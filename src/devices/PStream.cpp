@@ -264,11 +264,10 @@ std::string PStream::ReadLine()
 
             while( !mFileStream->eof())
                 {
+                    tmpstring += tmp; 
                     if(tmp == 10)       //10 is the newline character         
-                        break;          //Break out if the next character is eol                        
-                    else 
-                        tmpstring += tmp; 
-
+                        break;          //Break out if the next character is eol
+                    
                     mFileStream->get(tmp);
                 }
 

@@ -97,6 +97,7 @@ Variant::Variant(const char * string):
     mData.String = strdup(string);
 }
 
+
 //Character Constructor
 Variant::Variant(const char character):
     mComplexData(NULL),

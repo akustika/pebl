@@ -311,7 +311,8 @@ Variant PEBLStream::FileReadTable(Variant v)
 ///This function takes a filename as an argument.  It
 ///Opens the file, and reads in the entire file as a string,
 ///which it  returns, and closes the file afterward. It ignores any
-///lines that begin with #
+///lines that begin with #, and converts '\n' to [10], which
+///is later parsed as a carriage return.
 Variant PEBLStream::FileReadText(Variant v)
 {
 

@@ -39,6 +39,7 @@ enum StreamDirection
     };
 
 //Enumeration used to specify text or binary access
+
 enum StreamType
     {
         stASCII,

@@ -613,10 +613,8 @@ Variant PEBLEnvironment::TimeStamp(Variant v)
 Variant  PEBLEnvironment::GetPEBLVersion(Variant v)
 {
     
-    return Variant("PEBL Version 0.4");
+    return Variant("PEBL Version 0.5");
 }
-
-
 
 
 Variant PEBLEnvironment::IsNumber(Variant v)

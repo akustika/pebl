@@ -1,7 +1,7 @@
 The PEBL Manual
 (c) 2003-2005 Shane T Mueller  smueller at obereed dot net
   
-Current for PEBL Version 0.4
+Current for PEBL Version 0.5
 http://pebl.sourceforge.net
 
 =~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
@@ -241,6 +241,14 @@ COMMAND-LINE OPTIONS:
   command-line argument.  If it does not, PEBL should exit
   with a useful error message; of course, it could
   potentially damage your hardware.
+  
+  For convenience, the width, height, and bit depth can be accessed from within
+  a PEBL script with the global variables gVideoWidth, gVideoHeight,
+  and gVideoDepth.  These values are not protected from being changed
+  in a script, but changing them will not change the display.
+  Consequently, if you change them, they will no longer be accurate.
+  
+
 
 --depth
   Controls the pixel depth.  Depends on your video card.
