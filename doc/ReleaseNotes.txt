@@ -81,6 +81,20 @@ Details:
     MoveCenter
   
 
+I now include a set of experiments in the 'experiments' directory, which appears
+in My Documents\PEBL-exp in windows.  These include:
+
+    cue.pbl:             List learning/Gist recall experiments
+    IAT.pbl:             Implicit Association Test (http://implicit.harvard.edu/implicit/)
+    rsvp.pbl:            A demo trial to test RSVP-type presentation
+    lexicaldecision.pbl: Sample lexical decision task
+    masking.pbl:         A 2AFC visual perception task with briefly-presented stimuli
+    letterstrings:       Another 2AFC task, with letter strings.
+
+
+Other demo scripts that are not necessarily
+full-fledged experiments still live in the PEBL/demo directory. 
+
    Notes:  There is a scoping/reference counter problem so that some
    memory sometimes doesn't get released properly at the end of a
    program, causing a segfault.  This is annoying, but pretty
