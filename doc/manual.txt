@@ -2035,6 +2035,21 @@ Example:
 
 See Also:    FileReadLine(), FileReadTable(), FileReadList()
 
+
+
+
+------------------------------------------------------------
+Name/Symbol:  FindInString
+
+Description:  Finds a token in a string, returning the position.
+
+Usage:        FindInString(<string>,<string>)
+
+Example:      FindInString("about","bo") == 2
+
+See Also:     SplitString()
+
+
 ------------------------------------------------------------
 Name/Symbol:  First
 
@@ -2087,6 +2102,20 @@ Example:      Floor(33.23)  # == 33
 	     Floor(-32.23) # == -33
  
 See Also:     AbsFloor(), Round(), Ceiling()
+
+
+
+------------------------------------------------------------
+Name/Symbol:  FoldList
+
+Description:  Folds a list into equal-length sublists.
+
+Usage:        FoldList(<list>, size)
+
+Example:      FoldList([1,2,3,4,5,6,7,8],2) # == [[1,2],[3,4],[5,6],[7,8]]
+
+ 
+See Also:     FlattenN(), Flatten()
 
 
 
@@ -2927,10 +2956,10 @@ Usage:        Move(<object>, <x>, <y>)
 
 Example:      Move(label, 33, 100)
 
-See Also:     MoveCorner()
+See Also:     MoveCorner(), MoveCenter
 
 ------------------------------------------------------------
-Name/Symbol:  Move
+Name/Symbol:  MoveCorner
 
 Description: Moves a label or image to a specified location, according to its
 	     upper lefthand corner, instead of its center. 
@@ -2939,7 +2968,20 @@ Usage:        MoveCorner(<object>, <x>, <y>)
 
 Example:      MoveCorner(label, 33, 100)
 
-See Also:     Move()
+See Also:     Move(), MoveCenter
+
+
+------------------------------------------------------------
+Name/Symbol:  MoveCenter
+
+Description: Moves a label or image to a specified location, according to its
+	     center
+
+Usage:        MoveCenter(<object>, <x>, <y>)
+
+Example:      MoveCenter(label, 33, 100)
+
+See Also:     Move(), MoveCorner()
 
 ------------------------------------------------------------
 Name/Symbol: not

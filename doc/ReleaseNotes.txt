@@ -33,15 +33,58 @@ obsolete.
 Version 0.4
 March 2, 2005
 
-The fourth release of PEBL is here.  This release includes a bunch
-of new functions, some ready-to-run experiments I have done, and allows
-you to set the display options as arguments, allowing different screen sizes, 
-full-screen or windowed operation, and specifying the SDL driver you want to 
-use.  I am also experimenting with an an automatic setup utility on Windows 
-that puts PEBL into c:\Program files\PEBL.  It may not be optimal if you do not
-have writeable access to this directory, but I'm working on a solution to that
-as well.
+The fourth release of PEBL is here.  This release includes a bunch of
+new functions, some ready-to-run experiments I have prepared, and it
+allows you to set the display options as arguments, enabling different
+screen sizes, full-screen or windowed operation, and specifying the
+SDL driver you want to use.  I am also experimenting with an an
+automatic setup utility on Windows that puts PEBL into c:\Program
+files\PEBL, creates a PEBL experiment folder in My Documents, and
+creates launchers that run these nicely.
 
+Details:
+
+  New Command-line arguments:
+  --driver <drivername> 
+    e.g., on linux, dga for direct access or xf86 for X11
+    driver. No real difference on Windows
+     
+--display  <widthxheight>
+  Controls the screen width and height (in pixels). Defaults to 640x480.
+  Currently, only the following screens are supported:
+                512x384
+                640x480
+                800x600
+                960x720
+                1024x768
+                1152x864
+                1280x1024
+  Note: the way this is invoked may be changed in the future.
+
+--depth
+  Controls the pixel depth.  Depends on your video card.  Currently,
+  depths of 2,8,15,16,24, and 32 are allowed on the command-line.
+--windowed
+--fullscreen
+  Controls whether the script will run in a window or fullscreen.
+
+  These are accessible on windows through new controls in the launcher
+  application.  
+
+
+  New Functions:
+    FoldList
+    Flatten
+    FlattenN
+    Replace
+    MoveCorner
+    MoveCenter
+  
+
+   Notes:  There is a scoping/reference counter problem so that some
+   memory sometimes doesn't get released properly at the end of a
+   program, causing a segfault.  This is annoying, but pretty
+   harmless.
 
 
 --------------------------------------------------
@@ -76,12 +119,12 @@ Details:
                                          StringLength()
                                          SubString(),
                                          FindInString(),
-					 SplitString()
+					                     SplitString()
   
   * Programs can be aborted with <CTRL><ALT><SHIFT><\>
   * Other new functions:
                                     MoveCorner()
-	                            GetInput()
+	                                GetInput()
                                     SetFont()
 
 --------------------------------------------------
