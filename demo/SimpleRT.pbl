@@ -1,0 +1,68 @@
+#!/usr/local/bin/pebl
+define Start(lPar)
+{
+  gBG <- MakeColor("GREY")
+  gFG <- MakeColor("RED")
+  gFont <- MakeFont("Vera.ttf",0,44,gFG,gBG,1)
+  gFixation <- MakeLabel("+",gFont)
+  lStimuli <- Shuffle(["a", "d", "c", "e", "d", "o", "n"])
+
+
+  gWin <- MakeWindow()
+
+  AddObject(gFixation,gWin)	
+  Move(gFixation, 300,200)
+  Hide(gFixation)
+  Draw()	  
+
+  loop(i, lStimuli)
+  {
+    Wait(200)
+    Print_(i + "   ")
+    Print( Trial(i))	
+  }
+  RemoveObject(gFixation, gWin)
+
+}
+
+
+define Trial(stim)
+{
+
+  ##Make fixation and stimulus
+  lText <- MakeLabel(stim, gFont)
+
+  ##Add labels to window
+  AddObject(lText,gWin)	
+
+
+  ##Move them to the same place
+
+  Move(lText, 300,200)
+
+  ##Hide the text; show fixation
+  Show(gFixation) 
+  Hide(lText)
+  Draw(gWin)
+
+  #hide the fixation after 200-400 ms
+
+  Wait(1200 + RandomDiscrete(200))
+
+
+  #Show the text after 100-200 ms
+  Show(lText)
+  Hide(gFixation)
+  Wait(100 + RandomDiscrete(100))
+  Draw()
+  lTime1 <- GetTime()
+  Hide(lText)
+  WaitForKeyDown("a")
+  lTime2 <- GetTime()
+  Draw()
+  RemoveObject(lText, gWin)
+
+  return lTime2 - lTime1	
+}
+
+

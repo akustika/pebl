@@ -1,0 +1,50 @@
+#!/usr/local/bin/pebl
+define Start (lParameter )
+{
+	gWindow <- MakeWindow()
+	gPic <- MakeImage("pebl.bmp")
+	AddObject(gPic, gWindow)
+	lBG <- MakeColor("GREY")
+	lFG <- MakeColor("dodgerblue3")
+	lFont <- MakeFont("Vera.ttf",0,22,lFG,lBG,1)
+	lText <- MakeLabel("Hello World", lFont)
+
+	Move(lText, 300,200)
+
+
+
+	AddObject(lText,gWindow)
+	Draw()
+	x <- 0
+	y <- 50
+	i <- 0
+
+   #Wait 2 seconds before we start to make sure everything gets processed.
+	Wait(2000)
+
+	while(i < 250)
+	{
+
+      cycles <- RandomDiscrete(4)
+		Draw()
+		Draw()
+		Draw()
+ 		time1 <- GetTime()
+		DrawFor(gWindow,cycles)	
+		time2 <- GetTime()
+
+      Print(cycles + "   " + (time2 - time1))
+      i <- i + 1
+	}
+
+
+	Hide(lText)
+	Hide(gPic)
+	lText2 <-MakeLabel("Press the 'X' key to Continue", lFont)
+	AddObject(lText2,gWindow)	
+	MOVE(lText2, 200, 300)	
+	Draw()
+
+	WaitForKeyDown("X")
+	Wait(300)
+}

@@ -1,0 +1,111 @@
+#!/usr/local/bin/pebl
+
+# This PEBL script demonstrates the creation of a basic stroop 
+# Choice-RT task. 
+# (c) 2003, Shane T. Mueller, Ph.D.
+
+
+
+define Start(lPar)
+{
+
+   #Initialize Window
+  gWindow <- MakeWindow("grey") 
+  
+ ##Create the text stimuli
+  colornames <-  ["red", "green", "blue", "orange", "yellow", "green"]
+ 
+
+ ##Create the color stimuli
+  red    <- MakeColor("red")
+  green  <- MakeColor("green")
+  blue   <- MakeColor("blue")
+  orange <- MakeColor("orange")
+  yellow <- MakeColor("yellow")
+  brown  <- MakeColor("brown")
+  grey   <- MakeColor("grey")  #This is gLobal
+  
+  colors <- [red, green, blue, orange, yellow, green]
+
+  Print(colornames)
+  Print("---------------")
+
+ ## Now, create the stimuli set. This should be 12 consistent mappings
+ ## and 12 inconsistent mappings.
+
+ colors <- [ red,   blue,   green,   orange,   yellow,   brown]
+ names  <- ["red", "blue", "green", "orange", "yellow", "brown"]
+
+ 
+ colors2 <- RepeatList(colors,2)
+ names2  <- Merge(names, Rotate(names, 1))
+
+rawstimuli <- Transpose([colors2, names2, Merge(Repeat(1,6), Repeat(2,6))])
+shuffledstim <- Shuffle(rawstimuli)
+
+ Print(rawstimuli)
+ Print(shuffledstim)
+
+  loop(i, shuffledstim)
+  {
+
+    Wait(200)
+    Trial(i)	
+
+  }
+
+}
+
+
+define Trial(stim)
+{
+ Print(stim)
+
+##The first item of stim is the color
+ color <- Nth(stim,1)
+
+##The second item of stim is the color name
+ colorname <- Nth(stim,2)
+ Print(colorname)
+
+##The third item of stim indicates whether it is consistent or not.
+ consistent <- Nth(stim, 3)
+ Print(consistent)
+
+
+ ##Make the text labels to display the stimuli.
+  lFont <- MakeFont("VeraMono.ttf",0,22,color,grey,1)
+
+  lText <- MakeLabel(colorname,lFont)  ##Make stimulus label
+
+  ##Add label to window
+  AddObject(lText,gWindow)	
+
+  ##Move text to center
+  Move(lText, 300,200)
+
+  #Wait 300 msecs and hide the fixation
+  Show(lText)
+
+  Wait(100)
+
+  Draw()
+
+
+  #Get start time.
+  start <- GetTime()
+
+  #Wait for response, hiding stimulus as soon as it occurs.
+  Hide(lText)
+
+  lResponse <- WaitForKeyDown("A")
+
+  #Get the response time.
+  end <- GetTime()
+  Draw()
+
+  RemoveObject(lText, gWindow)
+
+  return (end - start)
+}
+

@@ -1,0 +1,13 @@
+# These are the instructions for the cue experiment.
+# They are read with the FileReadText() function,
+# which ignores lines starting with a #.
+In this experiment, you will see a series of nouns describing 
+common physical objects or entitities.  For 
+each word, you should decide whether the word is man-made 
+or natural.  If the object is man-made, hit the "Z" key on the 
+lower left part of the keyboard.  If the object occurs naturually, 
+hit the "/" key on the lower right part of the keyboard.  Respond as 
+accurately and as quickly as possible.  We will start with a few 
+practice items.\n  Press the "X" key to begin.
+
+

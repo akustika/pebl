@@ -1,0 +1,273 @@
+#/////////////////////////////////////////////////////////////////////////////////
+#//    Name:       src/pebl-lib/Utility.pbl
+#//    Purpose:    Contains PEBL functions used for various purposes
+#//    Author:     Shane T. Mueller, Ph.D.
+#//    Copyright:  (c) 2004 Shane T. Mueller <smueller@obereed.net>
+#//    License:    GPL 2
+#//
+#//
+#//
+#//     This file is part of the PEBL project.
+#//
+#//    PEBL is free software; you can redistribute it and/or modify
+#//    it under the terms of the GNU General Public License as published by
+#//    the Free Software Foundation; either version 2 of the License, or
+#//    (at your option) any later version.
+#//
+#//    PEBL is distributed in the hope that it will be useful,
+#//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#//    GNU General Public License for more details.
+#//
+#//    You should have received a copy of the GNU General Public License
+#//    along with PEBL; if not, write to the Free Software
+#//    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#////////////////////////////////////////////////////////////////////////////////
+
+
+#  The functions defined here are available for use in any PEBL program.
+#  They are written in PEBL itself, and so are interpreted, but the ease of
+#  writing them in PEBL far outweighed the possible speed-up that might be gained
+#  by writing them directly in C++.
+
+
+define GetNIMHDemographics(code,window, file)
+{
+
+        foreground <- MakeColor("black")
+        background <- MakeColor("grey")
+        white      <- MakeColor("white")
+        fontBig   <- MakeFont("Vera.ttf", 0, 22, foreground,  background,1)
+        fontSmall <- MakeFont("Vera.ttf", 0, 15, foreground,  background, 1)
+        fontTB    <- MakeFont("Vera.ttf", 0, 30, foreground,  white, 1)  
+
+        #####################################################
+        ##First, ask about gender.
+
+        question <- MakeLabel("What is your sex/gender?",fontBig)
+        option1  <- MakeLabel("1. Male", fontSmall) 
+        option2  <- MakeLabel("2. Female", fontSmall) 
+        option3  <- MakeLabel("3. Prefer not to say.", fontSmall) 
+        option4  <- MakeLabel(" ", fontSmall) 
+        option5  <- MakeLabel(" ", fontSmall) 
+        option6  <- MakeLabel(" ", fontSmall) 
+                                          
+        #Add the text to the window
+        AddObject(question, window)
+      
+        AddObject(option1, window)
+        AddObject(option2, window)
+        AddObject(option3, window)
+        AddObject(option4, window)
+        AddObject(option5, window)
+        AddObject(option6, window)
+
+
+        #Position in properly
+        MoveCorner(question, 100, 150)            
+        MoveCorner(option1, 120, 220)
+        MoveCorner(option2, 120, 240)
+        MoveCorner(option3, 120, 260)
+        MoveCorner(option4, 120, 280)
+        MoveCorner(option5, 120, 300)
+        MoveCorner(option6, 120, 320)
+         
+        Draw()
+        
+        #Get their response
+        responseGender <- WaitForListKeyPress(["1", "2", "3"])
+ 
+         
+        Hide(question)
+        Hide(option1)
+        Hide(option2)
+        Hide(option3)
+        Draw()        
+
+        ##########################################################
+        ##Ask about ethnicity
+        SetText(question, "Are you of Hispanic or Latino/Latina Heritage?")
+        SetText(option1, "[Y] Yes")
+        SetText(option2, "[N] No")
+        MoveCorner(question,100, 150)
+        MoveCorner(option1, 120, 220)
+        MoveCorner(option2, 120, 240)
+
+        Show(question)
+        Show(option1)
+        Show(option2)
+        Draw()
+       
+        responseEthnicity <- WaitForListKeyPress(["Y", "N"])
+       
+        Hide(question)
+        Hide(option1)
+        Hide(option2)
+        Draw()
+
+        ##########################################################
+        ##Ask about Race
+
+        SetText(question, "What is your race?")
+        SetText(option1, "[1] American Indian or Native American")
+        SetText(option2, "[2] Asian")
+        SetText(option3, "[3] Native Hawaiian or Pacific Islander")
+        SetText(option4, "[4] Black/African American")
+        SetText(option5, "[5] White")
+        SetText(option6, "[6] Other/Prefer not to say")
+
+        MoveCorner(question, 100, 150)            
+        MoveCorner(option1, 120, 220)
+        MoveCorner(option2, 120, 240)
+        MoveCorner(option3, 120, 260)
+        MoveCorner(option4, 120, 280)
+        MoveCorner(option5, 120, 300)
+        MoveCorner(option6, 120, 320)
+
+        Show(question)
+        Show(option1)
+        Show(option2)
+        Show(option3)
+        Show(option4)
+        Show(option5)
+        Show(option6)
+        Draw()
+        responseRace <- WaitForListKeyPress(["1", "2", "3", "4", "5", "6"])
+
+
+
+        Hide(question)
+        Hide(option1)
+        Hide(option2)
+        Hide(option3)    
+        Hide(option4)    
+        Hide(option5)
+        Hide(option6)
+        Draw()
+
+        ##############################################################
+        ##Ask about Age.
+        SetText(question, "How old are you (in years)?")
+        SetText(option1,"Hit 'enter' key when age is entered.")
+                  
+        MoveCorner(question,100,150)
+        MoveCorner(option1, 100,250)
+        Show(question)
+        Show(option1)
+        tb <- MakeTextBox("",fontTB,100,40)
+        AddObject(tb,window)
+        MoveCorner(tb,100,180)
+        Draw()
+        responseAge <-  GetInput(tb, "<return>")
+                  
+
+        fileOut <- FileOpenAppend(file)
+        FilePrint(fileOut, code + " " + TimeStamp() + " " + responseGender+ " " + responseEthnicity + " " + responseRace + " " + responseAge)
+        FileClose(fileOut)
+        RemoveObject(question,window)
+        RemoveObject(option1,window)
+        RemoveObject(option2,window)
+        RemoveObject(option3,window)
+        RemoveObject(option4,window)
+        RemoveObject(option5,window)
+        RemoveObject(option6,window)
+        RemoveObject(tb,window)
+}     
+
+
+define MoveCorner(object,x, y)
+{
+  if(IsTextBox(object))
+  {
+   Move(object,x,y)
+  } else {
+  size    <- GetSize(object)
+  centerY <- y + First(size)/2
+  centerX <- x + Nth(size,2)/2
+  Move(object, centerX, centerY)
+  }
+}
+
+
+
+
+define MoveCenter(object,x, y)
+{
+  if(IsTextBox(object))
+  {
+  size    <- GetSize(object)
+  newY <- y - First(size)/2
+  newX <- x - Nth(size,2)/2
+  Move(object, newX, newY)
+
+  } else {
+   Move(object,x,y)
+  }
+}
+
+
+
+## This splits 'string' into a list, breaking each time 'split'
+## appears in sting.  It discards the split token(s).
+## if split is "", split at each letter.  This should be able
+## to accept a list of split characters, but does not yet.
+define SplitString(string, split)
+{
+  ##Check to see if the arguments are of the right type.
+ if(not IsString(string))
+  {
+    SignalFatalError("First argument of function[SplitString(<string>,<string>)] is not a string")
+  }
+
+ if(not IsString(split))
+  {
+    SignalFatalError("Second argument of function[SplitString(<string>,<string>)] is not a string")
+  }
+
+  ##Pre-calculate the lengths.
+  splitLength <- StringLength(split)
+  strLength   <- StringLength(string)
+  
+   returnList <- []   ##Make a blank list to return
+   begin <- 1         ##Start at the first letter
+   length <- 0        ##With a 0-length list	
+
+   while(begin <= strLength+1)
+   { 
+
+    length <- 0        ## reset length to  0-length list
+
+     ##check substrings of splitlength until we have a match
+     while(begin + length <= strLength and
+          (SubString(string,begin+length,splitLength) != split))
+     {
+       length <- length + 1
+     }
+
+
+     ##length now contains the length of the current token.
+     ##If length is equal to 0, for 0-length split symbol, set it equal to 1.
+     ## (0-length split symbols indicate a split between each letter)
+     if(length == 0 and splitLength == 0)
+     {
+        length <- 1
+     }
+    
+     #Extract the token we want
+     token <- SubString(string, begin, length)
+ 
+     #Don't add the token if its length is zero and the splitlength is zero too;
+     #this happens at the end of a string
+  
+     if(not (StringLength(token) == 0 and splitLength == 0))
+     {
+        returnList <- Append(returnList, token)
+     } 
+ 
+     #update the beginning position of the next token
+     begin <- begin + length + splitLength 
+
+    }
+
+   return(returnList)
+}

@@ -1,0 +1,4 @@
+
+
+
+fix: Crash on printing null list []

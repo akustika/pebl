@@ -1,0 +1,26 @@
+#!/usr/local/bin/pebl
+define Start(lPar)
+{
+
+   Print("Testing Sound Playback.")
+		
+   ##You need to make a window in order to play a sound in Windows.
+   gWin <- MakeWindow()
+   sound <- LoadSound("buzz500ms.wav")
+
+   Print("********************************************")
+
+
+   
+   PlayForeground(sound)
+
+
+   PlayForeground(sound)
+   
+   PlayBackground(sound)
+   Wait(100)
+   Stop(sound)
+
+
+}
+

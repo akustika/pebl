@@ -1,0 +1,143 @@
+//* -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*- */
+/////////////////////////////////////////////////////////////////////////////////
+//    Name:       src/base/VariableMap.cpp
+//    Purpose:    Structure that holds global or local variables
+//    Author:     Shane T. Mueller, Ph.D.
+//    Copyright:  (c) 2003 Shane T. Mueller <smueller@umich.edu>
+//    License:    GPL 2
+//
+//   
+//
+//     This file is part of the PEBL project.
+//
+//    PEBL is free software; you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation; either version 2 of the License, or
+//    (at your option) any later version.
+//
+//    PEBL is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with PEBL; if not, write to the Free Software
+//    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+////////////////////////////////////////////////////////////////////////////////
+
+#include "VariableMap.h"
+
+#include "../utility/PError.h"
+
+
+#include <iostream>
+#include <map>
+#include <string>
+
+
+using std::cerr;
+using std::cout;
+using std::endl;
+using std::map;
+using std::pair;
+using std::string;
+
+
+VariableMap::VariableMap()
+{
+
+    //Initiate anything necessary here.
+}
+
+
+VariableMap::~VariableMap()
+{
+    //Delete mVariableMap if necessary.
+
+    mVariableMap.clear();
+}
+
+///
+/// This method will add a new variable with 
+/// name varname and value val to the variable map, or (if it already exists)
+/// change its value to val.
+void VariableMap::AddVariable(const char* varname, Variant val)
+{
+    string tmpVarname =varname;
+    map<string, Variant>::iterator p;
+    
+    p = mVariableMap.find(varname);
+    
+    //If the variable is in there already, change its value
+    
+    if(p!=mVariableMap.end())
+        {
+            p->second = val;
+        }
+    else
+        {
+            //variable isn't there yet, so add the new value into map
+            mVariableMap.insert(pair<string, Variant>(varname, val));
+        }
+
+} 
+
+
+
+/// 
+/// This method will retrieve the value designated by
+/// varname.  If varname doesn't exist, it will return 
+/// 0, along with a warning.
+Variant  VariableMap::RetrieveValue(const char * varname)
+{
+
+  
+    map<string,Variant>::iterator p;
+  
+    //Get a the variable 
+    string tmpVarname = varname;
+    p = mVariableMap.find(tmpVarname);
+  
+    if(p == mVariableMap.end())
+        {
+            
+            string message = "Trying to use an undefined variable:  " + tmpVarname;
+            PError::SignalFatalError(message);
+
+            return Variant(0);  //This really won't happen.
+            
+	
+        }
+    else
+        {
+
+            return p->second;
+        }
+  
+};
+
+
+/// This will erase the value stored in varname
+///
+void VariableMap::Erase(const char* varname)
+{
+    string tmpVarname = varname;
+    mVariableMap.erase(tmpVarname);
+}
+
+
+
+/// This method is primarily for debugging purposes.
+/// It will iterate through the entire variable map, and
+/// Display each of the values held in the map.
+///
+void VariableMap::DumpValues()
+{
+    map<string,Variant>::iterator p;
+  
+    for(p= mVariableMap.begin(); p!=mVariableMap.end(); p++)
+        {
+            cout << "VariableName:  [" << p->first << ":"<< (p->first).length() << "] | Value: [" << p->second << "]\n";   
+        }
+  
+}

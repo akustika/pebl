@@ -1,0 +1,19 @@
+define Start(parameter)
+{
+	#wait until initialization output catches up.
+	Wait(2000)
+
+
+ 	i <- 0
+	while(i < 10000)
+	  {
+		 waitTime <-RandomDiscrete(20)
+		 start <- GetTime()
+		 Wait(waitTime)
+		 end <- GetTime()
+		 Print(waitTime + "   " + (end - start))
+		 i<-i+1
+	   }
+		
+}
+

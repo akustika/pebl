@@ -1,0 +1,312 @@
+//* -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*- */
+/////////////////////////////////////////////////////////////////////////////////
+//    Name:       src/base/PNode.cpp
+//    Purpose:    Primary data structure for code
+//    Author:     Shane T. Mueller, Ph.D.
+//    Copyright:  (c) 2003 Shane T. Mueller <smueller@umich.edu>
+//    License:    GPL 2
+//
+//   
+//
+//     This file is part of the PEBL project.
+//
+//    PEBL is free software; you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation; either version 2 of the License, or
+//    (at your option) any later version.
+//
+//    PEBL is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with PEBL; if not, write to the Free Software
+//    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+////////////////////////////////////////////////////////////////////////////////
+#include "PNode.h"
+#include "grammar.tab.hpp"
+
+#include <iostream>
+#include <string.h>
+#include <stdlib.h>
+
+using std::cerr;
+using std::cout;
+using std::endl;
+using std::flush;
+using std::ostream;
+
+#undef VERBOSE_PNODE_CONSTRUCTION_MESSAGES
+
+/// This is the standard pNode constructor
+/*PNode::PNode(PNODE_TYPE type):
+    mType(type),
+    mTrace(0),
+    mSourceFile("<Unknown File>"),
+    mLineNumber(0)
+ {
+
+};
+*/
+
+
+/// This is the standard pNode constructor
+PNode::PNode(PNODE_TYPE type, const char* filename, int linenumber):
+    mType(type),
+    mTrace(0),
+    mSourceFile(strdup(filename)),
+    mLineNumber(linenumber)
+{
+
+};
+
+/// This is the standard pNode destructor
+PNode::~PNode()
+{
+    // Standard Destructor
+};
+
+
+//Overload of the << operator
+ostream& operator<<(ostream& out, const PNode & node)
+{
+    node.SendToStream(out);
+    return out;
+};
+
+ostream & PNode::SendToStream(ostream & out) const
+{
+    out << "<Anonymous OpNode of Type: " << GetType() << ">" << flush;
+    return out;
+}
+
+void PNode::SetFileInfo(const char* filename, int linenumber)
+{
+    mSourceFile = strdup(filename); 
+    mLineNumber = linenumber;
+}
+
+//******************************************************************************
+//  OpNode
+//******************************************************************************
+/*
+
+OpNode::OpNode(int op, PNode *left, PNode *right):
+    PNode(PEBL_OP_NODE,"", 0),
+    mOp(op),
+    mLeft(left),
+    mRight(right)
+
+ {
+
+#ifdef VERBOSE_PNODE_CONSTRUCTION_MESSAGES
+    cerr << "\tConstructing PNode of type [" << op << "]:[" << GetOpName() <<"]\n";
+#endif
+
+}
+*/
+
+
+OpNode::OpNode(int op, PNode *left, PNode *right, const char* filename, int linenumber):
+    PNode(PEBL_OP_NODE,filename,linenumber),
+    mOp(op),
+    mLeft(left),
+    mRight(right)
+{
+
+#ifdef VERBOSE_PNODE_CONSTRUCTION_MESSAGES
+    cerr << "\tConstructing PNode of type [" << op << "]:[" << GetOpName() <<"]\n";
+#endif
+    
+
+}
+
+//Standard Destructor
+OpNode::~OpNode()
+{
+
+
+}
+
+
+const char* OpNode::GetOpName() const
+{
+    switch(GetOp())
+        {
+
+        case PEBL_ADD:        return "PEBL_ADD";
+        case PEBL_AND:        return "PEBL_AND";
+        case PEBL_ARGLIST:    return "PEBL_ARGLIST";
+        case PEBL_ASSIGN:     return "PEBL_ASSIGN";
+        case PEBL_COMMA:      return "PEBL_COMMA";
+        case PEBL_DIVIDE:     return "PEBL_DIVIDE";
+        case PEBL_DEFINE:     return "PEBL_DEFINE";
+        case PEBL_DOT:        return "PEBL_DOT";
+        case PEBL_ELSE:       return "PEBL_ELSE";
+        case PEBL_END:        return "PEBL_END";
+        case PEBL_EQ:         return "PEBL_EQ";
+        case PEBL_FUNCTION:   return "PEBL_FUNCTION";
+        case PEBL_FUNCTIONS:  return "PEBL_FUNCTIONS";
+        case PEBL_GE:         return "PEBL_GE";
+        case PEBL_GT:         return "PEBL_GT";
+        case PEBL_IF:         return "PEBL_IF";
+        case PEBL_IFELSE:     return "PEBL_IFELSE";
+        case PEBL_LAMBDAFUNCTION:    return "PEBL_LAMBDAFUNCTION";
+        case PEBL_LBRACE:     return "PEBL_LBRACE";
+        case PEBL_LBRACKET:   return "PEBL_LBRACKET";
+        case PEBL_LIBRARYFUNCTION:   return "PEBL_LIBRARYFUNCTION";
+        case PEBL_LISTHEAD:   return "PEBL_LISTHEAD";
+        case PEBL_LISTITEM:   return "PEBL_LISTITEM";
+        case PEBL_LE:         return "PEBL_LE";
+        case PEBL_LOOP:       return "PEBL_LOOP";
+        case PEBL_LPAREN:     return "PEBL_LPAREN";
+        case PEBL_LT:         return "PEBL_LT";
+        case PEBL_MULTIPLY:   return "PEBL_MULTIPLY";
+        case PEBL_NE:         return "PEBL_NE";
+        case PEBL_NEWLINE:    return "PEBL_NEWLINE";
+        case PEBL_NOT:        return "PEBL_NOT";
+        case PEBL_OR:         return "PEBL_OR";
+        case PEBL_POWER:      return "PEBL_POWER";
+        case PEBL_RBRACE:     return "PEBL_RBRACE";
+        case PEBL_RBRACKET:   return "PEBL_RBRACKET";
+        case PEBL_RETURN:     return "PEBL_RETURN";
+        case PEBL_RPAREN:     return "PEBL_RPAREN";
+        case PEBL_SEMI:       return "PEBL_SEMI";
+        case PEBL_START:      return "PEBL_START";
+        case PEBL_STATEMENTS: return "PEBL_STATEMENTS";
+        case PEBL_SUBTRACT:   return "PEBL_SUBTRACT";
+        case PEBL_UMINUS:     return "PEBL_UMINUS";
+        case PEBL_VARLIST:     return "PEBL_VARLIST";
+        case PEBL_VARIABLEDATUM: return "PEBL_VARIABLEDATUM";
+        case PEBL_WHILE:     return "PEBL_WHILE";
+
+        case PEBL_FLOAT:      return "PEBL_FLOAT";
+        case PEBL_INTEGER:    return "PEBL_INTEGER";
+        case PEBL_STRING:     return "PEBL_STRING";
+        case PEBL_SYMBOL:     return "PEBL_SYMBOL";
+        case PEBL_FUNCTIONNAME:  return "PEBL_FUNCTIONNAME";
+
+        default:              return "UNKNOWN PEBL OPERATION";
+     
+        }
+}
+
+
+
+//Overload of the << operator
+
+ostream& OpNode::SendToStream(ostream& out) const
+{
+
+    out << "<OpNode of Type: " << GetOpName() << ">" <<flush;
+    return out;
+
+};
+
+
+//******************************************************************************
+//  DataNode
+//******************************************************************************
+
+/*
+DataNode::DataNode(const Variant value):
+    PNode(PEBL_DATA_NODE, "", 0)
+{
+    //This automatically makes  a deep copy (I think)
+#ifdef VERBOSE_PNODE_CONSTRUCTION_MESSAGES
+    cerr << "\tConstructing DataNode of variant value " << flush << value << endl;
+#endif
+    mValue = value;
+}
+*/
+
+DataNode::DataNode(const Variant value, const char * filename, int linenumber):
+    PNode(PEBL_DATA_NODE, filename, linenumber)
+{
+    //This automatically makes  a deep copy (I think)
+#ifdef VERBOSE_PNODE_CONSTRUCTION_MESSAGES
+    cerr << "\tConstructing DataNode of variant value " << flush << value << endl;
+#endif
+    mValue = value;
+}
+
+/*
+DataNode::DataNode():
+    PNode(PEBL_DATA_NODE)
+{
+    
+#ifdef VERBOSE_PNODE_CONSTRUCTION_MESSAGES
+    cerr << "\tConstructing DataNode without value \n";
+#endif
+}
+*/
+
+DataNode::DataNode(const char * filename, int linenumber):
+    PNode(PEBL_DATA_NODE, filename, linenumber)
+{
+    
+#ifdef VERBOSE_PNODE_CONSTRUCTION_MESSAGES
+    cerr << "\tConstructing DataNode without value \n";
+#endif
+}
+
+
+/*
+DataNode::DataNode(long int ivalue):
+    PNode(PEBL_DATA_NODE)
+{
+    mValue = ivalue;
+
+#ifdef VERBOSE_PNODE_CONSTRUCTION_MESSAGES
+    cerr << "\tConstructing DataNode of Integer value " << flush << ivalue << endl;
+#endif
+
+};
+*/
+
+
+DataNode::DataNode(long int ivalue, const char * filename, int linenumber):
+    PNode(PEBL_DATA_NODE, filename, linenumber)
+{
+    mValue = ivalue;
+
+#ifdef VERBOSE_PNODE_CONSTRUCTION_MESSAGES
+    cerr << "\tConstructing DataNode of Integer value " << flush << ivalue << endl;
+#endif
+
+};
+
+/*
+DataNode::DataNode(long double fvalue):
+    PNode(PEBL_DATA_NODE)
+{
+    mValue = fvalue;
+#ifdef VERBOSE_PNODE_CONSTRUCTION_MESSAGES
+    cerr << "\tConstructing DataNode of Float value " << flush << fvalue << endl;
+#endif
+};
+*/
+
+
+DataNode::DataNode(long double fvalue, const char * filename, int linenumber):
+    PNode(PEBL_DATA_NODE, filename, linenumber)
+{
+    mValue = fvalue;
+#ifdef VERBOSE_PNODE_CONSTRUCTION_MESSAGES
+    cerr << "\tConstructing DataNode of Float value " << flush << fvalue << endl;
+#endif
+};
+
+
+DataNode::~DataNode()
+{
+  
+}
+
+//Overload of the << operator
+ostream& DataNode::SendToStream(ostream& out) const
+{
+    out << "<DataNode of Type: " << GetType() << " and Value: " << GetValue()<< ">" << flush;
+    return out;
+};

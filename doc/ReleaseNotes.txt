@@ -1,0 +1,162 @@
+
+--------------------------------------------------
+PEBL: Psychology Experiment Building Language
+http://pebl.sourceforge.net
+pebl-list at lists  sourceforge  net
+http://lists.sourceforge.net/lists/listinfo/pebl-list
+--------------------------------------------------
+
+
+
+About: 
+
+PEBL is a new programming language and interpreter/compiler designed
+to make experiment-writing easy. It is cross-platform, written in C++,
+and relies on a Flex/Bison parser. Although other platforms are
+possible, we currently use the SDL game-programming library
+(http://libsdl.org) to easily support multiple platforms with one code
+base. PEBL does not require you to purchase anything in order to use
+it. It does not require a compiler or experience using any other
+programming system.  PEBL is designed to be an open system.  It
+requires no licensing or registration fees to use, and you can re-use
+the source code as long as you abide by the GNU GPL. This allows you
+to freely share your experiments with others without worrying about
+licenses, vendor lock-in, or whether you will be able to run your
+experiments down the road when your current hardware systems are
+obsolete. 
+
+
+                 RELEASE NOTES
+
+
+
+--------------------------------------------------
+Version 0.3
+September 13, 2004
+
+The third public release of PEBL is now available!  In addition
+to the fixing of numerous bugs, I have improved the event
+handling system for better performance, added an
+abort-execution keyboard shortcut, added numerous new
+functions, including an all-in-one function that collects
+the demographic information required by NIMH, and have enabled
+text entry into textboxes.  I have been using and testing
+this version for a few months, and I think it is ready to
+release.
+
+Details:
+ 
+  * Added an event queue that captures OS events, along with
+    'state' events previously handled.
+  * TextBoxes are user-editable with the GetInput() function
+  * GetNIMHDemographics() collects NIMH data
+  * New event-related functions: 
+                                         WaitForKeyPress(),
+                                         WaitForAnyKeyPress(),
+                                         WaitForKeyRelease(),
+                                         WaitForListKeyPress(),
+                                                         
+  * New String handling functions:
+                                         Uppercase(),
+                                         Lowercase(),
+                                         StringLength()
+                                         SubString(),
+                                         FindInString(),
+					 SplitString()
+  
+  * Programs can be aborted with <CTRL><ALT><SHIFT><\>
+  * Other new functions:
+                                    MoveCorner()
+	                                 GetInput()
+                                    SetFont()
+
+--------------------------------------------------
+Version 0.2 
+January 25, 2004
+
+The second release of PEBL is now available.  In preparing a new experiment,
+ I found and fixed many bugs and implemented a dozen or so new functions.  
+Highlights include a new textbox object for displaying instructions and other
+text, and primitive windows launcher that allows you to set arguments like the 
+subject number or condition.
+
+Notes:
+
+ * Primitive TextBox objects are available
+ * Several fixes to bugs in grammar
+ * Win32 launcher
+ * On Windows (tm), PEBL now runs at HIGH priority
+ * Included some new sample images.
+ * Improved manual modestly.
+ * Began implementing useful library of built-in PEBL functions
+
+
+--------------------------------------------------
+Version 0.1
+January 3, 2004
+
+I would like to announce the first public release of PEBL, the
+cross-platform open source system for creating psychology experiments.
+It is incomplete and certainly contains bugs that limit its
+usefulness. With this release, it is usable on Linux and Microsoft
+Windows.
+
+
+
+Notes:  
+
+The first release of PEBL offers basic stimulus presentation and
+response collection capabilities.  PEBL can present many different
+kinds of images, it can present text using any truetype font, and it
+can present sounds stored in the .wav format.  It can collect
+responses using a standard computer keyboard. It is designed for
+controlling short experiments typically associated with cognitive
+psychology, on human subjects using standard computer systems.
+Consequently, it does not currently offer the ability to control or
+detect external devices, like the kind typically used in animal
+research labs (as well as in many cognitive and neuroscience research
+programs).
+
+For detailed descriptions on how to use PEBL, consult the PEBL manual
+found in the source or executable distributions at doc/manual.txt.
+
+PEBL is still embryonic, and the form it will eventually take will be
+driven by what its users want and need.  If you are interested in
+guiding its future, sign up to the email list at
+http://lists.sourceforge.net/lists/listinfo/pebl-list.  We welcome
+contributions at any level; from testing and bug-reporting, to the
+creation of new sample experiments, to the writing of documentation,
+to web site design and maintenance, to hard-core programming. Come
+join us and help build a better system for designing experiments.
+
+Despite its nascent state, the system is sufficient for many types of
+experiments.  It currently offers a library of about 125 functions
+that allow complex experiments to be created, and simplify many of the
+common tasks associated with creating an experiment.  We hope you find
+it useful and an attractive alternative to the expensive and
+proprietary solutions that currently exist.
+
+
+Caveats:  
+
+PEBL does not yet have great control over presentation timing,
+nor does it manage its priority well so it will easily get
+interrupted by the operating system.  Do not rely on this system for
+collecting reaction times or presenting tachistoscopic stimuli  
+unless it is acceptable to be tens of milliseconds off.  The control
+over stimulus presentation is compromised because the SDL library
+API does not provide a way to sync with the video card vertical
+blank.  Timing in general is compromised by the fact that it runs on
+time-sharing operating systems that do not allow for real-time
+scheduling.  The timing can be improved by running at a higher
+priority and shutting off unnecessary programs, as well as by using
+an operating system that supports low-latency kernel pre-emption (like
+Linux 2.6).
+
+Many of the documented functions are not implemented yet.  If you
+attempt to use an unimplemented function, it will signal a fatal
+error that will tell you that the function is not implemented. Sorry
+for the inconvenience.
+
+I anticipate making a bug-fix release in early 2004
+--------------------------------------------------

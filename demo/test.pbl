@@ -1,0 +1,10 @@
+#!/usr/local/bin/pebl
+define Start (lParameter )
+{
+		  gWin <- MakeWindow()
+		  
+
+        Print("Video Width : " + gVideoWidth)
+        Print("Video Height: " + gVideoHeight)
+        Print("Video Depth : " + gVideoDepth)
+}
