@@ -56,7 +56,7 @@ or         [Oo][Rr]
 not        [Nn][Oo][Tt]
 globalvar         g[A-Za-z0-9\_]*
 localvar   [a-fh-z][A-Za-z0-9\_]*
-string     \"[^\"\n]*[\"\n]
+string     \"[^\"]*[\"\n]
 functionname  [A-Z][A-Za-z0-9\_]*
 datum      [integer float string variable]
 
@@ -120,10 +120,11 @@ datum      [integer float string variable]
 };
 {string} {          /*Make a deep copy of the string*/
   yylval.strValue = strdup(yytext+1); /*skip open quote*/
-  if(yylval.strValue[yyleng-2] != '"')     /*"*/
+
+if(yylval.strValue[yyleng-2] != '"')     /*"*/
 	    { char message[40];
 	    sprintf(message,"Unterminated character string in line: %d\n",yylineno  );
-	    yyerror(message);
+	  /*  yyerror(message);*/
 	    }
   else
     yylval.strValue[yyleng-2] = '\0'; /*remove close quote*/
