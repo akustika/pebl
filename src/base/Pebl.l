@@ -45,12 +45,20 @@ whitespace [ \t]+
 comment     #.*$  
 integer    [0-9]+
 float      [0-9]*\.[0-9]+ 
+if         [Ii][Ff]
+loop       [Ll][Oo][Oo][Pp]
+return     [Rr][Ee][Tt][Uu][Rr][Nn]
+else       [Ee][Ll][Ss][Ee]
+while      [Ww][Hh][Ii][Ll][Ee]
+define     [Dd][Ee][Ff][Ii][Nn][Ee]
+and        [Aa][Nn][Dd]
+or         [Oo][Rr]
+not        [Nn][Oo][Tt]
 globalvar         g[A-Za-z0-9\_]*
 localvar   [a-fh-z][A-Za-z0-9\_]*
 string     \"[^\"\n]*[\"\n]
 functionname  [A-Z][A-Za-z0-9\_]*
 datum      [integer float string variable]
-
 
 %%
 {whitespace} ;       /* ignore whitespace*/
@@ -86,15 +94,15 @@ datum      [integer float string variable]
 \)        return  PEBL_RPAREN;
 \-        return  PEBL_SUBTRACT;
 \;        return  PEBL_NEWLINE;
-"if"            return  PEBL_IF;
-"loop"          return  PEBL_LOOP;
-"return"        return  PEBL_RETURN;
-"else"          return  PEBL_ELSE;
-"while"         return  PEBL_WHILE;
-"define"        return  PEBL_DEFINE;
-"and"           return PEBL_AND;
-"or"            return PEBL_OR;
-"not"           return  PEBL_NOT;
+{if}            return  PEBL_IF;
+{loop}          return  PEBL_LOOP;
+{return}        return  PEBL_RETURN;
+{else}          return  PEBL_ELSE;
+{while}         return  PEBL_WHILE;
+{define}        return  PEBL_DEFINE;
+{and}           return PEBL_AND;
+{or}            return PEBL_OR;
+{not}           return  PEBL_NOT;
 
 {localvar} {   /*Make a deep copy of the variable*/
                yylval.symbol = strdup(yytext);

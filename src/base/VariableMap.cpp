@@ -28,7 +28,7 @@
 #include "VariableMap.h"
 
 #include "../utility/PError.h"
-
+#include "../utility/PEBLUtility.h"
 
 #include <iostream>
 #include <map>
@@ -63,10 +63,11 @@ VariableMap::~VariableMap()
 /// change its value to val.
 void VariableMap::AddVariable(const char* varname, Variant val)
 {
-    string tmpVarname =varname;
+    string tmpVarName = PEBLUtility::ToUpper(varname);
+
     map<string, Variant>::iterator p;
     
-    p = mVariableMap.find(varname);
+    p = mVariableMap.find(tmpVarName);
     
     //If the variable is in there already, change its value
     
@@ -77,7 +78,7 @@ void VariableMap::AddVariable(const char* varname, Variant val)
     else
         {
             //variable isn't there yet, so add the new value into map
-            mVariableMap.insert(pair<string, Variant>(varname, val));
+            mVariableMap.insert(pair<string, Variant>(tmpVarName, val));
         }
 
 } 
@@ -95,22 +96,17 @@ Variant  VariableMap::RetrieveValue(const char * varname)
     map<string,Variant>::iterator p;
   
     //Get a the variable 
-    string tmpVarname = varname;
-    p = mVariableMap.find(tmpVarname);
+    string tmpVarName = PEBLUtility::ToUpper(varname);
+    p = mVariableMap.find(tmpVarName);
   
     if(p == mVariableMap.end())
         {
-            
-            string message = "Trying to use an undefined variable:  " + tmpVarname;
+            string message = "Trying to use an undefined variable:  " + string(varname);
             PError::SignalFatalError(message);
-
             return Variant(0);  //This really won't happen.
-            
-	
         }
     else
         {
-
             return p->second;
         }
   
@@ -121,7 +117,7 @@ Variant  VariableMap::RetrieveValue(const char * varname)
 ///
 void VariableMap::Erase(const char* varname)
 {
-    string tmpVarname = varname;
+    string tmpVarname = PEBLUtility::ToUpper(varname);
     mVariableMap.erase(tmpVarname);
 }
 

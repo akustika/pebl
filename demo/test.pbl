@@ -3,5 +3,37 @@ define Start (lParameter )
 {
 
 
-	 Xtext <- FileReadText("instructions.txt")
+	 text <- FileReadText("instructions.txt")
+     Print("Hello")
+   if(33 > 3)
+   {
+     Print("Tennessee")
+   }
+
+
+   iF(33 > 3)
+   {
+     Print("Tennessee")
+   }
+
+
+
+   IF(33 > 3)
+   {
+     Print("Tennessee")
+   }
+
+  textile <- 3333
+  Print(textile)
+  Print(texTile)
+
+  Test()
+  TEst()
+  TEST()
+
+}
+
+define Test()
+{
+   Print("Kentucky")
 }
