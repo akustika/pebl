@@ -91,8 +91,7 @@ void VariableMap::AddVariable(const char* varname, Variant val)
 /// 0, along with a warning.
 Variant  VariableMap::RetrieveValue(const char * varname)
 {
-
-  
+ 
     map<string,Variant>::iterator p;
   
     //Get a the variable 

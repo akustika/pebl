@@ -95,9 +95,8 @@ void Loader::FindFunctions(const PNode * node)
 
                     //Now, convert the function name in v to upper case
                     //It is really just a string.
-                    char* ucasename = PEBLUtility::ToUpper(v);
-                    Variant v2 = Variant(ucasename, P_DATA_FUNCTION);
-                    free(ucasename);
+                    std::string ucasename = PEBLUtility::ToUpper(v);
+                    Variant v2 = Variant(ucasename.c_str(), P_DATA_FUNCTION);
 
                     //cout << "\tValue: " << v2 << endl;
                     mFunctionSet.insert(v2);

@@ -30,7 +30,14 @@ define Start (lParameter )
   Test()
   TEst()
   TEST()
-
+  rey1 <- MakeColor("Black")
+  rey2 <- MakeColor("Black")
+  rey3 <- MakeColor("green")
+  rey4 <- MakeColor("grEEN")
+  Print(rey1)
+  Print(rey2)
+  Print(rey3)
+  Print(rey4)
 }
 
 define Test()

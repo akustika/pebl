@@ -39,10 +39,12 @@ class Variant;
 namespace PEBLUtility
 {
     /// Returns a new buffer with upper-case version of text.  Be sure to free returned value afterwards.
-    char* ToUpper(const char* text);
+    std::string ToUpper(const char* text);
 
     /// Returns a new buffer with lower-case version of text.  Be sure to free returned value afterwards.
-    char* ToLower(const char* text);
+    std::string ToLower(const char* text);
+
+
 
     /// Places upper-case version first n characters of text into buffer.
     void ToUpper(const char* text, char* buffer, int n);

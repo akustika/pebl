@@ -33,7 +33,7 @@
 #include "../apps/Globals.h"
 
 #include <ctype.h>
-#include <string.h>
+#include <string>
 #include <stdlib.h>
 #include <cmath>
 #include <iostream>
@@ -48,9 +48,9 @@ using std::cout;
 
 ///This returns a pointer to an upper-case version of the text.
 ///Be sure to free the memory when done.
-char * PEBLUtility::ToUpper(const char* text)
+std::string PEBLUtility::ToUpper(const char* text)
 {
-    char * newtext = strdup(text);
+    std::string newtext = std::string(text);
     int i =0;
     while(newtext[i] != '\0')
         {
@@ -64,9 +64,9 @@ char * PEBLUtility::ToUpper(const char* text)
 
 ///This returns a pointer to a lower-case version of the text.
 ///Be sure to free the memory when done.
-char* PEBLUtility::ToLower(const char* text)
+std::string PEBLUtility::ToLower(const char* text)
 {
-    char * newtext = strdup(text);
+    std::string  newtext = std::string(text);
     int i =0;
     while(newtext[i] != '\0')
         {

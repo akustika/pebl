@@ -33,7 +33,7 @@ namespace RGBNames
 {
     
     struct PEBL_RGB_Color_Names {
-        char * name;
+        std::string  name;
         int r;
         int g;
         int b;

@@ -71,7 +71,7 @@ void FunctionMap::AddFunction(const char* funcname,  OpNode * node)
     
     //Get the uppercase version of the funcname.
 
-    char * upperfuncname = PEBLUtility::ToUpper(funcname);
+    std::string upperfuncname = PEBLUtility::ToUpper(funcname);
 
     map<string, PNode*>::iterator p;   
     p = mFunctionMap.find(upperfuncname);
@@ -88,9 +88,6 @@ void FunctionMap::AddFunction(const char* funcname,  OpNode * node)
             //variable isn't there yet, so add the new value into map
             mFunctionMap.insert(pair<string, PNode* >(upperfuncname, node));
         }
-    
-    free(upperfuncname);
-
 }
 
 /// This method will add a new function with name and code associated with the
@@ -120,7 +117,7 @@ PNode *  FunctionMap::GetFunction(const char * lcasefuncname)
     // Convert the function name to uppercase, so that it will find
     // a match when searching through the upper-case functionmap.
     
-    char * funcname = PEBLUtility::ToUpper(lcasefuncname);
+    std::string   funcname = PEBLUtility::ToUpper(lcasefuncname);
     map<string,PNode*>::iterator p;
     
     //Get a the function 
@@ -132,12 +129,11 @@ PNode *  FunctionMap::GetFunction(const char * lcasefuncname)
             //This should probably signal an error.
             cerr << "Function Name [" << funcname << "] not found.  Returning 0" << endl;
             DumpValues();
-            free(funcname);
             return new DataNode(Variant(PEBL_DATA_NODE),"PEBL SELF-GENERATED OBJECT",-1);
         }
     else
         {
-            free(funcname);
+
             //Otherwise, just return a pointer to the node.
             //cast it to the appropriate type.
             if((p->second)->GetType() == PEBL_OP_NODE)
@@ -161,13 +157,11 @@ PNode *  FunctionMap::GetFunction(const char * lcasefuncname)
 bool FunctionMap::IsFunction(const char* funcname)
 {
 
-    char * upperfuncname = PEBLUtility::ToUpper(funcname);
+    std::string  upperfuncname = PEBLUtility::ToUpper(funcname);
     //Get a the function from the map 
     map<string,PNode*>::iterator p;
     p = mFunctionMap.find(upperfuncname);
     
-    free(upperfuncname);
-
     //If it isn't in there, return false, otherwise true.
     if(p == mFunctionMap.end())
         return false;
@@ -180,9 +174,8 @@ bool FunctionMap::IsFunction(const char* funcname)
 ///
 void FunctionMap::Erase(const char* funcname)
 {
-    char * upperfuncname = PEBLUtility::ToUpper(funcname);   
+    std::string upperfuncname = PEBLUtility::ToUpper(funcname);   
     mFunctionMap.erase(upperfuncname);
-    free(upperfuncname);
 }
 
 

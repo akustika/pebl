@@ -115,7 +115,7 @@ void PColor::SetColorByRGBA(int red, int green, int blue, int alpha)
 void PColor::SetColorByName(const char * colorname)
 {
 
-    char * ucasename = PEBLUtility::ToUpper(colorname);
+    std::string ucasename = PEBLUtility::ToUpper(colorname);
     
     
     ///the RGBNames::Colornames is uppercase and sorted, so use a simple search 
@@ -129,13 +129,13 @@ void PColor::SetColorByName(const char * colorname)
                            
     
     //Check the top-most name first.  If this is a hit, we could get stuck
-    if(strcmp(ucasename, RGBNames::ColorNames[top].name) == 0)
+    if(ucasename ==  RGBNames::ColorNames[top].name)
         {
             foundindex = top;    //It is a hit.
         }
     
     //Check the bottom-most name.  If this is a hit, we could get stuck
-    if(strcmp(ucasename, RGBNames::ColorNames[bottom].name) == 0)
+    if(ucasename == RGBNames::ColorNames[bottom].name)
         {
             foundindex = bottom;    //It is a hit.
         }
@@ -154,7 +154,7 @@ void PColor::SetColorByName(const char * colorname)
             
              
             //Compare the library color and the current color. 0 means they are the same.
-            test =strcmp(ucasename, RGBNames::ColorNames[mid].name);
+            test =strcmp(ucasename.c_str(), RGBNames::ColorNames[mid].name.c_str());
             //cout << "Comparing [" << ucasename << "] to [" << RGBNames::ColorNames[mid].name << "] " << test  << "\n";            
 
 
@@ -195,8 +195,6 @@ void PColor::SetColorByName(const char * colorname)
     mRed   = RGBNames::ColorNames[foundindex].r;
     mGreen = RGBNames::ColorNames[foundindex].g;
     mBlue  = RGBNames::ColorNames[foundindex].b;
-    
-    free(ucasename);
 }
 
 
