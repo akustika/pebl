@@ -51,7 +51,7 @@ public:
   
   
     ///This method initiates everything needed to display the main window
-    bool PlatformWindow::Initialize(PEBLVideoMode mode, 
+    bool Initialize(PEBLVideoMode mode, 
                                     PEBLVideoDepth vdepth, 
                                     bool windowed);
     int GetVideoFlags();

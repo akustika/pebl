@@ -46,7 +46,7 @@ enum PEBL_DEVICE_TYPE
         PDT_STREAM,
         PDT_EVENT_QUEUE,
         PDT_AUDIO_OUT,
-        PDT_DUMMY,
+        PDT_DUMMY
 	};
 
 

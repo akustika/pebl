@@ -75,7 +75,7 @@ class PEvent
 {
  public:
 	PEvent(PEBL_DEVICE_TYPE type, long unsigned int time);
-    PEvent::PEvent(const PEvent & evt);
+    PEvent(const PEvent & evt);
 
 	~PEvent();
 

@@ -44,7 +44,7 @@ enum PFontStyle
         PFS_Normal    = 0x00,   //this is a dummy
         PFS_Bold      = 0x01,
         PFS_Italic    = 0x02,
-        PFS_Underline = 0x04,
+        PFS_Underline = 0x04
     };
 
 

@@ -210,7 +210,8 @@ define MoveCenter(object,x, y)
 ## This splits 'string' into a list, breaking each time 'split'
 ## appears in sting.  It discards the split token(s).
 ## if split is "", split at each letter.  This should be able
-## to accept a list of split characters, but does not yet.
+## to accept a list of split characters, but does not yet.  
+## Also, it could use the PEBLUtility::Tokenize, becoming a compiled function.
 define SplitString(string, split)
 {
   ##Check to see if the arguments are of the right type.

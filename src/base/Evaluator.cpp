@@ -40,7 +40,7 @@
 #include <iostream>
 #include <string>
 #include <strstream>
-
+#include <math.h>
 
 #undef PEBL_DEBUG_PRINT
 

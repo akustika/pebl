@@ -43,7 +43,7 @@ public:
     PColor(int red, int green , int blue, int alpha);     ///Constructor
     PColor(const char* colorname);                        ///Constructor using RGBColorNames
 
-    PColor::PColor(const PColor & pcolor);                ///Copy constructor
+    PColor(const PColor & pcolor);                ///Copy constructor
     virtual ~PColor(){}                                   ///Standard Destructor
   
 
