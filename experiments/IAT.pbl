@@ -293,7 +293,7 @@ define Start(lPar)
    round <- round + 1
 
    #In round 1, stimuli should be just the pictures (20 of each)
-   stimAll <- Shuffle(XFlattenN([SampleBalanced(goodWordStim,10), SampleBalanced(badWordStim,10)],1))
+   stimAll <- Shuffle(XFlattenN([SampleBalanced(goodWordStim,20), SampleBalanced(badWordStim,20)],1))
 
    Wait(2500) 
    loop(i,stimAll)
