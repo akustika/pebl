@@ -26,6 +26,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "PList.h"
 #include "Variant.h"
+#include "../utility/PError.h"
 
 #include <list>
 #include <map>
@@ -125,6 +126,9 @@ std::list<Variant>::const_iterator  PList::End() const
 //returns the first element of the list
 Variant PList::First()
 {
+    if(mList.empty())
+        PError::SignalFatalError("Attempting to get First() element of empty list.");
+    
     return mList.front();
 
 }
@@ -132,17 +136,30 @@ Variant PList::First()
 
 
 //This returns the nth item in a list (first item is 1).
-Variant PList::Nth(int n)
+Variant PList::Nth(unsigned int n)
 {
+    //This is messed up--need a NULL variant type
+    //or error codes etc.
+    if(mList.size() < n)
+        PError::SignalFatalError("Attempting to get Nth element element of  too-short list.");
+
+
     list<Variant>::iterator p = mList.begin();
-    for(int i = 1; i< n; i++,p++);
+    for(unsigned int i = 1; i< n; i++,p++);
     return *p;
 };
 
 Variant PList::Last()
 {
+    //This is messed up--need a NULL variant type
+    //or error codes etc.
+    if(mList.empty())
+        PError::SignalFatalError("Attempting to get last element element of empty list.");
+
+
     list<Variant>::iterator p = mList.end();
-    return *(p--);
+    p--;
+    return *p;
 }
 
 

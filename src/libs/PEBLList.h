@@ -40,7 +40,6 @@ namespace PEBLList
     Variant RepeatList (Variant v);
     Variant RepeatExpression(Variant v);
     Variant Sequence(Variant v);
-    Variant DesignBalancedSampling (Variant v);
     Variant DesignFullCounterbalance (Variant v);
     Variant CrossFactorWithoutDuplicates(Variant v);
     Variant Rotate(Variant v);

@@ -252,25 +252,6 @@ Variant PEBLList::RepeatExpression (Variant v)
 }
 
 
-/// DesignBalancedSampling(<treatment_list>,<sublist_size>,<number_of_sublists>)
-/// This function returns a list of repeated without-replacement <sublist_size>
-/// samples from <treatment_list>, in such a way that each element in <treatment_list>
-/// appears approximately equally. Sampling techniques may introduce selection biases, 
-/// so results list should be shuffled before use. In the final results, no single item
-/// should appear more than two times more than any other item.
-Variant PEBLList::DesignBalancedSampling (Variant v)
-{
-   //v[1] should be a list
-    /*
-    counted_ptr<PList> plist = (v.GetComplexData())->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
-    counted_ptr<PList> myList = v1.GetComplexData()->GetList();
-    */ 
-    PError::SignalFatalError("Function [DesignBalancedSampling] not implemented");
-    return Variant(true);
-}
-
-
 
 /// This takes two lists as parameters, and returns a nested
 /// list of lists that includes the full counterbalancing of a and b.
@@ -510,7 +491,7 @@ Variant PEBLList::Nth (Variant v)
 }
 
 
-Variant PEBLList::Last (Variant v)
+Variant PEBLList::Last(Variant v)
 {
    //v[1] should be a list
     counted_ptr<PList> plist = (v.GetComplexData())->GetList();

@@ -71,7 +71,7 @@ public:
 
     Variant First();
     Variant Rest();
-    Variant Nth(int n);
+    Variant Nth(unsigned int n);
     Variant Last();
     counted_ptr<PList> SortBy(const PList & key);
 

@@ -247,7 +247,6 @@ namespace PEBLList
             {"REPEAT",                    Repeat,    2, 2},            
             {"REPEATLIST",                RepeatList,2, 2},            
             {"SEQUENCE",                  Sequence,  3, 3},
-            {"DESIGNBALANCEDSAMPLING",     DesignBalancedSampling,   2, 2},
             {"DESIGNFULLCOUNTERBALANCE",   DesignFullCounterbalance, 2, 2},
             {"CROSSFACTORWITHOUTDUPLICATES", CrossFactorWithoutDuplicates, 1, 1},
             {"ROTATE",                     Rotate,  2, 2},

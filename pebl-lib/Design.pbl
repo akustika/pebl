@@ -78,10 +78,50 @@ define DesignGrecoLatinSquare(a,b,c)
       returnList <- []
       loop(i, Sequence(0,Length(a)-1,1))
       {
-      returnList <- Append(returnList, Transpose([a,Rotate(b,i), Rotate(c,-i)]))
+        returnList <- Append(returnList, Transpose([a,Rotate(b,i), Rotate(c,-i)]))
       }
       
     return returnList
+}
+
+
+## This is like SampleWithReplacement, but it makes sure that each item is sampled roughly 
+## equally. First, the list is shuffled, then repeated so that it is longer than the number you need.  
+## Then, it is truncated to be the right number.  Finally, it is shuffled again.  This ensures that
+## each item will be sampled a roughly equal number of times. (+/-1)
+define DesignBalancedSampling(list, number)
+{
+
+   #Ensure that all arguments are actually lists
+   if(not IsList(list))
+      {
+    	SignalFatalError("First argument of function [DesignBalancedSampling(<list>,<int>)] is not a list")
+      }
+   if(not IsInteger(number) )
+      {
+	    SignalFatalError("Second argument of function [DesignBalancedSampling(<list>,<int>)] is not an integer")
+      }	
+
+
+  ## Get repeated list (too long)
+  listlength <- Length(list)
+  multiply <- Ceiling(number / listlength)
+  i <- 1
+  fullStim <- []
+  while(i <= multiply)
+  {
+   tmp <- Shuffle(list)
+   if(First(tmp) == Nth(fullStim,Length(fullStim)))
+   {
+     tmp <- Rotate(tmp,1)
+   }
+
+   fullStim <- Merge(fullStim, tmp)
+   i <- i + 1
+  }
+  newStim <- SubList(fullStim,1,number)
+  
+  return newStim
 }
 
 
