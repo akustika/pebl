@@ -37,7 +37,5 @@ letterstrings.pbl    A visual perception 2AFC experiment with briefly-presented
                      letter strings, with the target and foil differing by
                      specified operations (add, subtract, swap, change, etc.)
 --------------------------------------------------------------------
-
 --------------------------------------------------------------------
-
---------------------------------------------------------------------
+Note:  More experiments/test scripts are available in PEBL\demo
