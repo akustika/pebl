@@ -2,21 +2,6 @@
 define Start (lParameter )
 {
 
-	  colBlack <- MakeColor("Black")
-      colWhite <- MakeColor("White")
-      font <- MakeFont("Vera.ttf",0, 10,colBlack, colWhite,1)	
 
-      gWin <- MakeWindow("grey")
-
-
-
-	 text <- FileReadText("instructions.txt")
-	 Print(text)
-	 tb <- MakeTextBox(text,font,300,200)
-	 AddObject(tb,gWin)
-     Move(tb,100,100)
-	 Draw()
-	
-    WaitForAnyKeyPress()
-	
+	 Xtext <- FileReadText("instructions.txt")
 }

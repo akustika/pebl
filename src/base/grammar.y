@@ -418,7 +418,7 @@ PNode * parse (const char* filename)
    */
   
   ///Reset the linecounter
-  yylineno = 0;
+  yylineno = 1;
 
     FILE * filein = fopen(filename,"r");
     if(!filein) 
