@@ -2,8 +2,8 @@ VERSION 5.00
 Begin VB.Form Form1 
    Caption         =   "PEBL Launcher"
    ClientHeight    =   7485
-   ClientLeft      =   1695
-   ClientTop       =   2370
+   ClientLeft      =   4875
+   ClientTop       =   2850
    ClientWidth     =   8370
    Icon            =   "Form1.frx":0000
    LinkTopic       =   "Form1"
