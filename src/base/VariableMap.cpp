@@ -53,7 +53,6 @@ VariableMap::VariableMap()
 VariableMap::~VariableMap()
 {
     //Delete mVariableMap if necessary.
-
     mVariableMap.clear();
 }
 

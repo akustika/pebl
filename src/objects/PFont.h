@@ -30,6 +30,7 @@
 
 #include "PWidget.h"
 #include "PColor.h"
+#include <string>
 #include "../utility/rc_ptrs.h"
 
 
@@ -70,7 +71,7 @@ public:
 
     
     //Get methods for all of the data in font
-    virtual char* GetFontFileName()     const {return strdup(mFontFileName);};
+    virtual std::string GetFontFileName()     const {return mFontFileName;};
     virtual int GetFontStyle()          const {return mFontStyle;};
     virtual int GetFontSize()           const {return mFontSize;};
     virtual PColor GetFontColor()       const {return mFontColor;};
@@ -88,7 +89,7 @@ public:
 protected:
     virtual  std::ostream & SendToStream(std::ostream& out) const;    
     
-    char * mFontFileName;            // Filename of font file.
+    std::string  mFontFileName;            // Filename of font file.
     int  mFontStyle;                 // Bold, underlined, italics, normal, etc.  These use PFontStyle constants or'ed together
     int  mFontSize;                  // Size, in 'points'
 

@@ -80,7 +80,6 @@ private:
 
     counted_ptr<PlatformFont> mFont;
 
-
 };
 
 

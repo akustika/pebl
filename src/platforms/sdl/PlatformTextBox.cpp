@@ -430,9 +430,9 @@ void PlatformTextBox::HandleKeyPress(int keycode, int modkeys)
                         i++;
                     }
                 
-                cout << "downup\n"<< mCursorPos << "  " << change * height << endl;
+                //cout << "downup\n"<< mCursorPos << "  " << change * height << endl;
                 mCursorPos = FindCursorPosition(x, y + change * height);
-                cout << mCursorPos << endl;
+                //cout << mCursorPos << endl;
                 mCursorChanged = true;
                 break;
             }

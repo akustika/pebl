@@ -70,7 +70,8 @@ private:
     
     std::string StripText(const char * text);
   
-    TTF_Font * mTTF_Font;
+    //    TTF_Font * mTTF_Font;
+    counted_ptr<TTF_Font> mTTF_Font;
     SDL_Color mSDL_FGColor;
     SDL_Color mSDL_BGColor;  
 };

@@ -65,13 +65,8 @@ PlatformLabel::PlatformLabel(PlatformLabel & label):
 ///Standard Destructor
 PlatformLabel::~PlatformLabel()
 {
-
-    // PlatformWidget frees mSurface, 
-    if(mParent)
-        {
-            mParent->RemoveSubWidget(this);
-        }
 }
+
 
 // Inheritable function that is called by friend method << operator of PComplexData
 ostream & PlatformLabel::SendToStream(ostream& out) const

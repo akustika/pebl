@@ -31,7 +31,7 @@
 ///Standard constructor of PFont
 
 PFont::PFont():
-    mFontFileName(strdup("Vera.ttf")),
+    mFontFileName("Vera.ttf"),
     mFontStyle(PFS_Normal),
     mFontSize(16),
     mFontColor(PColor(0,0,0,255)),
@@ -43,7 +43,7 @@ PFont::PFont():
 
 ///Convenience constructor of PFont:
 PFont::PFont(const char* filename, int style, int size, PColor fgcolor, PColor bgcolor, bool aa):
-    mFontFileName(strdup(filename)),
+    mFontFileName(filename),
     mFontStyle(style),
     mFontSize(size),
     mFontColor(fgcolor),
@@ -70,8 +70,7 @@ PFont::PFont(const PFont & font)
 ///Standard destructor of PFont
 PFont::~PFont()
 {
-    if(mFontFileName)
-        free(mFontFileName);
+
 }
 
 

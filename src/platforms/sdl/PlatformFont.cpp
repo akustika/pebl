@@ -32,6 +32,7 @@
 #include "../../utility/PEBLPath.h"
 #include "../../utility/PError.h"
 #include "../../base/Evaluator.h"
+#include "../../utility/rc_ptrs.h"
 
 #include "SDL/SDL.h"
 #include "SDL/SDL_ttf.h"
@@ -51,8 +52,10 @@ PlatformFont::PlatformFont():
         PError::SignalFatalError(string("Unable to find font file [")  + mFontFileName + string("]."));
 
     //Open the font.  Should do error checking here.
-    mTTF_Font = TTF_OpenFont(fontname.c_str(), mFontSize);
-    TTF_SetFontStyle(mTTF_Font, mFontStyle);
+    TTF_Font * tmp = TTF_OpenFont(fontname.c_str(), mFontSize);
+    TTF_SetFontStyle(tmp, mFontStyle);
+
+    mTTF_Font = counted_ptr<TTF_Font>(tmp);
 
     //Translate PColor to SDLcolor for direct use in rendering.
     mSDL_FGColor = SDLUtility::PColorToSDLColor(mFontColor);
@@ -70,9 +73,12 @@ PlatformFont::PlatformFont(const char* filename, int style, int size, PColor fgc
     if(fontname == "")
         PError::SignalFatalError(string("Unable to find font file [")  + mFontFileName + string("]."));
 
-    //These convert above properties to sdl-specific font
-    mTTF_Font = TTF_OpenFont(fontname.c_str(), mFontSize);
-    TTF_SetFontStyle(mTTF_Font, mFontStyle);
+  //Open the font.  Should do error checking here.
+    TTF_Font * tmp = TTF_OpenFont(fontname.c_str(), mFontSize);
+    TTF_SetFontStyle(tmp, mFontStyle);
+    mTTF_Font = counted_ptr<TTF_Font>(tmp);
+
+
 
    //Translate PColor to SDLcolor for direct use in rendering.
     mSDL_FGColor = SDLUtility::PColorToSDLColor(mFontColor);
@@ -93,9 +99,12 @@ PlatformFont::PlatformFont(const PlatformFont & font)
     mBackgroundColor = font.GetBackgroundColor();
     mAntiAliased     = font.GetAntiAliased();
 
-    //These convert above properties to sdl-specific font
-    mTTF_Font = TTF_OpenFont(mFontFileName, mFontSize);
-    TTF_SetFontStyle(mTTF_Font, mFontStyle); 
+
+    //Open the font.  Should do error checking here.
+    TTF_Font * tmp = TTF_OpenFont(mFontFileName.c_str(), mFontSize);
+    TTF_SetFontStyle(tmp, mFontStyle);
+    mTTF_Font = counted_ptr<TTF_Font>(tmp);
+
 
     //Translate PColor to SDLcolor for direct use in rendering.
     mSDL_FGColor = SDLUtility::PColorToSDLColor(mFontColor);
@@ -109,7 +118,7 @@ PlatformFont::PlatformFont(const PlatformFont & font)
 ///Standard destructor of PlatformFont
 PlatformFont::~PlatformFont()
 {
-    TTF_CloseFont(mTTF_Font);
+    TTF_CloseFont(mTTF_Font.get());
 }
 
 
@@ -152,11 +161,12 @@ SDL_Surface * PlatformFont::RenderText(const char * text)
 
     if(mAntiAliased)
         {
-            tmpSurface = TTF_RenderText_Shaded(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor, mSDL_BGColor);
+            
+            tmpSurface = TTF_RenderText_Shaded(mTTF_Font.get(), toBeRendered.c_str(), mSDL_FGColor, mSDL_BGColor);
         }
     else
         {
-            tmpSurface =  TTF_RenderText_Solid(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor);
+            tmpSurface =  TTF_RenderText_Solid(mTTF_Font.get(), toBeRendered.c_str(), mSDL_FGColor);
         }
 
 
@@ -207,7 +217,7 @@ unsigned int PlatformFont::GetTextWidth(const std::string & text)
 {
     int height, width;
     std::string toBeRendered = StripText(text.c_str()); 
-    TTF_SizeText(mTTF_Font,toBeRendered.c_str(),&width,&height);
+    TTF_SizeText(mTTF_Font.get(),toBeRendered.c_str(),&width,&height);
     unsigned int uwidth = (unsigned int)width;
     return uwidth;
 }
@@ -215,7 +225,7 @@ unsigned int PlatformFont::GetTextWidth(const std::string & text)
 unsigned int PlatformFont::GetTextHeight(const std::string & text)
 {
     int height, width;
-    TTF_SizeText(mTTF_Font,text.c_str(),&width,&height);
+    TTF_SizeText(mTTF_Font.get(),text.c_str(),&width,&height);
     unsigned int uheight = (unsigned int)height;
     return uheight;
 }
