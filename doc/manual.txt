@@ -1,7 +1,7 @@
 The PEBL Manual
 (c) 2003-2005 Shane T Mueller  smueller at obereed dot net
   
-Current for PEBL Version 0.3
+Current for PEBL Version 0.4
 http://pebl.sourceforge.net
 
 =~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
