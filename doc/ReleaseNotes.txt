@@ -29,6 +29,20 @@ obsolete.
                  RELEASE NOTES
 
 
+--------------------------------------------------
+Version 0.4
+March 2, 2005
+
+The fourth release of PEBL is here.  This release includes a bunch
+of new functions, some ready-to-run experiments I have done, and allows
+you to set the display options as arguments, allowing different screen sizes, 
+full-screen or windowed operation, and specifying the SDL driver you want to 
+use.  I am also experimenting with an an automatic setup utility on Windows 
+that puts PEBL into c:\Program files\PEBL.  It may not be optimal if you do not
+have writeable access to this directory, but I'm working on a solution to that
+as well.
+
+
 
 --------------------------------------------------
 Version 0.3
@@ -67,7 +81,7 @@ Details:
   * Programs can be aborted with <CTRL><ALT><SHIFT><\>
   * Other new functions:
                                     MoveCorner()
-	                                 GetInput()
+	                            GetInput()
                                     SetFont()
 
 --------------------------------------------------
