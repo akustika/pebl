@@ -19,7 +19,8 @@ define Start(lPar)
 ##  and an appropriately specified argument -v subnum.  
 ##  If no subject number is specified, it uses 0, overwriting previous
 ##  versions.
-
+##
+##  This program is designed to run at 1024x768 resolution (use pebl --display 1024x768)
 
 
 ##############################################
@@ -32,13 +33,10 @@ define Start(lPar)
   goodPicTitle  <- "Pictures of Good Things"
   badPicTitle   <- "Pictures of Bad Things"
 
-
   goodWordText <- Lowercase(goodWordTitle)
   badWordText  <- Lowercase(badWordTitle)
   goodPicText  <- Lowercase(goodPicTitle)
   badPicText   <- Lowercase(badPicTitle)
-
-
 
 ##This 
   if(IsList(lPar))
@@ -228,7 +226,7 @@ define Start(lPar)
    round <- round + 1
  
    #In round 1, stimuli should be just the pictures (20 of each)
-   stimAll <- Shuffle(XFlattenN([SampleBalanced(goodWordStim,10), SampleBalanced(badWordStim,10), 
+   stimAll <- Shuffle(FlattenN([SampleBalanced(goodWordStim,10), SampleBalanced(badWordStim,10), 
 	                            SampleBalanced(goodPicStim,10),  SampleBalanced(badPicStim,10)],1))
    Wait(2500) 
    loop(i,stimAll)
@@ -261,7 +259,7 @@ define Start(lPar)
    round <- round + 1
  
    #In round 1, stimuli should be just the pictures (20 of each)
-   stimAll <- Shuffle(XFlattenN([SampleBalanced(goodPicStim,20),  SampleBalanced(badPicStim,20)],1))
+   stimAll <- Shuffle(FlattenN([SampleBalanced(goodPicStim,20),  SampleBalanced(badPicStim,20)],1))
    Wait(2500) 
    loop(i,stimAll)
    { 
@@ -293,7 +291,7 @@ define Start(lPar)
    round <- round + 1
 
    #In round 1, stimuli should be just the pictures (20 of each)
-   stimAll <- Shuffle(XFlattenN([SampleBalanced(goodWordStim,20), SampleBalanced(badWordStim,20)],1))
+   stimAll <- Shuffle(FlattenN([SampleBalanced(goodWordStim,20), SampleBalanced(badWordStim,20)],1))
 
    Wait(2500) 
    loop(i,stimAll)
@@ -327,7 +325,7 @@ define Start(lPar)
    round <- round + 1
 
    #In round 1, stimuli should be just the pictures (20 of each)
-   stimAll <- Shuffle(XFlattenN([SampleBalanced(goodWordStim,10), SampleBalanced(badWordStim,10), 
+   stimAll <- Shuffle(FlattenN([SampleBalanced(goodWordStim,10), SampleBalanced(badWordStim,10), 
 	                            SampleBalanced(goodPicStim,10),  SampleBalanced(badPicStim,10)],1))
    Wait(2500) 
    loop(i,stimAll)
@@ -398,8 +396,6 @@ define MatchTrial(stim, text, type, lgoodness)
 
 define MisMatchTrial(stim, text, type, lgoodness)
 {
-
-   
 	AddObject(stim,gWin)
     Move(stim, 500,500)
     Show(stim)
@@ -408,8 +404,6 @@ define MisMatchTrial(stim, text, type, lgoodness)
 
 	response <-  WaitForListKeyPress(["1","2"])
     t2 <- GetTime()
- 
-
 
    #Since there is a mismatch, the correct response depends on both the type and the 'goodness'
    if(type != lgoodness)
@@ -442,66 +436,6 @@ define MisMatchTrial(stim, text, type, lgoodness)
    RemoveObject(stim,gWin)
 }
 
-
-
-
-##This flattens a nested list into a single list.
-define XFlatten(list)
-{
-        if(not IsList(list))
-        {
-          SignalFatalError("First Argument of Flatten(<list>) must be a list.")
-        }
-
-        newlist <- []
-
-        loop(i,list)
-        {
-          if(IsList(i))
-      {
-                  newlist <- Merge(newlist, XFlatten(i))
-
-      } else {
-             newlist <- Append(newlist,i)
-      }
-
-        }
-
-  return newlist
-}
-
-
-
-define XFlattenN(list, n)
-{
-
-        if(not IsList(list))
-        {
-          SignalFatalError("First Argument of FlattenN(<list>) must be a list.")
-
-        }
-
-        if(not IsInteger(n))
-        {
-          SignalFatalError("Second Argument of FlattenN(<list>) must be an integer.")
-        }
-
-
-        newlist <- []
-        loop(i,list)
-        {
-          if(IsList(i) and n > 0)
-      {
-                  newlist <- Merge(newlist, XFlattenN(i, n-1))
-
-      } else {
-             newlist <- Append(newlist,i)
-      }
-
-        }
-
-  return newlist
-}
 
 ## This changes a string with spaces to a string without spaces, but with underscores.
 ##
