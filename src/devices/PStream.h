@@ -76,6 +76,7 @@ public:
     char  ReadChar();
     std::string ReadToken(const char separator);
     std::string ReadLine();
+    std::string ReadLineClean();
     
     bool Eof();
     bool Eol();

@@ -251,8 +251,8 @@ std::string PStream::ReadToken(const char separator)
 }
 
 
-/// This reads up until the next eol/eof character.  It should handle cr/lf and
-/// DOS-style LF, but currently does not.
+/// This reads up until the next eol/eof character, including the newline 
+/// character at the end.
 std::string PStream::ReadLine()
 {
     if(mStreamDirection == sdRead)
@@ -282,6 +282,42 @@ std::string PStream::ReadLine()
         }
 }
     
+
+
+// This reads a line from a stream, stripping the newline character from the end.
+//
+std::string PStream::ReadLineClean()
+{
+    if(mStreamDirection == sdRead)
+        {
+            std::string tmpstring;
+            char tmp;
+            mFileStream->get(tmp);
+
+
+            while( !mFileStream->eof())
+                {
+
+                    if(tmp == 10)       //10 is the newline character         
+                        break;          //Break out if the next character is eol
+
+                    tmpstring += tmp;                     
+                    mFileStream->get(tmp);
+                }
+
+
+            return tmpstring;
+        }
+          
+    else
+        {
+            PError::SignalFatalError("Error in PStream::ReadLine--trying to Read a Write stream\n");
+            return 0;
+        }
+}
+    
+
+
 
 bool PStream::Eol()
 {

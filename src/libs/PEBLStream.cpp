@@ -197,7 +197,7 @@ Variant PEBLStream::FileReadLine(Variant v)
     PError::AssertType(v1, PEAT_FILESTREAM, "Argument error in function [FileReadLine(<file-stream>)]: ");   
     counted_ptr<PStream> mystream = (v1.GetComplexData())->GetFileStream();
 
-    return Variant(mystream->ReadLine());
+    return Variant(mystream->ReadLineClean());
 }
 
 
@@ -228,7 +228,7 @@ Variant PEBLStream::FileReadList(Variant v)
     std::string  tmpstring;
     while(!mystream->Eof())
         {
-            tmpstring = mystream->ReadLine();
+            tmpstring = mystream->ReadLineClean();
 
             if(strcmp("",tmpstring.c_str()) &&       //Ignore blank lines
                strncmp("#",tmpstring.c_str(),1)      //Ignore lines starting with #
@@ -286,7 +286,7 @@ Variant PEBLStream::FileReadTable(Variant v)
     while(!myStream->Eof())
         {
 
-            tmpstring = myStream->ReadLine();
+            tmpstring = myStream->ReadLineClean();
             if((strcmp("",tmpstring.c_str()) == 0) ||      //Ignore blank lines
                (strncmp("#",tmpstring.c_str(),1)==0)      //Ignore lines starting with #
                )
