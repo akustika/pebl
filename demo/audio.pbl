@@ -8,18 +8,19 @@ define Start(lPar)
    gWin <- MakeWindow()
    sound <- LoadSound("buzz500ms.wav")
 
-   Print("********************************************")
+
+   PlayForeGround(sound)
+   Wait(1000)
 
 
-   
-   PlayForeground(sound)
-
-
-   PlayForeground(sound)
-   
-   PlayBackground(sound)
-   Wait(100)
-   Stop(sound)
+   #SOS
+   sos <- [100,100,100,300,300,300,100,100,100]
+   loop(i,sos)
+    {
+     PlayBackground(sound)
+     Wait(i)
+     Stop(sound)
+    }
 
 
 }

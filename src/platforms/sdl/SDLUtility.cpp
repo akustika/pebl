@@ -29,6 +29,7 @@
 #include "../../objects/PColor.h"
 #include "SDL/SDL.h"
 
+#include <math.h>
 #include <iostream>
 using std::cout;
 using std::flush;
