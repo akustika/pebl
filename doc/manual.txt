@@ -1206,7 +1206,7 @@ __________________________________________________________________
  
  DesignLatinSquare          <list1> <list2>
  DesignGrecoLatinSquare     <list1> <list2> <list3>
- DesignBalancedSampling     unimplemented
+ DesignBalancedSampling     <list> <number>
  DesignFullCounterbalance   <list1> <list2> 
  CrossFactorWithoutDuplicates   <list>   Returns a list of all pairs of items in the list, excluding 
                                          pairs that where an element appears twice.
@@ -1686,21 +1686,24 @@ See Also:    Cos(), Sin(), Tan(), ATan(), ACos(), ATan()
 ------------------------------------------------------------
 Name/Symbol:  DesignBalancedSampling
 
-Description: Not Implemented
-
+Description: Samples elements "roughly" equally.
  
- This function will return a list of repeated without-replacement
- <sublist_size> samples from <treatment_list>, in such a way that each
- element in <treatment_list> appears approximately equally. Sampling
- techniques may introduce selection biases, so results list should be
- shuffled before use. In the final results, no single item should
- appear more than two times more than any other item.
+ This function returns a list of repeated  samples from
+ <treatment_list>, in such a way that each
+ element in <treatment_list> appears approximately equally.  Each
+ element from <treatment_list> is sampled once without replacement
+ before all elements are returned to the mix and sampling is
+ repeated.  If there are no repeated items in <list>, there will be no
+ consecutive repeats in the output.  The last repeat-sampling will be
+ truncated so that a <length>-size list is returned.  If one doesn't
+ want the repeated epochs this function provides, Shuffle() the results.
 
-Usage:       DesignBalancedSampling(<treatment_list>,
-				<sublist_size>,
-				<number_of_sublists>)
 
-Example:     
+Usage:       DesignBalancedSampling(<list>, <length>)
+
+
+Example:     DesignBalancedSampling([1,2,3,4,5],12)
+             # e.g., == [5,3,1,4,2, 3,1,5,2,4,  4,1 ]
 
 See Also:     
  CrossFactorWithoutDuplicates(), DesignFullCounterBalance(),
