@@ -1236,13 +1236,14 @@ __________________________________________________________________
 
                  STRING MANAGEMENT FUNCTIONS
 
- ----------None of the following are implemented-----------
+
  Uppercase   <string>        Returns uppercased string
  Lowercase   <string>        Returns lowercased string
  SplitString <string> <split>   Splits <string> into a list of
                                 <split>-delimited substrings 
  StringLength <string>       Returns the length of a string
  SubString    <string> <position> <length>  Returns a substring
+
  FindInString <string> <key>  Returns position of <key> in <string>
 
              
@@ -2149,6 +2150,18 @@ Usage:       GetCursorPosition(<textbox>)
 Example:     
 
 See Also:      SetCursorPosition(), MakeTextBox(), SetText()
+
+
+------------------------------------------------------------
+Name/Symbol:  GetInput
+
+Description: Allows user to type input into a textbox
+
+Usage:       GetInput(<textbox>,<escape-key>)
+
+Example:     
+
+See Also:      SetEditable, GetCursorPosition(), MakeTextBox(), SetText()
 
 ------------------------------------------------------------
 Name/Symbol:  GetNIMHDemographics

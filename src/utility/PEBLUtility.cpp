@@ -241,8 +241,12 @@ PEBLKey PEBLUtility::TranslateString(const std::string & letters)
     
     if(letters == "<RETURN>" || letters == "<return>") 
         return PEBLKEY_RETURN;
-    if(letters == "<esc>" || letters == "<ESC")
+    if(letters == "<esc>" || letters == "<ESC>")
         return PEBLKEY_ESCAPE;
+    if(letters == "<back>" || letters == "<BACK>"
+       || letters == "<backspace>" || letters == "<BACKSPACE>"
+       )
+        return PEBLKEY_BACKSPACE;
 
 
     //More extravagent things can be done to get other keys.
