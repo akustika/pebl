@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformWord.cpp
 //    Purpose:    Contains SDL-specific visual representation of a word
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003 Shane T. Mueller <smueller@umich.edu>
+//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -220,7 +220,8 @@ unsigned int PlatformFont::GetTextWidth(const std::string & text)
 unsigned int PlatformFont::GetTextHeight(const std::string & text)
 {
     int height, width;
-    TTF_SizeText(mTTF_Font,text.c_str(),&width,&height);
+    TTF_SizeText(mTTF_Font
+,text.c_str(),&width,&height);
     unsigned int uheight = (unsigned int)height;
     return uheight;
 }
