@@ -139,6 +139,7 @@ const char* OpNode::GetOpName() const
         case PEBL_AND:        return "PEBL_AND";
         case PEBL_ARGLIST:    return "PEBL_ARGLIST";
         case PEBL_ASSIGN:     return "PEBL_ASSIGN";
+        case PEBL_BREAK:      return "PEBL_BREAK";
         case PEBL_COMMA:      return "PEBL_COMMA";
         case PEBL_DIVIDE:     return "PEBL_DIVIDE";
         case PEBL_DEFINE:     return "PEBL_DEFINE";

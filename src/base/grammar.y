@@ -41,6 +41,7 @@
 %token   PEBL_ADD
 %token   PEBL_ARGLIST		      
 %token   PEBL_ASSIGN
+%token   PEBL_BREAK
 %token   PEBL_COMMA
 %token   PEBL_DEFINE
 %token   PEBL_DIVIDE
@@ -177,7 +178,7 @@ statement: 	/*==================================================================
 		/******************************************************************************/
 	 	exp PEBL_NEWLINE                 {$$ = $1;}
 
-
+    |   PEBL_BREAK PEBL_NEWLINE           {$$ = new OpNode(PEBL_BREAK, NULL, NULL, sourcefilename, yylineno);}
 		/******************************************************************************/
 	| 	PEBL_LOCALVAR PEBL_ASSIGN exp  PEBL_NEWLINE 
 		{ 

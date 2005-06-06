@@ -3,7 +3,7 @@
 //    Name:       src/base/Variant.cpp
 //    Purpose:    Contains the Variant Class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003 Shane T. Mueller <smueller@umich.edu>
+//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -423,6 +423,10 @@ bool Variant::Equal(const Variant & rhs) const
             //strcmp returns 0 if they are identical, a number otherwise
             bool b = !strcmp(str1, str2);
             return b;
+        }
+    else if (this->IsStackSignal() && rhs.IsStackSignal())
+        {
+            return (this->GetSignal() == rhs.GetSignal());
         }
     return false;
 }

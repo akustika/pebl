@@ -19,7 +19,7 @@ your needs as long as you follow the terms of the GPL, under
 which the source code is licensed.  PEBL is written
 primarily in C++, but requires a few other tools (flex,
 yacc) and libraries (SDL, SDL_image, SDL_ttf) to use.  It
-currently compiles and runs on Linux (using gcc) and
+currently compiles and runs on Linux (using g++), Mac OSX (also g++), and
 Microsoft Windows (using Dev-cpp and mingw) platforms using
 free tools.  It has been developed primarily by Shane
 T. Mueller, Ph.D. (smueller at obereed dot net), who
@@ -61,6 +61,15 @@ found at
 http://www.libsdl.org/pipermail/sdl/2002-June/046382.html
 and elsewhere on the net.  Email the PEBL list for more details.
 
+2.1.3 Mac OSX
+
+Currently, only Mac OSX 10.4 (TIGER) is tested.    PEBL is compiled
+and run from the command-line, and resides in /usr/local/share/pebl
+and /usr/local/bin.  To compile, download the source and compile
+libSDL, libSDL_image, and libSDL_ttf.  libSDL_ttf requires freetype,
+and libSDL_image requires libpng, libjpeg, and zlib. 
+
+
 2.2 HOW TO INSTALL
 
 Currently, there is no automated installation program on any
@@ -79,6 +88,20 @@ to do this, and you can just as easily do it by hand.
 In Microsoft Windows, we provide a .zip file that contains all necessary
 executable binary files and .dlls.  Just unzip the archive somewhere
 (like "c:\Program Files\PEBL") and you are ready to begin.
+Additionally, we provide an automated installer.  This installer
+places PEBL in c:\Program Files\PEBL, and creates a directory pebl-exp
+in My Documents with a shortcut that allows PEBL to be launched from
+there and to run programs that reside there.
+
+2.2.3 Macintosh OSX
+ 
+For the MAC, we provide a .pkg installer that installs all the
+necessary files and libraries in /usr/local/share/pebl.  PEBL can be
+run from the command line by invoking /usr/local/bin/pebl.  
+
+
+
+
 
 2.3 HOW TO RUN A PEBL PROGRAM
 
@@ -173,6 +196,37 @@ Every | separated pair after the third line will appear as
 text-entry boxes in with the pre-specified default value.  This can
 be used for specifying subject numbers and conditions and such 
 which then get fed into the PEBL script.
+
+
+2.3.3 Macintosh OSX
+
+Installing pebl.pkg  places pebl in 
+/usr/local/share/pebl and /usr/local/bin.  Currently, PEBL must be run 
+from the command line (there is no graphical front-end).  Open a 
+terminal (in the applications folder) and type at the $ prompt:
+
+$ /usr/local/bin/pebl
+
+
+To execute, type:
+
+$  /usr/local/bin/pebl Documents/test.pbl
+
+
+To make for less typing, add /usr/local/bin to the path:
+
+export PATH=$PATH:/usr/local/bin
+
+then you can run:
+
+$  pebl Documents/test.pbl
+
+
+On OSX, there is no such thing as double-buffering.  Drawing can be 
+synced to the vertical refresh, however, under fullscreen mode.  I doubt 
+this is currently working however, so take care.
+
+
 
 2.4 How to stop running a program
 
@@ -371,6 +425,7 @@ ___________________________________________________________________
 ==                   Equal to
 <> != ~=             Not equal to
 and                  Logical and
+break                Breaks out of a loop prematurely
 not                  Logical not
 or                   Logical or
 while                Traditional while loop
@@ -1570,6 +1625,27 @@ Usage:
 Example:     
 
 See Also:    Cos(), Sin(), Tan(), ATan(), ACos(), ATan() 
+
+
+------------------------------------------------------------
+Name/Symbol:  break
+
+Description:  breaks out of a loop immediately
+
+Usage:        break
+
+Example:      loop(i ,[1,3,5,9,2,7])
+               {
+                Print(i)
+			    if(i == 3) 
+			    {
+                 break
+                }
+			   }
+
+
+See Also:   loop, return
+
 ------------------------------------------------------------
 Name/Symbol:  Ceiling    
 
@@ -1656,7 +1732,7 @@ Name/Symbol:  define
 
 Description:  Defines a user-specified function
 
-Usage:       define funcionname (parameters)
+Usage:       define functionname (parameters)
 	     {
 	      statement1
 	      statement2

@@ -54,6 +54,7 @@ define     [Dd][Ee][Ff][Ii][Nn][Ee]
 and        [Aa][Nn][Dd]
 or         [Oo][Rr]
 not        [Nn][Oo][Tt]
+break      [Bb][Rr][Ee][Aa][Kk]
 globalvar         g[A-Za-z0-9\_]*
 localvar   [a-fh-z][A-Za-z0-9\_]*
 string     \"[^\"]*[\"\n]
@@ -103,6 +104,7 @@ datum      [integer float string variable]
 {and}           return PEBL_AND;
 {or}            return PEBL_OR;
 {not}           return  PEBL_NOT;
+{break}         return PEBL_BREAK;
 
 {localvar} {   /*Make a deep copy of the variable*/
                yylval.symbol = strdup(yytext);

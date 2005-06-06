@@ -3,7 +3,7 @@
 //    Name:       src/base/Variant.h
 //    Purpose:    Contains the Variant Class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003 Shane T. Mueller <smueller@umich.edu>
+//    Copyright:  (c) 2003--2005 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -53,7 +53,8 @@ enum StackSignalType {
     STACK_UNDEFINED=100,
     STACK_LIST_HEAD,
     STACK_RETURN_DUMMY,
-    STACK_TERMINATE_EVENT_LOOP
+    STACK_TERMINATE_EVENT_LOOP,
+    STACK_BREAK
 };
 
 

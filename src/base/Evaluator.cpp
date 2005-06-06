@@ -3,7 +3,7 @@
 //    Name:       src/base/Evaluator.cpp
 //    Purpose:    Defines an class that can evaluate PNodes
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003 Shane T. Mueller <smueller@umich.edu>
+//    Copyright:  (c) 2003--2005 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -554,6 +554,13 @@ void Evaluator::Evaluate(const OpNode * node)
                         //Pop them off so the stack doesn't grow; add them back at the end.
                         results = Pop();
 
+                        if(results.GetDataType() == P_DATA_STACK_SIGNAL &&
+                           results == Variant(STACK_BREAK))
+                            {
+                                results = Pop();
+                                break;
+                            }
+                        
                     }
                 //Push the last results back onto the stack.
                 Push(results);
@@ -615,6 +622,14 @@ void Evaluator::Evaluate(const OpNode * node)
                         //Pop them off so the stack doesn't grow; add them back at the end.
                         results = Pop();
                         
+                        if(results.GetDataType() == P_DATA_STACK_SIGNAL &&
+                           results == Variant(STACK_BREAK))
+                            {
+                                p = end;
+                                Pop();
+                                results = Variant(0);
+
+                            }
                     }
                 //Push the last results back onto the stack.
                         Push(results);
@@ -679,7 +694,7 @@ void Evaluator::Evaluate(const OpNode * node)
                 //To do this efficiently and avoid recreating lists iteratively, the bottom
                 //item does this in a while loop.  to signal the end of the while loop, the
                 //PEBL_LISTHEAD must put a dummy item on the stack so the bottom item
-                //knows when the front of the list has been reached.  This is a variant of type
+                //knows when the front of the list has been reached.  This is a variant of type STACK_LIST_HEAD
                 
                 //Create the stack signal variant and push it onto the stack.
                 Variant v1 = Variant(STACK_LIST_HEAD);
@@ -872,16 +887,64 @@ void Evaluator::Evaluate(const OpNode * node)
                 //This is a node that connects two statements. Since a statement leaves its
                 //evaluation on the stack, this should pop the stack after evaluating the LEFT
                 //statement. This means that the last statement in a series remains on the stack.
+
+#ifdef PEBL_DEBUG_PRINT
+                cerr << "Checking a PEBL_STATEMENTS: " << GetStackDepth() << endl;
+#endif
                 
+                //If the top of the stack is a STACK_BREAK, we should do nothing.
+                if(GetStackDepth())
+                    {
+             
+                        Variant v1 = Peek();
+
+
+                        if(v1.GetDataType() == P_DATA_STACK_SIGNAL &&
+                           v1 == Variant(STACK_BREAK))
+                            {
+                                //If this is a stack signal, and if 
+                                //it is a break, we should just back out
+                                Push(Variant(0));
+                                break;
+                            }
+                    }
+
                 if(node->GetLeft())
                     {
                         Evaluate(node->GetLeft());
-                        Pop();
+                        Variant v1 = Pop();
+
+
+                        if(v1.GetDataType() == P_DATA_STACK_SIGNAL &&
+                           v1 == Variant(STACK_BREAK))
+                            {
+                                //If this is a stack signal, and if 
+                                //it is a break, we should just back out
+                                Push(Variant(STACK_BREAK));
+                                break;
+                            }
                     }
-	  
+                
                 if(node->GetRight())
                     Evaluate(node->GetRight());
-                
+            }
+            
+            break;
+
+
+        case PEBL_BREAK:
+            {
+                //This exits out of the current loop, while, or function context.
+                //it works by adding a STACK_BREAK stacksignalevent onto the top of the stack.
+                //all relevant loops look for this type of event and 
+                //cleanly abort when that times comes.
+                Variant v1 = Variant(STACK_BREAK);
+                Push(v1);
+                Push(v1);
+#ifdef PEBL_DEBUG_PRINT
+                cerr << "PEBL_BREAK: pushing break onto stack.\n";
+#endif
+
             }
             break;
 
@@ -1106,5 +1169,20 @@ Variant Evaluator::Pop()
     if(mStack.size())cerr << "  [" << mStack.top() << "] is on top.\n";
     else cerr << endl;
 #endif 
+    return v;
+}
+
+
+Variant Evaluator::Peek()
+{
+#ifdef PEBL_DEBUG_PRINT
+    cerr << "Peeking at top of stack: "<< mStack.size() << endl;
+#endif 
+    if(mStack.size() <=0 )
+        {
+            PError::SignalFatalError("Error: Tried to Peek at an empty stack.");
+        }
+   
+    Variant v = mStack.top();
     return v;
 }
