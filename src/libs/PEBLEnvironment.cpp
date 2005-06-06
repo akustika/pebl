@@ -58,7 +58,7 @@ namespace PEBLEnvironment
     PlatformTimer myTimer;
     PlatformKeyboard myKeyboard;
 
-};
+}
 
 extern PlatformEnvironment * myEnv;
 extern PlatformEventQueue  * gEventQueue;

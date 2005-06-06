@@ -63,7 +63,7 @@ ostream & operator <<(ostream & out, const DeviceState & device )
 { 
     device.SendToStream(out);
     return out;
-};
+}
 
 
 

@@ -36,13 +36,13 @@ using std::cerr;
 PDevice::PDevice()
 {
 
-};
+}
 
 /// This is the standard pNode destructor
 PDevice::~PDevice()
 {
     // Standard Destructor
-};
+}
 
 
 
@@ -52,7 +52,7 @@ ostream & operator <<(ostream & out, const PDevice & device )
 { 
     device.SendToStream(out);
     return out;
-};
+}
 
  
 

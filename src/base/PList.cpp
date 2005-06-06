@@ -147,7 +147,7 @@ Variant PList::Nth(unsigned int n)
     list<Variant>::iterator p = mList.begin();
     for(unsigned int i = 1; i< n; i++,p++);
     return *p;
-};
+}
 
 Variant PList::Last()
 {
@@ -238,5 +238,5 @@ ostream & PList::SendToStream(ostream& out) const
     out << "]" ;
 
     return out;
-};
+}
 

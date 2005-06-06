@@ -72,7 +72,7 @@ ostream & PlatformEnvironment::SendToStream(ostream& out) const
     
     out << "<SDL PlatformEnvironment>" << flush;
     return out;
-};
+}
 
 
 

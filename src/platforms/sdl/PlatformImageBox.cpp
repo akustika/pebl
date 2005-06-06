@@ -69,7 +69,7 @@ ostream & PlatformImageBox::SendToStream(ostream& out) const
     
     out << "<SDL PlatformImageBox>" << flush;
     return out;
-};
+}
 
 
 

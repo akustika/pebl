@@ -126,19 +126,20 @@ class counted_ptr
 
   void release()
   {
-
-    if (count && --(*count)==0)
-      {
+      
+      if (count)
+          if( --(*count)==0)
+              {
+                  
+                  delete ptr;
+                  delete count;
+                  ptr = 0;
+                  count = 0;
           
-          delete ptr;
-          delete count;
-          ptr = 0;
-          count = 0;
-          
-      }
+              }
   }
-
-  
+    
+    
 };
 
 #endif

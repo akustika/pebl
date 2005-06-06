@@ -45,7 +45,7 @@ PComplexData::PComplexData():
     mComplexDataType(CDT_UNDEFINED)
 {
 
-};
+}
 
 
 PComplexData::PComplexData(counted_ptr<PList> list):
@@ -53,14 +53,14 @@ PComplexData::PComplexData(counted_ptr<PList> list):
     mList(list)
 {
 
-};
+}
 
 PComplexData::PComplexData(counted_ptr<PlatformEnvironment> env):
     mComplexDataType(CDT_ENVIRONMENT),
     mEnvironment(env)
 {
 
-};
+}
 
 
 PComplexData::PComplexData(counted_ptr<PlatformWindow> window):
@@ -68,7 +68,7 @@ PComplexData::PComplexData(counted_ptr<PlatformWindow> window):
     mWindow(window)
 {
 
-};
+}
 
 PComplexData::PComplexData(counted_ptr<PColor> color):
     mComplexDataType(CDT_COLOR),
@@ -76,21 +76,21 @@ PComplexData::PComplexData(counted_ptr<PColor> color):
 {
 
 
-};
+}
 
 PComplexData::PComplexData(counted_ptr<PlatformFont>  font):
     mComplexDataType(CDT_FONT),
     mFont(font)
 {
 
-};
+}
 
 PComplexData::PComplexData(counted_ptr<PlatformLabel> label):
     mComplexDataType(CDT_LABEL),
     mLabel(label)
 {
 
-};
+}
 
 
 PComplexData::PComplexData(counted_ptr<PlatformTextBox> textbox):
@@ -98,7 +98,7 @@ PComplexData::PComplexData(counted_ptr<PlatformTextBox> textbox):
     mTextBox(textbox)
 {
 
-};
+}
 
 
 PComplexData::PComplexData(counted_ptr<PlatformImageBox> imagebox):
@@ -106,14 +106,14 @@ PComplexData::PComplexData(counted_ptr<PlatformImageBox> imagebox):
     mImageBox(imagebox)
 {
 
-};
+}
 
 PComplexData::PComplexData(counted_ptr<PlatformKeyboard> keyboard):
     mComplexDataType(CDT_KEYBOARD),
     mKeyboard(keyboard)
 {
 
-};
+}
 
 
 PComplexData::PComplexData(counted_ptr<PStream> stream):
@@ -121,7 +121,7 @@ PComplexData::PComplexData(counted_ptr<PStream> stream):
     mFileStream(stream)
 {
 
-};
+}
 
 
 PComplexData::PComplexData(counted_ptr<PlatformAudioOut> audio):
@@ -129,7 +129,7 @@ PComplexData::PComplexData(counted_ptr<PlatformAudioOut> audio):
     mAudioOut(audio)
 {
 
-};
+}
 
 
 
@@ -137,7 +137,7 @@ PComplexData::PComplexData(counted_ptr<PlatformAudioOut> audio):
 PComplexData::~PComplexData()
 {
 
-};
+}
   
 
 ///This is a generic copy constructor
@@ -242,7 +242,7 @@ PComplexData::PComplexData(const PComplexData * pcd):
             break;
         }
 
-};
+}
 
 
 
@@ -252,7 +252,7 @@ ostream & operator <<(ostream & out, const PComplexData & pcd )
     
     pcd.SendToStream(out);
     return out;
-};
+}
  
 
 //This prints out stuff to a stream.

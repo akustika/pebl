@@ -42,7 +42,7 @@ PFont::PFont():
 
 
 ///Convenience constructor of PFont:
-PFont::PFont(const char* filename, int style, int size, PColor fgcolor, PColor bgcolor, bool aa):
+PFont::PFont(const std::string & filename, int style, int size, PColor fgcolor, PColor bgcolor, bool aa):
     mFontFileName(filename),
     mFontStyle(style),
     mFontSize(size),
@@ -51,7 +51,7 @@ PFont::PFont(const char* filename, int style, int size, PColor fgcolor, PColor b
     mAntiAliased(aa)
 {
 
-};
+}
 
 
 ///Copy constructor of PFont:

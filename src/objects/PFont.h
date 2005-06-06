@@ -55,8 +55,8 @@ public:
 
     ///Standard constructors:
     PFont();                                     
-    PFont(const char * filename);
-    PFont(const char* filename, int style, int size, PColor fgcolor, PColor bgcolor, bool aa);
+    PFont(const std::string &  filename);
+    PFont(const std::string & filename, int style, int size, PColor fgcolor, PColor bgcolor, bool aa);
     PFont(const PFont & font);              ///Copy constructor
     virtual ~PFont();                       ///Standard Destructors
     

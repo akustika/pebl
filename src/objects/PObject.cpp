@@ -66,4 +66,4 @@ ostream & PObject::SendToStream(ostream& out) const
     
     out << "<Unknown PObject" << flush;
     return out;
-};
+}

@@ -176,4 +176,4 @@ ostream & PlatformKeyboard::SendToStream(ostream& out) const
     
     out << "<SDL PlatformKeyboard>" << flush;
     return out;
-};
+}

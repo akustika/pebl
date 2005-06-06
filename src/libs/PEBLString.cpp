@@ -57,7 +57,7 @@ Variant PEBLString::Uppercase(Variant v)
     transform(s.begin(), s.end(), s.begin(), toupper);
 
     return Variant(s);
-};
+}
 
 
 
@@ -70,7 +70,7 @@ Variant PEBLString::Lowercase(Variant v)
     transform(s.begin(), s.end(), s.begin(), tolower);
 
     return Variant(s);
-};
+}
 
 
 Variant PEBLString::StringLength(Variant v)
@@ -80,7 +80,7 @@ Variant PEBLString::StringLength(Variant v)
     std::string s=plist->First();    
 
     return Variant((int)(s.length()));
-};
+}
 
 
 //Not implemented:
@@ -109,7 +109,7 @@ Variant PEBLString::SubString(Variant v)
     int length = plist->First(); plist->PopFront();
 
     return Variant(string1.substr(position-1,length));
-};
+}
 
 
 
@@ -135,5 +135,5 @@ Variant PEBLString::FindInString(Variant v)
         return Variant(0);
     else
         return Variant((int)newpos+1);
-};
+}
 

@@ -138,7 +138,7 @@ Variant PEBLMath::Log10(Variant v)
         }
 
     return 0;
-};
+}
 
 Variant PEBLMath::Log2(Variant v)
 {
@@ -159,7 +159,7 @@ Variant PEBLMath::Log2(Variant v)
             return 0;
         }
 
-};
+}
 
 Variant PEBLMath::Ln(Variant v)
 {
@@ -181,7 +181,7 @@ Variant PEBLMath::Ln(Variant v)
             return 0;
         }
 
-};
+}
 
 
 Variant PEBLMath::LogN(Variant v)
@@ -234,7 +234,7 @@ Variant PEBLMath::Exp(Variant v)
             return 0;
         }
 
-};
+}
 
 
 Variant PEBLMath::Pow(Variant v)
@@ -285,7 +285,7 @@ Variant PEBLMath::Sqrt(Variant v)
             return 0;
         }
 
-};
+}
 
 
 Variant PEBLMath::NthRoot(Variant v)
@@ -345,7 +345,7 @@ Variant PEBLMath::Tan(Variant v)
             return 0;
         }
 
-};
+}
 
 
 
@@ -369,7 +369,7 @@ Variant PEBLMath::Sin(Variant v)
 
             return 0;
         }
-};
+}
 
 
 Variant PEBLMath::Cos(Variant v)
@@ -390,7 +390,7 @@ Variant PEBLMath::Cos(Variant v)
             PError::SignalFatalError("Non-numeric argument in [Cos]");
             return 0;
         }
-};
+}
 
 
 Variant PEBLMath::ATan(Variant v)
@@ -412,7 +412,7 @@ Variant PEBLMath::ATan(Variant v)
             PError::SignalFatalError("Non-numeric argument in [ATan]");
             return 0;
         }
-};
+}
 
 Variant PEBLMath::ASin(Variant v)
 {
@@ -432,7 +432,7 @@ Variant PEBLMath::ASin(Variant v)
             PError::SignalFatalError("Non-numeric argument in [ASin]");
             return 0;
         }
-};
+}
 
 Variant PEBLMath::ACos(Variant v)
 {   
@@ -452,7 +452,7 @@ Variant PEBLMath::ACos(Variant v)
             PError::SignalFatalError("Non-numeric argument in [ACos]");
             return 0;
         }
-};
+}
 
 
 //Converts radians to degrees.  Does not truncate at 180.

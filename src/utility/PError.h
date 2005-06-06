@@ -82,6 +82,6 @@ namespace PError
 
     void AssertType(Variant v, int type, const std::string & outsidemessage );
     std::string GetTypeName(Variant v);
-};
+}
 
 #endif

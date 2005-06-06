@@ -38,13 +38,13 @@ using std::ostream;
 PKeyboard::PKeyboard()
 {
     //Standard Constructor
-};
+}
 
 /// This is the standard pNode destructor
 PKeyboard::~PKeyboard()
 {
     // Standard Destructor
-};
+}
 
 
 
@@ -75,7 +75,7 @@ int PKeyboard::GetState(int iface)const
 {
      cerr << "*****Error:  Getting generic state with PKeyboard::GetState\n" ;
      return 1;
-};
+}
 
 
 int PKeyboard::GetModKeys() const

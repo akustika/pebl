@@ -52,7 +52,7 @@ PColor::PColor(int red, int green, int blue, int alpha):
     mAlpha(To8BitColor(alpha))
 {
 
-};
+}
 
 
 
@@ -97,7 +97,7 @@ void PColor::SetColorByRGBA(unsigned int color)
     mGreen  = color / (255 * 255) % 255;
     mRed    = color / ( 255 * 255 * 255) % 255;
 
-};
+}
 
 
 
@@ -109,7 +109,7 @@ void PColor::SetColorByRGBA(int red, int green, int blue, int alpha)
     mBlue  = To8BitColor(blue);
     mAlpha = To8BitColor(alpha);
 
-};
+}
 
 
 void PColor::SetColorByName(const char * colorname)
@@ -173,7 +173,7 @@ void PColor::SetColorByName(const char * colorname)
                 }
            
             
-        };
+        }
 
     //Check top & bottom to see if there is a match.
     //if(strcmp(ucasename, RGBNames::ColorNames[top].name) == 0) foundindex = top;
@@ -206,7 +206,7 @@ unsigned int PColor::GetColor() const
     unsigned int color=0;
     color = mAlpha + (255 * mBlue)  + (255 * 255 * mGreen) + (255 * 255 * 255 * mRed);
     return color;
-};
+}
 
 
 /// This sends the color descriptions to the specified stream.

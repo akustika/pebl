@@ -43,29 +43,28 @@ using std::string;
 using std::cout;
 ///Standard constructor of PFont
 
-PlatformFont::PlatformFont():
-    PFont("Vera.ttf", PFS_Normal, 16, PColor(0,0,0,255), PColor(0,0,0,0), false)
-{
-    //find the font.
-    string fontname = Evaluator::gPath.FindFile(mFontFileName);
-    if(fontname == "")
-        PError::SignalFatalError(string("Unable to find font file [")  + mFontFileName + string("]."));
+// PlatformFont::PlatformFont():
+//     PFont("Vera.ttf", PFS_Normal, 16, PColor(0,0,0,255), PColor(0,0,0,0), false)
+// {
+//     //find the font.
+//     string fontname = Evaluator::gPath.FindFile(mFontFileName);
+//     if(fontname == "")
+//         PError::SignalFatalError(string("Unable to find font file [")  + mFontFileName + string("]."));
 
-    //Open the font.  Should do error checking here.
-    TTF_Font * tmp = TTF_OpenFont(fontname.c_str(), mFontSize);
-    TTF_SetFontStyle(tmp, mFontStyle);
+//     //Open the font.  Should do error checking here.
+//     mTTF_Font = TTF_OpenFont(fontname.c_str(), mFontSize);
+//     TTF_SetFontStyle(mTTF_Font, mFontStyle);
 
-    mTTF_Font = counted_ptr<TTF_Font>(tmp);
+//
+//     //Translate PColor to SDLcolor for direct use in rendering.
+//     mSDL_FGColor = SDLUtility::PColorToSDLColor(mFontColor);
+//     mSDL_BGColor = SDLUtility::PColorToSDLColor(mBackgroundColor);
 
-    //Translate PColor to SDLcolor for direct use in rendering.
-    mSDL_FGColor = SDLUtility::PColorToSDLColor(mFontColor);
-    mSDL_BGColor = SDLUtility::PColorToSDLColor(mBackgroundColor);
-
-} 
+// } 
 
 
 ///Convenience constructor of PlatformFont:
-PlatformFont::PlatformFont(const char* filename, int style, int size, PColor fgcolor, PColor  bgcolor, bool aa):
+PlatformFont::PlatformFont(const std::string & filename, int style, int size, PColor fgcolor, PColor  bgcolor, bool aa):
     PFont(filename, style, size, fgcolor, bgcolor, aa)
 {
 
@@ -74,10 +73,8 @@ PlatformFont::PlatformFont(const char* filename, int style, int size, PColor fgc
         PError::SignalFatalError(string("Unable to find font file [")  + mFontFileName + string("]."));
 
   //Open the font.  Should do error checking here.
-    TTF_Font * tmp = TTF_OpenFont(fontname.c_str(), mFontSize);
-    TTF_SetFontStyle(tmp, mFontStyle);
-    mTTF_Font = counted_ptr<TTF_Font>(tmp);
-
+    mTTF_Font  = TTF_OpenFont(fontname.c_str(), mFontSize);
+    TTF_SetFontStyle(mTTF_Font, mFontStyle);
 
 
    //Translate PColor to SDLcolor for direct use in rendering.
@@ -101,11 +98,9 @@ PlatformFont::PlatformFont(const PlatformFont & font)
 
 
     //Open the font.  Should do error checking here.
-    TTF_Font * tmp = TTF_OpenFont(mFontFileName.c_str(), mFontSize);
-    TTF_SetFontStyle(tmp, mFontStyle);
-    mTTF_Font = counted_ptr<TTF_Font>(tmp);
-
-
+    mTTF_Font  = TTF_OpenFont(mFontFileName.c_str(), mFontSize);
+    TTF_SetFontStyle(mTTF_Font, mFontStyle);
+ 
     //Translate PColor to SDLcolor for direct use in rendering.
     mSDL_FGColor = SDLUtility::PColorToSDLColor(mFontColor);
     mSDL_BGColor = SDLUtility::PColorToSDLColor(mBackgroundColor);
@@ -118,7 +113,7 @@ PlatformFont::PlatformFont(const PlatformFont & font)
 ///Standard destructor of PlatformFont
 PlatformFont::~PlatformFont()
 {
-    TTF_CloseFont(mTTF_Font.get());
+    TTF_CloseFont(mTTF_Font);
 }
 
 
@@ -162,11 +157,11 @@ SDL_Surface * PlatformFont::RenderText(const char * text)
     if(mAntiAliased)
         {
             
-            tmpSurface = TTF_RenderText_Shaded(mTTF_Font.get(), toBeRendered.c_str(), mSDL_FGColor, mSDL_BGColor);
+            tmpSurface = TTF_RenderText_Shaded(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor, mSDL_BGColor);
         }
     else
         {
-            tmpSurface =  TTF_RenderText_Solid(mTTF_Font.get(), toBeRendered.c_str(), mSDL_FGColor);
+            tmpSurface =  TTF_RenderText_Solid(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor);
         }
 
 
@@ -217,7 +212,7 @@ unsigned int PlatformFont::GetTextWidth(const std::string & text)
 {
     int height, width;
     std::string toBeRendered = StripText(text.c_str()); 
-    TTF_SizeText(mTTF_Font.get(),toBeRendered.c_str(),&width,&height);
+    TTF_SizeText(mTTF_Font,toBeRendered.c_str(),&width,&height);
     unsigned int uwidth = (unsigned int)width;
     return uwidth;
 }
@@ -225,7 +220,7 @@ unsigned int PlatformFont::GetTextWidth(const std::string & text)
 unsigned int PlatformFont::GetTextHeight(const std::string & text)
 {
     int height, width;
-    TTF_SizeText(mTTF_Font.get(),text.c_str(),&width,&height);
+    TTF_SizeText(mTTF_Font,text.c_str(),&width,&height);
     unsigned int uheight = (unsigned int)height;
     return uheight;
 }

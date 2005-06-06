@@ -107,8 +107,7 @@ Variant  VariableMap::RetrieveValue(const char * varname)
         {
             return p->second;
         }
-  
-};
+}
 
 
 /// This will erase the value stored in varname

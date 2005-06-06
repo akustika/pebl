@@ -43,13 +43,13 @@ extern PlatformEventQueue * gEventQueue;
 PEventLoop::PEventLoop()
 {
 
-};
+}
 
 /// This is the standard pNode destructor
 PEventLoop::~PEventLoop()
 {
     // Standard Destructor
-};
+}
 
 
 

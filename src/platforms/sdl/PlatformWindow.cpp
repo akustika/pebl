@@ -59,7 +59,7 @@ ostream & PlatformWindow::SendToStream(ostream& out) const
 {
     out << "<SDL PlatformWindow>" << flush;
     return out;
-};
+}
 
 int PlatformWindow::GetVideoFlags()
 {

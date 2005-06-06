@@ -146,7 +146,7 @@ PNode *  FunctionMap::GetFunction(const char * lcasefuncname)
                 return p->second;
         }
     
-};
+}
 
 
 
@@ -167,7 +167,7 @@ bool FunctionMap::IsFunction(const char* funcname)
         return false;
     else
         return true;
-};
+}
 
 
 /// This will erase the topmost value stored in varname

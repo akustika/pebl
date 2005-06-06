@@ -59,13 +59,13 @@ PNode::PNode(PNODE_TYPE type, const char* filename, int linenumber):
     mLineNumber(linenumber)
 {
 
-};
+}
 
 /// This is the standard pNode destructor
 PNode::~PNode()
 {
     // Standard Destructor
-};
+}
 
 
 //Overload of the << operator
@@ -73,7 +73,7 @@ ostream& operator<<(ostream& out, const PNode & node)
 {
     node.SendToStream(out);
     return out;
-};
+}
 
 ostream & PNode::SendToStream(ostream & out) const
 {
@@ -202,7 +202,7 @@ ostream& OpNode::SendToStream(ostream& out) const
     out << "<OpNode of Type: " << GetOpName() << ">" <<flush;
     return out;
 
-};
+}
 
 
 //******************************************************************************
@@ -275,7 +275,7 @@ DataNode::DataNode(long int ivalue, const char * filename, int linenumber):
     cerr << "\tConstructing DataNode of Integer value " << flush << ivalue << endl;
 #endif
 
-};
+}
 
 /*
 DataNode::DataNode(long double fvalue):
@@ -296,7 +296,7 @@ DataNode::DataNode(long double fvalue, const char * filename, int linenumber):
 #ifdef VERBOSE_PNODE_CONSTRUCTION_MESSAGES
     cerr << "\tConstructing DataNode of Float value " << flush << fvalue << endl;
 #endif
-};
+}
 
 
 DataNode::~DataNode()
@@ -309,4 +309,4 @@ ostream& DataNode::SendToStream(ostream& out) const
 {
     out << "<DataNode of Type: " << GetType() << " and Value: " << GetValue()<< ">" << flush;
     return out;
-};
+}

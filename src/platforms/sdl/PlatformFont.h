@@ -46,9 +46,9 @@ class PlatformFont: public PFont
 {
     
 public:
-    PlatformFont();
-    PlatformFont(const char * filename);
-    PlatformFont(const char* filename, int style, int size, PColor fgcolor, PColor bgcolor, bool aa);
+    //    PlatformFont();
+    PlatformFont(const std::string &  filename);
+    PlatformFont(const std::string &  filename, int style, int size, PColor fgcolor, PColor bgcolor, bool aa);
     PlatformFont(const PlatformFont & font);              ///Copy constructor
     virtual ~PlatformFont();
 
@@ -70,8 +70,7 @@ private:
     
     std::string StripText(const char * text);
   
-    //    TTF_Font * mTTF_Font;
-    counted_ptr<TTF_Font> mTTF_Font;
+    TTF_Font * mTTF_Font;
     SDL_Color mSDL_FGColor;
     SDL_Color mSDL_BGColor;  
 };

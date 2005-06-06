@@ -35,15 +35,13 @@
 PTimer::PTimer()
 {
 
-};
+}
 
 /// This is the standard pNode destructor
 PTimer::~PTimer()
 {
     // Standard Destructor
-};
-
-
+}
 
 
 ostream & PTimer::SendToStream(ostream & out) const

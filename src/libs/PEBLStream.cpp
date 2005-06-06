@@ -53,7 +53,7 @@ Variant PEBLStream::Print(Variant v)
     cout << v1 << endl;
 
     return v1;
-};
+}
 
 
 Variant PEBLStream::Print_(Variant v)
@@ -64,7 +64,7 @@ Variant PEBLStream::Print_(Variant v)
     cout << v1 << flush;
 
     return v1;
-};
+}
 
 Variant PEBLStream::Format(Variant v)
 {  
@@ -72,7 +72,7 @@ Variant PEBLStream::Format(Variant v)
     Variant v1 = plist->First();
     PError::SignalFatalError("Function [Format()] not implemented.");
     return v1;
-};
+}
 
 
 ///This opens a filestream for reading.

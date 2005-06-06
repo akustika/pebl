@@ -37,6 +37,11 @@ SDL_CONFIG = /usr/bin/sdl-config
 SDL_FLAGS = -I/usr/include/SDL -D_REENTRANT
 SDL_LIBS = -L/usr/lib -Wl,-rpath,/usr/local/lib -lSDL -lpthread
 
+
+#Comment/uncomment below on OSX
+#OSX_FLAGS = -framework AppKit -lSDLmain -DPEBL_OSX
+OSX_FLAGS =
+
 SDLIMG_FLAGS =  -L/usr/lib -Wl,-rpath,/usr/lib
 SDLIMG_LIBS =   -lSDL -lpthread -lSDL_image
 
@@ -250,7 +255,7 @@ DIRS = \
 
 main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
 	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/pebl -g -O2 -Wall -I/usr/local/include/SDL -D_REENTRANT  \
-	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf \
+	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf   $(OSX_FLAGS) \
 	 $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(PEBLMAIN_OBJ)) 
 
 parse:

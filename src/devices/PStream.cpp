@@ -79,7 +79,7 @@ PStream::PStream(const char* filename, StreamDirection dir, StreamType type):
         {
             PError::SignalFatalError("Error initiating file [" + string(mStreamFileName) + ".");
         }
-};
+}
 
 
 
@@ -126,7 +126,7 @@ void PStream::Open(const char* filename, StreamDirection dir, StreamType type)
             PError::SignalFatalError("Error initiating file [" + string(mStreamFileName) + ".");
         }
     
-};
+}
 
 
 ///This method sends a single character to the stream
@@ -350,7 +350,7 @@ PStream::~PStream()
 {
     // Standard Destructor
     delete mStreamFileName;
-};
+}
 
 
 ostream & PStream::SendToStream(ostream & out) const
