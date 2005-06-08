@@ -1064,13 +1064,14 @@ YY_RULE_SETUP
 #line 119 "src/base/Pebl.l"
 { /*Make a deep copy of the function name*/
                yylval.function =strdup(yytext);
+
                return PEBL_FUNCTIONNAME;
 };
 	YY_BREAK
 case 41:
 /* rule 41 can match eol */
 YY_RULE_SETUP
-#line 123 "src/base/Pebl.l"
+#line 124 "src/base/Pebl.l"
 {          /*Make a deep copy of the string*/
   yylval.strValue = strdup(yytext+1); /*skip open quote*/
 
@@ -1087,12 +1088,12 @@ if(yylval.strValue[yyleng-2] != '"')     /*"*/
 case 42:
 /* rule 42 can match eol */
 YY_RULE_SETUP
-#line 136 "src/base/Pebl.l"
+#line 137 "src/base/Pebl.l"
 { return PEBL_NEWLINE;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 138 "src/base/Pebl.l"
+#line 139 "src/base/Pebl.l"
 { char message[100];
                  snprintf(message,99,"Unknown characters in line %d: [%s]\n",yylineno,yytext);
                  yyerror(message);
@@ -1100,10 +1101,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 142 "src/base/Pebl.l"
+#line 143 "src/base/Pebl.l"
 ECHO;
 	YY_BREAK
-#line 1107 "src/base/lex.yy.c"
+#line 1108 "src/base/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2078,7 +2079,7 @@ void yyfree (void * ptr )
 #undef YY_DECL_IS_OURS
 #undef YY_DECL
 #endif
-#line 142 "src/base/Pebl.l"
+#line 143 "src/base/Pebl.l"
 
 
 int yywrap(void) {

@@ -28,6 +28,7 @@
 #define __PNODE_H__
 
 #include "Variant.h"         //This contains definition for enum VariantDataType
+#include <string>
 
 enum PNODE_TYPE {
     PEBL_OP_NODE,
@@ -49,9 +50,9 @@ public:
   
     ///The Standard constructor.  
     //    PNode();
-    PNode(const char* filename, int linenumber);
+    PNode(const std::string & filename, int linenumber);
     //    PNode(PNODE_TYPE type);
-    PNode(PNODE_TYPE type, const char* filename, int linenumber);
+    PNode(PNODE_TYPE type, const std::string & filename, int linenumber);
     ///The Standard destructor.  
     virtual ~PNode();
 
@@ -62,9 +63,11 @@ public:
     //Overload of the << operator
     friend std::ostream& operator<<(std::ostream& out, const PNode & node );
     
-    void SetFileInfo(const char* filename, int linenumber);
-    const char* GetFilename()const {return mSourceFile;};
+    void SetFileInfo(const std::string & filename, int linenumber);
+    std::string  GetFilename()const {return mSourceFile;};
     int GetLineNumber()const {return mLineNumber;};
+
+    virtual void DestroyChildren();
 private:
 
 protected:
@@ -83,7 +86,7 @@ protected:
 
 
     ///Source file of origin.
-    char * mSourceFile;
+    std::string  mSourceFile;
     
     ///Closest Line number of origin.
     int mLineNumber;
@@ -97,17 +100,17 @@ class OpNode: public PNode
 public:
     //Constructor
     //OpNode(int type, PNode *left, PNode *right);
-    OpNode(int type, PNode *left, PNode *right, const char* filename, int linenumber);
+    OpNode(int type, PNode *left, PNode *right,const  std::string & filename, int linenumber);
     virtual ~OpNode();
 
 
     int GetOp()const{return mOp;};
-    const char* GetOpName() const;
+    std::string GetOpName() const;
  
     PNode*  GetLeft() const {return mLeft;};
     PNode*  GetRight() const{return mRight;};
 
- 
+    virtual void DestroyChildren();
 
 
 private:
@@ -131,10 +134,10 @@ public:
     //    DataNode();
     //    DataNode(long int ivalue);
     //    DataNode(long double fvalue);
-    DataNode(const Variant value, const char* filename, int linenumber);
-    DataNode(const char* filename, int linenumber);
-    DataNode(long int ivalue, const char* filename, int linenumber);
-    DataNode(long double fvalue, const char* filename, int linenumber);
+    DataNode(const Variant value, const  std::string & filename, int linenumber);
+    DataNode(const std::string & filename, int linenumber);
+    DataNode(long int ivalue, const std::string & filename, int linenumber);
+    DataNode(long double fvalue, const std::string & filename, int linenumber);
 
 
     virtual ~DataNode();

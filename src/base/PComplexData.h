@@ -119,7 +119,7 @@ public:
     //'Get' Methods.
 
     ComplexDataType GetType() const;
-    const char* GetTypeName() const;
+    std::string  GetTypeName() const;
 
     counted_ptr<PList>                 GetList() const;
     counted_ptr<PlatformEnvironment>   GetEnvironment() const;

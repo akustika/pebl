@@ -437,12 +437,12 @@ static const yysigned_char yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const unsigned short int yyrline[] =
 {
-       0,   118,   118,   126,   134,   140,   150,   151,   155,   156,
-     160,   166,   169,   179,   181,   183,   191,   199,   212,   218,
-     234,   241,   251,   255,   265,   268,   272,   276,   284,   288,
-     294,   297,   300,   306,   309,   313,   316,   319,   322,   325,
-     329,   332,   335,   338,   341,   344,   353,   363,   366,   369,
-     374,   377,   382,   385,   390,   391,   395,   396
+       0,   118,   118,   126,   134,   141,   152,   153,   157,   158,
+     162,   168,   171,   181,   183,   185,   193,   201,   214,   220,
+     236,   243,   253,   257,   267,   270,   274,   278,   286,   290,
+     296,   299,   302,   308,   311,   315,   318,   321,   324,   327,
+     331,   334,   337,   340,   343,   346,   355,   364,   367,   370,
+     375,   378,   383,   388,   395,   396,   400,   401
 };
 #endif
 
@@ -1322,64 +1322,66 @@ yyreduce:
     { ;
 		PNode * tmpFN = new OpNode(PEBL_LAMBDAFUNCTION, yyvsp[-3].exp, yyvsp[0].exp, sourcefilename, yylineno);  
 		PNode * tmpNode = new DataNode(Variant(yyvsp[-5].function, P_DATA_FUNCTION), sourcefilename, yylineno);
-		yyval.exp = new OpNode(PEBL_FUNCTION, tmpNode, tmpFN, sourcefilename, yylineno);;}
+		yyval.exp = new OpNode(PEBL_FUNCTION, tmpNode, tmpFN, sourcefilename, yylineno);
+        ;}
     break;
 
   case 5:
-#line 140 "src/base/grammar.y"
+#line 141 "src/base/grammar.y"
     { ;
 		PNode * tmpFN = new OpNode(PEBL_LAMBDAFUNCTION, NULL, yyvsp[0].exp, sourcefilename, yylineno);  
 		PNode * tmpNode = new DataNode(Variant(yyvsp[-4].function, P_DATA_FUNCTION), sourcefilename, yylineno);
-		yyval.exp = new OpNode(PEBL_FUNCTION, tmpNode, tmpFN, sourcefilename, yylineno);;}
+		yyval.exp = new OpNode(PEBL_FUNCTION, tmpNode, tmpFN, sourcefilename, yylineno);
+		  ;}
     break;
 
   case 6:
-#line 150 "src/base/grammar.y"
+#line 152 "src/base/grammar.y"
     {yyval.exp = yyvsp[0].exp;;}
     break;
 
   case 7:
-#line 151 "src/base/grammar.y"
+#line 153 "src/base/grammar.y"
     {yyval.exp = yyvsp[-1].exp;;}
     break;
 
   case 8:
-#line 155 "src/base/grammar.y"
+#line 157 "src/base/grammar.y"
     { yyval.exp = yyvsp[-1].exp;;}
     break;
 
   case 9:
-#line 156 "src/base/grammar.y"
+#line 158 "src/base/grammar.y"
     { yyval.exp = new OpNode(PEBL_STATEMENTS, yyvsp[-3].exp, yyvsp[-1].exp, sourcefilename, yylineno);;}
     break;
 
   case 10:
-#line 160 "src/base/grammar.y"
+#line 162 "src/base/grammar.y"
     { yyval.exp = yyvsp[-2].exp;;}
     break;
 
   case 11:
-#line 166 "src/base/grammar.y"
+#line 168 "src/base/grammar.y"
     { yyval.exp = yyvsp[0].exp; ;}
     break;
 
   case 12:
-#line 169 "src/base/grammar.y"
+#line 171 "src/base/grammar.y"
     { yyval.exp = new OpNode(PEBL_STATEMENTS, yyvsp[-2].exp, yyvsp[0].exp, sourcefilename, yylineno);;}
     break;
 
   case 13:
-#line 179 "src/base/grammar.y"
+#line 181 "src/base/grammar.y"
     {yyval.exp = yyvsp[-1].exp;;}
     break;
 
   case 14:
-#line 181 "src/base/grammar.y"
+#line 183 "src/base/grammar.y"
     {yyval.exp = new OpNode(PEBL_BREAK, NULL, NULL, sourcefilename, yylineno);;}
     break;
 
   case 15:
-#line 184 "src/base/grammar.y"
+#line 186 "src/base/grammar.y"
     { 
 	        Variant tmpV(yyvsp[-3].symbol,P_DATA_LOCALVARIABLE);       /*create a new temporary variant*/
 		PNode * tmpNode = new DataNode(tmpV, sourcefilename, yylineno);        /*create basic pnode*/
@@ -1388,7 +1390,7 @@ yyreduce:
     break;
 
   case 16:
-#line 192 "src/base/grammar.y"
+#line 194 "src/base/grammar.y"
     { 
 	        Variant tmpV(yyvsp[-3].symbol,P_DATA_GLOBALVARIABLE);      /*create a new temporary variant*/
 		PNode * tmpNode = new DataNode(tmpV, sourcefilename, yylineno);        /*create basic pnode*/
@@ -1397,19 +1399,19 @@ yyreduce:
     break;
 
   case 17:
-#line 199 "src/base/grammar.y"
+#line 201 "src/base/grammar.y"
     {;
 		yyval.exp = new OpNode(PEBL_WHILE, yyvsp[-4].exp, yyvsp[-1].exp, sourcefilename, yylineno); ;}
     break;
 
   case 18:
-#line 212 "src/base/grammar.y"
+#line 214 "src/base/grammar.y"
     {
 		yyval.exp = new OpNode(PEBL_IF, yyvsp[-4].exp, yyvsp[-1].exp, sourcefilename, yylineno); ;}
     break;
 
   case 19:
-#line 218 "src/base/grammar.y"
+#line 220 "src/base/grammar.y"
     {
 		/*First make the else node*/
 		PNode * tmpNode = new OpNode(PEBL_ELSE, yyvsp[-4].exp, yyvsp[-1].exp, sourcefilename, yylineno);
@@ -1418,69 +1420,69 @@ yyreduce:
     break;
 
   case 20:
-#line 234 "src/base/grammar.y"
+#line 236 "src/base/grammar.y"
     {
 		PNode * tmpNode = new OpNode(PEBL_VARIABLEDATUM, yyvsp[-6].exp, yyvsp[-4].exp, sourcefilename, yylineno);
 		yyval.exp = new OpNode(PEBL_LOOP, tmpNode, yyvsp[-1].exp, sourcefilename, yylineno); ;}
     break;
 
   case 21:
-#line 241 "src/base/grammar.y"
+#line 243 "src/base/grammar.y"
     {yyval.exp = new OpNode(PEBL_RETURN, yyvsp[0].exp, NULL, sourcefilename, yylineno);;}
     break;
 
   case 22:
-#line 251 "src/base/grammar.y"
+#line 253 "src/base/grammar.y"
     {yyval.exp = new OpNode(PEBL_ARGLIST, NULL, NULL, sourcefilename, yylineno);;}
     break;
 
   case 23:
-#line 255 "src/base/grammar.y"
+#line 257 "src/base/grammar.y"
     {yyval.exp = new OpNode(PEBL_ARGLIST, yyvsp[-1].exp, NULL, sourcefilename, yylineno);;}
     break;
 
   case 24:
-#line 265 "src/base/grammar.y"
+#line 267 "src/base/grammar.y"
     {yyval.exp = new OpNode(PEBL_LISTHEAD,yyvsp[-1].exp, NULL, sourcefilename, yylineno);;}
     break;
 
   case 25:
-#line 268 "src/base/grammar.y"
+#line 270 "src/base/grammar.y"
     {yyval.exp = new OpNode(PEBL_LISTHEAD, NULL, NULL, sourcefilename, yylineno);;}
     break;
 
   case 26:
-#line 272 "src/base/grammar.y"
+#line 274 "src/base/grammar.y"
     {yyval.exp = new OpNode(PEBL_LISTITEM, yyvsp[0].exp, NULL, sourcefilename, yylineno);;}
     break;
 
   case 27:
-#line 276 "src/base/grammar.y"
+#line 278 "src/base/grammar.y"
     {yyval.exp = new OpNode(PEBL_LISTITEM, yyvsp[-3].exp, yyvsp[0].exp, sourcefilename, yylineno);;}
     break;
 
   case 28:
-#line 284 "src/base/grammar.y"
+#line 286 "src/base/grammar.y"
     {yyval.exp = new OpNode(PEBL_VARLIST, yyvsp[0].exp, NULL, sourcefilename, yylineno);;}
     break;
 
   case 29:
-#line 288 "src/base/grammar.y"
+#line 290 "src/base/grammar.y"
     {yyval.exp = new OpNode(PEBL_VARLIST,yyvsp[-3].exp,yyvsp[0].exp, sourcefilename, yylineno);;}
     break;
 
   case 30:
-#line 294 "src/base/grammar.y"
+#line 296 "src/base/grammar.y"
     { yyval.exp = yyvsp[0].exp;;}
     break;
 
   case 31:
-#line 297 "src/base/grammar.y"
+#line 299 "src/base/grammar.y"
     {yyval.exp = yyvsp[-2].exp;}
     break;
 
   case 32:
-#line 300 "src/base/grammar.y"
+#line 302 "src/base/grammar.y"
     {
 		Variant tmpV = 0;
 		PNode * tmpNode = new DataNode(tmpV, sourcefilename, yylineno);
@@ -1488,72 +1490,72 @@ yyreduce:
     break;
 
   case 33:
-#line 306 "src/base/grammar.y"
+#line 308 "src/base/grammar.y"
     {yyval.exp = new OpNode(PEBL_NOT, yyvsp[0].exp, NULL, sourcefilename, yylineno); ;}
     break;
 
   case 34:
-#line 309 "src/base/grammar.y"
+#line 311 "src/base/grammar.y"
     { yyval.exp = new OpNode(PEBL_ADD, yyvsp[-3].exp, yyvsp[0].exp, sourcefilename, yylineno);  ;}
     break;
 
   case 35:
-#line 313 "src/base/grammar.y"
+#line 315 "src/base/grammar.y"
     { yyval.exp = new OpNode(PEBL_DIVIDE,yyvsp[-3].exp, yyvsp[0].exp, sourcefilename, yylineno);  ;}
     break;
 
   case 36:
-#line 316 "src/base/grammar.y"
+#line 318 "src/base/grammar.y"
     { yyval.exp = new OpNode(PEBL_MULTIPLY, yyvsp[-3].exp, yyvsp[0].exp, sourcefilename, yylineno);;}
     break;
 
   case 37:
-#line 319 "src/base/grammar.y"
+#line 321 "src/base/grammar.y"
     { yyval.exp = new OpNode(PEBL_SUBTRACT, yyvsp[-3].exp, yyvsp[0].exp, sourcefilename, yylineno); ;}
     break;
 
   case 38:
-#line 322 "src/base/grammar.y"
+#line 324 "src/base/grammar.y"
     { yyval.exp = new OpNode(PEBL_OR, yyvsp[-3].exp, yyvsp[0].exp, sourcefilename, yylineno); ;}
     break;
 
   case 39:
-#line 325 "src/base/grammar.y"
+#line 327 "src/base/grammar.y"
     { yyval.exp = new OpNode(PEBL_AND, yyvsp[-3].exp, yyvsp[0].exp, sourcefilename, yylineno); ;}
     break;
 
   case 40:
-#line 329 "src/base/grammar.y"
+#line 331 "src/base/grammar.y"
     { yyval.exp = new OpNode(PEBL_LT,  yyvsp[-2].exp, yyvsp[0].exp, sourcefilename, yylineno);;}
     break;
 
   case 41:
-#line 332 "src/base/grammar.y"
+#line 334 "src/base/grammar.y"
     { yyval.exp = new OpNode(PEBL_GT,  yyvsp[-2].exp, yyvsp[0].exp, sourcefilename, yylineno);;}
     break;
 
   case 42:
-#line 335 "src/base/grammar.y"
+#line 337 "src/base/grammar.y"
     { yyval.exp = new OpNode(PEBL_GE,  yyvsp[-2].exp, yyvsp[0].exp, sourcefilename, yylineno);;}
     break;
 
   case 43:
-#line 338 "src/base/grammar.y"
+#line 340 "src/base/grammar.y"
     { yyval.exp = new OpNode(PEBL_LE,  yyvsp[-2].exp, yyvsp[0].exp, sourcefilename, yylineno);;}
     break;
 
   case 44:
-#line 341 "src/base/grammar.y"
+#line 343 "src/base/grammar.y"
     { yyval.exp = new OpNode(PEBL_EQ,  yyvsp[-2].exp, yyvsp[0].exp, sourcefilename, yylineno);;}
     break;
 
   case 45:
-#line 344 "src/base/grammar.y"
+#line 346 "src/base/grammar.y"
     { yyval.exp = new OpNode(PEBL_NE,  yyvsp[-2].exp, yyvsp[0].exp, sourcefilename, yylineno);;}
     break;
 
   case 46:
-#line 353 "src/base/grammar.y"
+#line 355 "src/base/grammar.y"
     {
 		PNode * tmpNode = new DataNode(Variant(yyvsp[-1].function, P_DATA_FUNCTION), sourcefilename, yylineno);
 		yyval.exp = new OpNode(PEBL_FUNCTION, tmpNode, yyvsp[0].exp, sourcefilename, yylineno);
@@ -1561,17 +1563,17 @@ yyreduce:
     break;
 
   case 47:
-#line 363 "src/base/grammar.y"
+#line 364 "src/base/grammar.y"
     { yyval.exp = new DataNode (yyvsp[0].iValue, sourcefilename, yylineno); ;}
     break;
 
   case 48:
-#line 366 "src/base/grammar.y"
+#line 367 "src/base/grammar.y"
     { yyval.exp = new DataNode (yyvsp[0].fValue, sourcefilename, yylineno);;}
     break;
 
   case 49:
-#line 369 "src/base/grammar.y"
+#line 370 "src/base/grammar.y"
     {
 		Variant tmpV(yyvsp[0].strValue);            /*create a new temporary variant*/
 		yyval.exp = new DataNode(tmpV, sourcefilename, yylineno);
@@ -1579,46 +1581,50 @@ yyreduce:
     break;
 
   case 50:
-#line 374 "src/base/grammar.y"
+#line 375 "src/base/grammar.y"
     { yyval.exp = yyvsp[0].exp;;}
     break;
 
   case 51:
-#line 377 "src/base/grammar.y"
+#line 378 "src/base/grammar.y"
     { yyval.exp = yyvsp[0].exp;;}
     break;
 
   case 52:
-#line 382 "src/base/grammar.y"
+#line 383 "src/base/grammar.y"
     { 
 		Variant tmpV(yyvsp[0].symbol, P_DATA_LOCALVARIABLE);           /*create a new temporary variant*/;
-		yyval.exp = new DataNode(tmpV, sourcefilename, yylineno); ;}
+		yyval.exp = new DataNode(tmpV, sourcefilename, yylineno);                        /*Make a new variable node here.*/
+        free(yyvsp[0].symbol);
+        ;}
     break;
 
   case 53:
-#line 385 "src/base/grammar.y"
+#line 388 "src/base/grammar.y"
     { 
 		Variant tmpV(yyvsp[0].symbol, P_DATA_GLOBALVARIABLE);          /*create a new temporary variant*/;
-		yyval.exp = new DataNode(tmpV, sourcefilename, yylineno); ;}
+		yyval.exp = new DataNode(tmpV, sourcefilename, yylineno);  /*Make a new variable node here.*/
+		free(yyvsp[0].symbol);
+		 ;}
     break;
 
   case 54:
-#line 390 "src/base/grammar.y"
+#line 395 "src/base/grammar.y"
     {/*nothing*/;;}
     break;
 
   case 55:
-#line 391 "src/base/grammar.y"
+#line 396 "src/base/grammar.y"
     {/**/;;}
     break;
 
   case 56:
-#line 395 "src/base/grammar.y"
+#line 400 "src/base/grammar.y"
     {/**/;;}
     break;
 
   case 57:
-#line 396 "src/base/grammar.y"
+#line 401 "src/base/grammar.y"
     {/**/;;}
     break;
 
@@ -1626,7 +1632,7 @@ yyreduce:
     }
 
 /* Line 1010 of yacc.c.  */
-#line 1630 "src/base/grammar.tab.cpp"
+#line 1636 "src/base/grammar.tab.cpp"
 
   yyvsp -= yylen;
   yyssp -= yylen;
@@ -1851,7 +1857,7 @@ yyreturn:
 }
 
 
-#line 402 "src/base/grammar.y"
+#line 407 "src/base/grammar.y"
 
 
 void yyerror (char *error)

@@ -52,6 +52,8 @@ VariableMap::VariableMap()
 
 VariableMap::~VariableMap()
 {
+    cout << "Deleting variablemap\n";
+    DumpValues();
     //Delete mVariableMap if necessary.
     mVariableMap.clear();
 }

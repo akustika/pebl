@@ -28,7 +28,7 @@
 #include "grammar.tab.hpp"
 
 #include <iostream>
-#include <string.h>
+#include <string>
 #include <stdlib.h>
 
 using std::cerr;
@@ -36,6 +36,7 @@ using std::cout;
 using std::endl;
 using std::flush;
 using std::ostream;
+using std::string;
 
 #undef VERBOSE_PNODE_CONSTRUCTION_MESSAGES
 
@@ -52,10 +53,10 @@ using std::ostream;
 
 
 /// This is the standard pNode constructor
-PNode::PNode(PNODE_TYPE type, const char* filename, int linenumber):
+PNode::PNode(PNODE_TYPE type, const string & filename, int linenumber):
     mType(type),
     mTrace(0),
-    mSourceFile(strdup(filename)),
+    mSourceFile(filename),
     mLineNumber(linenumber)
 {
 
@@ -81,10 +82,16 @@ ostream & PNode::SendToStream(ostream & out) const
     return out;
 }
 
-void PNode::SetFileInfo(const char* filename, int linenumber)
+void PNode::SetFileInfo(const string & filename, int linenumber)
 {
-    mSourceFile = strdup(filename); 
+    mSourceFile = filename; 
     mLineNumber = linenumber;
+}
+
+void PNode::DestroyChildren()
+{
+    //A generic PNode doesn't necessarily have children, so
+    //don't do anything.
 }
 
 //******************************************************************************
@@ -108,7 +115,7 @@ OpNode::OpNode(int op, PNode *left, PNode *right):
 */
 
 
-OpNode::OpNode(int op, PNode *left, PNode *right, const char* filename, int linenumber):
+OpNode::OpNode(int op, PNode *left, PNode *right, const std::string & filename, int linenumber):
     PNode(PEBL_OP_NODE,filename,linenumber),
     mOp(op),
     mLeft(left),
@@ -122,15 +129,34 @@ OpNode::OpNode(int op, PNode *left, PNode *right, const char* filename, int line
 
 }
 
-//Standard Destructor
+void OpNode::DestroyChildren()
+{
+    cerr << "destroying children\n";
+    if(mLeft)
+        {
+            mLeft->DestroyChildren();
+            delete mLeft;
+            mLeft=NULL;
+        }
+    if(mRight)
+        {
+            mRight->DestroyChildren();
+            delete mRight;
+            mRight=NULL;
+        }
+}
+
+
+
+//Standard Destructor.  This doesn't automatically destroy children
+//nodes--to do that, use DestroyChildren();
 OpNode::~OpNode()
 {
-
 
 }
 
 
-const char* OpNode::GetOpName() const
+std::string  OpNode::GetOpName() const
 {
     switch(GetOp())
         {
@@ -222,7 +248,7 @@ DataNode::DataNode(const Variant value):
 }
 */
 
-DataNode::DataNode(const Variant value, const char * filename, int linenumber):
+DataNode::DataNode(const Variant value,const std::string &  filename, int linenumber):
     PNode(PEBL_DATA_NODE, filename, linenumber)
 {
     //This automatically makes  a deep copy (I think)
@@ -243,7 +269,7 @@ DataNode::DataNode():
 }
 */
 
-DataNode::DataNode(const char * filename, int linenumber):
+DataNode::DataNode(const string &  filename, int linenumber):
     PNode(PEBL_DATA_NODE, filename, linenumber)
 {
     
@@ -267,7 +293,7 @@ DataNode::DataNode(long int ivalue):
 */
 
 
-DataNode::DataNode(long int ivalue, const char * filename, int linenumber):
+DataNode::DataNode(long int ivalue, const string & filename, int linenumber):
     PNode(PEBL_DATA_NODE, filename, linenumber)
 {
     mValue = ivalue;
@@ -290,7 +316,7 @@ DataNode::DataNode(long double fvalue):
 */
 
 
-DataNode::DataNode(long double fvalue, const char * filename, int linenumber):
+DataNode::DataNode(long double fvalue, const string & filename, int linenumber):
     PNode(PEBL_DATA_NODE, filename, linenumber)
 {
     mValue = fvalue;

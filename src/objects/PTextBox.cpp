@@ -60,6 +60,7 @@ PTextBox::PTextBox(std::string text, int width, int height):
 PTextBox::PTextBox( PTextBox & text)
 
 {
+    mTextChanged = true;
     mText = text.GetText();
     mEditable = false;
     mCursorPos = 0;

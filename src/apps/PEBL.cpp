@@ -84,6 +84,8 @@ VariableMap Evaluator::gGlobalVariableMap;
 const PNode * Evaluator::gEvalNode = NULL;
 PEBLPath  Evaluator::gPath;
 
+Loader* myLoader;
+PNode * head;
 
 int PEBLInterpret( int argc, char *argv[] )
 { 
@@ -116,7 +118,7 @@ int PEBLInterpret( int argc, char *argv[] )
     //-----------------------------------------------------------
     //        Process all files on the command-line
     string inputfilename = Evaluator::gPath.FindFile(*i);
-    PNode * head = NULL;
+    head = NULL;
     if(inputfilename != "")
         {
             cerr << "Processing PEBL Source File: " <<  inputfilename << endl;
@@ -155,6 +157,7 @@ int PEBLInterpret( int argc, char *argv[] )
             else
                 {
                     PError::SignalFatalError("Unable to find file: " + inputfilename);
+
                 }
             i++;
        }
@@ -170,7 +173,7 @@ int PEBLInterpret( int argc, char *argv[] )
     //Now, load it into the environment:
  
     // Create a loader that will load functions into the functionmap 
-    Loader* myLoader = new Loader(); 
+    myLoader = new Loader(); 
     myLoader->LoadUserFunctions((OpNode*)head);
 
     cerr <<"Analyzing code for functions." << endl;
@@ -348,19 +351,28 @@ int PEBLInterpret( int argc, char *argv[] )
             cerr << "---------Evaluating Program-----" << endl;
             //Execute everything
             myEval.Evaluate(head);
+            head->DestroyChildren();
+            delete head;
+            delete myLoader;
             return 0;
         }
     else
         {
             cerr << "Error: Can't evaluate program" << endl;
             return 1;
+            delete myLoader;
         }
 
 }
 
 void  CaptureSignal(int signal)
 {
-    cerr << "Exiting PEBL because of signal.\n";
+    cerr << "Exiting PEBL because of captured signal.\n";
+    head->DestroyChildren();
+    delete head;
+    delete myLoader;
+    raise(signal);
+
     exit(0);
 }
 
@@ -373,12 +385,30 @@ int main(int argc,  char *argv[])
 #ifdef SIGHUP
     signal(SIGHUP, CaptureSignal);
 #endif
+
+#ifdef SIGKILL
+    signal(SIGKILL, CaptureSignal);
+#endif
+
+#ifdef SIGSTOP
+    signal(SIGSTOP, CaptureSignal);
+#endif
+
+#ifdef SIGTERM
+    signal(SIGTERM, CaptureSignal);
+#endif
+
     signal(SIGINT, CaptureSignal);
+
+
 #ifdef SIGQUIT
     signal(SIGQUIT, CaptureSignal);
 #endif
+
+
     signal(SIGTERM, CaptureSignal);
     
+
     if(argc == 1)
         {
             PrintOptions();

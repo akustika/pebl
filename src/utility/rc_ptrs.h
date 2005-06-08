@@ -126,7 +126,6 @@ class counted_ptr
 
   void release()
   {
-      
       if (count)
           if( --(*count)==0)
               {
@@ -135,10 +134,9 @@ class counted_ptr
                   delete count;
                   ptr = 0;
                   count = 0;
-          
               }
+      
   }
-    
     
 };
 

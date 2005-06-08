@@ -90,12 +90,14 @@ Variant::Variant(const long double f):
 
 
 //String Constructor
-Variant::Variant(const char * string):
+Variant::Variant(const char *  mystring):
     mComplexData(NULL),
     mDataType(P_DATA_STRING)
 {
-    mData.String = strdup(string);
-}
+    mData.String = strdup(mystring);
+    if(!mData.String)
+        PError::SignalFatalError("Failed to copy string.");
+} 
 
 
 //Character Constructor
@@ -659,7 +661,7 @@ Variant Variant::operator = (const  std::string  value)
 
 ///overload operator<<
 
-ostream &operator << (ostream& out, const Variant& v)
+ostream & operator << (ostream& out, const Variant& v)
 {
 	
     switch(v.GetDataType())
@@ -776,7 +778,7 @@ VariantDataType Variant::GetDataType() const
 }
 
 ///This returns the type as a char*
-const char * Variant::GetDataTypeName() const
+std::string Variant::GetDataTypeName() const
 {
     switch(mDataType)
         {
@@ -810,9 +812,6 @@ const char * Variant::GetDataTypeName() const
         case P_DATA_UNDEFINED:
         default:
             return "Undefined PEBL Variant Type";
-
-
-
         }
 }
 
@@ -1106,6 +1105,8 @@ void Variant::SetComplexData(PComplexData* data)
 /// by multiple variants, although the data they reference is ref-counted and may be shared.
 void Variant::free_mData()
 {
+
+    
     if(mDataType == P_DATA_STRING )
         {
             if(mData.String)
@@ -1135,6 +1136,7 @@ void Variant::free_mData()
         {
             if(mComplexData)
                 {
+                    
                     delete mComplexData;
                     mComplexData = NULL;
                 }

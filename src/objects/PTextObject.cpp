@@ -52,7 +52,9 @@ PTextObject::PTextObject(const std::string & text):
 
 PTextObject::PTextObject( PTextObject &object):
     PWidget(0,0,0,0,false),
+    mTextChanged(true),
     mText(object.GetText())
+ 
 {
 }
 

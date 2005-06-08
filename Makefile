@@ -254,7 +254,7 @@ DIRS = \
 #
 
 main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/pebl -g -O2 -Wall -I/usr/local/include/SDL -D_REENTRANT  \
+	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/pebl -I/usr/local/include/SDL -D_REENTRANT  \
 	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf   $(OSX_FLAGS) \
 	 $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(PEBLMAIN_OBJ)) 
 

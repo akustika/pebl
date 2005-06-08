@@ -134,13 +134,15 @@ function:	/*Syntax allows there to be a newline between the varlist and the bloc
 		PEBL_DEFINE PEBL_FUNCTIONNAME PEBL_LPAREN varlist PEBL_RPAREN  nlornone functionblock  { ;
 		PNode * tmpFN = new OpNode(PEBL_LAMBDAFUNCTION, $4, $7, sourcefilename, yylineno);  
 		PNode * tmpNode = new DataNode(Variant($2, P_DATA_FUNCTION), sourcefilename, yylineno);
-		$$ = new OpNode(PEBL_FUNCTION, tmpNode, tmpFN, sourcefilename, yylineno);}
+		$$ = new OpNode(PEBL_FUNCTION, tmpNode, tmpFN, sourcefilename, yylineno);
+        }
 
 	       /******************************************************************************/
 	|	PEBL_DEFINE PEBL_FUNCTIONNAME PEBL_LPAREN PEBL_RPAREN  nlornone functionblock    { ;
 		PNode * tmpFN = new OpNode(PEBL_LAMBDAFUNCTION, NULL, $6, sourcefilename, yylineno);  
 		PNode * tmpNode = new DataNode(Variant($2, P_DATA_FUNCTION), sourcefilename, yylineno);
-		$$ = new OpNode(PEBL_FUNCTION, tmpNode, tmpFN, sourcefilename, yylineno);}
+		$$ = new OpNode(PEBL_FUNCTION, tmpNode, tmpFN, sourcefilename, yylineno);
+		  }
 	;	
 
 
@@ -354,7 +356,6 @@ exp:	        datum                   { $$ = $1;}
 		PNode * tmpNode = new DataNode(Variant($1, P_DATA_FUNCTION), sourcefilename, yylineno);
 		$$ = new OpNode(PEBL_FUNCTION, tmpNode, $2, sourcefilename, yylineno);
 		}
-
 		;
 
 
@@ -381,10 +382,14 @@ datum:         	PEBL_INTEGER             { $$ = new DataNode ($1, sourcefilename
 		/******************************************************************************/
 variable:	PEBL_LOCALVAR              { 
 		Variant tmpV($1, P_DATA_LOCALVARIABLE);           /*create a new temporary variant*/;
-		$$ = new DataNode(tmpV, sourcefilename, yylineno); }                        /*Make a new variable node here.*/
+		$$ = new DataNode(tmpV, sourcefilename, yylineno);                        /*Make a new variable node here.*/
+        free($1);
+        };
          |	PEBL_GLOBALVAR              { 
 		Variant tmpV($1, P_DATA_GLOBALVARIABLE);          /*create a new temporary variant*/;
-		$$ = new DataNode(tmpV, sourcefilename, yylineno); }                        /*Make a new variable node here.*/
+		$$ = new DataNode(tmpV, sourcefilename, yylineno);  /*Make a new variable node here.*/
+		free($1);
+		 };
 		;
 
 nlornone:	/**/   {/*nothing*/;}

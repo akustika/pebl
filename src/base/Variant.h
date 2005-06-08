@@ -29,7 +29,7 @@
 
 //#include "PComplexData.h"
 #include <iostream>
-
+#include "../utility/rc_ptrs.h"
 
 
 class PComplexData;
@@ -45,7 +45,7 @@ enum VariantDataType {
     P_DATA_STRING,           // a string of characters
     P_DATA_LOCALVARIABLE,    // a 'variable'; i.e. a char* symbolizing another piece of data.
     P_DATA_GLOBALVARIABLE,   // a 'variable'; i.e. a char* symbolizing another piece of data.
-    P_DATA_COMPLEXDATA       // Any one of a number of compex data 'objects'.
+    P_DATA_COMPLEXDATA       // Any one of a number of complex data 'objects'.
 };
 
 
@@ -134,7 +134,7 @@ public:
     operator bool();
 
     VariantDataType GetDataType() const;
-    const char* GetDataTypeName() const;
+    std::string GetDataTypeName() const;
   
     bool IsNumber() const;
     bool IsFloat() const;
@@ -170,7 +170,7 @@ private:
     /// The variant does not take care of cleaning up mComplexData
     /// itself automatically; this must be done explicitly
     PComplexData  * mComplexData;
- 
+    counted_ptr<PComplexData> mCD;
     VariantDataType  mDataType;          // number, string or array 
 
     union PValue {

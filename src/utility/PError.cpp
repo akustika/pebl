@@ -34,6 +34,7 @@
 
 #include <iostream>
 #include <string>
+#include <signal.h>
 
 using std::cerr;
 using std::endl;
@@ -54,6 +55,8 @@ void PError::SignalFatalError(const string & message)
             cerr << "Error before files are loaded.\n";
             cerr << message << endl;
         }
+ 
+    raise(SIGTERM);
     exit(0);
 }
 

@@ -83,6 +83,9 @@ void PEventLoop::RegisterState(DeviceState * state, const char* function, PList 
 /// in an event-loop.  This allows multiple tests to be registered (time limit, key press, etc.)
 /// and tested within a fairly tight compiled loop, without the user having to write his/her own 
 /// interpreted event loop.
+
+/// This method takes over ownership of the DeviceState, and is responsible for cleaning it up 
+/// when finished.
 void PEventLoop::RegisterEvent(DeviceState * state, const char* function, PList * parameters)
 {
     //Add the state to the states list.
@@ -108,6 +111,17 @@ void PEventLoop::RegisterEvent(DeviceState * state, const char* function, PList 
 
 void PEventLoop::Clear()
 {
+
+    //When the eventloop is Clear()ed, the states should be deleted one-by-one,
+    //to avoid a memory leak.
+    
+    std::vector<DeviceState*>::iterator i = mStates.begin();
+    while(i != mStates.end())
+        {
+            delete *i;
+            i++;
+        }
+
     mStates.clear();
     mNodes.clear();
     mParameters.clear();
@@ -220,10 +234,12 @@ PEvent PEventLoop::Loop()
 
                 }
         end:
-            //Get rid of the top item in the event queue.
+            //Get rid of the top item in the event queue
             gEventQueue->PopEvent();
-            
+
         }
+
+    delete myEval;
     return returnval;
 }
 
