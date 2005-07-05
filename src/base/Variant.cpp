@@ -163,10 +163,11 @@ Variant::Variant(int i):
 }
 
 
-Variant::Variant(PComplexData * pcd):
+Variant::Variant(counted_ptr<PComplexData> pcd):
     mDataType(P_DATA_COMPLEXDATA)
 {
-    mComplexData = pcd;  
+    mCD = pcd;
+    //    mComplexData = pcd;  
 }
 
 
@@ -266,8 +267,8 @@ Variant::Variant(const Variant &v):
 
         case P_DATA_COMPLEXDATA:
             {
-                //First, retrieve the list from v.
-                mComplexData  = new PComplexData(v.GetComplexData());
+                //do a direct copy because these are counted references.
+                mCD  = v.GetComplexData();
             }
             break;
 
@@ -547,7 +548,7 @@ Variant Variant::operator = (const Variant & value)
             break;
             
         case P_DATA_COMPLEXDATA:
-            mComplexData = new PComplexData(value.GetComplexData());
+            mCD = value.GetComplexData();
             break;            
 
         case P_DATA_UNDEFINED: // undefined, error 
@@ -1079,12 +1080,9 @@ pFunc Variant::GetFunctionPointer() const
 
 /// This will return a pointer to the complex data
 /// held within the variant.
-PComplexData * Variant::GetComplexData() const
+counted_ptr<PComplexData>  Variant::GetComplexData() const
 {
-    if(mDataType == P_DATA_COMPLEXDATA)
-        return mComplexData;
-    else 
-        return 0;
+    return mCD;
 }
 
 
@@ -1092,9 +1090,9 @@ PComplexData * Variant::GetComplexData() const
 /// This sets the complex data type to the argument.
 /// It does not delete the complex data currently held
 /// in the pointer.
-void Variant::SetComplexData(PComplexData* data)
+void Variant::SetComplexData(counted_ptr<PComplexData> data)
 {
-    mComplexData = data;
+    mCD = data;
 }
 
 
@@ -1134,12 +1132,6 @@ void Variant::free_mData()
 
     else if(mDataType == P_DATA_COMPLEXDATA)
         {
-            if(mComplexData)
-                {
-                    
-                    delete mComplexData;
-                    mComplexData = NULL;
-                }
         }
 
     //    mDataType = P_DATA_UNDEFINED;

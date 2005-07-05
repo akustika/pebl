@@ -48,7 +48,7 @@ public:
     //This sets up default pathnames.  Called by const char constructor; takes the 
     //binary filename and uses it on platforms where this indicates location of
     //support files.
-    void Initialize(std::list<char*>);
+    void Initialize(std::list<std::string>);
     
 
     void AddToPathList(const string & s); 

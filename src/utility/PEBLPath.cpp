@@ -43,9 +43,8 @@ PEBLPath::PEBLPath()
 }
 
 
-void PEBLPath::Initialize(std::list<char*> files)
+void PEBLPath::Initialize(std::list<std::string> files)
 {
-
 
 #if defined PEBL_UNIX
     //On unix, add the following paths:
@@ -56,7 +55,7 @@ void PEBLPath::Initialize(std::list<char*> files)
     AddToPathList("");
     //The directories of each file on the command-line.
     string tmp;
-    std::list<char*>::iterator i=files.begin();
+    std::list<string>::iterator i=files.begin();
     i++;  //skip over the command name in UNIX.
     while(i != files.end())
         {
@@ -104,7 +103,7 @@ void PEBLPath::Initialize(std::list<char*> files)
     // files[0] is the execution directory, 
     // the others are filenames.
     string tmp;
-    std::list<char* >::iterator i=files.begin();
+    std::list<string>::iterator i=files.begin();
     while(i != files.end())
         {
             //For each commandline argument, strip the filename and add it.
@@ -191,7 +190,6 @@ string  PEBLPath::FindFile(const string & filename)
 // (ending with a '/' or '\'), it won't strip that character.
 const string PEBLPath::StripFile(const string &  file)
 {
-
 #if defined PEBL_UNIX
     char separator = '/';
 #else

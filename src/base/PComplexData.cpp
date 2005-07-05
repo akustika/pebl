@@ -542,8 +542,6 @@ PlatformWidget * PComplexData::GetWidget() const
 }
 
 
-
-
 bool PComplexData::IsList() const
 {
     return mComplexDataType == CDT_LIST;

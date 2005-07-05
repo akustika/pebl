@@ -74,7 +74,7 @@ using std::endl;
 
 //Prototype for c function defined in grammar.y:
 PNode *  parse(const char* filename);
-std::list<char*> GetFiles(int argc, char * argv[]);
+std::list<string> GetFiles(int argc, const char * argv[]);
 void  PrintOptions();
    
 ///Initiate some static member data.
@@ -87,7 +87,7 @@ PEBLPath  Evaluator::gPath;
 Loader* myLoader;
 PNode * head;
 
-int PEBLInterpret( int argc, char *argv[] )
+int PEBLInterpret( int argc, const char *argv[] )
 { 
     
     PNode * tmp = NULL;
@@ -95,10 +95,7 @@ int PEBLInterpret( int argc, char *argv[] )
     //Cycle through command-line parameters extracting the files.
     //This does not check for file validity, it just removes any other command-line options,
     //i.e. ones that are of the form <-flag> <option> or whatever.
-    std::list<char*> files = GetFiles(argc, argv);
-    
-
-
+    std::list<std::string> files = GetFiles(argc, argv);
 
     //Set up the search path.
     Evaluator::gPath.Initialize(files);
@@ -110,7 +107,7 @@ int PEBLInterpret( int argc, char *argv[] )
     files.push_back("Utility.pbl");
 
     //Process the first command-line argument.
-    std::list<char*>::iterator i = files.begin();
+    std::list<std::string>::iterator i = files.begin();
     //Skip ahead one on the list; the first one is the executable's name
     i++;
 
@@ -325,18 +322,18 @@ int PEBLInterpret( int argc, char *argv[] )
     //Now, arglist should contain any values specified with the -v flag.
     if(arglist->Length()==0)
         {
-            pList->PushFront(Variant(0));
+            arglist->PushBack(Variant(0));
+            pList->PushFront(Variant(new PComplexData(arglist)));
         }
     else
         {
             pList->PushFront(Variant(new PComplexData(arglist)));
         }
-    
-    PComplexData * pcd = new PComplexData(pList);
+        
+    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(pList));
     Variant v = Variant(pcd);
     
-
-    Evaluator myEval = Evaluator(v);
+    Evaluator myEval = Evaluator(v,"Start");
 
 
 
@@ -377,7 +374,7 @@ void  CaptureSignal(int signal)
 }
 
 
-int main(int argc,  char *argv[])
+int main(int argc,  const char *argv[])
 {
 
     
@@ -419,10 +416,10 @@ int main(int argc,  char *argv[])
 
 
 //This returns a list of the files listed on the command-line.
-std::list<char*> GetFiles(int argc, char * argv[])
+std::list<std::string> GetFiles(int argc, const char * argv[])
 {
 
-    std::list<char*> tmp;
+    std::list<std::string> tmp;
     for(int i = 0; i < argc; i++)
         {
             if(strcmp(argv[i], "-v")==0 ||
@@ -446,7 +443,7 @@ std::list<char*> GetFiles(int argc, char * argv[])
             else
                 {
 
-                    tmp.push_back(strdup(argv[i]));
+                    tmp.push_back(std::string(argv[i]));
                 }
             
         }

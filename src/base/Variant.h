@@ -75,7 +75,7 @@ public:
     Variant(const char* string, VariantDataType type);
     Variant(const StackSignalType);
     Variant(pFunc);  //This one takes a function-pointer as an argument.
-    Variant(PComplexData * pcd);
+    Variant(counted_ptr<PComplexData> pcd);
     Variant(int i);
     Variant(double f);
     Variant(float f);
@@ -155,9 +155,9 @@ public:
     const char * GetString() const;
     StackSignalType GetSignal()const;
     pFunc GetFunctionPointer() const;
-    PComplexData* GetComplexData() const;
+    counted_ptr<PComplexData> GetComplexData() const;
 
-    void SetComplexData(PComplexData * data);      //Set and retrieve something in the complex data slot.
+    void SetComplexData(counted_ptr<PComplexData> data);      //Set and retrieve something in the complex data slot.
 
 
 protected:

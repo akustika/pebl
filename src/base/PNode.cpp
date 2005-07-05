@@ -131,7 +131,7 @@ OpNode::OpNode(int op, PNode *left, PNode *right, const std::string & filename, 
 
 void OpNode::DestroyChildren()
 {
-    cerr << "destroying children\n";
+    //cerr << "destroying children\n";
     if(mLeft)
         {
             mLeft->DestroyChildren();

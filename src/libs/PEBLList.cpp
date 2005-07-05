@@ -72,7 +72,7 @@ Variant PEBLList::Shuffle (Variant v)
     
     //Now, sort by the key list        
     counted_ptr<PList> newList = dataList->SortBy(*keyList);
-    PComplexData * PCD = new PComplexData(newList);
+    counted_ptr<PComplexData> PCD =counted_ptr<PComplexData>( new PComplexData(newList));
     
     return Variant(PCD);
             

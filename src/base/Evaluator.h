@@ -54,7 +54,7 @@ class Evaluator
 public:
 
     Evaluator();
-    Evaluator(Variant  v);
+    Evaluator(Variant  v, std::string scope);
     ~Evaluator();
   
     void CallFunction(const OpNode * node);
@@ -94,6 +94,7 @@ public:
     static  const  PNode * gEvalNode;
 
 
+    
 private:
 
 
@@ -109,6 +110,10 @@ private:
 
     /// This holds variables local to the current thread.
     VariableMap mLocalVariableMap; 
+    
+    /// The name of the current scope; the function name
+    /// which the evaluator is invoked for.
+    std::string mScope;
  
 };
 

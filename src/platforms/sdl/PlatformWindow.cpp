@@ -28,9 +28,9 @@
 #include "../../objects/PWindow.h"
 #include "../../objects/PColor.h"
 #include "../../base/Evaluator.h"
+#include "../../base/VariableMap.h"
 
 #include "SDL/SDL.h"
-
 #include <stdio.h>
 
 using std::cout;

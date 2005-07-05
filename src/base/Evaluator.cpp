@@ -43,7 +43,7 @@
 #include <math.h>
 
 #undef PEBL_DEBUG_PRINT
-
+//#define PEBL_DEBUG_PRINT
 
 using std::cerr;
 using std::cout;
@@ -53,17 +53,17 @@ using std::list;
 using std::string;
 
 Evaluator::Evaluator():
-    mStackMax(10000)
-
+    mStackMax(10000),
+    mScope("Base Scope")
 {
 
 }
 
 
-Evaluator::Evaluator(Variant  stacktop):
-    mStackMax(10000)
+Evaluator::Evaluator(Variant stacktop, string scope):
+    mStackMax(10000),
+    mScope(scope)
 {
-
     //Initialize the evaluator scope with a variant which is a list of variables
     Push(stacktop);
 }
@@ -402,60 +402,72 @@ void Evaluator::Evaluate(const OpNode * node)
    
                 //Get the argument list.
                 Variant v1 = Pop();
-                
                 counted_ptr<PList> tmpList;
                 //If v1 is a stacksignal list_head, there are no arguments
                 //provided.
+                
                 if( v1.IsStackSignal() && v1.GetSignal() == STACK_LIST_HEAD)
                     {
                         tmpList = counted_ptr<PList>(new PList());
-                        
                     }
-                
+
                 if( v1.IsComplexData())
                     {
                         tmpList = v1.GetComplexData()->GetList(); 
                     }
-                
+
                 Variant v2 = 0;
                 list<Variant>::iterator p;
                 //iterate through the lists and assign values to variables.
                 while(node1)
                     {
+
                         //Get the variable name
                         v2 = ((DataNode*)(((OpNode*)node1)->GetLeft()))->GetValue();
-                        
-                        if(tmpList->IsEmpty())
+
+                        //if(tmpList->IsEmpty())
+                        if(!tmpList.get()
+                           ||( tmpList.get() && tmpList->Length()==0))
                             {
                                 //Too few arguments.
-                                PError::SignalFatalError("Too few arguments in function");
-                            }
+                                string message =  "Too few arguments passed to function [" + mScope + "].";
+                                if(mScope == "Start")
+                                    message += " (Make sure Start function has only one variable).";
+
+                                PError::SignalFatalError(message);
                         
+                            }
                         
                         //Get the value, remove it from the list.
                         p = tmpList->Begin();
-                        
                         
                         //Add pair to variable map.  This should always be a local variable map.
                         mLocalVariableMap.AddVariable(v2, *p);
                         //remove it from the front of the list.
                         tmpList->PopFront();
-                        
                         //Move to the next item.
                         node1 = ((OpNode*)node1)->GetRight();
                     }
-                
-                if(!tmpList->IsEmpty())
+
+
+                if(tmpList.get()
+                   && tmpList->Length() > 0)
                     {
                         //Too many arguments.
-                        PError::SignalFatalError(string("Too many arguments in function"));
-                    }
+                        string message = string("Too many arguments passed to function [" + mScope + "].");
+
+                        if(mScope == "Start")
+                            message += " (Make sure Start function has a variable).";
+                        PError::SignalFatalError(message);
+                                   
+                     }
                     
-                
                 //Now, get the code block and execute it.
                 PNode * node2 = node->GetRight();
                 Evaluate(node2);
+
             }
+
     
     break;
 
@@ -467,9 +479,11 @@ void Evaluator::Evaluate(const OpNode * node)
                 
                 //The left child of a PEBL_LIBRARYFUNCTION contains an PEBL_AND node containing two datanodes, 
                 //each containing integers integer describing the min and max  number of arguments, respectively.
+
                 
                 OpNode * node0 =(OpNode*)(node->GetLeft());
                 
+
                 int min = ((DataNode*)(node0->GetLeft()))->GetValue();
                 int max = ((DataNode*)(node0->GetRight()))->GetValue();
 
@@ -479,23 +493,29 @@ void Evaluator::Evaluate(const OpNode * node)
 
                 PNode * node1 = node->GetRight();
                 Variant v1 = ((DataNode*)node1)->GetValue();
-            
+
                 //All built-in functions take a single parameter: a Variant list.  
                 //This variant should be on the top of the stack right now. So get it.
                 Variant v2 = Pop();
-            
+
+
 
                 //Before we execute, check to see if v2 has a length  between min and max.
-                int numargs;
+                int numargs=0;
 
                 if (v2.IsStackSignal())
                     numargs = 0;
                 else
-                    numargs = ((v2.GetComplexData())->GetList())->Length();
+                    {
+                        if(v2.IsComplexData())
+                            if((v2.GetComplexData())->IsList())
+                                numargs = ((v2.GetComplexData())->GetList())->Length();
+                    }
 
                 if(numargs < min || numargs > max)
                     {
                         std::ostrstream message;
+                        message << "In Function [" << mScope << "]:";
                         message << "Incorrect number of arguments.  Wanted between " << min 
                                 << " and " << max << " but got " << numargs << ".";
 
@@ -507,6 +527,7 @@ void Evaluator::Evaluate(const OpNode * node)
                 //Execute the functionpointer and push the results onto the stack.
                 Push((v1.GetFunctionPointer())(v2));
             }
+
             break;
 
 
@@ -714,7 +735,7 @@ void Evaluator::Evaluate(const OpNode * node)
 
                         //Make an empty list and push it onto the stack.
                         counted_ptr<PList> tmpList = counted_ptr<PList>(new PList());                      
-                        PComplexData * pcd = new PComplexData(tmpList);    
+                        counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(tmpList));    
                         Variant v2 = Variant(pcd);
                         Push(v2);
                     }
@@ -753,6 +774,8 @@ void Evaluator::Evaluate(const OpNode * node)
                     }
                 else
                     {
+
+
                         //If node2 is NULL, then we are at the end of the list.
                         //everything has been pushed to the stack.  Just get everything
                         //off the stack, make a list out of it,  and put it back on the stack.
@@ -763,7 +786,7 @@ void Evaluator::Evaluate(const OpNode * node)
                         //Now, pop off items from the list until you get to a
                         //P_DATA_STACK_SIGNAL, then if it i
                         Variant v1 = Pop();
-                  
+
                         while(v1.GetDataType() != P_DATA_STACK_SIGNAL)
                             {
                                 //Add the item to the list.
@@ -772,10 +795,11 @@ void Evaluator::Evaluate(const OpNode * node)
                                 //Pop and repeat.
                                 v1 = Pop();
                             }
+
                 
                         //Now, tmpList should be the entire list.
                         //Make a Variant out of it, and put it on the stack. 
-                        PComplexData * pcd = new PComplexData(tmpList);    
+                        counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(tmpList));
                         Variant v2 = Variant(pcd);
                         Push(v2);
                     }
@@ -1047,7 +1071,7 @@ void Evaluator::Evaluate(const DataNode * node)
         case P_DATA_UNDEFINED:
         default:
             //This should signal an error.
-            PError::SignalFatalError("Undefined Data Type in Evaluate::Evaluate(DataNode)");
+            PError::SignalFatalError("In Function [" + mScope + "Undefined Data Type in Evaluate::Evaluate(DataNode)");
             break;
         }
 
@@ -1099,7 +1123,7 @@ void Evaluator::CallFunction(const OpNode * node)
                 Variant v = Pop();
                 
                 //Make a new evaluator for the function scope and v at the top of the stack.
-                Evaluator  myEval(v);
+                Evaluator  myEval(v,funcname);
                 
                 //Evaluate the lambda function in new scope.
                 myEval.Evaluate(node2);

@@ -3,7 +3,7 @@
 //    Name:       VariantTest.cpp
 //    Purpose:    Tests the Variant Class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003 Shane T. Mueller <smueller@umich.edu>
+//    Copyright:  (c) 2003--2005 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -27,6 +27,26 @@
 #include "../base/Variant.h"
 #include "../base/PComplexData.h"
 #include "../base/PList.h"
+#include "../base/Evaluator.h"
+#include "../base/PNode.h"
+#include "../base/VariableMap.h"
+#include "../base/FunctionMap.h"
+
+#include "../base/grammar.tab.hpp"
+
+#include "../utility/PEBLPath.h"
+#include "../devices/PEventLoop.h"
+
+#include "../libs/PEBLObjects.h"
+#include "../base/Evaluator.h"
+#include "../base/Loader.h"
+
+
+
+#include "../utility/PError.h"
+#include "../utility/PEBLPath.h"
+#include "../utility/PEBLUtility.h"
+#include "../utility/rc_ptrs.h"
 
 #include <iostream>
 #include <stdlib.h>
@@ -34,6 +54,16 @@
 using std::cout;
 using std::endl;
 using std::flush;
+
+
+   PNode *  parse(const char* filename);
+///Initiate some static member data.
+
+FunctionMap Evaluator::mFunctionMap;
+PEventLoop Evaluator::mEventLoop; 
+const PNode * Evaluator::gEvalNode = NULL;
+PEBLPath  Evaluator::gPath;
+VariableMap Evaluator::gGlobalVariableMap;
 
 //The following is the entry point for the command-line version
 int main(int argc, char **argv[])
@@ -194,10 +224,10 @@ int main(int argc, char **argv[])
     cout << "==========================================================\n";
     
     char* name = "Apostrophe";
-    myVariant2 = Variant(name,P_DATA_VARIABLE);
+    myVariant2 = Variant(name,P_DATA_LOCALVARIABLE);
     cout << "Apostrophe: "<< name << " " << myVariant2 << myVariant2.GetDataTypeName() << endl;
     
-    myVariant3 = Variant("Nonesty",P_DATA_VARIABLE);
+    myVariant3 = Variant("Nonesty",P_DATA_LOCALVARIABLE);
     cout << "Nonesty: "<< flush << myVariant3 << flush << myVariant3.GetDataTypeName() << endl;
 
  
@@ -213,14 +243,12 @@ int main(int argc, char **argv[])
     cout << "Checking List Type\n";
     cout << "==========================================================\n";
 
-
-
     //First, make a list 
    
-    PList *list1;
+    counted_ptr<PList> list1;
     myVariant1 = 33;
     
-    list1=new PList();
+    list1=counted_ptr<PList>(new PList());
     list1->PushFront(myVariant1);
     list1->PushFront(myVariant2);
     list1->PushFront(myVariant3);

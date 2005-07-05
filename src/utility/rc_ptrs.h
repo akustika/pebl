@@ -64,79 +64,79 @@ for use with arrays.
 template <class X>
 class counted_ptr
 {
-  //
-  // Public typedefs
-  //
+    //
+    // Public typedefs
+    //
+public:
+    typedef X element_type;
+    typedef X* pointer_type;
+    typedef size_t size_type;
+    
  public:
-  typedef X element_type;
-  typedef X* pointer_type;
-  typedef size_t size_type;
-  
- public:
-  explicit counted_ptr(X* p=0) : ptr(p)
-  {
-    count=new size_type(1);
-  }
-  
-  counted_ptr (const counted_ptr<X> &r)
-  {
-    ptr=r.ptr;
-    count=r.count;
-    acquire();
-  }
-  
-  
-  ~counted_ptr() { release(); }
-  
-
-  counted_ptr& operator= (const counted_ptr<X> &r)
+    explicit counted_ptr(X* p=0) : ptr(p)
     {
-      if (this != &r)
-	{
-	  release();
-	  ptr = r.ptr;
-	  count = r.count;
-	  acquire();
-	}
-      return *this;
+        count=new size_type(1);
     }
     
-  X& operator* () const { return *ptr; }
-  X* get () const { return ptr; }
-  X* operator-> () const { return ptr; }
+    counted_ptr (const counted_ptr<X> &r)
+    {
+        ptr=r.ptr;
+        count=r.count;
+        acquire();
+    }
+    
   
-  bool unique () const
-  {
-    return *count==1;
-  }
-
-
-
- protected:
-  X* ptr;
-  size_type *count;
-  
- protected:
-  
-  void acquire()
-  {
-    (*count) += 1;
-  }
-
-
-  void release()
-  {
-      if (count)
-          if( --(*count)==0)
-              {
-                  
-                  delete ptr;
-                  delete count;
-                  ptr = 0;
-                  count = 0;
-              }
-      
-  }
+    ~counted_ptr() { release(); }
+    
+    
+    counted_ptr& operator= (const counted_ptr<X> &r)
+    {
+        if (this != &r)
+            {
+                release();
+                ptr = r.ptr;
+                count = r.count;
+                acquire();
+            }
+        return *this;
+    }
+    
+    X& operator* () const { return *ptr; }
+    X* get () const { return ptr; }
+    X* operator-> () const { return ptr; }
+    
+    bool unique () const
+    {
+        return *count==1;
+    }
+    
+    
+    
+protected:
+    X* ptr;
+    size_type *count;
+    
+protected:
+    
+    void acquire()
+    {
+        (*count) += 1;
+    }
+    
+    
+    void release()
+    {
+        if (count)
+            if( --(*count)==0)
+                {
+                    
+                    delete ptr;
+                    delete count;
+                    ptr = 0;
+                    count = 0;
+                }
+        
+    }
     
 };
 
