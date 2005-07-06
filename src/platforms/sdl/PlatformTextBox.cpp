@@ -89,7 +89,7 @@ ostream & PlatformTextBox::SendToStream(ostream& out) const
 {
     out << "<SDL PlatformTextBox: [" << mText << "] in " << *mFont << ">" <<flush;
     return out;
-};
+}
 
  
 

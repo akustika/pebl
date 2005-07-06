@@ -35,13 +35,13 @@
 PlatformTimer::PlatformTimer()
 {
 
-};
+}
 
 /// This is the standard pNode destructor
 PlatformTimer::~PlatformTimer()
 {
     // Standard Destructor
-};
+}
 
 
 void PlatformTimer::Wait(unsigned long int msecs)

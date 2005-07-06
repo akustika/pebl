@@ -79,7 +79,7 @@ bool PlatformAudioOut::LoadSoundFile(const string & soundfilename)
 	/* Load the wave file into memory */
 	if ( SDL_LoadWAV(filename.c_str(), &mWave.spec, &mWave.audio, &mWave.audiolen) == NULL )
         {
-            fprintf(stderr, "Couldn't load %s: %s\n", mFileName, SDL_GetError());
+			std::cerr << "Couldn't load " << mFileName << ": " << SDL_GetError() << std::endl;
             return false;
         }
 

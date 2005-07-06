@@ -74,7 +74,7 @@ using std::endl;
 
 //Prototype for c function defined in grammar.y:
 PNode *  parse(const char* filename);
-std::list<string> GetFiles(int argc, const char * argv[]);
+std::list<string> GetFiles(int argc, char * argv[]);
 void  PrintOptions();
    
 ///Initiate some static member data.
@@ -87,7 +87,7 @@ PEBLPath  Evaluator::gPath;
 Loader* myLoader;
 PNode * head;
 
-int PEBLInterpret( int argc, const char *argv[] )
+int PEBLInterpret( int argc, char *argv[] )
 { 
     
     PNode * tmp = NULL;
@@ -379,7 +379,7 @@ void  CaptureSignal(int signal)
 }
 
 
-int main(int argc,  const char *argv[])
+int main(int argc,  char *argv[])
 {
 
     
@@ -421,7 +421,7 @@ int main(int argc,  const char *argv[])
 
 
 //This returns a list of the files listed on the command-line.
-std::list<std::string> GetFiles(int argc, const char * argv[])
+std::list<std::string> GetFiles(int argc,  char * argv[])
 {
 
     std::list<std::string> tmp;
@@ -459,7 +459,7 @@ void PrintOptions()
 {
     cout << "-------------------------------------------------------------------------------\n";
     cout << "PEBL: The Psychology Experiment Building Language\n";
-    cout << "Version 0.4\n";
+    cout << "Version 0.05\n";
     cout << "(c) 2003-2005 Shane T. Mueller, Ph.D.\n";
     cout << "smueller@obereed.net   http://pebl.sf.net\n";
     cout << "-------------------------------------------------------------------------------\n";

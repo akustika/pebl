@@ -73,7 +73,7 @@ ostream & PlatformLabel::SendToStream(ostream& out) const
 {
     out << "<SDL PlatformLabel: " << mText << " in " << *mFont << ">" <<flush;
     return out;
-};
+}
 
  
 

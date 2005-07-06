@@ -80,7 +80,7 @@ PlatformFont::PlatformFont(const std::string & filename, int style, int size, PC
     mSDL_FGColor = SDLUtility::PColorToSDLColor(mFontColor);
     mSDL_BGColor = SDLUtility::PColorToSDLColor(mBackgroundColor);
 
-};
+}
 
 
 
@@ -191,7 +191,7 @@ std::string PlatformFont::StripText(const std::string & text)
 
     std::string toBeRendered;
     
-    for(int i = 0; i < text.size(); i++)
+    for(unsigned int i = 0; i < text.size(); i++)
         {
             if(text[i] == 10 ||
                text[i] == 13 ||
