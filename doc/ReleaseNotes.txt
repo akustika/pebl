@@ -30,6 +30,49 @@ obsolete.
 
 
 --------------------------------------------------
+Version 0.05
+July 2005
+
+The fifth PEBL release (named 0.05 rather than 0.5) focusses on memory
+management and infrastructure.  There are few user-visable changes,
+but there are substantial beneath-the-hood fixes thanks to memory
+profiling tools like memprof and valgrind.  Most of the reckless use
+of pointers has been changed to counted references; std::string has
+replaced most of the use of char*, the parser doesn't leak memory
+anymore, the parse tree gets cleaned up properly, and the default
+compile options use -pedantic, forcing me to fix all wierd warnings
+that will hopefully catch errors as well.
+
+There are a couple cool additions to the syntax.  First, character
+strings in programs can span multiple lines, and those linebreaks are
+reflected in TextBoxes.  This makes it easier to put instructions
+in-line, because you don't have to do "text part one" + " text part
+two" to span lines.   Next, I've added a 'break' keyword that allows
+you to escape out of loops immediately.  I've also made keywords case
+insensitive, as was originally described in the manual but was never
+really true.
+
+ I've also added the function 'DesignBalancedSampling', which works
+ sort of like SampleWithReplacement:  You give it a list and a length
+ of list you need--this list can (should) be longer than the list.  It
+ will return a list of items which contains multiple shuffled copies
+ of the original list, so that every instance on the list is present
+ before any are repeated, and so that there are no direct repeats on
+ the cusps between lists.  It chops off the last shuffled list.  If
+ the epoch-shuffling is not desired, one can Shuffle() it afterwards.
+
+  For linux users, I've mocked
+up a script (in the bin/ directory) that provides a demonstration on
+how to use the zenity program as a front-end launcher for your
+experiments, allowing you to enter things like subject numbers and
+conditions before the experiment launches.  For emacs users, there is
+a new (and simplistic) .el mode available, which performs syntax
+highlighting but doesn't do proper indentation yet.  Finally, I released an
+experimental version of 0.4 for Mac OSX, and 0.05 will be the first
+official release of PEBL for OSX.  
+
+
+--------------------------------------------------
 Version 0.4
 March 2, 2005
 
