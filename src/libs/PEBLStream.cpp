@@ -221,7 +221,7 @@ Variant PEBLStream::FileReadList(Variant v)
         PError::SignalFatalError(string("Unable to find file [")  + v1.GetString() + string("]."));
 
     //It must be good, so open it.
-    counted_ptr<PStream> mystream = counted_ptr<PStream>(new PStream(filename.c_str(),sdRead, stASCII));
+    counted_ptr<PStream> mystream = counted_ptr<PStream>(new PStream(filename,sdRead, stASCII));
    
 
     counted_ptr<PList>  returnlist = counted_ptr<PList>(new PList());
@@ -260,7 +260,7 @@ Variant PEBLStream::FileReadTable(Variant v)
         PError::SignalFatalError(string("Unable to find file [")  +v1.GetString() + string("]."));
 
     //It must be good, so open it.
-    counted_ptr<PStream>  myStream = counted_ptr<PStream> (new PStream(filename.c_str(),sdRead, stASCII));
+    counted_ptr<PStream>  myStream = counted_ptr<PStream> (new PStream(filename,sdRead, stASCII));
     
     char separator;
     //See if there is another parameter; if there is, it is the token separator.
@@ -328,7 +328,7 @@ Variant PEBLStream::FileReadText(Variant v)
         PError::SignalFatalError(string("Unable to find file [")  + v1.GetString() + string("]."));
 
     //It must be good, so open it.
-    counted_ptr<PStream> mystream = counted_ptr<PStream>(new PStream(filename.c_str(),sdRead, stASCII));
+    counted_ptr<PStream> mystream = counted_ptr<PStream>(new PStream(filename,sdRead, stASCII));
    
 
     Variant returnText = "";

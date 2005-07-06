@@ -341,9 +341,11 @@ define GetStimuli()
   loop(word, words)
   {
 
-	stim <- ExtractListItems(words, [1,3,5,6,8,9,11,12,13,15,16,17, 19,21,23, 24, 26, 27, 29, 30, 31, 33, 34, 35])
+	stim <- ExtractListItems(word, 
+	                         [1,3,5,6,8,9,11,12,13,15,16,17, 
+	                          19,21,23, 24, 26, 27, 29, 30, 31, 33, 34, 35])
 	stimFrequency <- Merge(Repeat("l",16), Repeat("h",16))
-	cues   <- ExtractListItems(words, [2,4,7,10, 14, 18, 20, 22, 25, 28, 32, 36])
+	cues   <- ExtractListItems(word, [2,4,7,10, 14, 18, 20, 22, 25, 28, 32, 36])
 	cueFrequency <- Merge(Repeat("l", 6), Repeat("h", 6))
 
 	stimCategorySize <- RepeatList([1,1,2,2,2,2,3,3,3,3,3,3],2)
