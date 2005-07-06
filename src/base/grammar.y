@@ -134,7 +134,9 @@ function:	/*Syntax allows there to be a newline between the varlist and the bloc
 		PEBL_DEFINE PEBL_FUNCTIONNAME PEBL_LPAREN varlist PEBL_RPAREN  nlornone functionblock  { ;
 		PNode * tmpFN = new OpNode(PEBL_LAMBDAFUNCTION, $4, $7, sourcefilename, yylineno);  
 		PNode * tmpNode = new DataNode(Variant($2, P_DATA_FUNCTION), sourcefilename, yylineno);
+		free($2);
 		$$ = new OpNode(PEBL_FUNCTION, tmpNode, tmpFN, sourcefilename, yylineno);
+
         }
 
 	       /******************************************************************************/
@@ -142,6 +144,7 @@ function:	/*Syntax allows there to be a newline between the varlist and the bloc
 		PNode * tmpFN = new OpNode(PEBL_LAMBDAFUNCTION, NULL, $6, sourcefilename, yylineno);  
 		PNode * tmpNode = new DataNode(Variant($2, P_DATA_FUNCTION), sourcefilename, yylineno);
 		$$ = new OpNode(PEBL_FUNCTION, tmpNode, tmpFN, sourcefilename, yylineno);
+        free($2);
 		  }
 	;	
 
@@ -185,8 +188,9 @@ statement: 	/*==================================================================
 	| 	PEBL_LOCALVAR PEBL_ASSIGN exp  PEBL_NEWLINE 
 		{ 
 	        Variant tmpV($1,P_DATA_LOCALVARIABLE);       /*create a new temporary variant*/
-		PNode * tmpNode = new DataNode(tmpV, sourcefilename, yylineno);        /*create basic pnode*/
-		$$ = new OpNode(PEBL_ASSIGN, tmpNode, $3, sourcefilename, yylineno);   /*Use symbol node in assignment node*/
+		    free($1);
+			PNode * tmpNode = new DataNode(tmpV, sourcefilename, yylineno);        /*create basic pnode*/
+		    $$ = new OpNode(PEBL_ASSIGN, tmpNode, $3, sourcefilename, yylineno);   /*Use symbol node in assignment node*/
 		}
 
 		/******************************************************************************/
@@ -355,6 +359,7 @@ exp:	        datum                   { $$ = $1;}
 		PEBL_FUNCTIONNAME arglist {
 		PNode * tmpNode = new DataNode(Variant($1, P_DATA_FUNCTION), sourcefilename, yylineno);
 		$$ = new OpNode(PEBL_FUNCTION, tmpNode, $2, sourcefilename, yylineno);
+        free($1);
 		}
 		;
 
@@ -368,9 +373,11 @@ datum:         	PEBL_INTEGER             { $$ = new DataNode ($1, sourcefilename
 
 		/******************************************************************************/
 	|	PEBL_STRING              {
-		Variant tmpV($1);            /*create a new temporary variant*/
-		$$ = new DataNode(tmpV, sourcefilename, yylineno);
-                                          }
+	  Variant tmpV($1);            /*create a new temporary variant*/
+	  free($1);
+	  $$ = new DataNode(tmpV, sourcefilename, yylineno);
+
+                        }
 		/******************************************************************************/
 	|	list                     { $$ = $1;}
 

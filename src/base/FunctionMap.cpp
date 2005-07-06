@@ -58,15 +58,39 @@ FunctionMap::FunctionMap()
 
 FunctionMap::~FunctionMap()
 {
+
     //Delete mFunctionMap if necessary.
+    //go through each function and delete the opnode,  because
+    //it is a pointer that is held nowhere else.
+    Destroy();
 }
 
+void FunctionMap::Destroy()
+{
+
+   //Delete mFunctionMap if necessary.
+    //go through each function and delete the opnode,  because
+    //it is a pointer that is held nowhere else.
+    std::map<std::string, PNode*>::iterator i = mFunctionMap.begin();
+
+    while(i != mFunctionMap.end())
+        {
+            if(i->second)
+                {
+                    i->second->DestroyChildren();
+                    delete i->second;
+                    i->second = NULL;
+                }
+            i++;
+        }
+    mFunctionMap.clear();
+};
 
 ///
 /// This method will add a new variable with 
 /// name varname and value val to the variable map, or (if it already exists)
 /// change its value to val.
-void FunctionMap::AddFunction(const char* funcname,  OpNode * node)
+void FunctionMap::AddFunction(std::string funcname,  OpNode * node)
 {
     
     //Get the uppercase version of the funcname.
@@ -93,31 +117,31 @@ void FunctionMap::AddFunction(const char* funcname,  OpNode * node)
 /// This method will add a new function with name and code associated with the
 /// OpNode node, which is of type PEBL_FUNCTION.
 
-void FunctionMap::AddFunction(OpNode * node)
-{
+// void FunctionMap::AddFunction(OpNode * node)
+// {
 
-    //Get the left node, which is a FunctionName.
-    DataNode * node1 = (DataNode*)(node->GetLeft());
-    Variant v = node1->GetValue();
+//     //Get the left node, which is a FunctionName.
+//     DataNode * node1 = (DataNode*)(node->GetLeft());
+//     Variant v = node1->GetValue();
 
-    OpNode * node2 = (OpNode*)(node->GetRight());
+//     OpNode * node2 = (OpNode*)(node->GetRight());
   
-    //Add the name/node pair using previous method.
-    AddFunction(v,node2);
+//     //Add the name/node pair using previous method.
+//     AddFunction(v,node2);
 
-}
+// }
 
 
 /// 
 /// This method will retrieve the value designated by
 /// funcname.  If funcname doesn't exist, it will return 
 /// a null pointer.
-PNode *  FunctionMap::GetFunction(const char * lcasefuncname)
+PNode *  FunctionMap::GetFunction(const string & lcasefuncname)
 {
     // Convert the function name to uppercase, so that it will find
     // a match when searching through the upper-case functionmap.
     
-    std::string   funcname = PEBLUtility::ToUpper(lcasefuncname);
+    std::string  funcname = PEBLUtility::ToUpper(lcasefuncname);
     map<string,PNode*>::iterator p;
     
     //Get a the function 
@@ -154,7 +178,7 @@ PNode *  FunctionMap::GetFunction(const char * lcasefuncname)
 ///  there is a function of the given name.  It is useful because
 ///  GetFunction() may behave badly when the function doesn't exist.
 ///  It converts the query to uppercase, because everything in the functionmap should be uppercase.
-bool FunctionMap::IsFunction(const char* funcname)
+bool FunctionMap::IsFunction(const string & funcname)
 {
 
     std::string  upperfuncname = PEBLUtility::ToUpper(funcname);
@@ -172,7 +196,7 @@ bool FunctionMap::IsFunction(const char* funcname)
 
 /// This will erase the topmost value stored in varname
 ///
-void FunctionMap::Erase(const char* funcname)
+void FunctionMap::Erase(const string & funcname)
 {
     std::string upperfuncname = PEBLUtility::ToUpper(funcname);   
     mFunctionMap.erase(upperfuncname);
@@ -187,11 +211,13 @@ void FunctionMap::Erase(const char* funcname)
 void FunctionMap::DumpValues()
 {
     map<string,PNode *>::iterator p;
-
+    cout << "---------------------------\n    Function Map:\n";
     for(p= mFunctionMap.begin(); p!=mFunctionMap.end(); p++)
         {
-            cout << "Function Name:  [" << p->first << ":";
+            cout << "Function Name:  [" << std::flush;
+            cout << p->first << ":";
             cout << ":" << *(p->second) << "]\n" ;
+
         }
-  
+    
 }

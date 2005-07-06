@@ -28,8 +28,8 @@
 C   = gcc
 CXX = g++	
 DEBUGFLAGS = -lefence -DPEBL_DEBUG
-CFLAGS =   -O2 -g -std=c99
-CXXFLAGS =   -O2 -g -Wno-deprecated -Wall -pedantic -DPEBL_UNIX 
+CFLAGS =   -O2  -std=c99
+CXXFLAGS =   -O2  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX 
 
 
 SDL_CONFIG = /usr/bin/sdl-config
@@ -257,7 +257,7 @@ DIRS = \
 #
 
 main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/pebl -I/usr/local/include/SDL -D_REENTRANT  \
+	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/pebl -I/usr/local/include/SDL -D_REENTRANT \
 	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf   $(OSX_FLAGS) \
 	 $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(PEBLMAIN_OBJ)) 
 
@@ -300,25 +300,25 @@ $(BIN_DIR)/fonttest:  $(TEST_FONT_OBJ)
 	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/fonttest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_FONT_OBJ)) 
 
 $(BIN_DIR)/VCGMaker: $(APPS_DIR)/VCGMaker.cpp $(VCG_MAKER_OBJ) $(VCG_MAKER_INC) $(PUTILITIES_OBJ) $(PLATFORM_SDL_OBJ) $(PDEVICES_OBJ)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/VCGMaker -g -O2 -Wall -I/usr/local/include/SDL -D_REENTRANT  \
+	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/VCGMaker -O2 -Wall -I/usr/local/include/SDL -D_REENTRANT  \
 	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf  $(BASE_DIR)/$(PEBLBASE_SRC) \
         $(APPS_DIR)/VCGMaker.cpp $(patsubst %.o, $(OBJ_DIR)/%.o, $(VCG_MAKER_OBJ) $(PLATFORM_SDL_OBJ) $(PDEVICES_OBJ)) 
 
 $(BIN_DIR)/windowtest:  $(TEST_WINDOW_OBJ) $(TEST_WINDOW_INC)
-	$(CXX) $(CXXFLAGS) -g -O2 -Wall -I/usr/local/include/SDL -D_REENTRANT  \
+	$(CXX) $(CXXFLAGS) -O2 -Wall -I/usr/local/include/SDL -D_REENTRANT  \
 	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -o $(BIN_DIR)/windowtest \
             $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_WINDOW_OBJ))
 
 $(BIN_DIR)/pstreamtest:  $(TEST_PSTREAM_OBJ) $(TEST_PSTREAM_INC)
-	$(CXX) $(CXXFLAGS) -g -O2 -Wall -I/usr/local/include/SDL -D_REENTRANT  \
+	$(CXX) $(CXXFLAGS)  -O2 -Wall -I/usr/local/include/SDL -D_REENTRANT  \
 	   -L/usr/local/lib  -o $(BIN_DIR)/pstreamtest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_PSTREAM_OBJ))
 
 $(BIN_DIR)/audioouttest: $(TEST_AUDIOOUT_SRC) $(TEST_AUDIOOUT_OBJ) $(TEST_AUDIOOUT_INC)
-	$(CXX) $(CXXFLAGS) -g -O2 -Wall -I/usr/local/include/SDL -D_REENTRANT  \
+	$(CXX) $(CXXFLAGS) -O2 -Wall -I/usr/local/include/SDL -D_REENTRANT  \
 	   -L/usr/local/lib -lSDL -lpthread -o $(BIN_DIR)/audioouttest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_AUDIOOUT_OBJ))
 
 $(BIN_DIR)/pathtest: $(TEST_PATH_SRC) $(TEST_PATH_OBJ) $(TEST_PATH_INC)
-	$(CXX) $(CXXFLAGS) -g -O2 -Wall  -D_REENTRANT  \
+	$(CXX) $(CXXFLAGS) -O2 -Wall  -D_REENTRANT  \
 	   -L/usr/local/lib  -lpthread -o $(BIN_DIR)/pathtest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_PATH_OBJ))
 
 %.h:

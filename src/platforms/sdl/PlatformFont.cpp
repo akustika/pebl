@@ -142,11 +142,10 @@ void PlatformFont::SetBackgroundColor(const PColor & color)
 
 
 
-SDL_Surface * PlatformFont::RenderText(const char * text)
+SDL_Surface * PlatformFont::RenderText(const std::string & text)
 {    
-
     //If there is no text, return a null surface.
-    if(!text) return NULL;
+    if(text=="") return NULL;
 
 
     //cout << "ABout to render text" << text  << " with font " << *this << endl;
@@ -185,32 +184,33 @@ SDL_Surface * PlatformFont::RenderText(const char * text)
 
 
 //This transforms an escape-filled text string into its displayable version.
-std::string PlatformFont::StripText(const char * text)
+std::string PlatformFont::StripText(const std::string & text)
 {
     //First, transform text into the to-be-rendered text.  I.E., replace 
     //escape characters etc.
 
     std::string toBeRendered;
     
-    int i = 0;
-    while(text[i] != '\0')
+    for(int i = 0; i < text.size(); i++)
         {
             if(text[i] == 10 ||
                text[i] == 13 ||
                text[i] == 18)
                 {
                     //Do nothing.;
-
+                    
                 }
             else
                 {
                     toBeRendered.push_back(text[i]);
                 }
-            i++;
+
         }
 
     return toBeRendered;
 }
+
+
 unsigned int PlatformFont::GetTextWidth(const std::string & text)
 {
     int height, width;

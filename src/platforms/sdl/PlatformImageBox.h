@@ -33,6 +33,7 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 
+#include <string>
 ///
 /// 
 /// 
@@ -45,7 +46,7 @@ public:
     PlatformImageBox();
     virtual ~PlatformImageBox();
   
-    virtual bool LoadImage(const char*  imagefilename);
+    virtual bool LoadImage(const std::string & imagefilename);
 
 protected:
 

@@ -72,7 +72,9 @@ Evaluator::Evaluator(Variant stacktop, string scope):
 Evaluator::~Evaluator()
 
 {
-
+#ifdef PEBL_DEBUG_PRINT
+    cerr << "Deleting Evaluator: " << mScope << endl;
+#endif
 
     //Delete all local variables now.
 

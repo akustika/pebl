@@ -61,7 +61,7 @@ public:
     virtual ~PFont();                       ///Standard Destructors
     
     ///Set methods for all of the data in font
-    virtual void SetFontFileName(const char* name)       {mFontFileName = strdup(name);};
+    virtual void SetFontFileName(const std::string & name)  {mFontFileName = name;};
     virtual void SetFontStyle(const int style)           {mFontStyle=style;};
     virtual void SetFontSize(const int size)             {mFontSize = size;};
     virtual void SetFontColor(const PColor & color)      {mFontColor = color;};  

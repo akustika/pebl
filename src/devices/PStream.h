@@ -29,6 +29,7 @@
 
 #include "PDevice.h"
 #include <fstream>
+#include <string>
 
 //Enumeration used to specify whether this is a write or read stream
 enum StreamDirection
@@ -61,17 +62,17 @@ public:
 
 
     ///The Standard constructor.  
-    PStream(const char * filename, StreamDirection dir, StreamType type);
+    PStream(const std::string & filename, StreamDirection dir, StreamType type);
 
     
     ///The Standard destructor.  
     virtual ~PStream();
 
 
-    void Open(const char * filename, StreamDirection dir, StreamType type);
+    void Open(const std::string & filename, StreamDirection dir, StreamType type);
     void WriteChar(const char character);
-    void WriteString(const char * buffer);
-    void WriteBuffer(const char* buffer, unsigned int length);
+    void WriteString(const std::string & buffer);
+    void WriteBuffer(const std::string & buffer, unsigned int length);
     
     char  ReadChar();
     std::string ReadToken(const char separator);
@@ -89,7 +90,7 @@ protected:
     virtual std::ostream& SendToStream(std::ostream& out)const; 
 
 private:
-    char * mStreamFileName;
+    std::string  mStreamFileName;
     std::fstream  * mFileStream;
     StreamDirection mStreamDirection;
     StreamType mStreamType;

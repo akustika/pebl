@@ -99,7 +99,6 @@ private:
 
 
     /// This is the main data stack for the evaluator
-    /// It currently does not have a limit--it probably should
     std::stack<Variant> mStack;
 
     /// This stack could be done a little smarter.  Limits

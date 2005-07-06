@@ -147,12 +147,56 @@ void OpNode::DestroyChildren()
 }
 
 
+// The original parse tree contains a high-level tree of PEBL_FUNCTIONS
+// nodes.  The branches get picked off the tree and placed in a functionmap,
+// and get destroyed when the functionmap get destroyed.  But, the top of the
+// original parse tree remains, causing a memory leak that never gets cleaned up 
+// appropriately, unless this is called after Loader::GetFunctions
+void OpNode::DestroyFunctionTree()
+{
+
+    if(GetOp() == PEBL_FUNCTION)
+        {
+            //This is a function node, which means we should remove
+            //the datanode on the left.  The right node is a lambda function, which
+            //gets taken over by the function map.
+            if(mLeft) 
+                {
+                    delete mLeft;
+                    mLeft = NULL;
+                }
+        }
+    else if(GetOp() == PEBL_FUNCTIONS)
+        {   
+            //This is a PEBL_FUNCTIONS node; it contains links to other PEBL_FUNCTIONS
+            //as well as PEBL_FUNCTION nodes.  Destroy them as well.
+
+            if(mLeft)
+                {
+                    ((OpNode*)mLeft)->DestroyFunctionTree();
+                    delete mLeft;
+                    mLeft = NULL;
+                }
+            if(mRight)
+                {
+                    ((OpNode*)mRight)->DestroyFunctionTree();
+                    delete mRight;
+                    mRight = NULL;
+                }
+
+        }
+
+}
+
+
 
 //Standard Destructor.  This doesn't automatically destroy children
 //nodes--to do that, use DestroyChildren();
 OpNode::~OpNode()
 {
-
+#ifdef VERBOSE_PNODE_CONSTRUCTION_MESSAGES
+    cout <<" deleting  OpNode: " << *this << endl;
+#endif
 }
 
 
@@ -328,7 +372,9 @@ DataNode::DataNode(long double fvalue, const string & filename, int linenumber):
 
 DataNode::~DataNode()
 {
-  
+#ifdef VERBOSE_PNODE_CONSTRUCTION_MESSAGES
+    cout <<" deleting  DataNode: " << *this << endl;
+#endif
 }
 
 //Overload of the << operator

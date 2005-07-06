@@ -26,13 +26,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "PStream.h"
 #include "../utility/PError.h"
-
 #include <iostream>
 #include <fstream>
 #include <sstream> 
 #include <list>
 #include <string>
-
+#include <algorithm>
 
 using std::ostream;
 using std::fstream;
@@ -42,8 +41,8 @@ using std::cout;
 using namespace std;  //Ugh...need this for ios_base?
 
 /// This is the standard pNode constructor
-PStream::PStream(const char* filename, StreamDirection dir, StreamType type):
-    mStreamFileName(strdup(filename)),
+PStream::PStream(const string & filename, StreamDirection dir, StreamType type):
+    mStreamFileName(filename),
     mStreamDirection(dir),
     mStreamType(type)
 {
@@ -56,15 +55,15 @@ PStream::PStream(const char* filename, StreamDirection dir, StreamType type):
     switch (mStreamDirection)
         {
         case sdRead:
-            mFileStream = new fstream(mStreamFileName,  ios_base::in);        
+            mFileStream = new fstream(mStreamFileName.c_str(),  ios_base::in);        
             break;
 
         case sdWrite:
-            mFileStream = new fstream(mStreamFileName,  ios_base::out);
+            mFileStream = new fstream(mStreamFileName.c_str(),  ios_base::out);
             break;
 
         case sdAppend:
-            mFileStream = new fstream(mStreamFileName, ios_base::out | ios_base::app);
+            mFileStream = new fstream(mStreamFileName.c_str(), ios_base::out | ios_base::app);
             break;
         default:
 
@@ -77,40 +76,35 @@ PStream::PStream(const char* filename, StreamDirection dir, StreamType type):
             //If we didn't manage to encode anything, call an error
     if(!mFileStream)
         {
-            PError::SignalFatalError("Error initiating file [" + string(mStreamFileName) + ".");
+            PError::SignalFatalError("Error initiating file [" + mStreamFileName + ".");
         }
 }
 
 
 
 /// This is the standard pNode constructor
-void PStream::Open(const char* filename, StreamDirection dir, StreamType type)
+void PStream::Open(const string & filename, StreamDirection dir, StreamType type)
 {
-  
-    if(mStreamFileName)
-        free(mStreamFileName);
-
     
-    mStreamFileName  = strdup(filename);
+    mStreamFileName  = filename;
     mStreamDirection = dir;
     mStreamType      = type;
 
     //Now, create the stream with proper flags and ready it for
     //input/output.
-
-
+    
     if(mStreamDirection==sdRead)
         {
-            mFileStream->open(mStreamFileName,  ios_base::in);        
+            mFileStream->open(mStreamFileName.c_str(),  ios_base::in);        
         }
     else if (mStreamDirection==sdWrite)
         {
-            mFileStream->open(mStreamFileName,  ios_base::out);        
+            mFileStream->open(mStreamFileName.c_str(),  ios_base::out);        
             
         }
     else if (mStreamDirection == sdAppend)
         {
-            mFileStream->open(mStreamFileName, ios_base::out | ios_base::app);
+            mFileStream->open(mStreamFileName.c_str(), ios_base::out | ios_base::app);
         }
     else
         {
@@ -123,7 +117,7 @@ void PStream::Open(const char* filename, StreamDirection dir, StreamType type)
     //If we didn't manage to encode anything, call an error
     if(!mFileStream)
         {
-            PError::SignalFatalError("Error initiating file [" + string(mStreamFileName) + ".");
+            PError::SignalFatalError("Error initiating file [" + mStreamFileName + ".");
         }
     
 }
@@ -148,20 +142,17 @@ void PStream::WriteChar(const char character)
 /// This method sends the number of bytes specified by the length 
 /// parameter from the buffer to the stream.  This could be dangerous
 /// if the user is allowed to specify these things themselves.
-void PStream::WriteBuffer(const char* buffer, unsigned int length)
+void PStream::WriteBuffer(const string & buffer, unsigned int length)
 {
 
     if(mStreamDirection == sdWrite ||
        mStreamDirection == sdAppend)
         {
             
-            char * tmp = strdup(buffer);
-            //            cout << "Writing buffer to file: ["<< tmp << "]\n";
-         //This is really dangerous.
-               tmp[length]='\0';  //add an end-of-string character
-            
+            int len =  length < buffer.size()? length: buffer.size();
+            string tmp;
+            std::copy(buffer.begin(), buffer.begin()+len, tmp.begin());
             (* mFileStream) << tmp << flush;
-            free(tmp);
             
         }
     else
@@ -172,15 +163,12 @@ void PStream::WriteBuffer(const char* buffer, unsigned int length)
 
 
 ///This method just writes the char* string to the stream.
-void PStream::WriteString(const char* buffer)
+void PStream::WriteString(const string & buffer)
 {
     if(mStreamDirection == sdWrite ||
        mStreamDirection == sdAppend)
         {
-            
-            char * tmp = strdup(buffer);          
-            (* mFileStream) << tmp << flush;
-            free(tmp);
+            (* mFileStream) << buffer << flush;
 
         }
     else
@@ -349,7 +337,7 @@ bool PStream::Close()
 PStream::~PStream()
 {
     // Standard Destructor
-    delete mStreamFileName;
+
 }
 
 

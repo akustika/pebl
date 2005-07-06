@@ -161,13 +161,13 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
             vflags |=  SDL_FULLSCREEN;       // Enable fullscreen
         }
 
-
-    Evaluator * myEval = new Evaluator();
+    
+    Evaluator * myEval = new Evaluator(Variant(0),"Window");
     myEval->gGlobalVariableMap.AddVariable("gVideoWidth", width);
     myEval->gGlobalVariableMap.AddVariable("gVideoHeight", height);
     myEval->gGlobalVariableMap.AddVariable("gVideoDepth", depth);
     delete myEval;
-
+    
 
     //INitialize the SDL surface with the appropriate flags.
     mSurface=SDL_SetVideoMode(width,height,depth,vflags);

@@ -116,7 +116,7 @@ Variant PEBLObjects::MakeWindow(Variant v)
     //Add the window to the environment
     myEnv->AddWindow(myWindow.get());
 
-    PComplexData * pcd = new PComplexData(myWindow);
+    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myWindow));
     return Variant(pcd);
 }
 
@@ -132,7 +132,7 @@ Variant PEBLObjects::MakeImage(Variant v)
 
     myImageBox->LoadImage(name);
 
-    PComplexData * pcd = new PComplexData(myImageBox);
+    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myImageBox));
 
 
     return Variant(pcd);
@@ -166,8 +166,7 @@ Variant PEBLObjects::MakeLabel(Variant v)
     myLabel->SetPosition(0,0);
     
     //Return a variant containing the label.
-    PComplexData * pcd = new PComplexData(myLabel);
-
+    counted_ptr<PComplexData> pcd =     counted_ptr<PComplexData>(new PComplexData(myLabel));
 
     return Variant(pcd);
 }
@@ -210,7 +209,7 @@ Variant PEBLObjects::MakeTextBox(Variant v)
     myTextBox->SetPosition(0,0);
     
     //Return a variant containing the label.
-    PComplexData * pcd = new PComplexData(myTextBox);
+    counted_ptr<PComplexData>  pcd = counted_ptr<PComplexData>(new PComplexData(myTextBox));
 
     return Variant(pcd);
 
@@ -226,15 +225,13 @@ Variant PEBLObjects::MakeColor(Variant v)
 
     counted_ptr<PList> plist = (v.GetComplexData())->GetList();    
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in first parameter of function [MakeColor(<color>)]: "); 
-    char * name = plist->First(); plist->PopFront();
     
-    
-    PColor * tmpColor = new PColor(name);
-    counted_ptr<PColor> myColor = counted_ptr<PColor>(tmpColor);    
+    std::string name = plist->First(); plist->PopFront();
 
-    PComplexData * pcd = new PComplexData(myColor);
-    
-    return     Variant(pcd);
+    counted_ptr<PColor> myColor = counted_ptr<PColor>(new PColor(name));    
+    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myColor));
+
+    return Variant(pcd);
 }
 
 Variant PEBLObjects::MakeColorRGB(Variant v)
@@ -255,7 +252,7 @@ Variant PEBLObjects::MakeColorRGB(Variant v)
     PColor * tmpColor = new PColor(red,green,blue, 0);
     counted_ptr<PColor> myColor = counted_ptr<PColor>(tmpColor);    
 
-    PComplexData * pcd = new PComplexData(myColor);
+    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myColor));
     
     return     Variant(pcd);
 }
@@ -270,7 +267,7 @@ Variant PEBLObjects::MakeFont(Variant v)
 
     //First comes the filename of the font.
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in first parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: "); 
-    char * name = plist->First(); plist->PopFront();
+    std::string name = plist->First(); plist->PopFront();
     
     //Next comes the style, an integerized code for normal, bold, italic, underline.
     PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in second parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: "); 
@@ -297,7 +294,7 @@ Variant PEBLObjects::MakeFont(Variant v)
     //Make the font and wrap it up in a Variant to return it.
     PlatformFont * tmpFont = new PlatformFont(name, style, size, *fgcolor, *bgcolor, aa);
     counted_ptr<PlatformFont> myFont = counted_ptr<PlatformFont>(tmpFont);    
-    PComplexData * pcd = new PComplexData(myFont);
+    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myFont));
     
     return Variant(pcd);
 }
@@ -617,7 +614,8 @@ Variant PEBLObjects::GetSize(Variant v)
     newlist->PushFront(height);
     newlist->PushBack(width);
 
-    PComplexData * pcd = new PComplexData(newlist); 
+    counted_ptr<PComplexData>  pcd = counted_ptr<PComplexData>(new PComplexData(newlist)); 
+
     return Variant(pcd);
 }
 
@@ -636,7 +634,8 @@ Variant PEBLObjects::LoadSound(Variant v)
     counted_ptr<PlatformAudioOut> myAudio = counted_ptr<PlatformAudioOut>(new PlatformAudioOut());
     myAudio->LoadSoundFile(v1);
     myAudio->Initialize();
-    PComplexData * pcd = new PComplexData(myAudio);
+    
+    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myAudio));
     return Variant(pcd);        
 }
 

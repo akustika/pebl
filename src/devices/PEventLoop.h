@@ -50,8 +50,8 @@ public:
     //One way to use the event loop is to register condition states of devices. The
     //loop then examines the devices on each loop, determining if the device is 
     //in some certain state. These methods add and remove such states.
-    void RegisterState(DeviceState * state, const char*  function, PList * parameters);
-    void RegisterEvent(DeviceState * state, const char*  function, PList * parameters);
+    void RegisterState(DeviceState * state, const std::string & function, PList * parameters);
+    void RegisterEvent(DeviceState * state, const std::string & function, PList * parameters);
     void RemoveState(DeviceState state);
 
     //Another way to use the event loop is to register conditions associated with 'events'
@@ -60,7 +60,7 @@ public:
 
     //The queue needs to be defined at the platform level, but it is a subclassed PDevice, and
     //so is carried along with the DeviceState test.
-    void RegisterEventTest(DeviceState * state, const char*  function, PList * parameters);
+    void RegisterEventTest(DeviceState * state, const std::string function, PList * parameters);
     void RemoveEventTest(DeviceState state);
     
     //Clears all state/events tests.

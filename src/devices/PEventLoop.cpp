@@ -57,14 +57,14 @@ PEventLoop::~PEventLoop()
 /// in an event-loop.  This allows multiple tests to be registered (time limit, key press, etc.)
 /// and tested within a fairly tight compiled loop, without the user having to write his/her own 
 /// interpreted event loop.
-void PEventLoop::RegisterState(DeviceState * state, const char* function, PList * parameters)
+void PEventLoop::RegisterState(DeviceState * state, const std::string & function, PList * parameters)
 {
 
     //Add the state to the states list.
     mStates.push_back(state);
     //Make a PNode representing the function. If the function-name is null, push a
     //null PNode onto the vector; this is a short-cut for an end-of-loop event.
-    if(function)
+    if(function != "")
         {
             PNode * node = Evaluator::mFunctionMap.GetFunction(function);
             mNodes.push_back(node);
@@ -86,13 +86,13 @@ void PEventLoop::RegisterState(DeviceState * state, const char* function, PList 
 
 /// This method takes over ownership of the DeviceState, and is responsible for cleaning it up 
 /// when finished.
-void PEventLoop::RegisterEvent(DeviceState * state, const char* function, PList * parameters)
+void PEventLoop::RegisterEvent(DeviceState * state, const std::string &  function, PList * parameters)
 {
     //Add the state to the states list.
     mStates.push_back(state);
     //Make a PNode representing the function. If the function-name is null, push a
     //null PNode onto the vector; this is a short-cut for an end-of-loop event.
-    if(function)
+    if(function != "")
         {
             PNode * node = Evaluator::mFunctionMap.GetFunction(function);
             mNodes.push_back(node);
@@ -149,13 +149,10 @@ PEvent PEventLoop::Loop()
     while(myEval->gGlobalVariableMap.RetrieveValue("gKeepLooping") 
           && mStates.size() != 0)
         {
-
             
             //At the beginning of a cycle, the event queue has not yet been primed.
-
             gEventQueue->Prime();
-
-
+            
             //Scan through each event in the event vector.         
             for(i = 0; i < mStates.size(); i++)
                 {
@@ -183,7 +180,7 @@ PEvent PEventLoop::Loop()
                                                         {
                                                             //Add the parameters, as a list, to the stack.
                                                             counted_ptr<PList> tmpList = counted_ptr<PList>(mParameters[i]);
-                                                            PComplexData * pcd = new PComplexData(tmpList);
+                                                            counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(tmpList));
                                                             myEval->Push(Variant(pcd));
                                                             myEval->Evaluate(mNodes[i]);
                                                             
@@ -201,7 +198,7 @@ PEvent PEventLoop::Loop()
                     else
                         {
                             //The test exmanines the device's state directly.
-
+                            
                             result = mStates[i]->TestDevice();
                             if(result)
                                 {
@@ -218,7 +215,7 @@ PEvent PEventLoop::Loop()
                                         {
                                             //Add the parameters, as a list, to the stack.
                                             counted_ptr<PList> tmpList = counted_ptr<PList>(mParameters[i]);
-                                            PComplexData * pcd = new PComplexData(tmpList);
+                                            counted_ptr<PComplexData>  pcd =counted_ptr<PComplexData>(new PComplexData(tmpList));
                                             myEval->Push(Variant(pcd));
                                             myEval->Evaluate(mNodes[i]);
                                         }

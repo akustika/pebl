@@ -27,6 +27,8 @@
 #ifndef __PAUDIOOUT_H__
 #define __PAUDIOOUT_H__
 #include "PDevice.h"
+#include <string>
+
 
 /// This defines a generic sound presentation interface.
 /// It has two basic modes: It can operate 'modally', where a sound file is played, 
@@ -40,7 +42,7 @@ class PAudioOut: public PDevice
     PAudioOut(){};
     virtual ~PAudioOut(){};
     
-    bool LoadSoundFile(char* filename);
+    bool LoadSoundFile(const std::string & filename);
     
     virtual bool Play(){return false;};
     virtual bool Stop(){return false;};

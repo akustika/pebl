@@ -29,21 +29,19 @@
 
 #include "PObject.h"
 #include <iostream>
-
+#include <string>
 
 ///  This class represents color. Currently, only RGBA color is  accessible.
 ///  Access through other color spaces could be added.
 class PColor: public PObject
 {
 public:
-
-    
     PColor();                                             ///Constructor
     PColor(unsigned int color){SetColorByRGBA(color);}    ///Constructor
-    PColor(int red, int green , int blue, int alpha);     ///Constructor
-    PColor(const char* colorname);                        ///Constructor using RGBColorNames
+    PColor(int red, int green, int blue, int alpha);      ///Constructor
+    PColor(const std::string & colorname);                     ///Constructor using RGBColorNames
 
-    PColor(const PColor & pcolor);                ///Copy constructor
+    PColor(const PColor & pcolor);                        ///Copy constructor
     virtual ~PColor(){}                                   ///Standard Destructor
   
 
@@ -67,7 +65,7 @@ public:
     void SetColorByRGBA(int red, int green, int blue, int alpha);
 
     ///Sets color as by its name.
-    void SetColorByName(const char * colorname);
+    void SetColorByName(const std::string & colorname);
 
     ///Gets 32-bit unsigned int color
     unsigned int GetColor() const;

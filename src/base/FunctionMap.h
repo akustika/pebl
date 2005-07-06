@@ -50,12 +50,13 @@ public:
     ///The Standard destructor.  
     ~FunctionMap();
 
-    void AddFunction(const char* funcname, OpNode * node);
-    void AddFunction(OpNode * node);
-    PNode *  GetFunction(const char* funcname);
-    bool IsFunction(const char* funcname);
-    void Erase(const char * funcname);
+    void AddFunction(std::string funcname, OpNode * node);
+    //    void AddFunction(OpNode * node);
+    PNode *  GetFunction(const std::string & funcname);
+    bool IsFunction(const std::string &  funcname);
+    void Erase(const std::string & funcname);
     void DumpValues();
+    void Destroy(); //destroys everything in the functionmap, for good.
 
 private:
 

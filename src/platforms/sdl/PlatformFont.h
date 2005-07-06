@@ -58,7 +58,7 @@ public:
     virtual PColor GetBackgroundColor() const {return SDLUtility::SDLColorToPColor(mSDL_BGColor);}
 
     ///This takes care of all the busy work of rendering the text.
-    SDL_Surface * RenderText(const char * text);
+    SDL_Surface * RenderText(const std::string & text);
     
     unsigned int GetTextWidth(const std::string & text);
     unsigned int GetTextHeight(const std::string & text);
@@ -68,7 +68,7 @@ protected:
     virtual std::ostream & SendToStream(std::ostream& out) const;
 private:
     
-    std::string StripText(const char * text);
+    std::string StripText(const std::string & text);
   
     TTF_Font * mTTF_Font;
     SDL_Color mSDL_FGColor;

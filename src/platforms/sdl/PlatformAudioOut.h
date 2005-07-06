@@ -31,6 +31,8 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_audio.h"
   
+#include <string>
+
 struct AudioInfo{
     SDL_AudioSpec spec;
     Uint8   *audio;			/* Pointer to wave data */
@@ -43,10 +45,10 @@ class PlatformAudioOut: public PAudioOut
 {
  public:
     PlatformAudioOut();
-    PlatformAudioOut(const char * filename);
+    PlatformAudioOut(const std::string & filename);
     ~PlatformAudioOut();
   
-    bool LoadSoundFile(const char* filename);
+    bool LoadSoundFile(const std::string & filename);
 
     bool CreateSineWave(float freq, double length, int amplitude);
     bool CreateSquareWave(float freq, double length, int amplitude);
@@ -60,8 +62,8 @@ class PlatformAudioOut: public PAudioOut
     
     bool Initialize();
 
-    void AddTrack(char * handle, AudioInfo track);
-    void RemoveTrack(char* handle);
+    void AddTrack(const std::string &  handle, AudioInfo track);
+    void RemoveTrack(const std::string &  handle);
 
     Uint8 * MixTracks();
     

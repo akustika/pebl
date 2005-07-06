@@ -38,7 +38,7 @@
 #include <cmath>
 #include <iostream>
 #include <strstream>
-
+#include <algorithm>
 
 //Some math libraries contain this, but let's not take any chances.
 #define PI 3.141592653589793238462643383279502884197169399375
@@ -46,73 +46,60 @@
 
 using std::cout;
 
-///This returns a pointer to an upper-case version of the text.
-///Be sure to free the memory when done.
-std::string PEBLUtility::ToUpper(const char* text)
+
+std::string PEBLUtility::ToUpper(const std::string & text)
 {
-    std::string newtext = std::string(text);
-    int i =0;
-    while(newtext[i] != '\0')
-        {
-            newtext[i] = toupper(newtext[i]);
-            i++;
-        }
-    return newtext;    
-}
-
-
-
-///This returns a pointer to a lower-case version of the text.
-///Be sure to free the memory when done.
-std::string PEBLUtility::ToLower(const char* text)
-{
-    std::string  newtext = std::string(text);
-    int i =0;
-    while(newtext[i] != '\0')
-        {
-            newtext[i] = tolower(newtext[i]);
-            i++;
-        }
-    
+    std::string newtext(text);
+    std::transform(newtext.begin(), newtext.end(), newtext.begin(), ::toupper);
     return newtext;
 }
 
-///This returns a pointer to an upper-case version of the text.
-///buffer better be at least n items long.
-void PEBLUtility::ToUpper(const char* text, char* buffer, int n)
+
+
+std::string PEBLUtility::ToLower(const std::string & text)
 {
-    //Go through each letter, copying the upper-case version to buffer.
-    //Stop before the last letter because we need a \0.
-    int i = 0;
-    while(text[i] != '\0' &&  i < (n-1))
-        {
-            buffer[i] = toupper(text[i]);
-            i++;
-        }
-    //Add an end-of-string character
-    buffer[i] = '\0';
+    std::string newtext(text);
+    std::transform(newtext.begin(), newtext.end(), newtext.begin(), ::tolower);
+    return newtext;
 }
 
 
+// ///This returns a pointer to an upper-case version of the text.
+// ///buffer better be at least n items long.
+// void PEBLUtility::ToUpper(const char* text, char* buffer, int n)
+// {
+//     //Go through each letter, copying the upper-case version to buffer.
+//     //Stop before the last letter because we need a \0.
+//     int i = 0;
+//     while(text[i] != '\0' &&  i < (n-1))
+//         {
+//             buffer[i] = toupper(text[i]);
+//             i++;
+//         }
+//     //Add an end-of-string character
+//     buffer[i] = '\0';
+// }
 
-///This returns a pointer to a lower-case version of the text.
-void PEBLUtility::ToLower(const char* text, char* buffer, int n)
-{
+
+
+// ///This returns a pointer to a lower-case version of the text.
+// void PEBLUtility::ToLower(const char* text, char* buffer, int n)
+// {
     
-    //Go through each letter, copying the lower-case version to buffer.
-    //Stop before the last letter because we need a \0.
-    int i = 0;    
-    while(text[i] != '\0' && i < (n-1))
-        {
-            buffer[i] = tolower(text[i]);
-            i++;
-        }
+//     //Go through each letter, copying the lower-case version to buffer.
+//     //Stop before the last letter because we need a \0.
+//     int i = 0;    
+//     while(text[i] != '\0' && i < (n-1))
+//         {
+//             buffer[i] = tolower(text[i]);
+//             i++;
+//         }
     
-    //Add an end-of-string character
-    buffer[i] = '\0';
+//     //Add an end-of-string character
+//     buffer[i] = '\0';
     
     
-}
+// }
 
 
 Variant PEBLUtility::Tokenize(const char* line, char separator)
@@ -156,12 +143,12 @@ Variant PEBLUtility::Tokenize(const char* line, char separator)
 
 
 
-long double PEBLUtility::StringToLongDouble(const char * string)
+long double PEBLUtility::StringToLongDouble(const char * mystring)
 {
 #if defined(strold)
-    return strtold(string,0);
+    return strtold(mystring,0);
 #else 
-    return (long double)strtod(string,0);
+    return (long double)strtod(mystring,0);
 #endif
 }
 

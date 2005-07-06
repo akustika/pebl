@@ -120,7 +120,25 @@ std::list<Variant>::const_iterator  PList::End() const
 
   
 
-  
+void PList::PushFront(const Variant & v)
+{
+    mList.push_front(v);
+}
+
+void PList::PopFront()
+{
+    mList.pop_front();
+}
+
+void PList::PushBack(const Variant &  v)
+{
+    mList.push_back(v);
+}
+
+void PList::PopBack()
+{
+    mList.pop_back();
+}
 
 
 //returns the first element of the list

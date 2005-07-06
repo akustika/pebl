@@ -47,9 +47,9 @@ public:
     ///The Standard destructor.  
     ~VariableMap();
 
-    void AddVariable(const char* varname, Variant val);
-    Variant RetrieveValue(const char* varname);
-    void Erase(const char * varname);
+    void AddVariable(const std::string & varname, Variant val);
+    Variant RetrieveValue(const std::string & varname);
+    void Erase(const std::string &  varname);
     void DumpValues();
 
 private:

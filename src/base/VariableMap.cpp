@@ -52,7 +52,7 @@ VariableMap::VariableMap()
 
 VariableMap::~VariableMap()
 {
-    //cout << "Deleting variablemap\n";
+
     //DumpValues();
     //Delete mVariableMap if necessary.
     mVariableMap.clear();
@@ -62,7 +62,7 @@ VariableMap::~VariableMap()
 /// This method will add a new variable with 
 /// name varname and value val to the variable map, or (if it already exists)
 /// change its value to val.
-void VariableMap::AddVariable(const char* varname, Variant val)
+void VariableMap::AddVariable(const string & varname, Variant val)
 {
     string tmpVarName = PEBLUtility::ToUpper(varname);
 
@@ -90,7 +90,7 @@ void VariableMap::AddVariable(const char* varname, Variant val)
 /// This method will retrieve the value designated by
 /// varname.  If varname doesn't exist, it will return 
 /// 0, along with a warning.
-Variant  VariableMap::RetrieveValue(const char * varname)
+Variant  VariableMap::RetrieveValue(const string &  varname)
 {
  
     map<string,Variant>::iterator p;
@@ -114,7 +114,7 @@ Variant  VariableMap::RetrieveValue(const char * varname)
 
 /// This will erase the value stored in varname
 ///
-void VariableMap::Erase(const char* varname)
+void VariableMap::Erase(const string & varname)
 {
     string tmpVarname = PEBLUtility::ToUpper(varname);
     mVariableMap.erase(tmpVarname);

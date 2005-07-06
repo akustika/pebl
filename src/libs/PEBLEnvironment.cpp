@@ -77,26 +77,21 @@ Variant  PEBLEnvironment::Wait(Variant v)
 {
     //v[1] should have the parameter
     counted_ptr<PList> plist = (v.GetComplexData())->GetList();
-    
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in function [Wait(<number>)]: ");
-     
     int delay = plist->First(); plist->PopFront();
     delay += myTimer.GetTime();
-                                                                                                                   
     //Create a timer test correspending to keydown.
     //1 is the value (down), DT_GREATER_THAN is the test, key is the interface (e.g., the 'A' key)
     PDevice * device = new PlatformTimer(myTimer);
     ValueState  * state = new ValueState(delay, DT_GREATER_THAN_OR_EQUAL, 1,device, PDT_TIMER);
-                                                                                                                   
     //NULL,NULL will terminate the looping
-    char* funcname = NULL;
+    string funcname = "";
     PList* params = NULL;
     Evaluator::mEventLoop.RegisterState(state, funcname, params);
     PEvent returnval = Evaluator::mEventLoop.Loop();
- 
     //Now, clear the event loop tests
     Evaluator::mEventLoop.Clear();
-
+    delete device;
 
     return Variant(returnval.GetDummyEvent().value);
 }
@@ -109,8 +104,8 @@ Variant PEBLEnvironment::IsKeyDown(Variant v)
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [IsKeyDown(<string>)]: ");    
 
-    char * string = plist->First(); plist->PopFront();
-    PEBLKey key = PEBLUtility::TranslateString(string);
+    std::string mystring = plist->First(); plist->PopFront();
+    PEBLKey key = PEBLUtility::TranslateString(mystring);
 
     return Variant(myKeyboard.IsKeyDown(key));
 }
@@ -126,8 +121,8 @@ Variant PEBLEnvironment::IsKeyUp(Variant v)
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [IsKeyUp(<string>)]:  ");    
 
-    char * string = plist->First(); plist->PopFront();
-    PEBLKey key = PEBLUtility::TranslateString(string);
+    string mystring = plist->First(); plist->PopFront();
+    PEBLKey key = PEBLUtility::TranslateString(mystring);
 
     return Variant(myKeyboard.IsKeyUp(key));
 }
@@ -152,8 +147,8 @@ Variant PEBLEnvironment::WaitForKeyDown(Variant v)
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyDown(<string>)]:  ");    
 
-    char * string = plist->First(); plist->PopFront();
-    PEBLKey key = PEBLUtility::TranslateString(string);
+    string mystring = plist->First(); plist->PopFront();
+    PEBLKey key = PEBLUtility::TranslateString(mystring);
     
  
     //Create a keyboard test correspending to keydown. 
@@ -162,7 +157,7 @@ Variant PEBLEnvironment::WaitForKeyDown(Variant v)
     ValueState  * state = new ValueState(1, DT_EQUAL, key, device, PDT_KEYBOARD);
 
     //NULL,NULL will terminate the looping
-    char* funcname = NULL;
+    string  funcname = "";
     PList* params = NULL;
     Evaluator::mEventLoop.RegisterState(state,funcname, params);
     PEvent returnval = Evaluator::mEventLoop.Loop();
@@ -183,8 +178,8 @@ Variant PEBLEnvironment::WaitForKeyUp(Variant v)
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyUp(<string>)]:  ");    
 
-    char * string = plist->First(); plist->PopFront();
-    PEBLKey key = PEBLUtility::TranslateString(string);
+    string mystring = plist->First(); plist->PopFront();
+    PEBLKey key = PEBLUtility::TranslateString(mystring);
     
 
     //Create a keyboard test correspending to keydown. 
@@ -193,7 +188,7 @@ Variant PEBLEnvironment::WaitForKeyUp(Variant v)
     ValueState  * state = new ValueState(1, DT_NOT_EQUAL, key, device, PDT_KEYBOARD);
 
     //NULL,NULL will terminate the looping
-    char* funcname = NULL;
+    string funcname = "";
     PList* params = NULL;
     Evaluator::mEventLoop.RegisterState(state, funcname, params);
     PEvent returnval = Evaluator::mEventLoop.Loop();
@@ -221,7 +216,7 @@ Variant PEBLEnvironment::WaitForAnyKeyDown(Variant v)
     ValueState  * state = new ValueState(1, DT_EQUAL, key, device,PDT_KEYBOARD);
 
     //NULL,NULL will terminate the looping
-    char* funcname = NULL;
+    string  funcname = "";
     PList* params = NULL;
     Evaluator::mEventLoop.RegisterState(state, funcname, params);
     PEvent returnval = Evaluator::mEventLoop.Loop();
@@ -244,8 +239,8 @@ Variant PEBLEnvironment::WaitForKeyPress(Variant v)
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyPress(<string>)]:  ");    
 
-    char * string = plist->First(); plist->PopFront();
-    PEBLKey key = PEBLUtility::TranslateString(string);
+    string mystring = plist->First(); plist->PopFront();
+    PEBLKey key = PEBLUtility::TranslateString(mystring);
     
  
     //Create a keyboard test correspending to keydown. 
@@ -254,7 +249,7 @@ Variant PEBLEnvironment::WaitForKeyPress(Variant v)
     ValueState  * state = new ValueState(PEBL_PRESSED, DT_EQUAL, key, gEventQueue, PDT_KEYBOARD);
 
     //NULL,NULL will terminate the looping
-    char* funcname = NULL;
+    string funcname = "";
     PList* params = NULL;
     Evaluator::mEventLoop.RegisterEvent(state,funcname, params);
     PEvent returnval = Evaluator::mEventLoop.Loop();
@@ -275,8 +270,8 @@ Variant PEBLEnvironment::WaitForKeyRelease(Variant v)
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyRelease(<string>)]:  ");    
 
-    char * string = plist->First(); plist->PopFront();
-    PEBLKey key = PEBLUtility::TranslateString(string);
+    string mystring = plist->First(); plist->PopFront();
+    PEBLKey key = PEBLUtility::TranslateString(mystring);
     
 
     //Create a keyboard test correspending to keydown. 
@@ -285,7 +280,7 @@ Variant PEBLEnvironment::WaitForKeyRelease(Variant v)
     ValueState  * state = new ValueState(PEBL_RELEASED, DT_EQUAL, key, gEventQueue, PDT_KEYBOARD);
 
     //NULL,NULL will terminate the looping
-    char* funcname = NULL;
+    string funcname = "";
     PList* params = NULL;
     Evaluator::mEventLoop.RegisterEvent(state, funcname, params);
     PEvent returnval = Evaluator::mEventLoop.Loop();
@@ -312,7 +307,7 @@ Variant PEBLEnvironment::WaitForAnyKeyPress(Variant v)
     ValueState  * state = new ValueState(PEBL_PRESSED, DT_EQUAL, key, gEventQueue, PDT_KEYBOARD);
 
     //NULL,NULL will terminate the looping
-    char* funcname = NULL;
+    string  funcname = "";
     PList* params = NULL;
     Evaluator::mEventLoop.RegisterEvent(state, funcname, params);
     PEvent returnval = Evaluator::mEventLoop.Loop();
@@ -339,7 +334,7 @@ Variant PEBLEnvironment::WaitForAllKeysUp(Variant v)
     ValueState  * state = new ValueState(1, DT_NOT_EQUAL, key, device, PDT_KEYBOARD);
     
     //NULL,NULL will terminate the looping
-    char* funcname = NULL;
+    string  funcname = "";
     PList* params = NULL;
     Evaluator::mEventLoop.RegisterState(state,funcname, params);
     PEvent returnval = Evaluator::mEventLoop.Loop();
@@ -377,7 +372,7 @@ Variant PEBLEnvironment::WaitForAnyKeyDownWithTimeout(Variant v)
     ValueState  * state = new ValueState(1, DT_EQUAL, key, device, PDT_KEYBOARD);
 
     //NULL,NULL will terminate the looping
-    char* funcname = NULL;
+    string  funcname = "";
     PList* params = NULL;
     Evaluator::mEventLoop.RegisterState(state,funcname, params);
     Evaluator::mEventLoop.RegisterState(timestate, funcname, params);
@@ -410,7 +405,7 @@ Variant PEBLEnvironment::WaitForKeyListDown(Variant v)
 
     PDevice * device = new PlatformKeyboard(myKeyboard);
     ValueState * state;
-    char* funcname = NULL;
+    string  funcname = "";
     PList* params = NULL;
     PEBLKey key;
 
@@ -453,7 +448,7 @@ Variant PEBLEnvironment::WaitForListKeyPress(Variant v)
     std::list<Variant>::iterator end = keylist->End();
 
     ValueState * state;
-    char* funcname = NULL;
+    string funcname = "";
     PList* params = NULL;
     PEBLKey key;
 
@@ -491,7 +486,7 @@ Variant PEBLEnvironment::GetInput(Variant v)
 
     //The next argument should be the 'escape' key.
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [GetInput(<textbox>,<key-string>)]: ");    
-    char * myString = plist->First(); plist->PopFront();
+    string  myString = plist->First(); plist->PopFront();
 
 
     //Create a keyboard test correspending to escape keydown. 
@@ -501,7 +496,7 @@ Variant PEBLEnvironment::GetInput(Variant v)
     ValueState  * keypressstate = new ValueState(PEBL_PRESSED, DT_EQUAL, PEBLKEY_ANYKEY,gEventQueue, PDT_KEYBOARD);
 
     //NULL,NULL will terminate the looping
-    char* funcname = NULL;
+    string funcname = "";
     PList* params = NULL;
 
 
@@ -527,11 +522,12 @@ Variant PEBLEnvironment::GetInput(Variant v)
                 {
                     myEnv->Draw();
                 }
-
+            
             //Wait for the next keystroke..
             keypress =  Evaluator::mEventLoop.Loop();
             pke = keypress.GetKeyboardEvent();
         }
+    
     
     Evaluator::mEventLoop.Clear();
     textbox->SetEditable(false);
@@ -605,7 +601,9 @@ Variant PEBLEnvironment::TimeStamp(Variant v)
             pos++;
         }
     timestring[pos] = '\0';
-    return Variant(timestring);
+    Variant ret = Variant(timestring);
+    free(timestring);
+    return ret;
 }
 
 

@@ -29,6 +29,7 @@
 
 
 #include "PWidget.h"
+#include <string>
 
 ///
 /// This class, a subtype of PComplexData, is the base Object class
@@ -45,7 +46,7 @@ public:
     
     ///This will load a file into the class data, given a file name.
     ///height and width are set automatically.
-    virtual bool LoadImage(const char *  imagefilename)=0;
+    virtual bool LoadImage(const std::string  & imagefilename)=0;
 
     virtual void SetPosition(int x, int y);
 

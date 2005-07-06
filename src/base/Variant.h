@@ -70,9 +70,9 @@ public:
     Variant(const long int i);
     Variant(const long unsigned int i);
     Variant(const long double f);
-    Variant(const char* string);
+    Variant(const char* mystring);
     Variant(const char character);
-    Variant(const char* string, VariantDataType type);
+    Variant(const char* mystring, VariantDataType type);
     Variant(const StackSignalType);
     Variant(pFunc);  //This one takes a function-pointer as an argument.
     Variant(counted_ptr<PComplexData> pcd);

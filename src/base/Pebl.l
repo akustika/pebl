@@ -117,10 +117,10 @@ datum      [integer float string variable]
            };
 
 {functionname} { /*Make a deep copy of the function name*/
-               yylval.function =strdup(yytext);
-
-               return PEBL_FUNCTIONNAME;
+                yylval.function =strdup(yytext);
+                return PEBL_FUNCTIONNAME;
 };
+
 {string} {          /*Make a deep copy of the string*/
   yylval.strValue = strdup(yytext+1); /*skip open quote*/
 

@@ -84,7 +84,7 @@ Variant PEBLStream::FileOpenRead(Variant v)
     
     ///v1 contains the name of a file to open.
     counted_ptr<PStream> mystream = counted_ptr<PStream>(new PStream(v1,sdRead, stASCII));
-    PComplexData * pcd = new PComplexData(mystream);
+    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(mystream));
     return Variant(pcd);
 }
 
@@ -97,7 +97,7 @@ Variant PEBLStream::FileOpenWrite(Variant v)
  
     ///v1 contains the name of a file to open.      
     counted_ptr<PStream> mystream = counted_ptr<PStream>(new PStream(v1,sdWrite, stASCII));
-    PComplexData * pcd = new PComplexData(mystream);
+    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(mystream));
     return Variant(pcd);
 }
 
@@ -110,7 +110,7 @@ Variant PEBLStream::FileOpenAppend(Variant v)
 
     ///v1 contains the name of a file to open.    
     counted_ptr<PStream> mystream = counted_ptr<PStream>(new PStream(v1,sdAppend, stASCII));
-    PComplexData * pcd = new PComplexData(mystream);
+    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(mystream));
     return Variant(pcd);
 }
 
@@ -238,7 +238,7 @@ Variant PEBLStream::FileReadList(Variant v)
                 }
         }
     mystream->Close();
-    PComplexData * pcd = new PComplexData(returnlist);
+    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(returnlist));
     return Variant(pcd);    
 }
     
@@ -271,7 +271,7 @@ Variant PEBLStream::FileReadTable(Variant v)
     else
         {
             PError::AssertType(plist->First(), PEAT_STRING, "Argument error in second parameter of function [FileReadTable(<list>)]:  ");    
-            char * tmp = plist->First(); plist->PopFront();
+            std::string tmp = plist->First(); plist->PopFront();
             separator = tmp[0];
         }
 
@@ -280,7 +280,7 @@ Variant PEBLStream::FileReadTable(Variant v)
 
     //Make an inner list
     Variant innerlist;
-    PComplexData * pcd;
+
     std::string tmpstring;
 
     while(!myStream->Eof())
@@ -302,7 +302,7 @@ Variant PEBLStream::FileReadTable(Variant v)
                 }
         }
     myStream->Close();
-    pcd = new PComplexData(returnlist);
+    counted_ptr<PComplexData>pcd = counted_ptr<PComplexData>(new PComplexData(returnlist));
 
     return Variant(pcd);    
 }

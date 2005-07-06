@@ -96,6 +96,7 @@ void Loader::FindFunctions(const PNode * node)
                     //Now, convert the function name in v to upper case
                     //It is really just a string.
                     std::string ucasename = PEBLUtility::ToUpper(v);
+
                     Variant v2 = Variant(ucasename.c_str(), P_DATA_FUNCTION);
 
                     //cout << "\tValue: " << v2 << endl;
@@ -139,7 +140,8 @@ void Loader::LoadUserFunctions(OpNode * node)
     node1 = (OpNode*)(node->GetLeft());
     if(node1->GetOp() == PEBL_FUNCTION)
         {
-            Evaluator::mFunctionMap.AddFunction(node1);      
+            Evaluator::mFunctionMap.AddFunction( ((DataNode*)(((OpNode*)node1)->GetLeft()))->GetValue(),
+                                                 (OpNode*)node1->GetRight());      
         }
     else if (node1->GetOp() == PEBL_FUNCTIONS)
         {
@@ -158,6 +160,7 @@ void Loader::LoadUserFunctions(OpNode * node)
         {
             LoadUserFunctions(node1);
         }
+
 }
 
 
@@ -180,7 +183,7 @@ void Loader::LoadLibraryFunctions()
             //If it is found, it may be a user-defined function (as in Start), or
             //one that has already been loaded previously.
 
-            const char * name = (*p).GetFunctionName();
+            string name = (*p).GetFunctionName();
             if(!(Evaluator::mFunctionMap.IsFunction(name)) )
                 {
                     bool functionNotFound = true;
@@ -223,17 +226,17 @@ void Loader::LoadLibraryFunctions()
                         
 
                             int i = 0;
+
                             while (functionTable[i].name && functionNotFound)
                                 {
-                                    //Test to see whether the 
-                                    if(!strcmp(functionTable[i].name, name))
+                                    if(functionTable[i].name == name)
                                         {
                                             //Its a match. Construct a top-level function node with pieces below it
                                             //that can be processed appropriately by the Evaluator. 
                                             
                                             //The filename and linenumber are irrelevant; this is not tied directly
                                             //to the source code.
-                                            char * filename = "<PEBL STANDARD LIBRARY FILE>";
+                                            string filename = "<PEBL STANDARD LIBRARY FILE>";
                                             int linenum = -1;
 
                                             //Make a DataNode with numargs to signal the number of arguments required by the function; connect
@@ -246,18 +249,10 @@ void Loader::LoadLibraryFunctions()
                                             PNode * node1 = new DataNode(functionTable[i].funcname,filename, linenum);
                                             
                                             // Make a new OpNode with the *NumArgs on the left and the function pointer on the right.
-                                            PNode * node2 = new OpNode(PEBL_LIBRARYFUNCTION, node0, node1,filename, linenum);
+                                            OpNode * node2 = new OpNode(PEBL_LIBRARYFUNCTION, node0, node1,filename, linenum);
                                             
-                                            
-                                            //Make a Datanode which has a function variant in it.
-                                            PNode * node3 = new DataNode(*p,filename, linenum);
-                                            
-                                            //Make a top-level OpNode with the function name and the function node.
-                                            OpNode * node4  = new OpNode(PEBL_FUNCTION, node3, node2, filename, linenum);
-                                            
-                                            //Add the top node to the functionmap.
-                                            Evaluator::mFunctionMap.AddFunction(node4);
-                                            
+                                            Evaluator::mFunctionMap.AddFunction(*p,node2);
+                                                                                        
                                             //break out of the while--we are done.
                                             functionNotFound = false;
                                         }

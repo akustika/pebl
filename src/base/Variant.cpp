@@ -922,7 +922,7 @@ long double Variant::GetFloat() const
 	
         case P_DATA_NUMBER_FLOAT:   // a float
             return mData.fNumber;
-
+ 
         case P_DATA_STRING:
 
             return PEBLUtility::StringToLongDouble(mData.String);

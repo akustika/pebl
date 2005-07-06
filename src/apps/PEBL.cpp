@@ -114,24 +114,23 @@ int PEBLInterpret( int argc, const char *argv[] )
 
     //-----------------------------------------------------------
     //        Process all files on the command-line
+    //-----------------------------------------------------------
     string inputfilename = Evaluator::gPath.FindFile(*i);
     head = NULL;
     if(inputfilename != "")
         {
             cerr << "Processing PEBL Source File: " <<  inputfilename << endl;
             head  = parse(inputfilename.c_str());
-            
         }
     else
         {
             PError::SignalFatalError("Unable to find file: " + inputfilename);
         }
     
+    //If there are any more arguments, process them by accomodating them
+    //inside a function list.
     
-        //If there are any more arguments, process them by accomodating them
-        //inside a function list.
-    
-    //Increment the iterator to move to the second command-line option.
+    //Increment the iterator to move to the second command-line 
     i++;
     while(i != files.end())
         {
@@ -162,16 +161,14 @@ int PEBLInterpret( int argc, const char *argv[] )
     //       Done processing files.
     //------------------------------------------------------
 
-   //Now, head should point to the top of the tree containing all of the source.
-
-    cerr << "---------Program Parsed---------" << endl;   
-
+    
     cerr << "---------Loading Program---------" << endl;     
     //Now, load it into the environment:
  
     // Create a loader that will load functions into the functionmap 
     myLoader = new Loader(); 
     myLoader->LoadUserFunctions((OpNode*)head);
+
 
     cerr <<"Analyzing code for functions." << endl;
     myLoader->FindFunctions(head);
@@ -180,13 +177,20 @@ int PEBLInterpret( int argc, const char *argv[] )
     cerr << "Loading Library functions." << endl;
     myLoader->LoadLibraryFunctions();
 
+    //This just destroys the function tree, not the
+    //parsed node structure that is contained within
+    //mFunctionMap.
+    cerr << "Removing residual function tree\n";
+    ((OpNode*)head)->DestroyFunctionTree();
+    delete head;
+    head = NULL;
+
+
     cerr << "\n\n--------------------------------\n";
     cerr << "Functions used in program: " << endl;
     cerr << "--------------------------------\n";
     Evaluator::mFunctionMap.DumpValues();
     cerr << "--------------------------------\n\n";
-
-
 
 
     //Parse command-line arguments.
@@ -323,11 +327,13 @@ int PEBLInterpret( int argc, const char *argv[] )
     if(arglist->Length()==0)
         {
             arglist->PushBack(Variant(0));
-            pList->PushFront(Variant(new PComplexData(arglist)));
+            counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(arglist));
+            pList->PushFront(Variant(pcd));
         }
     else
         {
-            pList->PushFront(Variant(new PComplexData(arglist)));
+            counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(arglist));
+            pList->PushFront(Variant(pcd));
         }
         
     counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(pList));
@@ -344,13 +350,13 @@ int PEBLInterpret( int argc, const char *argv[] )
 
     if(head) 
         {
-    
             cerr << "---------Evaluating Program-----" << endl;
             //Execute everything
             myEval.Evaluate(head);
-            head->DestroyChildren();
-            delete head;
-            delete myLoader;
+            delete myLoader; 
+            
+            Evaluator::mFunctionMap.Destroy();
+            
             return 0;
         }
     else
@@ -365,8 +371,7 @@ int PEBLInterpret( int argc, const char *argv[] )
 void  CaptureSignal(int signal)
 {
     cerr << "Exiting PEBL because of captured signal.\n";
-    head->DestroyChildren();
-    delete head;
+
     delete myLoader;
     raise(signal);
 

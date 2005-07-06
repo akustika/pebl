@@ -1063,9 +1063,8 @@ case 40:
 YY_RULE_SETUP
 #line 119 "src/base/Pebl.l"
 { /*Make a deep copy of the function name*/
-               yylval.function =strdup(yytext);
-
-               return PEBL_FUNCTIONNAME;
+                yylval.function =strdup(yytext);
+                return PEBL_FUNCTIONNAME;
 };
 	YY_BREAK
 case 41:
@@ -1104,7 +1103,7 @@ YY_RULE_SETUP
 #line 143 "src/base/Pebl.l"
 ECHO;
 	YY_BREAK
-#line 1108 "src/base/lex.yy.c"
+#line 1107 "src/base/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 

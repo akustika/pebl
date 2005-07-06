@@ -45,7 +45,7 @@ PlatformAudioOut::PlatformAudioOut()
 
 
 
-PlatformAudioOut::PlatformAudioOut(const char * soundfilename)
+PlatformAudioOut::PlatformAudioOut(const string &  soundfilename)
 {
 
     //Check to see if we can find the sound file; if not, call everything off.
@@ -67,7 +67,7 @@ PlatformAudioOut::~PlatformAudioOut()
 }
 
 
-bool PlatformAudioOut::LoadSoundFile(const char* soundfilename)
+bool PlatformAudioOut::LoadSoundFile(const string & soundfilename)
 {
     //Check to see if we can find the sound file; if not, call everything off.
     string filename = Evaluator::gPath.FindFile(soundfilename);

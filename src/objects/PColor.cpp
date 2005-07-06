@@ -54,15 +54,12 @@ PColor::PColor(int red, int green, int blue, int alpha):
 
 }
 
-
-
 ///Name-based constructor of PColor:
-PColor::PColor(const char * colorname)
+PColor::PColor(const string & colorname)
 {
     SetColorByName(colorname);
     SetAlpha(0);
 }
-
 
 
 ///Copy constructor of PColor:
@@ -112,7 +109,7 @@ void PColor::SetColorByRGBA(int red, int green, int blue, int alpha)
 }
 
 
-void PColor::SetColorByName(const char * colorname)
+void PColor::SetColorByName(const string & colorname)
 {
 
     std::string ucasename = PEBLUtility::ToUpper(colorname);

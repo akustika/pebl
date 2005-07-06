@@ -75,7 +75,7 @@ ostream & PlatformImageBox::SendToStream(ostream& out) const
 
 
 
-bool PlatformImageBox::LoadImage(const char * imagefilename)
+bool PlatformImageBox::LoadImage(const std::string &  imagefilename)
 {
 
     //Check to see if we can find the image; if not, call everything off.

@@ -61,10 +61,12 @@ public:
 
     //    std::list<Variant>::iterator  GetNext(std::list<Variant>::iterator i){return i->next(); }
     //    std::list<Variant>::iterator  GetPrev(std::list<Variant>::iterator i){return i->previous(); }
-    void PushFront(Variant  v){mList.push_front(v);};
-    void PopFront(){mList.pop_front();};
-    void PushBack(Variant  v){mList.push_back(v);};
-    void PopBack(){mList.pop_back();};
+    void PushFront(const Variant & v);
+    void PopFront();
+    void PushBack(const Variant & v);
+    void PopBack();
+
+
     bool IsEmpty(){return mList.empty();};
     void Remove(Variant v){mList.remove(v);};
     void Clear(){mList.clear();};

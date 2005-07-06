@@ -34,27 +34,20 @@
 #include "../devices/PKeyboard.h"
 #include "../apps/Globals.h"
 
+#include <string>
+
 class Variant;
 
 namespace PEBLUtility
 {
-    /// Returns a new buffer with upper-case version of text.  Be sure to free returned value afterwards.
-    std::string ToUpper(const char* text);
 
-    /// Returns a new buffer with lower-case version of text.  Be sure to free returned value afterwards.
-    std::string ToLower(const char* text);
-
-
-
-    /// Places upper-case version first n characters of text into buffer.
-    void ToUpper(const char* text, char* buffer, int n);
-
-    /// Places lowercase version first n characters of text into buffer.
-    void ToLower(const char* text, char* buffer, int n);
+    std::string ToUpper(const std::string & text);
+    std::string ToLower(const std::string & text);
+  
 
     /// This does its best, with the available libraries, to convert
     /// a string to a long double.
-    long double StringToLongDouble(const char * string);
+    long double StringToLongDouble(const char * mystring);
 
     long double Log2(long double val);
     long int Round(long double val);

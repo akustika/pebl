@@ -111,7 +111,8 @@ public:
     PNode*  GetRight() const{return mRight;};
 
     virtual void DestroyChildren();
-
+    virtual void DestroyFunctionTree();
+    
 
 private:
 protected:
