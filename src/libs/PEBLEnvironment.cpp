@@ -589,10 +589,9 @@ Variant PEBLEnvironment::TimeStamp(Variant v)
 
     time_t  rawtime;
     rawtime = time(NULL);
-
-
     char* timestring = ctime(&rawtime);
    
+    
     //timestring now ends with a carriage return.  So fix it.
     
     int pos =0;
@@ -602,7 +601,7 @@ Variant PEBLEnvironment::TimeStamp(Variant v)
         }
     timestring[pos] = '\0';
     Variant ret = Variant(timestring);
-    free(timestring);
+
     return ret;
 }
 

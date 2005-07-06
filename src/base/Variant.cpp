@@ -94,6 +94,7 @@ Variant::Variant(const char *  mystring):
     mComplexData(NULL),
     mDataType(P_DATA_STRING)
 {
+    
     mData.String = strdup(mystring);
     if(!mData.String)
         PError::SignalFatalError("Failed to copy string.");
