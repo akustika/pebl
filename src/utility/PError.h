@@ -3,7 +3,7 @@
 //    Name:       src/utility/PError.h
 //    Purpose:    Utility class for signaling warnings and errors
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003 Shane T. Mueller <smueller@umich.edu>
+//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   

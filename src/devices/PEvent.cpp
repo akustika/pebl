@@ -1,9 +1,9 @@
 //* -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*- */
 /////////////////////////////////////////////////////////////////////////////////
-//    Name:        src/devices/PEven.cpp
+//    Name:        src/devices/PEvent.cpp
 //    Purpose:     Events processed by Event Loop.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003 Shane T. Mueller <smueller@umich.edu>
+//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //

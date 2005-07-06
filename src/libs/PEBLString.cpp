@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLString.cpp
 //    Purpose:    String Processing Function Library for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2005 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   

@@ -1,7 +1,9 @@
 The PEBL Manual
 (c) 2003-2005 Shane T Mueller  smueller at obereed dot net
   
-Current for PEBL Version 0.5
+Current for PEBL Version 0.05
+July 2005
+
 http://pebl.sourceforge.net
 
 =~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
@@ -37,7 +39,7 @@ Currently, there is no automated compile procedure.  PEBL requires the
 SDL, SDL-image, and SDL-ttf libraries and development headers.  It
 also uses flex and bison, but you can compile without these tools.
 PEBL compiles on both Linux and Windows using the free gcc compiler.
-Note that SDL-image may require jpeg,  png, and a Z compression
+Note that SDL-image may require jpeg,  png, and a zlib compression
 library, while SDL-ttf requires truetype 2.0.
 
 2.1.1 Linux
@@ -98,8 +100,6 @@ there and to run programs that reside there.
 For the MAC, we provide a .pkg installer that installs all the
 necessary files and libraries in /usr/local/share/pebl.  PEBL can be
 run from the command line by invoking /usr/local/bin/pebl.  
-
-
 
 
 
@@ -503,6 +503,19 @@ Any expression can be used as the argument of a function. (A
 function may not successfully operate when given bogus arguments).
 
 
+If a string is defined across line breaks, the string definition will
+contain a linebreak character, which will get printed in output text
+files and textboxes.
+
+text <- "this is a line
+and so is this"
+
+If a long body of text is desired without linebreaks, one must define
+it piecemeal:
+
+text <- "This is a line " +
+        "There is no line break before this line."
+
 3.5  VARIABLES
 
 PEBL has the ability to store the results of expressions in
@@ -530,7 +543,7 @@ starts out the expression as a string and an integer, but
 the combination is a string.
 
 3.5.2 Variable Naming
-As a programming aid, all variables must begin with a
+As a programming cue, all variables must begin with a
 lowercase letter. Following that letter can be any sequence of numbers or
 letter.  If the variable begins with a lowercase 'g', it has
 global scope, otherwise it has local scope.
@@ -552,8 +565,7 @@ floating-point ratio numbers, strings, and complex types
 like lists, windows, sounds, fonts, and so on.  A variable
 can be set to a new value, but there are very few ways in
 which a complex object can be changed once it is set to that
-value.  This is by design
-
+value.  This is by design.
 
 For example, if you say:
   woof   <- LoadSound("dog.wav")
@@ -605,8 +617,24 @@ does not happen for simple (non-object) data types:
 The above produces the output:
 55  33
 
-This is confusing at first.  There may be a better way to
-handle this.  
+This may appear confusing at first, but it is consistent.  The <-
+assignment operator never changes the value of the data attached to a
+variable, it just changes what the variable is pointing to.  PEBL is 
+functional in its handling of simple data types, so you can't, for
+example, modify the contents of a string directly.
+
+  a  <- "my string"    #assigns a string literal to a
+  b  <- a              #make b refer to a's string literal
+  a  <- "your string"  #re-assigns a to a new string literal
+  b  <- a
+
+In general, there are no 'list surgery' or 'string surgery' functions,
+like 
+    SetCharacter(a,5,"X")
+which would theoreticall modify the string pointed to by a to be
+"yourXstring".  If this were the case, b would be "yourXstring" as
+well.
+
 
 3.5.5 Passing by reference and by value.
 
@@ -644,7 +672,8 @@ write a simple program.  Here is an annotated program
 # Any line starting with a # is a comment.  It gets ignored.
 
 --------------------------------------------------------
-define Start() #Every program needs to define a function called Start()
+ #Every program needs to define a function called Start()
+define Start(par) #Start needs a parameter, just in case
 #braces below contain PEBL statements
 {
 
@@ -684,12 +713,12 @@ define PrintIt(text, number)
   }
 
   #return the counting variable.
-  return j
+  return(j)
 }
 
 --------------------------------------------------------
-More sample programs can be found in the demo/ directory of
-the PEBL source tree.
+More sample programs can be found in the demo/ and experiments/
+directories of the PEBL source tree.
 
 =~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~
@@ -891,6 +920,7 @@ a text-based code that describes the keypress that should be
 checked for exit. Typical escape-key options include:
  "<return>"
  "<esc>"
+ "<backspace>"
  " "
  "A"
 Translation from string to keyboard input is still quite
@@ -1674,7 +1704,7 @@ See Also:
 ------------------------------------------------------------
 Name/Symbol:  ClearEventLoop
 
-Description:  Unimplemented. Advanced Event loop management.
+Description:  UNIMPLEMENTED. Advanced Event loop management.
 
 Usage:       
 
@@ -1682,16 +1712,6 @@ Example:
 
 See Also:     
 
-
-------------------------------------------------------------
-Name/Symbol:  Combine
-Description: String function--Not Implemented.  Combines
-	     two strings.  Use '+' instead.
-Usage:       
-
-Example:     
-
-See Also:     
 
 ------------------------------------------------------------
 Name/Symbol:  Cos
@@ -1779,7 +1799,7 @@ Usage:       DesignBalancedSampling(<list>, <length>)
 
 
 Example:     DesignBalancedSampling([1,2,3,4,5],12)
-             # e.g., == [5,3,1,4,2, 3,1,5,2,4,  4,1 ]
+             # e.g., produces something like [5,3,1,4,2, 3,1,5,2,4,  3,1 ]
 
 See Also:     
  CrossFactorWithoutDuplicates(), DesignFullCounterBalance(),
@@ -2147,6 +2167,7 @@ Usage:        First(<list>)
 
 Example:      First([3,33,132]) # == 3
 
+
 See Also:     Nth(), Last()
 
 
@@ -2186,8 +2207,8 @@ Description:  Rounds <num> down to the next integer
 Usage:        Floor(<num>)
 
 Example:      Floor(33.23)  # == 33
-	     Floor(3.999)  # ==3
-	     Floor(-32.23) # == -33
+			  Floor(3.999)  # ==3
+			  Floor(-32.23) # == -33
  
 See Also:     AbsFloor(), Round(), Ceiling()
 
@@ -2210,7 +2231,7 @@ See Also:     FlattenN(), Flatten()
 ------------------------------------------------------------
 Name/Symbol:  Format            
 
-Description: unimplemented
+Description: UNIMPLEMENTED
 
 Usage:       Format(<value>)
 
@@ -2724,6 +2745,9 @@ Description: Returns the last item in a list
 Usage:       Last(<list>)
 
 Example:     Last([1,2,3,444]) # == 444
+			 
+			 Provides faster access to the last item of a list than
+			 does Nth()
 
 See Also:     Nth(), First()
 
@@ -2842,7 +2866,7 @@ See Also:     while(){}
 ------------------------------------------------------------
 Name/Symbol:  Mean
 
-Description: Unimplemented. Returns the mean of the numbers in <list>
+Description: UNIMPLEMENTED. Returns the mean of the numbers in <list>
 
 Usage:       
 
@@ -2851,9 +2875,20 @@ Example:
 See Also:     Median(), Quantile(), StDev(), Min(), Max()
 
 ------------------------------------------------------------
+Name/Symbol:  Median
+
+Description: UNIMPLEMENTED. Returns the median of the numbers in <list>
+
+Usage:       
+
+Example:     
+
+See Also:     Mean(), Quantile(), StDev(), Min(), Max()
+
+------------------------------------------------------------
 Name/Symbol:  MakeChirp  
 
-Description:  unimplemented
+Description:  UNIMPLEMENTED
 
 Usage:       
 
@@ -2926,7 +2961,7 @@ See Also:
 ------------------------------------------------------------
 Name/Symbol:  MakeMap     
 
-Description: unimplemented
+Description: UNIMPLEMENTED
 
 Usage:       
 
@@ -2938,7 +2973,7 @@ See Also:
 ------------------------------------------------------------
 Name/Symbol:  MakeSawtoothWave     
 
-Description: unimplemented
+Description: UNIMPLEMENTED
 
 Usage:       
 
@@ -2949,7 +2984,7 @@ See Also:     MakeSquareWave(), MakeSineWave(), MakeChirp()
 ------------------------------------------------------------
 Name/Symbol:  MakeSineWave     
 
-Description: unimplemented
+Description: UNIMPLEMENTED
 
 Usage:       
 
@@ -2960,7 +2995,7 @@ See Also:     MakeSquareWave(), MakeSawtoothWave(), MakeChirp()
 ------------------------------------------------------------
 Name/Symbol:  MakeSquareWave     
 
-Description: unimplemented
+Description: UNIMPLEMENTED
 
 Usage:       
 
@@ -3002,7 +3037,7 @@ See Also:
 ------------------------------------------------------------
 Name/Symbol:  Max            
 
-Description:  Unimplemented. Returns the largest of <list>
+Description:  UNIMPLEMENTED. Returns the largest of <list>
 
 Usage:       Max(<list>)
 
@@ -3024,7 +3059,7 @@ See Also:     [], Append(), List()
 ------------------------------------------------------------
 Name/Symbol: Min 
 
-Description:  Unimplemented.  Returns the 'smallest' element of a list.
+Description:  UNIMPLEMENTED.  Returns the 'smallest' element of a list.
 
 Usage:       Min(<list>)
 
@@ -3103,8 +3138,14 @@ Description: Extracts the Nth item from a list.  Indexes from
 Usage:       Nth(<list>, <index>)
 
 Example:     
+			 a <- ["a","b","c","d"]
+			 Print(Nth(a,3)) #=='c'
+			 
+			 Note: Last() provides faster access to the end of the
+			 list than does Nth, which must walk along the list to the
+			 desired position.
 
-See Also:     
+See Also:    First(), Last() 
 
 ------------------------------------------------------------
 Name/Symbol: NthRoot
@@ -3184,21 +3225,27 @@ Description:  Prints <value> to stdout,  without appending a
 
 Usage:        Print_(<value>)
 
-Example:     
+Example:    
+			 Print_("This line")
+			 Print_(" ")
+			 Print_("and")
+			 Print_(" ")
+			 Print("Another line")
+			 ## prints out: 'This line and Another line'
 
 See Also:     
  
 ------------------------------------------------------------ 
 Name/Symbol: Quantile
 
-Description:  Unimplemented. Returns the <num> quantile of
+Description:  UNIMPLEMENTED. Returns the <num> quantile of
                the numbers in <list>
 
 Usage:       Quantile(<list>, <num>)
 
 Example:     
 
-See Also:     
+See Also:    StDev(), Median(), Mean(), Max(), Min()
 
 ------------------------------------------------------------
 Name/Symbol:  Random
@@ -3378,7 +3425,7 @@ See Also:     DegToRad(), Tan(), Cos(), Sin(), ATan(), ASin(), ACos()
 ------------------------------------------------------------
 Name/Symbol:  RegisterEvent
 
-Description:  Unimplemented.  Advanced event loop management.
+Description:  UNIMPLEMENTED.  Advanced event loop management.
 
 Usage:       
 
@@ -3442,6 +3489,9 @@ Example:
 	     x <- "potato"
 	     y <- repeat(x, 10)
 	     Print(y)
+         #produces:
+	     # ["potato","potato","potato","potato","potato","potato",
+		 #  "potato","potato","potato","potato"]
 	     
 	     
 See Also:    RepeatList()
@@ -3652,18 +3702,17 @@ Usage:       SetFont(<text-widget>, <font>)
 
 Example:   
 	   fontGreen <- MakeFont("vera.ttf",1,22,MakeColor("green"),MakeColor("black"), 1)
-           fontRed   <- MakeFont("vera.ttf",1,22,MakeColor("red"),MakeColor("black"), 1)
+       fontRed   <- MakeFont("vera.ttf",1,22,MakeColor("red"),MakeColor("black"), 1)
 	   label <- MakeLabel(fontGreen, "Correct")
 	  
  
-           #Do trial here.
+       #Do trial here.
            
 	   if(response == 1)
-           {
-             SetText(label, "CORRECT")
+       {
+         SetText(label, "CORRECT")
 	     SetFont(label, fontGreen)
-	   } else
-	   {
+	   } else {
 	     SetText(label, "INCORRECT")
 	     SetFont(label, "fontRed)
 	   }
@@ -3782,7 +3831,9 @@ See Also:    SortBy(), Shuffle()
 ------------------------------------------------------------
 Name/Symbol: SortBy
 
-Description: Sorts a list by the values in another list.
+Description: Sorts a list by the values in another list, in ascending
+			 order.
+
 
 Usage:       SortBy(<value-list>, <key-list>)
 
@@ -3828,19 +3879,19 @@ See Also:
 ------------------------------------------------------------
 Name/Symbol:  StDev 
 
-Description: Unimplemented. Returns the standard dev of <list>
+Description: UNIMPLEMENTED. Returns the standard dev of <list>
 
 Usage:       StDev(<list> )        
 
 Example:     
 
-See Also:     Min(), Max(), Mean()
+See Also:     Min(), Max(), Mean(), Median(), Quantile()
 
 
 ------------------------------------------------------------
 Name/Symbol:  StartEventLoop
 
-Description:  Unimplemented. Advanced control of event loop.
+Description:  UNIMPLEMENTED. Advanced control of event loop.
 
 Usage:       
 
@@ -3989,7 +4040,7 @@ See Also:
 ------------------------------------------------------------
 Name/Symbol:  Token
 
-Description:  Unimplemented.
+Description:  UNIMPLEMENTED.
 
 Usage:       
 

@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformTextBox.cpp
 //    Purpose:    Contains SDL-specific interface for the text boxes.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003 Shane T. Mueller <smueller@umich.edu>
+//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //

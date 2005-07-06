@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformWindow.cpp
 //    Purpose:    Contains SDL-specific interface for the main window class.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003 Shane T. Mueller <smueller@umich.edu>
+//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //

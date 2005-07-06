@@ -3,7 +3,7 @@
 //    Name:       src/utility/PEBLPath.h
 //    Purpose:    Utility class storing search path and searching for files there
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003 Shane T. Mueller <smueller@umich.edu>
+//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   

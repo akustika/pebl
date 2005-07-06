@@ -3,7 +3,7 @@
 //    Name:       src/objects/PLabel.h
 //    Purpose:    Contains generic specs for a visually-displayed text.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004 Shane T. Mueller <smueller@umich.edu>
+//    Copyright:  (c) 2004-2005 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //

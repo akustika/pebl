@@ -3,7 +3,7 @@
 //    Name:       src/objects/PImageBox.cpp
 //    Purpose:    Contains generic specification for a imagebox  class.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003 Shane T. Mueller <smueller@umich.edu>
+//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //

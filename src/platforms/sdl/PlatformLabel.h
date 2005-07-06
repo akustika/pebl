@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformLabel.h
 //    Purpose:    Contains SDL-specific interface for text labels
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004 Shane T. Mueller <smueller@umich.edu>
+//    Copyright:  (c) 2004-2005 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
