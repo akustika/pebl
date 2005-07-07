@@ -28,7 +28,7 @@
 
 (define-generic-mode 'pebl-mode
   '("#")
-  '("while" "if" "then" "return" "not" "and" "or" "loop" "define")
+  '("while" "if" "then" "return" "not" "and" "or" "loop" "define" "break")
   '(("\\<[A-Z][A-Za-z]*\\>"  . 'font-lock-function-name-face)
 	("\\<[a-fh-z][A-Za-z]*" . 'font-lock-variable-name-face)
 	("\\<[g][A-Za-z]*" .       'font-lock-constant-face)

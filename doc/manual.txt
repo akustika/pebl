@@ -74,8 +74,9 @@ and libSDL_image requires libpng, libjpeg, and zlib.
 
 2.2 HOW TO INSTALL
 
-Currently, there is no automated installation program on any
-platform.
+Currently, binary distributions of PEBL are available with automatic
+package installers for Windows and OSX.  No binary distribution is
+available on linux.
 
 2.2.1 Linux
 
@@ -87,20 +88,18 @@ to do this, and you can just as easily do it by hand.
 
 2.2.2 Microsoft Windows
 
-In Microsoft Windows, we provide a .zip file that contains all necessary
-executable binary files and .dlls.  Just unzip the archive somewhere
-(like "c:\Program Files\PEBL") and you are ready to begin.
-Additionally, we provide an automated installer.  This installer
-places PEBL in c:\Program Files\PEBL, and creates a directory pebl-exp
-in My Documents with a shortcut that allows PEBL to be launched from
+In Microsoft Windows, we provide an installer package that  contains
+all necessary executable binary files and .dlls.This installer places
+PEBL in c:\Program Files\PEBL, and creates a directory pebl-exp in My
+Documents with a shortcut that allows PEBL to be launched from
 there and to run programs that reside there.
+
 
 2.2.3 Macintosh OSX
  
 For the MAC, we provide a .pkg installer that installs all the
 necessary files and libraries in /usr/local/share/pebl.  PEBL can be
 run from the command line by invoking /usr/local/bin/pebl.  
-
 
 
 2.3 HOW TO RUN A PEBL PROGRAM
@@ -120,9 +119,11 @@ supplementary library functions in library.pbl.
 Additionally, PEBL can take the -v or -V command-line parameter,
 which allows you to pass values in to the script.  This is useful for
 entering subject numbers and condition types using an outside program
-like a bash script (possibly one that invokes dialog or zenity: see
-http://freshmeat.net/projects/zenity/?topic_id=861%2C884%2C1009). See Section 2.5:
-Command-line arguments.
+like a bash script (possibly one that invokes dialog or zenity)  In the bin/ 
+directory is a sample zenity script that asks for a subject number and then runs  
+a sample experiment, which uses that input.  The script could be edited to use
+fullscreen mode or change the display dimensions, for example.  See 
+also Section 2.5: Command-line arguments.
 
 You can also specify directories without a filename on the command
 line (as long as they end with '/'.)  Doing so will add that directory
@@ -237,11 +238,7 @@ process.  We have added a 'abort program' shortcut key
 combination that will immediately kill the program and
 report the location in your code that it was killed.  To do
 this, press <CTRL><SHIFT><ALT><\> simultaneously, and PEBL
-should end.  Note: currently (Version 0.3) some of the objects do not get
-cleaned up when aborted this way, leading PEBL to actually
-crash in response to this keycode.  This will hopefully be
-fixed in the future.
-
+should end.  
 
 2.5 Command-line arguments
 
@@ -361,7 +358,7 @@ define Start(par)
 }
 
 A simple PEBL program that actually runs follows:
-define Start()
+define Start(par)
 {
  Print("Hello")
 }
@@ -369,7 +366,9 @@ define Start()
 "Print" is a standard library function. If you run PEBL from a
 command-line, the text inside the Print function will be sent to the
 console. On windows, it will appear in the file 'stdout.txt' in the
-PEBL directory.
+PEBL directory.  Although other functions do not need a parameter
+argument, the Start function does, in case some values are passed in
+from the command-line.
 
 A number of example PEBL programs are found in the /demo subdirectory.
 
@@ -401,7 +400,8 @@ PEBL has a simple and forgiving syntax, reminiscent of S+ (or R)
 and c.  There are differences, however.
 
 There are a number of keywords and symbols used in PEBL,
-shown in the table below.  These must appear in lowercase in your programs.
+shown in the table below. These need not appear in lowercase in your
+program.
 
 ___________________________________________________________________
 Symbol/keyword       Usage
@@ -1060,6 +1060,28 @@ Vowels.txt                Vowels (both cases)
 
 
 
+4.13  Special Variables.
+
+There are a number of special variables that get set by PEBL, and can
+later be accessed by an experiment.
+---------------------------------------------------------------
+ Name                 Purpose
+---------------------------------------------------------------
+gKeepLooping         Controls continued execution in event loop
+                     (Not currently useful)
+
+gVideoWidth			 The width in pixels of the display (set by default
+					 or command-line option. Changing this does not
+					 change display width.
+
+gVideoHeight         The height in pixels of the display (set by
+					 default or command-line). Changing this
+					 does not change display height.
+
+gVideoDepth          The bit depth of the video.
+
+---------------------------------------------------------------
+
 =~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~
 =~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
@@ -1195,7 +1217,8 @@ __________________________________________________________________
  MakeColorRGB <red> <green> <blue>  Creates a color based on
                                      red, green, and blue values
  MakeFont   <ttf_filename> <style> <size> <fgcolor> <bgcolor> <anti-aliased>
-                                 Creates a font which can be used to make labels.                                                                       cycles, then returns
+                                 Creates a font which can be used to
+                                 make labels.
  SetCursorPosition  <textbox> <position>   Move the editing cursor in a textbox
  GetCursorPosition  <textbox>              Gets the position of the editing cursor.
  SetEditable        <textbox> <status>     Turns on or off the editing cursor.
@@ -1283,7 +1306,8 @@ __________________________________________________________________
  RepeatList  <list> <n>       Makes a new list containing
                               the elements of <list> repeated  <n>  times.
  Sequence                 <start> <end> <step> Makes a sequence of numbers 
-                           from <start> to <end>, with <step>-sized steps                                                                                <step>-sized increments.
+                           from <start> to <end>, with <step>-sized
+						   steps <step>-sized increments.
  ChooseN                  <list> <n> Returns a sublist of <n> items
                                      from a list, in the order they appear in teh original list
  SampleN                  <list> <n> Returns a randomly-ordered sublist of <n> items from a list.
@@ -1347,11 +1371,11 @@ concatenates strings together.
 
 Usage:       <num1> + <num2>
              <string1> + <string2>
-	    <string1> + <num1>
+ 	         <string1> + <num1>
  Using other types of variables will cause errors.
 
 Example:     33 + 322                   --> 355
-	    "Hello" + " " + "World"    --> "Hello World"
+	         "Hello" + " " + "World"    --> "Hello World"
              "Hello" + 33 + 322.5       --> "Hello355.5"
               33 + 322.5 + "Hello"      --> "33322.5Hello"
 
