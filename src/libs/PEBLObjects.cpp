@@ -38,12 +38,14 @@
 #include "../objects/PObject.h"
 #include "../objects/PColor.h"
 #include "../objects/PTextBox.h"
+#include "../objects/PDrawObject.h"
 #include "../utility/PError.h"
 
 
 #include "../platforms/sdl/PlatformEnvironment.h"
 #include "../platforms/sdl/PlatformWindow.h"
 #include "../platforms/sdl/PlatformImageBox.h"
+#include "../platforms/sdl/PlatformDrawObject.h"
 #include "../platforms/sdl/PlatformLabel.h"
 #include "../platforms/sdl/PlatformFont.h" 
 #include "../platforms/sdl/PlatformEventQueue.h"
@@ -713,4 +715,40 @@ Variant PEBLObjects::MakeChirp(Variant v)
 {
     PError::SignalFatalError("Function [MakeChirp] Not implemented.");
     return Variant(false);
+}
+
+
+
+Variant PEBLObjects::DrawLine(Variant v)
+{
+
+    //v[1] should have the object,
+    // v[2] should be X, v[3] shoud be Y
+    // v[4] should be dx, v[5] should be dy
+    // v[6] should be the color.
+    counted_ptr<PList> plist = (v.GetComplexData())->GetList();    
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_WIDGET, "Argument error in first parameter of function [DrawLine(<widget>,<x>, <y>, <dx>, <dy>, <color>)]: "); 
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in second parameter of function [DrawLine(<widget>,<x>, <y>, <dx>, <dy>, <color>)]: "); 
+    int x = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in third parameter of function  [DrawLine(<widget>,<x>, <y>, <dx>, <dy>, <color>)]: "); 
+    int y = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in fourth parameter of function  [DrawLine(<widget>,<x>, <y>, <dx>, <dy>, <color>)]: "); 
+    int dx = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in fifth parameter of function  [DrawLine(<widget>,<x>, <y>, <dx>, <dy>, <color>)]: "); 
+    int dy = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_COLOR, "Argument error in sixth parameter of function  [DrawLine(<widget>,<x>, <y>, <dx>, <dy>, <color>)]: "); 
+    Variant v2 = plist->First(); plist->PopFront();
+    counted_ptr<PColor> color = v2.GetComplexData()->GetColor();    
+
+    std::cout<< "Color: " << color << endl;
+    counted_ptr<PlatformLine> myLine = counted_ptr<PlatformLine>(new PlatformLine(x,y,dx,dy,*color));
+    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myLine));
+    return Variant(pcd);
+
 }

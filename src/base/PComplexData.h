@@ -30,6 +30,7 @@
 #include "PList.h"
 #include "../objects/PColor.h"
 
+
 #include "../platforms/sdl/PlatformEnvironment.h"
 #include "../platforms/sdl/PlatformWindow.h"
 #include "../platforms/sdl/PlatformImageBox.h"
@@ -37,6 +38,7 @@
 #include "../platforms/sdl/PlatformLabel.h"
 #include "../platforms/sdl/PlatformTextBox.h"
 #include "../platforms/sdl/PlatformKeyboard.h"
+#include "../platforms/sdl/PlatformDrawObject.h"
 #include "../devices/PStream.h"
 #include "../platforms/sdl/PlatformAudioOut.h"
 #include "../utility/rc_ptrs.h"
@@ -78,7 +80,8 @@ enum ComplexDataType
         CDT_LIST,
         CDT_TEXTBOX,
         CDT_WINDOW,
-        CDT_LABEL
+        CDT_LABEL,
+        CDT_LINE
     };
 
 class PComplexData
@@ -99,6 +102,7 @@ public:
     PComplexData(counted_ptr<PlatformKeyboard>);
     PComplexData(counted_ptr<PStream>);
     PComplexData(counted_ptr<PlatformAudioOut>);
+    PComplexData(counted_ptr<PlatformLine>);
     
 
     ///Copy Constructors
@@ -130,6 +134,7 @@ public:
     counted_ptr<PlatformTextBox>       GetTextBox() const;
     counted_ptr<PlatformImageBox>      GetImageBox() const;
     counted_ptr<PlatformKeyboard>      GetKeyboard() const;
+    counted_ptr<PlatformLine>          GetLine() const;
    
 
     counted_ptr<PStream>               GetFileStream() const;
@@ -153,6 +158,7 @@ public:
     bool IsKeyboard() const;
     bool IsFileStream() const;
     bool IsAudioOut() const;
+    bool IsLine() const;
 
 
 
@@ -184,6 +190,7 @@ private:
     counted_ptr<PlatformKeyboard>     mKeyboard;
     counted_ptr<PStream>              mFileStream; 
     counted_ptr<PlatformAudioOut>     mAudioOut;
+    counted_ptr<PlatformLine>         mLine;
 };
 
 

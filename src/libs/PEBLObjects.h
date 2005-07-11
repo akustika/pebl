@@ -79,6 +79,10 @@ namespace PEBLObjects
     Variant MakeSawtoothWave(Variant v);
     Variant MakeChirp(Variant v);
 
+
+
+    //Functions to draw things.
+    Variant DrawLine(Variant v);
     
 }
 

@@ -132,6 +132,14 @@ PComplexData::PComplexData(counted_ptr<PlatformAudioOut> audio):
 
 
 
+PComplexData::PComplexData(counted_ptr<PlatformLine> line):
+    mComplexDataType(CDT_LINE),
+    mLine(line)
+{
+}
+
+
+
 
 PComplexData::~PComplexData()
 {
@@ -180,6 +188,8 @@ PComplexData::PComplexData(const PComplexData & pcd):
         case CDT_AUDIOOUT:
             mAudioOut = pcd.GetAudioOut();
             break;
+        case CDT_LINE:
+            mLine = pcd.GetLine();
 
         case CDT_UNDEFINED:
         default:             
@@ -234,6 +244,10 @@ PComplexData::PComplexData(const PComplexData * pcd):
             mAudioOut = pcd->GetAudioOut();
             break;
 
+        case CDT_LINE:
+            mLine = pcd->GetLine();
+            break;
+
         case CDT_UNDEFINED:
         default:             
             PError::SignalFatalError("Trying to copy undefined PComplexData.");
@@ -270,6 +284,7 @@ ostream & PComplexData::SendToStream(ostream& out) const
         case CDT_KEYBOARD:     out << *mKeyboard; break;
         case CDT_FILESTREAM:   out << *mFileStream; break;
         case CDT_AUDIOOUT:     out << *mAudioOut; break;
+        case CDT_LINE:         out << *mLine; break;
         case CDT_UNDEFINED:
         default:               out << "Undefined" << GetTypeName();
             break;
@@ -322,6 +337,10 @@ std::string  PComplexData::GetTypeName() const
             
         case CDT_AUDIOOUT:
             return "Complex Data: Audio Out";
+
+        case CDT_LINE:
+            return "Complex Data: Line";
+
         case CDT_UNDEFINED:
         default:
             return "Complex Data: Undefined";
@@ -502,6 +521,22 @@ counted_ptr<PlatformAudioOut> PComplexData::GetAudioOut() const
 }
 
 
+counted_ptr<PlatformLine> PComplexData::GetLine() const
+{
+
+    if(IsLine())
+        {
+            return mLine;
+        }
+    else
+        {
+            PError::SignalFatalError("Trying to get a Line.");
+            exit(0);
+        }
+
+}
+
+
 
 //  This accessor will return a pointer to a raw pointer to a 
 // 'widget' if the data is one, or NULL otherwise.
@@ -524,6 +559,10 @@ PlatformWidget * PComplexData::GetWidget() const
 
         case CDT_IMAGEBOX:
             return mImageBox.get();
+
+        case CDT_LINE:
+            return mLine.get();
+
 
             //These all fall through to the NULL return, because they are not widgets..
         case CDT_COLOR:
@@ -560,6 +599,7 @@ bool PComplexData::IsWidget() const
         || (mComplexDataType == CDT_LABEL)
         || (mComplexDataType == CDT_IMAGEBOX)
         || (mComplexDataType == CDT_TEXTBOX)
+        || (mComplexDataType == CDT_LINE)
        )
         return true;
     else
@@ -623,6 +663,11 @@ bool PComplexData::IsAudioOut() const
     return mComplexDataType == CDT_AUDIOOUT;
 }
 
+bool PComplexData::IsLine() const
+{
+    return mComplexDataType == CDT_LINE;
+}
+
 
 /// This method unpoints any non-null pointer.
 ///It isn't used because rc pointers handle things for themselves.
@@ -675,12 +720,12 @@ void PComplexData::ClearPointers()
          
             break;
             
-        case CDT_AUDIOOUT:
-         
-            break;
+        case CDT_AUDIOOUT:  break;
+        case CDT_LINE:break;
 
         case CDT_UNDEFINED:
             break;
+
 
         default:
             PError::SignalFatalError("Undefined data type in PComplexData::ClearPointers()");

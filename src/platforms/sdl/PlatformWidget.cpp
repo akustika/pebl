@@ -60,20 +60,21 @@ std::ostream & PlatformWidget::SendToStream(std::ostream& out) const
 
 bool PlatformWidget::Draw()
 {
+
     if(IsVisible())
         {
             //To draw a widget, draw each of the window's subwidgets
             //(using PlatformWidget::Draw(SDLSurface)
             //This should be done backwards, so that the last item added
             //(which is on the front) will be the last item drawn.
- 
+
             std::list<PWidget *>::iterator p = mSubWidgets.end();
+
             while(p != mSubWidgets.begin())
                 {
                     //decrement iterator--moving backward so we draw things in 
                     //reverse order.
                     p--;
-                    
                     //Draw the subwidget
                     if((*p)->IsVisible())
                         {
@@ -86,7 +87,7 @@ bool PlatformWidget::Draw()
                 {          
                     SDL_Rect  fromRect = {0,0,mWidth,mHeight};
                     SDL_Rect  toRect   = {mDrawX,mDrawY,mWidth,mHeight};
-                    //  unsigned long int start =SDL_GetTicks();
+                    //  unsigne    d long int start =SDL_GetTicks();
                     SDL_BlitSurface(mSurface, &fromRect, mParentSurface, &toRect);
                     //  unsigned long int end =SDL_GetTicks();
                     //     cout << "Time to BlitSurface:  " << end - start << endl;

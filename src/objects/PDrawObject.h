@@ -33,180 +33,174 @@
 
 //A DrawObject is parallel to PWidget, but specific to drawing 
 //primitives.
-class PDrawObject: public PObject
+class PDrawObject: public virtual PWidget
 
 {
 
 public:
 
     PDrawObject();
-    PDrawObject(int x, int y, bool visible);
+    PDrawObject(int x, int y, const PColor & fg, const PColor & outline);
     virtual ~PDrawObject();
   
-    ///This unconditionally sets the parent widget.
-    virtual void SetParent(PWidget * widget){mParent = widget;}
+//     ///This unconditionally sets the parent widget.
+//     virtual void SetParent(PWidget * widget){mParent = widget;}
 
-    ///This draws the subwidgets.  It doesn't need a 'parent'
-    ///argument, because 'this' is it.
-    virtual bool Draw(){return false;}
+//     ///This draws the subwidgets.  It doesn't need a 'parent'
+//     ///argument, because 'this' is it.
+//     virtual bool Draw(){return false;}
 
-    ///Sets the location of the upper left-hand corner of the
-    ///image on the parent widget.
-    virtual void SetPosition(int x, int y);
+//     ///Sets the location of the upper left-hand corner of the
+//     ///image on the parent widget.
+//     virtual void SetPosition(int x, int y){mX=x; mY=y;};
     
-    virtual int GetX()const {return mX;};
-    virtual int GetY()const {return mY;};
+//     virtual int GetX()const {return mX;};
+//     virtual int GetY()const {return mY;};
 
-    //This returns the width and height of the drawing object.
-    virtual int GetWidth()const;
-    virtual int GetHeight()const;
+//     //This returns the width and height of the drawing object.
+//     virtual int GetWidth()const=0;
+//     virtual int GetHeight()const=0;
 
-    virtual void SetBackgroundColor(const PColor & color);
-    virtual PColor  GetBackgroundColor(){return mBackgroundColor;};
-    
-    ///AddSubWidget takes care of adding a widget to a parent widget, and setting
-    ///the parent field of the child widget to the parent widget.
-    virtual bool AddSubWidget(PWidget * widget);
-
-    ///This method iterates through the subwidgets and sees if any
-    ///are equal to the argument.  If so, it removes it.  It does not delete it.
-    virtual bool RemoveSubWidget(PWidget * widget);
-
-    ///This is probably pretty useless.
-    virtual bool RemoveLastSubWidget();
-    
-    ///These change the visibility state.  If invisible, the widget gets
-    ///skipped over when drawn.
-    virtual void Show(){mIsVisible = true;}
-    virtual void Hide(){mIsVisible = false;}
-    virtual bool IsVisible(){return mIsVisible;}
+//     virtual void SetColor(const PColor & color){mColor=color;};
+//     virtual void SetBackgroundColor(const PColor & color){mOutlineColor=color;};
+        
+//     ///These change the visibility state.  If invisible, the widget gets
+//     ///skipped over when drawn.
+//     virtual void Show(){mIsVisible = true;}
+//     virtual void Hide(){mIsVisible = false;}
+//     virtual bool IsVisible(){return mIsVisible;}
 
 protected:
 
     ///An inheritable printing class used by PObject::operator<<
-    virtual std::ostream & SendToStream(std::ostream& out) const;
+    virtual std::ostream & SendToStream(std::ostream& out) const=0;
  
-    ///The x and y coordinates, in pixels, from the upper left corner
-    ///of the parent screen
-    int mX, mY;
+//     ///The x and y coordinates, in pixels, from the upper left corner
+//     ///of the parent screen
+//     int mX, mY;
 
-    //These are the actual locations of the points to be drawn.  They differ
-    //from mX and mY in labels and images, which are drawn on their center point.
-    int mDrawX;
-    int mDrawY;
+//     //These are the actual locations of the points to be drawn.  They differ
+//     //from mX and mY in labels and images, which are drawn on their center point.
+//     int mDrawX;
+//     int mDrawY;
 
-    /// The background color of the widget.  if alpha = 0, will not be painted.
-    PColor mBackgroundColor;
+//     /// The background color of the widget.  if alpha = 0, will not be painted.
+    PColor mColor;
     PColor mOutlineColor;
 
-    //Whether this should actually get drawn.
-    bool mIsVisible;
+//     //Whether this should actually get drawn.
+//     bool mIsVisible;
 
-    ///The parent widget. If null (0), this has no parent (top-level window).
-    ///or is currently unattached.
-    PWidget * mParent;
+//     ///The parent widget. If null (0), this has no parent (top-level window).
+//     ///or is currently unattached.
+//     PWidget * mParent;
 private:
 
 };
 
 
-class PLine: public PDrawObject
+class PLine: public virtual PDrawObject
 {
 public:
-    PLine();
+    PLine(int x1, int y1, int dx, int dy, const PColor & fg);
     ~PLine();
-private:
+    virtual int GetWidth() const{return mX2;};
+    virtual int GetHeight() const{return mY2;};
+    virtual std::ostream & SendToStream(std::ostream& out);
+
+protected:
+    //X1--Y2 are relative to mX and mY
     int mX1;
     int mY1;
     int mX2;
-    int mY2;
-    
-    int mWidth;;
+    int mY2;  
+    int mWidth;
 
     bool mAntiAliased;
-};
-
-class PBezier: public PDrawObject
-{
-};
-
-class PPolygon: public PDrawObject
-{
-public:
-    PPolygon();
-    ~PPolygon();
-protected:
 private:
 };
 
-class PTriangle: public PPolygon
-{
-public:
-    PTriangle();
-    ~PTriangle();
-protected:
-private:
+// class PBezier: public PDrawObject
+// {
+// };
 
-};
+// class PPolygon: public PDrawObject
+// {
+// public:
+//     PPolygon();
+//     ~PPolygon();
+// protected:
+// private:
+// };
 
-class PTrapezoid: public PPolygon
-{
-public:
-    PTrapezoid();
-    ~PTrapezoid();
-protected:
-private:
-};
+// class PTriangle: public PPolygon
+// {
+// public:
+//     PTriangle();
+//     ~PTriangle();
+// protected:
+// private:
 
+// };
 
-class PRectangle: public PTrapezoid
-{
-public:
-    PRectangle();
-    ~PRectangle();
-protected:
-private:
-};
-
-class PSquare: public PRectangle
-{
-public:
-    PSquare();
-    ~PSquare();
-protected:
-private:
-};
+// class PTrapezoid: public PPolygon
+// {
+// public:
+//     PTrapezoid();
+//     ~PTrapezoid();
+// protected:
+// private:
+// };
 
 
-class PEllipse: public PDrawObject
-{
-public:
-    PEllipse();
-    ~PEllipse();
-protected:
-private:
-};
+// class PRectangle: public PTrapezoid
+// {
+// public:
+//     PRectangle();
+//     ~PRectangle();
+// protected:
+// private:
+// };
+
+// class PSquare: public PRectangle
+// {
+// public:
+//     PSquare();
+//     ~PSquare();
+// protected:
+// private:
+// };
 
 
-class PCircle: public PEllipse
-{
-public:
-    PCircle();
-    ~PCircle();
-protected:
-private:
+// class PEllipse: public PDrawObject
+// {
+// public:
+//     PEllipse();
+//     ~PEllipse();
+// protected:
+// private:
+// };
 
-};
+
+// class PCircle: public PEllipse
+// {
+// public:
+//     PCircle();
+//     ~PCircle();
+// protected:
+// private:
+
+// };
 
 
-class PDrawGroup: public PDrawObject
-{
-public:
-    PDrawGroup();
-    ~PDrawGroup();
-protected:
-private:
-};
+// class PDrawGroup: public PDrawObject
+// {
+// public:
+//     PDrawGroup();
+//     ~PDrawGroup();
+// protected:
+// private:
+// };
 
 
 #endif

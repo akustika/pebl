@@ -39,7 +39,7 @@ PColor::PColor():
     mRed(0),
     mGreen(0),
     mBlue(0),
-    mAlpha(0)
+    mAlpha(255)
 {
 } 
 
@@ -58,7 +58,7 @@ PColor::PColor(int red, int green, int blue, int alpha):
 PColor::PColor(const string & colorname)
 {
     SetColorByName(colorname);
-    SetAlpha(0);
+    SetAlpha(255);
 }
 
 
@@ -156,11 +156,11 @@ void PColor::SetColorByName(const string & colorname)
 
 
           
-            if(test < 0)                     //If test < 0, the chosen word comes before the point in the dictionary. Move top down.
+            if(test < 0)           //If test < 0, the chosen word comes before the point in the dictionary. Move top down.
                 {
                     top = mid;
                 }
-            else if(test > 0)                //If test > 0, the chosen word comes after the point in the dictionary. Move bottom up.
+            else if(test > 0)       //If test > 0, the chosen word comes after the point in the dictionary. Move bottom up.
                 {
                     bottom = mid;
                 }
@@ -192,6 +192,7 @@ void PColor::SetColorByName(const string & colorname)
     mRed   = RGBNames::ColorNames[foundindex].r;
     mGreen = RGBNames::ColorNames[foundindex].g;
     mBlue  = RGBNames::ColorNames[foundindex].b;
+    mAlpha = 255;
 }
 
 

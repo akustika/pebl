@@ -29,7 +29,7 @@ C   = gcc
 CXX = g++	
 DEBUGFLAGS = -lefence -DPEBL_DEBUG
 CFLAGS =   -O3 -std=c99
-CXXFLAGS =   -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX 
+CXXFLAGS =   -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX -g
 
 
 SDL_CONFIG = /usr/bin/sdl-config
@@ -106,6 +106,7 @@ POBJECT_SRC  =  $(OBJECTS_DIR)/PObject.cpp \
 		$(OBJECTS_DIR)/PWindow.cpp  \
 		$(OBJECTS_DIR)/PImageBox.cpp \
 		$(OBJECTS_DIR)/PColor.cpp  \
+		$(OBJECTS_DIR)/PDrawObject.cpp \
 		$(OBJECTS_DIR)/PFont.cpp \
 		$(OBJECTS_DIR)/PTextObject.cpp \
 		$(OBJECTS_DIR)/PLabel.cpp \
@@ -136,13 +137,14 @@ PLATFORM_SDL_SRC  =	$(SDL_DIR)/PlatformEnvironment.cpp \
 			$(SDL_DIR)/PlatformWidget.cpp \
 			$(SDL_DIR)/PlatformWindow.cpp \
 			$(SDL_DIR)/PlatformImageBox.cpp \
-         $(SDL_DIR)/PlatformKeyboard.cpp \
+			$(SDL_DIR)/PlatformKeyboard.cpp \
 			$(SDL_DIR)/PlatformFont.cpp \
 			$(SDL_DIR)/PlatformLabel.cpp \
 			$(SDL_DIR)/PlatformTextBox.cpp \
-			$(SDL_DIR)/PlatformTimer.cpp \
+			$(SDL_DIR)/PlatformTimer.cpp	\
+			$(SDL_DIR)/PlatformDrawObject.cpp \
 			$(SDL_DIR)/SDLUtility.cpp \
-		   $(SDL_DIR)/PlatformEventQueue.cpp \
+		   	$(SDL_DIR)/PlatformEventQueue.cpp \
 			$(SDL_DIR)/PlatformAudioOut.cpp
 
 PLATFORM_SDL_OBJ  = 	$(patsubst %.cpp, %.o, $(PLATFORM_SDL_SRC))
@@ -150,8 +152,8 @@ PLATFORM_SDL_INC  = 	$(patsubst %.cpp, %.h, $(PLATFORM_SDL_SRC))
 
 
 FUNCTIONLIB_SRC = $(LIBS_DIR)/PEBLMath.cpp \
-		  $(LIBS_DIR)/PEBLStream.cpp \
-	 	  $(LIBS_DIR)/PEBLObjects.cpp \
+		  		$(LIBS_DIR)/PEBLStream.cpp \
+	 	  		$(LIBS_DIR)/PEBLObjects.cpp \
                   $(LIBS_DIR)/PEBLEnvironment.cpp \
                   $(LIBS_DIR)/PEBLList.cpp \
                   $(LIBS_DIR)/PEBLString.cpp
@@ -258,7 +260,7 @@ DIRS = \
 
 main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
 	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/pebl -I/usr/local/include/SDL -D_REENTRANT \
-	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf   $(OSX_FLAGS) \
+	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  $(OSX_FLAGS) \
 	 $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(PEBLMAIN_OBJ)) 
 
 parse:
