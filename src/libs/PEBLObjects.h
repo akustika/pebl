@@ -82,7 +82,10 @@ namespace PEBLObjects
 
 
     //Functions to draw things.
-    Variant DrawLine(Variant v);
+    Variant Line(Variant v);
+    Variant Ellipse(Variant v);
+    Variant Circle(Variant v);
+
     
 }
 

@@ -139,6 +139,19 @@ PComplexData::PComplexData(counted_ptr<PlatformLine> line):
 }
 
 
+PComplexData::PComplexData(counted_ptr<PlatformEllipse> ellipse):
+    mComplexDataType(CDT_ELLIPSE),
+    mEllipse(ellipse)
+{
+}
+
+PComplexData::PComplexData(counted_ptr<PlatformCircle> circle):
+    mComplexDataType(CDT_CIRCLE),
+    mCircle(circle)
+{
+}
+
+
 
 
 PComplexData::~PComplexData()
@@ -190,6 +203,12 @@ PComplexData::PComplexData(const PComplexData & pcd):
             break;
         case CDT_LINE:
             mLine = pcd.GetLine();
+
+        case CDT_ELLIPSE:
+            mEllipse = pcd.GetEllipse();
+
+        case CDT_CIRCLE:
+            mCircle = pcd.GetCircle();
 
         case CDT_UNDEFINED:
         default:             
@@ -248,6 +267,14 @@ PComplexData::PComplexData(const PComplexData * pcd):
             mLine = pcd->GetLine();
             break;
 
+        case CDT_ELLIPSE:
+            mEllipse = pcd->GetEllipse();
+            break;
+
+        case CDT_CIRCLE:
+            mCircle = pcd->GetCircle();
+            break;
+
         case CDT_UNDEFINED:
         default:             
             PError::SignalFatalError("Trying to copy undefined PComplexData.");
@@ -285,6 +312,8 @@ ostream & PComplexData::SendToStream(ostream& out) const
         case CDT_FILESTREAM:   out << *mFileStream; break;
         case CDT_AUDIOOUT:     out << *mAudioOut; break;
         case CDT_LINE:         out << *mLine; break;
+        case CDT_ELLIPSE:      out << *mEllipse; break;
+        case CDT_CIRCLE:       out << *mCircle; break;
         case CDT_UNDEFINED:
         default:               out << "Undefined" << GetTypeName();
             break;
@@ -340,6 +369,12 @@ std::string  PComplexData::GetTypeName() const
 
         case CDT_LINE:
             return "Complex Data: Line";
+
+        case CDT_ELLIPSE:
+            return "Complex Data: Ellipse";
+
+        case CDT_CIRCLE:
+            return "Complex Data: Circle";
 
         case CDT_UNDEFINED:
         default:
@@ -538,6 +573,39 @@ counted_ptr<PlatformLine> PComplexData::GetLine() const
 
 
 
+counted_ptr<PlatformEllipse> PComplexData::GetEllipse() const
+{
+
+    if(IsEllipse())
+        {
+            return mEllipse;
+        }
+    else
+        {
+            PError::SignalFatalError("Trying to get an Ellipse.");
+            exit(0);
+        }
+
+}
+
+
+
+counted_ptr<PlatformCircle> PComplexData::GetCircle() const
+{
+    if(IsCircle())
+        {
+            return mCircle;
+        }
+    else
+        {
+            PError::SignalFatalError("Trying to get a Circle.");
+            exit(0);
+        }
+
+}
+
+
+
 //  This accessor will return a pointer to a raw pointer to a 
 // 'widget' if the data is one, or NULL otherwise.
 //  This is dangerous to use, as it circumvents the counted-pointer system.
@@ -562,6 +630,13 @@ PlatformWidget * PComplexData::GetWidget() const
 
         case CDT_LINE:
             return mLine.get();
+
+        case CDT_ELLIPSE:
+            return mEllipse.get();
+
+
+        case CDT_CIRCLE:
+            return mCircle.get();
 
 
             //These all fall through to the NULL return, because they are not widgets..
@@ -600,6 +675,8 @@ bool PComplexData::IsWidget() const
         || (mComplexDataType == CDT_IMAGEBOX)
         || (mComplexDataType == CDT_TEXTBOX)
         || (mComplexDataType == CDT_LINE)
+        || (mComplexDataType == CDT_ELLIPSE)
+        || (mComplexDataType == CDT_CIRCLE)
        )
         return true;
     else
@@ -668,67 +745,18 @@ bool PComplexData::IsLine() const
     return mComplexDataType == CDT_LINE;
 }
 
+bool PComplexData::IsCircle() const
+{
+    return mComplexDataType == CDT_CIRCLE;
+}
 
-/// This method unpoints any non-null pointer.
-///It isn't used because rc pointers handle things for themselves.
-///It may be necessary to resurrect in the future if the counted_ptr<>s are
-///managed a little bit differently.  If this happens, though, it may 
-///be possible to fold some of this back into Variant.
+bool PComplexData::IsEllipse() const
+{
+    return mComplexDataType == CDT_ELLIPSE;
+}
+
+
 void PComplexData::ClearPointers()
 {
-
-
-   switch(mComplexDataType)
-        {
-        case CDT_LIST:
-         
-            break;
-            
-        case CDT_ENVIRONMENT:
-         
-            break;
-
-        case CDT_WINDOW:
-         
-            break;
-
-        case CDT_COLOR:
-         
-            break;
-            
-        case CDT_FONT:
-         
-            break;
-
-        case CDT_LABEL:
-         
-            break;
-
-        case CDT_TEXTBOX:
-         
-            break;
-
-        case CDT_IMAGEBOX:
-         
-            break;
-
-        case CDT_KEYBOARD:
-         
-            break;
-
-        case CDT_FILESTREAM:
-         
-            break;
-            
-        case CDT_AUDIOOUT:  break;
-        case CDT_LINE:break;
-
-        case CDT_UNDEFINED:
-            break;
-
-
-        default:
-            PError::SignalFatalError("Undefined data type in PComplexData::ClearPointers()");
-        }
-
+    // deprecated.
 }

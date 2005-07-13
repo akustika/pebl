@@ -40,60 +40,20 @@ class PDrawObject: public virtual PWidget
 public:
 
     PDrawObject();
-    PDrawObject(int x, int y, const PColor & fg, const PColor & outline);
+    //PDrawObject(int x, int y, const PColor & fg, const PColor & outline);
+    //PDrawObject(int x, int y, const PColor & fg, const PColor & outline, bool filled);
     virtual ~PDrawObject();
-  
-//     ///This unconditionally sets the parent widget.
-//     virtual void SetParent(PWidget * widget){mParent = widget;}
-
-//     ///This draws the subwidgets.  It doesn't need a 'parent'
-//     ///argument, because 'this' is it.
-//     virtual bool Draw(){return false;}
-
-//     ///Sets the location of the upper left-hand corner of the
-//     ///image on the parent widget.
-//     virtual void SetPosition(int x, int y){mX=x; mY=y;};
-    
-//     virtual int GetX()const {return mX;};
-//     virtual int GetY()const {return mY;};
-
-//     //This returns the width and height of the drawing object.
-//     virtual int GetWidth()const=0;
-//     virtual int GetHeight()const=0;
-
-//     virtual void SetColor(const PColor & color){mColor=color;};
-//     virtual void SetBackgroundColor(const PColor & color){mOutlineColor=color;};
-        
-//     ///These change the visibility state.  If invisible, the widget gets
-//     ///skipped over when drawn.
-//     virtual void Show(){mIsVisible = true;}
-//     virtual void Hide(){mIsVisible = false;}
-//     virtual bool IsVisible(){return mIsVisible;}
+    virtual void SetFilled(bool filled){mFilled = filled;};
 
 protected:
 
     ///An inheritable printing class used by PObject::operator<<
     virtual std::ostream & SendToStream(std::ostream& out) const=0;
  
-//     ///The x and y coordinates, in pixels, from the upper left corner
-//     ///of the parent screen
-//     int mX, mY;
-
-//     //These are the actual locations of the points to be drawn.  They differ
-//     //from mX and mY in labels and images, which are drawn on their center point.
-//     int mDrawX;
-//     int mDrawY;
-
-//     /// The background color of the widget.  if alpha = 0, will not be painted.
     PColor mColor;
     PColor mOutlineColor;
+    bool mFilled;
 
-//     //Whether this should actually get drawn.
-//     bool mIsVisible;
-
-//     ///The parent widget. If null (0), this has no parent (top-level window).
-//     ///or is currently unattached.
-//     PWidget * mParent;
 private:
 
 };
@@ -103,7 +63,7 @@ class PLine: public virtual PDrawObject
 {
 public:
     PLine(int x1, int y1, int dx, int dy, const PColor & fg);
-    ~PLine();
+    virtual ~PLine();
     virtual int GetWidth() const{return mX2;};
     virtual int GetHeight() const{return mY2;};
     virtual std::ostream & SendToStream(std::ostream& out);
@@ -116,6 +76,7 @@ protected:
     int mY2;  
     int mWidth;
 
+    bool mFilled;
     bool mAntiAliased;
 private:
 };
@@ -172,25 +133,45 @@ private:
 // };
 
 
-// class PEllipse: public PDrawObject
-// {
-// public:
-//     PEllipse();
-//     ~PEllipse();
-// protected:
-// private:
-// };
+class PEllipse: public virtual PDrawObject
+ {
+ public:
+     PEllipse(int x1, int y1, int rx, int ry, const PColor & fg, bool filled);
+     virtual ~PEllipse();
+     virtual int GetWidth() const{return mRX;};
+     virtual int GetHeight() const{return mRY;};
+     virtual std::ostream & SendToStream(std::ostream& out);
+     
+ protected:
+     
+     //X1--Y2 are relative to mX and mY
+     int mX1;
+     int mY1;
+     int mRX;
+     int mRY;  
 
 
-// class PCircle: public PEllipse
-// {
-// public:
-//     PCircle();
-//     ~PCircle();
-// protected:
-// private:
+ private:
+};
 
-// };
+
+ class PCircle: public virtual PDrawObject
+ {
+ public:
+     PCircle(int x1, int y1, int r, const PColor & fg, bool filled);
+     virtual ~PCircle();
+
+     virtual int GetWidth() const{return (int)(2*mR);};
+     virtual int GetHeight() const{return (int)(2*mR);};
+     virtual std::ostream & SendToStream(std::ostream& out);
+
+ protected:
+
+     int mX1;
+     int mY1;
+     double mR;
+ private:
+ };
 
 
 // class PDrawGroup: public PDrawObject

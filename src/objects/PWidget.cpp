@@ -41,6 +41,8 @@ PWidget::PWidget():
     mIsVisible(true),
     mParent(NULL)
 {
+
+    std::cout << "Generic Widget constructor\n";
 }
 
 PWidget::PWidget(int x, int y, int width, int height, bool visible):
@@ -53,6 +55,7 @@ PWidget::PWidget(int x, int y, int width, int height, bool visible):
     mIsVisible(visible),
     mParent(NULL)
 {
+    std::cout << "Widget constructor\n";
 }
 
 

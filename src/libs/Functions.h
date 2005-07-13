@@ -183,7 +183,9 @@ namespace PEBLObjects
             {"MAKESAWTOOTHWAVE",  MakeSawtoothWave, 2, 2},
             {"MAKECHIRP",         MakeChirp,        3, 3},
             
-            {"DRAWLINE",          DrawLine,         6, 6},
+            {"LINE",              Line,         5, 5},
+            {"ELLIPSE",           Ellipse,      6, 6},
+            {"CIRCLE",            Circle,         5, 5},
 
             {0,            0,  0, 0}
         };
