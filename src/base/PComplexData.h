@@ -82,11 +82,7 @@ enum ComplexDataType
         CDT_WINDOW,
         CDT_LABEL,
 
-        CDT_LINE,
-        CDT_ELLIPSE,
-        CDT_CIRCLE
-        
-
+        CDT_DRAWOBJECT
     };
 
 class PComplexData
@@ -107,9 +103,8 @@ public:
     PComplexData(counted_ptr<PlatformKeyboard>);
     PComplexData(counted_ptr<PStream>);
     PComplexData(counted_ptr<PlatformAudioOut>);
-    PComplexData(counted_ptr<PlatformLine>);
-    PComplexData(counted_ptr<PlatformEllipse>);
-    PComplexData(counted_ptr<PlatformCircle>);
+
+    PComplexData(counted_ptr<PlatformDrawObject>);
     
 
     ///Copy Constructors
@@ -141,9 +136,8 @@ public:
     counted_ptr<PlatformTextBox>       GetTextBox() const;
     counted_ptr<PlatformImageBox>      GetImageBox() const;
     counted_ptr<PlatformKeyboard>      GetKeyboard() const;
-    counted_ptr<PlatformLine>          GetLine() const;
-    counted_ptr<PlatformEllipse>       GetEllipse() const;
-    counted_ptr<PlatformCircle>        GetCircle() const;
+   
+    counted_ptr<PlatformDrawObject>    GetDrawObject() const;
    
 
     counted_ptr<PStream>               GetFileStream() const;
@@ -167,9 +161,8 @@ public:
     bool IsKeyboard() const;
     bool IsFileStream() const;
     bool IsAudioOut() const;
-    bool IsLine() const;
-    bool IsEllipse() const;
-    bool IsCircle() const;
+ 
+    bool IsDrawObject() const;
 
 
 
@@ -202,9 +195,8 @@ private:
     counted_ptr<PlatformKeyboard>     mKeyboard;
     counted_ptr<PStream>              mFileStream; 
     counted_ptr<PlatformAudioOut>     mAudioOut;
-    counted_ptr<PlatformLine>         mLine;
-    counted_ptr<PlatformCircle>       mCircle;
-    counted_ptr<PlatformEllipse>      mEllipse;
+
+    counted_ptr<PlatformDrawObject>   mDrawObject;
 };
 
 

@@ -49,7 +49,7 @@ public:
     virtual bool Draw();
 
     ///Used to extract an SDL surface from the widget.  Used by children drawing themselves on their parent.
-    SDL_Surface * GetSDL_Surface();
+    virtual SDL_Surface * GetSDL_Surface();
     
     virtual bool AddSubWidget(PlatformWidget * widget);
     virtual bool RemoveSubWidget(PlatformWidget * widget);

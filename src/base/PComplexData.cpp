@@ -132,25 +132,11 @@ PComplexData::PComplexData(counted_ptr<PlatformAudioOut> audio):
 
 
 
-PComplexData::PComplexData(counted_ptr<PlatformLine> line):
-    mComplexDataType(CDT_LINE),
-    mLine(line)
+PComplexData::PComplexData(counted_ptr<PlatformDrawObject> object):
+    mComplexDataType(CDT_DRAWOBJECT),
+    mDrawObject(object)
 {
 }
-
-
-PComplexData::PComplexData(counted_ptr<PlatformEllipse> ellipse):
-    mComplexDataType(CDT_ELLIPSE),
-    mEllipse(ellipse)
-{
-}
-
-PComplexData::PComplexData(counted_ptr<PlatformCircle> circle):
-    mComplexDataType(CDT_CIRCLE),
-    mCircle(circle)
-{
-}
-
 
 
 
@@ -201,14 +187,10 @@ PComplexData::PComplexData(const PComplexData & pcd):
         case CDT_AUDIOOUT:
             mAudioOut = pcd.GetAudioOut();
             break;
-        case CDT_LINE:
-            mLine = pcd.GetLine();
 
-        case CDT_ELLIPSE:
-            mEllipse = pcd.GetEllipse();
-
-        case CDT_CIRCLE:
-            mCircle = pcd.GetCircle();
+        case CDT_DRAWOBJECT:
+            mDrawObject = pcd.GetDrawObject();
+            break;
 
         case CDT_UNDEFINED:
         default:             
@@ -263,17 +245,11 @@ PComplexData::PComplexData(const PComplexData * pcd):
             mAudioOut = pcd->GetAudioOut();
             break;
 
-        case CDT_LINE:
-            mLine = pcd->GetLine();
+
+        case CDT_DRAWOBJECT:
+            mDrawObject = pcd->GetDrawObject();
             break;
 
-        case CDT_ELLIPSE:
-            mEllipse = pcd->GetEllipse();
-            break;
-
-        case CDT_CIRCLE:
-            mCircle = pcd->GetCircle();
-            break;
 
         case CDT_UNDEFINED:
         default:             
@@ -311,9 +287,7 @@ ostream & PComplexData::SendToStream(ostream& out) const
         case CDT_KEYBOARD:     out << *mKeyboard; break;
         case CDT_FILESTREAM:   out << *mFileStream; break;
         case CDT_AUDIOOUT:     out << *mAudioOut; break;
-        case CDT_LINE:         out << *mLine; break;
-        case CDT_ELLIPSE:      out << *mEllipse; break;
-        case CDT_CIRCLE:       out << *mCircle; break;
+        case CDT_DRAWOBJECT:   out << *mDrawObject; break;
         case CDT_UNDEFINED:
         default:               out << "Undefined" << GetTypeName();
             break;
@@ -367,15 +341,9 @@ std::string  PComplexData::GetTypeName() const
         case CDT_AUDIOOUT:
             return "Complex Data: Audio Out";
 
-        case CDT_LINE:
-            return "Complex Data: Line";
-
-        case CDT_ELLIPSE:
-            return "Complex Data: Ellipse";
-
-        case CDT_CIRCLE:
-            return "Complex Data: Circle";
-
+        case CDT_DRAWOBJECT:
+            return "Complex Data: Drawing Object";
+            
         case CDT_UNDEFINED:
         default:
             return "Complex Data: Undefined";
@@ -556,49 +524,15 @@ counted_ptr<PlatformAudioOut> PComplexData::GetAudioOut() const
 }
 
 
-counted_ptr<PlatformLine> PComplexData::GetLine() const
+counted_ptr<PlatformDrawObject> PComplexData::GetDrawObject() const
 {
-
-    if(IsLine())
+    if(IsDrawObject())
         {
-            return mLine;
+            return mDrawObject;
         }
     else
         {
-            PError::SignalFatalError("Trying to get a Line.");
-            exit(0);
-        }
-
-}
-
-
-
-counted_ptr<PlatformEllipse> PComplexData::GetEllipse() const
-{
-
-    if(IsEllipse())
-        {
-            return mEllipse;
-        }
-    else
-        {
-            PError::SignalFatalError("Trying to get an Ellipse.");
-            exit(0);
-        }
-
-}
-
-
-
-counted_ptr<PlatformCircle> PComplexData::GetCircle() const
-{
-    if(IsCircle())
-        {
-            return mCircle;
-        }
-    else
-        {
-            PError::SignalFatalError("Trying to get a Circle.");
+            PError::SignalFatalError("Trying to get a Drawing Object.");
             exit(0);
         }
 
@@ -628,15 +562,8 @@ PlatformWidget * PComplexData::GetWidget() const
         case CDT_IMAGEBOX:
             return mImageBox.get();
 
-        case CDT_LINE:
-            return mLine.get();
-
-        case CDT_ELLIPSE:
-            return mEllipse.get();
-
-
-        case CDT_CIRCLE:
-            return mCircle.get();
+        case CDT_DRAWOBJECT:
+            return mDrawObject.get();
 
 
             //These all fall through to the NULL return, because they are not widgets..
@@ -674,9 +601,7 @@ bool PComplexData::IsWidget() const
         || (mComplexDataType == CDT_LABEL)
         || (mComplexDataType == CDT_IMAGEBOX)
         || (mComplexDataType == CDT_TEXTBOX)
-        || (mComplexDataType == CDT_LINE)
-        || (mComplexDataType == CDT_ELLIPSE)
-        || (mComplexDataType == CDT_CIRCLE)
+        || (mComplexDataType == CDT_DRAWOBJECT)
        )
         return true;
     else
@@ -740,20 +665,12 @@ bool PComplexData::IsAudioOut() const
     return mComplexDataType == CDT_AUDIOOUT;
 }
 
-bool PComplexData::IsLine() const
+
+bool PComplexData::IsDrawObject() const
 {
-    return mComplexDataType == CDT_LINE;
+    return mComplexDataType == CDT_DRAWOBJECT;
 }
 
-bool PComplexData::IsCircle() const
-{
-    return mComplexDataType == CDT_CIRCLE;
-}
-
-bool PComplexData::IsEllipse() const
-{
-    return mComplexDataType == CDT_ELLIPSE;
-}
 
 
 void PComplexData::ClearPointers()

@@ -744,9 +744,79 @@ Variant PEBLObjects::Line(Variant v)
     Variant v2 = plist->First(); plist->PopFront();
     counted_ptr<PColor> color = v2.GetComplexData()->GetColor();    
 
-    std::cout<< "Color: " << color << endl;
-    counted_ptr<PlatformLine> myLine = counted_ptr<PlatformLine>(new PlatformLine(x,y,dx,dy,*color));
+    counted_ptr<PlatformDrawObject> myLine = counted_ptr<PlatformDrawObject>(new PlatformLine(x,y,dx,dy,*color));
     counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myLine));
+    return Variant(pcd);
+
+}
+
+
+
+Variant PEBLObjects::Rectangle(Variant v)
+{
+
+    //
+    // v[1] should be X, v[2] shoud be Y
+    // v[3] should be dx, v[4] should be dy
+    // v[5] should be the color, v[6] should be whether it is filled.
+
+    counted_ptr<PList> plist = (v.GetComplexData())->GetList();    
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: "); 
+    int x = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in second parameter of function  [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: "); 
+    int y = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in third parameter of function  [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: "); 
+    int dx = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in fourth parameter of function  [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: "); 
+    int dy = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_COLOR, "Argument error in fifth parameter of function  [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: "); 
+    Variant v2 = plist->First(); plist->PopFront();
+    counted_ptr<PColor> color = v2.GetComplexData()->GetColor();    
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in sixth parameter of function  [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: "); 
+    int filled = plist->First(); plist->PopFront();
+
+    counted_ptr<PlatformDrawObject> myRect = counted_ptr<PlatformDrawObject>(new PlatformRectangle(x,y,dx,dy,*color,filled));
+    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myRect));
+    return Variant(pcd);
+
+}
+
+
+
+
+
+Variant PEBLObjects::Square(Variant v)
+{
+    // v[1] should be X, v[2] shoud be Y
+    // v[3] should be dx, v[4] should be dy
+    // v[5] should be the color, v[6] should be whether it is filled.
+
+    counted_ptr<PList> plist = (v.GetComplexData())->GetList();    
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Square(<x>, <y>, <size>, <color>, <filled>)]: "); 
+    int x = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in second parameter of function  [Square(<x>, <y>, <size>, <color>, <filled>)]: "); 
+    int y = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in third parameter of function  [Square(<x>, <y>, <size>, <color>, <filled>)]: "); 
+    int size = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_COLOR, "Argument error in fourth parameter of function  [Square(<x>, <y>, <size>, <color>, <filled>)]: "); 
+    Variant v2 = plist->First(); plist->PopFront();
+    counted_ptr<PColor> color = v2.GetComplexData()->GetColor();    
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in fifth parameter of function  [Square(<x>, <y>, <size>, <color>, <filled>)]: "); 
+    int filled = plist->First(); plist->PopFront();
+
+    counted_ptr<PlatformDrawObject> mySquare = counted_ptr<PlatformDrawObject>(new PlatformSquare(x,y,size,*color,filled));
+    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(mySquare));
     return Variant(pcd);
 
 }
@@ -780,8 +850,7 @@ Variant PEBLObjects::Ellipse(Variant v)
     int filled = plist->First(); plist->PopFront();
 
 
-    std::cout<< "Color: " << color << endl;
-    counted_ptr<PlatformEllipse> myEllipse = counted_ptr<PlatformEllipse>(new PlatformEllipse(x,y,rx,ry,*color,filled));
+    counted_ptr<PlatformDrawObject> myEllipse = counted_ptr<PlatformDrawObject>(new PlatformEllipse(x,y,rx,ry,*color,filled));
     counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myEllipse));
     return Variant(pcd);
 
@@ -812,11 +881,10 @@ Variant PEBLObjects::Circle(Variant v)
     Variant v2 = plist->First(); plist->PopFront();
     counted_ptr<PColor> color = v2.GetComplexData()->GetColor();    
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in sixth parameter of function  [Circle(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in fifth parameter of function  [Circle(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: "); 
     int filled = plist->First(); plist->PopFront();
 
-    std::cout<< "Color: " << color << endl;
-    counted_ptr<PlatformCircle> myCircle = counted_ptr<PlatformCircle>(new PlatformCircle(x,y,r,*color,filled));
+    counted_ptr<PlatformDrawObject> myCircle = counted_ptr<PlatformDrawObject>(new PlatformCircle(x,y,r,*color,filled));
     counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myCircle));
     return Variant(pcd);
 }

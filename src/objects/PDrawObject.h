@@ -114,23 +114,36 @@ private:
 // };
 
 
-// class PRectangle: public PTrapezoid
-// {
-// public:
-//     PRectangle();
-//     ~PRectangle();
-// protected:
-// private:
-// };
+ class PRectangle: public virtual PDrawObject
+ {
+ public:
+     PRectangle(int x1, int y1, int dx, int dy, const PColor & fg, bool filled);
+     virtual ~PRectangle();
+     virtual int GetWidth() const{return mDX;};
+     virtual int GetHeight() const{return mDY;};
+     virtual std::ostream & SendToStream(std::ostream& out);
 
-// class PSquare: public PRectangle
-// {
-// public:
-//     PSquare();
-//     ~PSquare();
-// protected:
-// private:
-// };
+
+ protected:
+     int mX1;
+     int mY1;
+     int mDX;
+     int mDY;
+ private:
+ };
+
+ class PSquare: public PRectangle
+ {
+ public:
+     PSquare(int x, int y, int size, const PColor & fg, bool filled);
+     virtual ~PSquare();
+     virtual int GetWidth() const{return mDX;};
+     virtual int GetHeight() const{return mDY;};
+     virtual std::ostream & SendToStream(std::ostream& out);
+     
+ protected:
+ private:
+ };
 
 
 class PEllipse: public virtual PDrawObject
