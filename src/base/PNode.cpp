@@ -78,7 +78,7 @@ ostream& operator<<(ostream& out, const PNode & node)
 
 ostream & PNode::SendToStream(ostream & out) const
 {
-    out << "<Anonymous OpNode of Type: " << GetType() << ">" << flush;
+    out << "<Anonymous PNode of Type: " << GetType() << ">" << flush;
     return out;
 }
 

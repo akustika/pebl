@@ -55,12 +55,12 @@ and        [Aa][Nn][Dd]
 or         [Oo][Rr]
 not        [Nn][Oo][Tt]
 break      [Bb][Rr][Ee][Aa][Kk]
-globalvar         g[A-Za-z0-9\_]*
-localvar   [a-fh-z][A-Za-z0-9\_]*
+globalvar  g[A-Za-z0-9\_]*(\.[A-Za-z0-9\_]+)?
+localvar   [a-fh-z][A-Za-z0-9\_]*(\.[A-Za-z0-9\_]+)?
 string     \"[^\"]*[\"\n]
 functionname  [A-Z][A-Za-z0-9\_]*
 datum      [integer float string variable]
-
+localprop {localvar}"."{property}
 %%
 {whitespace} ;       /* ignore whitespace*/
 {comment}    ;       /* ignore comments  */

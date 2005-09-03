@@ -42,6 +42,12 @@ PWidget::PWidget():
     mParent(NULL)
 {
 
+    InitializeProperty("X",Variant(mX));
+    InitializeProperty("Y",Variant(mY));
+    InitializeProperty("WIDTH",Variant(mWidth));
+    InitializeProperty("HEIGHT",Variant(mHeight));
+    InitializeProperty("VISIBLE",Variant(mIsVisible));
+
 }
 
 PWidget::PWidget(int x, int y, int width, int height, bool visible):
@@ -54,6 +60,11 @@ PWidget::PWidget(int x, int y, int width, int height, bool visible):
     mIsVisible(visible),
     mParent(NULL)
 {
+    InitializeProperty("X",Variant(mX));
+    InitializeProperty("Y",Variant(mY));
+    InitializeProperty("WIDTH",Variant(mWidth));
+    InitializeProperty("HEIGHT",Variant(mHeight));
+    InitializeProperty("VISIBLE",Variant(mIsVisible));
 
 }
 
@@ -71,7 +82,11 @@ void PWidget::SetPosition(int x, int y)
     mDrawX = x;
     mDrawY = y;
 
+    PObject::SetProperty("X",mX);
+    PObject::SetProperty("Y",mY);
 }
+
+
 
 //Inherited from PComplexObject->PObject
 std::ostream & PWidget::SendToStream(std::ostream& out) const
@@ -111,3 +126,14 @@ bool PWidget::RemoveLastSubWidget()
 }
 
 
+void PWidget::Show()
+{
+    mIsVisible = true;
+    PObject::SetProperty("VISIBLE",mIsVisible);}
+
+
+void PWidget::Hide()
+{
+    mIsVisible = false;    
+    PObject::SetProperty("VISIBLE",mIsVisible);
+}

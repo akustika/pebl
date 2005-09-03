@@ -583,6 +583,124 @@ PlatformWidget * PComplexData::GetWidget() const
 }
 
 
+
+
+
+void PComplexData::SetProperty(std::string prop, Variant v) 
+{
+    switch(mComplexDataType)
+        {
+        case CDT_LIST:
+            //lists don't have properties.
+
+            break;
+        case CDT_ENVIRONMENT:
+            mEnvironment->SetProperty(prop,v);
+            break;
+
+        case CDT_WINDOW:
+            mWindow->SetProperty(prop,v);
+            break;
+
+        case CDT_COLOR:
+
+            mColor->SetProperty(prop,v);
+            break;
+        case CDT_FONT:
+            mFont->SetProperty(prop,v);
+            break;
+        case CDT_LABEL:
+            mLabel->SetProperty(prop,v);
+            break;
+        case CDT_TEXTBOX:
+            mTextBox->SetProperty(prop,v);
+            break;
+        case CDT_IMAGEBOX:
+            mImageBox->SetProperty(prop,v);
+            break;
+        case CDT_KEYBOARD:
+            //no properties
+            break;
+        case CDT_FILESTREAM:
+            //no properties
+            break;
+        case CDT_AUDIOOUT:
+            //no properties
+            break;
+        case CDT_DRAWOBJECT:
+            mDrawObject->SetProperty(prop,v);
+            break;
+
+        case CDT_UNDEFINED:
+        default:
+            
+            // Don't sweat it.
+            break;
+
+        }
+
+}
+ 
+
+Variant PComplexData::GetProperty(std::string prop) 
+{
+    switch(mComplexDataType)
+        {
+        case CDT_LIST:
+            //lists don't have properties.
+
+            break;
+        case CDT_ENVIRONMENT:
+            return mEnvironment->GetProperty(prop);
+
+
+        case CDT_WINDOW:
+            return mWindow->GetProperty(prop);
+
+
+        case CDT_COLOR:
+
+            return mColor->GetProperty(prop);
+
+        case CDT_FONT:
+            return mFont->GetProperty(prop);
+
+        case CDT_LABEL:
+            return mLabel->GetProperty(prop);
+
+        case CDT_TEXTBOX:
+            return mTextBox->GetProperty(prop);
+
+        case CDT_IMAGEBOX:
+            return mImageBox->GetProperty(prop);
+
+        case CDT_KEYBOARD:
+            //no properties
+            break;
+        case CDT_FILESTREAM:
+            //no properties
+            break;
+        case CDT_AUDIOOUT:
+            //no properties
+            break;
+        case CDT_DRAWOBJECT:
+            return mDrawObject->GetProperty(prop);
+
+        case CDT_UNDEFINED:
+        default:
+            
+            // Don't sweat it.
+            break;
+
+        }
+    return Variant(0);
+}
+ 
+
+
+
+
+
 bool PComplexData::IsList() const
 {
     return mComplexDataType == CDT_LIST;

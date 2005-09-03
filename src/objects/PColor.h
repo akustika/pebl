@@ -37,13 +37,19 @@ class PColor: public PObject
 {
 public:
     PColor();                                             ///Constructor
-    PColor(unsigned int color){SetColorByRGBA(color);}    ///Constructor
+    PColor(unsigned int color){SetColorByRGBA(color);};   ///Constructor
     PColor(int red, int green, int blue, int alpha);      ///Constructor
     PColor(const std::string & colorname);                     ///Constructor using RGBColorNames
 
     PColor(const PColor & pcolor);                        ///Copy constructor
     virtual ~PColor(){}                                   ///Standard Destructor
   
+
+    //overloaded generic PObject methods
+    virtual bool SetProperty(std::string, Variant v);
+    virtual ObjectValidationError ValidateProperty(std::string name, Variant v)const;
+    virtual ObjectValidationError ValidateProperty(std::string name)const;
+
 
     //These will return a single color
     int GetRed  () const { return mRed;};
@@ -52,11 +58,10 @@ public:
     int GetAlpha() const { return mAlpha;};
  
     //These will set a single color
-    void SetRed  (int color){mRed   = To8BitColor(color);}
-    void SetGreen(int color){mGreen = To8BitColor(color);}
-    void SetBlue (int color){mBlue  = To8BitColor(color);}
-    void SetAlpha(int color){mAlpha = To8BitColor(color);}
-
+    void SetRed  (int color);
+    void SetGreen(int color);
+    void SetBlue (int color);
+    void SetAlpha(int color);
 
     ///Sets color as a 32-bit unsigned int.
     void SetColorByRGBA(unsigned int color);
@@ -72,6 +77,7 @@ public:
 
 protected:
 
+    virtual std::string ObjectName() const;
     //Used by overloaded << operator in PComplexData.
     virtual std::ostream & SendToStream(std::ostream& out) const;
 
@@ -79,6 +85,9 @@ private:
 
     //Private function that ensures colors are between 0 and 255.
     int To8BitColor(int color);
+
+    void __SetProps__();
+
 
     ///Each of the colors is represented by an 8-bit array:
     unsigned mRed:   8;

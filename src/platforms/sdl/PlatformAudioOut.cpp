@@ -37,7 +37,7 @@
 
 
 using std::string;
-using std::cout;
+using std::cerr;
 
 PlatformAudioOut::PlatformAudioOut()
 {
@@ -83,15 +83,15 @@ bool PlatformAudioOut::LoadSoundFile(const string & soundfilename)
             return false;
         }
 
-    cout << "------------------------------------\n";
-    cout << "Loading Sound File.  Specs:\n";
-    cout << "Frequency:   [" << mWave.spec.freq << "]\n";
-    cout << "Format:      [" << mWave.spec.format << "]\n";
-    cout << "Channels:    [" << mWave.spec.channels << "]\n";
-    cout << "Silence:     [" << mWave.spec.silence  << "]\n";
-    cout << "Samples:     [" << mWave.spec.samples  << "]\n";
-    cout << "Size:        [" << mWave.spec.size     << "]\n";
-    cout << "------------------------------------\n";
+    cerr << "------------------------------------\n";
+    cerr << "Loading Sound File.  Specs:\n";
+    cerr << "Frequency:   [" << mWave.spec.freq << "]\n";
+    cerr << "Format:      [" << mWave.spec.format << "]\n";
+    cerr << "Channels:    [" << mWave.spec.channels << "]\n";
+    cerr << "Silence:     [" << mWave.spec.silence  << "]\n";
+    cerr << "Samples:     [" << mWave.spec.samples  << "]\n";
+    cerr << "Size:        [" << mWave.spec.size     << "]\n";
+    cerr << "------------------------------------\n";
     mLoaded = true;
     mWave.spec.callback = PlayCallBack;
     mWave.spec.userdata = &mWave;
@@ -156,7 +156,7 @@ bool PlatformAudioOut::Stop()
 void PlayCallBack(void * udata, Uint8 * stream, int len)
 {
 
-    //    cout << "Callback Called\n" <<endl;
+    //    cerr << "Callback Called\n" <<endl;
     Uint8 * waveptr;
     int waveleft;
 
@@ -167,7 +167,7 @@ void PlayCallBack(void * udata, Uint8 * stream, int len)
     waveptr = wave->audio + wave->audiopos;
     waveleft = wave->audiolen - wave->audiopos;
 
-    //   cout << "waveleft: " <<  waveleft << "  len:" << len << endl;
+    //   cerr << "waveleft: " <<  waveleft << "  len:" << len << endl;
     if(waveleft >= len)
         {
             SDL_MixAudio(stream, waveptr, len, SDL_MIX_MAXVOLUME);

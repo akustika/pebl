@@ -160,19 +160,53 @@ void Evaluator::Evaluate(const OpNode * node)
                 
                 Variant v1=((DataNode*)node1)->GetValue();
 
+
 #ifdef PEBL_DEBUG_PRINT
                 cerr << "Initial Variable Name: [" << v1.GetVariableName() << "]" << endl;
 #endif
 
+                //Get the name of property being 
+                string property =v1.GetVariablePropertyName();
 
                 //Add the variable name/value pair to the appropriate map structure
                 if(v1.IsLocalVariable())
                     {
-                        mLocalVariableMap.AddVariable(v1.GetVariableName(), v2);
+
+                        if(property == "")
+                            {
+                                mLocalVariableMap.AddVariable(v1.GetVariableName(), v2);
+                            }
+                        else
+                            {
+                                //otherwise get the object from the variable store 
+                                //and set its property.
+
+                                Variant v3 = mLocalVariableMap.RetrieveValue(v1.GetVariableBaseName());
+
+                                counted_ptr<PComplexData> pcd=v3.GetComplexData();
+                                if(pcd.get() != NULL)
+                                    pcd->SetProperty(property, v2);
+                            }
+
+
                     }
                 else
                     {
-                        gGlobalVariableMap.AddVariable(v1.GetVariableName(),v2);
+
+                        if(property == "")
+                            {
+                                gGlobalVariableMap.AddVariable(v1.GetVariableName(),v2);
+                            }
+                        else
+                            {
+                                //otherwise get the object from the variable store 
+                                //and set its property.
+                                Variant v3 = gGlobalVariableMap.RetrieveValue(v1.GetVariableBaseName());
+                                counted_ptr<PComplexData> pcd=v3.GetComplexData();
+                                if(pcd.get() != NULL)                             
+                                    pcd->SetProperty(property, v2);
+                            }
+
                     }
 
 
@@ -1030,32 +1064,40 @@ void Evaluator::Evaluate(const DataNode * node)
     switch(v1.GetDataType())
         {
         case P_DATA_LOCALVARIABLE:
-      
-#ifdef PEBL_DEBUG_PRINT
-            cerr << "Evaluating a Local Variable: [" << v1  << "]" << endl;
-#endif
-       
-            v2  = mLocalVariableMap.RetrieveValue(v1.GetVariableName());
+            {      
+                
+                v2  = mLocalVariableMap.RetrieveValue(v1.GetVariableBaseName());
+                
+                //Get the name of property being 
+                string property =v1.GetVariablePropertyName();
 
-#ifdef PEBL_DEBUG_PRINT
-            cerr << "Value:  " << v2 << endl;
-#endif      
+                if(property!="")
+                    {
+                        counted_ptr<PComplexData> pcd = v2.GetComplexData();
+                        v2 = pcd->GetProperty(property);
+                    }
 		
-            Push(v2);
+                Push(v2);
+            }
             break;
+
+
+
+
         case P_DATA_GLOBALVARIABLE:
-      
-#ifdef PEBL_DEBUG_PRINT
-            cerr << "Evaluating a Global Variable: [" << v1  << "]" << endl;
-#endif
-
-            v2  = gGlobalVariableMap.RetrieveValue(v1.GetVariableName());
-
-#ifdef PEBL_DEBUG_PRINT
-            cerr << "Value:  " << v2 << endl;
-#endif      
+            {
+            v2  = gGlobalVariableMap.RetrieveValue(v1.GetVariableBaseName());
 		
+            //Get the name of property being 
+            string property =v1.GetVariablePropertyName();
+            if(property!="")
+                {
+                    counted_ptr<PComplexData> pcd = v2.GetComplexData();
+                    v2 = pcd->GetProperty(property);
+                }
+
             Push(v2);
+            }
             break;
  
         case P_DATA_NUMBER_INTEGER:
@@ -1113,7 +1155,7 @@ void Evaluator::CallFunction(const OpNode * node)
     //a new scope, so need their own evaluator.  A built-in function is precompiled
     //and doesn't need its own new scope, so don't create one in that case.
     
-    
+
     
     switch(((OpNode*)node2)->GetOp())
         {

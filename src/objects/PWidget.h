@@ -81,8 +81,8 @@ public:
     
     ///These change the visibility state.  If invisible, the widget gets
     ///skipped over when drawn.
-    virtual void Show(){mIsVisible = true;}
-    virtual void Hide(){mIsVisible = false;}
+    virtual void Show();
+    virtual void Hide();
     virtual bool IsVisible(){return mIsVisible;}
 
 protected:
@@ -103,7 +103,7 @@ protected:
     int mWidth, mHeight;
 
     /// The background color of the widget.  if alpha = 0, will not be painted.
-    PColor  mBackgroundColor;
+    PColor mBackgroundColor;
 
    //A list of sub-widgets.
     std::list<PWidget*> mSubWidgets;

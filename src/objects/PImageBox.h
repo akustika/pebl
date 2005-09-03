@@ -40,10 +40,18 @@ class PImageBox: virtual public PWidget
 {
 public:
   
-    PImageBox(){};
+    PImageBox();
     virtual ~PImageBox(){};
   
     
+
+    //overloaded generic PObject methods
+    virtual bool SetProperty(std::string, Variant v);
+    virtual Variant GetProperty(std::string)const;
+    virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
+    virtual ObjectValidationError ValidateProperty(std::string)const;
+
+
     ///This will load a file into the class data, given a file name.
     ///height and width are set automatically.
     virtual bool LoadImage(const std::string  & imagefilename)=0;
@@ -56,7 +64,11 @@ protected:
 
     virtual  std::ostream & SendToStream(std::ostream& out) const {return out;};    
 
+
+private:
+    void __SetProps__();
 };
+
 
 
 #endif

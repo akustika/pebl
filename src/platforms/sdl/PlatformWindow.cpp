@@ -69,7 +69,7 @@ int PlatformWindow::GetVideoFlags()
 
 	videoInfo = SDL_GetVideoInfo();
 	if (videoInfo == NULL) {
-        cout << "Error" << endl;
+        std::cerr << "SDL Video Error in PEBL" << endl;
 	}
 
 
@@ -81,19 +81,19 @@ int PlatformWindow::GetVideoFlags()
             videoFlags |= SDL_HWPALETTE;
             //videoFlags |= SDL_FULLSCREEN;
             videoFlags |= SDL_ANYFORMAT;      
-            cout << "Hardware surfaces available.\n";
+            cerr << "Hardware surfaces available.\n";
         }
 	else 
         {
             videoFlags  = SDL_SWSURFACE;
             //videoFlags |= SDL_RESIZABLE;       // Enable window resizing
-            cout << "Hardware surfaces NOT available.\n";
+            cerr << "Hardware surfaces NOT available.\n";
         }
 
 	// This checks if hardware blits can be done
 	if (videoInfo->blit_hw)
         {
-            cout << "Hardware blits are possible.\n";
+            cerr << "Hardware blits are possible.\n";
             videoFlags |= SDL_HWACCEL;
         }
     

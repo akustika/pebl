@@ -1,4 +1,4 @@
-/* A Bison parser, made by GNU Bison 1.875d.  */
+/* A Bison parser, made by GNU Bison 2.0.  */
 
 /* Skeleton parser for Yacc-like parsing with Bison,
    Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
@@ -154,7 +154,7 @@ typedef union YYSTYPE {
   char        *symbol; /* The name of a variable*/
   char        *function; 
 } YYSTYPE;
-/* Line 1285 of yacc.c.  */
+/* Line 1318 of yacc.c.  */
 #line 159 "src/base/grammar.tab.hpp"
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

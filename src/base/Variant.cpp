@@ -1027,6 +1027,62 @@ const char *  Variant::GetVariableName() const
 
 
 
+
+
+//This returns the name of the variable; if this is a variable.property, it returns
+//just the first part, and in all caps.
+const char *Variant::GetVariableBaseName() const
+{
+
+    if( mDataType == P_DATA_LOCALVARIABLE || mDataType == P_DATA_GLOBALVARIABLE)
+        {
+
+            std::string tmp = PEBLUtility::ToUpper(mData.Variable);
+            std::string::size_type pos = tmp.find(".");
+            if(pos == std::string::npos)
+                return tmp.c_str();
+            else
+                return tmp.substr(0, pos).c_str();
+
+        }
+    else
+        {
+            PError::SignalFatalError("Erroneous Data type in Variant::GetVariableBaseName()");
+            return NULL;
+
+        }
+}
+
+
+//This returns the name of the variable; if this is a variable.property, it returns
+//just the first part.
+const char *  Variant::GetVariablePropertyName() const
+{
+
+    if( mDataType == P_DATA_LOCALVARIABLE || mDataType == P_DATA_GLOBALVARIABLE)
+        {
+
+            std::string tmp = PEBLUtility::ToUpper(mData.Variable);
+            std::string::size_type pos = tmp.find(".");
+            if(pos == std::string::npos)
+                return "";
+            else
+                return tmp.substr(pos+1,tmp.size()).c_str();
+        }
+    else
+        {
+            PError::SignalFatalError("Erroneous Data type in Variant::GetVariablePropertyName()");
+            return NULL;
+
+        }
+}
+
+
+
+
+
+
+
 //This returns a pointer to the name of the function.
 const char *  Variant::GetFunctionName() const
 {

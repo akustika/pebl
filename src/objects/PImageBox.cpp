@@ -26,16 +26,86 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "PImageBox.h"
+#include <iostream>
 
+using std::cout;
+
+PImageBox::PImageBox():
+    PWidget()
+{
+
+ 
+}
 
 ///This sets the imagebox's position on its parent widget.
 ///It overrides the parent method because images positions
 ///are set by their centers.
 void PImageBox::SetPosition(int x, int y)
 {
-    mX = x;
-    mY = y;
+
+
+    PWidget::SetPosition(x,y);
     mDrawX = x - GetWidth()/2;
     mDrawY = y - GetHeight()/2;
+
+}
+
+
+
+//overloaded generic PObject methods
+bool PImageBox::SetProperty(std::string name, Variant v)
+{
+
+
+    if(name == "X") SetPosition(v,mY);
+    else if (name == "Y") SetPosition(mX,v);
+    else if (name == "VISIBLE") 
+        {
+            if(v.GetInteger())
+                Show();
+            else 
+                Hide();
+        }
+    else return false;
+
+    return true;
+}
+
+
+Variant PImageBox::GetProperty(std::string name)const
+{
+    return PObject::GetProperty(name);
+}
+
+
+ObjectValidationError PImageBox::ValidateProperty(std::string name, Variant v)const
+{
+
+    return ValidateProperty(name);
+}
+
+ObjectValidationError PImageBox::ValidateProperty(std::string name)const
+{
+    if(name == "X" ||
+       name == "Y" ||
+       name == "VISIBLE" ||
+       name == "WIDTH" ||
+       name == "HEIGHT" )
+        return OVE_SUCCESS;
+    else
+        return OVE_INVALID_PROPERTY_NAME;
+}
+
+
+
+//This makes sure that the object properties are synced with the class properties.
+void PImageBox::__SetProps__()
+{
+
+    PObject::SetProperty("X",mX);
+    PObject::SetProperty("Y",mY);
+    PObject::SetProperty("VISIBLE",mIsVisible);
+    PObject::SetProperty("WIDTH",mWidth);
+    PObject::SetProperty("HEIGHT",mHeight);
 
 }

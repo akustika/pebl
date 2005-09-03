@@ -211,12 +211,12 @@ void FunctionMap::Erase(const string & funcname)
 void FunctionMap::DumpValues()
 {
     map<string,PNode *>::iterator p;
-    cout << "---------------------------\n    Function Map:\n";
+    cerr << "---------------------------\n    Function Map:\n";
     for(p= mFunctionMap.begin(); p!=mFunctionMap.end(); p++)
         {
-            cout << "Function Name:  [" << std::flush;
-            cout << p->first << ":";
-            cout << ":" << *(p->second) << "]\n" ;
+            cerr << "Function Name:  [" << std::flush;
+            cerr << p->first << ":";
+            cerr << ":" << *(p->second) << "]\n" ;
 
         }
     

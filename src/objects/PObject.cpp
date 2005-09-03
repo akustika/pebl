@@ -28,6 +28,7 @@
 #include "PObject.h"
 
 #include "../base/PComplexData.h"
+#include "../utility/PError.h"
 #include <stdio.h>
 
 using std::cout;
@@ -52,6 +53,60 @@ PObject::~PObject()
 }
 
 
+bool PObject::SetProperty(std::string name, Variant v)
+{
+
+    ObjectValidationError err = ValidateProperty(name,v);
+    if(err == OVE_SUCCESS)
+        {
+            mProperties[name]=v;
+            return true;
+        }
+    else
+        {
+            PError::SignalFatalError("Failing to set property\n");
+            return false;
+        }
+}
+
+
+bool PObject::InitializeProperty(std::string name, Variant v)
+{
+    mProperties[name]=v;
+    return true;
+}
+
+Variant PObject::GetProperty(const std::string name)const
+{
+ 
+    
+   ObjectValidationError err = ValidateProperty(name);
+    if(err == 0)
+        return mProperties.find(name)->second;
+    else
+        {
+
+ 
+            PError::SignalFatalError("Attempted to get invalid property [" + name + "] of object.");
+        }
+    return Variant(0);
+}
+
+
+//By default, just check to see if the property exists.
+ObjectValidationError PObject::ValidateProperty(std::string name, Variant v)const
+{
+    return ValidateProperty(name);
+}
+
+ObjectValidationError PObject::ValidateProperty(std::string name)const
+{
+    if(mProperties.find(name) == mProperties.end())
+        return OVE_INVALID_PROPERTY_NAME;
+    else
+        return OVE_SUCCESS;
+}
+
 
 //Overload of the << operator
 std::ostream & operator <<(std::ostream & out, const PObject & object )
@@ -60,10 +115,34 @@ std::ostream & operator <<(std::ostream & out, const PObject & object )
     return out;
 }
 
+
+
+std::string PObject::ObjectName() const
+{
+    return "<Unknown PObject>";
+}
+
+ostream & PObject::PrintProperties(ostream& out) const
+{
+    out << "----------\n";
+    std::map<std::string, Variant>::const_iterator i;
+    i = mProperties.begin();
+    while(i != mProperties.end())
+        {
+            out << i->first << " " <<  i->second << endl;
+            i++;
+        }
+    out << "----------\n";
+
+
+    return out;
+
+}
+
 // Inheritable function that is called by friend method << operator of PComplexData
 ostream & PObject::SendToStream(ostream& out) const
 {
     
-    out << "<Unknown PObject" << flush;
+    out << ObjectName() << flush;
     return out;
 }

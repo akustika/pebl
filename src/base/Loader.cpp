@@ -99,9 +99,13 @@ void Loader::FindFunctions(const PNode * node)
 
                     Variant v2 = Variant(ucasename.c_str(), P_DATA_FUNCTION);
 
-                    //cout << "\tValue: " << v2 << endl;
-                    mFunctionSet.insert(v2);
-                    // DumpFunctionSet();
+                    //cout << "\tValue: " << v2 << " " << v2.GetDataTypeName() <<  endl;
+                    //std::pair<std::set<Variant>::iterator, bool> myPair;
+                    //myPair = mFunctionSet.insert(v2);
+                     mFunctionSet.insert(v2);
+                    
+                    //cout << "Result: " << *(myPair.first) << " " <<  (myPair.second) << endl;
+                    //DumpFunctionSet();
                 }
         }
     else
@@ -319,14 +323,14 @@ void Loader::DumpFunctionSet()
     std::set<Variant>::iterator p;
     p=mFunctionSet.begin();
     
-    cout << "\t-----------------------------------------------------------\n";
-    cout << "\tPrinting all functions in mFunctionSet\n";
+    cerr << "\t-----------------------------------------------------------\n";
+    cerr << "\tPrinting all functions in mFunctionSet\n";
     while(p != mFunctionSet.end())
         {
-            cout << "\t\tFunction: ["<<  *p << "]\n";         
+            cerr << "\t\tFunction: ["<<  *p << "]\n";         
             p++;
         }
-    cout << "\t-----------------------------------------------------------\n";
+    cerr << "\t-----------------------------------------------------------\n";
 
     
 }

@@ -263,7 +263,7 @@ void  VCGGraph::OutputNodes(ostream &out)
         }
     out << "\n";
 
-};
+}
 
 void VCGGraph::OutputEdges(ostream & out)
 {
@@ -278,7 +278,7 @@ void VCGGraph::OutputEdges(ostream & out)
         }
     out << "\n";
  
-};
+}
 
 
 

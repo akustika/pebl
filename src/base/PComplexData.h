@@ -165,7 +165,8 @@ public:
     bool IsDrawObject() const;
 
 
-
+    void SetProperty(std::string, Variant v);
+    Variant GetProperty(std::string prop);
 
 protected:
     //Inheritable function for use by << operator.

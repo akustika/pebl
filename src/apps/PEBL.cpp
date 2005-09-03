@@ -100,7 +100,7 @@ int PEBLInterpret( int argc, char *argv[] )
     //Set up the search path.
     Evaluator::gPath.Initialize(files);
     
-    cout << Evaluator::gPath;
+    cerr << Evaluator::gPath;
 
     //Add the built-in PEBL libraries to the files list.
     files.push_back("Design.pbl");
@@ -269,7 +269,7 @@ int PEBLInterpret( int argc, char *argv[] )
     //Now, set the priority to the highest it can go.
     setpriority(PRIO_PROCESS,0,PRIO_MIN);
     int priority = getpriority(PRIO_PROCESS,0);
-    cout << "Process running at a nice value of " << priority << endl;
+    cerr << "Process running at a nice value of " << priority << endl;
     
     /*
       struct sched_param mysched;

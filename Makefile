@@ -303,7 +303,7 @@ $(BIN_DIR)/fonttest:  $(TEST_FONT_OBJ)
 
 $(BIN_DIR)/VCGMaker: $(APPS_DIR)/VCGMaker.cpp $(VCG_MAKER_OBJ) $(VCG_MAKER_INC) $(PUTILITIES_OBJ) $(PLATFORM_SDL_OBJ) $(PDEVICES_OBJ)
 	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/VCGMaker -O2 -Wall -I/usr/local/include/SDL -D_REENTRANT  \
-	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf  $(BASE_DIR)/$(PEBLBASE_SRC) \
+	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  $(BASE_DIR)/$(PEBLBASE_SRC) \
         $(APPS_DIR)/VCGMaker.cpp $(patsubst %.o, $(OBJ_DIR)/%.o, $(VCG_MAKER_OBJ) $(PLATFORM_SDL_OBJ) $(PDEVICES_OBJ)) 
 
 $(BIN_DIR)/windowtest:  $(TEST_WINDOW_OBJ) $(TEST_WINDOW_INC)

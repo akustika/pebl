@@ -33,6 +33,8 @@
 #include <string>
 
 using std::string;
+using std::cout;
+using std::endl;
 ///Standard constructor of PColor
 
 PColor::PColor():
@@ -41,6 +43,12 @@ PColor::PColor():
     mBlue(0),
     mAlpha(255)
 {
+
+    InitializeProperty("RED",Variant(GetRed()));
+    InitializeProperty("GREEN",Variant(GetGreen()));
+    InitializeProperty("BLUE",Variant(GetBlue()));
+    InitializeProperty("ALPHA",Variant(GetAlpha()));
+    
 } 
 
 
@@ -51,14 +59,23 @@ PColor::PColor(int red, int green, int blue, int alpha):
     mBlue(To8BitColor(blue)),
     mAlpha(To8BitColor(alpha))
 {
+    InitializeProperty("RED",Variant(GetRed()));
+    InitializeProperty("GREEN",Variant(GetGreen()));
+    InitializeProperty("BLUE",Variant(GetBlue()));
+    InitializeProperty("ALPHA",Variant(GetAlpha()));
 
 }
 
 ///Name-based constructor of PColor:
 PColor::PColor(const string & colorname)
 {
+    InitializeProperty("RED",Variant(0));
+    InitializeProperty("GREEN",Variant(0));
+    InitializeProperty("BLUE",Variant(0));
+    InitializeProperty("ALPHA",Variant(0));
+
     SetColorByName(colorname);
-    SetAlpha(255);
+    SetAlpha(255);    
 }
 
 
@@ -69,7 +86,55 @@ PColor::PColor(const PColor & pcolor)
     mGreen = pcolor.GetGreen();
     mBlue  = pcolor.GetBlue();
     mAlpha = pcolor.GetAlpha();
+    
+    InitializeProperty("RED",Variant(GetRed()));
+    InitializeProperty("GREEN",Variant(GetGreen()));
+    InitializeProperty("BLUE",Variant(GetBlue()));
+    InitializeProperty("ALPHA",Variant(GetAlpha()));
+    
 }
+
+
+void PColor::__SetProps__()
+{
+    PObject::SetProperty("RED",Variant(GetRed()));
+    PObject::SetProperty("GREEN",Variant(GetGreen()));
+    PObject::SetProperty("BLUE",Variant(GetBlue()));
+    PObject::SetProperty("ALPHA",Variant(GetAlpha()));
+}
+
+
+
+
+bool PColor::SetProperty(std::string name, Variant v)
+{
+
+    if(name == "RED") SetRed(v);
+    else if(name == "GREEN") SetGreen(v);
+    else if(name == "BLUE") SetBlue(v);
+    else if(name == "ALPHA") SetAlpha(v);
+    else return false;
+
+    return true;
+}
+
+
+
+ObjectValidationError PColor::ValidateProperty(std::string name, Variant v)const
+{
+    if(ValidateProperty(name) == OVE_INVALID_PROPERTY_NAME) return OVE_INVALID_PROPERTY_NAME;
+    
+    if(!v.IsNumber()) return OVE_INVALID_PROPERTY_TYPE;
+    if( v < Variant(0) || v > Variant(255)) return OVE_INVALID_PROPERTY_VALUE;
+    return OVE_SUCCESS;
+}
+
+
+ObjectValidationError PColor::ValidateProperty(std::string name)const
+ {
+     return PObject::ValidateProperty(name);
+ }
+
 
 
 
@@ -84,6 +149,33 @@ int PColor::To8BitColor(int color)
 }
 
 
+ //These will set a single color
+void PColor::SetRed  (int color)
+{
+    mRed   = To8BitColor(color);
+    PObject::SetProperty("RED",GetRed());
+}
+
+void PColor::SetGreen(int color)
+{
+    mGreen = To8BitColor(color);
+    PObject::SetProperty("GREEN",GetGreen());
+}
+
+void PColor::SetBlue (int color)
+{
+    mBlue  = To8BitColor(color);
+    PObject::SetProperty("BLUE",GetBlue());
+}
+
+void PColor::SetAlpha(int color)
+{
+    mAlpha = To8BitColor(color);
+    PObject::SetProperty("ALPHA",GetAlpha());
+}
+
+
+
 ///This uses modular arithmetic to extract colors from unsigned int.
 ///There could be more efficient ways to do it, but this is clear, and 
 ///More likely to work cross-platform.
@@ -93,7 +185,7 @@ void PColor::SetColorByRGBA(unsigned int color)
     mBlue   = color / 255 % 255;
     mGreen  = color / (255 * 255) % 255;
     mRed    = color / ( 255 * 255 * 255) % 255;
-
+    __SetProps__();
 }
 
 
@@ -105,7 +197,7 @@ void PColor::SetColorByRGBA(int red, int green, int blue, int alpha)
     mGreen = To8BitColor(green);
     mBlue  = To8BitColor(blue);
     mAlpha = To8BitColor(alpha);
-
+    __SetProps__();
 }
 
 
@@ -193,6 +285,7 @@ void PColor::SetColorByName(const string & colorname)
     mGreen = RGBNames::ColorNames[foundindex].g;
     mBlue  = RGBNames::ColorNames[foundindex].b;
     mAlpha = 255;
+    __SetProps__();
 }
 
 
@@ -207,13 +300,19 @@ unsigned int PColor::GetColor() const
 }
 
 
+std::string PColor::ObjectName() const
+{
+    return "<PColor>";
+}
+
+
 /// This sends the color descriptions to the specified stream.
 std::ostream & PColor::SendToStream(std::ostream& out) const
 {
-    out << "<PColor: Red: [" << mRed;
-    out << "] Green: ["<< mGreen;
-    out << "] Blue: ["<< mBlue;
-    out << "] Alpha: ["<< mAlpha;
+    out << "<PColor: Red: [" << mRed << "|" << GetProperty(string("RED"));
+    out << "] Green: ["<< mGreen<< "|" << GetProperty(string("GREEN"));
+    out << "] Blue: ["<< mBlue<< "|" << GetProperty(string("BLUE"));
+    out << "] Alpha: ["<< mAlpha<< "|" << GetProperty(string("ALPHA"));
     out << "] Color Code: ["<< GetColor() << "]>";
 
     return out;

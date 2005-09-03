@@ -151,6 +151,9 @@ public:
     long int GetInteger() const;
     long double GetFloat() const;
     const char * GetVariableName() const;
+    const char * GetVariableBaseName() const;    
+    const char * GetVariablePropertyName() const;
+    
     const char * GetFunctionName() const;
     const char * GetString() const;
     StackSignalType GetSignal()const;

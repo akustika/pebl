@@ -47,8 +47,10 @@ using std::string;
 
 
 ///Standard Constructor
-PlatformImageBox::PlatformImageBox()
+PlatformImageBox::PlatformImageBox():
+    PImageBox()
 {
+
     mSurface = NULL;
 }
 
@@ -113,10 +115,17 @@ bool PlatformImageBox::LoadImage(const std::string &  imagefilename)
         {  
             mWidth  = mSurface->w; 
             mHeight = mSurface->h;
+            PObject::SetProperty("WIDTH", Variant(mWidth));
+            PObject::SetProperty("HEIGHT", Variant(mHeight));
             return true;
         }
     else
         {
+
+
+            SetProperty("WIDTH", 0);
+            SetProperty("HEIGHT", 0);
+
             return false;
         } 
 }
