@@ -38,6 +38,8 @@ PTextObject::PTextObject():
     mTextChanged(true),
     mText("")
 {
+    InitializeProperty("TEXT","");
+    PrintProperties(cout);
 }
 
 
@@ -47,6 +49,7 @@ PTextObject::PTextObject(const std::string & text):
     mTextChanged(true),
     mText(std::string(text))
 {
+    InitializeProperty("TEXT",Variant(mText));
 }
 
 
@@ -56,9 +59,9 @@ PTextObject::PTextObject( PTextObject &object):
     mText(object.GetText())
  
 {
+    InitializeProperty("TEXT",Variant(mText));
 }
 
 PTextObject::~PTextObject()
 {
 }
-

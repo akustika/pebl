@@ -49,6 +49,14 @@ public:
     PLabel(const PLabel & label);
     virtual ~PLabel();
 
+
+    //overloaded generic PObject methods
+    virtual bool SetProperty(std::string, Variant v);
+    virtual Variant GetProperty(std::string)const;
+    virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
+    virtual ObjectValidationError ValidateProperty(std::string)const;
+
+
     void SetPosition(int x, int y);
     //This overrides the default method, because labels are centered on their
     //Position.

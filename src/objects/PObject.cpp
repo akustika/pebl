@@ -64,6 +64,8 @@ bool PObject::SetProperty(std::string name, Variant v)
         }
     else
         {
+            std::cerr << "Property: " << name << " " << v << endl;
+            PrintProperties(cerr);
             PError::SignalFatalError("Failing to set property\n");
             return false;
         }

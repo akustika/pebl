@@ -55,10 +55,56 @@ PLabel::~PLabel()
 {
 }
 
+
+bool PLabel::SetProperty(std::string name, Variant v)
+{
+    if(name == "X") SetPosition(v,mY);
+    else if (name == "Y") SetPosition(mX,v);
+    else if (name == "TEXT") SetText(v);
+    else if (name == "VISIBLE") 
+        {
+            if(v.GetInteger())
+                Show();
+            else 
+                Hide();
+        }
+    else return false;
+    
+    return true;
+}
+
+
+Variant PLabel::GetProperty(std::string name)const
+{
+    return PObject::GetProperty(name);
+}
+
+
+ObjectValidationError PLabel::ValidateProperty(std::string name, Variant v)const
+{
+    return ValidateProperty(name);
+}
+
+ObjectValidationError PLabel::ValidateProperty(std::string name)const
+{
+    if(name == "X" ||
+       name == "Y" ||
+       name == "VISIBLE" ||
+       name == "WIDTH" ||
+       name == "HEIGHT" || 
+       name == "TEXT")
+        return OVE_SUCCESS;
+    else
+        return OVE_INVALID_PROPERTY_NAME;
+
+}
+
 void PLabel::SetPosition(int x, int y)
 {
     mX = x;
     mY = y;
     mDrawX = x - GetWidth()/2;
     mDrawY = y - GetHeight()/2;
+    PObject::SetProperty("X",Variant(mX));
+    PObject::SetProperty("Y",Variant(mY));
 }

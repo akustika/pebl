@@ -71,6 +71,54 @@ PTextBox::~PTextBox()
 }
  
 
+
+
+bool PTextBox::SetProperty(std::string name, Variant v)
+{
+    if(name == "X") SetPosition(v,mY);
+    else if (name == "Y") SetPosition(mX,v);
+    else if (name == "TEXT") SetText(v);
+    else if (name == "VISIBLE") 
+        {
+            if(v.GetInteger())
+                Show();
+            else 
+                Hide();
+        }
+    else return false;
+    
+    return true;
+}
+
+
+Variant PTextBox::GetProperty(std::string name)const
+{
+    return PObject::GetProperty(name);
+}
+
+
+ObjectValidationError PTextBox::ValidateProperty(std::string name, Variant v)const
+{
+    return ValidateProperty(name);
+}
+
+ObjectValidationError PTextBox::ValidateProperty(std::string name)const
+{
+    if(name == "X" ||
+       name == "Y" ||
+       name == "VISIBLE" ||
+       name == "WIDTH" ||
+       name == "HEIGHT" ||
+       name == "TEXT" )
+        return OVE_SUCCESS;
+    else
+        return OVE_INVALID_PROPERTY_NAME;
+
+}
+
+
+
+
 //Inserts text at cursor
 void PTextBox::InsertText(std::string text)
 {
@@ -78,7 +126,7 @@ void PTextBox::InsertText(std::string text)
     mText.insert(mCursorPos, text);
     mCursorPos += text.length();
     mTextChanged= true;
-
+    SetProperty("TEXT",mText);
 }
 
 void PTextBox::InsertText(const char character)
@@ -91,6 +139,7 @@ void PTextBox::InsertText(const char character)
     mText.insert(mCursorPos, tmp);
     mCursorPos += 1;
     mTextChanged = true;
+    SetProperty("TEXT",mText);
 
 }
 
@@ -102,6 +151,7 @@ void PTextBox::DeleteText(int length)
         {
             mText.erase(mCursorPos, length);
             mTextChanged= true;
+
         }
     else if (length < 0)
         {
@@ -111,15 +161,17 @@ void PTextBox::DeleteText(int length)
                     mText.erase(0, mCursorPos);
                     mTextChanged= true;
                     mCursorPos = 0;
+
                 }
             else
                 {
                     mText.erase(mCursorPos+length, -length);
                     mTextChanged= true;
                     mCursorPos += length;
+
                 }
         }
-
+    SetProperty("TEXT",mText);
 }
 
 int PTextBox::IncrementCursor()

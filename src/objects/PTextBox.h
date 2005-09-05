@@ -44,6 +44,14 @@ public:
     PTextBox(PTextBox & textbox);
     virtual ~PTextBox();
 
+
+    //overloaded generic PObject methods
+    virtual bool SetProperty(std::string, Variant v);
+    virtual Variant GetProperty(std::string)const;
+    virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
+    virtual ObjectValidationError ValidateProperty(std::string)const;
+
+
     virtual void InsertText(std::string character);
     virtual void InsertText(char character);
 

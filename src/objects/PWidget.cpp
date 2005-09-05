@@ -41,7 +41,7 @@ PWidget::PWidget():
     mIsVisible(true),
     mParent(NULL)
 {
-
+    cout << "Initializing widget\n";
     InitializeProperty("X",Variant(mX));
     InitializeProperty("Y",Variant(mY));
     InitializeProperty("WIDTH",Variant(mWidth));
@@ -60,6 +60,7 @@ PWidget::PWidget(int x, int y, int width, int height, bool visible):
     mIsVisible(visible),
     mParent(NULL)
 {
+    cout << "Initializing widget\n";
     InitializeProperty("X",Variant(mX));
     InitializeProperty("Y",Variant(mY));
     InitializeProperty("WIDTH",Variant(mWidth));
