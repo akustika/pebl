@@ -46,7 +46,8 @@ using std::ostream;
 PlatformLabel::PlatformLabel(const std::string & text, counted_ptr<PlatformFont> font):
     PlatformWidget(),
     PLabel(text),
-    mFont(font)
+    mFont(font),
+    mCDT(CDT_LABEL)
 {
     Draw();
 }
@@ -54,7 +55,8 @@ PlatformLabel::PlatformLabel(const std::string & text, counted_ptr<PlatformFont>
 
 PlatformLabel::PlatformLabel(PlatformLabel & label):
     PlatformWidget(),
-    PLabel(label.GetText())
+    PLabel(label.GetText()),
+    mCDT(CDT_LABEL)
 {
 
     mFont = label.GetFont();

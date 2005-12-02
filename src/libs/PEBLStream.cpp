@@ -84,7 +84,7 @@ Variant PEBLStream::FileOpenRead(Variant v)
     
     ///v1 contains the name of a file to open.
     counted_ptr<PStream> mystream = counted_ptr<PStream>(new PStream(v1,sdRead, stASCII));
-    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(mystream));
+    PComplexData * pcd = new PComplexData(mystream);
     return Variant(pcd);
 }
 
@@ -97,7 +97,7 @@ Variant PEBLStream::FileOpenWrite(Variant v)
  
     ///v1 contains the name of a file to open.      
     counted_ptr<PStream> mystream = counted_ptr<PStream>(new PStream(v1,sdWrite, stASCII));
-    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(mystream));
+    PComplexData * pcd = new PComplexData(mystream);
     return Variant(pcd);
 }
 
@@ -110,7 +110,7 @@ Variant PEBLStream::FileOpenAppend(Variant v)
 
     ///v1 contains the name of a file to open.    
     counted_ptr<PStream> mystream = counted_ptr<PStream>(new PStream(v1,sdAppend, stASCII));
-    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(mystream));
+    PComplexData * pcd = new PComplexData(mystream);
     return Variant(pcd);
 }
 
@@ -238,7 +238,7 @@ Variant PEBLStream::FileReadList(Variant v)
                 }
         }
     mystream->Close();
-    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(returnlist));
+    PComplexData * pcd = new PComplexData(returnlist);
     return Variant(pcd);    
 }
     
@@ -302,7 +302,7 @@ Variant PEBLStream::FileReadTable(Variant v)
                 }
         }
     myStream->Close();
-    counted_ptr<PComplexData>pcd = counted_ptr<PComplexData>(new PComplexData(returnlist));
+    PComplexData * pcd = new PComplexData(returnlist);
 
     return Variant(pcd);    
 }

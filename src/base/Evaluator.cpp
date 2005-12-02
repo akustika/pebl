@@ -42,10 +42,10 @@
 #include <strstream>
 #include <math.h>
 
-#undef PEBL_DEBUG_PRINT
-//#define PEBL_DEBUG_PRINT
+//#undef PEBL_DEBUG_PRINT
+#define PEBL_DEBUG_PRINT
 
-using std::cerr;
+using std::cout;
 using std::cout;
 using std::endl;
 using std::flush;
@@ -60,12 +60,14 @@ Evaluator::Evaluator():
 }
 
 
-Evaluator::Evaluator(Variant stacktop, string scope):
+Evaluator::Evaluator(Variant & stacktop, string scope):
     mStackMax(10000),
     mScope(scope)
 {
     //Initialize the evaluator scope with a variant which is a list of variables
+    cout << "Making evaluator\n";
     Push(stacktop);
+    cout << "Done pushing\n";
 }
 
 
@@ -73,7 +75,7 @@ Evaluator::~Evaluator()
 
 {
 #ifdef PEBL_DEBUG_PRINT
-    cerr << "Deleting Evaluator: " << mScope << endl;
+    cout << "Deleting Evaluator: " << mScope << endl;
 #endif
 
     //Delete all local variables now.
@@ -96,21 +98,25 @@ void Evaluator::Evaluate(const PNode * node)
         gEvalNode = node;
 
 #ifdef PEBL_DEBUG_PRINT
-    cerr << "Type: " << node->GetType() << endl;
+    cout << "PDP::Type: " << node->GetType() << endl;
+    cout << "PDP::Type: " << node->GetType() << endl;
 #endif
 
     if(node->GetType() ==  PEBL_OP_NODE)
         {
+            cout <<"HereA\n";
             Evaluate((OpNode*)node);
         }
     else if (node->GetType() ==  PEBL_DATA_NODE)
         {
+            cout <<"HereB\n";
             Evaluate((DataNode*)node);
+            cout << "DoneB\n";
         }
     else
         {
 #ifdef PEBL_DEBUG_PRINT 
-            cerr << "ERROR IN GENERIC EVALUATOR::EVALUATE" << endl;
+            cout << "ERROR IN GENERIC EVALUATOR::EVALUATE" << endl;
 #endif
         }
 }
@@ -127,7 +133,7 @@ void Evaluator::Evaluate(const OpNode * node)
         gEvalNode = node;
 
 #ifdef PEBL_DEBUG_PRINT 
-    cerr << "-------------------------Evaluating OpNode ["<< node->GetOp() << "] of Type: " << node->GetOpName() << "------------\n";
+    cout << "-------------------------Evaluating OpNode ["<< node->GetOp() << "] of Type: " << node->GetOpName() << "------------\n";
 #endif
 
 
@@ -162,7 +168,7 @@ void Evaluator::Evaluate(const OpNode * node)
 
 
 #ifdef PEBL_DEBUG_PRINT
-                cerr << "Initial Variable Name: [" << v1.GetVariableName() << "]" << endl;
+                cout << "Initial Variable Name: [" << v1.GetVariableName() << "]" << endl;
 #endif
 
                 //Get the name of property being 
@@ -182,10 +188,9 @@ void Evaluator::Evaluate(const OpNode * node)
                                 //and set its property.
 
                                 Variant v3 = mLocalVariableMap.RetrieveValue(v1.GetVariableBaseName());
-
-                                counted_ptr<PComplexData> pcd=v3.GetComplexData();
-                                if(pcd.get() != NULL)
-                                    pcd->SetProperty(property, v2);
+                                
+                                PComplexData * pcd = v3.GetComplexData();
+                                if(pcd != NULL)  pcd->SetProperty(property, v2);
                             }
 
 
@@ -202,9 +207,8 @@ void Evaluator::Evaluate(const OpNode * node)
                                 //otherwise get the object from the variable store 
                                 //and set its property.
                                 Variant v3 = gGlobalVariableMap.RetrieveValue(v1.GetVariableBaseName());
-                                counted_ptr<PComplexData> pcd=v3.GetComplexData();
-                                if(pcd.get() != NULL)                             
-                                    pcd->SetProperty(property, v2);
+                                PComplexData * pcd = v3.GetComplexData();
+                                if(pcd  != NULL) pcd->SetProperty(property, v2);
                             }
 
                     }
@@ -438,83 +442,81 @@ void Evaluator::Evaluate(const OpNode * node)
    
                 //Get the argument list.
                 Variant v1 = Pop();
-                counted_ptr<PList> tmpList;
+
+                //Create a list to use.
                 //If v1 is a stacksignal list_head, there are no arguments
                 //provided.
-                
+
+                counted_ptr<PEBLObjectBase> tmpList;
                 if( v1.IsStackSignal() && v1.GetSignal() == STACK_LIST_HEAD)
                     {
-                        tmpList = counted_ptr<PList>(new PList());
+                        tmpList = counted_ptr<PEBLObjectBase>(new PList());
                     }
 
                 if( v1.IsComplexData())
                     {
-                        tmpList = v1.GetComplexData()->GetList(); 
+                        tmpList = v1.GetComplexData()->GetObject(); 
                     }
+
+
 
                 Variant v2 = 0;
                 list<Variant>::iterator p;
                 //iterate through the lists and assign values to variables.
+                PList * tmp = (PList*)(tmpList.get());
+
                 while(node1)
                     {
-
                         //Get the variable name
                         v2 = ((DataNode*)(((OpNode*)node1)->GetLeft()))->GetValue();
 
-                        //if(tmpList->IsEmpty())
-                        if(!tmpList.get()
-                           ||( tmpList.get() && tmpList->Length()==0))
+
+
+                        if(!tmp ||( tmp && tmp->Length()==0))
                             {
                                 //Too few arguments.
                                 string message =  "Too few arguments passed to function [" + mScope + "].";
                                 if(mScope == "Start")
                                     message += " (Make sure Start function has only one variable).";
-
+                                
                                 PError::SignalFatalError(message);
                         
                             }
                         
                         //Get the value, remove it from the list.
-                        p = tmpList->Begin();
+                        p = tmp->Begin();
                         
                         //Add pair to variable map.  This should always be a local variable map.
                         mLocalVariableMap.AddVariable(v2, *p);
                         //remove it from the front of the list.
-                        tmpList->PopFront();
+                        tmp->PopFront();
                         //Move to the next item.
                         node1 = ((OpNode*)node1)->GetRight();
                     }
 
 
-                if(tmpList.get()
-                   && tmpList->Length() > 0)
+                if(tmp && tmp->Length() > 0)
                     {
                         //Too many arguments.
                         string message = string("Too many arguments passed to function [" + mScope + "].");
 
-                        if(mScope == "Start")
-                            message += " (Make sure Start function has a variable).";
+                        if(mScope == "Start") message += " (Make sure Start function has a variable).";
                         PError::SignalFatalError(message);
-                                   
-                     }
+                    }
                     
                 //Now, get the code block and execute it.
                 PNode * node2 = node->GetRight();
                 Evaluate(node2);
-
             }
-
-    
-    break;
-
+            break;
+            
         case PEBL_LIBRARYFUNCTION:
             {
                 // This type of function is built in and precompiled.  The loader examines the parse tree and
                 // identifies each function that is used.
                 
-                
-                //The left child of a PEBL_LIBRARYFUNCTION contains an PEBL_AND node containing two datanodes, 
-                //each containing integers integer describing the min and max  number of arguments, respectively.
+                //The left child of a PEBL_LIBRARYFUNCTION contains an PEBL_AND node containing two datanodes 
+                //each containing integers describing the min and max  number of arguments, respectively.
 
                 
                 OpNode * node0 =(OpNode*)(node->GetLeft());
@@ -538,14 +540,14 @@ void Evaluator::Evaluate(const OpNode * node)
 
                 //Before we execute, check to see if v2 has a length  between min and max.
                 int numargs=0;
-
+                
                 if (v2.IsStackSignal())
                     numargs = 0;
                 else
                     {
                         if(v2.IsComplexData())
                             if((v2.GetComplexData())->IsList())
-                                numargs = ((v2.GetComplexData())->GetList())->Length();
+                                numargs = ((PList*)(v2.GetComplexData()->GetObject().get()))->Length();
                     }
 
                 if(numargs < min || numargs > max)
@@ -653,8 +655,9 @@ void Evaluator::Evaluate(const OpNode * node)
                 
                 //Retrieve an iterator to the items in the list.
                 //PComplexData * tmpPCD = v1.GetComplexData();
-                list<Variant>::iterator p = v1.GetComplexData()->GetList()->Begin();
-                list<Variant>::iterator end = v1.GetComplexData()->GetList()->End();
+                PList * tmp = (PList*)(v1.GetComplexData()->GetObject().get());
+                list<Variant>::iterator p = tmp->Begin();
+                list<Variant>::iterator end = tmp->End();
                 Variant results=0;
                 
                 while(p != end)
@@ -770,8 +773,8 @@ void Evaluator::Evaluate(const OpNode * node)
                         Pop();
 
                         //Make an empty list and push it onto the stack.
-                        counted_ptr<PList> tmpList = counted_ptr<PList>(new PList());                      
-                        counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(tmpList));    
+                        counted_ptr<PEBLObjectBase> tmpList = counted_ptr<PEBLObjectBase>(new PList());
+                        PComplexData * pcd = new PComplexData(tmpList);
                         Variant v2 = Variant(pcd);
                         Push(v2);
                     }
@@ -815,19 +818,21 @@ void Evaluator::Evaluate(const OpNode * node)
                         //If node2 is NULL, then we are at the end of the list.
                         //everything has been pushed to the stack.  Just get everything
                         //off the stack, make a list out of it,  and put it back on the stack.
-                        
+                        cout << "-----Making a new list\n";
                         //Must make a new list, and create a variant out of it.
-                        counted_ptr<PList> tmpList = counted_ptr<PList>(new PList());
+                        PList * tmpList = new PList();
                         
                         //Now, pop off items from the list until you get to a
                         //P_DATA_STACK_SIGNAL, then if it i
                         Variant v1 = Pop();
-
+                        
                         while(v1.GetDataType() != P_DATA_STACK_SIGNAL)
                             {
+                                cout << "     External pushing: ["<< v1 << "] onto list.\n";
                                 //Add the item to the list.
                                 tmpList->PushFront(v1);
                                 
+                                cout << *tmpList << endl;
                                 //Pop and repeat.
                                 v1 = Pop();
                             }
@@ -835,7 +840,8 @@ void Evaluator::Evaluate(const OpNode * node)
                 
                         //Now, tmpList should be the entire list.
                         //Make a Variant out of it, and put it on the stack. 
-                        counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(tmpList));
+                        counted_ptr<PEBLObjectBase> pl = counted_ptr<PEBLObjectBase>(tmpList);
+                        PComplexData * pcd = new PComplexData(pl);
                         Variant v2 = Variant(pcd);
                         Push(v2);
                     }
@@ -949,7 +955,7 @@ void Evaluator::Evaluate(const OpNode * node)
                 //statement. This means that the last statement in a series remains on the stack.
 
 #ifdef PEBL_DEBUG_PRINT
-                cerr << "Checking a PEBL_STATEMENTS: " << GetStackDepth() << endl;
+                cout << "Checking a PEBL_STATEMENTS: " << GetStackDepth() << endl;
 #endif
                 
                 //If the top of the stack is a STACK_BREAK, we should do nothing.
@@ -1002,7 +1008,7 @@ void Evaluator::Evaluate(const OpNode * node)
                 Push(v1);
                 Push(v1);
 #ifdef PEBL_DEBUG_PRINT
-                cerr << "PEBL_BREAK: pushing break onto stack.\n";
+                cout << "PEBL_BREAK: pushing break onto stack.\n";
 #endif
 
             }
@@ -1050,7 +1056,7 @@ void Evaluator::Evaluate(const DataNode * node)
         gEvalNode = node;
 
 #ifdef PEBL_DEBUG_PRINT 
-    cerr << "Evaluating DataNode of Value: " << node->GetValue() << endl;;
+    cout << "Evaluating DataNode of Value: " << node->GetValue() << endl;;
 #endif
 
     Variant v1, v2;
@@ -1073,7 +1079,7 @@ void Evaluator::Evaluate(const DataNode * node)
 
                 if(property!="")
                     {
-                        counted_ptr<PComplexData> pcd = v2.GetComplexData();
+                        PComplexData * pcd = v2.GetComplexData();
                         v2 = pcd->GetProperty(property);
                     }
 		
@@ -1092,7 +1098,7 @@ void Evaluator::Evaluate(const DataNode * node)
             string property =v1.GetVariablePropertyName();
             if(property!="")
                 {
-                    counted_ptr<PComplexData> pcd = v2.GetComplexData();
+                    PComplexData * pcd = v2.GetComplexData();
                     v2 = pcd->GetProperty(property);
                 }
 
@@ -1106,8 +1112,8 @@ void Evaluator::Evaluate(const DataNode * node)
         case P_DATA_COMPLEXDATA:
       
 #ifdef PEBL_DEBUG_PRINT 
-            cerr << "Evaluating a normal Variant: ";
-            cerr <<  v1 << endl;
+            cout << "Evaluating a normal Variant: ";
+            cout <<  v1 << endl;
 #endif
             Push(v1);
             break;
@@ -1146,7 +1152,7 @@ void Evaluator::CallFunction(const OpNode * node)
 
  
 #ifdef PEBL_DEBUG_PRINT
-    cerr << "Calling a function with argument list: " <<  endl;
+    cout << "Calling a function with argument list: " <<  endl;
 #endif 
     
 
@@ -1205,7 +1211,7 @@ void Evaluator::Push(Variant v)
 {
 
 #ifdef PEBL_DEBUG_PRINT
-    cerr << "Pushing Stack: depth: "<< mStack.size() << "-->" << GetStackDepth() + 1;
+    cout << "Pushing Stack: depth: "<< mStack.size() << "-->" << GetStackDepth() + 1;
 #endif 
 
     if (mStack.size() > mStackMax)
@@ -1214,8 +1220,8 @@ void Evaluator::Push(Variant v)
         }
     mStack.push(v);
 #ifdef PEBL_DEBUG_PRINT
-    if(mStack.size())cerr << "  [" << mStack.top() << "] is on top.\n";
-    else cerr << endl;
+    if(mStack.size())cout << "  [" << mStack.top() << "] is on top.\n";
+    else cout << endl;
 #endif 
 
 }
@@ -1224,7 +1230,7 @@ void Evaluator::Push(Variant v)
 Variant Evaluator::Pop()
 {
 #ifdef PEBL_DEBUG_PRINT
-    cerr << "Popping Stack: depth: "<< mStack.size() << "-->" << GetStackDepth() - 1;
+    cout << "Popping Stack: depth: "<< mStack.size() << "-->" << GetStackDepth() - 1;
 #endif 
     if(mStack.size() <=0 )
         {
@@ -1234,8 +1240,8 @@ Variant Evaluator::Pop()
     Variant v = mStack.top();
     mStack.pop();
 #ifdef PEBL_DEBUG_PRINT
-    if(mStack.size())cerr << "  [" << mStack.top() << "] is on top.\n";
-    else cerr << endl;
+    if(mStack.size())cout << "  [" << mStack.top() << "] is on top.\n";
+    else cout << endl;
 #endif 
     return v;
 }
@@ -1244,7 +1250,7 @@ Variant Evaluator::Pop()
 Variant Evaluator::Peek()
 {
 #ifdef PEBL_DEBUG_PRINT
-    cerr << "Peeking at top of stack: "<< mStack.size() << endl;
+    cout << "Peeking at top of stack: "<< mStack.size() << endl;
 #endif 
     if(mStack.size() <=0 )
         {

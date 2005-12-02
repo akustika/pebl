@@ -32,7 +32,7 @@
 This class is heavily based on a reference-counted pointer implementation by
 Mark E.  It included the below copyright statement, as well as a counted pointer
 for use with arrays.
-  
+
   Copyright 1998, 1999
   Mark E. (snowball3@usa.net)
   http://snowball.digitalspace.net/cpp/
@@ -46,7 +46,7 @@ for use with arrays.
   Mark E. makes no representations about the suitability of
   this software for any purpose. It is provided "as is" without
   express or implied warranty.
- 
+
 */
 
 
@@ -58,7 +58,7 @@ for use with arrays.
   deletes the pointer it contains when no longer needed
   i.e. (reference count drops to zero)
 */
-
+#include <iostream>
 #include <stddef.h>
 
 template <class X>
@@ -71,24 +71,24 @@ public:
     typedef X element_type;
     typedef X* pointer_type;
     typedef size_t size_type;
-    
+
  public:
     explicit counted_ptr(X* p=0) : ptr(p)
     {
         count=new size_type(1);
     }
-    
+
     counted_ptr (const counted_ptr<X> &r)
     {
         ptr=r.ptr;
         count=r.count;
         acquire();
     }
-    
-  
+
+
     ~counted_ptr() { release(); }
-    
-    
+
+
     counted_ptr& operator= (const counted_ptr<X> &r)
     {
         if (this != &r)
@@ -100,44 +100,48 @@ public:
             }
         return *this;
     }
-    
+
     X& operator* () const { return *ptr; }
     X* get () const { return ptr; }
     X* operator-> () const { return ptr; }
-    
+
     bool unique () const
     {
         return *count==1;
     }
-    
-    
-    
+
+    void PrintCounts()
+    {
+        std::cout << "Object has "<< *count << "copies" <<std::endl;
+    }
+
 protected:
     X* ptr;
     size_type *count;
-    
+
 protected:
-    
+
     void acquire()
     {
         (*count) += 1;
     }
-    
-    
+
+
     void release()
     {
+        std::cout <<"XXXXX["<< *count << "|" <<"]\n";
         if (count)
-            if( --(*count)==0)
-                {
-                    
-                    delete ptr;
-                    delete count;
-                    ptr = 0;
-                    count = 0;
-                }
-        
+            {
+                (*count)--;
+                if((*count)==0)
+                    {                    
+                        delete ptr;
+                        delete count;
+                        ptr = NULL;
+                        count = NULL;
+                    }
+            }
     }
-    
 };
 
 #endif

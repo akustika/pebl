@@ -42,9 +42,10 @@ using std::ostream;
 
 
 ///Standard Constructor
-PlatformWindow::PlatformWindow()
+PlatformWindow::PlatformWindow():
+    mCDT(CDT_WINDOW)
 {
-    PWidget::SetBackgroundColor(PColor(200,200,200,255));
+    PWidget::SetBackgroundColor(counted_ptr<PColor>(new PColor(200,200,200,255)));
 }
 
 
@@ -107,9 +108,33 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
                                 PEBLVideoDepth vdepth, 
                                 bool windowed)
 {  
-    
+    Variant v = 0;
+    Evaluator * myEval = new Evaluator(v,"Window");
+    //gVideoWidth and gVideoHeight may have been set by the user
+    //in the script.  First, get these values, and try them.
+
+    Variant vWidth =  0;
+    Variant vHeight = 0;
+    Variant vDp =  0;
+
+    //Extract video values from variable values.
+    if(myEval->gGlobalVariableMap.Exists("gVideoWidth"))
+        vWidth =  myEval->gGlobalVariableMap.RetrieveValue("gVideoWidth");
+
+    if(myEval->gGlobalVariableMap.Exists("gVideoHeight"))
+       vHeight =  myEval->gGlobalVariableMap.RetrieveValue("gVideoHeight");
+
+    if(myEval->gGlobalVariableMap.Exists("gVideoDepth"))
+        vDp =   myEval->gGlobalVariableMap.RetrieveValue("gVideoDepth");
+
     int vflags = GetVideoFlags();
-    int width, height,depth;
+
+    int width  = vWidth;
+    int height = vHeight;
+    int depth  = vDp;    
+
+    //If either width or height are undefined, get the externally-set value.
+    if(!( width>0 && height>0))
     switch(mode)
         {
 		case PVM_512_384:
@@ -154,27 +179,28 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
             break;
         }
 
+    if(!(depth > 0))
+        depth = (int)vdepth;
 
-    depth = (int)vdepth;
     if(!windowed)
         {
             vflags |=  SDL_FULLSCREEN;       // Enable fullscreen
         }
 
     
-    Evaluator * myEval = new Evaluator(Variant(0),"Window");
-    myEval->gGlobalVariableMap.AddVariable("gVideoWidth", width);
-    myEval->gGlobalVariableMap.AddVariable("gVideoHeight", height);
-    myEval->gGlobalVariableMap.AddVariable("gVideoDepth", depth);
-    delete myEval;
-    
-
-    //INitialize the SDL surface with the appropriate flags.
-    mSurface=SDL_SetVideoMode(width,height,depth,vflags);
-    
-    if ( mSurface == NULL )
-        {          
-            cerr << "Unable to set " << width << "x" << height << ": " << depth << " video mode: " << SDL_GetError() << endl;
+       //Re-stare the values
+       myEval->gGlobalVariableMap.AddVariable("gVideoWidth", width);
+       myEval->gGlobalVariableMap.AddVariable("gVideoHeight", height);
+       myEval->gGlobalVariableMap.AddVariable("gVideoDepth", depth);
+       delete myEval;
+       
+       
+       //INitialize the SDL surface with the appropriate flags.
+       mSurface=SDL_SetVideoMode(width,height,depth,vflags);
+       
+       if ( mSurface == NULL )
+    {          
+        cerr << "Unable to set " << width << "x" << height << ": " << depth << " video mode: " << SDL_GetError() << endl;
             return false;
         }
     else
@@ -226,10 +252,10 @@ bool PlatformWindow::Draw()
  
     //First, draw the background       
     SDL_FillRect(mSurface, NULL, SDL_MapRGBA(mSurface->format, 
-                                             mBackgroundColor.GetRed(),
-                                             mBackgroundColor.GetGreen(),
-                                             mBackgroundColor.GetBlue(),
-                                             mBackgroundColor.GetAlpha()));
+                                             mBackgroundColor->GetRed(),
+                                             mBackgroundColor->GetGreen(),
+                                             mBackgroundColor->GetBlue(),
+                                             mBackgroundColor->GetAlpha()));
 
     
     //Now, draw the subwidgets.
@@ -258,10 +284,10 @@ long int PlatformWindow::DrawFor(unsigned int cycles)
     int result = 0;// = SDL_Flip(mSurface);
         //First, draw the background       
     SDL_FillRect(mSurface, NULL, SDL_MapRGBA(mSurface->format, 
-                                             mBackgroundColor.GetRed(),
-                                             mBackgroundColor.GetGreen(),
-                                             mBackgroundColor.GetBlue(),
-                                             mBackgroundColor.GetAlpha()));
+                                             mBackgroundColor->GetRed(),
+                                             mBackgroundColor->GetGreen(),
+                                             mBackgroundColor->GetBlue(),
+                                             mBackgroundColor->GetAlpha()));
 
     
     

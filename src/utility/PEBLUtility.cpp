@@ -137,7 +137,7 @@ Variant PEBLUtility::Tokenize(const char* line, char separator)
             i++;
         }
 
-    counted_ptr<PComplexData> pcd  = counted_ptr<PComplexData>(new PComplexData(plist));
+    PComplexData * pcd  = new PComplexData(plist);
     return Variant(pcd);
 }
 

@@ -26,7 +26,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "PFont.h"
 #include "PColor.h"
-
+#include "../base/Variant.h"
+#include "../base/PComplexData.h"
+#include "../utility/rc_ptrs.h"
 
 ///Standard constructor of PFont
 
@@ -34,22 +36,63 @@ PFont::PFont():
     mFontFileName("Vera.ttf"),
     mFontStyle(PFS_Normal),
     mFontSize(16),
-    mFontColor(PColor(0,0,0,255)),
-    mBackgroundColor(PColor(0,0,0,0)),
     mAntiAliased(false)
 {
-} 
+    PColor * tmp = new PColor(0,0,0,255);
+    mFontColor       = counted_ptr<PColor>(tmp);
+    mBackgroundColor = counted_ptr<PColor>(tmp); 
+
+
+    InitializeProperty("FILENAME", mFontFileName);
+    InitializeProperty("BOLD", Variant(IsBoldFont()));
+    InitializeProperty("UNDERLINE",Variant(IsUnderlineFont()));
+    InitializeProperty("ITALIC",  Variant(IsItalicFont()));
+    InitializeProperty("SIZE", mFontSize);
+
+
+    PComplexData * pcd = new PComplexData(mFontColor);
+    Variant col = Variant(pcd);
+    InitializeProperty("FGCOLOR", col);
+
+
+    pcd = new PComplexData(mBackgroundColor);
+    col = Variant(pcd);
+    InitializeProperty("BGCOLOR", col);
+
+    InitializeProperty("ANTIALIASED", Variant(mAntiAliased));
+    
+}
 
 
 ///Convenience constructor of PFont:
-PFont::PFont(const std::string & filename, int style, int size, PColor fgcolor, PColor bgcolor, bool aa):
+PFont::PFont(const std::string & filename, int style, int size, counted_ptr<PColor> fgcolor, counted_ptr<PColor> bgcolor, bool aa):
     mFontFileName(filename),
     mFontStyle(style),
     mFontSize(size),
-    mFontColor(fgcolor),
-    mBackgroundColor(bgcolor),
     mAntiAliased(aa)
 {
+    std::cout << "TTTTTTTTTTTTConstructing pfont\n";
+
+    mFontColor       = fgcolor;
+    mBackgroundColor = bgcolor;
+
+
+    InitializeProperty("FILENAME", mFontFileName);
+    InitializeProperty("BOLD", Variant(IsBoldFont()));
+    InitializeProperty("UNDERLINE",Variant(IsUnderlineFont()));
+    InitializeProperty("ITALIC",  Variant(IsItalicFont()));
+    InitializeProperty("SIZE", mFontSize);
+
+    PComplexData * pcd = new  PComplexData(mFontColor);
+    Variant col = Variant(pcd);
+    InitializeProperty("FGCOLOR", col);
+
+
+    pcd = new PComplexData(mBackgroundColor);
+    col = Variant(pcd);
+    InitializeProperty("BGCOLOR", col);
+
+    InitializeProperty("ANTIALIASED", Variant(mAntiAliased));
 
 }
 
@@ -64,6 +107,25 @@ PFont::PFont(const PFont & font)
     mBackgroundColor = font.GetBackgroundColor();
     mAntiAliased     = font.GetAntiAliased();
 
+    InitializeProperty("FILENAME", mFontFileName);
+    InitializeProperty("BOLD", Variant(IsBoldFont()));
+    InitializeProperty("UNDERLINE",Variant(IsUnderlineFont()));
+    InitializeProperty("ITALIC",  Variant(IsItalicFont()));
+    InitializeProperty("SIZE", mFontSize);
+
+    PComplexData * pcd = new PComplexData(mFontColor);
+    Variant col = Variant(pcd);
+    InitializeProperty("FGCOLOR", col);
+
+
+    pcd = new PComplexData(mBackgroundColor);
+    col = Variant(pcd);
+    InitializeProperty("BGCOLOR", col);
+
+
+    InitializeProperty("ANTIALIASED", Variant(mAntiAliased));
+
+
 }
 
 
@@ -71,6 +133,146 @@ PFont::PFont(const PFont & font)
 PFont::~PFont()
 {
 
+}
+
+
+//overloaded generic PEBLObjectBase methods
+bool PFont::SetProperty(std::string name, Variant v)
+{
+    if(name == "FILENAME") SetFontFileName(v);
+    else if (name == "BOLD" )
+        {
+            int b,u,i;
+            if(v.GetInteger()) b = PFS_Bold;
+            else b = PFS_Normal;
+
+            if(IsItalicFont()) i = PFS_Italic;
+            else i = PFS_Normal;
+            
+            if(IsUnderlineFont()) u = PFS_Underline;
+            else u = PFS_Normal;
+            
+            SetFontStyle( b | i | u);
+
+        }
+    else if (name == "ITALIC" )
+        {
+            int b,u,i;
+            if(IsBoldFont()) b = PFS_Bold;
+            else b = PFS_Normal;
+
+            if(v.GetInteger()) i = PFS_Italic;
+            else i = PFS_Normal;
+            
+            if(IsUnderlineFont()) u = PFS_Underline;
+            else u = PFS_Normal;
+            
+            SetFontStyle( b | i | u);
+
+        }
+    else if (name == "UNDERLINE" )
+        {
+            int b,u,i;
+            if(IsBoldFont()) b = PFS_Bold;
+            else b = PFS_Normal;
+
+            if(IsItalicFont()) i = PFS_Italic;
+            else i = PFS_Normal;
+            
+            if(v.GetInteger()) u = PFS_Underline;
+            else u = PFS_Normal;
+            
+            SetFontStyle( b | i | u);
+        }
+    else if (name == "SIZE") SetFontSize(v) ;
+
+    
+    else if (name == "FGCOLOR")
+        {
+            //For colors, directly set the property to avoid 
+            //dual conversion.
+            PEBLObjectBase::SetProperty(name,v);
+            mFontColor = v.GetComplexData()->GetColor();
+        }
+    else if (name == "BGCOLOR") 
+        {
+            PEBLObjectBase::SetProperty(name,v);
+            mBackgroundColor = v.GetComplexData()->GetColor();
+        }
+    else if (name == "ANTIALIASED")SetAntiAliased(v.GetInteger());
+    else return false;
+    
+    return true;
+}
+
+Variant PFont::GetProperty(std::string name)const
+{
+    return PEBLObjectBase::GetProperty(name);
+}
+
+
+ObjectValidationError PFont::ValidateProperty(std::string name, Variant v)const
+{
+    return ValidateProperty(name);
+}
+ObjectValidationError PFont::ValidateProperty(std::string name)const
+{
+    return OVE_SUCCESS;
+}
+
+std::string PFont::ObjectName()
+{
+    return "PFont";
+}
+
+
+
+///Set methods for all of the data in font
+void PFont::SetFontFileName(const std::string & name)  
+{
+    mFontFileName = name;
+    PEBLObjectBase::SetProperty("FILENAME", mFontFileName);
+}
+
+void PFont::SetFontStyle(const int style)         
+{
+    mFontStyle=style;
+    PEBLObjectBase::SetProperty("BOLD", Variant(IsBoldFont()));
+    PEBLObjectBase::SetProperty("UNDERLINE",Variant(IsUnderlineFont()));
+    PEBLObjectBase::SetProperty("ITALIC",  Variant(IsItalicFont()));
+
+}
+
+void PFont::SetFontSize(const int size) 
+{
+    mFontSize = size;
+    PEBLObjectBase::SetProperty("SIZE", mFontSize);
+}
+
+void PFont::SetFontColor(const counted_ptr<PColor> color) 
+{
+
+
+
+    mFontColor = color;  
+    PComplexData * pcd = new PComplexData(color);
+    Variant col = Variant(pcd);
+    InitializeProperty("FGCOLOR", col);
+
+}  
+
+void PFont::SetBackgroundColor(const counted_ptr<PColor> color)
+{
+    mBackgroundColor = color;  
+    PComplexData * pcd = new PComplexData(color);
+    Variant col = Variant(pcd);
+    InitializeProperty("BGCOLOR", col);
+}
+
+void PFont::SetAntiAliased(const bool aa)  
+{
+    mAntiAliased = aa;
+    PEBLObjectBase::SetProperty("ANTIALIASED", Variant(mAntiAliased));
 }
 
 
@@ -112,3 +314,4 @@ bool PFont::IsUnderlineFont() const
     //The PFS_Underline acts as a bit filter, if it isn't bold the & should be 0.
     return (mFontStyle & PFS_Underline);
 }
+

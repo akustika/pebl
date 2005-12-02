@@ -33,6 +33,7 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_ttf.h"
 #include "../../utility/rc_ptrs.h"
+#include "../../base/PEBLObject.h"
 
 #include <vector>
 
@@ -41,7 +42,7 @@
 /// 
 
 
-class PlatformTextBox:  public PlatformWidget, public PTextBox 
+class PlatformTextBox:  public PlatformWidget, public PTextBox//, public virtual PEBLObjectBase
 {
 public:
     PlatformTextBox(std::string text, counted_ptr<PlatformFont> font, int width, int height);
@@ -68,7 +69,7 @@ public:
 
 protected:
     virtual std::ostream & SendToStream(std::ostream& out) const;
-
+    virtual std::string ObjectName()const{return "PlatformTextBox";} ;
     std::vector<int> mBreaks;  ///This stores linebreaks
 
 private:

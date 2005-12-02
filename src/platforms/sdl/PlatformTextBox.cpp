@@ -51,7 +51,8 @@ using std::string;
 
 PlatformTextBox::PlatformTextBox(string text, counted_ptr<PlatformFont> font, int width, int height):
     PlatformWidget(),
-    PTextBox(text, width, height)
+    PTextBox(text, width, height),
+    mCDT(CDT_TEXTBOX)
 
 {
     mWidth = width;
@@ -67,7 +68,8 @@ PlatformTextBox::PlatformTextBox(string text, counted_ptr<PlatformFont> font, in
 PlatformTextBox::PlatformTextBox(PlatformTextBox & text):
     PlatformWidget(),
     PTextBox(text.GetText(), text.GetWidth(), text.GetHeight()),
-    mFont(text.GetFont())
+    mFont(text.GetFont()),
+    mCDT(CDT_TEXTBOX)
 {
     mWidth = text.GetWidth();
     mHeight = text.GetHeight();
@@ -104,7 +106,6 @@ bool  PlatformTextBox::RenderText()
 
     //create a new surface on which to render the text.
 
-    PColor bg = mFont->GetBackgroundColor();
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 
     Uint32 rmask = 0xff000000;
@@ -129,10 +130,10 @@ bool  PlatformTextBox::RenderText()
     
     //Fill the box with the background color of the font.
     SDL_FillRect(mSurface, NULL, SDL_MapRGBA(mSurface->format, 
-                                             mBackgroundColor.GetRed(),
-                                             mBackgroundColor.GetGreen(),
-                                             mBackgroundColor.GetBlue(),
-                                             mBackgroundColor.GetAlpha()));
+                                             mBackgroundColor->GetRed(),
+                                             mBackgroundColor->GetGreen(),
+                                             mBackgroundColor->GetBlue(),
+                                             mBackgroundColor->GetAlpha()));
     
 
 
@@ -374,7 +375,7 @@ void PlatformTextBox::DrawCursor()
         }
     
     //x,y specifies the top of the cursor.
-    SDLUtility::DrawLine(mSurface, x, y, x, y+height, mFont->GetFontColor());
+    SDLUtility::DrawLine(mSurface, x, y, x, y+height,*(mFont->GetFontColor()));
 
 }
 

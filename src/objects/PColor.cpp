@@ -24,8 +24,9 @@
 //    along with PEBL; if not, write to the Free Software
 //    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ////////////////////////////////////////////////////////////////////////////////
+
 #include "PColor.h"
-#include "PObject.h"
+#include "../base/PEBLObject.h"
 #include "RGBColorNames.h"
 #include "../utility/PEBLUtility.h"
 #include "../utility/PError.h"
@@ -41,7 +42,8 @@ PColor::PColor():
     mRed(0),
     mGreen(0),
     mBlue(0),
-    mAlpha(255)
+    mAlpha(255),
+    mCDT(CDT_COLOR)
 {
 
     InitializeProperty("RED",Variant(GetRed()));
@@ -57,7 +59,8 @@ PColor::PColor(int red, int green, int blue, int alpha):
     mRed(To8BitColor(red)),
     mGreen(To8BitColor(green)),
     mBlue(To8BitColor(blue)),
-    mAlpha(To8BitColor(alpha))
+    mAlpha(To8BitColor(alpha)),
+    mCDT(CDT_COLOR)
 {
     InitializeProperty("RED",Variant(GetRed()));
     InitializeProperty("GREEN",Variant(GetGreen()));
@@ -67,7 +70,8 @@ PColor::PColor(int red, int green, int blue, int alpha):
 }
 
 ///Name-based constructor of PColor:
-PColor::PColor(const string & colorname)
+PColor::PColor(const string & colorname):
+    mCDT(CDT_COLOR)
 {
     InitializeProperty("RED",Variant(0));
     InitializeProperty("GREEN",Variant(0));
@@ -80,7 +84,8 @@ PColor::PColor(const string & colorname)
 
 
 ///Copy constructor of PColor:
-PColor::PColor(const PColor & pcolor)
+PColor::PColor(const PColor & pcolor):
+    mCDT(CDT_COLOR)
 {
     mRed   = pcolor.GetRed();
     mGreen = pcolor.GetGreen();
@@ -94,13 +99,18 @@ PColor::PColor(const PColor & pcolor)
     
 }
 
+PColor::~PColor()
+{
+    cout << "Destroying: " ;
+    SendToStream(cout);
+}
 
 void PColor::__SetProps__()
 {
-    PObject::SetProperty("RED",Variant(GetRed()));
-    PObject::SetProperty("GREEN",Variant(GetGreen()));
-    PObject::SetProperty("BLUE",Variant(GetBlue()));
-    PObject::SetProperty("ALPHA",Variant(GetAlpha()));
+    PEBLObjectBase::SetProperty("RED",Variant(GetRed()));
+    PEBLObjectBase::SetProperty("GREEN",Variant(GetGreen()));
+    PEBLObjectBase::SetProperty("BLUE",Variant(GetBlue()));
+    PEBLObjectBase::SetProperty("ALPHA",Variant(GetAlpha()));
 }
 
 
@@ -132,7 +142,7 @@ ObjectValidationError PColor::ValidateProperty(std::string name, Variant v)const
 
 ObjectValidationError PColor::ValidateProperty(std::string name)const
  {
-     return PObject::ValidateProperty(name);
+     return PEBLObjectBase::ValidateProperty(name);
  }
 
 
@@ -153,25 +163,25 @@ int PColor::To8BitColor(int color)
 void PColor::SetRed  (int color)
 {
     mRed   = To8BitColor(color);
-    PObject::SetProperty("RED",GetRed());
+    PEBLObjectBase::SetProperty("RED",GetRed());
 }
 
 void PColor::SetGreen(int color)
 {
     mGreen = To8BitColor(color);
-    PObject::SetProperty("GREEN",GetGreen());
+    PEBLObjectBase::SetProperty("GREEN",GetGreen());
 }
 
 void PColor::SetBlue (int color)
 {
     mBlue  = To8BitColor(color);
-    PObject::SetProperty("BLUE",GetBlue());
+    PEBLObjectBase::SetProperty("BLUE",GetBlue());
 }
 
 void PColor::SetAlpha(int color)
 {
     mAlpha = To8BitColor(color);
-    PObject::SetProperty("ALPHA",GetAlpha());
+    PEBLObjectBase::SetProperty("ALPHA",GetAlpha());
 }
 
 

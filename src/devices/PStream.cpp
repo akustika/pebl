@@ -82,7 +82,7 @@ PStream::PStream(const string & filename, StreamDirection dir, StreamType type):
 
 
 
-/// This is the standard pNode constructor
+
 void PStream::Open(const string & filename, StreamDirection dir, StreamType type)
 {
     

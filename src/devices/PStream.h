@@ -3,7 +3,7 @@
 //    Name:       src/devices/PStream.h
 //    Purpose:    Primary File Stream Interface Device
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003 Shane T. Mueller <smueller@umich.edu>
+//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -28,6 +28,7 @@
 #define __PSTREAM_H__
 
 #include "PDevice.h"
+#include "../base/PEBLObject.h"
 #include <fstream>
 #include <string>
 
@@ -55,7 +56,7 @@ enum StreamType
 ///  event loop for interesting between-process communications, and probably even used as
 ///  a basis for other input devices.
 
-class PStream: public PDevice
+class PStream: public PDevice, virtual public PEBLObjectBase
 {
     
 public:    

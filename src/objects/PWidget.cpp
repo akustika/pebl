@@ -83,13 +83,13 @@ void PWidget::SetPosition(int x, int y)
     mDrawX = x;
     mDrawY = y;
 
-    PObject::SetProperty("X",mX);
-    PObject::SetProperty("Y",mY);
+    PEBLObjectBase::SetProperty("X",mX);
+    PEBLObjectBase::SetProperty("Y",mY);
 }
 
 
 
-//Inherited from PComplexObject->PObject
+//Inherited from PComplexObject->PEBLObjectBase
 std::ostream & PWidget::SendToStream(std::ostream& out) const
 {
     out << "<Unknown PWidget>" << std::flush;
@@ -97,7 +97,7 @@ std::ostream & PWidget::SendToStream(std::ostream& out) const
 }
 
 
-void PWidget::SetBackgroundColor(PColor color)
+void PWidget::SetBackgroundColor(counted_ptr<PColor> color)
 {
     mBackgroundColor = color;
 }
@@ -130,11 +130,11 @@ bool PWidget::RemoveLastSubWidget()
 void PWidget::Show()
 {
     mIsVisible = true;
-    PObject::SetProperty("VISIBLE",mIsVisible);}
+    PEBLObjectBase::SetProperty("VISIBLE",mIsVisible);}
 
 
 void PWidget::Hide()
 {
     mIsVisible = false;    
-    PObject::SetProperty("VISIBLE",mIsVisible);
+    PEBLObjectBase::SetProperty("VISIBLE",mIsVisible);
 }

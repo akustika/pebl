@@ -28,6 +28,7 @@
 #define __PLATFORMKEYBOARD_H__
 
 #include "../../devices/PKeyboard.h"
+#include "../../base/PEBLObject.h"
 #include "SDL/SDL.h"
 
 #include <list>
@@ -38,7 +39,7 @@ class ValueState;
 /// This class instantiates a Keyboard event handler using platform-specific
 /// code.
 
-class PlatformKeyboard: public PKeyboard
+class PlatformKeyboard: public PKeyboard, virtual public PEBLObjectBase
 {
 public:
   

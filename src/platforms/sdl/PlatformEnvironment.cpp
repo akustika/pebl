@@ -54,7 +54,8 @@ using std::ostream;
 PlatformEnvironment::PlatformEnvironment(PEBLVideoMode mode, PEBLVideoDepth depth, bool windowed):
     mVideoMode(mode),
     mVideoDepth(depth),
-    mWindowed(windowed)
+    mWindowed(windowed),
+    mCDT(CDT_ENVIRONMENT)
 {
     mIsInitialized = false;
 }
@@ -80,7 +81,7 @@ ostream & PlatformEnvironment::SendToStream(ostream& out) const
 void PlatformEnvironment::Initialize()
 {
     mIsInitialized = true;
-    if ( SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) < 0 )
+    if ( SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_NOPARACHUTE ) < 0 )
         {
             cerr << "Unable to init SDL: " <<  SDL_GetError() << endl;;
             mIsInitialized = false;

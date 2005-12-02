@@ -27,7 +27,7 @@
 #include "PList.h"
 #include "Variant.h"
 #include "../utility/PError.h"
-
+#include "PEBLObject.h"
 #include <list>
 #include <map>
 #include <stdio.h>
@@ -44,6 +44,7 @@ using std::ostream;
 ///Standard Constructor
 PList::PList()
 {
+    mCDT = CDT_LIST;
 }
 
 
@@ -51,6 +52,7 @@ PList::PList()
 PList::PList(PList & tmpList)
 {
 
+    mCDT=CDT_LIST;
     list<Variant> * tmp = tmpList.GetList();
 
     //Make an item-by-item copy of list into mList.
@@ -122,6 +124,7 @@ std::list<Variant>::const_iterator  PList::End() const
 
 void PList::PushFront(const Variant & v)
 {
+    cout << "             Pushing [" << v << "] onto list\n";
     mList.push_front(v);
 }
 
@@ -242,17 +245,20 @@ ostream & PList::SendToStream(ostream& out) const
     p = mList.begin();
   
     out << "[" ;
+    out << mList.size() << ":";
 
     //Print out the first item, so comma-ing works out ok.
-    out << *p ;
-    p++;
-    while(p != mList.end())
-        {      
-            //send each item to stream with space and comma in between.
-            out << ", " << *p  << flush;
+    if( p != mList.end())
+        {
+            out << *p ;
             p++;
+            while(p != mList.end())
+                {      
+                    //send each item to stream with space and comma in between.
+                    out << ", " << *p  << flush;
+                    p++;
+                }
         }
-
     out << "]" ;
 
     return out;

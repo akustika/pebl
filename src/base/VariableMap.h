@@ -48,7 +48,9 @@ public:
     ~VariableMap();
 
     void AddVariable(const std::string & varname, Variant val);
+
     Variant RetrieveValue(const std::string & varname);
+    bool Exists(const std::string & varname);
     void Erase(const std::string &  varname);
     void DumpValues();
 

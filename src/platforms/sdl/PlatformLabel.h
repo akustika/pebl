@@ -31,6 +31,7 @@
 #include "PlatformFont.h"
 #include "../../objects/PLabel.h"
 #include "../../utility/rc_ptrs.h"
+#include "../../base/PEBLObject.h"
 #include "SDL/SDL.h"
 #include "SDL/SDL_ttf.h"
 
@@ -62,7 +63,7 @@ public:
     
 protected:
     virtual std::ostream & SendToStream(std::ostream& out) const;
-
+    virtual std::string ObjectName()const{return "PlatformLabel";} ;
 private:
 
     counted_ptr<PlatformFont> mFont;

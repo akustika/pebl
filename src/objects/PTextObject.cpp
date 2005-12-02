@@ -62,6 +62,8 @@ PTextObject::PTextObject( PTextObject &object):
     InitializeProperty("TEXT",Variant(mText));
 }
 
+
+
 PTextObject::~PTextObject()
 {
 }

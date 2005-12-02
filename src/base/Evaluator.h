@@ -54,7 +54,7 @@ class Evaluator
 public:
 
     Evaluator();
-    Evaluator(Variant  v, std::string scope);
+    Evaluator(Variant & v, std::string scope);
     ~Evaluator();
   
     void CallFunction(const OpNode * node);

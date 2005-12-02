@@ -30,12 +30,12 @@
 #include "../base/Variant.h"
 #include "../base/PList.h"
 #include "../base/PComplexData.h"
-
+#include "../base/PEBLObjectBase.h"
 
 #include "../devices/DeviceState.h"
 #include "../devices/PEventLoop.h"
 
-#include "../objects/PObject.h"
+
 #include "../objects/PColor.h"
 #include "../objects/PTextBox.h"
 #include "../objects/PDrawObject.h"
@@ -108,7 +108,7 @@ Variant PEBLObjects::MakeWindow(Variant v)
     //Create a new window, and reference it in a counted pointer.
     counted_ptr<PlatformWindow> myWindow = counted_ptr<PlatformWindow>(new PlatformWindow);
 
-    myWindow->SetBackgroundColor(PColor(color.GetString()));
+    myWindow->SetBackgroundColor(counted_ptr<PColor>(new PColor(color.GetString())));
     PEBLVideoMode mode = myEnv->GetVideoMode();
     PEBLVideoDepth depth = myEnv->GetVideoDepth();
     bool windowed = myEnv->GetWindowed();
@@ -118,7 +118,7 @@ Variant PEBLObjects::MakeWindow(Variant v)
     //Add the window to the environment
     myEnv->AddWindow(myWindow.get());
 
-    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myWindow));
+    PComplexData *  pcd = new PComplexData(myWindow);
     return Variant(pcd);
 }
 
@@ -134,7 +134,7 @@ Variant PEBLObjects::MakeImage(Variant v)
 
     myImageBox->LoadImage(name);
 
-    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myImageBox));
+    PComplexData *  pcd = new PComplexData(myImageBox);
 
 
     return Variant(pcd);
@@ -168,7 +168,7 @@ Variant PEBLObjects::MakeLabel(Variant v)
     myLabel->SetPosition(0,0);
     
     //Return a variant containing the label.
-    counted_ptr<PComplexData> pcd =     counted_ptr<PComplexData>(new PComplexData(myLabel));
+    PComplexData *  pcd =     new PComplexData(myLabel);
 
     return Variant(pcd);
 }
@@ -211,7 +211,7 @@ Variant PEBLObjects::MakeTextBox(Variant v)
     myTextBox->SetPosition(0,0);
     
     //Return a variant containing the label.
-    counted_ptr<PComplexData>  pcd = counted_ptr<PComplexData>(new PComplexData(myTextBox));
+    PComplexData *   pcd = new PComplexData(myTextBox);
 
     return Variant(pcd);
 
@@ -231,7 +231,7 @@ Variant PEBLObjects::MakeColor(Variant v)
     std::string name = plist->First(); plist->PopFront();
 
     counted_ptr<PColor> myColor = counted_ptr<PColor>(new PColor(name));    
-    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myColor));
+    PComplexData *  pcd = new PComplexData(myColor);
 
     return Variant(pcd);
 }
@@ -254,7 +254,7 @@ Variant PEBLObjects::MakeColorRGB(Variant v)
     PColor * tmpColor = new PColor(red,green,blue, 0);
     counted_ptr<PColor> myColor = counted_ptr<PColor>(tmpColor);    
 
-    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myColor));
+    PComplexData *  pcd = new PComplexData(myColor);
     
     return     Variant(pcd);
 }
@@ -266,24 +266,27 @@ Variant PEBLObjects::MakeFont(Variant v)
     //v[1-6] should be have font parameters in it.
     counted_ptr<PList> plist = (v.GetComplexData())->GetList();    
 
-
+    cout << "*********** 1  ************\n";
     //First comes the filename of the font.
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in first parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: "); 
     std::string name = plist->First(); plist->PopFront();
-    
+        cout << "*********** 2  ************\n";
     //Next comes the style, an integerized code for normal, bold, italic, underline.
     PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in second parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: "); 
     int style = plist->First(); plist->PopFront();
-
+    cout << "*********** 3  ************\n";
     //Next is the point size.
     PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in third parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: "); 
     int size = plist->First(); plist->PopFront();
-
+    cout << "*********** 4  ************\n";
     //The next parameter should be a PColor--foreground color
     Variant vfg = plist->First(); plist->PopFront();
+    cout << "************* 5 **********\n";
+    //cout << vfg << endl;
+
     PError::AssertType(vfg, PEAT_COLOR, "Argument error in fourth parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: "); 
     counted_ptr<PColor> fgcolor = vfg.GetComplexData()->GetColor();
-    
+        cout << "*********** 6  ************\n";
     //The next parameter should be a PColor--background color
     Variant vbg = plist->First(); plist->PopFront();
     PError::AssertType(vbg, PEAT_COLOR, "Argument error in fifth parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: "); 
@@ -294,9 +297,9 @@ Variant PEBLObjects::MakeFont(Variant v)
     bool aa = plist->First(); plist->PopFront();
 
     //Make the font and wrap it up in a Variant to return it.
-    PlatformFont * tmpFont = new PlatformFont(name, style, size, *fgcolor, *bgcolor, aa);
+    PlatformFont * tmpFont = new PlatformFont(name, style, size, fgcolor, bgcolor, aa);
     counted_ptr<PlatformFont> myFont = counted_ptr<PlatformFont>(tmpFont);    
-    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myFont));
+    PComplexData *  pcd = new PComplexData(myFont);
     
     return Variant(pcd);
 }
@@ -616,7 +619,7 @@ Variant PEBLObjects::GetSize(Variant v)
     newlist->PushFront(height);
     newlist->PushBack(width);
 
-    counted_ptr<PComplexData>  pcd = counted_ptr<PComplexData>(new PComplexData(newlist)); 
+    PComplexData *   pcd = new PComplexData(newlist); 
 
     return Variant(pcd);
 }
@@ -637,7 +640,7 @@ Variant PEBLObjects::LoadSound(Variant v)
     myAudio->LoadSoundFile(v1);
     myAudio->Initialize();
     
-    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myAudio));
+    PComplexData *  pcd = new PComplexData(myAudio);
     return Variant(pcd);        
 }
 
@@ -744,8 +747,8 @@ Variant PEBLObjects::Line(Variant v)
     Variant v2 = plist->First(); plist->PopFront();
     counted_ptr<PColor> color = v2.GetComplexData()->GetColor();    
 
-    counted_ptr<PlatformDrawObject> myLine = counted_ptr<PlatformDrawObject>(new PlatformLine(x,y,dx,dy,*color));
-    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myLine));
+    counted_ptr<PlatformDrawObject> myLine = counted_ptr<PlatformDrawObject>(new PlatformLine(x,y,dx,dy,color));
+    PComplexData *  pcd = new PComplexData(myLine);
     return Variant(pcd);
 
 }
@@ -781,8 +784,8 @@ Variant PEBLObjects::Rectangle(Variant v)
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in sixth parameter of function  [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: "); 
     int filled = plist->First(); plist->PopFront();
 
-    counted_ptr<PlatformDrawObject> myRect = counted_ptr<PlatformDrawObject>(new PlatformRectangle(x,y,dx,dy,*color,filled));
-    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myRect));
+    counted_ptr<PlatformDrawObject> myRect = counted_ptr<PlatformDrawObject>(new PlatformRectangle(x,y,dx,dy,color,filled));
+    PComplexData *  pcd = new PComplexData(myRect);
     return Variant(pcd);
 
 }
@@ -815,8 +818,8 @@ Variant PEBLObjects::Square(Variant v)
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in fifth parameter of function  [Square(<x>, <y>, <size>, <color>, <filled>)]: "); 
     int filled = plist->First(); plist->PopFront();
 
-    counted_ptr<PlatformDrawObject> mySquare = counted_ptr<PlatformDrawObject>(new PlatformSquare(x,y,size,*color,filled));
-    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(mySquare));
+    counted_ptr<PlatformDrawObject> mySquare = counted_ptr<PlatformDrawObject>(new PlatformSquare(x,y,size,color,filled));
+    PComplexData *  pcd = new PComplexData(mySquare);
     return Variant(pcd);
 
 }
@@ -850,8 +853,8 @@ Variant PEBLObjects::Ellipse(Variant v)
     int filled = plist->First(); plist->PopFront();
 
 
-    counted_ptr<PlatformDrawObject> myEllipse = counted_ptr<PlatformDrawObject>(new PlatformEllipse(x,y,rx,ry,*color,filled));
-    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myEllipse));
+    counted_ptr<PlatformDrawObject> myEllipse = counted_ptr<PlatformDrawObject>(new PlatformEllipse(x,y,rx,ry,color,filled));
+    PComplexData *  pcd = new PComplexData(myEllipse);
     return Variant(pcd);
 
 }
@@ -884,7 +887,7 @@ Variant PEBLObjects::Circle(Variant v)
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in fifth parameter of function  [Circle(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: "); 
     int filled = plist->First(); plist->PopFront();
 
-    counted_ptr<PlatformDrawObject> myCircle = counted_ptr<PlatformDrawObject>(new PlatformCircle(x,y,r,*color,filled));
-    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(myCircle));
+    counted_ptr<PlatformDrawObject> myCircle = counted_ptr<PlatformDrawObject>(new PlatformCircle(x,y,r,color,filled));
+    PComplexData *  pcd = new PComplexData(myCircle);
     return Variant(pcd);
 }

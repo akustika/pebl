@@ -53,9 +53,23 @@ VariableMap::VariableMap()
 VariableMap::~VariableMap()
 {
 
-    //DumpValues();
+    cout << "---------------------\nDestroying Variable Map\n";
+    DumpValues();
     //Delete mVariableMap if necessary.
+    //Erase things by hand, for debugging's sake
+
+    std::map<std::string, Variant>::iterator i = mVariableMap.begin();
+    while(i !=  mVariableMap.end())
+        {
+            cout <<"Erasing: "  << i->first << endl;
+            mVariableMap.erase(i);
+            i++;
+        }
+    
+    cout <<"Done erasing. clearing.\n";
     mVariableMap.clear();
+    cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
+
 }
 
 ///
@@ -90,7 +104,7 @@ void VariableMap::AddVariable(const string & varname, Variant val)
 /// This method will retrieve the value designated by
 /// varname.  If varname doesn't exist, it will return 
 /// 0, along with a warning.
-Variant  VariableMap::RetrieveValue(const string &  varname)
+Variant  VariableMap::RetrieveValue(const string & varname)
 {
  
     map<string,Variant>::iterator p;
@@ -111,6 +125,17 @@ Variant  VariableMap::RetrieveValue(const string &  varname)
         }
 }
 
+
+//Checks to see if a variable exists in the map.
+bool VariableMap::Exists(const string & varname)
+{
+    string tmpVarName = PEBLUtility::ToUpper(varname);
+    map<string,Variant>::iterator p = mVariableMap.find(tmpVarName);
+    if(p == mVariableMap.end())
+        return false;
+    else
+        return true;
+}
 
 /// This will erase the value stored in varname
 ///

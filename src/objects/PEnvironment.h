@@ -27,16 +27,16 @@
 #ifndef __PENVIRONMENT_H__
 #define __PENVIRONMENT_H__
 
-#include "PObject.h"
+#include "../base/PEBLObject.h"
 #include "PWindow.h"
 
 ///
-/// This class, a subtype of PObject, initiates the interface environment
+/// This class, a subtype of PEBLObjectBase, initiates the interface environment
 /// and maintians all widgets, sounds, etc. subtypes include sounds, visual objects, etc.
 ///  It is a virtual class that needs to be inherited by a PlatformEnvironment, have
 ///  and have its methods overridden.
 
-class PEnvironment: public PObject
+class PEnvironment: public PEBLObjectBase
 {
 public:
   

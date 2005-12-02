@@ -47,11 +47,11 @@ public:
 
 protected:
 
-    ///An inheritable printing class used by PObject::operator<<
+    ///An inheritable printing class used by PEBLObjectBase::operator<<
     virtual std::ostream & SendToStream(std::ostream& out) const=0;
  
-    PColor mColor;
-    PColor mOutlineColor;
+    counted_ptr<PColor> mColor;
+    counted_ptr<PColor> mOutlineColor;
     bool mFilled;
 
 private:
@@ -62,7 +62,7 @@ private:
 class PLine: public virtual PDrawObject
 {
 public:
-    PLine(int x1, int y1, int dx, int dy, const PColor & fg);
+    PLine(int x1, int y1, int dx, int dy, counted_ptr<PColor> fg);
     virtual ~PLine();
     virtual int GetWidth() const{return mX2;};
     virtual int GetHeight() const{return mY2;};
@@ -117,7 +117,7 @@ private:
  class PRectangle: public virtual PDrawObject
  {
  public:
-     PRectangle(int x1, int y1, int dx, int dy, const PColor & fg, bool filled);
+     PRectangle(int x1, int y1, int dx, int dy, counted_ptr<PColor> fg, bool filled);
      virtual ~PRectangle();
      virtual int GetWidth() const{return mDX;};
      virtual int GetHeight() const{return mDY;};
@@ -135,7 +135,7 @@ private:
  class PSquare: public PRectangle
  {
  public:
-     PSquare(int x, int y, int size, const PColor & fg, bool filled);
+     PSquare(int x, int y, int size, counted_ptr<PColor> fg, bool filled);
      virtual ~PSquare();
      virtual int GetWidth() const{return mDX;};
      virtual int GetHeight() const{return mDY;};
@@ -149,7 +149,7 @@ private:
 class PEllipse: public virtual PDrawObject
  {
  public:
-     PEllipse(int x1, int y1, int rx, int ry, const PColor & fg, bool filled);
+     PEllipse(int x1, int y1, int rx, int ry, counted_ptr<PColor> fg, bool filled);
      virtual ~PEllipse();
      virtual int GetWidth() const{return mRX;};
      virtual int GetHeight() const{return mRY;};
@@ -171,7 +171,7 @@ class PEllipse: public virtual PDrawObject
  class PCircle: public virtual PDrawObject
  {
  public:
-     PCircle(int x1, int y1, int r, const PColor & fg, bool filled);
+     PCircle(int x1, int y1, int r, counted_ptr<PColor> fg, bool filled);
      virtual ~PCircle();
 
      virtual int GetWidth() const{return (int)(2*mR);};

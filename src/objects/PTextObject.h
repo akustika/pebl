@@ -73,6 +73,7 @@ protected:
 
     bool mTextChanged;     //Determines whether the object should be re-rendered.
     std::string mText;
+    virtual std::string ObjectName() const{return "PTextObject";};
 };
 
 

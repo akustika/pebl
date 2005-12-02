@@ -49,24 +49,33 @@ enum PFontStyle
     };
 
 
-class PFont: virtual public PObject
+class PFont: virtual public PEBLObjectBase
 {
 public:
 
     ///Standard constructors:
     PFont();                                     
     PFont(const std::string &  filename);
-    PFont(const std::string & filename, int style, int size, PColor fgcolor, PColor bgcolor, bool aa);
+    PFont(const std::string & filename, int style, int size,
+          counted_ptr<PColor> fgcolor, counted_ptr<PColor> bgcolor, bool aa);
     PFont(const PFont & font);              ///Copy constructor
     virtual ~PFont();                       ///Standard Destructors
+
+    //overloaded generic PObject methods
+    virtual bool SetProperty(std::string, Variant v);
+    virtual Variant GetProperty(std::string)const;
+    virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
+    virtual ObjectValidationError ValidateProperty(std::string)const;
+    virtual std::string ObjectName();
     
+
     ///Set methods for all of the data in font
-    virtual void SetFontFileName(const std::string & name)  {mFontFileName = name;};
-    virtual void SetFontStyle(const int style)           {mFontStyle=style;};
-    virtual void SetFontSize(const int size)             {mFontSize = size;};
-    virtual void SetFontColor(const PColor & color)      {mFontColor = color;};  
-    virtual void SetBackgroundColor(const PColor & color){mBackgroundColor = color;};
-    virtual void SetAntiAliased(const bool aa)           {mAntiAliased = aa;};
+    virtual void SetFontFileName(const std::string & name);
+    virtual void SetFontStyle(const int style);
+    virtual void SetFontSize(const int size); 
+    virtual void SetFontColor(counted_ptr<PColor> color);
+    virtual void SetBackgroundColor(counted_ptr<PColor> color);
+    virtual void SetAntiAliased(const bool aa);
 
 
     
@@ -74,8 +83,8 @@ public:
     virtual std::string GetFontFileName()     const {return mFontFileName;};
     virtual int GetFontStyle()          const {return mFontStyle;};
     virtual int GetFontSize()           const {return mFontSize;};
-    virtual PColor GetFontColor()       const {return mFontColor;};
-    virtual PColor GetBackgroundColor() const {return mBackgroundColor;};
+    virtual counted_ptr<PColor> GetFontColor()       const {return mFontColor;};
+    virtual counted_ptr<PColor> GetBackgroundColor() const {return mBackgroundColor;};
     virtual bool GetAntiAliased()       const {return mAntiAliased;};
 
 
@@ -85,7 +94,6 @@ public:
     virtual bool IsItalicFont() const;
     virtual bool IsUnderlineFont() const;
 
-
 protected:
     virtual  std::ostream & SendToStream(std::ostream& out) const;    
     
@@ -93,8 +101,8 @@ protected:
     int  mFontStyle;                 // Bold, underlined, italics, normal, etc.  These use PFontStyle constants or'ed together
     int  mFontSize;                  // Size, in 'points'
 
-    PColor  mFontColor;              // Foreground color, using PColor, an RGBA value
-    PColor  mBackgroundColor;        // Background color, using PColor, an RGBA value (use (0,0,0,0) for tranparent background
+    counted_ptr<PColor>  mFontColor;              // Foreground color, using PColor, an RGBA value
+    counted_ptr<PColor>  mBackgroundColor;        // Background color, using PColor, an RGBA value (use (0,0,0,0) for tranparent background
     bool mAntiAliased;               // Whether the text is anti-aliased, alpha-blended with background (slow but nice)    
 };
 

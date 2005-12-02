@@ -27,13 +27,13 @@
 #ifndef __PCOLOR_H__
 #define __PCOLOR_H__
 
-#include "PObject.h"
+#include "../base/PEBLObject.h"
 #include <iostream>
 #include <string>
 
 ///  This class represents color. Currently, only RGBA color is  accessible.
 ///  Access through other color spaces could be added.
-class PColor: public PObject
+class PColor: public virtual PEBLObjectBase
 {
 public:
     PColor();                                             ///Constructor
@@ -42,10 +42,10 @@ public:
     PColor(const std::string & colorname);                     ///Constructor using RGBColorNames
 
     PColor(const PColor & pcolor);                        ///Copy constructor
-    virtual ~PColor(){}                                   ///Standard Destructor
+    virtual ~PColor();                                   ///Standard Destructor
   
 
-    //overloaded generic PObject methods
+    //overloaded generic PEBLObjectBase methods
     virtual bool SetProperty(std::string, Variant v);
     virtual ObjectValidationError ValidateProperty(std::string name, Variant v)const;
     virtual ObjectValidationError ValidateProperty(std::string name)const;

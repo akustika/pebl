@@ -1,5 +1,5 @@
 //* -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*- */
-/////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 //    Name:       src/base/Variant.cpp
 //    Purpose:    Contains the Variant Class
 //    Author:     Shane T. Mueller, Ph.D.
@@ -22,8 +22,9 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with PEBL; if not, write to the Free Software
-//    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-////////////////////////////////////////////////////////////////////////////////
+//    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+//    USA
+//////////////////////////////////////////////////////////////////////////
 
 
 #include "Variant.h"
@@ -32,7 +33,7 @@
 #include "../utility/PError.h"
 
 #include <iostream>
-#include <sstream> 
+#include <sstream>
 
 #include <math.h>
 #include <string>
@@ -48,11 +49,10 @@ using std::string;
 //Constructor
 
 Variant::Variant():
-    mComplexData(NULL),
-    mDataType(P_DATA_UNDEFINED)
-
+   mComplexData(NULL),
+   mDataType(P_DATA_UNDEFINED)
 {
-    
+
     mData.iNumber = 0;
 }
 
@@ -64,7 +64,7 @@ Variant::Variant(const long int i):
 
 {
     mData.iNumber = i;
-      
+
 }
 
 
@@ -75,7 +75,7 @@ Variant::Variant(const long unsigned int i):
     mDataType(P_DATA_NUMBER_INTEGER)
 {
     mData.iNumber = static_cast<long int>(i);
-      
+
 }
 
 
@@ -94,11 +94,11 @@ Variant::Variant(const char *  mystring):
     mComplexData(NULL),
     mDataType(P_DATA_STRING)
 {
-    
+
     mData.String = strdup(mystring);
     if(!mData.String)
         PError::SignalFatalError("Failed to copy string.");
-} 
+}
 
 
 //Character Constructor
@@ -160,15 +160,14 @@ Variant::Variant(int i):
 
 {
     mData.iNumber = (long int)i;
-  
+
 }
 
 
-Variant::Variant(counted_ptr<PComplexData> pcd):
+Variant::Variant(PComplexData * pcd):
     mDataType(P_DATA_COMPLEXDATA)
 {
-    mCD = pcd;
-    //    mComplexData = pcd;  
+    mComplexData = new PComplexData(*pcd);
 }
 
 
@@ -208,7 +207,7 @@ Variant::Variant(float f):
 
 {
     mData.fNumber = (long double)f;
-      
+
 }
 
 //Constructor
@@ -223,7 +222,7 @@ Variant::Variant(bool b):
 
 ///
 /// Copy Constructor for variant
-/// 
+///
 
 Variant::Variant(const Variant &v):
     mComplexData(NULL)
@@ -233,11 +232,11 @@ Variant::Variant(const Variant &v):
     mDataType = v.GetDataType();
     switch(mDataType)
         {
-	
+
         case P_DATA_NUMBER_INTEGER:  // an integer
             mData.iNumber = v.GetInteger();
             break;
-	    
+
         case P_DATA_NUMBER_FLOAT:    // a float
             mData.fNumber = v.GetFloat();
             break;
@@ -245,9 +244,9 @@ Variant::Variant(const Variant &v):
         case P_DATA_STRING:
             mData.String = strdup(v.GetString());
             break;
-	    
-        case P_DATA_LOCALVARIABLE:        // a variable name    
-        case P_DATA_GLOBALVARIABLE:        // a variable name    
+
+        case P_DATA_LOCALVARIABLE:        // a variable name
+        case P_DATA_GLOBALVARIABLE:        // a variable name
             mData.Variable = strdup(v.GetVariableName());
             break;
 
@@ -259,7 +258,7 @@ Variant::Variant(const Variant &v):
             mData.pFunction = v.GetFunctionPointer();
             break;
 
-	
+
         case P_DATA_STACK_SIGNAL:
             mData.Signal = v.GetSignal();
             break;
@@ -268,12 +267,16 @@ Variant::Variant(const Variant &v):
 
         case P_DATA_COMPLEXDATA:
             {
-                //do a direct copy because these are counted references.
-                mCD  = v.GetComplexData();
+                PComplexData * pcd = v.GetComplexData();
+                cout << "My type is: " << pcd->GetType() << endl;
+                if(pcd)
+                    mComplexData  = new PComplexData(*pcd);
+                else 
+                    mComplexData = NULL;
             }
             break;
 
-        case P_DATA_UNDEFINED: // undefined, not an error 
+        case P_DATA_UNDEFINED: // undefined, not an error
             break;
         default:
 
@@ -281,9 +284,9 @@ Variant::Variant(const Variant &v):
             cerr << v << endl;
             PError::SignalFatalError("Undefined Data Type.");
         break;
-    
+
         }
-    
+
 }
 
 
@@ -293,7 +296,7 @@ Variant::Variant(const Variant &v):
 /// up after data subtypes that put stuff on the stack.
 Variant::~Variant()
 {
-    free_mData();  
+    free_mData();
 }
 
 
@@ -389,7 +392,7 @@ Variant Variant::operator /(const Variant & rhs) const
 
     if(this->IsNumber() && rhs.IsNumber())
         {
-		  
+
             f = this->GetFloat() / rhs.GetFloat();
             return Variant(f);
         }
@@ -408,7 +411,7 @@ bool Variant::Equal(const Variant & rhs) const
 {
     //If they are both integers, make equality be exact.
     //If one is a float, make equality be with some tolerance.
-    
+
     if(this->IsInteger()  && rhs.IsInteger())
         {
             return (this->GetInteger() == rhs.GetInteger());
@@ -419,11 +422,11 @@ bool Variant::Equal(const Variant & rhs) const
         }
     else if (this->IsString() && rhs.IsString())
         { //If both are strings, compare them
-	    
+
             //Get copies of the strings.
             const char * str1 = this->GetString();
             const char * str2 = rhs.GetString();
-	    
+
             //strcmp returns 0 if they are identical, a number otherwise
             bool b = !strcmp(str1, str2);
             return b;
@@ -447,11 +450,11 @@ bool Variant::Less(const Variant & rhs) const
 		}
 	else if (this->IsString() && rhs.IsString())
 	    { //If both are strings, compare them
-	    
+
             //Get copies of the strings.
             const char * str1 = this->GetString();
             const char * str2 = rhs.GetString();
-	    
+
             //strcmp returns 0 if they are identical, a number otherwise
             bool b = (strcmp(str1, str2)<0);
             return b;
@@ -461,11 +464,11 @@ bool Variant::Less(const Variant & rhs) const
                  //Get copies of the strings.
             const char * str1 = this->GetFunctionName();
             const char * str2 = rhs.GetFunctionName();
-	    
+
             //strcmp returns 0 if they are identical, a number otherwise
             bool b = (strcmp(str1, str2)<0);
             return b;
-  
+
 
         }
 	    //This should be handled more elegantly.
@@ -477,7 +480,7 @@ bool Variant::Less(const Variant & rhs) const
 //The following overloaded operators use the above
 //::Equal() and ::Less() methods, and each other.
 bool Variant::operator == ( const Variant & rhs) const
-{ return Equal(rhs); } 
+{ return Equal(rhs); }
 
 
 
@@ -497,7 +500,7 @@ bool Variant::operator > ( const Variant & rhs) const
 
 
 bool Variant::operator <= ( const Variant & rhs) const
-{ return ! ((*this) > rhs); } 
+{ return ! ((*this) > rhs); }
 
 
 
@@ -515,17 +518,17 @@ Variant Variant::operator = (const Variant & value)
     //First, clean up 'this' if it contains data on free store
     // (e.g., a Variable or a string)
     free_mData();
-   
+
     mDataType=value.GetDataType();
     switch(mDataType)
-        {    
+        {
         case P_DATA_NUMBER_INTEGER:  // an integer
             mData.iNumber = value.GetInteger();
             break;
 
         case P_DATA_NUMBER_FLOAT:    // a float
             mData.fNumber = value.GetFloat();
-            break;    
+            break;
 
         case P_DATA_STRING:
             mData.String = strdup(value.GetString());
@@ -535,7 +538,7 @@ Variant Variant::operator = (const Variant & value)
         case P_DATA_GLOBALVARIABLE:        // a char* variable name
             mData.Variable = strdup(value.GetVariableName());
             break;
-      
+
         case P_DATA_FUNCTION:
             mData.Function = strdup(value.GetFunctionName());
             break;
@@ -543,16 +546,16 @@ Variant Variant::operator = (const Variant & value)
         case P_DATA_FUNCTION_POINTER:
             mData.pFunction = value.GetFunctionPointer();
             break;
-      
+
         case P_DATA_STACK_SIGNAL:
             mData.Signal = value.GetSignal();
             break;
-            
-        case P_DATA_COMPLEXDATA:
-            mCD = value.GetComplexData();
-            break;            
 
-        case P_DATA_UNDEFINED: // undefined, error 
+        case P_DATA_COMPLEXDATA:
+            mComplexData = value.GetComplexData();
+            break;
+
+        case P_DATA_UNDEFINED: // undefined, error
         default:
             PError::SignalFatalError( "Undefined Variant type in Variant::operator = (Variant).");
             break;
@@ -565,7 +568,7 @@ Variant Variant::operator = (const long double & value)
     //First, clean up 'this' if it contains data on free store
     // (e.g., a Variable or a string)
     free_mData();
-  
+
     mDataType = P_DATA_NUMBER_FLOAT;
     mData.fNumber = value;
     return *this;
@@ -577,12 +580,12 @@ Variant Variant::operator = (const long int & value)
     //First, clean up 'this' if it contains data on free store
     // (e.g., a Variable or a string)
     free_mData();
-   
+
 
     mDataType = P_DATA_NUMBER_INTEGER;
     mData.iNumber = value;
     return *this;
-} 
+}
 
 
 Variant Variant::operator = (const long unsigned int & value)
@@ -590,12 +593,12 @@ Variant Variant::operator = (const long unsigned int & value)
     //First, clean up 'this' if it contains data on free store
     // (e.g., a Variable or a string)
     free_mData();
-   
+
 
     mDataType = P_DATA_NUMBER_INTEGER;
     mData.iNumber = value;
     return *this;
-} 
+}
 
 
 Variant Variant::operator = (const int & value)
@@ -603,18 +606,18 @@ Variant Variant::operator = (const int & value)
     //First, clean up 'this' if it contains data on free store
     // (e.g., a Variable or a string)
     free_mData();
-  
+
     mDataType = P_DATA_NUMBER_INTEGER;
     mData.iNumber = (long int)value;
     return *this;
-} 
+}
 
 Variant Variant::operator = (const double & value)
 {
     //First, clean up 'this' if it contains data on free store
     // (e.g., a Variable or a string)
     free_mData();
-  
+
     mDataType = P_DATA_NUMBER_FLOAT;
     mData.fNumber = (long double)value;
     return *this;
@@ -626,7 +629,7 @@ Variant Variant::operator = (const float & value)
     //First, clean up 'this' if it contains data on free store
     // (e.g., a Variable or a string)
     free_mData();
-    
+
     mDataType = P_DATA_NUMBER_FLOAT;
     mData.fNumber = (long double)value;
     return *this;
@@ -640,20 +643,20 @@ Variant Variant::operator = (const  char * value)
     //First, clean up 'this' if it contains data on free store
     // (e.g., a Variable or a string)
     free_mData();
-    
+
     mDataType = P_DATA_STRING;
     mData.String = strdup(value);
     return *this;
 }
 
 
-    
+
 Variant Variant::operator = (const  std::string  value)
 {
     //First, clean up 'this' if it contains data on free store
     // (e.g., a Variable or a string)
     free_mData();
-    
+
     mDataType = P_DATA_STRING;
     const char * dummy = string(value).c_str();
     mData.String = strdup(dummy);
@@ -665,18 +668,18 @@ Variant Variant::operator = (const  std::string  value)
 
 ostream & operator << (ostream& out, const Variant& v)
 {
-	
+
     switch(v.GetDataType())
         {
-	    
+
         case P_DATA_NUMBER_INTEGER:  // an integer
             out << v.GetInteger();
             break;
-	    
+
         case P_DATA_NUMBER_FLOAT:    // a float
             out << v.GetFloat();
             break;
-	    
+
         case P_DATA_STRING:          // a string
             out <<  v.GetString();
             break;
@@ -684,7 +687,7 @@ ostream & operator << (ostream& out, const Variant& v)
         case P_DATA_LOCALVARIABLE:        // a variable
         case P_DATA_GLOBALVARIABLE:        // a variable
             out << v.GetVariableName();
-            break;  
+            break;
 
         case P_DATA_FUNCTION:        // a function name
             out << v.GetFunctionName();
@@ -696,7 +699,7 @@ ostream & operator << (ostream& out, const Variant& v)
 
         case P_DATA_COMPLEXDATA:
             {
-                out << *( v.GetComplexData());
+                out << *(v.GetComplexData());
             }
             break;
 
@@ -705,12 +708,12 @@ ostream & operator << (ostream& out, const Variant& v)
             break;
 
 
-        case P_DATA_UNDEFINED: // undefined, error 
+        case P_DATA_UNDEFINED: // undefined, error
         default:
             out << "Trying to print undefined data type in Variant::<<: " << v.GetDataType() << "name: " << v.GetDataTypeName() << endl ;
             break;
         }
-    
+
     return out;
 }
 
@@ -763,7 +766,7 @@ Variant::operator bool ()
        (*this) == Variant("F") ||
        (*this) == Variant("FALSE")
        )
-     
+
         return false;
     else
         return true;
@@ -779,7 +782,7 @@ VariantDataType Variant::GetDataType() const
     return mDataType;
 }
 
-///This returns the type as a char*
+///This returns the type as a string
 std::string Variant::GetDataTypeName() const
 {
     switch(mDataType)
@@ -801,7 +804,7 @@ std::string Variant::GetDataTypeName() const
 
         case P_DATA_FUNCTION:
             return "PEBL Function Type";
-	
+
         case P_DATA_FUNCTION_POINTER:
             return "PEBL Function Pointer Type";
 
@@ -810,7 +813,7 @@ std::string Variant::GetDataTypeName() const
 
         case P_DATA_COMPLEXDATA:
             return "PEBL Complex data within Variant";
-    
+
         case P_DATA_UNDEFINED:
         default:
             return "Undefined PEBL Variant Type";
@@ -822,7 +825,7 @@ std::string Variant::GetDataTypeName() const
 bool Variant::IsNumber() const
 {
     return ( mDataType == P_DATA_NUMBER_INTEGER ||
-             mDataType == P_DATA_NUMBER_FLOAT); 
+             mDataType == P_DATA_NUMBER_FLOAT);
 }
 
 
@@ -834,7 +837,7 @@ bool Variant::IsFloat() const
 bool Variant::IsInteger() const
 {
     return  mDataType == P_DATA_NUMBER_INTEGER;
-    
+
 }
 
 bool Variant::IsString() const
@@ -892,7 +895,7 @@ long int Variant::GetInteger() const
         {
         case P_DATA_NUMBER_INTEGER: // an integer
             return mData.iNumber;
-      
+
         case P_DATA_NUMBER_FLOAT:   // a float
             return (long int)mData.fNumber;
 
@@ -904,13 +907,13 @@ long int Variant::GetInteger() const
         case P_DATA_GLOBALVARIABLE:       //
         case P_DATA_FUNCTION:       //
         case P_DATA_FUNCTION_POINTER:
-        case P_DATA_UNDEFINED:      // undefined, error 
+        case P_DATA_UNDEFINED:      // undefined, error
         default:
             PError::SignalWarning("Erroneous Data type in Variant::GetInteger(); returning 0");
             return (long int)0;
             break;
         }
- 
+
 }
 
 
@@ -920,26 +923,26 @@ long double Variant::GetFloat() const
         {
         case P_DATA_NUMBER_INTEGER: // an integer
             return (long double)mData.iNumber;
-	
+
         case P_DATA_NUMBER_FLOAT:   // a float
             return mData.fNumber;
- 
+
         case P_DATA_STRING:
 
             return PEBLUtility::StringToLongDouble(mData.String);
-	
+
         case P_DATA_STACK_SIGNAL:
         case P_DATA_LOCALVARIABLE:
         case P_DATA_GLOBALVARIABLE:
         case P_DATA_FUNCTION:
         case P_DATA_FUNCTION_POINTER:
-        case P_DATA_UNDEFINED:      // undefined, error 
+        case P_DATA_UNDEFINED:      // undefined, error
         default:
             PError::SignalWarning("Erroneous Data type in Variant::GetFloat(); returning 0");
             return (long double)0;
 
         }
- 
+
 }
 
 
@@ -954,7 +957,7 @@ const char *  Variant::GetString() const
             {
                 std::stringstream tmp;
                 tmp << mData.iNumber;
-                
+
                 std::string tmpstring;
                 tmp >> tmpstring;
 
@@ -965,7 +968,7 @@ const char *  Variant::GetString() const
             {
                 std::stringstream tmp;
                 tmp << mData.fNumber;
-                
+
                 std::string tmpstring;
                 tmp >> tmpstring;
 
@@ -992,18 +995,18 @@ const char *  Variant::GetString() const
                  tmp >> tmpstring;
                  return tmpstring.c_str();
             }
-        	
+
         case P_DATA_STACK_SIGNAL:
         case P_DATA_FUNCTION_POINTER:
-    
-        case P_DATA_UNDEFINED:      // undefined, error 
+
+        case P_DATA_UNDEFINED:      // undefined, error
         default:
             cout << mDataType << endl;
             PError::SignalWarning("Erroneous Data type in Variant::GetString");
             return "";
 
         }
- 
+
 
 }
 
@@ -1018,7 +1021,7 @@ const char *  Variant::GetVariableName() const
         }
     else
         {
-            
+
             PError::SignalFatalError("Erroneous Data type in Variant::GetVariableName()");
             return NULL;
 
@@ -1134,12 +1137,11 @@ pFunc Variant::GetFunctionPointer() const
 
 
 
-
 /// This will return a pointer to the complex data
 /// held within the variant.
-counted_ptr<PComplexData>  Variant::GetComplexData() const
+PComplexData * Variant::GetComplexData() const
 {
-    return mCD;
+    return mComplexData;
 }
 
 
@@ -1147,21 +1149,30 @@ counted_ptr<PComplexData>  Variant::GetComplexData() const
 /// This sets the complex data type to the argument.
 /// It does not delete the complex data currently held
 /// in the pointer.
-void Variant::SetComplexData(counted_ptr<PComplexData> data)
+void Variant::SetComplexData(PComplexData * data)
 {
-    mCD = data;
+    mComplexData = data;
 }
 
 
 
 ///This method just clears out any part of mData
-///That is on the free store, including any PComplexData that is 
+///That is on the free store, including any PComplexData that is
 ///held by the variant.  PCDs are 1-1 with variants; they should not be shared
 /// by multiple variants, although the data they reference is ref-counted and may be shared.
 void Variant::free_mData()
 {
 
-    
+    if(mComplexData)
+     {
+         cout << "Deleting mComplexData in free_mData\n";
+         
+         delete mComplexData;
+         mComplexData =NULL;
+         //mDataType=P_DATA_UNDEFINED;
+     } else
+         {
+
     if(mDataType == P_DATA_STRING )
         {
             if(mData.String)
@@ -1190,6 +1201,8 @@ void Variant::free_mData()
     else if(mDataType == P_DATA_COMPLEXDATA)
         {
         }
+    
+         }
 
     //    mDataType = P_DATA_UNDEFINED;
 }

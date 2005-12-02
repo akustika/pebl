@@ -72,7 +72,7 @@ Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
         }
 
     //Now, resultslist is a PList.  Put it into a PCD.
-    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(resultslist)); 
+    PComplexData * pcd = new PComplexData(resultslist); 
     return Variant(pcd);
 }
 
@@ -103,16 +103,15 @@ Variant PEBLMath::Recurse2(Variant v, Variant (*funcname)(Variant), Variant argu
     while(p != plist->End())
         {
             arglist->PushFront(*p);                          //Add the critical argument 
-            counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(arglist));
+            PComplexData * pcd = new PComplexData(arglist);
             resultslist->PushBack(funcname(Variant(pcd)));        //Execute
             arglist->PopFront();                             //Pop of argument to move to next one.
             p++;
         }
 
     //Now, resultslist is a PList.  Put it into a PCD.
-    counted_ptr<PComplexData>pcd = counted_ptr<PComplexData>(new PComplexData(resultslist)); 
+    PComplexData * pcd = new PComplexData(resultslist); 
     return Variant(pcd);
-    
 }
 
 
@@ -199,7 +198,7 @@ Variant PEBLMath::LogN(Variant v)
         }
     else if(number.GetComplexData()->IsList())
         {
-            counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(plist));
+            PComplexData * pcd = new PComplexData(plist);
             Variant args = Variant(pcd);
             Variant retval = Recurse2(number, LogN, args);
             return retval;
@@ -251,7 +250,7 @@ Variant PEBLMath::Pow(Variant v)
         }
     else if(base.GetComplexData()->IsList())
         {
-            counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(plist));
+            PComplexData * pcd = new PComplexData(plist);
             Variant args = Variant(pcd);
             Variant retval = Recurse2(base, Pow, args);
             return retval;
@@ -301,7 +300,7 @@ Variant PEBLMath::NthRoot(Variant v)
         }
     else if(number.GetComplexData()->IsList())
         {
-            counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(plist));
+            PComplexData * pcd = new PComplexData(plist);
             Variant args = Variant(pcd);
             Variant retval = Recurse2(number, NthRoot, args);
             return retval;

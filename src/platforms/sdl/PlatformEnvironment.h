@@ -31,6 +31,7 @@
 
 #include "../../objects/PEnvironment.h"
 #include "../../apps/Globals.h"
+#include "../../base/PEBLObject.h"
 #include <list>
 
 

@@ -50,8 +50,8 @@ public:
     virtual Variant GetProperty(std::string)const;
     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
     virtual ObjectValidationError ValidateProperty(std::string)const;
-
-
+    virtual std::string ObjectName();
+    
     virtual void InsertText(std::string character);
     virtual void InsertText(char character);
 
@@ -77,7 +77,7 @@ protected:
 
     
     virtual std::ostream & SendToStream(std::ostream& out) const{return out;};
-    
+    virtual std::string ObjectName() const{return "PTextBox";};
     bool mEditable;   //Whether the box is editable.
     int  mCursorPos;    //The character position of the cursor.
     bool mCursorChanged;  //True if cursor has moved.

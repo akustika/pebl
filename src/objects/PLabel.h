@@ -55,7 +55,7 @@ public:
     virtual Variant GetProperty(std::string)const;
     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
     virtual ObjectValidationError ValidateProperty(std::string)const;
-
+    virtual std::string ObjectName();
 
     void SetPosition(int x, int y);
     //This overrides the default method, because labels are centered on their
@@ -68,6 +68,7 @@ protected:
 
     
     virtual std::ostream & SendToStream(std::ostream& out) const{return out;};
+    virtual std::string ObjectName() const{return "PLabel";};
 
 };
 

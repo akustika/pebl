@@ -58,6 +58,7 @@ PLabel::~PLabel()
 
 bool PLabel::SetProperty(std::string name, Variant v)
 {
+
     if(name == "X") SetPosition(v,mY);
     else if (name == "Y") SetPosition(mX,v);
     else if (name == "TEXT") SetText(v);
@@ -76,7 +77,7 @@ bool PLabel::SetProperty(std::string name, Variant v)
 
 Variant PLabel::GetProperty(std::string name)const
 {
-    return PObject::GetProperty(name);
+    return PEBLObjectBase::GetProperty(name);
 }
 
 
@@ -105,6 +106,12 @@ void PLabel::SetPosition(int x, int y)
     mY = y;
     mDrawX = x - GetWidth()/2;
     mDrawY = y - GetHeight()/2;
-    PObject::SetProperty("X",Variant(mX));
-    PObject::SetProperty("Y",Variant(mY));
+    PEBLObjectBase::SetProperty("X",Variant(mX));
+    PEBLObjectBase::SetProperty("Y",Variant(mY));
+}
+
+
+std::string PLabel::ObjectName()
+{
+    return "Text Label";
 }

@@ -52,7 +52,7 @@ void PImageBox::SetPosition(int x, int y)
 
 
 
-//overloaded generic PObject methods
+//overloaded generic PEBLObjectBase methods
 bool PImageBox::SetProperty(std::string name, Variant v)
 {
 
@@ -74,7 +74,7 @@ bool PImageBox::SetProperty(std::string name, Variant v)
 
 Variant PImageBox::GetProperty(std::string name)const
 {
-    return PObject::GetProperty(name);
+    return PEBLObjectBase::GetProperty(name);
 }
 
 
@@ -102,10 +102,10 @@ ObjectValidationError PImageBox::ValidateProperty(std::string name)const
 void PImageBox::__SetProps__()
 {
 
-    PObject::SetProperty("X",mX);
-    PObject::SetProperty("Y",mY);
-    PObject::SetProperty("VISIBLE",mIsVisible);
-    PObject::SetProperty("WIDTH",mWidth);
-    PObject::SetProperty("HEIGHT",mHeight);
+    PEBLObjectBase::SetProperty("X",mX);
+    PEBLObjectBase::SetProperty("Y",mY);
+    PEBLObjectBase::SetProperty("VISIBLE",mIsVisible);
+    PEBLObjectBase::SetProperty("WIDTH",mWidth);
+    PEBLObjectBase::SetProperty("HEIGHT",mHeight);
 
 }

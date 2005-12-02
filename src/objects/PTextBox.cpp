@@ -93,7 +93,7 @@ bool PTextBox::SetProperty(std::string name, Variant v)
 
 Variant PTextBox::GetProperty(std::string name)const
 {
-    return PObject::GetProperty(name);
+    return PEBLObjectBase::GetProperty(name);
 }
 
 
@@ -355,4 +355,10 @@ bool PTextBox::AtPrintableCharacter(unsigned int x)
         return false;
     else
         return true;
+}
+
+
+std::string PTextBox::ObjectName()
+{
+    return "TextBox";
 }

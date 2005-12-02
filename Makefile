@@ -1,10 +1,10 @@
-#/////////////////////////////////////////////////////////////////////////////////////////////
-#/////////////////////////////////////////////////////////////////////////////////////////////
-#/////////////////////////////////////////////////////////////////////////////////////////////
-#//											
-#//	Copyright (c) 2003				
-#//	Shane T. Mueller					
-#//										
+#//////////////////////////////////////////////////////////////////////////////
+#//////////////////////////////////////////////////////////////////////////////
+#//////////////////////////////////////////////////////////////////////////////
+#//
+#//	Copyright (c) 2003-2005
+#//	Shane T. Mueller
+#//
 #//     This file is part of the PEBL project.
 #//
 #//    PEBL is free software; you can redistribute it and/or modify
@@ -19,17 +19,17 @@
 #//
 #//    You should have received a copy of the GNU General Public License
 #//    along with PEBL; if not, write to the Free Software
-#//    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#//    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #//
-#/////////////////////////////////////////////////////////////////////////////////////////////
-#/////////////////////////////////////////////////////////////////////////////////////////////
-#/////////////////////////////////////////////////////////////////////////////////////////////
+#//////////////////////////////////////////////////////////////////////////////
+#//////////////////////////////////////////////////////////////////////////////
+#//////////////////////////////////////////////////////////////////////////////
 
 C   = gcc
-CXX = g++	
+CXX = g++
 DEBUGFLAGS = -lefence -DPEBL_DEBUG
-CFLAGS =   -O3 -std=c99
-CXXFLAGS =   -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX -g
+CFLAGS =   -O1 -std=c99
+CXXFLAGS =   -O1  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX -g 
 
 
 SDL_CONFIG = /usr/bin/sdl-config
@@ -86,6 +86,7 @@ PUTILITIES_INC  = $(patsubst %.cpp, %.h, $(PUTILITIES_SRC))
 PEBLBASE_SRCXX =	$(BASE_DIR)/Evaluator.cpp \
 			$(BASE_DIR)/FunctionMap.cpp \
 			$(BASE_DIR)/grammar.tab.cpp \
+			$(BASE_DIR)/PEBLObject.cpp \
 			$(BASE_DIR)/Loader.cpp \
 			$(BASE_DIR)/PComplexData.cpp \
 			$(BASE_DIR)/PList.cpp \
@@ -93,6 +94,7 @@ PEBLBASE_SRCXX =	$(BASE_DIR)/Evaluator.cpp \
 			$(BASE_DIR)/VariableMap.cpp \
 			$(DEVICES_DIR)/PEventLoop.cpp \
 			$(BASE_DIR)/Variant.cpp 
+
 PEBLBASE_OBJXX = $(patsubst %.cpp, %.o, $(PEBL_SRCXX))
 
 
@@ -100,8 +102,7 @@ PEBLBASE_SRC = lex.yy.c
 PEBLBASE_OBJ = $(patsubst %.c, %.o, $(PEBL_SRC))
 
 
-POBJECT_SRC  =  $(OBJECTS_DIR)/PObject.cpp \
-		$(OBJECTS_DIR)/PEnvironment.cpp \
+POBJECT_SRC  =  $(OBJECTS_DIR)/PEnvironment.cpp \
 		$(OBJECTS_DIR)/PWidget.cpp \
 		$(OBJECTS_DIR)/PWindow.cpp  \
 		$(OBJECTS_DIR)/PImageBox.cpp \
@@ -169,11 +170,16 @@ TEST_VARIANT_SRC = $(TEST_DIR)/VariantTest.cpp $(PEBLBASE_SRCXX) \
 TEST_VARIANT_OBJ = $(patsubst %.cpp, %.o, $(TEST_VARIANT_SRC))
 TEST_VARIANT_INC = $(patsubst %.cpp, %.h, $(TEST_VARIANT_SRC))
 
-TEST_VARIABLE_MAP_SRC = $(TEST_DIR)/VariableMapTest.cpp $(BASE_DIR)/VariableMap.cpp $(BASE_DIR)/Variant.cpp $(BASE_DIR)/PComplexData.cpp $(BASE_DIR)/PList.cpp $(OBJECTS_DIR)/PObject.cpp $(UTIL_DIR)/PEBLUtility.cpp
+TEST_VARIABLE_MAP_SRC = $(TEST_DIR)/VariableMapTest.cpp \
+            $(BASE_DIR)/VariableMap.cpp $(BASE_DIR)/Variant.cpp \
+            $(BASE_DIR)/PComplexData.cpp $(BASE_DIR)/PList.cpp \
+            $(OBJECTS_DIR)/PObject.cpp $(UTIL_DIR)/PEBLUtility.cpp
 TEST_VARIABLE_MAP_OBJ = $(patsubst %.cpp, %.o, $(TEST_VARIABLE_MAP_SRC))
 TEST_VARIABLE_MAP_INC = $(patsubst %.cpp, %.h, $(TEST_VARIABLE_MAP_SRC))
 
-TEST_PNODE_SRC = $(TEST_DIR)/PNodeTest.cpp $(BASE_DIR)/Variant.cpp $(BASE_DIR)/PComplexData.cpp $(BASE_DIR)/PList.cpp $(BASE_DIR)/PNode.cpp   $(OBJECTS_DIR)/PObject.cpp $(UTIL_DIR)/PEBLUtility.cpp
+TEST_PNODE_SRC = $(TEST_DIR)/PNodeTest.cpp $(BASE_DIR)/Variant.cpp\
+   $(BASE_DIR)/PComplexData.cpp $(BASE_DIR)/PList.cpp $(BASE_DIR)/PNode.cpp \
+   $(OBJECTS_DIR)/PObject.cpp $(UTIL_DIR)/PEBLUtility.cpp
 TEST_PNODE_OBJ = $(patsubst %.cpp, %.o, $(TEST_PNODE_SRC))
 TEST_PNODE_INC = $(patsubst %.cpp, %.h, $(TEST_PNODE_SRC))
 
@@ -216,12 +222,12 @@ TEST_AUDIOOUT_SRC = src/platforms/sdl/PlatformAudioOut.cpp src/devices/PAudioOut
 TEST_AUDIOOUT_OBJ = $(patsubst %.cpp, %.o, $(TEST_AUDIOOUT_SRC))
 TEST_AUDIOOUT_INC = $(patsubst %.cpp, %.h, $(TEST_AUDIOOUT_SRC))
 
-TEST_PATH_SRC = $(TEST_DIR)/PathTest.cpp  $(UTIL_DIR)/PEBLPath.cpp 
+TEST_PATH_SRC = $(TEST_DIR)/PathTest.cpp  $(UTIL_DIR)/PEBLPath.cpp
 TEST_PATH_OBJ = $(patsubst %.cpp, %.o, $(TEST_PATH_SRC))
 TEST_PATH_INC = $(patsubst %.cpp, %.h, $(TEST_PATH_SRC))
 
 
-VCG_MAKER_SRC = $(BASE_DIR)/VCG.cpp  $(PEBLBASE_SRCXX)  $(POBJECT_SRC) $(FUNCTIONLIB_SRC) $(PUTILITY_SRC) 
+VCG_MAKER_SRC = $(BASE_DIR)/VCG.cpp  $(PEBLBASE_SRCXX)  $(POBJECT_SRC) $(FUNCTIONLIB_SRC) $(PUTILITY_SRC)
 VCG_MAKER_OBJ = $(patsubst %.cpp, %.o, $(VCG_MAKER_SRC))
 VCG_MAKER_INC = $(patsubst %.cpp, %.h, $(VCG_MAKER_SRC))
 
@@ -237,7 +243,7 @@ PEBLMAIN_OBJ = $(patsubst %.cpp, %.o, $(PEBLMAIN_SRC))
 PEBLMAIN_INC = $(patsubst %.cpp, %.h, $(PEBLMAIN_SRC))
 
 PEBLMAIN_EXTRA = $(LIBS_DIR)/Functions.h \
-		$(OBJECTS_DIR)/RGBColorNames.h \
+	           	$(OBJECTS_DIR)/RGBColorNames.h \
 
 
 DIRS = \
@@ -251,7 +257,7 @@ DIRS = \
 	$(OBJ_DIR)/$(PLATFORMS_DIR) \
 	$(OBJ_DIR)/$(SDL_DIR) \
 	$(OBJ_DIR)/$(UTIL_DIR) \
-	$(OBJ_DIR)/$(TEST_DIR) 
+	$(OBJ_DIR)/$(TEST_DIR)
 
 
 ##############################
@@ -261,50 +267,50 @@ DIRS = \
 main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
 	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/pebl -I/usr/local/include/SDL -D_REENTRANT \
 	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  $(OSX_FLAGS) \
-	 $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(PEBLMAIN_OBJ)) 
+	 $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(PEBLMAIN_OBJ))
 
 parse:
 	bison -d $(BASE_DIR)/grammar.y -o $(BASE_DIR)/grammar.tab.cpp
-	flex -o$(BASE_DIR)/lex.yy.c  $(BASE_DIR)/Pebl.l 
+	flex -o$(BASE_DIR)/lex.yy.c  $(BASE_DIR)/Pebl.l
 
-parse-debug: 
+parse-debug:
 	bison -d $(BASE_DIR)/grammar.y -t --verbose --graph=bison.vcg -o $(BASE_DIR)/grammar.tab.cpp
-	flex  -o$(BASE_DIR)/lex.yy.c -d $(BASE_DIR)/Pebl.l 
+	flex  -o$(BASE_DIR)/lex.yy.c -d $(BASE_DIR)/Pebl.l
 
 .PHONY: tests
 tests:  $(BIN_DIR)/varianttest $(BIN_DIR)/variablemaptest $(BIN_DIR)/pnodetest $(BIN_DIR)/parsertest $(BIN_DIR)/functionmaptest
 
-$(BIN_DIR)/varianttest: $(TEST_VARIANT_OBJ) $(TEST_VARIANT_INC)  $(POBJECT_OBJ) $(PLATFORM_SDL_OBJ) 
+$(BIN_DIR)/varianttest: $(TEST_VARIANT_OBJ) $(TEST_VARIANT_INC)  $(POBJECT_OBJ) $(PLATFORM_SDL_OBJ)
 	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/varianttest 	-Wall -I/usr/local/include/SDL -D_REENTRANT  \
-	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf  $(BASE_DIR)/lex.yy.c $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_VARIANT_OBJ)) 
+	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf  $(BASE_DIR)/lex.yy.c $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_VARIANT_OBJ))
 
 $(BIN_DIR)/variablemaptest: $(TEST_VARIABLE_MAP_OBJ) $(TEST_VARIABLE_MAP_INC)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/variablemaptest $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_VARIABLE_MAP_OBJ)) 
+	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/variablemaptest $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_VARIABLE_MAP_OBJ))
 
 $(BIN_DIR)/pnodetest: $(TEST_PNODE_OBJ) $(TEST_PNODE_INC)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/pnodetest $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_PNODE_OBJ)) 
+	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/pnodetest $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_PNODE_OBJ))
 
-$(BIN_DIR)/parsertest: $(TEST_PARSER_OBJ) $(TEST_PARSER_INC) 
+$(BIN_DIR)/parsertest: $(TEST_PARSER_OBJ) $(TEST_PARSER_INC)
 	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/parsertest -g -O2 -Wall -I/usr/local/include/SDL -D_REENTRANT  \
 	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf \
-	 $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_PARSER_OBJ)) 
+	 $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_PARSER_OBJ))
 
 $(BIN_DIR)/functionmaptest:  $(TEST_FMAP_OBJ) $(TEST_FMAP_INC)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/functionmaptest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_FMAP_OBJ)) 
+	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/functionmaptest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_FMAP_OBJ))
 
 $(BIN_DIR)/mathlibstest:  $(TEST_MATHLIBS_OBJ) $(TEST_MATHLIBS_INC)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/mathlibstest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_MATHLIBS_OBJ)) 
+	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/mathlibstest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_MATHLIBS_OBJ))
 
-$(BIN_DIR)/colortest:  $(TEST_COLOR_OBJ) 
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/colortest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_COLOR_OBJ)) 
+$(BIN_DIR)/colortest:  $(TEST_COLOR_OBJ)
+	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/colortest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_COLOR_OBJ))
 
 $(BIN_DIR)/fonttest:  $(TEST_FONT_OBJ)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/fonttest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_FONT_OBJ)) 
+	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/fonttest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_FONT_OBJ))
 
 $(BIN_DIR)/VCGMaker: $(APPS_DIR)/VCGMaker.cpp $(VCG_MAKER_OBJ) $(VCG_MAKER_INC) $(PUTILITIES_OBJ) $(PLATFORM_SDL_OBJ) $(PDEVICES_OBJ)
 	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/VCGMaker -O2 -Wall -I/usr/local/include/SDL -D_REENTRANT  \
 	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  $(BASE_DIR)/$(PEBLBASE_SRC) \
-        $(APPS_DIR)/VCGMaker.cpp $(patsubst %.o, $(OBJ_DIR)/%.o, $(VCG_MAKER_OBJ) $(PLATFORM_SDL_OBJ) $(PDEVICES_OBJ)) 
+        $(APPS_DIR)/VCGMaker.cpp $(patsubst %.o, $(OBJ_DIR)/%.o, $(VCG_MAKER_OBJ) $(PLATFORM_SDL_OBJ) $(PDEVICES_OBJ))
 
 $(BIN_DIR)/windowtest:  $(TEST_WINDOW_OBJ) $(TEST_WINDOW_INC)
 	$(CXX) $(CXXFLAGS) -O2 -Wall -I/usr/local/include/SDL -D_REENTRANT  \
@@ -329,7 +335,7 @@ $(BIN_DIR)/pathtest: $(TEST_PATH_SRC) $(TEST_PATH_OBJ) $(TEST_PATH_INC)
 	$(CXX) $(CXXFLAGS) -c $^ -o $(OBJ_DIR)/$@ $(SDL_FLAGS)
 
 
-$(DIRS): %: 
+$(DIRS): %:
 	-test -d $@ || mkdir $@
 
 
@@ -343,7 +349,7 @@ ready:
 	-rm -f $(OUT_DIR)/*
 
 .PHONY: dep
-dep:	
+dep:
 	$(CXX) -MM $(CXXFLAGS)    $(PEBLMAIN_SRC)  > .depend
 
 .PHONY: clean

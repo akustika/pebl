@@ -29,7 +29,7 @@
 
 #include "Variant.h"
 #include "../utility/rc_ptrs.h"
-
+#include "PEBLObject.h"
 
 #include <list>
 #include <iostream>
@@ -40,18 +40,19 @@ class Variant;
 /// This class is a simple list
 /// of Variants.  It is implemented as an STL list, but
 /// does not currently expose all of the STL list methods.
-class PList
+class PList:  public PEBLObjectBase
 {
+
 public:
   
     PList();
-    ~PList();
+    virtual ~PList();
   
     ///Copy Constructor
     PList(PList & list);
   
     ///Makes and returns a deep copy
-    PList * Clone();
+    virtual PList * Clone();
 
     std::list<Variant>::const_iterator  Begin() const;
     std::list<Variant>::const_iterator  End() const; 

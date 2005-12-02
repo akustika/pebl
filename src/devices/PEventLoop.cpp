@@ -31,7 +31,7 @@
 #include "../base/FunctionMap.h"
 #include "../base/Evaluator.h"
 #include "../base/PComplexData.h"
-
+#include "../base/PEBLObject.h"
 
 #include "../libs/PEBLEnvironment.h"
 #include <iostream>
@@ -179,8 +179,9 @@ PEvent PEventLoop::Loop()
                                                     if(mNodes[i])  //Execute mNodes
                                                         {
                                                             //Add the parameters, as a list, to the stack.
-                                                            counted_ptr<PList> tmpList = counted_ptr<PList>(mParameters[i]);
-                                                            counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(tmpList));
+                                                            counted_ptr<PEBLObjectBase> tmpList = counted_ptr<PEBLObjectBase>(mParameters[i]);
+                                                            
+                                                            PComplexData * pcd = new PComplexData(tmpList);
                                                             myEval->Push(Variant(pcd));
                                                             myEval->Evaluate(mNodes[i]);
                                                             
@@ -214,8 +215,8 @@ PEvent PEventLoop::Loop()
                                     if(mNodes[i])
                                         {
                                             //Add the parameters, as a list, to the stack.
-                                            counted_ptr<PList> tmpList = counted_ptr<PList>(mParameters[i]);
-                                            counted_ptr<PComplexData>  pcd =counted_ptr<PComplexData>(new PComplexData(tmpList));
+                                            counted_ptr<PEBLObjectBase> tmpList = counted_ptr<PEBLObjectBase>(mParameters[i]);
+                                            PComplexData * pcd = new PComplexData(tmpList);
                                             myEval->Push(Variant(pcd));
                                             myEval->Evaluate(mNodes[i]);
                                         }

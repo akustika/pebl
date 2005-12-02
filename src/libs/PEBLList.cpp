@@ -72,7 +72,7 @@ Variant PEBLList::Shuffle (Variant v)
     
     //Now, sort by the key list        
     counted_ptr<PList> newList = dataList->SortBy(*keyList);
-    counted_ptr<PComplexData> PCD =counted_ptr<PComplexData>( new PComplexData(newList));
+    PComplexData * PCD =( new PComplexData(newList));
     
     return Variant(PCD);
             
@@ -101,7 +101,7 @@ Variant PEBLList::Repeat (Variant v)
             returnList->PushBack(v1);
         }
     
-    counted_ptr<PComplexData> tmpPCD= counted_ptr<PComplexData>(new PComplexData(returnList));
+    PComplexData * tmpPCD= (new PComplexData(returnList));
     return Variant(tmpPCD);
 
 }
@@ -153,7 +153,7 @@ Variant PEBLList::RepeatList(Variant v)
                 }            
         }
     
-    counted_ptr<PComplexData> tmpPCD= counted_ptr<PComplexData>(new PComplexData(returnList));
+    PComplexData * tmpPCD= (new PComplexData(returnList));
     return Variant(tmpPCD);
 }
 
@@ -226,7 +226,7 @@ Variant PEBLList::Sequence(Variant v)
         }
 
     
-    counted_ptr<PComplexData> tmpPCD= counted_ptr<PComplexData>(new PComplexData(returnList));
+    PComplexData * tmpPCD= (new PComplexData(returnList));
     return Variant(tmpPCD);  
 }
 
@@ -296,7 +296,7 @@ Variant PEBLList::DesignFullCounterbalance (Variant v)
                     tmpList->PushFront(*p2);
                     tmpList->PushFront(*p1);
 
-                    counted_ptr<PComplexData> tmpPCD = counted_ptr<PComplexData>(new PComplexData(tmpList));
+                    PComplexData * tmpPCD = (new PComplexData(tmpList));
                     tmpVariant = Variant(tmpPCD);
                     
                     //Put the sublist in the outer list
@@ -307,7 +307,7 @@ Variant PEBLList::DesignFullCounterbalance (Variant v)
             p1++;
         }
     
-    counted_ptr<PComplexData> tmpPCD= counted_ptr<PComplexData>(new PComplexData(returnList));
+    PComplexData * tmpPCD= (new PComplexData(returnList));
     return Variant(tmpPCD);
 }
 
@@ -351,7 +351,7 @@ Variant PEBLList::CrossFactorWithoutDuplicates(Variant v)
                             tmpList->PushFront(*p2);
                             tmpList->PushFront(*p1);
 
-                            counted_ptr<PComplexData> tmpPCD = counted_ptr<PComplexData>(new PComplexData(tmpList));
+                            PComplexData * tmpPCD = (new PComplexData(tmpList));
                             tmpVariant = Variant(tmpPCD);
                     
                             //Put the sublist in the outer list
@@ -365,7 +365,7 @@ Variant PEBLList::CrossFactorWithoutDuplicates(Variant v)
             i1++;
         }
     
-    counted_ptr<PComplexData>tmpPCD= counted_ptr<PComplexData>(new PComplexData(returnList));
+    PComplexData * tmpPCD= new PComplexData(returnList);
     return Variant(tmpPCD);
 }
 
@@ -434,7 +434,7 @@ Variant PEBLList::Rotate(Variant v)
         }
     
     
-    counted_ptr<PComplexData> tmpPCD= counted_ptr<PComplexData>(new PComplexData(returnList));
+    PComplexData * tmpPCD= (new PComplexData(returnList));
     return Variant(tmpPCD);
 }
 
@@ -544,7 +544,7 @@ Variant PEBLList::Merge (Variant v)
             p2++;
         }
     
-    counted_ptr<PComplexData> tmpPCD= counted_ptr<PComplexData>(new PComplexData(returnList));
+    PComplexData * tmpPCD= (new PComplexData(returnList));
     return Variant(tmpPCD);
 }
 
@@ -583,7 +583,7 @@ Variant PEBLList::Append (Variant v)
     //Append v2.
     returnList->PushBack(v2);
 
-    counted_ptr<PComplexData> tmpPCD= counted_ptr<PComplexData>(new PComplexData(returnList));
+    PComplexData * tmpPCD= (new PComplexData(returnList));
     return Variant(tmpPCD);
     
 }
@@ -602,7 +602,7 @@ Variant PEBLList::Sort (Variant v)
     counted_ptr<PList> dataList = v1.GetComplexData()->GetList();
     
     counted_ptr<PList> newList = dataList->SortBy(*dataList);
-    counted_ptr<PComplexData> PCD = counted_ptr<PComplexData>(new PComplexData(newList));
+    PComplexData * PCD = (new PComplexData(newList));
     return Variant(PCD);    
 }
 
@@ -625,7 +625,7 @@ Variant PEBLList::SortBy (Variant v)
     counted_ptr<PList> keyList = v2.GetComplexData()->GetList();
     
     counted_ptr<PList> newList = dataList->SortBy(*keyList);
-    counted_ptr<PComplexData> PCD = counted_ptr<PComplexData>( new PComplexData(newList));
+    PComplexData * PCD = ( new PComplexData(newList));
     return Variant(PCD);
 }
 
@@ -744,12 +744,12 @@ Variant PEBLList::Transpose (Variant v)
                 }
             //The first item of each list has been added to tmpList, so add
             //it to returnList.
-            counted_ptr<PComplexData> tmpPCD = counted_ptr<PComplexData>(new PComplexData(tmpList));
+            PComplexData * tmpPCD = (new PComplexData(tmpList));
             tmpVariant = Variant(tmpPCD);
             returnList->PushBack(tmpVariant);
         }
     
-    counted_ptr<PComplexData> tmpPCD = counted_ptr<PComplexData>(new PComplexData(returnList));
+    PComplexData * tmpPCD = (new PComplexData(returnList));
     return Variant(tmpPCD);
 }
 
@@ -818,7 +818,7 @@ Variant PEBLList::SubList(Variant v)
             p++;
         }
     
-    counted_ptr<PComplexData> tmpPCD= counted_ptr<PComplexData>(new PComplexData(returnList));
+    PComplexData * tmpPCD = (new PComplexData(returnList));
     return Variant(tmpPCD);
 }
 

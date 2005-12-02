@@ -29,6 +29,7 @@
 
 
 #include "PlatformWidget.h"
+#include "../../base/PEBLObject.h"
 #include "../../objects/PWindow.h"
 #include "../../objects/PColor.h"
 
@@ -61,8 +62,8 @@ public:
 
 protected:
     virtual std::ostream & SendToStream(std::ostream& out) const;
-
-
+    virtual std::string ObjectName() const{return "PlatformWindow";};
+    
 private:
 
 };

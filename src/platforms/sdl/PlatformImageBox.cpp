@@ -48,7 +48,8 @@ using std::string;
 
 ///Standard Constructor
 PlatformImageBox::PlatformImageBox():
-    PImageBox()
+    PImageBox(),
+    mCDT(CDT_IMAGEBOX)
 {
 
     mSurface = NULL;
@@ -115,8 +116,8 @@ bool PlatformImageBox::LoadImage(const std::string &  imagefilename)
         {  
             mWidth  = mSurface->w; 
             mHeight = mSurface->h;
-            PObject::SetProperty("WIDTH", Variant(mWidth));
-            PObject::SetProperty("HEIGHT", Variant(mHeight));
+            PEBLObjectBase::SetProperty("WIDTH", Variant(mWidth));
+            PEBLObjectBase::SetProperty("HEIGHT", Variant(mHeight));
             return true;
         }
     else

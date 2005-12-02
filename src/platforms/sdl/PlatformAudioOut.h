@@ -28,6 +28,7 @@
 #define __PLATFORMAUDIOOUT_H__
 
 #include "../../devices/PAudioOut.h"
+#include "../../base/PEBLObject.h"
 #include "SDL/SDL.h"
 #include "SDL/SDL_audio.h"
   
@@ -41,7 +42,7 @@ struct AudioInfo{
     int      volume;           /* Relative volume. 0-100*/
 };
   
-class PlatformAudioOut: public PAudioOut
+class PlatformAudioOut: public PAudioOut, virtual public PEBLObjectBase
 {
  public:
     PlatformAudioOut();

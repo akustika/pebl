@@ -195,8 +195,8 @@ int PEBLInterpret( int argc, char *argv[] )
 
     //Parse command-line arguments.
 
-    counted_ptr<PList> pList = counted_ptr<PList>(new PList());
-    counted_ptr<PList> arglist = counted_ptr<PList>(new PList());
+    PList *  pList =  new PList();
+    PList *  arglist = new PList();
     std::string displaySize="640x480";
     std::string depth = "16";
     enum PEBLVideoMode displayMode;
@@ -327,25 +327,26 @@ int PEBLInterpret( int argc, char *argv[] )
     if(arglist->Length()==0)
         {
             arglist->PushBack(Variant(0));
-            counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(arglist));
+            PComplexData * pcd = new PComplexData(counted_ptr<PEBLObjectBase>(arglist));
             pList->PushFront(Variant(pcd));
         }
     else
         {
-            counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(arglist));
+            PComplexData * pcd = new PComplexData(counted_ptr<PEBLObjectBase>(arglist));
             pList->PushFront(Variant(pcd));
         }
         
-    counted_ptr<PComplexData> pcd = counted_ptr<PComplexData>(new PComplexData(pList));
+    PComplexData * pcd = new PComplexData(counted_ptr<PEBLObjectBase>(pList));
     Variant v = Variant(pcd);
     
+    cout << "A1\n";
     Evaluator myEval = Evaluator(v,"Start");
-
+    cout << "A2\n";
 
 
       //Now, everything should be F-I-N-E fine.
   
-    cerr << "--------Getting main function---" << endl;
+    cout << "--------Getting main function---" << endl;
     head = myLoader->GetMainPEBLFunction();
 
     if(head) 
@@ -459,7 +460,7 @@ void PrintOptions()
 {
     cout << "-------------------------------------------------------------------------------\n";
     cout << "PEBL: The Psychology Experiment Building Language\n";
-    cout << "Version 0.05\n";
+    cout << "Version 0.06\n";
     cout << "(c) 2003-2005 Shane T. Mueller, Ph.D.\n";
     cout << "smueller@obereed.net   http://pebl.sf.net\n";
     cout << "-------------------------------------------------------------------------------\n";

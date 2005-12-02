@@ -35,8 +35,8 @@
 class PComplexData;
 class Variant;
 
-enum VariantDataType { 
-    P_DATA_UNDEFINED = 0,    // undefined, error 
+enum VariantDataType {
+    P_DATA_UNDEFINED = 0,    // undefined, error
     P_DATA_STACK_SIGNAL,     // an enum that signals stuff to the evaluator stack, for internal use only.
     P_DATA_FUNCTION,         // the name of a function.
     P_DATA_FUNCTION_POINTER, // A pointer to a function.  Used for compiled library functions.
@@ -64,7 +64,7 @@ typedef  Variant(*pFunc)(Variant);
 class Variant
 {
 public:
-  
+
     Variant();
     ///Standard constructors
     Variant(const long int i);
@@ -75,7 +75,7 @@ public:
     Variant(const char* mystring, VariantDataType type);
     Variant(const StackSignalType);
     Variant(pFunc);  //This one takes a function-pointer as an argument.
-    Variant(counted_ptr<PComplexData> pcd);
+    Variant(PComplexData * pcd);
     Variant(int i);
     Variant(double f);
     Variant(float f);
@@ -88,8 +88,8 @@ public:
 
     ///Copy Constructor
     Variant(const Variant &v);
- 
- 
+
+
     //Overload the standard operators
     Variant operator + (const Variant & rhs) const;
     Variant operator - (const Variant & rhs) const;
@@ -100,7 +100,7 @@ public:
     //Primitive Comparators
     bool Equal(const Variant & rhs) const;
     bool Less (const Variant & rhs) const;
-  
+
     //Comparison Operators
     bool operator <  (const Variant & rhs) const;
     bool operator >  (const Variant & rhs) const;
@@ -108,7 +108,7 @@ public:
     bool operator >= (const Variant & rhs) const;
     bool operator == (const Variant & rhs) const;
     bool operator != (const Variant & rhs) const;
- 
+
     //Assignment Operators
     Variant operator = (const Variant & value);
     Variant operator = (const long double & value);
@@ -135,7 +135,7 @@ public:
 
     VariantDataType GetDataType() const;
     std::string GetDataTypeName() const;
-  
+
     bool IsNumber() const;
     bool IsFloat() const;
     bool IsInteger() const;
@@ -147,37 +147,38 @@ public:
     bool IsFunctionPointer() const;
     bool IsComplexData() const;
     bool IsStackSignal() const;
-  
+
     long int GetInteger() const;
     long double GetFloat() const;
     const char * GetVariableName() const;
-    const char * GetVariableBaseName() const;    
+    const char * GetVariableBaseName() const;
     const char * GetVariablePropertyName() const;
-    
+
     const char * GetFunctionName() const;
     const char * GetString() const;
     StackSignalType GetSignal()const;
     pFunc GetFunctionPointer() const;
-    counted_ptr<PComplexData> GetComplexData() const;
+    PComplexData * GetComplexData() const;
 
-    void SetComplexData(counted_ptr<PComplexData> data);      //Set and retrieve something in the complex data slot.
+    void SetComplexData(PComplexData * data);      //Set and retrieve something in the complex data slot.
 
 
 protected:
     void free_mData();
 private:
-  
+
     ///This is used as a pointer to a complex data
     ///object, including a list, a (tbd) matrix,
-    ///image, (tbd)sound, window object, etc.
+    ///image, sound, window object, etc.
     /// The variant does not take care of cleaning up mComplexData
     /// itself automatically; this must be done explicitly
+
+    /// counted_ptr<PComplexData>  mCD;
     PComplexData  * mComplexData;
-    counted_ptr<PComplexData> mCD;
-    VariantDataType  mDataType;          // number, string or array 
+    VariantDataType  mDataType;          // number, string or array
 
     union PValue {
-        long int     iNumber; 
+        long int     iNumber;
         long double  fNumber;      /* number */
         char       * String;
         char       * Variable;     /* The name of a variable */
@@ -186,8 +187,6 @@ private:
         StackSignalType Signal;  /*A signal type used by Evaluator stack.*/
     } mData;
 
-
-       
 };
 
 

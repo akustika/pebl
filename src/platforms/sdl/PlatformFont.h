@@ -30,9 +30,9 @@
 #include "../../objects/PFont.h"
 #include "../../objects/PColor.h"
 #include "../../utility/rc_ptrs.h"
+#include "../../base/PEBLObject.h"
 
 #include "SDLUtility.h"
-
 #include "SDL/SDL_ttf.h"
 #include "SDL/SDL.h"
 
@@ -42,20 +42,20 @@
 /// font structure from the font library, and handle the rendering.
 ///
 
-class PlatformFont: public PFont
+class PlatformFont: public PFont,virtual public PEBLObjectBase
 {
     
 public:
     //    PlatformFont();
     PlatformFont(const std::string &  filename);
-    PlatformFont(const std::string &  filename, int style, int size, PColor fgcolor, PColor bgcolor, bool aa);
+    PlatformFont(const std::string &  filename, int style, int size, counted_ptr<PColor> fgcolor, counted_ptr<PColor> bgcolor, bool aa);
     PlatformFont(const PlatformFont & font);              ///Copy constructor
     virtual ~PlatformFont();
 
-    virtual void SetFontColor        (const PColor & color);
-    virtual void SetBackgroundColor  (const PColor & color);
-    virtual PColor GetFontColor      () const {return SDLUtility::SDLColorToPColor(mSDL_FGColor);}
-    virtual PColor GetBackgroundColor() const {return SDLUtility::SDLColorToPColor(mSDL_BGColor);}
+    virtual void SetFontColor        (counted_ptr<PColor> color);
+    virtual void SetBackgroundColor  (counted_ptr<PColor> color);
+//     virtual PColor GetFontColor      () const {return SDLUtility::SDLColorToPColor(mSDL_FGColor);}
+//     virtual PColor GetBackgroundColor() const {return SDLUtility::SDLColorToPColor(mSDL_BGColor);}
 
     ///This takes care of all the busy work of rendering the text.
     SDL_Surface * RenderText(const std::string & text);
@@ -64,8 +64,10 @@ public:
     unsigned int GetTextHeight(const std::string & text);
     int GetPosition(const std::string & text, unsigned int x);
 
+
 protected:
     virtual std::ostream & SendToStream(std::ostream& out) const;
+    virtual std::string ObjectName() const{return "Platform Font";};
 private:
     
     std::string StripText(const std::string & text);

@@ -29,6 +29,7 @@
 
 #include "PlatformWidget.h"
 #include "../../objects/PImageBox.h"
+#include "../../base/PEBLObject.h"
 
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
@@ -52,7 +53,7 @@ protected:
 
     virtual std::ostream & SendToStream(std::ostream& out) const;
     SDL_Surface * GetSurface();
-    
+    virtual std::string ObjectName() const{return "PlatformImageBox\n";};
     
 };
 
