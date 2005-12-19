@@ -203,7 +203,7 @@ int PEBLInterpret( int argc, char *argv[] )
     enum PEBLVideoMode displayMode;
     enum PEBLVideoDepth displayDepth;
     bool windowed = true;
-
+    Variant subnum = 0;
     //Extract the command-line variables to bind   
     for(int j = 1; j < argc; j++)
         {
@@ -215,7 +215,11 @@ int PEBLInterpret( int argc, char *argv[] )
                     arglist->PushBack(tmp);
                 }
 
-            
+            else if(strcmp(argv[j], "-s")==0 ||
+                    strcmp(argv[j], "-S")==0)
+                {
+                    subnum  = argv[++j];
+                }
             //set the driver directly from the command-line, if necessary.
             else if(strcmp(argv[j],"--driver")==0)
                 {
@@ -254,9 +258,9 @@ int PEBLInterpret( int argc, char *argv[] )
     //Now, set the display modes variables based on the command-line options.
     displayMode = PEBLUtility::GetVideoMode(displaySize);
     displayDepth = PEBLUtility::GetVideoDepth(depth);
- 
-
-
+    
+    
+    
     //This sets the video driver, and other platform-specific stuff.
 #if defined(PEBL_UNIX)
     //Do specific *nix stuff here (excluding OSX).    
@@ -345,9 +349,12 @@ int PEBLInterpret( int argc, char *argv[] )
 
 
 
-      //Now, everything should be F-I-N-E fine.
-  
+    //Add the subject identifier.
+    Evaluator::gGlobalVariableMap.AddVariable("gSubNum",subnum);
 
+
+
+    //Now, everything should be F-I-N-E fine.
     head = myLoader->GetMainPEBLFunction();
 
     if(head) 
@@ -430,7 +437,9 @@ std::list<std::string> GetFiles(int argc,  char * argv[])
     for(int i = 0; i < argc; i++)
         {
             if(strcmp(argv[i], "-v")==0 ||
-               strcmp(argv[i], "-V")==0)
+               strcmp(argv[i], "-V")==0 || 
+               strcmp(argv[i], "-s")==0 ||
+               strcmp(argv[i], "-S") == 0)
                 {
                     //This is the variable switch.  get rid of it and the next argument.
                     i++;
@@ -462,7 +471,7 @@ void PrintOptions()
     cout << "-------------------------------------------------------------------------------\n";
     cout << "PEBL: The Psychology Experiment Building Language\n";
     cout << "Version 0.06\n";
-    cout << "(c) 2003-2005 Shane T. Mueller, Ph.D.\n";
+    cout << "(c) 2003-2006 Shane T. Mueller, Ph.D.\n";
     cout << "smueller@obereed.net   http://pebl.sf.net\n";
     cout << "-------------------------------------------------------------------------------\n";
 
@@ -473,6 +482,9 @@ void PrintOptions()
     cout << "-v VALUE1 -v VALUE2\n";
     cout << "  Invokes script and passes VALUE1 and VALUE2 (and any text immediately\n" ;
     cout << "  following -v) to a list in the argument of the Start() function.\n\n";
+    cout << "-s IDENTIFIER\n";
+    cout << "  Initiates the global variable gSubNum to IDENTIFIER.  If not set here,\n";
+    cout << " gSubNum is initiated to 0.\n\n";
     cout << "--driver <drivername>\n";
     cout << "  Sets the video driver, when there is a choice.  For linux SDL, options xf86,\n";
     cout << "  dga, svgalib (from console).  Also controlled via environment variables.\n\n";
