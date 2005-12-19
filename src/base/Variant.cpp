@@ -709,9 +709,7 @@ ostream & operator << (ostream& out, const Variant& v)
 
         case P_DATA_COMPLEXDATA:
             {
-                out << "^^^^^^^^^^^^^^^^^\n";
                 out << *(v.GetComplexData())<<endl;
-                out << "VVVVVVVVVVVVVVVVVV\n";
             }
             break;
 
