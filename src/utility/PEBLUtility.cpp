@@ -242,16 +242,20 @@ PEBLKey PEBLUtility::TranslateString(const std::string & letters)
     return PEBLKEY_UNKNOWN;
 }
 
+
+
 //This returns a text-valued description of the key pressed.
 std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
 {
+
+    cout << "Translating [" << key << "]\n";
     switch(key)
         {
             /* The keyboard syms have been cleverly chosen to map to ASCII */
-        case PEBLKEY_UNKNOWN:	     return "<unknown>";
-            //   case PEBLKEY_FIRST:	     return "<>";  //same as above
+        case PEBLKEY_UNKNOWN:        return "<unknown>";
+            //   case PEBLKEY_FIRST:         return "<>";  //same as above
             //  case PEBLKEY_NOTHING:        return "<nothing>";  //same as above
-        case PEBLKEY_ANYKEY:	     return "<ANYKEY>";
+        case PEBLKEY_ANYKEY:         return "<ANYKEY>";
         case PEBLKEY_BACKSPACE:      return "<backspace>";
         case PEBLKEY_TAB:            return "<tab>";
         case PEBLKEY_CLEAR:          return "<clear>";
@@ -261,7 +265,7 @@ std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
         case PEBLKEY_SPACE:          return " ";
         case PEBLKEY_EXCLAIM:        return "!";
         case PEBLKEY_QUOTEDBL:       return "\"";
-        case PEBLKEY_HASH:           return "#";	
+        case PEBLKEY_HASH:           return "#";
         case PEBLKEY_DOLLAR:         return "$";
         case PEBLKEY_AMPERSAND:      return "&";
         case PEBLKEY_QUOTE:          return "'";
@@ -290,7 +294,7 @@ std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
         case PEBLKEY_GREATER:       return ">";
         case PEBLKEY_QUESTION:      return "?";
         case PEBLKEY_AT:            return "@";
-        /* 
+        /*
            Skip uppercase letters
         */
         case PEBLKEY_LEFTBRACKET:         return "[";
@@ -329,102 +333,102 @@ std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
         /* End of ASCII mapped keysyms */
 
         /* International keyboard syms */
-        case PEBLKEY_WORLD_0:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_1:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_2:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_3:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_4:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_5:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_6:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_7:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_8:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_9:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_10:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_11:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_12:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_13:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_14:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_15:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_16:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_17:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_18:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_19:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_20:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_21:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_22:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_23:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_24:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_25:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_26:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_27:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_28:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_29:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_30:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_31:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_32:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_33:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_34:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_35:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_36:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_37:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_38:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_39:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_40:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_41:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_42:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_43:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_44:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_45:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_46:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_47:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_48:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_49:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_50:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_51:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_52:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_53:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_54:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_55:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_56:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_57:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_58:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_59:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_60:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_61:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_62:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_63:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_64:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_65:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_66:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_67:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_68:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_69:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_70:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_71:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_72:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_73:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_74:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_75:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_76:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_77:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_78:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_79:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_80:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_81:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_82:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_83:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_84:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_85:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_86:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_87:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_88:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_89:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_90:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_91:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_92:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_93:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_94:         return "<PEBL WORLD KEY>";
-        case PEBLKEY_WORLD_95:         return "<PEBL WORLD KEY>";
+        case PEBLKEY_WORLD_0:   cout << "WK0\n";   return "Ä";
+        case PEBLKEY_WORLD_1:   cout << "WK1\n";        return "Å";
+        case PEBLKEY_WORLD_2:   cout << "WK2\n";       return "Ç";
+        case PEBLKEY_WORLD_3:   cout << "WK3\n";       return  "É";
+        case PEBLKEY_WORLD_4:   cout << "WK4\n";      return  "Ñ";
+        case PEBLKEY_WORLD_5:   cout << "WK5\n";     return  "Ö";
+        case PEBLKEY_WORLD_6:   cout << "WK6\n";    return  "Ü";
+        case PEBLKEY_WORLD_7:   cout << "WK7\n";   return  "á";
+        case PEBLKEY_WORLD_8:   cout << "WK8\n";      return  "à";
+        case PEBLKEY_WORLD_9:   cout << "WK9\n";      return  "â";
+        case PEBLKEY_WORLD_10:  cout << "WK10\n";       return "ä";
+        case PEBLKEY_WORLD_11:  cout << "WK11\n";       return "ã";
+        case PEBLKEY_WORLD_12:  cout << "WK12\n";       return "å";
+        case PEBLKEY_WORLD_13:  cout << "WK13\n";       return "ç";
+        case PEBLKEY_WORLD_14:  cout << "WK14\n";       return "é";
+        case PEBLKEY_WORLD_15:  cout << "WK15\n";       return "è";
+        case PEBLKEY_WORLD_16:  cout << "WK16\n";         return "ê";
+        case PEBLKEY_WORLD_17:  cout << "WK17\n";   return "ë";
+        case PEBLKEY_WORLD_18:  cout << "WK18\n";   return "í";
+        case PEBLKEY_WORLD_19:  cout << "WK19\n";       return "ì";
+        case PEBLKEY_WORLD_20:  cout << "WK20\n";       return "î";
+        case PEBLKEY_WORLD_21:  cout << "WK21\n";       return "ï";
+        case PEBLKEY_WORLD_22:  cout << "WK22\n";       return "ñ";
+        case PEBLKEY_WORLD_23:  cout << "WK23\n";       return "ó";
+        case PEBLKEY_WORLD_24:  cout << "WK24\n";       return "ò";
+        case PEBLKEY_WORLD_25:  cout << "WK25\n";       return "ô";
+        case PEBLKEY_WORLD_26:  cout << "WK26\n";       return "ö";
+        case PEBLKEY_WORLD_27:  cout << "WK27\n";       return "õ";
+        case PEBLKEY_WORLD_28:  cout << "WK28\n";       return "ú";
+        case PEBLKEY_WORLD_29:  cout << "WK29\n";       return "ù";
+        case PEBLKEY_WORLD_30:  cout << "WK30\n";       return "û";
+        case PEBLKEY_WORLD_31:  cout << "WK31\n";       return "ü";
+        case PEBLKEY_WORLD_32:  cout << "WK32\n";       return "\u2020";
+        case PEBLKEY_WORLD_33:  cout << "WK33\n";       return "°";
+        case PEBLKEY_WORLD_34:  cout << "WK34\n";       return "¢";
+        case PEBLKEY_WORLD_35:  cout << "WK35\n";       return "£";
+        case PEBLKEY_WORLD_36:  cout << "WK36\n";       return "§";
+        case PEBLKEY_WORLD_37:  cout << "WK37\n";       return "\u2022";
+        case PEBLKEY_WORLD_38:  cout << "WK38\n";       return "¶";
+        case PEBLKEY_WORLD_39:  cout << "WK39\n";       return "ß";
+        case PEBLKEY_WORLD_40:  cout << "WK40\n";       return "®";
+        case PEBLKEY_WORLD_41:  cout << "WK41\n";       return "©";
+        case PEBLKEY_WORLD_42:  cout << "WK42\n";       return "\u2122";
+        case PEBLKEY_WORLD_43:  cout << "WK43\n";       return "´";
+        case PEBLKEY_WORLD_44:  cout << "WK44\n";       return "¨";
+        case PEBLKEY_WORLD_45:  cout << "WK45\n";       return "\u2260";
+        case PEBLKEY_WORLD_46:  cout << "WK46\n";       return "Æ";
+        case PEBLKEY_WORLD_47:  cout << "WK47\n";       return "Ø";
+        case PEBLKEY_WORLD_48:  cout << "WK48\n";       return "\u221e";
+        case PEBLKEY_WORLD_49:  cout << "WK49\n";       return "±";
+        case PEBLKEY_WORLD_50:  cout << "WK50\n";       return "\u2264";
+        case PEBLKEY_WORLD_51:  cout << "WK51\n";       return "\u2265";
+        case PEBLKEY_WORLD_52:  cout << "WK52\n";       return "¥";
+        case PEBLKEY_WORLD_53:  cout << "WK53\n";       return "µ";
+        case PEBLKEY_WORLD_54:  cout << "WK54\n";       return "\u2202";
+        case PEBLKEY_WORLD_55:  cout << "WK55\n";       return "\u2211";
+        case PEBLKEY_WORLD_56:  cout << "WK56\n";       return "\u220f";
+        case PEBLKEY_WORLD_57:  cout << "WK57\n";       return "\u03c0";
+        case PEBLKEY_WORLD_58:  cout << "WK58\n";       return "\u222b";
+        case PEBLKEY_WORLD_59:  cout << "WK59\n";       return "ª";
+        case PEBLKEY_WORLD_60:  cout << "WK60\n";       return "º";
+        case PEBLKEY_WORLD_61:  cout << "WK61\n";       return "\u03a9";
+        case PEBLKEY_WORLD_62:  cout << "WK62\n";       return "æ";
+        case PEBLKEY_WORLD_63:  cout << "WK63\n";       return "ø";
+        case PEBLKEY_WORLD_64:  cout << "WK64\n";       return "¿";
+        case PEBLKEY_WORLD_65:  cout << "WK65\n";       return "¡";
+        case PEBLKEY_WORLD_66:  cout << "WK66\n";       return "¬";
+        case PEBLKEY_WORLD_67:  cout << "WK67\n";       return "\u221a";
+        case PEBLKEY_WORLD_68:  cout << "WK68\n";       return "\u0192";
+        case PEBLKEY_WORLD_69:  cout << "WK69\n";       return "\u2248";
+        case PEBLKEY_WORLD_70:  cout << "WK70\n";       return "\u2206";
+        case PEBLKEY_WORLD_71:  cout << "WK71\n";       return "«";
+        case PEBLKEY_WORLD_72:  cout << "WK72\n";       return "»";
+        case PEBLKEY_WORLD_73:  cout << "WK73\n";       return "\u2026";
+        case PEBLKEY_WORLD_74:  cout << "WK74\n";       return " ";
+        case PEBLKEY_WORLD_75:  cout << "WK75\n";       return "À";
+        case PEBLKEY_WORLD_76:  cout << "WK76\n";       return "Ã";
+        case PEBLKEY_WORLD_77:  cout << "WK77\n";       return "Õ";
+        case PEBLKEY_WORLD_78:  cout << "WK78\n";       return "\u0152";
+        case PEBLKEY_WORLD_79:  cout << "WK79\n";       return "\u0153";
+        case PEBLKEY_WORLD_80:  cout << "WK80\n";       return "\u2013";
+        case PEBLKEY_WORLD_81:  cout << "WK81\n";       return "\u2014";
+        case PEBLKEY_WORLD_82:  cout << "WK82\n";       return "\u201c";
+        case PEBLKEY_WORLD_83:  cout << "WK83\n";       return "\u201d";
+        case PEBLKEY_WORLD_84:  cout << "WK84\n";       return "\u2018";
+        case PEBLKEY_WORLD_85:  cout << "WK85\n";       return "\u2019";
+        case PEBLKEY_WORLD_86:  cout << "WK86\n";       return "÷";
+        case PEBLKEY_WORLD_87:  cout << "WK87\n";       return "\u25ca";
+        case PEBLKEY_WORLD_88:  cout << "WK88\n";       return "ÿ";
+        case PEBLKEY_WORLD_89:  cout << "WK89\n";       return "\u0178";
+        case PEBLKEY_WORLD_90:  cout << "WK90\n";       return "\u2044";
+        case PEBLKEY_WORLD_91:  cout << "WK91\n";       return "\u20ac";
+        case PEBLKEY_WORLD_92:  cout << "WK92\n";       return "\u2039";
+        case PEBLKEY_WORLD_93:  cout << "WK93\n";       return "\u203a";
+        case PEBLKEY_WORLD_94:  cout << "WK94\n";       return "\ufb01";
+        case PEBLKEY_WORLD_95:  cout << "WK95\n";       return "\ufb02";
         /* Numeric keypad */
         case PEBLKEY_KP0:         return "0";
         case PEBLKEY_KP1:         return "1";
@@ -501,9 +505,273 @@ std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
 
         /* Add any other keys here */
         case PEBLKEY_LAST:         return "<LAST KEY: ERROR>";
-        default:                   return "<ERROR>";
+        default:          cout << "Unknown key: " << key  << std::endl;  return "<ERROR>";
     };
 }
+
+
+// //This returns a text-valued description of the key pressed.
+// std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
+// {
+//     switch(key)
+//         {
+//             /* The keyboard syms have been cleverly chosen to map to ASCII */
+//         case PEBLKEY_UNKNOWN:	     return "<unknown>";
+//             //   case PEBLKEY_FIRST:	     return "<>";  //same as above
+//             //  case PEBLKEY_NOTHING:        return "<nothing>";  //same as above
+//         case PEBLKEY_ANYKEY:	     return "<ANYKEY>";
+//         case PEBLKEY_BACKSPACE:      return "<backspace>";
+//         case PEBLKEY_TAB:            return "<tab>";
+//         case PEBLKEY_CLEAR:          return "<clear>";
+//         case PEBLKEY_RETURN:         return "<return>";
+//         case PEBLKEY_PAUSE:          return "<pause>";
+//         case PEBLKEY_ESCAPE:         return "<esc>";
+//         case PEBLKEY_SPACE:          return " ";
+//         case PEBLKEY_EXCLAIM:        return "!";
+//         case PEBLKEY_QUOTEDBL:       return "\"";
+//         case PEBLKEY_HASH:           return "#";	
+//         case PEBLKEY_DOLLAR:         return "$";
+//         case PEBLKEY_AMPERSAND:      return "&";
+//         case PEBLKEY_QUOTE:          return "'";
+//         case PEBLKEY_LEFTPAREN:      return "(";
+//         case PEBLKEY_RIGHTPAREN:     return ")";
+//         case PEBLKEY_ASTERISK:       return "*";
+//         case PEBLKEY_PLUS:           return "+";
+//         case PEBLKEY_COMMA:          return ",";
+//         case PEBLKEY_MINUS:          return "-";
+//         case PEBLKEY_PERIOD:         return ".";
+//         case PEBLKEY_SLASH:          return "/";
+//         case PEBLKEY_0:         return "0";
+//         case PEBLKEY_1:         return "1";
+//         case PEBLKEY_2:         return "2";
+//         case PEBLKEY_3:         return "3";
+//         case PEBLKEY_4:         return "4";
+//         case PEBLKEY_5:         return "5";
+//         case PEBLKEY_6:         return "6";
+//         case PEBLKEY_7:         return "7";
+//         case PEBLKEY_8:         return "8";
+//         case PEBLKEY_9:         return "9";
+//         case PEBLKEY_COLON:         return ":";
+//         case PEBLKEY_SEMICOLON:     return ";";
+//         case PEBLKEY_LESS:          return "<";
+//         case PEBLKEY_EQUALS:        return "=";
+//         case PEBLKEY_GREATER:       return ">";
+//         case PEBLKEY_QUESTION:      return "?";
+//         case PEBLKEY_AT:            return "@";
+//         /* 
+//            Skip uppercase letters
+//         */
+//         case PEBLKEY_LEFTBRACKET:         return "[";
+//         case PEBLKEY_BACKSLASH:           return "\\";
+//         case PEBLKEY_RIGHTBRACKET:        return "]";
+//         case PEBLKEY_CARET:               return "^";
+//         case PEBLKEY_UNDERSCORE:          return "_";
+//         case PEBLKEY_BACKQUOTE:           return "`";
+//         case PEBLKEY_a:         return ShiftSwitch(modkeys, "a","A");
+//         case PEBLKEY_b:         return ShiftSwitch(modkeys, "b","B");
+//         case PEBLKEY_c:         return ShiftSwitch(modkeys, "c","C");
+//         case PEBLKEY_d:         return ShiftSwitch(modkeys, "d","D");
+//         case PEBLKEY_e:         return ShiftSwitch(modkeys, "e","E");
+//         case PEBLKEY_f:         return ShiftSwitch(modkeys, "f","F");
+//         case PEBLKEY_g:         return ShiftSwitch(modkeys, "g","G");
+//         case PEBLKEY_h:         return ShiftSwitch(modkeys, "h","H");
+//         case PEBLKEY_i:         return ShiftSwitch(modkeys, "i","I");
+//         case PEBLKEY_j:         return ShiftSwitch(modkeys, "j","J");
+//         case PEBLKEY_k:         return ShiftSwitch(modkeys, "k","K");
+//         case PEBLKEY_l:         return ShiftSwitch(modkeys, "l","L");
+//         case PEBLKEY_m:         return ShiftSwitch(modkeys, "m","M");
+//         case PEBLKEY_n:         return ShiftSwitch(modkeys, "n","N");
+//         case PEBLKEY_o:         return ShiftSwitch(modkeys, "o","O");
+//         case PEBLKEY_p:         return ShiftSwitch(modkeys, "p","P");
+//         case PEBLKEY_q:         return ShiftSwitch(modkeys, "q","Q");
+//         case PEBLKEY_r:         return ShiftSwitch(modkeys, "r","R");
+//         case PEBLKEY_s:         return ShiftSwitch(modkeys, "s","S");
+//         case PEBLKEY_t:         return ShiftSwitch(modkeys, "t","T");
+//         case PEBLKEY_u:         return ShiftSwitch(modkeys, "u","U");
+//         case PEBLKEY_v:         return ShiftSwitch(modkeys, "v","V");
+//         case PEBLKEY_w:         return ShiftSwitch(modkeys, "w","W");
+//         case PEBLKEY_x:         return ShiftSwitch(modkeys, "x","X");
+//         case PEBLKEY_y:         return ShiftSwitch(modkeys, "y","Y");
+//         case PEBLKEY_z:         return ShiftSwitch(modkeys, "z","Z");
+//         case PEBLKEY_DELETE:         return "<delete>";
+//         /* End of ASCII mapped keysyms */
+
+//         /* International keyboard syms */
+//         case PEBLKEY_WORLD_0:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_1:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_2:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_3:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_4:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_5:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_6:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_7:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_8:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_9:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_10:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_11:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_12:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_13:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_14:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_15:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_16:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_17:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_18:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_19:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_20:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_21:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_22:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_23:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_24:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_25:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_26:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_27:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_28:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_29:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_30:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_31:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_32:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_33:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_34:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_35:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_36:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_37:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_38:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_39:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_40:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_41:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_42:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_43:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_44:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_45:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_46:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_47:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_48:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_49:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_50:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_51:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_52:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_53:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_54:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_55:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_56:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_57:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_58:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_59:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_60:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_61:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_62:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_63:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_64:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_65:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_66:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_67:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_68:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_69:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_70:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_71:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_72:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_73:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_74:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_75:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_76:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_77:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_78:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_79:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_80:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_81:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_82:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_83:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_84:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_85:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_86:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_87:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_88:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_89:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_90:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_91:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_92:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_93:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_94:         return "<PEBL WORLD KEY>";
+//         case PEBLKEY_WORLD_95:         return "<PEBL WORLD KEY>";
+//         /* Numeric keypad */
+//         case PEBLKEY_KP0:         return "0";
+//         case PEBLKEY_KP1:         return "1";
+//         case PEBLKEY_KP2:         return "2";
+//         case PEBLKEY_KP3:         return "3";
+//         case PEBLKEY_KP4:         return "4";
+//         case PEBLKEY_KP5:         return "5";
+//         case PEBLKEY_KP6:         return "6";
+//         case PEBLKEY_KP7:         return "7";
+//         case PEBLKEY_KP8:         return "8";
+//         case PEBLKEY_KP9:         return "9";
+//         case PEBLKEY_KP_PERIOD:   return ".";
+//         case PEBLKEY_KP_DIVIDE:   return "/";
+//         case PEBLKEY_KP_MULTIPLY: return "*";
+//         case PEBLKEY_KP_MINUS:    return "-";
+//         case PEBLKEY_KP_PLUS:     return "+";
+//         case PEBLKEY_KP_ENTER:    return "<kp_enter>";
+//         case PEBLKEY_KP_EQUALS:   return "=";
+
+//         /* Arrows + Home/End pad */
+//         case PEBLKEY_UP:         return "<up>";
+//         case PEBLKEY_DOWN:       return "<down>";
+//         case PEBLKEY_RIGHT:      return "<right>";
+//         case PEBLKEY_LEFT:       return "<left>";
+//         case PEBLKEY_INSERT:     return "<insert>";
+//         case PEBLKEY_HOME:       return "<home>";
+//         case PEBLKEY_END:        return "<end>";
+//         case PEBLKEY_PAGEUP:     return "<pageup>";
+//         case PEBLKEY_PAGEDOWN:   return "<pagedown>";
+
+//         /* Function keys */
+//         case PEBLKEY_F1:         return "<F1>";
+//         case PEBLKEY_F2:         return "<F2>";
+//         case PEBLKEY_F3:         return "<F3>";
+//         case PEBLKEY_F4:         return "<F4>";
+//         case PEBLKEY_F5:         return "<F5>";
+//         case PEBLKEY_F6:         return "<F6>";
+//         case PEBLKEY_F7:         return "<F7>";
+//         case PEBLKEY_F8:         return "<F8>";
+//         case PEBLKEY_F9:         return "<F9>";
+//         case PEBLKEY_F10:         return "<F10>";
+//         case PEBLKEY_F11:         return "<F11>";
+//         case PEBLKEY_F12:         return "<F12>";
+//         case PEBLKEY_F13:         return "<F13>";
+//         case PEBLKEY_F14:         return "<F14>";
+//         case PEBLKEY_F15:         return "<F15>";
+
+//         /* Key state modifier keys */
+//         case PEBLKEY_NUMLOCK:      return "<numlock>";
+//         case PEBLKEY_CAPSLOCK:     return "<capslock>";
+//         case PEBLKEY_SCROLLOCK:    return "<scrollock>";
+//         case PEBLKEY_RSHIFT:       return "<rshift>";
+//         case PEBLKEY_LSHIFT:       return "<lshift>";
+//         case PEBLKEY_RCTRL:        return "<rctrl>";
+//         case PEBLKEY_LCTRL:        return "<lctrl>";
+//         case PEBLKEY_RALT:         return "<ralt>";
+//         case PEBLKEY_LALT:         return "<lalt>";
+//         case PEBLKEY_RMETA:        return "<rmeta>";
+//         case PEBLKEY_LMETA:        return "<lmeta>";
+//         case PEBLKEY_LSUPER:       return "<lsuper>";
+//         case PEBLKEY_RSUPER:       return "<rsuper>";
+//         case PEBLKEY_MODE:         return "<mode>";
+//         case PEBLKEY_COMPOSE:      return "<compose>";
+
+//         /* Miscellaneous function keys */
+//         case PEBLKEY_HELP:         return "<help>";
+//         case PEBLKEY_PRINT:        return "<print>";
+//         case PEBLKEY_SYSREQ:       return "<sysreq>";
+//         case PEBLKEY_BREAK:        return "<break>";
+//         case PEBLKEY_MENU:         return "<menu>";
+//         case PEBLKEY_POWER:        return "<power>";
+//         case PEBLKEY_EURO:         return "<euro>";
+//         case PEBLKEY_UNDO:         return "<undo>";
+
+//         /* Add any other keys here */
+//         case PEBLKEY_LAST:         return "<LAST KEY: ERROR>";
+//         default:                   return "<ERROR>";
+//     };
+// }
 
 
 
