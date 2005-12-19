@@ -217,8 +217,8 @@ define ChooseN(list, number)
 	}
 
    #Construct a list of items to select:
-   returnNum <- Max(0, number)
-   returnNum <- Floor(Min(returnNum, Length(list)))
+   returnNum <- Max([0, number])
+   returnNum <- Floor(Min([returnNum, Length(list)]))
    indexes <- SubList(Shuffle(Sequence(1, Length(list),1)), 1, returnNum)
    return  SubSet(list, indexes)
 }

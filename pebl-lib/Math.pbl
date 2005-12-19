@@ -1,0 +1,137 @@
+#/////////////////////////////////////////////////////////////////////////////////
+#//    Name:       src/pebl-lib/Math.pbl
+#//    Purpose:    Contains PEBL functions used for math
+#//    Author:     Shane T. Mueller, Ph.D.
+#//    Copyright:  (c) 2005 Shane T. Mueller <smueller@obereed.net>
+#//    License:    GPL 2
+#//
+#//
+#//
+#//     This file is part of the PEBL project.
+#//
+#//    PEBL is free software; you can redistribute it and/or modify
+#//    it under the terms of the GNU General Public License as published by
+#//    the Free Software Foundation; either version 2 of the License, or
+#//    (at your option) any later version.
+#//
+#//    PEBL is distributed in the hope that it will be useful,
+#//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#//    GNU General Public License for more details.
+#//
+#//    You should have received a copy of the GNU General Public License
+#//    along with PEBL; if not, write to the Free Software
+#//    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#////////////////////////////////////////////////////////////////////////////////
+
+
+#  The functions defined here are available for use in any PEBL program.
+#  They are written in PEBL itself, and so are interpreted, but the ease of
+#  writing them in PEBL far outweighed the possible speed-up that might be gained
+#  by writing them directly in C++.
+
+define Sum(list)
+{
+  sum <- 0
+  loop(i, list)
+  {
+    sum <- sum + i
+  }
+ return sum
+}
+
+##Mean
+##
+define Mean(list)
+{
+  sum <- 0
+  loop(i, list)
+  {
+    sum <- sum + i
+  }
+ return sum / Length(list)
+}
+
+##StdDev
+##
+define StdDev(list)
+{
+  n <- Length(list)
+  sumX <- 0
+  sumXX <- 0
+  loop(i, list)
+  {
+    sumX <- sumX + i
+    sumXX <- sumXX + i * i
+  }
+ return Sqrt(n * sumXX - sumX * sumX ) / n
+}
+
+##Min
+##
+define Min(list)
+{
+  min <- First(list)
+  loop(i, list)
+  {
+   if(i < min)
+    {
+      min <- i
+    }
+  }
+ return min
+}
+
+##Max
+##
+define Max(list)
+{
+  max <- First(list)
+
+  loop(i, list)
+  {
+   if(i > max)
+    {
+      max <- i
+    }
+  }
+  return max
+}
+
+##Median
+## Returns the median value, or the average of the
+## medians if tied.  It is not very efficient
+define Median(list)
+{
+  sorted <- Sort(list)
+  
+  l <- Length(sorted)
+  if(Mod(l,2) == 0)
+   {
+     valList <- ExtractListItems(sorted, [Round(l/2), Round(l/2+1)])
+     val <- (First(valList) + Nth(valList,2)) / 2
+   } else {
+     val <- Nth(sorted, Round(l/2))
+  }
+ return val
+}
+
+##Order
+##
+##This returns a list of indices describing the order of values by position, from min to max. For example, Order([40,50,60,30,20,10]) is [6,5,4,1,2,3].
+
+define Order(list)
+{
+   key <- Sequence(1,Length(list),1)
+   return SortBy(key,list)
+}
+
+
+##Rank
+##
+##A simple rank function can be found by calling Order() on the results of Order(), assuming there are no ties. Rank([40,50,60,30,20,10]) is [4,5,6,3,2,1].
+
+define Rank(list)
+{
+  return Order(Order(list))
+}
