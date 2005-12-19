@@ -51,8 +51,7 @@ using std::string;
 Variant PEBLList::Shuffle (Variant v)
 {
     //v is a list.  v[1] should be have a list in it.
-    counted_ptr<PEBLObjectBase> tmp = (v.GetComplexData())->GetObject();
-    PList * plist = ((PList*)tmp.get());
+     PList * plist = v.GetComplexData()->GetList();
 
     Variant v1 = plist->First(); plist->PopFront();
 
@@ -86,8 +85,7 @@ Variant PEBLList::Shuffle (Variant v)
 Variant PEBLList::Repeat (Variant v)
 {
    //v is a list; v[1] is the object to repeat (can be anything)
-    counted_ptr<PEBLObjectBase> tmp = (v.GetComplexData())->GetObject();
-    PList * plist = ((PList*)tmp.get());
+     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); plist->PopFront();
 
 
@@ -121,8 +119,7 @@ Variant PEBLList::List(Variant v)
 Variant PEBLList::RepeatList(Variant v)
 {
    //v[1] should be a list.  Just extract the iterators.
-    counted_ptr<PEBLObjectBase> tmp = (v.GetComplexData())->GetObject();
-    PList * plist = ((PList*)tmp.get());
+    PList * plist = v.GetComplexData()->GetList();
     
 
 
@@ -170,8 +167,7 @@ Variant PEBLList::RepeatList(Variant v)
 Variant PEBLList::Sequence(Variant v)
 {
     //v is a list; v[1] is the bottom of the sequence
-    counted_ptr<PEBLObjectBase> tmp = (v.GetComplexData())->GetObject();
-    PList * plist = ((PList*)tmp.get());
+     PList * plist = v.GetComplexData()->GetList();
 
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Sequence(<first>, <last>, <step>)]");
     Variant start = plist->First(); plist->PopFront();
@@ -262,8 +258,7 @@ Variant PEBLList::RepeatExpression (Variant v)
 /// Use cautiously; this gets mxn large
 Variant PEBLList::DesignFullCounterbalance (Variant v)
 {
-    counted_ptr<PEBLObjectBase> tmp = (v.GetComplexData())->GetObject();
-    PList * plist = ((PList*)tmp.get());
+    PList * plist = v.GetComplexData()->GetList();
     
     Variant v1 = plist->First(); plist->PopFront();
     //v[1] should be a list.  Just extract the iterators.    
@@ -326,9 +321,7 @@ Variant PEBLList::DesignFullCounterbalance (Variant v)
 /// To achieve the same effect but include the duplicates, use DesignFullCounterBalance(x,x)
 Variant PEBLList::CrossFactorWithoutDuplicates(Variant v)
 {
-
-    counted_ptr<PEBLObjectBase> tmp = (v.GetComplexData())->GetObject();
-    PList * plist = ((PList*)tmp.get());
+    PList * plist = v.GetComplexData()->GetList();
 
    //v[1] should be a list.  Just extract the iterators.
 
@@ -387,8 +380,7 @@ Variant PEBLList::CrossFactorWithoutDuplicates(Variant v)
 Variant PEBLList::Rotate(Variant v)
 {
     //v[1] should be a list.  Just extract the iterators.
-    counted_ptr<PEBLObjectBase> tmp = (v.GetComplexData())->GetObject();
-    PList * plist = ((PList*)tmp.get());
+    PList * plist = v.GetComplexData()->GetList();
 
     Variant v1 = plist->First(); plist->PopFront();
     PError::AssertType(v1, PEAT_LIST, "Argument error in first parameter of function [Rotate(<list>, <n>)]:  ");    
@@ -397,7 +389,7 @@ Variant PEBLList::Rotate(Variant v)
     PError::AssertType(v2, PEAT_INTEGER, "Argument error in second parameter of function [Rotate(<list>, <n>)]:  ");    
 
 
-    PList * arglist = (PList*)(v1.GetComplexData()->GetObject().get());
+    PList * arglist = v1.GetComplexData()->GetList();
 
     list<Variant>::iterator pi = arglist->Begin();
     list<Variant>::iterator pStart = pi;
@@ -407,11 +399,11 @@ Variant PEBLList::Rotate(Variant v)
 
     //startpoint is the 0-based index of which item to start the new list with.
     int rotation = (int)v2;
-
-    int length =  plist->Length();
+    int length =  arglist->Length();
         
     //We need to find a startpoint as a positive number between 0 and length.
     //The normal % and mod functions will not produce this.
+
     double remainder = (((double)rotation/length) - (rotation/length));
 
     //Adjust for negative remainders.
@@ -460,8 +452,8 @@ Variant PEBLList::Rotate(Variant v)
 /// This returns the number of items in the list.
 Variant PEBLList::Length (Variant v)
 {
-    counted_ptr<PEBLObjectBase> tmp = (v.GetComplexData())->GetObject();
-    PList * plist = ((PList*)tmp.get());
+
+    PList * plist = v.GetComplexData()->GetList();
 
     //v[1] should be a list
     Variant v1 = plist->First(); plist->PopFront();
@@ -477,9 +469,8 @@ Variant PEBLList::Length (Variant v)
 Variant PEBLList::First (Variant v)
 {
    //v[1] should be a list
-    counted_ptr<PEBLObjectBase> tmp = (v.GetComplexData())->GetObject();
-    PList * plist = ((PList*)tmp.get());
 
+    PList * plist = v.GetComplexData()->GetList();
 
     Variant v1 = plist->First(); plist->PopFront();
     PError::AssertType(v1, PEAT_LIST, "Argument error in function [First(<list>)]:  ");    
@@ -494,8 +485,7 @@ Variant PEBLList::First (Variant v)
 //if it is longer than the list, it returns the last item.
 Variant PEBLList::Nth (Variant v)
 {
-    counted_ptr<PEBLObjectBase> tmp = (v.GetComplexData())->GetObject();
-    PList * plist = ((PList*)tmp.get());
+    PList * plist = v.GetComplexData()->GetList();
     
 
     //v[1] should be a list
@@ -513,8 +503,7 @@ Variant PEBLList::Nth (Variant v)
 Variant PEBLList::Last(Variant v)
 {
    //v[1] should be a list
-    counted_ptr<PEBLObjectBase> tmp = (v.GetComplexData())->GetObject();
-    PList * plist = ((PList*)tmp.get());
+     PList * plist = v.GetComplexData()->GetList();
 
     Variant v1 = plist->First(); plist->PopFront();
     PError::AssertType(v1, PEAT_LIST, "Argument error in function [Last(<list>)]:  ");    
@@ -528,8 +517,7 @@ Variant PEBLList::Last(Variant v)
 ///
 Variant PEBLList::Merge (Variant v)
 {
-    counted_ptr<PEBLObjectBase> tmp = (v.GetComplexData())->GetObject();
-    PList * plist = ((PList*)tmp.get());
+    PList * plist = v.GetComplexData()->GetList();
     
     Variant v1 = plist->First(); plist->PopFront();
     //v[1] should be a list.  Just extract the iterators.    
@@ -584,8 +572,7 @@ Variant PEBLList::Merge (Variant v)
 Variant PEBLList::Append (Variant v)
 {
 
-    counted_ptr<PEBLObjectBase> tmp = (v.GetComplexData())->GetObject();
-    PList * plist = ((PList*)tmp.get());
+    PList * plist = v.GetComplexData()->GetList();
     
     
     Variant v1 = plist->First(); plist->PopFront();
@@ -625,8 +612,7 @@ Variant PEBLList::Append (Variant v)
 Variant PEBLList::Sort (Variant v)
 {
    //v[1] should be a list
-    counted_ptr<PEBLObjectBase> tmp = (v.GetComplexData())->GetObject();
-    PList * plist = ((PList*)tmp.get());
+    PList * plist = v.GetComplexData()->GetList();
 
 
     Variant v1 = plist->First(); plist->PopFront();
@@ -644,8 +630,7 @@ Variant PEBLList::Sort (Variant v)
 Variant PEBLList::SortBy (Variant v)
 {
     //v[1] should be a list
-    counted_ptr<PEBLObjectBase> tmp = (v.GetComplexData())->GetObject();
-    PList * plist = ((PList*)tmp.get());
+     PList * plist = v.GetComplexData()->GetList();
 
     Variant v1 = plist->First(); plist->PopFront();
     PError::AssertType(v1, PEAT_LIST, "Argument error in first parameter of function [SortBy(<list>, <list>)]:  ");    
@@ -666,9 +651,7 @@ Variant PEBLList::SortBy (Variant v)
 
 Variant PEBLList::IsMember (Variant v)
 {
-    //v[1] should be a list
-    counted_ptr<PEBLObjectBase> tmp = (v.GetComplexData())->GetObject();
-    PList * plist = ((PList*)tmp.get());
+    PList * plist = v.GetComplexData()->GetList();
 
     //v[1] should be an item to check for membership.
     Variant v1 = plist->First(); plist->PopFront();
@@ -721,8 +704,7 @@ Variant PEBLList::MakeMap (Variant v)
 Variant PEBLList::Transpose (Variant v)
 {
    //v[1] should be a list
-    counted_ptr<PEBLObjectBase> tmp = (v.GetComplexData())->GetObject();
-    PList * plist = ((PList*)tmp.get());
+    PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); plist->PopFront();
     PError::AssertType(v1, PEAT_LIST, "Argument error in function [Transpose(<list-of-lists>)]:  ");    
 
@@ -795,8 +777,7 @@ Variant PEBLList::SubList(Variant v)
 {
 
   //v[1] should be a list.  Just extract the iterators.
-    counted_ptr<PEBLObjectBase> tmp = (v.GetComplexData())->GetObject();
-    PList * plist = ((PList*)tmp.get());
+    PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); plist->PopFront();
     PError::AssertType(v1, PEAT_LIST, "Argument error in first parameter of function [SubList(<list>, <int>, <int>)]:  ");    
 
