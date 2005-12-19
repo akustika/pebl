@@ -92,11 +92,11 @@ namespace PEBLMath
             {"ABS",           Abs,      1, 1},
              
             //Statistical (operates on a list; ignores non-numeric elements.)
-            {"MEAN",          Mean,     1, 1},
-            {"MIN",           Min,      1, 9999},
-            {"MAX",           Max,      1, 9999},
-            {"STDEV",         StDev,    1, 1},
-            {"MEDIAN",        Median,   1, 1},
+//             {"MEAN",          Mean,     1, 1},
+//             {"MIN",           Min,      1, 9999},
+//             {"MAX",           Max,      1, 9999},
+//             {"STDEV",         StDev,    1, 1},
+//             {"MEDIAN",        Median,   1, 1},
             {"QUANTILE",      Quantile, 2, 2},
 
             {"RANDOMIZETIMER",     RandomizeTimer,    0, 0},

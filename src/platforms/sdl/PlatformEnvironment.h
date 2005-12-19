@@ -32,6 +32,7 @@
 #include "../../objects/PEnvironment.h"
 #include "../../apps/Globals.h"
 #include "../../base/PEBLObject.h"
+
 #include <list>
 
 
@@ -40,7 +41,7 @@
 /// 
 
 
-class PlatformEnvironment: public PEnvironment
+class PlatformEnvironment: virtual public PEnvironment, public PEBLObjectBase
 {
 public:
   
@@ -57,6 +58,14 @@ public:
     PEBLVideoDepth  GetVideoDepth(){return mVideoDepth;};
     bool GetWindowed(){return mWindowed;};
     
+
+    //overloaded generic PEBLObjectBase methods
+    virtual bool SetProperty(std::string, Variant v);
+    virtual Variant GetProperty(std::string)const;
+//     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
+//     virtual ObjectValidationError ValidateProperty(std::string)const;
+    
+
 protected:
     virtual std::ostream & SendToStream(std::ostream& out) const;    
 
@@ -65,6 +74,7 @@ private:
     PEBLVideoMode mVideoMode;
     PEBLVideoDepth mVideoDepth;
     bool mWindowed;
+    void __SetProps__();
 };
 
 

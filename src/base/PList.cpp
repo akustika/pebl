@@ -42,17 +42,17 @@ using std::pair;
 using std::ostream;
 
 ///Standard Constructor
-PList::PList()
+PList::PList(): PEBLObjectBase(CDT_LIST)
 {
-    mCDT = CDT_LIST;
+    //    mCDT = CDT_LIST;
 }
 
 
 ///Copy constructor.  Should make a deep copy.
-PList::PList(PList & tmpList)
+PList::PList(PList & tmpList): PEBLObjectBase(CDT_LIST)
 {
 
-    mCDT=CDT_LIST;
+    //mCDT=CDT_LIST;
     list<Variant> * tmp = tmpList.GetList();
 
     //Make an item-by-item copy of list into mList.
@@ -94,7 +94,6 @@ PList * PList::Clone()
 ///Standard Destructor
 PList::~PList()
 {
-  
 }
 
 
@@ -124,7 +123,6 @@ std::list<Variant>::const_iterator  PList::End() const
 
 void PList::PushFront(const Variant & v)
 {
-    cout << "             Pushing [" << v << "] onto list\n";
     mList.push_front(v);
 }
 
@@ -188,7 +186,7 @@ Variant PList::Last()
 ///It does this by making a multiset, which is implicitly sorted,
 ///and then making the map back into a list.
 
-counted_ptr<PList> PList::SortBy(const PList & key)
+counted_ptr<PEBLObjectBase> PList::SortBy(const PList & key)
 {
     //This is the map that the variant pairs will be put into
     multimap<Variant, Variant> sortMap;
@@ -209,7 +207,8 @@ counted_ptr<PList> PList::SortBy(const PList & key)
 
     //Now, sortmap should be in order of keyIterator. Make
     //a new PList to put the data in.
-    counted_ptr<PList> newList = counted_ptr<PList>(new PList());
+    PList * newList = new PList();
+
     multimap<Variant, Variant>::iterator i=sortMap.begin();
     
     while(i != sortMap.end())
@@ -217,8 +216,7 @@ counted_ptr<PList> PList::SortBy(const PList & key)
             newList->PushBack(i->second);
             i++;
         }  
-    
-    return newList;
+    return counted_ptr<PEBLObjectBase>(newList); 
 }
 
 

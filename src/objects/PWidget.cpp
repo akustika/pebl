@@ -41,13 +41,13 @@ PWidget::PWidget():
     mIsVisible(true),
     mParent(NULL)
 {
-    cout << "Initializing widget\n";
+    
     InitializeProperty("X",Variant(mX));
     InitializeProperty("Y",Variant(mY));
     InitializeProperty("WIDTH",Variant(mWidth));
     InitializeProperty("HEIGHT",Variant(mHeight));
     InitializeProperty("VISIBLE",Variant(mIsVisible));
-
+    
 }
 
 PWidget::PWidget(int x, int y, int width, int height, bool visible):
@@ -60,12 +60,12 @@ PWidget::PWidget(int x, int y, int width, int height, bool visible):
     mIsVisible(visible),
     mParent(NULL)
 {
-    cout << "Initializing widget\n";
-    InitializeProperty("X",Variant(mX));
-    InitializeProperty("Y",Variant(mY));
-    InitializeProperty("WIDTH",Variant(mWidth));
-    InitializeProperty("HEIGHT",Variant(mHeight));
-    InitializeProperty("VISIBLE",Variant(mIsVisible));
+
+     InitializeProperty("X",Variant(mX));
+     InitializeProperty("Y",Variant(mY));
+     InitializeProperty("WIDTH",Variant(mWidth));
+     InitializeProperty("HEIGHT",Variant(mHeight));
+     InitializeProperty("VISIBLE",Variant(mIsVisible));
 
 }
 
@@ -83,8 +83,8 @@ void PWidget::SetPosition(int x, int y)
     mDrawX = x;
     mDrawY = y;
 
-    PEBLObjectBase::SetProperty("X",mX);
-    PEBLObjectBase::SetProperty("Y",mY);
+     PEBLObjectBase::SetProperty("X",mX);
+     PEBLObjectBase::SetProperty("Y",mY);
 }
 
 
@@ -97,7 +97,7 @@ std::ostream & PWidget::SendToStream(std::ostream& out) const
 }
 
 
-void PWidget::SetBackgroundColor(counted_ptr<PColor> color)
+void PWidget::SetBackgroundColor(PColor color)
 {
     mBackgroundColor = color;
 }
@@ -130,11 +130,13 @@ bool PWidget::RemoveLastSubWidget()
 void PWidget::Show()
 {
     mIsVisible = true;
-    PEBLObjectBase::SetProperty("VISIBLE",mIsVisible);}
+    PEBLObjectBase::SetProperty("VISIBLE",mIsVisible);
 
-
+}
 void PWidget::Hide()
 {
     mIsVisible = false;    
     PEBLObjectBase::SetProperty("VISIBLE",mIsVisible);
 }
+
+

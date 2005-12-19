@@ -52,13 +52,18 @@ void PImageBox::SetPosition(int x, int y)
 
 
 
+
+
 //overloaded generic PEBLObjectBase methods
 bool PImageBox::SetProperty(std::string name, Variant v)
 {
 
+    //Width and height are not currently 'settable', in that
+    //they are properties of the object.
 
     if(name == "X") SetPosition(v,mY);
     else if (name == "Y") SetPosition(mX,v);
+
     else if (name == "VISIBLE") 
         {
             if(v.GetInteger())
@@ -74,6 +79,8 @@ bool PImageBox::SetProperty(std::string name, Variant v)
 
 Variant PImageBox::GetProperty(std::string name)const
 {
+
+    //PEBLObjectBase::PrintProperties(cout);
     return PEBLObjectBase::GetProperty(name);
 }
 
@@ -102,10 +109,10 @@ ObjectValidationError PImageBox::ValidateProperty(std::string name)const
 void PImageBox::__SetProps__()
 {
 
-    PEBLObjectBase::SetProperty("X",mX);
-    PEBLObjectBase::SetProperty("Y",mY);
-    PEBLObjectBase::SetProperty("VISIBLE",mIsVisible);
-    PEBLObjectBase::SetProperty("WIDTH",mWidth);
-    PEBLObjectBase::SetProperty("HEIGHT",mHeight);
+     SetProperty("X",mX);
+     SetProperty("Y",mY);
+     SetProperty("VISIBLE",mIsVisible);
+     SetProperty("WIDTH",mWidth);
+     SetProperty("HEIGHT",mHeight);
 
 }

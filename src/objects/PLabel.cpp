@@ -36,6 +36,7 @@ using std::endl;
 PLabel::PLabel():
     PTextObject("")
 {
+    mCDT=CDT_LABEL;
 }
 
 
@@ -43,12 +44,15 @@ PLabel::PLabel():
 PLabel::PLabel(const std::string & text):
     PTextObject(text)
 {
+    mCDT=CDT_LABEL;
 }
+
 
 
 PLabel::PLabel(const  PLabel & label):
     PTextObject(label.GetText())
 {
+    mCDT=CDT_LABEL;
 }
 
 PLabel::~PLabel()
@@ -111,7 +115,7 @@ void PLabel::SetPosition(int x, int y)
 }
 
 
-std::string PLabel::ObjectName()
+std::string PLabel::ObjectName()const
 {
     return "Text Label";
 }

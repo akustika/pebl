@@ -55,8 +55,8 @@ using std::ostream;
 /// and poll them until one flips.
 
 ///Standard Constructor
-PlatformKeyboard::PlatformKeyboard():
-    mCDT(CDT_KEYBOARD)
+PlatformKeyboard::PlatformKeyboard()
+    //    mCDT(CDT_KEYBOARD)
 {
     mKeyboardState = SDL_GetKeyState(NULL);  
     SDL_PumpEvents();

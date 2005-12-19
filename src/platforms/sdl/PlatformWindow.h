@@ -43,7 +43,7 @@
 
 
 
-class PlatformWindow: public PWindow, public PlatformWidget
+class PlatformWindow: virtual public PWindow, virtual public PlatformWidget
 {
 public:
   
@@ -53,8 +53,8 @@ public:
   
     ///This method initiates everything needed to display the main window
     bool Initialize(PEBLVideoMode mode, 
-                                    PEBLVideoDepth vdepth, 
-                                    bool windowed);
+                    PEBLVideoDepth vdepth, 
+                    bool windowed);
     int GetVideoFlags();
 
     bool Draw();

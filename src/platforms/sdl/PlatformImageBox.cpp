@@ -28,6 +28,7 @@
 #include "../../utility/PEBLPath.h"
 #include "../../utility/PError.h"
 #include "../../base/Evaluator.h"
+#include "../../base/PEBLObject.h"
 
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
@@ -48,10 +49,10 @@ using std::string;
 
 ///Standard Constructor
 PlatformImageBox::PlatformImageBox():
-    PImageBox(),
-    mCDT(CDT_IMAGEBOX)
-{
+    PImageBox()
 
+{
+    mCDT=CDT_IMAGEBOX;
     mSurface = NULL;
 }
 
@@ -60,7 +61,6 @@ PlatformImageBox::PlatformImageBox():
 ///Standard Destructor
 PlatformImageBox::~PlatformImageBox()
 {
- 
 }
 
 
@@ -80,6 +80,7 @@ ostream & PlatformImageBox::SendToStream(ostream& out) const
 
 bool PlatformImageBox::LoadImage(const std::string &  imagefilename)
 {
+
 
     //Check to see if we can find the image; if not, call everything off.
     string filename = Evaluator::gPath.FindFile(imagefilename);
@@ -110,23 +111,29 @@ bool PlatformImageBox::LoadImage(const std::string &  imagefilename)
     //bpp, format, etc.
     
 
+
     //Now, set the height and width to be the same as the
     //initial image.
     if( mSurface)
         {  
+
             mWidth  = mSurface->w; 
             mHeight = mSurface->h;
-            PEBLObjectBase::SetProperty("WIDTH", Variant(mWidth));
-            PEBLObjectBase::SetProperty("HEIGHT", Variant(mHeight));
+            //These need to be set at the PWidget level because 
+            //they are not mutable at the imagebox level.
+            PWidget::SetProperty("WIDTH", Variant(mWidth));
+            PWidget::SetProperty("HEIGHT", Variant(mHeight));
+
             return true;
         }
     else
         {
-
-
-            SetProperty("WIDTH", 0);
-            SetProperty("HEIGHT", 0);
-
+            PWidget::SetProperty("WIDTH", 0);
+            PWidget::SetProperty("HEIGHT", 0);
+            
             return false;
-        } 
+        }
 }
+
+
+

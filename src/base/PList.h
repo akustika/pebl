@@ -76,7 +76,7 @@ public:
     Variant Rest();
     Variant Nth(unsigned int n);
     Variant Last();
-    counted_ptr<PList> SortBy(const PList & key);
+    counted_ptr<PEBLObjectBase> SortBy(const PList & key);
 
     unsigned int Length(){return mList.size();}
 

@@ -44,16 +44,21 @@ PEBLObjectBase::PEBLObjectBase()
 {
     mCDT=CDT_UNDEFINED;
 }
+///Standard Constructor
+PEBLObjectBase::PEBLObjectBase(ComplexDataType cdt)
+{
+    mCDT=cdt;
+}
 
+PEBLObjectBase::PEBLObjectBase(const PEBLObjectBase & pob)
+{
 
+}
 
 ///Standard Destructor
 PEBLObjectBase::~PEBLObjectBase()
 {
-    cout << "Destroying object: " << ObjectName() << endl;
-    PrintProperties(cout);
     mProperties.clear();
-    cout << "Done destroying object\n";
 }
 
 
@@ -68,8 +73,6 @@ bool PEBLObjectBase::SetProperty(std::string name, Variant v)
         }
     else
         {
-            std::cerr << "Property: " << name << " " << v << endl;
-            PrintProperties(cerr);
             PError::SignalFatalError("Failing to set property\n");
             return false;
         }
@@ -78,6 +81,7 @@ bool PEBLObjectBase::SetProperty(std::string name, Variant v)
 
 bool PEBLObjectBase::InitializeProperty(std::string name, Variant v)
 {
+
     mProperties[name]=v;
     return true;
 }
@@ -85,14 +89,11 @@ bool PEBLObjectBase::InitializeProperty(std::string name, Variant v)
 Variant PEBLObjectBase::GetProperty(const std::string name)const
 {
 
-
-   ObjectValidationError err = ValidateProperty(name);
+    ObjectValidationError err = ValidateProperty(name);
     if(err == 0)
         return mProperties.find(name)->second;
     else
         {
-
-
             PError::SignalFatalError("Attempted to get invalid property [" + name + "] of object.");
         }
     return Variant(0);
@@ -148,7 +149,6 @@ ostream & PEBLObjectBase::PrintProperties(ostream& out) const
 // Inheritable function that is called by friend method << operator of PComplexData
 ostream & PEBLObjectBase::SendToStream(ostream& out) const
 {
-
     out << ObjectName() << flush;
     return out;
 }

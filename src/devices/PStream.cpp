@@ -46,6 +46,8 @@ PStream::PStream(const string & filename, StreamDirection dir, StreamType type):
     mStreamDirection(dir),
     mStreamType(type)
 {
+
+    mCDT = CDT_FILESTREAM;
     //Standard Constructor
           
     

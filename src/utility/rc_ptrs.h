@@ -129,7 +129,7 @@ protected:
 
     void release()
     {
-        std::cout <<"XXXXX["<< *count << "|" <<"]\n";
+
         if (count)
             {
                 (*count)--;

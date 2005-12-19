@@ -108,7 +108,7 @@ Variant PEBLUtility::Tokenize(const char* line, char separator)
     //form a list out of the tokens.
     
 
-    counted_ptr<PList>  plist = counted_ptr<PList>(new PList());
+    PList * plist = new PList;
     int i = 0;
     int begin = 0;
     char * token;
@@ -137,7 +137,8 @@ Variant PEBLUtility::Tokenize(const char* line, char separator)
             i++;
         }
 
-    PComplexData * pcd  = new PComplexData(plist);
+    counted_ptr<PEBLObjectBase> tmpObj = counted_ptr<PEBLObjectBase>(plist);
+    PComplexData * pcd  = new PComplexData(tmpObj);
     return Variant(pcd);
 }
 

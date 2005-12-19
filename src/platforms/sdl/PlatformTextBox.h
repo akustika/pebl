@@ -42,13 +42,13 @@
 /// 
 
 
-class PlatformTextBox:  public PlatformWidget, public PTextBox//, public virtual PEBLObjectBase
+class PlatformTextBox: virtual  public PlatformWidget, virtual public PTextBox
 {
 public:
-    PlatformTextBox(std::string text, counted_ptr<PlatformFont> font, int width, int height);
+    PlatformTextBox(std::string text, counted_ptr<PEBLObjectBase> font, int width, int height);
 
     ///This copy constructor isn't const because the font is shared.
-    PlatformTextBox( PlatformTextBox & textbox);
+    PlatformTextBox(const PlatformTextBox & textbox);
 
     virtual ~PlatformTextBox();
 
@@ -56,20 +56,22 @@ public:
     virtual bool RenderText();
 
     //These need to be overridden because the text needs to be re-rendered when they are called.
-    virtual void SetFont(counted_ptr<PlatformFont> font);
+    virtual void SetFont(counted_ptr<PEBLObjectBase> font);
     virtual void SetText(std::string  text);
 
 
     //This needs to be overridden so that it returns a PlatformFont.
-    virtual counted_ptr<PlatformFont> GetFont(){return mFont;}
+    virtual counted_ptr<PEBLObjectBase> GetFont()const{return mFontObject;}
     
 
     virtual bool Draw();
     virtual void HandleKeyPress(int keycode, int modkey);
+    virtual std::string ObjectName()const{return "PlatformTextBox";} ;
 
 protected:
+
     virtual std::ostream & SendToStream(std::ostream& out) const;
-    virtual std::string ObjectName()const{return "PlatformTextBox";} ;
+
     std::vector<int> mBreaks;  ///This stores linebreaks
 
 private:
@@ -78,8 +80,9 @@ private:
     int FindNextLineBreak(unsigned int curposition);
     int FindCursorPosition(int x, int y);
     void DrawCursor();
-
-    counted_ptr<PlatformFont> mFont;
+    
+    counted_ptr<PEBLObjectBase> mFontObject;
+    PlatformFont * mFont;
 
 };
 

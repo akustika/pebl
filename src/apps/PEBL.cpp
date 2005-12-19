@@ -105,6 +105,7 @@ int PEBLInterpret( int argc, char *argv[] )
     //Add the built-in PEBL libraries to the files list.
     files.push_back("Design.pbl");
     files.push_back("Utility.pbl");
+    files.push_back("Math.pbl");
 
     //Process the first command-line argument.
     std::list<std::string>::iterator i = files.begin();
@@ -339,14 +340,14 @@ int PEBLInterpret( int argc, char *argv[] )
     PComplexData * pcd = new PComplexData(counted_ptr<PEBLObjectBase>(pList));
     Variant v = Variant(pcd);
     
-    cout << "A1\n";
+
     Evaluator myEval = Evaluator(v,"Start");
-    cout << "A2\n";
+
 
 
       //Now, everything should be F-I-N-E fine.
   
-    cout << "--------Getting main function---" << endl;
+
     head = myLoader->GetMainPEBLFunction();
 
     if(head) 

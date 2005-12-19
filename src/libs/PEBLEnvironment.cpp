@@ -75,8 +75,12 @@ Variant PEBLEnvironment::GetTime(Variant v)
 
 Variant  PEBLEnvironment::Wait(Variant v)
 {
+
+
     //v[1] should have the parameter
-    counted_ptr<PList> plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
+
+
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in function [Wait(<number>)]: ");
     int delay = plist->First(); plist->PopFront();
     delay += myTimer.GetTime();
@@ -100,8 +104,7 @@ Variant  PEBLEnvironment::Wait(Variant v)
 Variant PEBLEnvironment::IsKeyDown(Variant v)
 {
     //v[1] should have the parameter-a letter
-    counted_ptr<PList> plist = (v.GetComplexData())->GetList();
-
+     PList * plist = v.GetComplexData()->GetList();
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [IsKeyDown(<string>)]: ");    
 
     std::string mystring = plist->First(); plist->PopFront();
@@ -115,9 +118,8 @@ Variant PEBLEnvironment::IsKeyDown(Variant v)
 
 Variant PEBLEnvironment::IsKeyUp(Variant v)
 {
-
+    PList * plist = v.GetComplexData()->GetList();
    //v[1] should have the parameter-a letter
-    counted_ptr<PList> plist = (v.GetComplexData())->GetList();
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [IsKeyUp(<string>)]:  ");    
 
@@ -143,7 +145,7 @@ Variant PEBLEnvironment::WaitForKeyDown(Variant v)
 {
 
     //v[1] should have the parameter-a letter
-    counted_ptr<PList> plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyDown(<string>)]:  ");    
 
@@ -174,7 +176,7 @@ Variant PEBLEnvironment::WaitForKeyUp(Variant v)
 {
 
     //v[1] should have the parameter-a letter
-    counted_ptr<PList> plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyUp(<string>)]:  ");    
 
@@ -235,7 +237,7 @@ Variant PEBLEnvironment::WaitForAnyKeyDown(Variant v)
 Variant PEBLEnvironment::WaitForKeyPress(Variant v)
 {
     //v[1] should have the parameter-a letter
-    counted_ptr<PList> plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyPress(<string>)]:  ");    
 
@@ -266,7 +268,7 @@ Variant PEBLEnvironment::WaitForKeyRelease(Variant v)
 {
 
     //v[1] should have the parameter-a letter
-    counted_ptr<PList> plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyRelease(<string>)]:  ");    
 
@@ -351,7 +353,7 @@ Variant PEBLEnvironment::WaitForAnyKeyDownWithTimeout(Variant v)
 {
 
    //v[1] should have the parameter: a time to wait.
-    counted_ptr<PList> plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
 
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in function [WaitForAnyKeyDownWithTimeout(<number>)]:  ");    
 
@@ -392,13 +394,12 @@ Variant PEBLEnvironment::WaitForKeyListDown(Variant v)
 {
 
    //v[1] should have the parameter: a list of keys to wait for.
-    counted_ptr<PList> plist = (v.GetComplexData())->GetList();
-
+    PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); plist->PopFront();
     PError::AssertType(v1, PEAT_LIST, "Argument error in function [WaitForKeyListDown(<list>)]:  ");    
     
     //Use plist to get the actual list of items.
-    counted_ptr<PList> keylist = (v1.GetComplexData())->GetList(); 
+    PList * keylist = (PList*)((v1.GetComplexData())->GetObject().get());
                                                    
     std::list<Variant>::iterator p = keylist->Begin();
     std::list<Variant>::iterator end = keylist->End();
@@ -436,14 +437,14 @@ Variant PEBLEnvironment::WaitForListKeyPress(Variant v)
 {
 
    //v[1] should have the parameter: a list of keys to wait for.
-    counted_ptr<PList> plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
 
     Variant v1 = plist->First(); plist->PopFront();
     PError::AssertType(v1, PEAT_LIST, "Argument error in function [WaitForKeyListPress(<list>)]:  ");    
     
     //Use plist to get the actual list of items.
-    counted_ptr<PList> keylist = (v1.GetComplexData())->GetList(); 
-                                                   
+    PList * keylist = (PList*)((v1.GetComplexData())->GetObject().get());
+
     std::list<Variant>::iterator p = keylist->Begin();
     std::list<Variant>::iterator end = keylist->End();
 
@@ -478,11 +479,11 @@ Variant PEBLEnvironment::WaitForListKeyPress(Variant v)
 /// will return the text inside the box.
 Variant PEBLEnvironment::GetInput(Variant v)
 {
-    counted_ptr<PList> plist = (v.GetComplexData())->GetList();    
-
+    PList * plist = v.GetComplexData()->GetList();
     //The first argument should be a textbox.
     PError::AssertType(plist->First(), PEAT_TEXTBOX, "Argument error in function [GetInput(<textbox>,<key-string>)]: "); 
-    counted_ptr<PlatformTextBox> textbox = plist->First().GetComplexData()->GetTextBox(); plist->PopFront();    
+    PlatformTextBox * textbox = dynamic_cast<PlatformTextBox*>(plist->First().GetComplexData()->GetObject().get());
+    plist->PopFront();    
 
     //The next argument should be the 'escape' key.
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [GetInput(<textbox>,<key-string>)]: ");    
@@ -559,7 +560,9 @@ Variant  PEBLEnvironment::ClearEventLoop(Variant v)
 Variant PEBLEnvironment::SignalFatalError(Variant v)
 {
     //Signal a fatal error with the message inside v
-    std::string message  =  (v.GetComplexData())->GetList()->First().GetString();
+    PList * plist = v.GetComplexData()->GetList();
+    std::string message  = plist->First().GetString();
+
     PError::SignalFatalError(message);
     return Variant(false);
 }
@@ -572,8 +575,8 @@ Variant PEBLEnvironment::TranslateKeyCode(Variant v)
 {
 
    //v[1] should have the key
-    counted_ptr<PList> plist = (v.GetComplexData())->GetList();
-    
+    PList * plist = v.GetComplexData()->GetList();
+
     PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in function [TranslateKeyCode(<integer>)]:  ");    
 
     int key = (int)(plist->First()); plist->PopFront();
@@ -616,31 +619,40 @@ Variant  PEBLEnvironment::GetPEBLVersion(Variant v)
 
 Variant PEBLEnvironment::IsNumber(Variant v)
 {
-    return (v.GetComplexData())->GetList()->First().IsNumber();
+    PList * plist = v.GetComplexData()->GetList();
+
+    return plist->First().IsNumber();
 }
 
 Variant PEBLEnvironment::IsInteger(Variant v)
 {
-    return (v.GetComplexData())->GetList()->First().IsInteger();
+    PList * plist = v.GetComplexData()->GetList();
+
+    return plist->First().IsInteger();
 }
 
 
 Variant PEBLEnvironment::IsFloat(Variant v)
 {
-    return (v.GetComplexData())->GetList()->First().IsFloat();
+    PList * plist = v.GetComplexData()->GetList();
+
+    return plist->First().IsFloat();
 }
 
 
 
 Variant PEBLEnvironment::IsString(Variant v)
 {
-    return (v.GetComplexData())->GetList()->First().IsString();
+    PList * plist = v.GetComplexData()->GetList();
+    return plist->First().IsString();
 }
 
 
 Variant PEBLEnvironment::IsList(Variant v)
 {
-    Variant v1 =  (v.GetComplexData())->GetList()->First();
+    PList * plist = v.GetComplexData()->GetList();
+
+    Variant v1 =  plist->First();
     if (v1.IsComplexData())
         {
             if((v1.GetComplexData())->IsList())
@@ -654,7 +666,9 @@ Variant PEBLEnvironment::IsList(Variant v)
 
 Variant PEBLEnvironment::IsTextBox(Variant v)
 {
-    Variant v1 =  (v.GetComplexData())->GetList()->First();
+    PList * plist = v.GetComplexData()->GetList();
+
+    Variant v1 =  plist->First();
     if (v1.IsComplexData())
         {
             if((v1.GetComplexData())->IsTextBox())
@@ -667,7 +681,8 @@ Variant PEBLEnvironment::IsTextBox(Variant v)
 
 Variant PEBLEnvironment::IsImage(Variant v)
 {
-    Variant v1 =  (v.GetComplexData())->GetList()->First();
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 =  plist->First();
     if (v1.IsComplexData())
         {
             if((v1.GetComplexData())->IsImageBox())
@@ -682,7 +697,8 @@ Variant PEBLEnvironment::IsImage(Variant v)
 
 Variant PEBLEnvironment::IsLabel(Variant v)
 {
-    Variant v1 =  (v.GetComplexData())->GetList()->First();
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 =  plist->First();
     if (v1.IsComplexData())
         {
             if((v1.GetComplexData())->IsLabel())
@@ -697,7 +713,9 @@ Variant PEBLEnvironment::IsLabel(Variant v)
 
 Variant PEBLEnvironment::IsAudioOut(Variant v)
 {
-    Variant v1 =  (v.GetComplexData())->GetList()->First();
+    PList * plist = v.GetComplexData()->GetList();
+
+    Variant v1 =  plist->First();
     if (v1.IsComplexData())
         {
             if((v1.GetComplexData())->IsAudioOut())
@@ -712,7 +730,9 @@ Variant PEBLEnvironment::IsAudioOut(Variant v)
 
 Variant PEBLEnvironment::IsFont(Variant v)
 {
-    Variant v1 =  (v.GetComplexData())->GetList()->First();
+    PList * plist = v.GetComplexData()->GetList();
+
+    Variant v1 =  plist->First();
     if (v1.IsComplexData())
         {
             if((v1.GetComplexData())->IsFont())
@@ -727,7 +747,9 @@ Variant PEBLEnvironment::IsFont(Variant v)
 
 Variant PEBLEnvironment::IsColor(Variant v)
 {
-    Variant v1 =  (v.GetComplexData())->GetList()->First();
+    PList * plist = v.GetComplexData()->GetList();
+
+    Variant v1 =  plist->First();
     if (v1.IsComplexData())
         {
             if((v1.GetComplexData())->IsColor())
@@ -741,7 +763,8 @@ Variant PEBLEnvironment::IsColor(Variant v)
 
 Variant PEBLEnvironment::IsFileStream(Variant v)
 {
-    Variant v1 =  (v.GetComplexData())->GetList()->First();
+     PList * plist = v.GetComplexData()->GetList();
+    Variant v1 =  plist->First();
     if (v1.IsComplexData())
         {
             if((v1.GetComplexData())->IsFileStream())
@@ -754,7 +777,9 @@ Variant PEBLEnvironment::IsFileStream(Variant v)
 
 Variant PEBLEnvironment::IsWidget(Variant v)
 {
-    Variant v1 =  (v.GetComplexData())->GetList()->First();
+
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 =  plist->First();
     if (v1.IsComplexData())
         {
             if((v1.GetComplexData())->IsWidget())

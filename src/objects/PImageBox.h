@@ -45,12 +45,12 @@ public:
   
     
 
-    //overloaded generic PEBLObjectBase methods
+//     //overloaded generic PEBLObjectBase methods
     virtual bool SetProperty(std::string, Variant v);
     virtual Variant GetProperty(std::string)const;
     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
     virtual ObjectValidationError ValidateProperty(std::string)const;
-
+    
 
     ///This will load a file into the class data, given a file name.
     ///height and width are set automatically.
@@ -58,6 +58,8 @@ public:
 
     virtual void SetPosition(int x, int y);
 
+    virtual std::string ObjectName() const{return "PImageBox";};
+    
 protected:
 
     //These are inherited by child PlatformImageBox class.

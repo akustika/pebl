@@ -1,9 +1,9 @@
 #!/usr/local/bin/pebl
-define Start (lParameter )
+define Start (lParameter)
 {      
   
   ##Make initial objects needed for display.
-  gWindow <- MakeWindow()
+  gWindow <- MakeWindow("grey")
   gPic <- MakeImage("pebl.bmp")
   
   gSmiley <- MakeImage("smiley-big.png")

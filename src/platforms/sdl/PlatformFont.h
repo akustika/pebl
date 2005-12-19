@@ -42,18 +42,18 @@
 /// font structure from the font library, and handle the rendering.
 ///
 
-class PlatformFont: public PFont,virtual public PEBLObjectBase
+class PlatformFont:  virtual public PFont
 {
     
 public:
     //    PlatformFont();
     PlatformFont(const std::string &  filename);
-    PlatformFont(const std::string &  filename, int style, int size, counted_ptr<PColor> fgcolor, counted_ptr<PColor> bgcolor, bool aa);
+    PlatformFont(const std::string &  filename, int style, int size, PColor fgcolor, PColor bgcolor, bool aa);
     PlatformFont(const PlatformFont & font);              ///Copy constructor
     virtual ~PlatformFont();
 
-    virtual void SetFontColor        (counted_ptr<PColor> color);
-    virtual void SetBackgroundColor  (counted_ptr<PColor> color);
+    virtual void SetFontColor        (PColor color);
+    virtual void SetBackgroundColor  (PColor color);
 //     virtual PColor GetFontColor      () const {return SDLUtility::SDLColorToPColor(mSDL_FGColor);}
 //     virtual PColor GetBackgroundColor() const {return SDLUtility::SDLColorToPColor(mSDL_BGColor);}
 
@@ -63,11 +63,11 @@ public:
     unsigned int GetTextWidth(const std::string & text);
     unsigned int GetTextHeight(const std::string & text);
     int GetPosition(const std::string & text, unsigned int x);
-
+    virtual std::string ObjectName() const{return "Platform Font";};
 
 protected:
     virtual std::ostream & SendToStream(std::ostream& out) const;
-    virtual std::string ObjectName() const{return "Platform Font";};
+
 private:
     
     std::string StripText(const std::string & text);

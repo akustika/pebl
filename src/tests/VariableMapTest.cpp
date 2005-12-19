@@ -24,20 +24,84 @@
 //    along with PEBL; if not, write to the Free Software
 //    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ////////////////////////////////////////////////////////////////////////////////
+
+
+
+#include "../base/Evaluator.h"
+#include "../base/FunctionMap.h"
+#include "../base/grammar.tab.hpp"
+#include "../base/Loader.h"
+
+#include "../base/PComplexData.h"
+#include "../base/PList.h"
+#include "../base/PNode.h"
+
 #include "../base/Variant.h"
 #include "../base/VariableMap.h"
+
+
+#include "../devices/PEventLoop.h"
+
+#include "../libs/PEBLObjects.h"
+
+#include "../utility/PError.h"
+#include "../utility/PEBLPath.h"
+#include "../utility/PEBLUtility.h"
+#include "../utility/rc_ptrs.h"
+
+
 #include <iostream>
 #include <stdio.h>
+
 
 using std::cout;
 using std::endl;
 using std::flush;
 
+  
+///Initiate some static member data.
+FunctionMap Evaluator::mFunctionMap;
+PEventLoop Evaluator::mEventLoop; 
+VariableMap Evaluator::gGlobalVariableMap;
+const PNode * Evaluator::gEvalNode = NULL;
+PEBLPath  Evaluator::gPath;
+
 
 //The following is the entry point for the command-line version
 int main(int argc, char **argv)
 {
+    VariableMap myVMap;
+    Variant v(33);
+    myVMap.AddVariable("one", v);
+    cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%\n";
+    myVMap.DumpValues();
+    cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%\n";
+    cout << "=========================Real test\n";
+    cout << "========================="<< myVMap.RetrieveValue("one") << endl;
+    Variant v2;
+    v2 = myVMap.RetrieveValue("one");
+    cout << "========================="<< v2 << endl;
 
+    PlatformImageBox * pib = new PlatformImageBox();
+    counted_ptr<PEBLObjectBase> pob = counted_ptr<PEBLObjectBase>(pib);
+    PComplexData * pcd = new PComplexData(pob);
+    Variant v3 = Variant(pcd);
+    myVMap.AddVariable("image",v3);
+    cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%\n";
+    myVMap.DumpValues();
+    cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%\n";
+    Variant v4 = v3;
+    cout << "Copied variant:" <<  v4;
+    Variant v5;
+
+
+    cout <<"Extracted: " <<  myVMap.RetrieveValue("image") << endl;;
+    v5 = myVMap.RetrieveValue("image");
+    cout << "Extracted/assigned variant: " << v5 << endl;
+
+}
+int extra (){
+        
     long int a = 12341;
     long double b = 3352.9933;
 

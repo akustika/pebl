@@ -42,8 +42,8 @@
 #include <strstream>
 #include <math.h>
 
-//#undef PEBL_DEBUG_PRINT
-#define PEBL_DEBUG_PRINT
+#undef PEBL_DEBUG_PRINT
+//#define PEBL_DEBUG_PRINT 1
 
 using std::cout;
 using std::cout;
@@ -65,9 +65,8 @@ Evaluator::Evaluator(Variant & stacktop, string scope):
     mScope(scope)
 {
     //Initialize the evaluator scope with a variant which is a list of variables
-    cout << "Making evaluator\n";
     Push(stacktop);
-    cout << "Done pushing\n";
+
 }
 
 
@@ -90,6 +89,7 @@ Evaluator::~Evaluator()
 void Evaluator::Evaluate(const PNode * node)
 {
 
+    if(node == NULL) PError::SignalFatalError("Trying to evaluate null node\n");
     //Set up the globally-accessible structure to allow
     //better error reporting.  Only change it if the new node's
     //line number is greater than -1; if not, it is a PEBL-generated
@@ -98,20 +98,18 @@ void Evaluator::Evaluate(const PNode * node)
         gEvalNode = node;
 
 #ifdef PEBL_DEBUG_PRINT
+    cout << "Line: " << node->GetLineNumber() << endl;
     cout << "PDP::Type: " << node->GetType() << endl;
     cout << "PDP::Type: " << node->GetType() << endl;
 #endif
 
     if(node->GetType() ==  PEBL_OP_NODE)
         {
-            cout <<"HereA\n";
             Evaluate((OpNode*)node);
         }
     else if (node->GetType() ==  PEBL_DATA_NODE)
         {
-            cout <<"HereB\n";
             Evaluate((DataNode*)node);
-            cout << "DoneB\n";
         }
     else
         {
@@ -126,7 +124,7 @@ void Evaluator::Evaluate(const PNode * node)
 void Evaluator::Evaluate(const OpNode * node)
 {
 
-
+    if(node == NULL) PError::SignalFatalError("Trying to evaluate null node\n");
     //Set up the globally-accessible structure to allow
     //better error reporting.
     if(node->GetLineNumber() > -1)
@@ -537,7 +535,6 @@ void Evaluator::Evaluate(const OpNode * node)
                 Variant v2 = Pop();
 
 
-
                 //Before we execute, check to see if v2 has a length  between min and max.
                 int numargs=0;
                 
@@ -547,7 +544,14 @@ void Evaluator::Evaluate(const OpNode * node)
                     {
                         if(v2.IsComplexData())
                             if((v2.GetComplexData())->IsList())
-                                numargs = ((PList*)(v2.GetComplexData()->GetObject().get()))->Length();
+                                {
+                                    PList * tmp = (PList*)(v2.GetComplexData()->GetObject().get());
+                                    numargs = tmp->Length();
+                                }
+                            else
+                                {
+                                    
+                                }
                     }
 
                 if(numargs < min || numargs > max)
@@ -556,6 +560,8 @@ void Evaluator::Evaluate(const OpNode * node)
                         message << "In Function [" << mScope << "]:";
                         message << "Incorrect number of arguments.  Wanted between " << min 
                                 << " and " << max << " but got " << numargs << ".";
+
+
 
                         message.put(0);
                         PError::SignalFatalError(message.str());
@@ -794,6 +800,7 @@ void Evaluator::Evaluate(const OpNode * node)
                 
                 //The data: Get it out of the tree and evaluate it, so it gets
                 //push onto the stack.
+
                 PNode * node1 = node->GetLeft();
                 Evaluate(node1);
 
@@ -818,7 +825,8 @@ void Evaluator::Evaluate(const OpNode * node)
                         //If node2 is NULL, then we are at the end of the list.
                         //everything has been pushed to the stack.  Just get everything
                         //off the stack, make a list out of it,  and put it back on the stack.
-                        cout << "-----Making a new list\n";
+
+
                         //Must make a new list, and create a variant out of it.
                         PList * tmpList = new PList();
                         
@@ -828,11 +836,9 @@ void Evaluator::Evaluate(const OpNode * node)
                         
                         while(v1.GetDataType() != P_DATA_STACK_SIGNAL)
                             {
-                                cout << "     External pushing: ["<< v1 << "] onto list.\n";
                                 //Add the item to the list.
                                 tmpList->PushFront(v1);
                                 
-                                cout << *tmpList << endl;
                                 //Pop and repeat.
                                 v1 = Pop();
                             }
@@ -1056,7 +1062,9 @@ void Evaluator::Evaluate(const DataNode * node)
         gEvalNode = node;
 
 #ifdef PEBL_DEBUG_PRINT 
+    cout << "-------------------------";
     cout << "Evaluating DataNode of Value: " << node->GetValue() << endl;;
+    cout << "Line: " << node->GetLineNumber() << endl;
 #endif
 
     Variant v1, v2;
@@ -1071,9 +1079,8 @@ void Evaluator::Evaluate(const DataNode * node)
         {
         case P_DATA_LOCALVARIABLE:
             {      
-                
+
                 v2  = mLocalVariableMap.RetrieveValue(v1.GetVariableBaseName());
-                
                 //Get the name of property being 
                 string property =v1.GetVariablePropertyName();
 
@@ -1082,7 +1089,7 @@ void Evaluator::Evaluate(const DataNode * node)
                         PComplexData * pcd = v2.GetComplexData();
                         v2 = pcd->GetProperty(property);
                     }
-		
+                
                 Push(v2);
             }
             break;
@@ -1092,17 +1099,17 @@ void Evaluator::Evaluate(const DataNode * node)
 
         case P_DATA_GLOBALVARIABLE:
             {
-            v2  = gGlobalVariableMap.RetrieveValue(v1.GetVariableBaseName());
-		
-            //Get the name of property being 
-            string property =v1.GetVariablePropertyName();
-            if(property!="")
-                {
-                    PComplexData * pcd = v2.GetComplexData();
-                    v2 = pcd->GetProperty(property);
-                }
-
-            Push(v2);
+                v2  = gGlobalVariableMap.RetrieveValue(v1.GetVariableBaseName());
+                
+                //Get the name of property being 
+                string property =v1.GetVariablePropertyName();
+                if(property!="")
+                    {
+                        PComplexData * pcd = v2.GetComplexData();
+                        v2 = pcd->GetProperty(property);
+                    }
+                
+                Push(v2);
             }
             break;
  

@@ -49,31 +49,36 @@ using std::ostream;
 using std::string;
 
 
-PlatformTextBox::PlatformTextBox(string text, counted_ptr<PlatformFont> font, int width, int height):
+PlatformTextBox::PlatformTextBox(string text, counted_ptr<PEBLObjectBase> font, int width, int height):
     PlatformWidget(),
-    PTextBox(text, width, height),
-    mCDT(CDT_TEXTBOX)
+    PTextBox(text, width, height)
+
 
 {
+    mCDT = CDT_TEXTBOX;
     mWidth = width;
     mHeight = height;
-    mFont = font;
-    PWidget::SetBackgroundColor(mFont->GetBackgroundColor());
+    SetFont(font);
+    SetText(text);
+
+
 
     Draw();
     //    if(!RenderText()) cerr << "Unable to render text.\n";   
 }
 
 
-PlatformTextBox::PlatformTextBox(PlatformTextBox & text):
+PlatformTextBox::PlatformTextBox(const PlatformTextBox & text):
     PlatformWidget(),
-    PTextBox(text.GetText(), text.GetWidth(), text.GetHeight()),
-    mFont(text.GetFont()),
-    mCDT(CDT_TEXTBOX)
+    PTextBox(text.GetText(), text.GetWidth(), text.GetHeight())
+
+
 {
+    mCDT = CDT_TEXTBOX;
     mWidth = text.GetWidth();
     mHeight = text.GetHeight();
-    PWidget::SetBackgroundColor(mFont->GetBackgroundColor());
+
+    SetFont(text.GetFont());
     Draw();
     //    if(!RenderText()) cerr << "Unable to render text.\n";
 }
@@ -100,6 +105,7 @@ ostream & PlatformTextBox::SendToStream(ostream& out) const
 /// It will make the mSurface pointer hold the appropriate image.
 bool  PlatformTextBox::RenderText()
 {
+
 
     //free the memory if it is currently pointing at something.
     if(mSurface)  SDL_FreeSurface(mSurface);
@@ -128,12 +134,13 @@ bool  PlatformTextBox::RenderText()
                                     rmask, gmask, bmask, amask);
     if(!mSurface)  PError::SignalFatalError("Surface not created in TextBox::RenderText.");
     
+
     //Fill the box with the background color of the font.
     SDL_FillRect(mSurface, NULL, SDL_MapRGBA(mSurface->format, 
-                                             mBackgroundColor->GetRed(),
-                                             mBackgroundColor->GetGreen(),
-                                             mBackgroundColor->GetBlue(),
-                                             mBackgroundColor->GetAlpha()));
+                                             mBackgroundColor.GetRed(),
+                                             mBackgroundColor.GetGreen(),
+                                             mBackgroundColor.GetBlue(),
+                                             mBackgroundColor.GetAlpha()));
     
 
 
@@ -149,10 +156,10 @@ bool  PlatformTextBox::RenderText()
     std::vector<int>::iterator i = mBreaks.begin();
     linestart  = 0;
 
-    //    cout << mText << endl;
+
     while(i != mBreaks.end() && totalheight < (unsigned int) mHeight)
         {
-            //            cout << *i << endl;
+
             linelength = *i - linestart;
 
             tmpSurface = mFont->RenderText(mText.substr(linestart, linelength).c_str());
@@ -180,11 +187,12 @@ bool  PlatformTextBox::RenderText()
 }
 
 
-void PlatformTextBox::SetFont(counted_ptr<PlatformFont> font)
+void PlatformTextBox::SetFont(counted_ptr<PEBLObjectBase> font)
 {
-    //Chain up to parent method
-    mFont = font;
-    
+
+    mFontObject = font;
+    mFont = dynamic_cast<PlatformFont*>(mFontObject.get());
+    PWidget::SetBackgroundColor(mFont->GetBackgroundColor());
     //Re-render the text onto mSurface
     if(!RenderText()) cerr << "Unable to render text.\n";
 
@@ -197,6 +205,7 @@ void PlatformTextBox::SetText(string text)
     PTextObject::SetText(text);
     mCursorPos = 0;
     mCursorChanged = true;
+    mTextChanged = true;
     Draw();
     //Re-render the text onto mSurface
     //    if(!RenderText()) cerr << "Unable to render text.\n";
@@ -375,7 +384,7 @@ void PlatformTextBox::DrawCursor()
         }
     
     //x,y specifies the top of the cursor.
-    SDLUtility::DrawLine(mSurface, x, y, x, y+height,*(mFont->GetFontColor()));
+    SDLUtility::DrawLine(mSurface, x, y, x, y+height,(mFont->GetFontColor()));
 
 }
 
@@ -431,9 +440,8 @@ void PlatformTextBox::HandleKeyPress(int keycode, int modkeys)
                         i++;
                     }
                 
-                //cout << "downup\n"<< mCursorPos << "  " << change * height << endl;
+
                 mCursorPos = FindCursorPosition(x, y + change * height);
-                //cout << mCursorPos << endl;
                 mCursorChanged = true;
                 break;
             }

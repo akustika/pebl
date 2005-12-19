@@ -47,11 +47,12 @@ public:
     virtual ~PWindow(){}
     virtual bool Draw(){return true;}
     virtual long int DrawFor(unsigned int cycles){return true;}
-
-protected:
+    virtual std::string ObjectName() const{return "PWindow";};
+    
+protected:  
 
     virtual std::ostream & SendToStream(std::ostream& out) const{return out;};
-    virtual std::string ObjectName() const{return "PWindow";};
+
 
 };
 

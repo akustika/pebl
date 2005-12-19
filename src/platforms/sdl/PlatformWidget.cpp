@@ -72,6 +72,7 @@ bool PlatformWidget::Draw()
 
             while(p != mSubWidgets.begin())
                 {
+
                     //decrement iterator--moving backward so we draw things in 
                     //reverse order.
                     p--;
@@ -87,7 +88,7 @@ bool PlatformWidget::Draw()
                 {          
                     SDL_Rect  fromRect = {0,0,mWidth,mHeight};
                     SDL_Rect  toRect   = {mDrawX,mDrawY,mWidth,mHeight};
-                    //  unsigne    d long int start =SDL_GetTicks();
+                    //  unsigned long int start =SDL_GetTicks();
                     SDL_BlitSurface(mSurface, &fromRect, mParentSurface, &toRect);
                     //  unsigned long int end =SDL_GetTicks();
                     //     cout << "Time to BlitSurface:  " << end - start << endl;

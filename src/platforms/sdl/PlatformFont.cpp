@@ -40,6 +40,10 @@
 
 using std::string;
 using std::cout;
+using std::endl;
+
+
+
 ///Standard constructor of PFont
 
 // PlatformFont::PlatformFont():
@@ -63,12 +67,11 @@ using std::cout;
 
 
 ///Convenience constructor of PlatformFont:
-PlatformFont::PlatformFont(const std::string & filename, int style, int size, counted_ptr<PColor> fgcolor, counted_ptr<PColor> bgcolor, bool aa):
-    PFont(filename, style, size, fgcolor, bgcolor, aa),
-    mCDT(CDT_FONT)
+PlatformFont::PlatformFont(const std::string & filename, int style, int size, PColor fgcolor, PColor bgcolor, bool aa):
+    PFont(filename, style, size, fgcolor, bgcolor, aa)
+
 {
 
-    cout << "Making font\n";
 
     string fontname = Evaluator::gPath.FindFile(mFontFileName);
     if(fontname == "")
@@ -80,18 +83,19 @@ PlatformFont::PlatformFont(const std::string & filename, int style, int size, co
     TTF_SetFontStyle(mTTF_Font, mFontStyle);
 
    //Translate PColor to SDLcolor for direct use in rendering.
-    mSDL_FGColor = SDLUtility::PColorToSDLColor(*mFontColor);
-    mSDL_BGColor = SDLUtility::PColorToSDLColor(*mBackgroundColor);
+    mSDL_FGColor = SDLUtility::PColorToSDLColor(mFontColor);
+    mSDL_BGColor = SDLUtility::PColorToSDLColor(mBackgroundColor);
 
 }
 
 
 
 ///Copy constructor of PlatformFont:
-PlatformFont::PlatformFont(const PlatformFont & font):
-    mCDT(CDT_FONT)
+PlatformFont::PlatformFont(const PlatformFont & font)
+
 {
-    std::cout << "Making font\n";
+
+
     mFontFileName    = font.GetFontFileName();
     mFontStyle       = font.GetFontStyle();
     mFontSize        = font.GetFontSize();
@@ -106,10 +110,9 @@ PlatformFont::PlatformFont(const PlatformFont & font):
     TTF_SetFontStyle(mTTF_Font, mFontStyle);
  
     //Translate PColor to SDLcolor for direct use in rendering.
-    mSDL_FGColor = SDLUtility::PColorToSDLColor(*mFontColor);
-    mSDL_BGColor = SDLUtility::PColorToSDLColor(*mBackgroundColor);
+    mSDL_FGColor = SDLUtility::PColorToSDLColor(mFontColor);
+    mSDL_BGColor = SDLUtility::PColorToSDLColor(mBackgroundColor);
 
-    
 }
 
 
@@ -117,45 +120,49 @@ PlatformFont::PlatformFont(const PlatformFont & font):
 ///Standard destructor of PlatformFont
 PlatformFont::~PlatformFont()
 {
-    std::cout << "Destroying font\n";
+
+
     TTF_CloseFont(mTTF_Font);
     mTTF_Font = NULL;
-    std::cout << "Destroyed font\n";
+
 }
 
 
 
 ///Set*Color needs to be overridden because it doesn't change the SDL_Color data.
-void PlatformFont::SetFontColor(counted_ptr<PColor> color)
+void PlatformFont::SetFontColor(PColor color)
 {
     //Chain up to parent method
     PFont::SetFontColor(color);
 
     //Set child member data.
-    mSDL_FGColor = SDLUtility::PColorToSDLColor(*mFontColor);
+    mSDL_FGColor = SDLUtility::PColorToSDLColor(mFontColor);
 }
 
 
 
 ///Set*Color needs to be overridden because it doesn't change the SDL_Color data.
-void PlatformFont::SetBackgroundColor(counted_ptr<PColor> color)
+void PlatformFont::SetBackgroundColor(PColor color)
 {
     //Chain up to parent method
     PFont::SetBackgroundColor(color);
 
     //Set child member data.
-    mSDL_BGColor = SDLUtility::PColorToSDLColor(*mBackgroundColor);
+    mSDL_BGColor = SDLUtility::PColorToSDLColor(mBackgroundColor);
 }
 
 
 
 SDL_Surface * PlatformFont::RenderText(const std::string & text)
 {    
+    //cout << "ABout to render text [" << text  << "] with font " << *this << endl;
+
+    
     //If there is no text, return a null surface.
     if(text=="") return NULL;
 
 
-    //cout << "ABout to render text" << text  << " with font " << *this << endl;
+
  
     //Get a temporary pointer that we return
     std::string toBeRendered = StripText(text);

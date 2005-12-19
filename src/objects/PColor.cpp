@@ -39,44 +39,46 @@ using std::endl;
 ///Standard constructor of PColor
 
 PColor::PColor():
+    PEBLObjectBase(CDT_COLOR),
     mRed(0),
     mGreen(0),
     mBlue(0),
-    mAlpha(255),
-    mCDT(CDT_COLOR)
+    mAlpha(255)
+
 {
 
-    InitializeProperty("RED",Variant(GetRed()));
-    InitializeProperty("GREEN",Variant(GetGreen()));
-    InitializeProperty("BLUE",Variant(GetBlue()));
-    InitializeProperty("ALPHA",Variant(GetAlpha()));
+     InitializeProperty("RED",Variant(GetRed()));
+     InitializeProperty("GREEN",Variant(GetGreen()));
+     InitializeProperty("BLUE",Variant(GetBlue()));
+     InitializeProperty("ALPHA",Variant(GetAlpha()));
     
 } 
 
 
 ///Convenience constructor of PColor:
 PColor::PColor(int red, int green, int blue, int alpha):
+    PEBLObjectBase(CDT_COLOR),
     mRed(To8BitColor(red)),
     mGreen(To8BitColor(green)),
     mBlue(To8BitColor(blue)),
-    mAlpha(To8BitColor(alpha)),
-    mCDT(CDT_COLOR)
+    mAlpha(To8BitColor(alpha))
+
 {
-    InitializeProperty("RED",Variant(GetRed()));
-    InitializeProperty("GREEN",Variant(GetGreen()));
-    InitializeProperty("BLUE",Variant(GetBlue()));
-    InitializeProperty("ALPHA",Variant(GetAlpha()));
+     InitializeProperty("RED",Variant(GetRed()));
+     InitializeProperty("GREEN",Variant(GetGreen()));
+     InitializeProperty("BLUE",Variant(GetBlue()));
+     InitializeProperty("ALPHA",Variant(GetAlpha()));
 
 }
 
 ///Name-based constructor of PColor:
 PColor::PColor(const string & colorname):
-    mCDT(CDT_COLOR)
+    PEBLObjectBase(CDT_COLOR)
 {
-    InitializeProperty("RED",Variant(0));
-    InitializeProperty("GREEN",Variant(0));
-    InitializeProperty("BLUE",Variant(0));
-    InitializeProperty("ALPHA",Variant(0));
+     InitializeProperty("RED",Variant(0));
+     InitializeProperty("GREEN",Variant(0));
+     InitializeProperty("BLUE",Variant(0));
+     InitializeProperty("ALPHA",Variant(0));
 
     SetColorByName(colorname);
     SetAlpha(255);    
@@ -85,32 +87,30 @@ PColor::PColor(const string & colorname):
 
 ///Copy constructor of PColor:
 PColor::PColor(const PColor & pcolor):
-    mCDT(CDT_COLOR)
+    PEBLObjectBase(CDT_COLOR)
 {
     mRed   = pcolor.GetRed();
     mGreen = pcolor.GetGreen();
     mBlue  = pcolor.GetBlue();
     mAlpha = pcolor.GetAlpha();
     
-    InitializeProperty("RED",Variant(GetRed()));
-    InitializeProperty("GREEN",Variant(GetGreen()));
-    InitializeProperty("BLUE",Variant(GetBlue()));
-    InitializeProperty("ALPHA",Variant(GetAlpha()));
+     InitializeProperty("RED",Variant(GetRed()));
+     InitializeProperty("GREEN",Variant(GetGreen()));
+     InitializeProperty("BLUE",Variant(GetBlue()));
+     InitializeProperty("ALPHA",Variant(GetAlpha()));
     
 }
 
 PColor::~PColor()
 {
-    cout << "Destroying: " ;
-    SendToStream(cout);
 }
 
 void PColor::__SetProps__()
 {
-    PEBLObjectBase::SetProperty("RED",Variant(GetRed()));
-    PEBLObjectBase::SetProperty("GREEN",Variant(GetGreen()));
-    PEBLObjectBase::SetProperty("BLUE",Variant(GetBlue()));
-    PEBLObjectBase::SetProperty("ALPHA",Variant(GetAlpha()));
+     PEBLObjectBase::SetProperty("RED",Variant(GetRed()));
+     PEBLObjectBase::SetProperty("GREEN",Variant(GetGreen()));
+     PEBLObjectBase::SetProperty("BLUE",Variant(GetBlue()));
+     PEBLObjectBase::SetProperty("ALPHA",Variant(GetAlpha()));
 }
 
 
@@ -246,7 +246,6 @@ void PColor::SetColorByName(const string & colorname)
 
             
             mid = (top + bottom)/2;
-            //cout << "bottom: " << bottom << " mid " << mid << " top " << top << "  "; 
 
             //set the '1-item separation' flag to true.
             if((top - bottom) == 1) sep1 = true;
@@ -254,8 +253,6 @@ void PColor::SetColorByName(const string & colorname)
              
             //Compare the library color and the current color. 0 means they are the same.
             test =strcmp(ucasename.c_str(), RGBNames::ColorNames[mid].name.c_str());
-            //cout << "Comparing [" << ucasename << "] to [" << RGBNames::ColorNames[mid].name << "] " << test  << "\n";            
-
 
           
             if(test < 0)           //If test < 0, the chosen word comes before the point in the dictionary. Move top down.
@@ -310,20 +307,29 @@ unsigned int PColor::GetColor() const
 }
 
 
-std::string PColor::ObjectName() const
-{
-    return "<PColor>";
-}
 
 
 /// This sends the color descriptions to the specified stream.
 std::ostream & PColor::SendToStream(std::ostream& out) const
 {
-    out << "<PColor: Red: [" << mRed << "|" << GetProperty(string("RED"));
-    out << "] Green: ["<< mGreen<< "|" << GetProperty(string("GREEN"));
-    out << "] Blue: ["<< mBlue<< "|" << GetProperty(string("BLUE"));
-    out << "] Alpha: ["<< mAlpha<< "|" << GetProperty(string("ALPHA"));
-    out << "] Color Code: ["<< GetColor() << "]>";
-
+    out << ObjectName() << std::flush;
     return out;
+}
+
+std::string PColor::ObjectName() const
+{
+    Variant tmp = "<PColor: Red: [";
+
+    tmp = tmp + Variant((int)mRed) ;
+    tmp = tmp + Variant("] Green: [");
+    tmp = tmp +  Variant((int)mGreen);
+    tmp = tmp + Variant("] Blue: [");
+    tmp = tmp + Variant((int)mBlue );
+    tmp = tmp + Variant("] Alpha: [");
+    tmp = tmp + Variant((int)mAlpha );
+    tmp = tmp + Variant("] Color Code: [");
+    tmp = tmp + Variant((long unsigned int)GetColor());
+    tmp = tmp + Variant("]>");
+
+    return tmp.GetString();
 }

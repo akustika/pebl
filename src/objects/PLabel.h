@@ -41,7 +41,7 @@
 ///  It actually can represent multiple words, but only displays a single line.
 
 
-class PLabel: public PTextObject
+class PLabel: virtual public PTextObject
 {
 public:
     PLabel();
@@ -55,12 +55,11 @@ public:
     virtual Variant GetProperty(std::string)const;
     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
     virtual ObjectValidationError ValidateProperty(std::string)const;
-    virtual std::string ObjectName();
 
     void SetPosition(int x, int y);
     //This overrides the default method, because labels are centered on their
     //Position.
-
+    virtual std::string ObjectName() const;
 private:
 
 
@@ -68,7 +67,7 @@ protected:
 
     
     virtual std::ostream & SendToStream(std::ostream& out) const{return out;};
-    virtual std::string ObjectName() const{return "PLabel";};
+
 
 };
 

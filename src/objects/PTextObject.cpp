@@ -39,10 +39,16 @@ PTextObject::PTextObject():
     mText("")
 {
     InitializeProperty("TEXT","");
-    PrintProperties(cout);
+    
 }
 
 
+void PTextObject::SetText(const std::string & text)
+{
+    mText = text; 
+    PEBLObjectBase::SetProperty("TEXT",Variant(text));
+    mTextChanged = true;
+}
 
 PTextObject::PTextObject(const std::string & text):
     PWidget(0,0,0,0,false),

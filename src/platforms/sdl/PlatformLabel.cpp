@@ -43,23 +43,31 @@ using std::ostream;
 
 
 
-PlatformLabel::PlatformLabel(const std::string & text, counted_ptr<PlatformFont> font):
+PlatformLabel::PlatformLabel(const std::string & text, counted_ptr<PEBLObjectBase> font):
     PlatformWidget(),
     PLabel(text),
-    mFont(font),
-    mCDT(CDT_LABEL)
+    mFontObject(font)
 {
+    
+    mCDT=CDT_LABEL;
+
+    SetFont(font);
+    SetText(text);
+    
+
     Draw();
+
 }
 
 
 PlatformLabel::PlatformLabel(PlatformLabel & label):
     PlatformWidget(),
-    PLabel(label.GetText()),
-    mCDT(CDT_LABEL)
-{
+    PLabel(label.GetText())
 
-    mFont = label.GetFont();
+{
+    mCDT=CDT_LABEL;
+
+    SetFont(label.GetFont());
     Draw();
 }
 
@@ -85,8 +93,10 @@ ostream & PlatformLabel::SendToStream(ostream& out) const
 bool  PlatformLabel::RenderText()
 {
 
+
     //free the memory if it is currently pointing at something.
     if(mSurface)  SDL_FreeSurface(mSurface);
+
 
     //Re-render the text using the associated font.
     mSurface = mFont->RenderText(mText.c_str());
@@ -106,10 +116,12 @@ bool  PlatformLabel::RenderText()
 }
 
 
-void PlatformLabel::SetFont(counted_ptr<PlatformFont> font)
+void PlatformLabel::SetFont(counted_ptr<PEBLObjectBase> font)
 {
-    //Chain up to parent method
-    mFont = font;
+
+    mFontObject = font;
+    mFont = dynamic_cast<PlatformFont*>(mFontObject.get());
+
     mTextChanged =true;
     Draw();
     //Re-render the text onto mSurface
@@ -133,6 +145,7 @@ void PlatformLabel::SetText(const std::string & text)
 
 bool PlatformLabel::Draw()
 {
+
 
     if(mTextChanged)
         {

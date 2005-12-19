@@ -53,22 +53,19 @@ VariableMap::VariableMap()
 VariableMap::~VariableMap()
 {
 
-    cout << "---------------------\nDestroying Variable Map\n";
-    DumpValues();
+
+
     //Delete mVariableMap if necessary.
     //Erase things by hand, for debugging's sake
 
     std::map<std::string, Variant>::iterator i = mVariableMap.begin();
     while(i !=  mVariableMap.end())
         {
-            cout <<"Erasing: "  << i->first << endl;
+
             mVariableMap.erase(i);
             i++;
         }
-    
-    cout <<"Done erasing. clearing.\n";
     mVariableMap.clear();
-    cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
 
 }
 
@@ -111,8 +108,9 @@ Variant  VariableMap::RetrieveValue(const string & varname)
   
     //Get a the variable 
     string tmpVarName = PEBLUtility::ToUpper(varname);
+    
     p = mVariableMap.find(tmpVarName);
-  
+ 
     if(p == mVariableMap.end())
         {
             string message = "Trying to use an undefined variable:  " + string(varname);
@@ -121,7 +119,8 @@ Variant  VariableMap::RetrieveValue(const string & varname)
         }
     else
         {
-            return p->second;
+            Variant vt = p->second;
+            return vt;
         }
 }
 

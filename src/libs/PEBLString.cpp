@@ -49,7 +49,9 @@ using std::string;
 
 Variant PEBLString::Uppercase(Variant v)
 {
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+
+   //v[1] should have the parameter: a list of keys to wait for.
+    PList * plist = v.GetComplexData()->GetList();
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function Uppercase(<string>)]: ");  
 
@@ -63,7 +65,9 @@ Variant PEBLString::Uppercase(Variant v)
 
 Variant PEBLString::Lowercase(Variant v)
 {
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+
+   //v[1] should have the parameter: a list of keys to wait for.
+    PList * plist = v.GetComplexData()->GetList();
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function Uppercase(<string>)]: ");  
 
     std::string s=plist->First();    
@@ -75,7 +79,9 @@ Variant PEBLString::Lowercase(Variant v)
 
 Variant PEBLString::StringLength(Variant v)
 {
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+
+   //v[1] should have the parameter: a list of keys to wait for.
+    PList * plist = v.GetComplexData()->GetList();
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function StringLength(<string>)]: ");  
     std::string s=plist->First();    
 
@@ -87,7 +93,9 @@ Variant PEBLString::StringLength(Variant v)
 #if 0
 Variant PEBLString::Strip(Variant v)
 {
-   counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+
+   //v[1] should have the parameter: a list of keys to wait for.
+    PList * plist = v.GetComplexData()->GetList();
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function StringLength(<string>)]: ");  
     std::string s=plist->First();    
 
@@ -97,7 +105,9 @@ Variant PEBLString::Strip(Variant v)
 
 Variant PEBLString::SubString(Variant v)
 {
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+
+   //v[1] should have the parameter: a list of keys to wait for.
+    PList * plist = v.GetComplexData()->GetList();
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in first parameter of function SubString(<string>, <index>, <length>)]: ");  
     std::string string1 = plist->First(); plist->PopFront();
@@ -117,7 +127,8 @@ Variant PEBLString::SubString(Variant v)
 // 0 if the character is not found.
 Variant PEBLString::FindInString(Variant v)
 {
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+   //v[1] should have the parameter: a list of keys to wait for.
+    PList * plist = v.GetComplexData()->GetList();
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in first parameter of function FindInString(<string>,<substring>)]: ");  
     std::string str1 = plist->First(); plist->PopFront();

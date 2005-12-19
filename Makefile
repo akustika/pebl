@@ -28,8 +28,8 @@
 C   = gcc
 CXX = g++
 DEBUGFLAGS = -lefence -DPEBL_DEBUG
-CFLAGS =   -O1 -std=c99
-CXXFLAGS =   -O1  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX -g 
+CFLAGS =   -O1 -std=c99 
+CXXFLAGS =   -O1  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX 
 
 
 SDL_CONFIG = /usr/bin/sdl-config
@@ -170,12 +170,20 @@ TEST_VARIANT_SRC = $(TEST_DIR)/VariantTest.cpp $(PEBLBASE_SRCXX) \
 TEST_VARIANT_OBJ = $(patsubst %.cpp, %.o, $(TEST_VARIANT_SRC))
 TEST_VARIANT_INC = $(patsubst %.cpp, %.h, $(TEST_VARIANT_SRC))
 
+
+
 TEST_VARIABLE_MAP_SRC = $(TEST_DIR)/VariableMapTest.cpp \
-            $(BASE_DIR)/VariableMap.cpp $(BASE_DIR)/Variant.cpp \
-            $(BASE_DIR)/PComplexData.cpp $(BASE_DIR)/PList.cpp \
-            $(OBJECTS_DIR)/PObject.cpp $(UTIL_DIR)/PEBLUtility.cpp
+		$(PEBLBASE_SRCXX) \
+			$(PDEVICES_SRC) \
+			$(FUNCTIONLIB_SRC) \
+			$(POBJECT_SRC) \
+			$(PLATFORM_SDL_SRC)
+
+
 TEST_VARIABLE_MAP_OBJ = $(patsubst %.cpp, %.o, $(TEST_VARIABLE_MAP_SRC))
 TEST_VARIABLE_MAP_INC = $(patsubst %.cpp, %.h, $(TEST_VARIABLE_MAP_SRC))
+
+
 
 TEST_PNODE_SRC = $(TEST_DIR)/PNodeTest.cpp $(BASE_DIR)/Variant.cpp\
    $(BASE_DIR)/PComplexData.cpp $(BASE_DIR)/PList.cpp $(BASE_DIR)/PNode.cpp \
@@ -285,7 +293,9 @@ $(BIN_DIR)/varianttest: $(TEST_VARIANT_OBJ) $(TEST_VARIANT_INC)  $(POBJECT_OBJ) 
 	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf  $(BASE_DIR)/lex.yy.c $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_VARIANT_OBJ))
 
 $(BIN_DIR)/variablemaptest: $(TEST_VARIABLE_MAP_OBJ) $(TEST_VARIABLE_MAP_INC)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/variablemaptest $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_VARIABLE_MAP_OBJ))
+	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/variablemaptest -I/usr/local/include/SDL -D_REENTRANT \
+	-L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  $(OSX_FLAGS) \
+	 $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_VARIABLE_MAP_OBJ))
 
 $(BIN_DIR)/pnodetest: $(TEST_PNODE_OBJ) $(TEST_PNODE_INC)
 	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/pnodetest $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_PNODE_OBJ))

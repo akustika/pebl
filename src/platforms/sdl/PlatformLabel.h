@@ -40,10 +40,10 @@
 /// It uses the SDL_ttf library (a wrapper to freetype) to render words in a box.
 
 
-class PlatformLabel:  public PlatformWidget, public PLabel 
+class PlatformLabel:  virtual public PlatformWidget,virtual public PLabel
 {
 public:
-    PlatformLabel(const std::string & text, counted_ptr<PlatformFont> font);
+    PlatformLabel(const std::string & text, counted_ptr<PEBLObjectBase> font);
 
     ///This copy constructor isn't const because the font is shared.
     PlatformLabel(PlatformLabel & label);
@@ -54,19 +54,22 @@ public:
     virtual bool RenderText();
 
     //These need to be overridden because the text needs to be re-rendered when they are called.
-    virtual void SetFont(counted_ptr<PlatformFont> font);
+    virtual void SetFont(counted_ptr<PEBLObjectBase> font);
     virtual void SetText(const std::string & text);
 
     virtual bool Draw();
 
-    virtual counted_ptr<PlatformFont> GetFont(){return mFont;}
-    
+    virtual counted_ptr<PEBLObjectBase> GetFont(){return mFontObject;}
+    virtual std::string ObjectName()const{return "PlatformLabel";} ;
+
 protected:
     virtual std::ostream & SendToStream(std::ostream& out) const;
-    virtual std::string ObjectName()const{return "PlatformLabel";} ;
+
 private:
 
-    counted_ptr<PlatformFont> mFont;
+    counted_ptr<PEBLObjectBase> mFontObject;
+    //This below is just a shortcut to the font.
+    PlatformFont * mFont;
 };
 
 

@@ -52,10 +52,11 @@ using std::ostream;
 
 ///Standard Constructor
 PlatformEnvironment::PlatformEnvironment(PEBLVideoMode mode, PEBLVideoDepth depth, bool windowed):
+    PEBLObjectBase(CDT_ENVIRONMENT),
     mVideoMode(mode),
     mVideoDepth(depth),
-    mWindowed(windowed),
-    mCDT(CDT_ENVIRONMENT)
+    mWindowed(windowed)
+
 {
     mIsInitialized = false;
 }
@@ -121,3 +122,20 @@ bool PlatformEnvironment::Draw()
     return true;
 }
 
+
+//overloaded generic PEBLObjectBase methods
+bool PlatformEnvironment::SetProperty(std::string name, Variant v)
+{
+    //this class has no settable properties.
+    return false;
+}
+
+Variant PlatformEnvironment::GetProperty(std::string name )const
+{
+    return PEBLObjectBase::GetProperty(name);
+}
+
+// ObjectValidationError PlatformEnvironment::ValidateProperty(std::string, Variant v)const
+
+// ObjectValidationError PlatformEnvironment::ValidateProperty(std::string)const;
+   

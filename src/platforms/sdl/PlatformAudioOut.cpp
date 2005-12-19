@@ -40,14 +40,14 @@ using std::string;
 using std::cerr;
 
 PlatformAudioOut::PlatformAudioOut():
-    mCDT(CDT_AUDIOOUT)
+    PEBLObjectBase(CDT_AUDIOOUT)
 {
 }
 
 
 
 PlatformAudioOut::PlatformAudioOut(const string &  soundfilename):
-    mCDT(CDT_AUDIOOUT)
+    PEBLObjectBase(CDT_AUDIOOUT)
 {
 
     //Check to see if we can find the sound file; if not, call everything off.

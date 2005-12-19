@@ -36,7 +36,7 @@
 ///  It is a virtual class that needs to be inherited by a PlatformEnvironment, have
 ///  and have its methods overridden.
 
-class PEnvironment: public PEBLObjectBase
+class PEnvironment
 {
 public:
   

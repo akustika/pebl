@@ -63,6 +63,8 @@ class PEBLObjectBase
 {
  public:
     PEBLObjectBase();
+    PEBLObjectBase(ComplexDataType cdt);
+    PEBLObjectBase(const PEBLObjectBase & pob);
     virtual ~PEBLObjectBase();
        //Overload of the << operator
     friend std::ostream & operator <<(std::ostream & out, const PEBLObjectBase & object );
@@ -87,8 +89,11 @@ class PEBLObjectBase
     virtual ObjectValidationError ValidateProperty(std::string)const;
 
     ComplexDataType GetType(){return mCDT;};
- protected:
+
     virtual std::string ObjectName() const;
+ protected:
+
+
     virtual std::ostream & PrintProperties(std::ostream& out) const;
     virtual std::ostream & SendToStream(std::ostream& out) const;
     ComplexDataType mCDT;  

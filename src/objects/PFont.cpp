@@ -30,6 +30,10 @@
 #include "../base/PComplexData.h"
 #include "../utility/rc_ptrs.h"
 
+
+#include <iostream>
+using std::cout;
+using std::endl;
 ///Standard constructor of PFont
 
 PFont::PFont():
@@ -37,94 +41,106 @@ PFont::PFont():
     mFontStyle(PFS_Normal),
     mFontSize(16),
     mAntiAliased(false)
-{
-    PColor * tmp = new PColor(0,0,0,255);
-    mFontColor       = counted_ptr<PColor>(tmp);
-    mBackgroundColor = counted_ptr<PColor>(tmp); 
 
+{
+    mCDT = CDT_FONT;
+    mFontColor       = PColor(0,0,0,255);
+    mBackgroundColor = PColor(0,0,0,255);
 
     InitializeProperty("FILENAME", mFontFileName);
     InitializeProperty("BOLD", Variant(IsBoldFont()));
     InitializeProperty("UNDERLINE",Variant(IsUnderlineFont()));
     InitializeProperty("ITALIC",  Variant(IsItalicFont()));
     InitializeProperty("SIZE", mFontSize);
-
-
-    PComplexData * pcd = new PComplexData(mFontColor);
+    
+    
+    counted_ptr<PEBLObjectBase> pob = counted_ptr<PEBLObjectBase>(&mFontColor);
+    PComplexData * pcd = new PComplexData(pob);
     Variant col = Variant(pcd);
     InitializeProperty("FGCOLOR", col);
+    
 
-
-    pcd = new PComplexData(mBackgroundColor);
+    pob = counted_ptr<PEBLObjectBase>(&mBackgroundColor);
+    pcd = new PComplexData(pob);
     col = Variant(pcd);
     InitializeProperty("BGCOLOR", col);
-
+    
     InitializeProperty("ANTIALIASED", Variant(mAntiAliased));
     
 }
 
 
 ///Convenience constructor of PFont:
-PFont::PFont(const std::string & filename, int style, int size, counted_ptr<PColor> fgcolor, counted_ptr<PColor> bgcolor, bool aa):
+PFont::PFont(const std::string & filename, int style, int size, PColor fgcolor, PColor bgcolor, bool aa):
     mFontFileName(filename),
     mFontStyle(style),
     mFontSize(size),
     mAntiAliased(aa)
 {
-    std::cout << "TTTTTTTTTTTTConstructing pfont\n";
+
+    mCDT = CDT_FONT;
 
     mFontColor       = fgcolor;
     mBackgroundColor = bgcolor;
 
 
-    InitializeProperty("FILENAME", mFontFileName);
-    InitializeProperty("BOLD", Variant(IsBoldFont()));
-    InitializeProperty("UNDERLINE",Variant(IsUnderlineFont()));
-    InitializeProperty("ITALIC",  Variant(IsItalicFont()));
-    InitializeProperty("SIZE", mFontSize);
-
-    PComplexData * pcd = new  PComplexData(mFontColor);
-    Variant col = Variant(pcd);
-    InitializeProperty("FGCOLOR", col);
+     InitializeProperty("FILENAME", mFontFileName);
+     InitializeProperty("BOLD", Variant(IsBoldFont()));
+     InitializeProperty("UNDERLINE",Variant(IsUnderlineFont()));
+     InitializeProperty("ITALIC",  Variant(IsItalicFont()));
+     InitializeProperty("SIZE", mFontSize);
 
 
-    pcd = new PComplexData(mBackgroundColor);
-    col = Variant(pcd);
-    InitializeProperty("BGCOLOR", col);
+     counted_ptr<PEBLObjectBase> pob = counted_ptr<PEBLObjectBase>(&mFontColor);
+     PComplexData * pcd = new PComplexData(pob);
+     Variant col = Variant(pcd);
+     InitializeProperty("FGCOLOR", col);
+    
 
-    InitializeProperty("ANTIALIASED", Variant(mAntiAliased));
+     pob = counted_ptr<PEBLObjectBase>(&mBackgroundColor);
+     pcd = new PComplexData(pob);
+     col = Variant(pcd);
+     InitializeProperty("BGCOLOR", col);
+
+    
+     InitializeProperty("ANTIALIASED", Variant(mAntiAliased));
 
 }
 
 
 ///Copy constructor of PFont:
 PFont::PFont(const PFont & font)
+
 {
+    mCDT = CDT_FONT;
+
     mFontFileName    = font.GetFontFileName();
     mFontStyle       = font.GetFontStyle();
     mFontSize        = font.GetFontSize();
     mFontColor       = font.GetFontColor();
     mBackgroundColor = font.GetBackgroundColor();
     mAntiAliased     = font.GetAntiAliased();
-
+    
     InitializeProperty("FILENAME", mFontFileName);
     InitializeProperty("BOLD", Variant(IsBoldFont()));
     InitializeProperty("UNDERLINE",Variant(IsUnderlineFont()));
     InitializeProperty("ITALIC",  Variant(IsItalicFont()));
     InitializeProperty("SIZE", mFontSize);
 
-    PComplexData * pcd = new PComplexData(mFontColor);
+
+    
+    counted_ptr<PEBLObjectBase> pob = counted_ptr<PEBLObjectBase>(&mFontColor);
+    PComplexData * pcd = new PComplexData(pob);
     Variant col = Variant(pcd);
     InitializeProperty("FGCOLOR", col);
-
-
-    pcd = new PComplexData(mBackgroundColor);
+    
+    
+    pob = counted_ptr<PEBLObjectBase>(&mBackgroundColor);
+    pcd = new PComplexData(pob);
     col = Variant(pcd);
     InitializeProperty("BGCOLOR", col);
-
-
+    
     InitializeProperty("ANTIALIASED", Variant(mAntiAliased));
-
 
 }
 
@@ -192,12 +208,12 @@ bool PFont::SetProperty(std::string name, Variant v)
             //For colors, directly set the property to avoid 
             //dual conversion.
             PEBLObjectBase::SetProperty(name,v);
-            mFontColor = v.GetComplexData()->GetColor();
+            mFontColor = *(dynamic_cast<PColor*>(v.GetComplexData()->GetObject().get()));
         }
     else if (name == "BGCOLOR") 
         {
             PEBLObjectBase::SetProperty(name,v);
-            mBackgroundColor = v.GetComplexData()->GetColor();
+            mBackgroundColor = *(dynamic_cast<PColor*>(v.GetComplexData()->GetObject().get()));
         }
     else if (name == "ANTIALIASED")SetAntiAliased(v.GetInteger());
     else return false;
@@ -220,7 +236,7 @@ ObjectValidationError PFont::ValidateProperty(std::string name)const
     return OVE_SUCCESS;
 }
 
-std::string PFont::ObjectName()
+std::string PFont::ObjectName()const
 {
     return "PFont";
 }
@@ -240,7 +256,6 @@ void PFont::SetFontStyle(const int style)
     PEBLObjectBase::SetProperty("BOLD", Variant(IsBoldFont()));
     PEBLObjectBase::SetProperty("UNDERLINE",Variant(IsUnderlineFont()));
     PEBLObjectBase::SetProperty("ITALIC",  Variant(IsItalicFont()));
-
 }
 
 void PFont::SetFontSize(const int size) 
@@ -249,22 +264,22 @@ void PFont::SetFontSize(const int size)
     PEBLObjectBase::SetProperty("SIZE", mFontSize);
 }
 
-void PFont::SetFontColor(const counted_ptr<PColor> color) 
+void PFont::SetFontColor(const PColor color) 
 {
 
-
-
     mFontColor = color;  
-    PComplexData * pcd = new PComplexData(color);
+    counted_ptr<PEBLObjectBase> pob = counted_ptr<PEBLObjectBase>(&mFontColor);
+    PComplexData * pcd = new PComplexData(pob);
     Variant col = Variant(pcd);
     InitializeProperty("FGCOLOR", col);
 
 }  
 
-void PFont::SetBackgroundColor(const counted_ptr<PColor> color)
+void PFont::SetBackgroundColor(const PColor color)
 {
     mBackgroundColor = color;  
-    PComplexData * pcd = new PComplexData(color);
+    counted_ptr<PEBLObjectBase> pob = counted_ptr<PEBLObjectBase>(&mBackgroundColor);
+    PComplexData * pcd = new PComplexData(pob);
     Variant col = Variant(pcd);
     InitializeProperty("BGCOLOR", col);
 }

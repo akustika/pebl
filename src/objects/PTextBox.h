@@ -36,7 +36,7 @@
 ///
 /// This class is the basic generic text box.
 
-class PTextBox: public PTextObject
+class PTextBox: virtual public PTextObject
 {
 public:
     PTextBox();
@@ -50,7 +50,7 @@ public:
     virtual Variant GetProperty(std::string)const;
     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
     virtual ObjectValidationError ValidateProperty(std::string)const;
-    virtual std::string ObjectName();
+
     
     virtual void InsertText(std::string character);
     virtual void InsertText(char character);
@@ -68,7 +68,10 @@ public:
         
     virtual void HandleKeyPress(int keycode, int modkeys);
 
+
     virtual bool AtPrintableCharacter(unsigned int x);
+
+    virtual std::string ObjectName() const;
 
 private:
 
@@ -77,7 +80,8 @@ protected:
 
     
     virtual std::ostream & SendToStream(std::ostream& out) const{return out;};
-    virtual std::string ObjectName() const{return "PTextBox";};
+
+
     bool mEditable;   //Whether the box is editable.
     int  mCursorPos;    //The character position of the cursor.
     bool mCursorChanged;  //True if cursor has moved.

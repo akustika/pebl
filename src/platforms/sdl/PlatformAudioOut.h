@@ -42,7 +42,7 @@ struct AudioInfo{
     int      volume;           /* Relative volume. 0-100*/
 };
   
-class PlatformAudioOut: public PAudioOut, virtual public PEBLObjectBase
+class PlatformAudioOut: virtual public PAudioOut, public PEBLObjectBase
 {
  public:
     PlatformAudioOut();

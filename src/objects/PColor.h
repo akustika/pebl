@@ -33,7 +33,7 @@
 
 ///  This class represents color. Currently, only RGBA color is  accessible.
 ///  Access through other color spaces could be added.
-class PColor: public virtual PEBLObjectBase
+class PColor: public PEBLObjectBase
 {
 public:
     PColor();                                             ///Constructor

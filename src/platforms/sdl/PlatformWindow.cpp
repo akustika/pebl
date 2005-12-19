@@ -42,17 +42,18 @@ using std::ostream;
 
 
 ///Standard Constructor
-PlatformWindow::PlatformWindow():
-    mCDT(CDT_WINDOW)
+PlatformWindow::PlatformWindow()
+
 {
-    PWidget::SetBackgroundColor(counted_ptr<PColor>(new PColor(200,200,200,255)));
+    mCDT=CDT_WINDOW;
+    PWidget::SetBackgroundColor(PColor(200,200,200,255));
 }
 
 
 ///Standard Destructor
 PlatformWindow::~PlatformWindow()
 {
- 
+
 }
 
 // Inheritable function that is called by friend method << operator of PComplexData
@@ -252,10 +253,10 @@ bool PlatformWindow::Draw()
  
     //First, draw the background       
     SDL_FillRect(mSurface, NULL, SDL_MapRGBA(mSurface->format, 
-                                             mBackgroundColor->GetRed(),
-                                             mBackgroundColor->GetGreen(),
-                                             mBackgroundColor->GetBlue(),
-                                             mBackgroundColor->GetAlpha()));
+                                             mBackgroundColor.GetRed(),
+                                             mBackgroundColor.GetGreen(),
+                                             mBackgroundColor.GetBlue(),
+                                             mBackgroundColor.GetAlpha()));
 
     
     //Now, draw the subwidgets.
@@ -284,11 +285,11 @@ long int PlatformWindow::DrawFor(unsigned int cycles)
     int result = 0;// = SDL_Flip(mSurface);
         //First, draw the background       
     SDL_FillRect(mSurface, NULL, SDL_MapRGBA(mSurface->format, 
-                                             mBackgroundColor->GetRed(),
-                                             mBackgroundColor->GetGreen(),
-                                             mBackgroundColor->GetBlue(),
-                                             mBackgroundColor->GetAlpha()));
-
+                                             mBackgroundColor.GetRed(),
+                                             mBackgroundColor.GetGreen(),
+                                             mBackgroundColor.GetBlue(),
+                                             mBackgroundColor.GetAlpha()));
+-
     
     
     //Now, draw the subwidgets.

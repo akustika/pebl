@@ -47,7 +47,8 @@ using std::endl;
 
 Variant PEBLStream::Print(Variant v)
 {
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+
+    PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First();
     //No type assertion is needed, because everything should work.
     cout << v1 << endl;
@@ -58,7 +59,8 @@ Variant PEBLStream::Print(Variant v)
 
 Variant PEBLStream::Print_(Variant v)
 {
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+
+    PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First();
     //No type assertion is needed, because everything should work.
     cout << v1 << flush;
@@ -68,7 +70,8 @@ Variant PEBLStream::Print_(Variant v)
 
 Variant PEBLStream::Format(Variant v)
 {  
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+
+    PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First();
     PError::SignalFatalError("Function [Format()] not implemented.");
     return v1;
@@ -78,12 +81,12 @@ Variant PEBLStream::Format(Variant v)
 ///This opens a filestream for reading.
 Variant PEBLStream::FileOpenRead(Variant v)
 {
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in function FileOpenRead(<string>)]: ");  
     
     ///v1 contains the name of a file to open.
-    counted_ptr<PStream> mystream = counted_ptr<PStream>(new PStream(v1,sdRead, stASCII));
+    counted_ptr<PEBLObjectBase> mystream = counted_ptr<PEBLObjectBase>(new PStream(v1,sdRead, stASCII));
     PComplexData * pcd = new PComplexData(mystream);
     return Variant(pcd);
 }
@@ -91,12 +94,12 @@ Variant PEBLStream::FileOpenRead(Variant v)
 ///This opens a filestream for writing, replacing current file
 Variant PEBLStream::FileOpenWrite(Variant v)
 {
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in function FileOpenWrite(<string>)]: ");  
  
     ///v1 contains the name of a file to open.      
-    counted_ptr<PStream> mystream = counted_ptr<PStream>(new PStream(v1,sdWrite, stASCII));
+    counted_ptr<PEBLObjectBase> mystream = counted_ptr<PEBLObjectBase>(new PStream(v1,sdWrite, stASCII));
     PComplexData * pcd = new PComplexData(mystream);
     return Variant(pcd);
 }
@@ -104,12 +107,12 @@ Variant PEBLStream::FileOpenWrite(Variant v)
 ///This opens a filestream for writing, appending to end of file.
 Variant PEBLStream::FileOpenAppend(Variant v)
 {
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in function FileOpenAppend(<string>)]: ");  
 
     ///v1 contains the name of a file to open.    
-    counted_ptr<PStream> mystream = counted_ptr<PStream>(new PStream(v1,sdAppend, stASCII));
+    counted_ptr<PEBLObjectBase> mystream = counted_ptr<PEBLObjectBase>(new PStream(v1,sdAppend, stASCII));
     PComplexData * pcd = new PComplexData(mystream);
     return Variant(pcd);
 }
@@ -118,13 +121,14 @@ Variant PEBLStream::FileOpenAppend(Variant v)
 Variant PEBLStream::FileClose(Variant v)
 {
     //v[1] should have the file stream to close
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
     
     Variant v1 = plist->First(); plist->PopFront();
     PError::AssertType(v1, PEAT_FILESTREAM, "Argument error in function [FileClose(<file-stream>)]: ");  
 
-    counted_ptr<PStream> mystream = (v1.GetComplexData())->GetFileStream();
 
+    counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
+    PStream * mystream = dynamic_cast<PStream*>(tmp2.get());
     return Variant(mystream->Close());
 }
 
@@ -133,15 +137,18 @@ Variant PEBLStream::FilePrint(Variant v)
 {
     //v[1] should have the file stream 
     //v[2] should have the variant to print
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
+
     Variant v1 = plist->First(); plist->PopFront();
 
 
     PError::AssertType(v1, PEAT_FILESTREAM, "Argument error in first parameter of function [FilePrint(<file-stream>, <text>)]: ");  
-    counted_ptr<PStream> mystream = (v1.GetComplexData())->GetFileStream();
- 
+
+    counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
+    PStream * mystream = dynamic_cast<PStream*>(tmp2.get());
+
     Variant v2 = plist->First(); plist->PopFront();
-    
+   
     mystream->WriteString(v2 + Variant("\n"));
     return (v2+Variant("\n"));
 }  
@@ -150,11 +157,14 @@ Variant PEBLStream::FilePrint_(Variant v)
 {
     //v[1] should have the file stream 
     //v[2] should have the variant to print
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
+
     Variant v1 = plist->First(); plist->PopFront();
 
     PError::AssertType(v1, PEAT_FILESTREAM, "Argument error in first parameter of function [FilePrint_(<file-stream>, <text>)]: ");  
-    counted_ptr<PStream> mystream = (v1.GetComplexData())->GetFileStream();
+
+    counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
+    PStream * mystream = dynamic_cast<PStream*>(tmp2.get());
 
     Variant v2 = plist->First(); plist->PopFront();
     mystream->WriteString(v2);
@@ -164,12 +174,14 @@ Variant PEBLStream::FilePrint_(Variant v)
 Variant PEBLStream::FileReadCharacter(Variant v)
 {
     //v[1] should have the file stream 
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
+
     Variant v1 = plist->First(); plist->PopFront();
 
     PError::AssertType(v1, PEAT_FILESTREAM, "Argument error in function [FileReadCharacter(<file-stream>)]: ");   
-    counted_ptr<PStream> mystream = (v1.GetComplexData())->GetFileStream();
+    counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
 
+    PStream * mystream = dynamic_cast<PStream*>(tmp2.get());
     char c = (mystream->ReadChar());
     return Variant((char)c);
 }
@@ -177,11 +189,14 @@ Variant PEBLStream::FileReadCharacter(Variant v)
 Variant PEBLStream::FileReadWord(Variant v)
 {
     //v[1] should have the file stream 
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
+
     Variant v1 = plist->First(); plist->PopFront();
 
     PError::AssertType(v1, PEAT_FILESTREAM, "Argument error in function [FileReadWord(<file-stream>)]: ");   
-    counted_ptr<PStream> mystream = (v1.GetComplexData())->GetFileStream();
+
+    counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
+    PStream * mystream = dynamic_cast<PStream*>(tmp2.get());
 
     return Variant(mystream->ReadToken(' '));
 }
@@ -190,12 +205,13 @@ Variant PEBLStream::FileReadWord(Variant v)
 //This takes a filestream and returns the next line.
 Variant PEBLStream::FileReadLine(Variant v)
 {
-    //v[1] should have the file stream 
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
+    //v[1] should have the file stream    
     Variant v1 = plist->First(); plist->PopFront();
 
     PError::AssertType(v1, PEAT_FILESTREAM, "Argument error in function [FileReadLine(<file-stream>)]: ");   
-    counted_ptr<PStream> mystream = (v1.GetComplexData())->GetFileStream();
+    counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
+    PStream * mystream = dynamic_cast<PStream*>(tmp2.get());
 
     return Variant(mystream->ReadLineClean());
 }
@@ -210,7 +226,8 @@ Variant PEBLStream::FileReadList(Variant v)
 {
 
    //v[1] should have the filename
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
+
     Variant v1 = plist->First(); plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in function [FileReadList(<filename>)]:  ");    
  
@@ -221,10 +238,11 @@ Variant PEBLStream::FileReadList(Variant v)
         PError::SignalFatalError(string("Unable to find file [")  + v1.GetString() + string("]."));
 
     //It must be good, so open it.
-    counted_ptr<PStream> mystream = counted_ptr<PStream>(new PStream(filename,sdRead, stASCII));
+    PStream *  mystream = new PStream(filename,sdRead, stASCII);
    
 
-    counted_ptr<PList>  returnlist = counted_ptr<PList>(new PList());
+
+    PList * returnlist = new PList();
     std::string  tmpstring;
     while(!mystream->Eof())
         {
@@ -238,8 +256,11 @@ Variant PEBLStream::FileReadList(Variant v)
                 }
         }
     mystream->Close();
-    PComplexData * pcd = new PComplexData(returnlist);
-    return Variant(pcd);    
+    delete mystream;
+
+    counted_ptr<PEBLObjectBase>  tmp2 = counted_ptr<PEBLObjectBase>(returnlist);
+    PComplexData * pcd = new PComplexData(tmp2);
+    return Variant(pcd);
 }
     
 
@@ -249,7 +270,7 @@ Variant PEBLStream::FileReadList(Variant v)
 Variant PEBLStream::FileReadTable(Variant v)
 {
     //v[1] should have the file stream 
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in first parameter of function [FileReadTable(<list>)]:  ");    
      
@@ -260,7 +281,7 @@ Variant PEBLStream::FileReadTable(Variant v)
         PError::SignalFatalError(string("Unable to find file [")  +v1.GetString() + string("]."));
 
     //It must be good, so open it.
-    counted_ptr<PStream>  myStream = counted_ptr<PStream> (new PStream(filename,sdRead, stASCII));
+    PStream *   myStream = new PStream(filename,sdRead, stASCII);
     
     char separator;
     //See if there is another parameter; if there is, it is the token separator.
@@ -276,7 +297,8 @@ Variant PEBLStream::FileReadTable(Variant v)
         }
 
     //Make an outer list to put everything in.
-    counted_ptr<PList>  returnlist = counted_ptr<PList>(new PList());
+
+    PList * returnlist = new PList();
 
     //Make an inner list
     Variant innerlist;
@@ -302,8 +324,9 @@ Variant PEBLStream::FileReadTable(Variant v)
                 }
         }
     myStream->Close();
-    PComplexData * pcd = new PComplexData(returnlist);
-
+    delete myStream;
+    counted_ptr<PEBLObjectBase> tmp2 =  counted_ptr<PEBLObjectBase>(returnlist);
+    PComplexData * pcd = new PComplexData(tmp2);
     return Variant(pcd);    
 }
 
@@ -317,7 +340,7 @@ Variant PEBLStream::FileReadText(Variant v)
 {
 
    //v[1] should have the filename
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in function [FileReadText(<filename>)]:  ");    
  
@@ -328,7 +351,7 @@ Variant PEBLStream::FileReadText(Variant v)
         PError::SignalFatalError(string("Unable to find file [")  + v1.GetString() + string("]."));
 
     //It must be good, so open it.
-    counted_ptr<PStream> mystream = counted_ptr<PStream>(new PStream(filename,sdRead, stASCII));
+    PStream * mystream = new PStream(filename,sdRead, stASCII);
    
 
     Variant returnText = "";
@@ -345,6 +368,7 @@ Variant PEBLStream::FileReadText(Variant v)
                 }
         }
     mystream->Close();
+    delete mystream;
 
     return returnText;
 }
@@ -355,12 +379,12 @@ Variant PEBLStream::FileReadText(Variant v)
 Variant PEBLStream::EndOfLine(Variant v)
 {
    //v[1] should have the file stream 
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); plist->PopFront();
 
     PError::AssertType(v1, PEAT_FILESTREAM, "Argument error in function [EndOfLine(<file-stream>)]: ");   
-    counted_ptr<PStream> mystream = (v1.GetComplexData())->GetFileStream();
-    
+    counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
+    PStream * mystream = dynamic_cast<PStream*>(tmp2.get());
     return Variant(mystream->Eol());
 }
 
@@ -369,11 +393,11 @@ Variant PEBLStream::EndOfLine(Variant v)
 Variant PEBLStream::EndOfFile(Variant v)
 {
    //v[1] should have the file stream 
-    counted_ptr<PList>  plist = (v.GetComplexData())->GetList();
+    PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); plist->PopFront();
 
     PError::AssertType(v1, PEAT_FILESTREAM, "Argument error in function [EndOfFile(<file-stream>)]: ");   
-    counted_ptr<PStream> mystream = (v1.GetComplexData())->GetFileStream();
-
+    counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
+    PStream * mystream = dynamic_cast<PStream*>(tmp2.get());
     return Variant(mystream->Eof());
 }

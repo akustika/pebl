@@ -44,17 +44,19 @@ using std::endl;
 PComplexData::PComplexData()
 {
 
+
 }
 
 
 PComplexData::PComplexData( counted_ptr <PEBLObjectBase > object )
 {
     mPEBLObject = object;
+
 }
 
 PComplexData::~PComplexData()
 {
-    cout << "Deleting a PCD: <"  << "> "<< GetTypeName() << endl;
+
 }
 
 
@@ -62,28 +64,30 @@ PComplexData::~PComplexData()
 PComplexData::PComplexData(const PComplexData & pcd )
 {
     mPEBLObject = pcd.GetObject();
+
 }
 
 //Overload of the << operator
 ostream & operator << ( ostream & out, const PComplexData & pcd )
 {
-
-  pcd.SendToStream( out );
-  return out;
+    pcd.SendToStream( out );
+    return out;
 }
 
 
 //This prints out stuff to a stream.
 ostream & PComplexData::SendToStream( ostream & out ) const
 {
-    out << mPEBLObject;
+
+    out << GetTypeName() << endl;
     return out;
 }
 
 
 ComplexDataType PComplexData::GetType() const
 {
-  return mPEBLObject->GetType();
+    if(mPEBLObject.get() != NULL) return mPEBLObject->GetType();
+    else return CDT_UNDEFINED;
 }
 
 
@@ -142,10 +146,6 @@ std::string PComplexData::GetTypeName() const
 
 
 
-
-
-
-
 void PComplexData::SetProperty( std::string prop, Variant v )
 {
     mPEBLObject->SetProperty(prop,v);
@@ -156,8 +156,6 @@ Variant PComplexData::GetProperty( std::string prop )const
 {
     return mPEBLObject->GetProperty(prop);
 }
-
-
 
 
 
@@ -197,7 +195,7 @@ bool PComplexData::IsColor() const
 
 bool PComplexData::IsFont() const
 {
-  return GetType() == CDT_FONT;
+    return GetType() == CDT_FONT;
 }
 
 bool PComplexData::IsTextObject() const
@@ -245,3 +243,9 @@ bool PComplexData::IsDrawObject() const
 }
 
 
+
+PList * PComplexData::GetList()const
+{
+    if(IsList()) return dynamic_cast<PList*>(mPEBLObject.get());
+    else return NULL;
+}

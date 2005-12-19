@@ -83,11 +83,11 @@ namespace PEBLMath
 
 
     //Statistical (operates on a list; ignores non-numeric elements.)
-    Variant Mean(Variant v);
-    Variant Min(Variant v);
-    Variant Max(Variant v);
-    Variant StDev(Variant v);
-    Variant Median(Variant v);
+//     Variant Mean(Variant v);
+//     Variant Min(Variant v);
+//     Variant Max(Variant v);
+//     Variant StDev(Variant v);
+//     Variant Median(Variant v);
     Variant Quantile(Variant v);
 
     Variant RandomizeTimer(Variant v);

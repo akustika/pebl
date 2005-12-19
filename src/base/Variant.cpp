@@ -227,9 +227,12 @@ Variant::Variant(bool b):
 Variant::Variant(const Variant &v):
     mComplexData(NULL)
 {
+
+
     //This should behave differently depending on what type of variant v is
 
     mDataType = v.GetDataType();
+
     switch(mDataType)
         {
 
@@ -267,12 +270,14 @@ Variant::Variant(const Variant &v):
 
         case P_DATA_COMPLEXDATA:
             {
+
                 PComplexData * pcd = v.GetComplexData();
-                cout << "My type is: " << pcd->GetType() << endl;
+
                 if(pcd)
                     mComplexData  = new PComplexData(*pcd);
                 else 
                     mComplexData = NULL;
+
             }
             break;
 
@@ -515,6 +520,7 @@ bool Variant::operator >= ( const Variant & rhs) const
 /// Assignment Operator (overloaded)
 Variant Variant::operator = (const Variant & value)
 {
+
     //First, clean up 'this' if it contains data on free store
     // (e.g., a Variable or a string)
     free_mData();
@@ -552,7 +558,12 @@ Variant Variant::operator = (const Variant & value)
             break;
 
         case P_DATA_COMPLEXDATA:
-            mComplexData = value.GetComplexData();
+
+            PComplexData * tmp = value.GetComplexData();
+            //tmp is a pointer to complex data, which
+            //is just a holder for the object.  We want to make a 
+            //copy of tmp
+            mComplexData = new PComplexData(*tmp);
             break;
 
         case P_DATA_UNDEFINED: // undefined, error
@@ -668,7 +679,6 @@ Variant Variant::operator = (const  std::string  value)
 
 ostream & operator << (ostream& out, const Variant& v)
 {
-
     switch(v.GetDataType())
         {
 
@@ -699,7 +709,9 @@ ostream & operator << (ostream& out, const Variant& v)
 
         case P_DATA_COMPLEXDATA:
             {
-                out << *(v.GetComplexData());
+                out << "^^^^^^^^^^^^^^^^^\n";
+                out << *(v.GetComplexData())<<endl;
+                out << "VVVVVVVVVVVVVVVVVV\n";
             }
             break;
 
@@ -989,11 +1001,32 @@ const char *  Variant::GetString() const
 
         case P_DATA_COMPLEXDATA:
             {
-                 std::stringstream tmp;
-                 tmp <<  GetComplexData();
-                 std::string tmpstring;
-                 tmp >> tmpstring;
-                 return tmpstring.c_str();
+                PComplexData * pcd = GetComplexData();
+                counted_ptr<PEBLObjectBase> pob = pcd->GetObject();
+
+                std::string tmp = pob->ObjectName();
+                return tmp.c_str();
+
+//                 cout << *pob << endl;
+                
+//                 std::stringstream tmp;
+//                 tmp <<  *pob << std::flush;
+
+//                 std::string tmpstring;
+//                 tmp >> tmpstring;
+                
+//                 return tmpstring.c_str();
+                //                return pcd->GetTypeName().c_str();
+
+
+//                 cout << *pcd << endl;
+//                 cout << "Getting Variant string\n";
+
+//              
+//                  cout << "[[["<< tmpstring << "]]]"<< endl;
+//                  cout << "done Getting Variant string\n";
+//                  return tmpstring.c_str();
+
             }
 
         case P_DATA_STACK_SIGNAL:
@@ -1165,7 +1198,6 @@ void Variant::free_mData()
 
     if(mComplexData)
      {
-         cout << "Deleting mComplexData in free_mData\n";
          
          delete mComplexData;
          mComplexData =NULL;

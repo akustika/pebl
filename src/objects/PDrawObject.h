@@ -33,7 +33,7 @@
 
 //A DrawObject is parallel to PWidget, but specific to drawing 
 //primitives.
-class PDrawObject: public virtual PWidget
+class PDrawObject: virtual public PWidget
 
 {
 
@@ -50,8 +50,8 @@ protected:
     ///An inheritable printing class used by PEBLObjectBase::operator<<
     virtual std::ostream & SendToStream(std::ostream& out) const=0;
  
-    counted_ptr<PColor> mColor;
-    counted_ptr<PColor> mOutlineColor;
+    PColor mColor;
+    PColor mOutlineColor;
     bool mFilled;
 
 private:
@@ -59,10 +59,10 @@ private:
 };
 
 
-class PLine: public virtual PDrawObject
+class PLine: public PDrawObject
 {
 public:
-    PLine(int x1, int y1, int dx, int dy, counted_ptr<PColor> fg);
+    PLine(int x1, int y1, int dx, int dy, PColor fg);
     virtual ~PLine();
     virtual int GetWidth() const{return mX2;};
     virtual int GetHeight() const{return mY2;};
@@ -114,10 +114,10 @@ private:
 // };
 
 
- class PRectangle: public virtual PDrawObject
+ class PRectangle: public PDrawObject
  {
  public:
-     PRectangle(int x1, int y1, int dx, int dy, counted_ptr<PColor> fg, bool filled);
+     PRectangle(int x1, int y1, int dx, int dy, PColor fg, bool filled);
      virtual ~PRectangle();
      virtual int GetWidth() const{return mDX;};
      virtual int GetHeight() const{return mDY;};
@@ -135,7 +135,7 @@ private:
  class PSquare: public PRectangle
  {
  public:
-     PSquare(int x, int y, int size, counted_ptr<PColor> fg, bool filled);
+     PSquare(int x, int y, int size, PColor fg, bool filled);
      virtual ~PSquare();
      virtual int GetWidth() const{return mDX;};
      virtual int GetHeight() const{return mDY;};
@@ -146,10 +146,10 @@ private:
  };
 
 
-class PEllipse: public virtual PDrawObject
+class PEllipse: public  PDrawObject
  {
  public:
-     PEllipse(int x1, int y1, int rx, int ry, counted_ptr<PColor> fg, bool filled);
+     PEllipse(int x1, int y1, int rx, int ry, PColor fg, bool filled);
      virtual ~PEllipse();
      virtual int GetWidth() const{return mRX;};
      virtual int GetHeight() const{return mRY;};
@@ -168,10 +168,10 @@ class PEllipse: public virtual PDrawObject
 };
 
 
- class PCircle: public virtual PDrawObject
+ class PCircle: public PDrawObject
  {
  public:
-     PCircle(int x1, int y1, int r, counted_ptr<PColor> fg, bool filled);
+     PCircle(int x1, int y1, int r, PColor fg, bool filled);
      virtual ~PCircle();
 
      virtual int GetWidth() const{return (int)(2*mR);};

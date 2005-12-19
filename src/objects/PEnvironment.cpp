@@ -27,7 +27,6 @@
 #include "PEnvironment.h"
 
 
-
 bool PEnvironment::AddWindow(PWindow * window)
 {
     mWindows.push_front(window);

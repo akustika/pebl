@@ -38,7 +38,7 @@
 /// to be overriden by an inherited class (i.e., Platform*) to be used.
 
 
-class PWidget: public PEBLObjectBase
+class PWidget: virtual public PEBLObjectBase
 {
 public:
   
@@ -65,8 +65,8 @@ public:
     virtual int GetHeight()const {return mHeight;};
 
      
-    virtual void SetBackgroundColor(counted_ptr<PColor> color);
-    virtual counted_ptr<PColor>  GetBackgroundColor(){return mBackgroundColor;};
+    virtual void SetBackgroundColor(PColor color);
+    virtual PColor  GetBackgroundColor(){return mBackgroundColor;};
     
     ///AddSubWidget takes care of adding a widget to a parent widget, and setting
     ///the parent field of the child widget to the parent widget.
@@ -85,12 +85,14 @@ public:
     virtual void Hide();
     virtual bool IsVisible(){return mIsVisible;}
 
+    virtual std::string ObjectName() const{return "PWidget";};
+
 protected:
 
     ///An inheritable printing class used by PEBLObjectBase::operator<<
     virtual std::ostream & SendToStream(std::ostream& out) const;
  
-    virtual std::string ObjectName() const{return "PWidget";};
+
     ///The x and y coordinates, in pixels, from the upper left corner
     ///of the parent screen
     int mX, mY;
@@ -104,7 +106,7 @@ protected:
     int mWidth, mHeight;
 
     /// The background color of the widget.  if alpha = 0, will not be painted.
-    counted_ptr<PColor> mBackgroundColor;
+    PColor mBackgroundColor;
 
    //A list of sub-widgets.
     std::list<PWidget*> mSubWidgets;

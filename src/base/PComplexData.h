@@ -76,7 +76,8 @@ public:
     //Constructors
     PComplexData();
     PComplexData(counted_ptr<PEBLObjectBase>);
-//     PComplexData(counted_ptr<PlatformEnvironment>);
+
+    //     PComplexData(counted_ptr<PlatformEnvironment>);
 //     PComplexData(counted_ptr<PlatformWindow>);
 //     PComplexData(counted_ptr<PColor>);
 //     PComplexData(counted_ptr<PlatformFont>);
@@ -110,7 +111,12 @@ public:
     ComplexDataType GetType() const;
     std::string  GetTypeName() const;
 
-//     counted_ptr<PList>                 GetList() const;
+
+
+    //The following are convenience accessors; do not
+    //destroy or mangle the returned object.
+
+    PList *                GetList() const;
 //     counted_ptr<PlatformEnvironment>   GetEnvironment() const;
 //     counted_ptr<PlatformWindow>        GetWindow() const;
 //     counted_ptr<PColor>                GetColor() const;
