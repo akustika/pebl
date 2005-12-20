@@ -80,19 +80,17 @@ bool PWidget::SetProperty(std::string name, Variant v)
 
     //Height and width are not universally settable.
 
-    if(!PWidget::SetProperty(name,v))
-
-        if (name == "X") SetPosition(v,mY);
-        else if (name == "Y") SetPosition(mX,v);
-        else if (name == "VISIBLE")
-            {
-                if(v.GetInteger())
-                    Show();
-                else 
-                    Hide();
-            }
+    if (name == "X") SetPosition(v,mY);
+    else if (name == "Y") SetPosition(mX,v);
+    else if (name == "VISIBLE")
+        {
+            if(v.GetInteger())
+                Show();
+            else 
+                Hide();
+        }
     
-        else return false;
+    else return false;
     
     return true;
 }

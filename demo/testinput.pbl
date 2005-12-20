@@ -2,7 +2,7 @@ define Start(p)
 {
         font <- MakeFont("Vera.ttf",0,22,MakeColor("red"),MakeColor("white"),0)
     win <- MakeWindow()
-    tb <- MakeTextBox("test  ü",font, 200,200)
+    tb <- MakeTextBox("test  ü",font, 400,200)
    AddObject(tb,win)
    Draw()
 

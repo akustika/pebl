@@ -401,7 +401,7 @@ std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
         case PEBLKEY_WORLD_65:  cout << "WK65\n";       return "¡";
         case PEBLKEY_WORLD_66:  cout << "WK66\n";       return "¬";
         case PEBLKEY_WORLD_67:  cout << "WK67\n";       return "\u221a";
-        case PEBLKEY_WORLD_68:  cout << "WK68\n";       return "\u0192";
+        case PEBLKEY_WORLD_68:  cout << "WK68\n";       return "ä";
         case PEBLKEY_WORLD_69:  cout << "WK69\n";       return "\u2248";
         case PEBLKEY_WORLD_70:  cout << "WK70\n";       return "\u2206";
         case PEBLKEY_WORLD_71:  cout << "WK71\n";       return "«";
@@ -419,7 +419,7 @@ std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
         case PEBLKEY_WORLD_83:  cout << "WK83\n";       return "\u201d";
         case PEBLKEY_WORLD_84:  cout << "WK84\n";       return "\u2018";
         case PEBLKEY_WORLD_85:  cout << "WK85\n";       return "\u2019";
-        case PEBLKEY_WORLD_86:  cout << "WK86\n";       return "÷";
+        case PEBLKEY_WORLD_86:  cout << "WK86\n";       return "ö";
         case PEBLKEY_WORLD_87:  cout << "WK87\n";       return "\u25ca";
         case PEBLKEY_WORLD_88:  cout << "WK88\n";       return "ÿ";
         case PEBLKEY_WORLD_89:  cout << "WK89\n";       return "\u0178";
