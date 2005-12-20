@@ -558,14 +558,14 @@ Variant Variant::operator = (const Variant & value)
             break;
 
         case P_DATA_COMPLEXDATA:
-
+            {
             PComplexData * tmp = value.GetComplexData();
             //tmp is a pointer to complex data, which
             //is just a holder for the object.  We want to make a 
             //copy of tmp
             mComplexData = new PComplexData(*tmp);
             break;
-
+            }
         case P_DATA_UNDEFINED: // undefined, error
         default:
             PError::SignalFatalError( "Undefined Variant type in Variant::operator = (Variant).");
