@@ -50,12 +50,6 @@ public:
     virtual bool LoadImage(const std::string & imagefilename);
 
 
-     //overloaded generic PEBLObjectBase methods
- //     virtual bool SetProperty(std::string, Variant v);
-//      virtual Variant GetProperty(std::string)const;
-//      virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
-//      virtual ObjectValidationError ValidateProperty(std::string)const;
-
     virtual std::string ObjectName() const{return "PlatformImageBox\n";};
 protected:
 

@@ -50,12 +50,6 @@ public:
     virtual ~PTextObject();
 
 
-//     //overloaded generic PObject methods
-//     virtual bool SetProperty(std::string, Variant v)=0;
-//     virtual Variant GetProperty(std::string)const=0;
-//     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const=0;
-//     virtual ObjectValidationError ValidateProperty(std::string)const=0;
-
 
     virtual void SetText(const std::string & text);
     virtual std::string GetText()const {return mText;}

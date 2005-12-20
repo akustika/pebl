@@ -75,6 +75,49 @@ PWidget::~PWidget()
 }
 
 
+bool PWidget::SetProperty(std::string name, Variant v)
+{
+
+    //Height and width are not universally settable.
+
+    if(!PWidget::SetProperty(name,v))
+
+        if (name == "X") SetPosition(v,mY);
+        else if (name == "Y") SetPosition(mX,v);
+        else if (name == "VISIBLE")
+            {
+                if(v.GetInteger())
+                    Show();
+                else 
+                    Hide();
+            }
+    
+        else return false;
+    
+    return true;
+}
+
+
+
+Variant  PWidget::GetProperty(std::string name)const
+{
+    return PEBLObjectBase::GetProperty(name);
+}
+
+
+
+ ObjectValidationError PWidget::ValidateProperty(std::string, Variant v)const
+{
+    return OVE_SUCCESS;
+}
+
+
+ ObjectValidationError PWidget::ValidateProperty(std::string)const
+{
+    return OVE_SUCCESS;
+}
+
+
 ///This sets the widget's position on its parent widget.
 void PWidget::SetPosition(int x, int y)
 {

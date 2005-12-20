@@ -27,10 +27,15 @@
 
 #include "PDrawObject.h"
 #include "PWidget.h"
-
+#include "../base/PComplexData.h"
 
 PDrawObject::PDrawObject()
 {
+
+    InitializeProperty("FILLED",Variant(0));
+    InitializeProperty("COLOR",Variant(0));
+    InitializeProperty("OUTLINECOLOR",Variant(0));
+
 }
 
 
@@ -38,6 +43,67 @@ PDrawObject::PDrawObject()
 PDrawObject::~PDrawObject()
 {
 }
+
+
+bool PDrawObject::SetProperty(std::string name, Variant v)
+{
+    if(!PWidget::SetProperty(name,v))
+
+        if (name == "FILLED") SetFilled(v);
+        else if (name == "COLOR") SetColor(v);
+        else if (name == "OUTLINECOLOR")SetOutlineColor(v);
+        else return false;
+    
+    return true;
+}
+
+
+Variant PDrawObject::GetProperty(std::string name)const
+{
+    return PEBLObjectBase::GetProperty(name);
+}
+
+
+ObjectValidationError PDrawObject::ValidateProperty(std::string name, Variant v)const
+{
+    return ValidateProperty(name);
+}
+
+ObjectValidationError PDrawObject::ValidateProperty(std::string name)const
+{
+
+    ObjectValidationError tmp = PWidget::ValidateProperty(name);
+    
+    if(tmp == OVE_SUCCESS ) return OVE_SUCCESS;
+    else
+        {
+        if(name == "FILLED" ||
+           name == "COLOR" ||
+           name =="OUTLINECOLOR")
+            return OVE_SUCCESS;
+        else return OVE_INVALID_PROPERTY_NAME;
+        }
+}
+
+void PDrawObject::SetFilled(bool filled)
+{
+    mFilled = filled;
+    PEBLObjectBase::SetProperty("FILLED",filled);
+}
+
+void PDrawObject::SetColor(Variant col)
+{
+    PEBLObjectBase::SetProperty("COLOR",col);
+    mColor = *dynamic_cast<PColor*>(col.GetComplexData()->GetObject().get());
+
+}
+
+void  PDrawObject::SetOutlineColor(Variant  ocol)
+{
+    PEBLObjectBase::SetProperty("OUTLINECOLOR",ocol);
+    mOutlineColor = *dynamic_cast<PColor*>(ocol.GetComplexData()->GetObject().get());
+}
+
 
 
 
@@ -59,6 +125,40 @@ PLine::PLine(int x1, int y1, int dx, int dy, PColor fg):
 PLine::~PLine()
 {
 }
+
+
+
+
+bool PLine::SetProperty(std::string name, Variant v)
+{
+
+    if(!PDrawObject::SetProperty(name,v))
+        if("DUMMY" == name) return true;
+        else return false;
+    
+    return true;
+}
+
+
+Variant PLine::GetProperty(std::string name)const
+{
+    //return PEBLObjectBase::GetProperty(name);
+    return Variant(name);
+}
+
+
+ObjectValidationError PLine::ValidateProperty(std::string name, Variant v)const
+{
+    return ValidateProperty(name);
+}
+
+ObjectValidationError PLine::ValidateProperty(std::string name)const
+{
+    return PDrawObject::ValidateProperty(name);
+}
+
+
+
 
 std::ostream & PLine::SendToStream(std::ostream& out)
 {
@@ -84,6 +184,34 @@ PRectangle::PRectangle(int x1, int y1, int dx, int dy, PColor fg, bool filled):
 
 PRectangle:: ~PRectangle()
 {
+}
+
+bool PRectangle::SetProperty(std::string name, Variant v)
+{
+
+    if(!PDrawObject::SetProperty(name,v))
+        if("DUMMY" == name) return true;
+        else return false;
+    
+    return true;
+}
+
+
+Variant PRectangle::GetProperty(std::string name)const
+{
+    return PEBLObjectBase::GetProperty(name);
+
+}
+
+
+ObjectValidationError PRectangle::ValidateProperty(std::string name, Variant v)const
+{
+    return ValidateProperty(name);
+}
+
+ObjectValidationError PRectangle::ValidateProperty(std::string name)const
+{
+    return PDrawObject::ValidateProperty(name);
 }
 
 std::ostream & PRectangle::SendToStream(std::ostream& out)
@@ -118,6 +246,34 @@ std::ostream & PSquare::SendToStream(std::ostream& out)
 }
 
 
+bool PSquare::SetProperty(std::string name, Variant v)
+{
+
+    if(!PDrawObject::SetProperty(name,v))
+        if("DUMMY" == name) return true;
+        else return false;
+    
+    return true;
+}
+
+
+Variant PSquare::GetProperty(std::string name)const
+{
+    return PEBLObjectBase::GetProperty(name);
+
+}
+
+
+ObjectValidationError PSquare::ValidateProperty(std::string name, Variant v)const
+{
+    return ValidateProperty(name);
+}
+
+ObjectValidationError PSquare::ValidateProperty(std::string name)const
+{
+    return PDrawObject::ValidateProperty(name);
+}
+
 
 
 
@@ -134,7 +290,6 @@ PEllipse:: PEllipse(int x1, int y1, int rx, int ry, PColor fg, bool filled):
     mY = y1;
     mFilled = filled;
 
-    std::cout << mX << " " << mY << std::endl;
     mBackgroundColor = fg;
     mColor = fg;
     mOutlineColor = fg;
@@ -149,6 +304,38 @@ std::ostream & PEllipse::SendToStream(std::ostream& out)
   out << "PEllipse";
   return out;
 }
+
+bool PEllipse::SetProperty(std::string name, Variant v)
+{
+
+    if(!PDrawObject::SetProperty(name,v))
+        if("DUMMY" == name) return true;
+        else return false;
+    
+    return true;
+}
+
+
+Variant PEllipse::GetProperty(std::string name)const
+{
+    return PEBLObjectBase::GetProperty(name);
+
+}
+
+
+ObjectValidationError PEllipse::ValidateProperty(std::string name, Variant v)const
+{
+    return ValidateProperty(name);
+}
+
+ObjectValidationError PEllipse::ValidateProperty(std::string name)const
+{
+    return PDrawObject::ValidateProperty(name);
+}
+
+
+
+
 
 
 PCircle:: PCircle(int x1, int y1, int r, PColor fg, bool filled):
@@ -176,4 +363,32 @@ std::ostream & PCircle::SendToStream(std::ostream& out)
 {
   out << "PCircle";
   return out;
+}
+
+bool PCircle::SetProperty(std::string name, Variant v)
+{
+
+    if(!PDrawObject::SetProperty(name,v))
+        if("DUMMY" == name) return true;
+        else return false;
+    
+    return true;
+}
+
+
+Variant PCircle::GetProperty(std::string name)const
+{
+    return PEBLObjectBase::GetProperty(name);
+
+}
+
+
+ObjectValidationError PCircle::ValidateProperty(std::string name, Variant v)const
+{
+    return ValidateProperty(name);
+}
+
+ObjectValidationError PCircle::ValidateProperty(std::string name)const
+{
+    return PDrawObject::ValidateProperty(name);
 }

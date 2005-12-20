@@ -47,6 +47,13 @@ public:
     virtual ~PWidget();
   
 
+   //overloaded generic PEBLObjectBase methods
+    virtual bool SetProperty(std::string, Variant v);
+    virtual Variant GetProperty(std::string)const;
+    virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
+    virtual ObjectValidationError ValidateProperty(std::string)const;
+  
+
     ///This unconditionally sets the parent widget.
     virtual void SetParent(PWidget * widget){mParent = widget;}
 
@@ -63,6 +70,8 @@ public:
 
     virtual int GetWidth()const {return mWidth;};
     virtual int GetHeight()const {return mHeight;};
+
+
 
      
     virtual void SetBackgroundColor(PColor color);

@@ -43,7 +43,15 @@ public:
     //PDrawObject(int x, int y, const PColor & fg, const PColor & outline);
     //PDrawObject(int x, int y, const PColor & fg, const PColor & outline, bool filled);
     virtual ~PDrawObject();
-    virtual void SetFilled(bool filled){mFilled = filled;};
+    virtual void SetFilled(bool filled);
+    virtual void SetColor(Variant  col);
+    virtual void SetOutlineColor(Variant ocol);
+
+    //overloaded generic PEBLObjectBase methods
+    virtual bool SetProperty(std::string, Variant v);
+    virtual Variant GetProperty(std::string)const;
+    virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
+    virtual ObjectValidationError ValidateProperty(std::string)const;
 
 protected:
 
@@ -67,6 +75,14 @@ public:
     virtual int GetWidth() const{return mX2;};
     virtual int GetHeight() const{return mY2;};
     virtual std::ostream & SendToStream(std::ostream& out);
+
+
+    //overloaded generic PEBLObjectBase methods
+    virtual bool SetProperty(std::string, Variant v);
+    virtual Variant GetProperty(std::string)const;
+    virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
+    virtual ObjectValidationError ValidateProperty(std::string)const;
+
 
 protected:
     //X1--Y2 are relative to mX and mY
@@ -123,6 +139,12 @@ private:
      virtual int GetHeight() const{return mDY;};
      virtual std::ostream & SendToStream(std::ostream& out);
 
+     //overloaded generic PEBLObjectBase methods
+     virtual bool SetProperty(std::string, Variant v);
+     virtual Variant GetProperty(std::string)const;
+     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
+     virtual ObjectValidationError ValidateProperty(std::string)const;
+
 
  protected:
      int mX1;
@@ -141,6 +163,14 @@ private:
      virtual int GetHeight() const{return mDY;};
      virtual std::ostream & SendToStream(std::ostream& out);
      
+
+
+     //overloaded generic PEBLObjectBase methods
+     virtual bool SetProperty(std::string, Variant v);
+     virtual Variant GetProperty(std::string)const;
+     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
+     virtual ObjectValidationError ValidateProperty(std::string)const;
+
  protected:
  private:
  };
@@ -155,6 +185,14 @@ class PEllipse: public  PDrawObject
      virtual int GetHeight() const{return mRY;};
      virtual std::ostream & SendToStream(std::ostream& out);
      
+
+     //overloaded generic PEBLObjectBase methods
+     virtual bool SetProperty(std::string, Variant v);
+     virtual Variant GetProperty(std::string)const;
+     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
+     virtual ObjectValidationError ValidateProperty(std::string)const;
+
+
  protected:
      
      //X1--Y2 are relative to mX and mY
@@ -177,6 +215,14 @@ class PEllipse: public  PDrawObject
      virtual int GetWidth() const{return (int)(2*mR);};
      virtual int GetHeight() const{return (int)(2*mR);};
      virtual std::ostream & SendToStream(std::ostream& out);
+
+
+    //overloaded generic PEBLObjectBase methods
+     virtual bool SetProperty(std::string, Variant v);
+     virtual Variant GetProperty(std::string)const;
+     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
+     virtual ObjectValidationError ValidateProperty(std::string)const;
+
 
  protected:
 

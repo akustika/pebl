@@ -44,6 +44,12 @@ PTextBox::PTextBox():
     mCursorChanged(true)
 
 {
+    InitializeProperty("TEXT",Variant(""));
+    InitializeProperty("WIDTH",Variant(0));
+    InitializeProperty("HEIGHT",Variant(0));
+    InitializeProperty("EDITABLE",Variant(false));
+    InitializeProperty("CURSORPOS",Variant(0));
+
 }
 
 
@@ -53,7 +59,12 @@ PTextBox::PTextBox(std::string text, int width, int height):
     mEditable(false),
     mCursorPos(0),
     mCursorChanged(true)
-{
+{ 
+    InitializeProperty("TEXT",Variant(text));
+    InitializeProperty("WIDTH",Variant(width));
+    InitializeProperty("HEIGHT",Variant(height));
+    InitializeProperty("EDITABLE",Variant(false));
+    InitializeProperty("CURSORPOS",Variant(0));
 }
 
 
@@ -75,16 +86,11 @@ PTextBox::~PTextBox()
 
 bool PTextBox::SetProperty(std::string name, Variant v)
 {
-    if(name == "X") SetPosition(v,mY);
-    else if (name == "Y") SetPosition(mX,v);
+
+    if(!PWidget::SetProperty(name,v));
+    else if (name == "WIDTH") ;
+    else if(name == "HEIGHT");
     else if (name == "TEXT") SetText(v);
-    else if (name == "VISIBLE") 
-        {
-            if(v.GetInteger())
-                Show();
-            else 
-                Hide();
-        }
     else return false;
     
     return true;
@@ -93,8 +99,7 @@ bool PTextBox::SetProperty(std::string name, Variant v)
 
 Variant PTextBox::GetProperty(std::string name)const
 {
-    //return PEBLObjectBase::GetProperty(name);
-    return Variant(name);
+    return PEBLObjectBase::GetProperty(name);
 }
 
 
@@ -330,12 +335,11 @@ void PTextBox::HandleKeyPress(int keycode, int modkeys)
         case PEBLKEY_KP_MINUS:   
         case PEBLKEY_KP_PLUS:    
         case PEBLKEY_KP_EQUALS:  
-            
             InsertText(PEBLUtility::TranslateKeyCode(PEBLKey(keycode), modkeys));
             break;
-
         default:
-            //Do nothing if you get another key.
+            InsertText(PEBLUtility::TranslateKeyCode(PEBLKey(keycode), modkeys));
+            
             break;
         }
     mCursorChanged=true;
