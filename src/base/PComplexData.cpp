@@ -78,8 +78,7 @@ ostream & operator << ( ostream & out, const PComplexData & pcd )
 //This prints out stuff to a stream.
 ostream & PComplexData::SendToStream( ostream & out ) const
 {
-
-    out << GetTypeName() << endl;
+    out << *mPEBLObject;
     return out;
 }
 

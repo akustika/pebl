@@ -243,7 +243,7 @@ ostream & PList::SendToStream(ostream& out) const
     p = mList.begin();
   
     out << "[" ;
-    out << mList.size() << ":";
+    //out << mList.size() << ":";
 
     //Print out the first item, so comma-ing works out ok.
     if( p != mList.end())
