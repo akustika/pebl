@@ -337,6 +337,23 @@ void PTextBox::HandleKeyPress(int keycode, int modkeys)
         case PEBLKEY_KP_EQUALS:  
             InsertText(PEBLUtility::TranslateKeyCode(PEBLKey(keycode), modkeys));
             break;
+            /* Key state modifier keys */
+        case PEBLKEY_NUMLOCK:
+        case PEBLKEY_CAPSLOCK:
+        case PEBLKEY_SCROLLOCK:
+        case PEBLKEY_RSHIFT:
+        case PEBLKEY_LSHIFT:
+        case PEBLKEY_RCTRL:
+        case PEBLKEY_LCTRL:
+        case PEBLKEY_RALT:
+        case PEBLKEY_LALT:
+        case PEBLKEY_RMETA:
+        case PEBLKEY_LMETA:		
+        case PEBLKEY_LSUPER:		
+        case PEBLKEY_RSUPER:		
+        case PEBLKEY_MODE:		
+        case PEBLKEY_COMPOSE:
+            break;
         default:
             InsertText(PEBLUtility::TranslateKeyCode(PEBLKey(keycode), modkeys));
             

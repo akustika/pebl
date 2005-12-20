@@ -9,7 +9,7 @@ define Start(p)
   resp  <- GetInput(tb,"<return>")
    Print(resp)
    resp <- "X"
-   while(resp != "Q")
+   while(resp != "q")
    {
      resp <- WaitForAnyKeyPress()
      Print(resp)
