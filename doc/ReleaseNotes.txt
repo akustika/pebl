@@ -29,6 +29,82 @@ obsolete.
 
 
 --------------------------------------------------
+Version 0.06
+January 2006
+
+The sixth version of PEBL has been released. While the previous
+release focused on stability, this release brings some substantial
+changes to the underlying object management system.  Consequently, we
+expect a few bugs to have crept in undetected.  Major user-visible
+changes include the ability to create simple shape objects (like
+Circle(), Ellipse(), etc.), the ability to access object properties
+directly with a variable.property syntax, and a few new statistical
+functions.  A new command-line option, -s, enables you to set the
+variable gSubNum automatically at initiation, and the global variables
+gVideoWidth and gVideoHeight can now be changed at the beginning of a
+script, affecting the display screen size when MakeWindow() is
+called.  We also have a nicely improved manual thanks to Gulab Parab and
+Samuele Carcegeno, a new tutorial for beginners trying to learn PEBL,
+and a WIKI available on the website for help and tips, and where you can
+post your own experiments.  
+
+
+SHAPES. 
+ Now, several graphical 'shape' objects can be created and
+displayed directly, as an alternative to generating an image file with
+an external drawing program and loading it with MakeImage().  These
+include Line(), Square(), Rectangle(), Circle(), and Ellipse().  They
+can be created as filled or unfilled objects, moved around with the
+Move() function or .x and .y properties.  Like regular images, they
+must be added to the parent window with the AddObject() function, and
+are drawn when the Draw() function is called.  Shapes definition
+function include their initial coordinates in the parent window.
+
+Object/Properties.
+Previously, properties of objects were held privately by the object
+and were essentially inaccessible to user experiments, and modified by
+special functions.  With the new changes, object properties are
+available directly from the variable using a variable.property
+syntax.  All properties of an object are available for reading, and
+many can be set using the assignment symbol '<-'.  For example, if a
+variable representing an object has the property TEXT, it can be
+accessed like:
+  myText <-  object.TEXT
+  Print(myText)
+
+and it can be modified by doing something like:
+  object.TEXT <- "New Text"
+
+Old accessor functions are still available, so
+  SetText(object, "Alternative new text")
+still works.
+
+Properties are case insensitive, and are currently predefined for all
+objects.  Some objects and their accessible properties:
+
+
+All Widgets:          .X, .Y, .Width, .Height, .Visible
+Text-based widgets:   .Font, .Text
+TextBoxes:            .CursorPos, .Editable
+Colors:               .Red, .Green, .Blue, .Alpha
+Fonts:                .Bold, .Italic, .Underline, .Filename, .FGColor,
+                      .BGColor
+All Shapes:           properties of widgets, .Color, .OutlineColor, .Filled
+Circle:               .Radius
+Square:               .Size
+Rectangle:            .SizeX, .SizeY
+Ellipse:              .rX, .rY
+Line:                 .dX, dY
+     
+
+ 
+
+New Functions:
+  PEBL 0.06 introduces several new for creating shapes:  Circle(),
+  Square(), Line(), Ellipse(), Rectangle().  Median(), Mean(),
+  Order(), Rank(), Sum(), and StdDev()
+
+--------------------------------------------------
 Version 0.05
 July 2005
 

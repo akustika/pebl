@@ -3,26 +3,47 @@ define Start(lPar)
 {
   gBG <- MakeColor("GREY")
   gFG <- MakeColor("RED")
+  black <- MakeColor("black")
   gFont <- MakeFont("Vera.ttf",0,44,gFG,gBG,1)
+  font2 <- MakeFont("Vera.ttf",0,15,black,gBG,1)
   gFixation <- MakeLabel("+",gFont)
-  lStimuli <- Shuffle(["a", "d", "c", "e", "d", "o", "n"])
-
+  lStimuli <- Shuffle(RepeatList(["a", "d", "c", "e", "d", "o", "n"],5))
 
   gWin <- MakeWindow()
 
   AddObject(gFixation,gWin)	
   Move(gFixation, 300,200)
   Hide(gFixation)
-  Draw()	  
 
+  feedback <- MakeLabel("",font2)
+  AddObject(feedback,gWin)
+  Move(feedback, 300,400)
+
+  Draw()	  
+  sum <- 0
+  n <- 0
+  min <- 9999999
   loop(i, lStimuli)
   {
     Wait(200)
-    Print_(i + "   ")
-    Print( Trial(i))	
-  }
-  RemoveObject(gFixation, gWin)
+    rt <- Trial(i) 
+    sum <- sum + rt
+    n <- n + 1
+    if(rt < min)
+    {
+      min <- rt
+    }
 
+    Print(i + "   " + rt)
+    
+    feedback.text <- "RT: [" + rt + "] mean: [" + Round(sum/n)  + "] Min: [" +min + "]"
+
+  }
+
+  gFixation.text <- "Press any key to quit."
+  Show(gFixation)
+  Draw()
+  WaitForAnyKeyPress()
 }
 
 
@@ -47,7 +68,7 @@ define Trial(stim)
 
   #hide the fixation after 200-400 ms
 
-  Wait(1200 + RandomDiscrete(200))
+  Wait(1200 + RandomDiscrete(3000))
 
 
   #Show the text after 100-200 ms
@@ -57,7 +78,7 @@ define Trial(stim)
   Draw()
   lTime1 <- GetTime()
   Hide(lText)
-  WaitForKeyDown("a")
+  WaitForKeyPress("A")
   lTime2 <- GetTime()
   Draw()
   RemoveObject(lText, gWin)

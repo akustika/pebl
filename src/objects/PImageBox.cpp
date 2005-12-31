@@ -98,7 +98,7 @@ ObjectValidationError PImageBox::ValidateProperty(std::string name)const
        name == "VISIBLE" ||
        name == "WIDTH" ||
        name == "HEIGHT" )
-        return OVE_SUCCESS;
+        return OVE_VALID;
     else
         return OVE_INVALID_PROPERTY_NAME;
 }

@@ -87,10 +87,9 @@ PTextBox::~PTextBox()
 bool PTextBox::SetProperty(std::string name, Variant v)
 {
 
-    if(!PWidget::SetProperty(name,v));
-    else if (name == "WIDTH") ;
-    else if(name == "HEIGHT");
-    else if (name == "TEXT") SetText(v);
+    if(!PTextObject::SetProperty(name,v));
+    else if (name == "WIDTH") SetWidth(v);
+    else if(name == "HEIGHT") SetHeight(v);
     else return false;
     
     return true;
@@ -116,7 +115,7 @@ ObjectValidationError PTextBox::ValidateProperty(std::string name)const
        name == "WIDTH" ||
        name == "HEIGHT" ||
        name == "TEXT" )
-        return OVE_SUCCESS;
+        return OVE_VALID;
     else
         return OVE_INVALID_PROPERTY_NAME;
 
@@ -211,6 +210,19 @@ int PTextBox::DecrementCursor()
         mCursorPos = 0;
     mCursorChanged = true;
     return mCursorPos;
+}
+
+
+void PTextBox::SetHeight(int h)
+{
+    mHeight = h;
+    mTextChanged = true;
+}
+
+void PTextBox::SetWidth(int w)
+{
+    mWidth = w;
+    mTextChanged = true;
 }
 
 void PTextBox::HandleKeyPress(int keycode, int modkeys)

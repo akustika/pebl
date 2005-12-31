@@ -164,7 +164,7 @@ bool  PlatformTextBox::RenderText()
 
             tmpSurface = mFont->RenderText(mText.substr(linestart, linelength).c_str());
             
-            SDL_Rect to = {0,totalheight,tmpSurface->w, tmpSurface->h};           
+            SDL_Rect to = {0,totalheight,tmpSurface->w, tmpSurface->h};
             SDL_BlitSurface(tmpSurface, NULL, mSurface,&to);
             SDL_FreeSurface(tmpSurface);
             totalheight += height;

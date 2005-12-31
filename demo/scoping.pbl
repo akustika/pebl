@@ -4,13 +4,14 @@ define Start(parameter)
 	y <- 0
 	x <- Sin(342)
 	local <- 44
+	#Tests multi-line arguments:
 	gGlobal <- 999 +
                    33  + 252 - 
                    3252;  Print("gGlobal after multi-line: " + gGlobal)
 	Sub1(333)
 	Sub2(33);
-	Print(gGlobal)
-	Print(local)
+	Print(gGlobal + " Should be 33")
+	Print(local + " Should be 44")
 }
 
 

@@ -49,7 +49,11 @@ public:
     PTextObject(PTextObject & object);
     virtual ~PTextObject();
 
-
+    //overloaded generic PObject methods
+    virtual bool SetProperty(std::string, Variant v);
+    virtual Variant GetProperty(std::string)const;
+    virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
+    virtual ObjectValidationError ValidateProperty(std::string)const;
 
     virtual void SetText(const std::string & text);
     virtual std::string GetText()const {return mText;}

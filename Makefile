@@ -29,7 +29,7 @@ C   = gcc
 CXX = g++
 DEBUGFLAGS = -lefence -DPEBL_DEBUG
 CFLAGS =   -O3 -std=c99 
-CXXFLAGS =   -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX -g
+CXXFLAGS =   -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX 
 
 
 SDL_CONFIG = /usr/bin/sdl-config

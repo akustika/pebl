@@ -2,7 +2,7 @@
 
 # This PEBL script demonstrates the creation of a basic stroop 
 # Choice-RT task. 
-# (c) 2003, Shane T. Mueller, Ph.D.
+# (c) 2003-2006, Shane T. Mueller, Ph.D.
 
 
 
@@ -48,10 +48,8 @@ shuffledstim <- Shuffle(rawstimuli)
 
   loop(i, shuffledstim)
   {
-
     Wait(200)
     Trial(i)	
-
   }
 
 }
@@ -74,9 +72,9 @@ define Trial(stim)
 
 
  ##Make the text labels to display the stimuli.
-  lFont <- MakeFont("VeraMono.ttf",0,22,color,grey,1)
+  font <- MakeFont("VeraMono.ttf",0,22,color,grey,1)
 
-  lText <- MakeLabel(colorname,lFont)  ##Make stimulus label
+  lText <- MakeLabel(colorname,font)  ##Make stimulus label
 
   ##Add label to window
   AddObject(lText,gWindow)	

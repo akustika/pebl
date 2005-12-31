@@ -60,15 +60,14 @@ PWidget::PWidget(int x, int y, int width, int height, bool visible):
     mIsVisible(visible),
     mParent(NULL)
 {
-
-     InitializeProperty("X",Variant(mX));
-     InitializeProperty("Y",Variant(mY));
-     InitializeProperty("WIDTH",Variant(mWidth));
-     InitializeProperty("HEIGHT",Variant(mHeight));
-     InitializeProperty("VISIBLE",Variant(mIsVisible));
-
+    
+    InitializeProperty("X",Variant(mX));
+    InitializeProperty("Y",Variant(mY));
+    InitializeProperty("WIDTH",Variant(mWidth));
+    InitializeProperty("HEIGHT",Variant(mHeight));
+    InitializeProperty("VISIBLE",Variant(mIsVisible));
+    
 }
-
 
 PWidget::~PWidget()
 {
@@ -106,13 +105,13 @@ Variant  PWidget::GetProperty(std::string name)const
 
  ObjectValidationError PWidget::ValidateProperty(std::string, Variant v)const
 {
-    return OVE_SUCCESS;
+    return OVE_VALID;
 }
 
 
  ObjectValidationError PWidget::ValidateProperty(std::string)const
 {
-    return OVE_SUCCESS;
+    return OVE_VALID;
 }
 
 
@@ -123,9 +122,9 @@ void PWidget::SetPosition(int x, int y)
     mY = y;
     mDrawX = x;
     mDrawY = y;
-
-     PEBLObjectBase::SetProperty("X",mX);
-     PEBLObjectBase::SetProperty("Y",mY);
+    
+    PEBLObjectBase::SetProperty("X",mX);
+    PEBLObjectBase::SetProperty("Y",mY);
 }
 
 

@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformDrawObject.cpp
 //    Purpose:    Platform-specific classes drawing things.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2005-2006 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -117,12 +117,11 @@
 
 
 
-PlatformLine::PlatformLine(int x1, int y1, int dx, int dy, PColor fg):
+PlatformLine::PlatformLine(int x1, int y1, int dx, int dy, Variant fg):
     PLine(x1,y1,dx,dy,fg)
 {
     mCDT=CDT_DRAWOBJECT;
-    //mX = x1;
-    //mY = y1;
+
     mSurface =NULL;
     mParent = NULL;
     mIsVisible=true;
@@ -135,7 +134,7 @@ PlatformLine::~PlatformLine()
 
 std::ostream & PlatformLine::SendToStream(std::ostream& out) const
 {
-    out << "<A line:"<< mX1 << ", " << mY1 << ":" << mX2 << ", " << mY2 << std::endl;
+    out << "<A line:"<< mX << ", " << mY << ":" << mDX+mX << ", " << mDY+mY << std::endl;
     return out;
 }
 
@@ -143,17 +142,16 @@ bool PlatformLine::Draw()
 {
 
     int result;
-    //LockSurface();
- 
-    result = lineRGBA(mParentSurface,mX+mX1, mY + mY1, mX+mX2, mY+mY2,
+
+    
+    result = lineRGBA(mParentSurface,mX, mY, mX+mDX, mY+mDY,
                       mColor.GetRed(), mColor.GetGreen(), mColor.GetBlue(), mColor.GetAlpha());
     
-    //UnlockSurface();
     return result;
 }
 
 
-PlatformRectangle::PlatformRectangle(int x1, int y1, int dx, int dy, PColor fg, bool filled):
+PlatformRectangle::PlatformRectangle(int x1, int y1, int dx, int dy, Variant fg, bool filled):
     PRectangle(x1,y1,dx,dy,fg,filled)
 {
     mCDT = CDT_DRAWOBJECT;
@@ -170,15 +168,14 @@ bool PlatformRectangle::Draw()
     //LockSurface();
     if(mFilled)
         {
-            result = boxRGBA(mParentSurface,mX+mX1, mY + mY1, mX+mDX, mY+mDY,
+            result = boxRGBA(mParentSurface,mX - mDX/2, mY - mDY/2, mX+mDX/2, mY+mDY/2,
                              mColor.GetRed(), mColor.GetGreen(), mColor.GetBlue(), mColor.GetAlpha());
        
         }
     else
         {
-            result = rectangleRGBA(mParentSurface,mX+mX1, mY + mY1, mX+mDX, mY+mDY,
+            result = rectangleRGBA(mParentSurface,mX - mDX/2, mY - mDY/2, mX+mDX/2, mY+mDY/2,
                                    mColor.GetRed(), mColor.GetGreen(), mColor.GetBlue(), mColor.GetAlpha());
-            
         }
     //UnlockSurface();
     return result;
@@ -187,12 +184,12 @@ bool PlatformRectangle::Draw()
 
 std::ostream & PlatformRectangle::SendToStream(std::ostream& out) const
 {
-    out << "A Rectangle";
+    out << "A Rectangle"<< mX << " " << mY << " " << mDX << " " << mDY << std::endl;
     return out;
 }
 
 
-PlatformSquare::PlatformSquare(int x, int y, int size, PColor fg, bool filled):
+PlatformSquare::PlatformSquare(int x, int y, int size, Variant fg, bool filled):
     PSquare(x,y,size,fg,filled)
 
 {
@@ -212,15 +209,13 @@ bool PlatformSquare::Draw()
     //LockSurface();
     if(mFilled)
         {
-            result = boxRGBA(mParentSurface,mX+mX1, mY + mY1, mX+mDX, mY+mDY,
+            result = boxRGBA(mParentSurface,mX - mDX/2,  mY - mDY/2, mX+mDX/2, mY+mDY/2,
                              mColor.GetRed(), mColor.GetGreen(), mColor.GetBlue(), mColor.GetAlpha());
-       
         }
     else
         {
-            result = rectangleRGBA(mParentSurface,mX+mX1, mY + mY1, mX+mDX, mY+mDY,
+            result = rectangleRGBA(mParentSurface,mX - mDX/2, mY - mDY/2, mX+mDX/2, mY+mDY/2,
                                    mColor.GetRed(), mColor.GetGreen(), mColor.GetBlue(), mColor.GetAlpha());
-            
         }
     //UnlockSurface();
     return result;
@@ -229,26 +224,22 @@ bool PlatformSquare::Draw()
 
 std::ostream & PlatformSquare::SendToStream(std::ostream& out) const
 {
-    out << "A Square";
+    out << "A Square:"<< mX << " " << mY << " " << mDX << " " << mDY << " vis: "<<mIsVisible << std::endl;
     return out;
 }
 
 
 
 
-
-
-
-
-PlatformEllipse::PlatformEllipse(int x1, int y1, int dx, int dy, PColor fg, bool filled):
+PlatformEllipse::PlatformEllipse(int x1, int y1, int dx, int dy, Variant fg, bool filled):
     PEllipse(x1,y1,dx,dy,fg, filled)
 {
     mCDT = CDT_DRAWOBJECT;
     mSurface =NULL;
     mParent = NULL;
-    mIsVisible=true;
-    mX = x1;
-    mY = y1;
+//     mIsVisible=true;
+//     mX = x1;
+//     mY = y1;
 
 }
 
@@ -259,7 +250,7 @@ PlatformEllipse::~PlatformEllipse()
 
 std::ostream & PlatformEllipse::SendToStream(std::ostream& out) const
 {
-    out << "<An ellipse:"<< mX1 << ", " << mY1 << ":" << mRX << ", " << mRY << std::endl;
+    out << "<An ellipse:"<< mX << ", " << mY << ":" << mRX << ", " << mRY << std::endl;
     return out;
 }
 
@@ -270,13 +261,13 @@ bool PlatformEllipse::Draw()
     //LockSurface();
     if(mFilled)
         {
-            result = filledEllipseRGBA(mParentSurface,mX+mX1, mY + mY1, mRX, mRY,
+            result = filledEllipseRGBA(mParentSurface,mX, mY, mRX, mRY,
                                      mColor.GetRed(), mColor.GetGreen(), mColor.GetBlue(), mColor.GetAlpha());
             
         }
     else
         {
-            result = ellipseRGBA(mParentSurface,mX+mX1, mY + mY1, mRX, mRY,
+            result = ellipseRGBA(mParentSurface,mX, mY, mRX, mRY,
                                  mColor.GetRed(), mColor.GetGreen(), mColor.GetBlue(), mColor.GetAlpha());
         }
     //UnlockSurface();
@@ -285,16 +276,13 @@ bool PlatformEllipse::Draw()
 
 
 
-PlatformCircle::PlatformCircle(int x1, int y1, int r, PColor fg, bool filled):
+PlatformCircle::PlatformCircle(int x1, int y1, int r, Variant fg, bool filled):
     PCircle(x1,y1,r,fg,filled)
-
 {
     mCDT=CDT_DRAWOBJECT;
     mSurface =NULL;
     mParent = NULL;
     mIsVisible=true;
-    //    mX = x1;
-    //    mY = y1;
 
 }
 
@@ -305,7 +293,7 @@ PlatformCircle::~PlatformCircle()
 
 std::ostream & PlatformCircle::SendToStream(std::ostream& out) const
 {
-    out << "<A Circle :"<< mX1 << ", " << mY1 << ":" << mR  << std::endl;
+    out << "<A Circle :"<< mX << ", " << mY << ":" << mR  << std::endl;
     return out;
 }
 
@@ -315,13 +303,13 @@ bool PlatformCircle::Draw()
     //LockSurface();
     if(mFilled)
         {
-            result = filledCircleRGBA(mParentSurface, mX+mX1,  mY+mY1, (int)mR,
+            result = filledCircleRGBA(mParentSurface, mX,  mY, (int)mR,
                                       mColor.GetRed(), mColor.GetGreen(), mColor.GetBlue(), mColor.GetAlpha());
 
         }
     else
         {
-            result = circleRGBA(mParentSurface,mX+mX1, mY + mY1, (int)mR,
+            result = circleRGBA(mParentSurface,mX, mY, (int)mR,
                                 mColor.GetRed(), mColor.GetGreen(), mColor.GetBlue(), mColor.GetAlpha());
         }
     //UnlockSurface();

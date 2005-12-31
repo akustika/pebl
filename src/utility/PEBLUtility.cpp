@@ -248,7 +248,7 @@ PEBLKey PEBLUtility::TranslateString(const std::string & letters)
 std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
 {
 
-    cout << "Translating [" << key << "]\n";
+    
     switch(key)
         {
             /* The keyboard syms have been cleverly chosen to map to ASCII */
@@ -330,105 +330,107 @@ std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
         case PEBLKEY_y:         return ShiftSwitch(modkeys, "y","Y");
         case PEBLKEY_z:         return ShiftSwitch(modkeys, "z","Z");
         case PEBLKEY_DELETE:         return "<delete>";
-        /* End of ASCII mapped keysyms */
-
-        /* International keyboard syms */
-        case PEBLKEY_WORLD_0:   cout << "WK0\n";        return " ";  //160
-        case PEBLKEY_WORLD_1:   cout << "WK1\n";        return "¡";
-        case PEBLKEY_WORLD_2:   cout << "WK2\n";        return "¢";
-        case PEBLKEY_WORLD_3:   cout << "WK3\n";        return  "£";
-        case PEBLKEY_WORLD_4:   cout << "WK4\n";        return  "¤";
-        case PEBLKEY_WORLD_5:   cout << "WK5\n";        return  "¥";
-        case PEBLKEY_WORLD_6:   cout << "WK6\n";        return  "¦";
-        case PEBLKEY_WORLD_7:   cout << "WK7\n";        return  "§";
-        case PEBLKEY_WORLD_8:   cout << "WK8\n";        return  "¨";
-        case PEBLKEY_WORLD_9:   cout << "WK9\n";        return  "©";
-        case PEBLKEY_WORLD_10:  cout << "WK10\n";       return "ª";
-        case PEBLKEY_WORLD_11:  cout << "WK11\n";       return "«";
-        case PEBLKEY_WORLD_12:  cout << "WK12\n";       return "¬";
-        case PEBLKEY_WORLD_13:  cout << "WK13\n";       return "­";
-        case PEBLKEY_WORLD_14:  cout << "WK14\n";       return "®";
-        case PEBLKEY_WORLD_15:  cout << "WK15\n";       return "¯";
-        case PEBLKEY_WORLD_16:  cout << "WK16\n";       return "°";
-        case PEBLKEY_WORLD_17:  cout << "WK17\n";       return "±";
-        case PEBLKEY_WORLD_18:  cout << "WK18\n";       return "²";
-        case PEBLKEY_WORLD_19:  cout << "WK19\n";       return "³";
-        case PEBLKEY_WORLD_20:  cout << "WK20\n";       return "´";  //180
-        case PEBLKEY_WORLD_21:  cout << "WK21\n";       return "µ";
-        case PEBLKEY_WORLD_22:  cout << "WK22\n";       return "¶";
-        case PEBLKEY_WORLD_23:  cout << "WK23\n";       return "·";
-        case PEBLKEY_WORLD_24:  cout << "WK24\n";       return "¸";
-        case PEBLKEY_WORLD_25:  cout << "WK25\n";       return "¹";
-        case PEBLKEY_WORLD_26:  cout << "WK26\n";       return "º";
-        case PEBLKEY_WORLD_27:  cout << "WK27\n";       return "»";
-        case PEBLKEY_WORLD_28:  cout << "WK28\n";       return "¼";
-        case PEBLKEY_WORLD_29:  cout << "WK29\n";       return "½";
-        case PEBLKEY_WORLD_30:  cout << "WK30\n";       return "¾";
-        case PEBLKEY_WORLD_31:  cout << "WK31\n";       return "¿";
-        case PEBLKEY_WORLD_32:  cout << "WK32\n";       return "À";
-        case PEBLKEY_WORLD_33:  cout << "WK33\n";       return "Á";
-        case PEBLKEY_WORLD_34:  cout << "WK34\n";       return "Â";
-        case PEBLKEY_WORLD_35:  cout << "WK35\n";       return "Ã";
-        case PEBLKEY_WORLD_36:  cout << "WK36\n";       return "Ä";
-        case PEBLKEY_WORLD_37:  cout << "WK37\n";       return "Å";
-        case PEBLKEY_WORLD_38:  cout << "WK38\n";       return "Æ";
-        case PEBLKEY_WORLD_39:  cout << "WK39\n";       return "Ç";
-        case PEBLKEY_WORLD_40:  cout << "WK40\n";       return "È";  //200
-        case PEBLKEY_WORLD_41:  cout << "WK41\n";       return "É";
-        case PEBLKEY_WORLD_42:  cout << "WK42\n";       return "Ê";
-        case PEBLKEY_WORLD_43:  cout << "WK43\n";       return "Ë";
-        case PEBLKEY_WORLD_44:  cout << "WK44\n";       return "Ì";
-        case PEBLKEY_WORLD_45:  cout << "WK45\n";       return "Í";
-        case PEBLKEY_WORLD_46:  cout << "WK46\n";       return "Î";
-        case PEBLKEY_WORLD_47:  cout << "WK47\n";       return "Ï";
-        case PEBLKEY_WORLD_48:  cout << "WK48\n";       return "Ð";
-        case PEBLKEY_WORLD_49:  cout << "WK49\n";       return "Ñ";
-        case PEBLKEY_WORLD_50:  cout << "WK50\n";       return "Ò";
-        case PEBLKEY_WORLD_51:  cout << "WK51\n";       return "Ó";
-        case PEBLKEY_WORLD_52:  cout << "WK52\n";       return "Ô";
-        case PEBLKEY_WORLD_53:  cout << "WK53\n";       return "Õ";
-        case PEBLKEY_WORLD_54:  cout << "WK54\n";       return "Ö";
-        case PEBLKEY_WORLD_55:  cout << "WK55\n";       return "×";
-        case PEBLKEY_WORLD_56:  cout << "WK56\n";       return "Ø";
-        case PEBLKEY_WORLD_57:  cout << "WK57\n";       return "Ù";
-        case PEBLKEY_WORLD_58:  cout << "WK58\n";       return "Ú";
-        case PEBLKEY_WORLD_59:  cout << "WK59\n";       return "Û";
-        case PEBLKEY_WORLD_60:  cout << "WK60\n";       return "Ü";   //220
-        case PEBLKEY_WORLD_61:  cout << "WK61\n";       return "Ý";
-        case PEBLKEY_WORLD_62:  cout << "WK62\n";       return "Þ";
-        case PEBLKEY_WORLD_63:  cout << "WK63\n";       return "ß";   //223
-        case PEBLKEY_WORLD_64:  cout << "WK64\n";       return ShiftSwitch(modkeys,"à",  "À");
-        case PEBLKEY_WORLD_65:  cout << "WK65\n";       return ShiftSwitch(modkeys,"á",  "Á");
-        case PEBLKEY_WORLD_66:  cout << "WK66\n";       return ShiftSwitch(modkeys,"â",  "Â");
-        case PEBLKEY_WORLD_67:  cout << "WK67\n";       return ShiftSwitch(modkeys,"ã",  "Ã");
-        case PEBLKEY_WORLD_68:  cout << "WK68\n";       return ShiftSwitch(modkeys,"ä",  "Ä");      //228"ä";
-        case PEBLKEY_WORLD_69:  cout << "WK69\n";       return ShiftSwitch(modkeys,"å",  "Å");
-        case PEBLKEY_WORLD_70:  cout << "WK70\n";       return ShiftSwitch(modkeys,"æ",  "Æ");
-        case PEBLKEY_WORLD_71:  cout << "WK71\n";       return ShiftSwitch(modkeys,"ç",  "Ç");
-        case PEBLKEY_WORLD_72:  cout << "WK72\n";       return ShiftSwitch(modkeys,"è",  "È");
-        case PEBLKEY_WORLD_73:  cout << "WK73\n";       return ShiftSwitch(modkeys,"é",  "É");
-        case PEBLKEY_WORLD_74:  cout << "WK74\n";       return ShiftSwitch(modkeys,"ê",  "Ê");
-        case PEBLKEY_WORLD_75:  cout << "WK75\n";       return ShiftSwitch(modkeys,"ë",  "Ë");
-        case PEBLKEY_WORLD_76:  cout << "WK76\n";       return ShiftSwitch(modkeys,"ì",  "Ì");
-        case PEBLKEY_WORLD_77:  cout << "WK77\n";       return ShiftSwitch(modkeys,"í",  "Í");
-        case PEBLKEY_WORLD_78:  cout << "WK78\n";       return ShiftSwitch(modkeys,"î",  "Î");
-        case PEBLKEY_WORLD_79:  cout << "WK79\n";       return ShiftSwitch(modkeys,"ï",  "Ï");
-        case PEBLKEY_WORLD_80:  cout << "WK80\n";       return ShiftSwitch(modkeys,"ð",  "Ð");
-        case PEBLKEY_WORLD_81:  cout << "WK81\n";       return ShiftSwitch(modkeys,"ñ",  "Ñ");
-        case PEBLKEY_WORLD_82:  cout << "WK82\n";       return ShiftSwitch(modkeys,"ò",  "Ò");
-        case PEBLKEY_WORLD_83:  cout << "WK83\n";       return ShiftSwitch(modkeys,"ó",  "Ó");
-        case PEBLKEY_WORLD_84:  cout << "WK84\n";       return ShiftSwitch(modkeys,"ô",  "Ô");
-        case PEBLKEY_WORLD_85:  cout << "WK85\n";       return ShiftSwitch(modkeys,"õ",  "Õ");
-        case PEBLKEY_WORLD_86:  cout << "WK86\n";       return ShiftSwitch(modkeys,"ö",  "Ö");
-        case PEBLKEY_WORLD_87:  cout << "WK87\n";       return ShiftSwitch(modkeys,"÷",  "×");
-        case PEBLKEY_WORLD_88:  cout << "WK88\n";       return ShiftSwitch(modkeys,"ø",  "Ø");
-        case PEBLKEY_WORLD_89:  cout << "WK89\n";       return ShiftSwitch(modkeys,"ù",  "Ù");
-        case PEBLKEY_WORLD_90:  cout << "WK90\n";       return ShiftSwitch(modkeys,"ú",  "Ú"); //250
-        case PEBLKEY_WORLD_91:  cout << "WK91\n";       return ShiftSwitch(modkeys,"û",  "Û");
-        case PEBLKEY_WORLD_92:  cout << "WK92\n";       return ShiftSwitch(modkeys,"ü",  "Ü");
-        case PEBLKEY_WORLD_93:  cout << "WK93\n";       return ShiftSwitch(modkeys,"ý",  "Ý");
-        case PEBLKEY_WORLD_94:  cout << "WK94\n";       return ShiftSwitch(modkeys,"þ",  "Þ");
-        case PEBLKEY_WORLD_95:  cout << "WK95\n";       return ShiftSwitch(modkeys,"ÿ",  "ß");//255
+            /* End of ASCII mapped keysyms */
+            
+            /*Note: WORLD_0 through WORD_64 are currently unverified and most likely incorrect)*/
+            
+            /* International keyboard syms */
+        case PEBLKEY_WORLD_0:           return " ";  //160
+        case PEBLKEY_WORLD_1:           return "¡";
+        case PEBLKEY_WORLD_2:           return "¢";
+        case PEBLKEY_WORLD_3:           return  "£";
+        case PEBLKEY_WORLD_4:           return  "¤";
+        case PEBLKEY_WORLD_5:           return  "¥";
+        case PEBLKEY_WORLD_6:           return  "¦";
+        case PEBLKEY_WORLD_7:           return  "§";
+        case PEBLKEY_WORLD_8:           return  "¨";
+        case PEBLKEY_WORLD_9:           return  "©";
+        case PEBLKEY_WORLD_10:         return "ª";
+        case PEBLKEY_WORLD_11:         return "«";
+        case PEBLKEY_WORLD_12:         return "¬";
+        case PEBLKEY_WORLD_13:         return "­";
+        case PEBLKEY_WORLD_14:         return "®";
+        case PEBLKEY_WORLD_15:         return "¯";
+        case PEBLKEY_WORLD_16:         return "°";
+        case PEBLKEY_WORLD_17:         return "±";
+        case PEBLKEY_WORLD_18:         return "²";
+        case PEBLKEY_WORLD_19:         return "³";
+        case PEBLKEY_WORLD_20:         return "´";  //180
+        case PEBLKEY_WORLD_21:         return "µ";
+        case PEBLKEY_WORLD_22:         return "¶";
+        case PEBLKEY_WORLD_23:         return "·";
+        case PEBLKEY_WORLD_24:         return "¸";
+        case PEBLKEY_WORLD_25:         return "¹";
+        case PEBLKEY_WORLD_26:         return "º";
+        case PEBLKEY_WORLD_27:         return "»";
+        case PEBLKEY_WORLD_28:         return "¼";
+        case PEBLKEY_WORLD_29:         return "½";
+        case PEBLKEY_WORLD_30:         return "¾";
+        case PEBLKEY_WORLD_31:         return "¿";
+        case PEBLKEY_WORLD_32:         return "À";
+        case PEBLKEY_WORLD_33:         return "Á";
+        case PEBLKEY_WORLD_34:         return "Â";
+        case PEBLKEY_WORLD_35:         return "Ã";
+        case PEBLKEY_WORLD_36:         return "Ä";
+        case PEBLKEY_WORLD_37:         return "Å";
+        case PEBLKEY_WORLD_38:         return "Æ";
+        case PEBLKEY_WORLD_39:         return "Ç";
+        case PEBLKEY_WORLD_40:         return "È";  //200
+        case PEBLKEY_WORLD_41:         return "É";
+        case PEBLKEY_WORLD_42:         return "Ê";
+        case PEBLKEY_WORLD_43:         return "Ë";
+        case PEBLKEY_WORLD_44:         return "Ì";
+        case PEBLKEY_WORLD_45:         return "Í";
+        case PEBLKEY_WORLD_46:         return "Î";
+        case PEBLKEY_WORLD_47:         return "Ï";
+        case PEBLKEY_WORLD_48:         return "Ð";
+        case PEBLKEY_WORLD_49:         return "Ñ";
+        case PEBLKEY_WORLD_50:         return "Ò";
+        case PEBLKEY_WORLD_51:         return "Ó";
+        case PEBLKEY_WORLD_52:         return "Ô";
+        case PEBLKEY_WORLD_53:         return "Õ";
+        case PEBLKEY_WORLD_54:         return "Ö";
+        case PEBLKEY_WORLD_55:         return "×";
+        case PEBLKEY_WORLD_56:         return "Ø";
+        case PEBLKEY_WORLD_57:         return "Ù";
+        case PEBLKEY_WORLD_58:         return "Ú";
+        case PEBLKEY_WORLD_59:         return "Û";
+        case PEBLKEY_WORLD_60:         return "Ü";   //220
+        case PEBLKEY_WORLD_61:         return "Ý";
+        case PEBLKEY_WORLD_62:         return "Þ";
+        case PEBLKEY_WORLD_63:         return "ß";   //223
+        case PEBLKEY_WORLD_64:         return ShiftSwitch(modkeys,"à",  "À");
+        case PEBLKEY_WORLD_65:         return ShiftSwitch(modkeys,"á",  "Á");
+        case PEBLKEY_WORLD_66:         return ShiftSwitch(modkeys,"â",  "Â");
+        case PEBLKEY_WORLD_67:         return ShiftSwitch(modkeys,"ã",  "Ã");
+        case PEBLKEY_WORLD_68:         return ShiftSwitch(modkeys,"ä",  "Ä");      //228"ä";
+        case PEBLKEY_WORLD_69:         return ShiftSwitch(modkeys,"å",  "Å");
+        case PEBLKEY_WORLD_70:         return ShiftSwitch(modkeys,"æ",  "Æ");
+        case PEBLKEY_WORLD_71:         return ShiftSwitch(modkeys,"ç",  "Ç");
+        case PEBLKEY_WORLD_72:         return ShiftSwitch(modkeys,"è",  "È");
+        case PEBLKEY_WORLD_73:         return ShiftSwitch(modkeys,"é",  "É");
+        case PEBLKEY_WORLD_74:         return ShiftSwitch(modkeys,"ê",  "Ê");
+        case PEBLKEY_WORLD_75:         return ShiftSwitch(modkeys,"ë",  "Ë");
+        case PEBLKEY_WORLD_76:         return ShiftSwitch(modkeys,"ì",  "Ì");
+        case PEBLKEY_WORLD_77:         return ShiftSwitch(modkeys,"í",  "Í");
+        case PEBLKEY_WORLD_78:         return ShiftSwitch(modkeys,"î",  "Î");
+        case PEBLKEY_WORLD_79:         return ShiftSwitch(modkeys,"ï",  "Ï");
+        case PEBLKEY_WORLD_80:         return ShiftSwitch(modkeys,"ð",  "Ð");
+        case PEBLKEY_WORLD_81:         return ShiftSwitch(modkeys,"ñ",  "Ñ");
+        case PEBLKEY_WORLD_82:         return ShiftSwitch(modkeys,"ò",  "Ò");
+        case PEBLKEY_WORLD_83:         return ShiftSwitch(modkeys,"ó",  "Ó");
+        case PEBLKEY_WORLD_84:         return ShiftSwitch(modkeys,"ô",  "Ô");
+        case PEBLKEY_WORLD_85:         return ShiftSwitch(modkeys,"õ",  "Õ");
+        case PEBLKEY_WORLD_86:         return ShiftSwitch(modkeys,"ö",  "Ö");
+        case PEBLKEY_WORLD_87:         return ShiftSwitch(modkeys,"÷",  "×");
+        case PEBLKEY_WORLD_88:        return ShiftSwitch(modkeys,"ø",  "Ø");
+        case PEBLKEY_WORLD_89:        return ShiftSwitch(modkeys,"ù",  "Ù");
+        case PEBLKEY_WORLD_90:        return ShiftSwitch(modkeys,"ú",  "Ú"); //250
+        case PEBLKEY_WORLD_91:        return ShiftSwitch(modkeys,"û",  "Û");
+        case PEBLKEY_WORLD_92:        return ShiftSwitch(modkeys,"ü",  "Ü");
+        case PEBLKEY_WORLD_93:        return ShiftSwitch(modkeys,"ý",  "Ý");
+        case PEBLKEY_WORLD_94:        return ShiftSwitch(modkeys,"þ",  "Þ");
+        case PEBLKEY_WORLD_95:        return ShiftSwitch(modkeys,"ÿ",  "ß");//255
         /* Numeric keypad */
         case PEBLKEY_KP0:         return "0";
         case PEBLKEY_KP1:         return "1";
@@ -505,7 +507,7 @@ std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
 
         /* Add any other keys here */
         case PEBLKEY_LAST:         return "<LAST KEY: ERROR>";
-        default:          cout << "Unknown key: " << key  << std::endl;  return "<ERROR>";
+        default:            return "<ERROR>";
     };
 }
 

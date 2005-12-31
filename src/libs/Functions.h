@@ -188,7 +188,7 @@ namespace PEBLObjects
             {"SQUARE",            Square,          5, 5},
 
             {"ELLIPSE",           Ellipse,      6, 6},
-            {"CIRCLE",            Circle,         5, 5},
+            {"CIRCLE",            Circle,       5, 5},
 
 
             {0,            0,  0, 0}

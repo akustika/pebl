@@ -62,20 +62,10 @@ PLabel::~PLabel()
 
 bool PLabel::SetProperty(std::string name, Variant v)
 {
-
-    if(name == "X") SetPosition(v,mY);
-    else if (name == "Y") SetPosition(mX,v);
-    else if (name == "TEXT") SetText(v);
-    else if (name == "VISIBLE") 
-        {
-            if(v.GetInteger())
-                Show();
-            else 
-                Hide();
-        }
+    if(PTextObject::SetProperty(name,v))
+        return true;
     else return false;
-    
-    return true;
+
 }
 
 
@@ -92,16 +82,13 @@ ObjectValidationError PLabel::ValidateProperty(std::string name, Variant v)const
 
 ObjectValidationError PLabel::ValidateProperty(std::string name)const
 {
-    if(name == "X" ||
-       name == "Y" ||
-       name == "VISIBLE" ||
-       name == "WIDTH" ||
-       name == "HEIGHT" || 
-       name == "TEXT")
-        return OVE_SUCCESS;
+ 
+    ObjectValidationError ove = PTextObject::ValidateProperty(name);
+    
+    if(ove == OVE_VALID)
+        return ove;
     else
         return OVE_INVALID_PROPERTY_NAME;
-
 }
 
 void PLabel::SetPosition(int x, int y)

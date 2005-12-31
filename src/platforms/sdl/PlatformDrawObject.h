@@ -56,7 +56,7 @@ public:
 class PlatformLine: virtual public PlatformDrawObject, virtual public PLine
 {
 public:
-    PlatformLine(int x1, int y1, int dx, int dy, PColor fg);
+    PlatformLine(int x1, int y1, int dx, int dy, Variant fg);
     virtual ~PlatformLine();
     virtual bool Draw();
 protected:
@@ -101,7 +101,7 @@ private:
 class PlatformRectangle:  virtual public PlatformDrawObject, virtual public PRectangle
  {
  public:
-     PlatformRectangle(int x1, int y1, int dx, int dy, PColor fg, bool filled);
+     PlatformRectangle(int x1, int y1, int dx, int dy, Variant fg, bool filled);
      virtual ~PlatformRectangle();
      virtual bool Draw();
  protected:
@@ -112,7 +112,7 @@ class PlatformRectangle:  virtual public PlatformDrawObject, virtual public PRec
 class PlatformSquare: virtual public PlatformDrawObject, virtual public PSquare
 {
 public:
-    PlatformSquare(int x, int y, int size, PColor fg, bool filled);
+    PlatformSquare(int x, int y, int size, Variant fg, bool filled);
     virtual ~PlatformSquare();
     virtual bool Draw();
 protected:
@@ -124,7 +124,7 @@ private:
 class PlatformEllipse:  virtual public PlatformDrawObject, virtual public PEllipse
  {
  public:
-     PlatformEllipse(int x1, int y1, int dx, int dy, PColor fg, bool filled);
+     PlatformEllipse(int x1, int y1, int dx, int dy, Variant fg, bool filled);
      virtual ~PlatformEllipse();
      virtual bool Draw();
  protected:
@@ -136,7 +136,7 @@ class PlatformEllipse:  virtual public PlatformDrawObject, virtual public PEllip
 class PlatformCircle: virtual public PlatformDrawObject, virtual public PCircle
  {
  public:
-     PlatformCircle(int x1, int y1, int r, PColor fg, bool filled);
+     PlatformCircle(int x1, int y1, int r, Variant fg, bool filled);
      virtual ~PlatformCircle();
      virtual bool Draw();
  protected:

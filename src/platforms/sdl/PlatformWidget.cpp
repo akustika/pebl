@@ -60,7 +60,6 @@ std::ostream & PlatformWidget::SendToStream(std::ostream& out) const
 
 bool PlatformWidget::Draw()
 {
-
     if(IsVisible())
         {
             //To draw a widget, draw each of the window's subwidgets
@@ -69,10 +68,8 @@ bool PlatformWidget::Draw()
             //(which is on the front) will be the last item drawn.
 
             std::list<PWidget *>::iterator p = mSubWidgets.end();
-
             while(p != mSubWidgets.begin())
                 {
-
                     //decrement iterator--moving backward so we draw things in 
                     //reverse order.
                     p--;

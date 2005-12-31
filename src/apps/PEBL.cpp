@@ -312,12 +312,7 @@ int PEBLInterpret( int argc, char *argv[] )
 #endif
 
 
-
-
-    cerr << "Creating a PlatformEnvironment\n";
     PEBLObjects::MakeEnvironment(displayMode, displayDepth, windowed);
-
-
 
     //Seed the random number generator with time of day.
     //May not be cross-platform.

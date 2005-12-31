@@ -727,9 +727,7 @@ Variant PEBLObjects::MakeChirp(Variant v)
 
 Variant PEBLObjects::Line(Variant v)
 {
-
-    //
-    // v[1] should be X, v[2] shoud be Y
+    // v[1] should be X, v[2] should be Y
     // v[3] should be dx, v[4] should be dy
     // v[5] should be the color.
     PList * plist = v.GetComplexData()->GetList();
@@ -747,8 +745,7 @@ Variant PEBLObjects::Line(Variant v)
     int dy = plist->First(); plist->PopFront();
 
     PError::AssertType(plist->First(), PEAT_COLOR, "Argument error in fifth parameter of function  [Line(<x>, <y>, <dx>, <dy>, <color>)]: "); 
-    Variant v2 = plist->First(); plist->PopFront();
-    PColor color = *(dynamic_cast<PColor*>(v2.GetComplexData()->GetObject().get()));
+    Variant color = plist->First(); plist->PopFront();
 
     counted_ptr<PEBLObjectBase> myLine = counted_ptr<PEBLObjectBase>(new PlatformLine(x,y,dx,dy,color));
     PComplexData *  pcd = new PComplexData(myLine);
@@ -780,8 +777,7 @@ Variant PEBLObjects::Rectangle(Variant v)
     int dy = plist->First(); plist->PopFront();
 
     PError::AssertType(plist->First(), PEAT_COLOR, "Argument error in fifth parameter of function  [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: "); 
-    Variant v2 = plist->First(); plist->PopFront();
-    PColor color = *(dynamic_cast<PColor*>(v2.GetComplexData()->GetObject().get()));
+    Variant color = plist->First(); plist->PopFront();
 
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in sixth parameter of function  [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: "); 
     int filled = plist->First(); plist->PopFront();
@@ -813,8 +809,8 @@ Variant PEBLObjects::Square(Variant v)
     int size = plist->First(); plist->PopFront();
 
     PError::AssertType(plist->First(), PEAT_COLOR, "Argument error in fourth parameter of function  [Square(<x>, <y>, <size>, <color>, <filled>)]: "); 
-    Variant v2 = plist->First(); plist->PopFront();
-    PColor color = *(dynamic_cast<PColor*>(v2.GetComplexData()->GetObject().get()));
+
+    Variant color = plist->First(); plist->PopFront();
 
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in fifth parameter of function  [Square(<x>, <y>, <size>, <color>, <filled>)]: "); 
     int filled = plist->First(); plist->PopFront();
@@ -847,8 +843,7 @@ Variant PEBLObjects::Ellipse(Variant v)
     int ry = plist->First(); plist->PopFront();
 
     PError::AssertType(plist->First(), PEAT_COLOR, "Argument error in fifth parameter of function  [Ellipse(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: "); 
-    Variant v2 = plist->First(); plist->PopFront();
-    PColor color = *(dynamic_cast<PColor*>(v2.GetComplexData()->GetObject().get()));
+    Variant color = plist->First(); plist->PopFront();
 
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in sixth parameter of function  [Ellipse(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: "); 
     int filled = plist->First(); plist->PopFront();
@@ -871,7 +866,6 @@ Variant PEBLObjects::Circle(Variant v)
     // v[5] should be the color.
     PList * plist = v.GetComplexData()->GetList();
 
-
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Circle(<x>, <y>, <rx>,  <color>)]: "); 
     int x = plist->First(); plist->PopFront();
 
@@ -883,14 +877,14 @@ Variant PEBLObjects::Circle(Variant v)
 
 
     PError::AssertType(plist->First(), PEAT_COLOR, "Argument error in fourth parameter of function  [Circle(<x>, <y>, <rx>, <color>)]: "); 
-    Variant v2 = plist->First(); plist->PopFront();
-    PColor color = *(dynamic_cast<PColor*>(v2.GetComplexData()->GetObject().get()));
-
-
+    Variant color = plist->First(); plist->PopFront();
+    
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in fifth parameter of function  [Circle(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: "); 
     int filled = plist->First(); plist->PopFront();
 
+
     counted_ptr<PEBLObjectBase> myCircle = counted_ptr<PEBLObjectBase>(new PlatformCircle(x,y,r,color,filled));
     PComplexData *  pcd = new PComplexData(myCircle);
+
     return Variant(pcd);
 }

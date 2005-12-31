@@ -50,7 +50,10 @@ public:
     virtual Variant GetProperty(std::string)const;
     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
     virtual ObjectValidationError ValidateProperty(std::string)const;
+    
 
+    virtual void SetHeight(int h);
+    virtual void SetWidth(int w);
     
     virtual void InsertText(std::string character);
     virtual void InsertText(char character);

@@ -70,10 +70,11 @@ private:
 class PLine: public PDrawObject
 {
 public:
-    PLine(int x1, int y1, int dx, int dy, PColor fg);
+    PLine(int x1, int y1, int dx, int dy, Variant fg);
     virtual ~PLine();
-    virtual int GetWidth() const{return mX2;};
-    virtual int GetHeight() const{return mY2;};
+    virtual int GetWidth() const{return mDX;};
+    virtual int GetHeight() const{return mDY;};
+    virtual void SetSize(int dx, int dy);
     virtual std::ostream & SendToStream(std::ostream& out);
 
 
@@ -86,14 +87,11 @@ public:
 
 protected:
     //X1--Y2 are relative to mX and mY
-    int mX1;
-    int mY1;
-    int mX2;
-    int mY2;  
-    int mWidth;
+    int mDX;  
+    int mDY;  
 
-    bool mFilled;
     bool mAntiAliased;
+
 private:
 };
 
@@ -130,13 +128,17 @@ private:
 // };
 
 
+
+//For rectangles/squares, the 'position' is at the center of the object.
+//
  class PRectangle: public PDrawObject
  {
  public:
-     PRectangle(int x1, int y1, int dx, int dy, PColor fg, bool filled);
+     PRectangle(int x1, int y1, int dx, int dy, Variant fg, bool filled);
      virtual ~PRectangle();
      virtual int GetWidth() const{return mDX;};
      virtual int GetHeight() const{return mDY;};
+     virtual void SetSize(int dx, int dy);
      virtual std::ostream & SendToStream(std::ostream& out);
 
      //overloaded generic PEBLObjectBase methods
@@ -147,8 +149,6 @@ private:
 
 
  protected:
-     int mX1;
-     int mY1;
      int mDX;
      int mDY;
  private:
@@ -157,10 +157,11 @@ private:
  class PSquare: public PRectangle
  {
  public:
-     PSquare(int x, int y, int size, PColor fg, bool filled);
+     PSquare(int x, int y, int size, Variant fg, bool filled);
      virtual ~PSquare();
      virtual int GetWidth() const{return mDX;};
      virtual int GetHeight() const{return mDY;};
+     virtual void SetSize(int size);
      virtual std::ostream & SendToStream(std::ostream& out);
      
 
@@ -179,10 +180,11 @@ private:
 class PEllipse: public  PDrawObject
  {
  public:
-     PEllipse(int x1, int y1, int rx, int ry, PColor fg, bool filled);
+     PEllipse(int x1, int y1, int rx, int ry, Variant fg, bool filled);
      virtual ~PEllipse();
      virtual int GetWidth() const{return mRX;};
      virtual int GetHeight() const{return mRY;};
+     virtual void SetSize(int dx, int dy);
      virtual std::ostream & SendToStream(std::ostream& out);
      
 
@@ -196,8 +198,6 @@ class PEllipse: public  PDrawObject
  protected:
      
      //X1--Y2 are relative to mX and mY
-     int mX1;
-     int mY1;
      int mRX;
      int mRY;  
 
@@ -209,13 +209,14 @@ class PEllipse: public  PDrawObject
  class PCircle: public PDrawObject
  {
  public:
-     PCircle(int x1, int y1, int r, PColor fg, bool filled);
+     PCircle(int x1, int y1, int r, Variant fg, bool filled);
      virtual ~PCircle();
 
      virtual int GetWidth() const{return (int)(2*mR);};
      virtual int GetHeight() const{return (int)(2*mR);};
      virtual std::ostream & SendToStream(std::ostream& out);
 
+     virtual void SetSize(int r);
 
     //overloaded generic PEBLObjectBase methods
      virtual bool SetProperty(std::string, Variant v);
@@ -226,21 +227,9 @@ class PEllipse: public  PDrawObject
 
  protected:
 
-     int mX1;
-     int mY1;
      double mR;
  private:
  };
-
-
-// class PDrawGroup: public PDrawObject
-// {
-// public:
-//     PDrawGroup();
-//     ~PDrawGroup();
-// protected:
-// private:
-// };
 
 
 #endif

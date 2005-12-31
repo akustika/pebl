@@ -3,7 +3,7 @@ define Start(lPar)
 {
 
 ## Implicit Association Test
-## (c) 2005 Shane T. Mueller & Elizabeth S. Veinott
+## (c) 2005-2006 Shane T. Mueller & Elizabeth S. Veinott
 ##  stmuelle@indiana.edu
 
 ##############################################
@@ -20,7 +20,10 @@ define Start(lPar)
 ##  If no subject number is specified, it uses 0, overwriting previous
 ##  versions.
 ##
-##  This program is designed to run at 1024x768 resolution (use pebl --display 1024x768)
+##  This program is designed to run at 1024x768 resolution 
+##  
+ gVideoWidth <- 1024
+ gVideoHeight <- 768
 
 
 ##############################################

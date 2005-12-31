@@ -1,7 +1,6 @@
 ##This is an experiment for running likert-type or yes-no type questionnaires
-
-define Start(par)
-{
+ 
+define Start(par) {
 
   if(IsList(par))
    {
@@ -10,7 +9,6 @@ define Start(par)
 
     subnum <- 0
    }
-
 
   gWin <- MakeWindow()
   gFont <- MakeFont("Vera.ttf",0,16, MakeColor("black"), MakeColor("white"),1)
@@ -23,7 +21,7 @@ define Start(par)
 
 
 
-	##Add and position everything.
+    ##Add and position everything.
     AddObject(gTextBox,gWin)
     AddObject(gHeader,gWin)
     AddObject(gFooter,gWin)

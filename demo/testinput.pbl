@@ -1,12 +1,12 @@
 define Start(p)
 {
-        font <- MakeFont("Vera.ttf",0,22,MakeColor("red"),MakeColor("white"),0)
-    win <- MakeWindow()
-    tb <- MakeTextBox("test  ü",font, 400,200)
+   font <- MakeFont("Vera.ttf",0,22,MakeColor("red"),MakeColor("white"),0)
+   win <- MakeWindow()
+   tb <- MakeTextBox("test  ü",font, 400,200)
    AddObject(tb,win)
    Draw()
 
-  resp  <- GetInput(tb,"<return>")
+   resp  <- GetInput(tb,"<return>")
    Print(resp)
    resp <- "X"
    while(resp != "q")

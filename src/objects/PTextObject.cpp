@@ -70,6 +70,50 @@ PTextObject::PTextObject( PTextObject &object):
 
 
 
+
+bool PTextObject::SetProperty(std::string name, Variant v)
+{
+
+    if(PWidget::SetProperty(name,v))
+        return true;
+
+    else 
+        {
+            if (name == "TEXT") 
+                {
+                    SetText(v);
+                    return true;
+                }
+            return false;
+        }
+}
+
+
+Variant PTextObject::GetProperty(std::string name)const
+{
+    return PEBLObjectBase::GetProperty(name);
+}
+
+
+ObjectValidationError PTextObject::ValidateProperty(std::string name, Variant v)const
+{
+    return ValidateProperty(name);
+}
+
+ObjectValidationError PTextObject::ValidateProperty(std::string name)const
+{
+    ObjectValidationError ove = PWidget::ValidateProperty(name);
+    
+    if(ove == OVE_VALID)
+        return ove;
+    else if(name == "TEXT")
+        return OVE_VALID;
+    else
+        return OVE_INVALID_PROPERTY_NAME;
+
+}
+
+
 PTextObject::~PTextObject()
 {
 }
