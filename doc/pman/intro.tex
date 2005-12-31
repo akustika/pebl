@@ -1,0 +1,327 @@
+\chapter{About}
+
+PEBL (Psychology Experiment Building Language) is a cross-platform,
+open-source programming language and execution environment for
+constructing programs to conduct a wide range of archetypal psychology
+experiments. It is entirely free of charge, and may be modified to
+suit your needs as long as you follow the terms of the GPL, under
+which the source code is licensed. PEBL is written primarily in
+\texttt{C++}, but requires a few other tools (\texttt{flex},
+\texttt{yacc}) and libraries (\texttt{SDL}, \texttt{SDL\_image},
+\texttt{SDL\_ttf}) to use. It currently compiles and runs on Linux
+(using \texttt{g++}), Mac OSX (also using \texttt{g++}), and Microsoft
+Windows (using \texttt{Dev-cpp} and \texttt{mingw}) platforms using
+free tools. It has been developed primarily by Shane T.~Mueller,
+Ph.D.~(\href{mailto:smueller@obereed.net}{smueller@obereed.net}).
+Contributions are welcome and encouraged.
+
+\chapter{Usage}
+
+\section{How to Compile}
+
+Currently, there is no automated compile procedure.  PEBL requires the
+\texttt{SDL}, \texttt{SDL-image}, and \texttt{SDL-ttf} libraries and
+development headers.  It also uses \texttt{flex} and \texttt{bison},
+but you can compile without these tools. PEBL compiles on both Linux
+and Windows using the free \texttt{gcc} compiler. Note that
+\texttt{SDL-image} may require \texttt{jpeg}, \texttt{png}, and a
+\texttt{zlib} compression library, while \texttt{SDL-ttf} requires
+\texttt{truetype 2.0}.
+
+\subsection{Linux}
+
+PEBL should compile by typing `\texttt{make}' in its base directory
+once all requisite tools are installed and the source distribution is
+uncompressed. Currently, PEBL does not use autotools, so its make
+system is rather brittle. Assistance is welcome.
+
+On Linux, compiling will fail if you don't have an \texttt{/obj}
+directory and all the appropriate subdirectories (that mirror the main
+tree.)  These will not exist if you check out from CVS.
+
+\subsection{Microsoft Windows}
+
+On Microsoft Windows, PEBL is designed to be compiled using the Free
+ide \texttt{dev-c++} available at
+\href{http://www.bloodshed.net/dev/devcpp.html}{http://www.bloodshed.net/dev/devcpp.html}
+and instructions for installing \texttt{dev-c++}, \texttt{sdl}, and
+the \texttt{minGW} system can be found at
+\href{http://www.libsdl.org/pipermail/sdl/2002-June/046382.html}{http://www.libsdl.org/pipermail/sdl/2002-June/046382.html}
+and elsewhere on the net.  Email the PEBL list for more details.
+
+\subsection{Mac OSX}
+
+Currently, only Mac OSX 10.4 (TIGER) has been tested. PEBL is compiled
+and runs from the command-line, and resides in
+\texttt{/usr/local/share/pebl} and \texttt{/usr/local/bin}.  To
+compile, download the source and compile \texttt{libSDL},
+\texttt{libSDL\_image}, and \texttt{libSDL\_ttf}.
+\texttt{libSDL\_ttf} requires freetype, and \texttt{libSDL\_image}
+requires \texttt{libpng}, \texttt{libjpeg}, and \texttt{zlib}.
+
+\section{How to Install}
+
+Currently, binary distributions of PEBL are available with automatic
+package installers for Windows and OSX.  No binary distribution is
+available on Linux.
+
+\subsection{Linux}
+
+On Linux, you will probably have to install from source.
+There is an `\texttt{install}' option in the Makefile that, if invoked with
+`\texttt{make install}', will copy \texttt{bin/pebl} to \texttt{/usr/local/bin/pebl}, and the
+\texttt{media/} directories to \texttt{/usr/local/share/pebl/media}.  You must be root
+to do this, and you can just as easily do it by hand.
+
+\subsection{Microsoft Windows}
+
+In Microsoft Windows, we provide an installer package that  contains
+all necessary executable binary files and \texttt{.dlls}. This installer places
+PEBL in \texttt{c:\char92 Program Files\char92PEBL}, and creates a directory \texttt{pebl-exp} in \texttt{My Documents} with a shortcut that allows PEBL to be launched  and  programs that reside there to be run.
+
+\subsection{Macintosh OSX}
+
+For the MAC, we provide a \texttt{.pkg} installer that installs all the
+necessary files and libraries in \texttt{/usr/local/share/pebl}.  PEBL can be
+run from the command line by invoking \texttt{/usr/local/bin/pebl}.
+
+
+\section{How to Run a PEBL Program}
+
+
+\subsection{Linux}
+
+If you have installed PEBL into \texttt{/usr/local/bin}, you will be able to
+invoke PEBL by typing `\texttt{pebl}' at a command line.  PEBL requires you to
+specify one or more source files that it will compile and run, e.g., the
+command:
+\begin{verbatim}
+  > pebl stroop.pbl library.pbl
+\end{verbatim}
+will load the experiment described in \texttt{stroop.pbl}, and will load the
+supplementary library functions in \texttt{library.pbl}.
+
+Additionally, PEBL can take the \texttt{-v} or \texttt{-V} command-line parameter, which allows you to pass values into the script.  This is useful for
+entering subject numbers and condition types using an outside program
+like a bash script (possibly one that invokes dialog or zenity). A sample zenity script that asks for subject number and then runs a sample experiment which uses that input resides in the \texttt{bin} directory. The script can be edited to use fullscreen mode or change the display dimensions, for example. See Section \ref{sec:2.5}: Command-Line Arguments.
+
+You can also specify directories without a filename on the command-line (as long as they end with `\texttt{/}').  Doing so will add that directory to the search path when files are opened.
+
+\subsection{ Microsoft Windows}
+
+PEBL can be launched from the command line in Windows by going to the
+\texttt{pebl\char92bin} directory and typing `\texttt{pebl.exe}'.  PEBL requires you to specify one or more source files that it will compile and run.  For
+example, the command
+\begin{verbatim}
+  > pebl stroop.pbl library.pbl
+\end{verbatim}
+loads the experiment described in \texttt{stroop.pbl}, and loads supplementary library functions in \texttt{library.pbl}.
+
+
+Additionally, PEBL can take the \texttt{-v} or \texttt{-V} command-line parameter, which allows you to pass values in to the script.  This is useful for
+entering subject numbers and condition types using an outside program
+like a batch file. You can also specify directories without a file (as long as they end with `\texttt{\char92}').  Doing so will add that directory to the search path when files are opened. See Section \ref{sec:2.5}: Command-Line Arguments.
+
+Launching programs from the command-line on Windows is cumbersome.
+One easy way to launch PEBL on Windows is to create a shortcut to
+the executable file and then edit the properties so that the shortcut
+launches PEBL with the proper script and command-line parameters.
+Another way is to write and launch a batch file, which is
+especially useful if you wish to enter configuration data before loading the script.
+
+\subsubsection{ Win32 Launcher}
+PEBL comes with a launcher program that launches PEBL scripts in Microsoft Windows (tm).  It will allows you to specify 
+variables to pass into PEBL on execution, select multiple source files
+to load, and configure with a text file.
+
+The launcher is written in Visual Basic, and so you might need some
+\texttt{.dll} files in order for it to run.
+
+When the launcher is run, it first looks for a file called \texttt{pebl-init.txt}. This file should have the following format:
+\begin{verbatim}
+---------------Beginning of file----------------------
+"Quoted_Path_To_PEBL_Executable"
+"Quoted_Path_To_Directory_To_Load_Files_From"
+"File1.pbl" "File2.pbl"
+1st Variable Label|Initial_Value
+2nd Variable Label|Initial_Value
+3rd Variable Label|Initial_Value
+.
+.
+.
+------------------End of file-------------------------
+\end{verbatim}
+My actual pebl-init looks like this:
+\begin{verbatim}
+-------------
+"c:\Documents and Settings\smueller\My Documents\pebl\bin\pebl.exe"
+"c:\Documents and Settings\smueller\My Documents\pebl\demo\"
+"hello.pbl"
+Subject Number|1
+Condition|fast
+-------------
+\end{verbatim}
+
+The Launcher will select the specified files in the listed
+directory (this can be changed by selecting other files).
+After the third line, every pair separated with a `\texttt{|}'  will appear as a text-entry box with the pre-specified default value. This can be used to specify subject numbers, conditions, and such, which are then fed into the PEBL script.
+
+\subsection{ Macintosh OSX}
+
+Installing \texttt{pebl.pkg} places PEBL in
+\texttt{/usr/local/share/pebl} and \texttt{/usr/local/bin}.
+Currently, PEBL must be run from the command-line (there is no
+graphical front-end).  Open a terminal (in the applications folder)
+and type at the \texttt{\$} prompt:
+\begin{verbatim}
+$ /usr/local/bin/pebl
+\end{verbatim}
+To execute, type:
+\begin{verbatim}
+$  /usr/local/bin/pebl Documents/test.pbl
+\end{verbatim}
+To truncate, add \texttt{/usr/local/bin to the path}:
+\begin{verbatim}
+export PATH=$PATH:/usr/local/bin
+\end{verbatim}
+Then you can run:
+\begin{verbatim}
+$  pebl Documents/test.pbl
+\end{verbatim}
+
+On OSX, there is no such thing as double-buffering.  
+However, under fullscreen mode, drawing can be synced to the vertical refresh. But as a caveat, this has not yet been implemented.
+
+\section{How to stop running a program}
+
+In order to improve performance, PEBL runs at the highest
+priority possible on your computer.  This means that if it
+gets stuck somewhere, you may have difficulty terminating the
+process.  We have added an `abort program' shortcut key
+combination that will immediately terminate the program and
+report the location at which it became stuck in your code: \newline press \verb+<CTRL><SHIFT><ALT><\>+ simultaneously.
+  
+
+\section{Command-line arguments}
+\label{sec:2.5}
+Some aspects of PEBL's display can be controlled via
+command-line arguments.  Some of these are platform
+specific, or their use depends on your exact hardware and
+software. The following guide to command-line
+arguments is adapted from the output produced by
+invoking PEBL  with no arguments:\\
+\\
+Usage:  Invoke PEBL with the experiment script files (\texttt{.pbl})
+and  command-line arguments.\\
+\\
+Examples:
+\begin{verbatim}
+pebl experiment.pbl -v sub1 --fullscreen --display 800x600 --driver dga
+pebl experiment.pbl --driver xf86
+pebl experiment.pbl -v 33 -v 2 --fullscreen --display 640x480 
+\end{verbatim}
+ 
+
+\subsubsection{Command-Line Options}
+
+\begin{description}
+
+\item
+\begin{verbatim}
+-v VALUE1 -v VALUE2
+\end{verbatim}
+  Invokes script and passes \texttt{VALUE1} and \texttt{VALUE2} (or any text
+  immediately following a \texttt{-v}) to a list in the argument of
+  the\texttt{Start()}  function. \newline This is useful for passing in
+  conditions, subject numbers, randomization cues, and other
+  entities that are easier to control from outside  the
+  script.  Variables appear as strings, so numeric values
+  need to be converted to be used as numbers.
+
+\item 
+\begin{verbatim}
+--driver <drivername>
+\end{verbatim}
+  Sets the video driver, when there is more than one.  In Linux
+  SDL, options  \texttt{xf86}, \texttt{dga}, \texttt{svgalib} (from console), itcan also be controlled
+  via environment variables.  In fact, for SDL versions of
+  PEBL simply set the \texttt{SDL\_VIDEO\_DRIVER} environment variable
+  to the passed-in argument, without doing any checking, and
+  without checking or returning it to its original state.  
+
+\item
+\begin{verbatim}
+--display  <widthxheight>
+\end{verbatim}
+  Controls the screen width and height (in pixels). Defaults
+  to \texttt{640x480}.
+  Currently, only the following screens are supported:
+\begin{description}
+\item
+\begin{verbatim}
+512x384
+\end{verbatim}
+\item
+\begin{verbatim}
+640x480
+\end{verbatim}
+\item
+\begin{verbatim}
+800x600
+\end{verbatim}
+\item
+\begin{verbatim}
+960x720
+\end{verbatim}
+\item
+\begin{verbatim}
+1024x768
+\end{verbatim}
+\item
+\begin{verbatim}
+1152x864
+\end{verbatim}
+\item
+\begin{verbatim}
+1280x1024
+\end{verbatim}
+\end{description}
+
+Note: the way this is invoked may be changed in the
+future.  Your video display may not support the
+command-line argument.  If it does not, PEBL should exit
+and disply a useful error message; of course, it could
+possibly damage your hardware. 
+
+For the sake of convenience, the width, height, and bit depth can be accessed from within
+a PEBL script using the global variables \texttt{gVideoWidth}, \texttt{gVideoHeight}, and \texttt{gVideoDepth}.  These values are not protected from being changed in a script, but changing them will not change the display. However, if you change them, they will no longer be accurate.
+  
+
+\item
+\begin{verbatim}
+--depth
+\end{verbatim}
+  Controls the pixel depth, which also  depends on your video card.
+  Currently, depths of 2,8,15,16,24, and 32 are allowed on the
+  command-line.  There is no guarantee that you will get the
+  specified bit depth, and bit depths such as 2 and 8 are
+  likely never useful.  Changing depths can, for
+  some drivers and video cards, enable better performance or
+  possibly better video sychrony.
+
+\item
+\verb+--windowed+ or \verb+--fullscreen+
+
+Controls whether the script will run in a window or fullscreen.  
+\end{description}
+
+
+
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 

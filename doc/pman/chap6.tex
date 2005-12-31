@@ -1,0 +1,4443 @@
+
+
+\chapter{Detailed Function and Keyword Reference. (incomplete)}
+\label{sec:six}
+\setlength{\parindent}{0pt}
+
+\newcommand{\rl}{\rule{\textwidth}{0.3mm}}
+
+\newenvironment{desc}[1]
+ {\begin{list}{}%
+  {\renewcommand\makelabel[1]{{##1:}\hfil}%
+   \settowidth\labelwidth{\makelabel{#1}}%
+   \setlength\leftmargin{\labelwidth+\labelsep}}}%
+ {\end{list}}
+
+
+\rl
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] \verb!+!
+
+\item[Description] Adds two expressions together.  Also,
+concatenates strings together.
+
+\item[Usage]
+\begin{verbatim}
+<num1> + <num2>
+<string1> + <string2>
+<string1> + <num1>
+\end{verbatim}
+ Using other types of variables will cause errors.
+
+\item[Example]
+\begin{verbatim}
+33 + 322                   --> 355
+"Hello" + " " + "World"    --> "Hello World"
+"Hello" + 33 + 322.5       --> "Hello355.5"
+33 + 322.5 + "Hello"       --> "33322.5Hello"
+\end{verbatim}
+
+\item[See Also]     \verb!-!, \texttt{ToString()}
+
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol] \verb+-+
+
+\item[Description]  Subtracts one expression from another
+
+\item[Usage]        \verb!<num1> - <num2>!
+
+\item[Example]     
+
+\item[See Also]
+
+\end{desc}
+
+\rl     
+
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol] \verb+/+ 
+
+\item[Description]  Divides one expression by another
+
+\item[Usage]        \verb+<expression> / <expression>+ 
+
+\item[Example]
+\begin{verbatim}
+333 / 10    # == 33.3
+\end{verbatim}
+
+\item[See Also]
+
+\end{desc} 
+
+\rl
+
+\begin{desc}{Name/Symbol}
+   
+
+\item[Name/Symbol] \verb+*+
+
+\item[Description]        Multiplies two expressions together
+
+\item[Usage]       \verb+<expression> * <expression>+
+
+\item[Example]
+\begin{verbatim}
+32 * 2 # == 64
+\end{verbatim}
+
+\item[See Also]     
+
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol] \verb!^!
+
+\item[Description]  Raises one expression to the power of  another expression
+
+\item[Usage]       \verb!<expression> ^ <expression>!
+
+\item[Example]
+\begin{verbatim}
+25 ^ 2  # == 625
+\end{verbatim}
+
+\item[See Also]    \texttt{Exp}, \texttt{NthRoot}
+
+\end{desc}
+
+\rl
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol] \verb+;+ 
+
+\item[Description]        Finishes a statement, can start new statement
+                      on the same line (not needed at end of line)
+
+\item[Usage]       
+
+\item[Example]     
+
+\item[See Also]
+
+\end{desc}
+
+\rl
+
+\begin{desc}{Name/Symbol}     
+
+\item[Name/Symbol] \verb!#!
+
+\item[Description]   Comment indicator; anything until the next CR
+	       following this character is ignored
+
+\item[Usage]       
+
+\item[Example]     
+
+\item[See Also]
+
+\end{desc} 
+
+
+\rl
+     
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol] \verb!<-!                  
+
+\item[Description]  The assignment operator.  Assigns a value to a variable\\
+              N.B.: This two-character sequence takes the place of the
+	      `\verb!=!' operator found in many programming languages.
+
+\item[Usage]       
+
+\item[Example]     
+
+\item[See Also]  
+
+\end{desc}   
+
+\rl
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol] \verb+( )+                  
+
+\item[Description] Groups mathematical operations
+
+\item[Usage]      \verb+(expression)+
+
+\item[Example]
+\begin{verbatim}
+(3 + 22) * 4  # == 100
+\end{verbatim}
+
+\item[See Also]     
+
+\end{desc}
+
+\rl
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol] \verb!{ }!                  
+
+\item[Description] Groups a series of statements
+
+\item[Usage]
+\begin{verbatim}
+{ statement1
+  statement2
+  statement3
+}
+\end{verbatim}
+	     
+
+\item[Example]     
+
+\item[See Also]     
+\end{desc}
+
+\rl
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol] \verb+[ ]+                 
+
+\item[Description]  Creates a list. Closing \verb+]+ must be on
+ 	      same line as last element of list, even
+	      for nested lists.
+
+\item[Usage]       \verb+[<item1>, <item2>, ....]+
+            
+
+\item[Example]
+\begin{verbatim}
+[]                    #Creates an empty list
+[1,2,3]               #Simple list
+[[3,3,3],[2,2],0]     #creates a nested list structure
+\end{verbatim}
+
+
+\item[See Also]     \texttt{List()}
+\end{desc}
+
+\rl
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol] 	\verb+<+ 
+
+\item[Description] 	Less than.  Used to compare two numeric quantities.
+
+\item[Usage]
+\begin{verbatim}
+3 < 5
+3 < value
+\end{verbatim}
+             
+\item[Example]
+\begin{verbatim}
+if(j < 33)
+{
+  Print ("j is less than 33.")
+}
+\end{verbatim}
+
+See Also:     	\verb+>, >=, <=, ==, ~=, !=, <>+
+
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol] 	\verb!>!                    
+
+\item[Description] 	Greater than. Used to compare two numeric quantities.
+
+\item[Usage]
+\begin{verbatim}
+5 > 3
+5 > value
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+if(j > 55)
+{
+ Print ("j is greater than 55.")
+}
+\end{verbatim}
+
+\item[See Also]     	\verb+<+, \verb+>=+, \verb+<=+, \verb+==+, \verb+~=+, \verb+!=+, \verb+<>+
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol] 	\verb+<=+                   
+
+\item[Description] 	Less than or equal to.
+
+\item[Usage]
+\begin{verbatim}
+3<=5  
+3<=value
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+if(j <= 33)
+{
+ Print ("j is less than or equal to 33.")
+}
+\end{verbatim}
+	
+\item[See Also]     	\verb+<, >, >=, ==, ~=, !=, <>+
+
+\end{desc}
+
+\rl
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol] 	\verb+>=+                   
+
+\item[Description] 	Greater than or equal to.
+
+\item[Usage]
+\begin{verbatim}
+5>=3  
+5>=value
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+if(j >= 55)
+{
+ Print ("j is greater than or equal to 55.")
+}
+\end{verbatim}
+
+\item[See Also]     	\verb+<, >, <=, ==, ~=, !=, <>+
+\end{desc}
+
+\rl
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol] 	\verb+==+                   
+
+\item[Description] 	Equal to.
+
+\item[Usage]       	\verb+4 == 4+
+		
+
+\item[Example]
+\begin{verbatim}
+2 + 2 == 4
+\end{verbatim}
+
+\item[See Also]     	\verb+<, >, >=, <=, ~=, !=, <>+
+\end{desc}
+
+\rl
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+<>, !=, ~=+
+
+\item[Description]  	Not equal to.
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]     	\verb+<, >, >=, <=, ==+
+
+\end{desc}
+
+\rl 
+
+
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol] 	Abs()
+
+\item[Description]   	Returns the absolute value of the number.
+
+\item[Usage]
+\begin{verbatim}
+Abs(<num>)
+\end{verbatim}        
+
+\item[Example]
+\begin{verbatim}
+Abs(-300)  	# ==300
+Abs(23)    	# ==23
+\end{verbatim}
+
+\item[See Also]     	Round(), Floor(), AbsFloor(), Sign(), Ceiling()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol]  	AbsFloor()
+
+\item[Description]  	Rounds \verb+<num>+ toward 0 to an integer.
+
+\item[Usage]       	
+\begin{verbatim}
+AbsFloor(<num>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+AbsFloor(-332.7)   	# == -332
+AbsFloor(32.88)    	# == 32
+\end{verbatim}
+
+\item[See Also]     	Round(), Floor(), Abs(), Sign(), Ceiling()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol] 	ACos() 
+
+\item[Description]  	Inverse cosine of \verb+<num>+, in degrees.
+
+\item[Usage]
+\begin{verbatim}
+ACos(<num>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]    	Cos(), Sin(), Tan(), ATan(), ATan() 
+
+\end{desc}
+
+\rl
+ 
+
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol]  	AddObject()
+
+\item[Description] 	Adds a widget to a parent window.
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]    	RemoveObject()
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	and
+  
+\item[Description]  	Logical and operator.
+
+\item[Usage]       	
+\begin{verbatim}
+<expression> and <expression>
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]     	or, not
+
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol]  	Append
+  
+\item[Description]  	Appends an item to a list.  Useful for constructing lists in conjunction with the loop statement.
+
+\item[Usage] 
+\begin{verbatim}
+Append(<list>, <item>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+list <- Sequence(1,5,1)
+double  <- []
+loop(i, list)
+{
+ double <- Append(double, [i,i])
+}
+Print(double)
+# Produces [[1,1],[2,2],[3,3],[4,4],[5,5]]
+\end{verbatim}
+
+\item[See Also]     	List(), [], Merge()
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol]  	ASin() 
+
+\item[Description]  	Inverse Sine of \verb+<num>+, in degrees.
+
+\item[Usage]
+\begin{verbatim}
+ASin(<num>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]    	Cos(), Sin(), Tan(), ATan(), ACos(), ATan() 
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol]  	ATan 
+
+\item[Description]  	Inverse Tan of <num>, in degrees.
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]    	Cos(), Sin(), Tan(), ATan(), ACos(), ATan() 
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	break
+
+\item[Description]  	Breaks out of a loop immediately.
+
+\item[Usage]        	break
+
+\item[Example]
+\begin{verbatim}
+loop(i ,[1,3,5,9,2,7])
+{
+ Print(i)
+ if(i == 3) 
+        {
+         break
+        }
+}
+\end{verbatim}
+
+\item[See Also]   	loop, return
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	Ceiling()
+
+\item[Description] 	Rounds \verb+<num>+ up to the next integer.
+
+\item[Usage]
+\begin{verbatim}
+Ceiling(<num>)
+\end{verbatim}
+
+\item[Example] 
+\begin{verbatim}
+Ceiling(33.23)  	# == 34
+Ceiling(-33.02) 	# == -33
+\end{verbatim}
+
+\item[See Also]     	Round(), Floor(), AbsFloor(), Ceiling()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	ChooseN()
+
+\item[Description] 	NOT IMPLEMENTED.  Chooses \verb+<number>+ items from a list, without replacement.
+
+\item[Usage] 
+\begin{verbatim}
+ChooseN(<list>, <number>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	ClearEventLoop()
+
+\item[Description]  	NOT IMPLEMENTED. Advanced Event loop management.
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	Cos()
+			 
+\item[Description] 	Cosine of \verb+<deg>+ degrees.
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]     	Sin(), Tan(), ATan(), ACos(), ATan() 
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	CrossFactorWithoutDuplicates()
+
+\item[Description] 	This function takes a single list, and returns a list of all 
+			pairs, excluding the pairs that have two of the same item. 
+			To achieve the same effect but include the duplicates, use 
+			DesignFullCounterBalance(x,x).
+
+\item[Usage]
+\begin{verbatim}
+CrossFactorWithoutDuplicates(<list>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+CrossFactorWithoutDuplicates([a,b,c]) 
+# == [[a,b],[a,c],[b,a],[b,c],[c,a],[c,b]]
+\end{verbatim}
+
+\item[See Also]     	DesignFullCounterBalance(), DesignBalancedSampling(),
+  		DesignGrecoLatinSquare(), DesignLatinSquare(), Repeat(),
+  		RepeatList(), Shuffle()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	define
+
+\item[Description]  	Defines a user-specified function.
+
+\item[Usage]
+\begin{verbatim}
+define functionname (parameters)
+{
+ statement1
+ statement2
+ statement3
+       #Return statement is optional:
+ return <value>
+}
+\end{verbatim}
+
+\item[Example]    	See above.
+
+\item[See Also]
+\end{desc}   	
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	DegToRad()
+
+\item[Description]  	Converts degrees to radians.
+
+\item[Usage]
+\begin{verbatim}
+DegToRad(<deg>)
+\end{verbatim}
+
+\item[Example]     	
+\begin{verbatim}
+DegToRad(180) # == 3.14159...
+\end{verbatim}
+
+\item[See Also]    	Cos(), Sin(), Tan(), ATan(), ACos(), ATan() 
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	DesignBalancedSampling()
+
+\item[Description] 	Samples elements "roughly" equally.
+  		This function returns a list of repeated samples from
+ 		\verb+<treatment_list>+, such that each element in \verb+<treatment_list>+ 
+		appears approximately equally.  Each element from 
+		\verb+<treatment_list>+ is sampled once without replacement before 
+		all elements are returned to the mix and sampling is repeated.  
+		If there are no repeated items in \verb+<list>+, there will be no
+ 		consecutive repeats in the output.  The last repeat-sampling 
+		will be truncated so that a \verb+<length>+-size list is returned.  
+		If you don't want the repeated epochs this function provides, 
+		Shuffle() the results.
+
+\item[Usage]
+\begin{verbatim}
+DesignBalancedSampling(<list>, <length>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+DesignBalancedSampling([1,2,3,4,5],12)
+# e.g., produces something like [5,3,1,4,2, 3,1,5,2,4, 3,1 ]
+\end{verbatim}
+
+\item[See Also]	CrossFactorWithoutDuplicates(), DesignFullCounterBalance(),
+  		DesignGrecoLatinSquare(), DesignLatinSquare(), Repeat(), 
+		RepeatList(), Shuffle()
+
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol]	DesignFullCounterbalance()
+
+\item[Description]	This takes two lists as parameters, and returns a nested list 
+		of lists that includes the full counterbalancing of both 
+		parameter lists.  Use cautiously; this gets very large.
+
+\item[Usage]
+\begin{verbatim}
+DesignFullCounterbalance(<lista>, <listb>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+a <- [1,2,3]
+b <- [9,8,7]
+DesignFullCounterbalance(a,b)	# == [[1,9],[1,8],[1,7],
+				#     [2,9],[2,8],[2,7],
+				#     [3,9],[3,8],[3,7]]
+\end{verbatim}
+
+\item[See Also]	CrossFactorWithoutDuplicates(), DesignBalancedSampling(),
+		DesignGrecoLatinSquare(), DesignLatinSquare(), Repeat(), 
+		RepeatList(), Shuffle()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	DesignGrecoLatinSquare()
+
+\item[Description]	This will return a list of lists formed by rotating through 
+		each element of the \verb+<treatment_list>+s, making a list
+ 		containing all element of the list, according to a greco-latin 
+		square.  All lists must be of the same length.
+
+\item[Usage]
+\begin{verbatim}
+DesignGrecoLatinSquare(<factor_list>, <treatment_list>, 
+<treatment_list>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+x <- ["a","b","c"]
+y <- ["p","q","r"]
+z <- ["x","y","z"]
+Print(DesignGrecoLatinSquare(x,y,z))
+# produces:   	[[[a, p, x], [b, q, y], [c, r, z]], 
+#               [[a, q, z], [b, r, x], [c, p, y]], 
+#               [[a, r, y], [b, p, z], [c, q, x]]]
+\end{verbatim}
+
+\item[See Also]	CrossFactorWithoutDuplicates(), DesignFullCounterBalance(), 
+		DesignBalancedSampling(), DesignLatinSquare(), Repeat(),		
+		RepeatList(), Shuffle()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	DesignLatinSquare()
+
+\item[Description]	This returns return a list of lists formed by rotating 
+ 		through each element of \verb+<treatment_list>+, making a list
+ 		containing all element of the list. Has no side effect
+  		on input lists.
+		This is implemented as a PEBL function in \texttt{pebl-lib/Design.pbl}
+
+\item[Usage]
+\begin{verbatim}
+DesignLatinSquare(<treatment1_list>, <treatment2_list>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+order <- [1,2,3]
+treatment <- ["A","B","C"]
+design <- DesignLatinSquare(order,treatment)
+# produces: [[[1, A], [2, B], [3, C]],
+#            [[1, B], [2, C], [3, A]],
+#            [[1, C], [2, A], [3, B]]]
+\end{verbatim}
+
+\item[See Also]	CrossFactorWithoutDuplicates(),DesignFullCounterBalance(), 
+ 		DesignBalancedSampling(),  DesignGrecoLatinSquare(),  
+		Repeat(), RepeatList(), Shuffle(), Rotate()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Div()
+
+\item[Description]  	NOT IMPLEMENTED.  Returns round(\verb+<num>/<mod>+)
+
+\item[Usage]
+\begin{verbatim}
+Div(<num>, <mod>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	Mod()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Draw()
+
+\item[Description]	Redraws the screen or a specific widget.
+
+\item[Usage]
+\begin{verbatim}
+Draw()
+Draw(<object>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	DrawFor(), Show(), Hide()
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	DrawFor()
+
+\item[Description]  	Draws a screen or widget, returning after \verb+<cycles>+ refreshes. This function currently does not work as intended in the SDL implementation, because of a lack of control over the
+		refresh blank.  It may work in the future.
+
+\item[Usage]
+\begin{verbatim}
+DrawFor( <object>, <cycles>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	Draw(), Show(), Hide()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	EndOfFile()
+
+\item[Description]	Returns true if at the end of a file.
+
+\item[Usage]
+\begin{verbatim}
+EndOfFile(<filestream>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+while(not EndOfFile(fstream))
+{
+ Print(FileReadLine(fstream))
+}
+\end{verbatim}
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	EndOfLine()
+
+\item[Description]	Returns true if at end of line.
+
+\item[Usage]
+\begin{verbatim}
+EndOfLine(<filestream>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	Exp()
+
+\item[Description]	$e$ to the power of \verb+<pow>+.
+
+\item[Usage]
+\begin{verbatim}
+Exp(<pow>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+Exp(0) 		# == 1
+Exp(3)		# == 20.0855
+\end{verbatim}
+
+\item[See Also]	Log()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	ExtractListItems()
+
+\item[Description]	Extracts items from a list, forming a new list. 
+		The list \verb+<items>+ are the integers representing the
+		indices that should be extracted.  
+	     
+\item[Usage]
+\begin{verbatim}
+ExtractListItems(<list>,<items>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+myList <- Sequence(101, 110, 1)
+ExtractListItems(myList, [2,4,5,1,4])
+# produces [102, 104, 105, 101, 104]
+\end{verbatim}
+
+\item[See Also]	Subset(), SubList(), SampleN()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	FileClose()
+
+\item[Description]	Closes a filestream  variable.  Be sure to 
+		pass the variable name, not the filename.  
+
+\item[Usage]
+\begin{verbatim}
+FileClose(<filestream>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+x <- FileOpenRead("file.txt")
+# Do relevant stuff here.
+FileClose(x)
+\end{verbatim}
+
+\item[See Also]	FileOpenAppend(), FileOpenRead(), FileOpenWrite()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	FileOpenAppend()
+
+\item[Description]	Opens a filename, returning  a stream that can be used for 
+		writing information.  Appends if the file already exists.
+
+\item[Usage]
+\begin{verbatim}
+FileOpenAppend(<filename>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	FileClose(), FileOpenRead(), FileOpenWrite()
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	FileOpenRead()
+
+\item[Description]  	Opens a filename, returning  a stream to be used 
+		for reading information.
+
+\item[Usage]
+\begin{verbatim}
+FileOpenRead(<filename>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	FileClose(), FileOpenAppend(), FileOpenWrite()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	FileOpenWrite()
+
+\item[Description]	Opens a filename, returning a stream  that can be used for writing information.  Overwrites if file already exists.
+
+\item[Usage]
+\begin{verbatim}
+FileOpenWrite(<filename>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	FileClose(), FileOpenAppend(), FileOpenRead()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	FilePrint()
+
+\item[Description]	Like Print, but to a file.  Prints a string to a file, 
+		with a carriage return at the end.
+	
+\item[Usage]
+\begin{verbatim}
+FilePrint(<filestream>, <value>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+FilePrint(fstream, "Another Line.")
+\end{verbatim}
+
+\item[See Also]	\verb+Print(), FilePrint_()+
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+FilePrint_()+
+
+\item[Description]	Like \verb+Print_+, but to a file.  Prints a string to a file,	without appending a newline character.
+	
+\item[Usage]
+\begin{verbatim}
+FilePrint_(<filestream>, <value>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+FilePrint_(fstream, "This line doesn't end.")
+\end{verbatim}
+
+\item[See Also]	\verb+Print_(), FilePrint()+
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	FileReadCharacter()
+
+\item[Description]	Reads and returns a single character from a filestream.
+
+\item[Usage]
+\begin{verbatim}
+FileReadCharacter(<filestream>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	FileReadLine()
+
+\item[Description]	Reads and returns a line from a file; all characters up
+		until the next newline or the end of the file.
+
+\item[Usage]
+\begin{verbatim}
+FileReadLine(<filestream>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	FileReadList()
+ 
+\item[Description]  	Given a filename, will open it, read in all the items
+	     	into a list (one item per line), and close the file
+	     	afterward. Ignores blank lines or lines starting with \verb+#+.
+	     	Useful with a number of pre-defined data files stored in
+	     	media/text/.  See section 4.12: PROVIDED MEDIA FILES.
+
+\item[Usage]
+\begin{verbatim}
+FileReadList(<filename>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+FileReadList("data.txt")
+\end{verbatim}
+
+\item[See Also]
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	FileReadTable()
+
+\item[Description]	Reads a table directly from a file. Data in file should
+		separated by spaces.  Reads each line onto a sublist,
+		with space-separated tokens as items in sublist.  Ignores
+		blank lines or lines beginning with \verb+#+. Optionally,
+		specify a token separator other than space.
+
+\item[Usage]
+\begin{verbatim}
+FileReadTable(<filename>, <optional-separator>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+a <- FileReadTable("data.txt")
+\end{verbatim}
+
+\item[See Also]	FileReadList()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	FileReadText()
+
+\item[Description]	Returns all of the text from a file, ignoring any lines
+		beginning with \verb+#+. Opens and closes the file transparently.
+
+\item[Usage]
+\begin{verbatim}
+FileReadText(<filename>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+instructions <- FileReadText("instructions.txt")
+\end{verbatim}
+
+\item[See Also]	FileReadList(), FileReadTable()
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	FileReadWord()
+
+\item[Description]	Reads and returns  a `word' from a file; the next
+		connected stream of characters not including a \verb+' '+
+		or a newline. Will not read newline characters.
+
+\item[Usage]
+\begin{verbatim}
+FileReadWord(<filestream>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	FileReadLine(), FileReadTable(), FileReadList()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	FindInString()
+
+\item[Description]	Finds a token in a string, returning the position.
+
+\item[Usage]
+\begin{verbatim}
+FindInString(<string>,<string>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+FindInString("about","bo") 	# == 2
+\end{verbatim}
+
+\item[See Also]	SplitString()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	First()
+
+\item[Description]	Returns the first item of a list.
+
+\item[Usage]
+\begin{verbatim}
+First(<list>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+First([3,33,132])		# == 3
+\end{verbatim}
+
+\item[See Also]	Nth(), Last()
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Flatten()
+
+\item[Description]
+	Flattens nested list \verb+<list>+ to a single flat list.
+
+\item[Usage]
+\begin{verbatim}
+Flatten(<list>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+Flatten([1,2,[3,4],[5,[6,7],8],[9]])	# == [1,2,3,4,5,6,7,8,9]
+Flatten([1,2,[3,4],[5,[6,7],8],[9]])	# == [1,2,3,4,5,6,7,8,9]
+\end{verbatim}
+
+\item[See Also]	FlattenN(), FoldList()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	FlattenN()
+
+\item[Description]	Flattens \verb+<n>+ levels of nested list \verb+<list>+. 
+
+\item[Usage]
+\begin{verbatim}
+Flatten(<list>, <n>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+Flatten([1,2,[3,4],[5,[6,7],8],[9]],1) 
+# == [1,2,3,4,5,[6,7],8,9]
+\end{verbatim}
+
+\item[See Also]	Flatten(), FoldList()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Floor()
+
+\item[Description]	Rounds \verb+<num>+ down to the next integer.
+
+\item[Usage]
+\begin{verbatim}
+Floor(<num>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+Floor(33.23)	# == 33
+Floor(3.999)  	# ==3
+Floor(-32.23) 	# == -33
+\end{verbatim}
+ 
+\item[See Also]	AbsFloor(), Round(), Ceiling()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	FoldList()
+
+\item[Description]	Folds a list into equal-length sublists.
+
+\item[Usage]
+\begin{verbatim}
+FoldList(<list>, <size>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+FoldList([1,2,3,4,5,6,7,8],2)	# == [[1,2],[3,4],[5,6],[7,8]]
+\end{verbatim}
+ 
+\item[See Also]	FlattenN(), Flatten()
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Format()            
+
+\item[Description]	UNIMPLEMENTED.
+
+\item[Usage]
+\begin{verbatim}
+Format(<value>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	GetCursorPosition()
+
+\item[Description]	Returns an integer specifying where in a textbox the edit cursor is.  The value indicates which character it is on.
+
+\item[Usage]
+\begin{verbatim}
+GetCursorPosition(<textbox>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	SetCursorPosition(), MakeTextBox(), SetText()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	GetInput()
+
+\item[Description]	Allows user to type input into a textbox.
+
+\item[Usage]
+\begin{verbatim}
+GetInput(<textbox>,<escape-key>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	SetEditable(), GetCursorPosition(), MakeTextBox(), SetText()
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	GetNIMHDemographics()
+
+\item[Description]	Gets demographic information that are normally required for NIMH-related research.  Currently are gender (M/F/prefer not to say), ethnicity (Hispanic or not), and race (A.I./Alaskan, Asian/A.A., Hawaiian, black/A.A., white/Caucasian, other).  
+		It then prints their responses in a single line in the demographics file, along with any special code you supply and a time/date stamp. This code might include a subject number, experiment number, or something else, but many informed consent forms assure the subject that this information cannot be tied back to them or their data, so be careful about what you record. The file output will look something like: 
+\begin{verbatim}
+---- 
+x0413 Thu Apr 22 17:58:15 2004 1 Y 4 
+x0413 Thu Apr 23 17:58:20 2004 3 Y 5 
+x0413 Thu Apr 24 12:41:30 2004 2 Y 5 
+x0413 Thu Apr 24 14:11:54 2004 2 N 5 
+---- 
+\end{verbatim}
+
+
+	The first column is the user-specified code (in this 
+	case, indicating the experiment number).  The middle columns 
+	indicate date/time, and the last three columns indicate 
+	gender (M, F, other), Hispanic (Y/N), and race.
+
+\item[Usage]
+\begin{verbatim}
+GetNIMHDemographics(<code-to-print-out>, <window>, <filename>)
+\end{verbatim} 
+
+\item[Example]
+\begin{verbatim}
+GetNIMHDemographics("x0413", gwindow, "x0413-demographics.txt")
+\end{verbatim}
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	GetPEBLVersion()
+
+\item[Description]	Returns a string describing which version of PEBL you are running.
+
+\item[Usage]
+\begin{verbatim}
+GetPEBLVersion() 
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+Print(GetPEBLVersion())
+\end{verbatim}
+
+\item[See Also]	TimeStamp()
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	GetSize()
+
+\item[Description]	Returns a list of [height, width], specifying the 
+		size of the widget.
+
+\item[Usage]
+\begin{verbatim}
+GetSize(<widget>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+image <- MakeImage("stim1.bmp")
+xy <- GetSize(image)
+x <- Nth(xy, 1)
+y <- Nth(xy, 2)
+\end{verbatim}
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	GetText()
+
+\item[Description]	Returns the text stored in a text object 
+		(either a textbox or a label).
+
+\item[Usage]
+\begin{verbatim}
+GetText(<widget>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	SetCursorPosition(), GetCursorPosition(), SetEditable(), MakeTextBox()
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	GetTime()
+
+\item[Description]	Gets time, in milliseconds, from when PEBL was initialized. 
+	Do not use as a seed for the RNG, because it will tend to be 
+	about the same on each run. Instead, use RandomizeTimer().
+
+\item[Usage]
+\begin{verbatim}
+GetTime()
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+a <- GetTime()
+WaitForKeyDown("A")
+b <- GetTime()
+Print("Response time is: " + (b - a))
+\end{verbatim}
+
+\item[See Also]	TimeStamp()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Hide() 
+
+\item[Description]	Makes an object invisible, so it will not be drawn.
+
+\item[Usage]
+\begin{verbatim}
+Hide(<object>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+window <- MakeWindow()
+image1  <- MakeImage("pebl.bmp")
+image2  <- MakeImage("pebl.bmp")
+AddObject(image1, window)
+AddObject(image2, window)
+Hide(image1)
+Hide(image2)
+Draw()		# empty screen will be drawn.
+	
+Wait(3000)
+Show(image2)
+Draw()		# image2 will appear.
+
+Hide(image2)
+Draw()		# image2 will disappear.
+
+Wait(1000)
+Show(image1)
+Draw()		# image1 will appear.
+\end{verbatim}
+ 
+\item[See Also]	Show()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	if 
+
+\item[Description]	Simple conditional test.
+
+\item[Usage]
+\begin{verbatim}
+if(test)
+{
+ statements
+ to
+ be 
+ executed
+}
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+if...else+            
+
+\item[Description]	Complex conditional test.  Be careful of spacing 
+		the else---if you put carriage returns on either side 
+		of it, you will get a syntax error.
+
+\item[Usage]
+\begin{verbatim}
+if(test)
+{
+ statements if true
+} else {
+ statements if false
+}
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	IsAnyKeyDown()
+
+\item[Description]	
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	IsAudioOut()
+
+\item[Description]	Tests whether \verb+<variant>+ is a AudioOut stream.
+
+\item[Usage]
+\begin{verbatim}
+IsAudioOut(<variant>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+if(IsAudioOut(x))
+{
+ Play(x)
+}
+\end{verbatim}
+
+\item[See Also]	IsColor(), IsImage(), IsInteger(), IsFileStream(), 
+		IsFloat(), IsFont(), IsLabel(), IsList(), IsNumber(), 
+		IsString(), IsTextBox(), IsWidget()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	IsColor()
+
+\item[Description]	Tests whether \verb+<variant>+ is a Color.
+
+\item[Usage]
+\begin{verbatim}
+IsColor(<variant>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+if(IsColor(x)
+{
+ gWin <- MakeWindow(x)
+}
+\end{verbatim}
+
+\item[See Also]		IsAudioOut(), IsImage(), IsInteger(), IsFileStream(), IsFloat(), IsFont(), IsLabel(), IsList(), IsNumber(), IsString(), IsTextBox(), IsWidget()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	IsImage()
+
+\item[Description]	Tests whether \verb+<variant>+ is an Image.
+
+\item[Usage]
+\begin{verbatim}
+IsImage(<variant>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+if(IsImage(x))
+{
+ AddObject(gWin, x)
+}
+\end{verbatim}
+
+\item[See Also]	IsAudioOut(), IsColor(), IsInteger(), IsFileStream(), 
+		IsFloat(), IsFont(), IsLabel(), IsList(), IsNumber(), 
+		IsString(), IsTextBox(), IsWidget()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	IsInteger()
+
+\item[Description]	Tests whether \verb+<variant>+ is an integer type.  
+		Note: a number represented internally as a floating-point
+	     	type whose is an integer will return false.  
+	Floating-point numbers can be converted to internally- 
+	represented integers with the ToInteger() or Round() commands.
+ 
+\item[Usage]		
+\begin{verbatim}
+IsInteger(<variant>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+x <- 44
+y <- 23.5
+z <- 6.5
+test <- x + y + z 
+	
+IsInteger(x)		# true
+IsInteger(y)		# false
+IsInteger(z)		# false
+IsInteger(test)		# false
+\end{verbatim}
+
+\item[See Also]	IsAudioOut(), IsColor(), IsImage(), IsFileStream(), 
+	IsFloat(), IsFont(), IsLabel(), IsList(), IsNumber(), 
+	IsString(), IsTextBox(), IsWidget()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	IsFileStream()
+
+\item[Description]	Tests whether \verb+<variant>+ is a FileStream object.
+
+\item[Usage]		
+\begin{verbatim}
+IsFileStream(<variant>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+if(IsFileStream(x))
+{
+ Print(FileReadWord(x)
+}
+\end{verbatim}
+
+\item[See Also]	IsAudioOut(), IsColor(), IsImage(), IsInteger(), 
+            	IsFloat(), IsFont(), IsLabel(), IsList(), IsNumber(), 
+		IsString(), IsTextBox(), IsWidget()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	IsFloat()
+
+\item[Description]	Tests whether \verb+<variant>+ is a floating-point value. Note
+	that floating-point can represent integers with great 
+	precision, so that a number appearing as an integer 
+	can still be a float.
+
+\item[Usage]
+\begin{verbatim}
+IsFloat(<variant>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+x <- 44
+y <- 23.5
+z <- 6.5
+test <- x + y + z 
+
+IsFloat(x)     	# false
+IsFloat(y)     	# true
+IsFloat(z)     	# true
+IsFloat(test)  	# true
+\end{verbatim}
+
+\item[See Also]	IsAudioOut(), IsColor(), IsImage(), IsInteger(), 
+		IsFileStream(), IsFont(), IsLabel(), IsList(), 
+		IsNumber(), IsString(), IsTextBox(), IsWidget()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	IsFont()
+
+\item[Description]	Tests whether \verb+<variant>+ is a Font object.
+
+\item[Usage]
+\begin{verbatim}
+IsFont(<variant>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+if(IsFont(x))
+{
+ y <- MakeLabel("stimulus", x)
+}
+\end{verbatim}
+
+\item[See Also]	IsAudioOut(), IsColor(), IsImage(), IsInteger(), 
+		IsFileStream(), IsFloat(), IsLabel(), IsList(), 
+		IsNumber(), IsString(), IsTextBox(), IsWidget()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	IsKeyDown()
+
+\item[Description]	
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	IsKeyUp()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	IsKeyUp()
+
+\item[Description]	
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	IsKeyDown()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	IsLabel()
+
+\item[Description]	Tests whether \verb+<variant>+ is a text Label object.
+
+\item[Usage]		
+\begin{verbatim}
+IsLabel(<variant>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+if(IsLabel(x)
+{
+ text <- GetText(x)
+}
+\end{verbatim}
+
+\item[See Also]	IsAudioOut(), IsColor(), IsImage(), IsInteger(), 
+		IsFileStream(), IsFloat(), IsFont(), IsList(), 
+		IsNumber(), IsString(), IsTextBox(), IsWidget()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	IsList()
+
+\item[Description]	Tests whether \verb+<variant>+ is a PEBL list.
+
+\item[Usage]
+\begin{verbatim}
+IsList(<variant>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+if(IsList(x))
+{
+ loop(item, x)
+ {
+  Print(item)
+ }
+}
+\end{verbatim}
+
+\item[See Also]	IsAudioOut(), IsColor(), IsImage(), IsInteger(), 
+		IsFileStream(), IsFloat(), IsFont(), IsLabel(),
+		IsNumber(), IsString(), IsTextBox(), IsWidget()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	IsMember()
+
+\item[Description]	Returns true if \verb<element>+ is a member of \verb+<list>+.
+
+\item[Usage]		
+\begin{verbatim}
+IsMember(<element>,<list>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+IsMember(2,[1,4,6,7,7,7,7])		# false
+IsMember(2,[1,4,6,7,2,7,7,7]) 		# true
+\end{verbatim}
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	IsNumber()
+
+\item[Description]	Tests whether \verb+<variant>+ is a number, either a
+		floating-point or an integer.
+
+\item[Usage]		
+\begin{verbatim}
+IsNumber(<variant>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+if(IsNumber(x))
+{
+ Print(Sequence(x, x+10, 1))
+}
+\end{verbatim}
+
+\item[See Also]		IsAudioOut(), IsColor(), IsImage(), IsInteger(), IsFileStream(), IsFloat(), IsFont(), IsLabel(),
+ 	   	IsList(), IsString(), IsTextBox(), IsWidget()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	IsString()
+
+\item[Description]	Tests whether \verb+<variant>+ is a text string.
+
+\item[Usage]		
+\begin{verbatim}
+IsString(<variant>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+if(IsString(x))
+{
+ tb <- MakeTextBox(x, 100, 100)
+}
+\end{verbatim}
+
+\item[See Also]	IsAudioOut(), IsColor(), IsImage(), IsInteger(), 
+		IsFileStream(), IsFloat(), IsFont(), IsLabel(),
+		IsList(), IsNumber(), IsTextBox(), IsWidget()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	IsTextBox()
+
+\item[Description]	Tests whether \verb+<variant>+ is a TextBox Object
+
+\item[Usage]
+\begin{verbatim}
+IsTextBox(<variant>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+if(IsTextBox(x))
+{
+ Print(GetText(x))
+}
+\end{verbatim}
+
+\item[See Also]	IsAudioOut(), IsColor(), IsImage(), IsInteger(), 
+		IsFileStream(), IsFloat(), IsFont(), IsLabel(),
+ 		IsList(), IsNumber(), IsString(),  IsWidget()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	IsWidget
+
+\item[Description]	Tests whether \verb+<variant>+ is any kind of a widget object
+		(image, label, or textbox).
+
+\item[Usage]		
+\begin{verbatim}
+IsWidget(<variant>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+if(IsWidget(x))
+{
+ Move(x, 200,300)
+}
+\end{verbatim}
+
+\item[See Also]	IsAudioOut(), IsColor(), IsImage(), IsInteger(), 
+            	IsFileStream(), IsFloat(), IsFont(), IsLabel(),
+ 	   	IsList(), IsNumber(), IsString(), IsTextBox()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Last()
+
+\item[Description]	Returns the last item in a list. Provides faster 
+		access to the last item of a list than does Nth().
+
+\item[Usage]
+\begin{verbatim}
+Last(<list>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+Last([1,2,3,444])	# == 444
+\end{verbatim}
+
+\item[See Also]	Nth(), First()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	List()
+
+\item[Description]	Creates a list of items. Functional version of \verb+[]+.
+
+\item[Usage]
+\begin{verbatim}
+List(<item1>, <item2>, ....)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+List(1,2,3,444)		# == [1,2,3,444]
+\end{verbatim}
+
+\item[See Also]	\verb+[]+, Merge(), Append()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Length()
+
+\item[Description]	Returns the number of items in a list.
+
+\item[Usage]
+\begin{verbatim}
+Length(<list>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+Length([1,3,55,1515])	# == 4
+\end{verbatim}
+
+\item[See Also]	StringLength()
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	LoadSound()
+
+\item[Description]	Loads a soundfile from \verb+<filename>+, 
+		returning a variable that can be played.
+
+\item[Usage]
+\begin{verbatim}
+LoadSound(<filename>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Log10()
+
+\item[Description]	Log base 10 of \verb+<num>+.
+
+\item[Usage]
+\begin{verbatim}
+Log10(<num>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	Log2(), LogN(), Ln(), Exp()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Log2()
+
+\item[Description]	Log base 2 of \verb+<num>+.
+
+\item[Usage]
+\begin{verbatim}
+Log2(<num>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	Log(), LogN(), Ln(), Exp()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	LogN()
+
+\item[Description]	Log base <base> of <num>.
+
+\item[Usage]
+\begin{verbatim}
+LogN(<num>, <base>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+LogN(100,10)	# == 2
+LogN(256,2)	# == 8
+\end{verbatim}
+
+\item[See Also]	Log(), Log2(), Ln(), Exp()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Lowercase()
+
+\item[Description]	Changes a string to lowercase.  Useful for testing user
+		input against a stored value, to ensure case differences
+		are not detected.
+
+\item[Usage]
+\begin{verbatim}
+Lowercase(<string>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+Lowercase("POtaTo")	# == "potato"
+\end{verbatim}
+
+\item[See Also]	Uppercase()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Ln()
+
+\item[Description]	Natural log of \verb+<num>+.
+
+\item[Usage]		
+\begin{verbatim}
+Ln(<num>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	Log(), Log2(), LogN(), Exp()     
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	loop()
+
+\item[Description]	Loops over elements in a list.  During each iteration, <counter> is bound to each consecutive member of \verb+<list>+.
+
+\item[Usage]		
+\begin{verbatim}
+loop(<counter>, <list>)
+{
+ statements
+ to
+ be	   
+ executed
+}
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	while(), {}
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Mean()
+
+\item[Description] 	NOT IMPLEMENTED. Returns the mean of the numbers in \verb+<list>+.
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	Median(), Quantile(), StDev(), Min(), Max()
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Median()
+
+\item[Description]	NOT IMPLEMENTED. Returns the median of the numbers in \verb+<list>+.
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	Mean(), Quantile(), StDev(), Min(), Max()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	MakeChirp()  
+
+\item[Description]	NOT IMPLEMENTED.
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	MakeSawtoothWave(), MakeSineWave(), MakeSquareWave()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	MakeColor()
+
+\item[Description]	Makes a color from \verb+<colorname>+ such as ``red'', ``green'', and nearly 800 others.  Color names and corresponding RGB 
+		values can be found in \texttt{doc/colors.txt}.
+
+\item[Usage]
+\begin{verbatim}
+MakeColor(<colorname>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	MakeColorRGB()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	MakeColorRGB() 
+
+\item[Description]	Makes an RGB color by specifying \verb+<red>+, \verb+<green>+, and 
+		\verb+<blue>+ values (between 0 and 255).
+
+\item[Usage]		
+\begin{verbatim}
+MakeColorRGB(<red>, <green>, <blue>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	MakeColor()
+\end{desc}
+
+\rl
+
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	MakeFont() 
+
+\item[Description]	Makes a font.
+
+\item[Usage]
+\begin{verbatim}
+MakeFont(<ttf_filename>, <style>, <size>, 
+<fgcolor>, <bgcolor>, <anti-aliased>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	MakeImage()
+
+\item[Description]	Makes an image widget from an image file.
+		\texttt{.bmp} formats should be supported; others may be as well.
+
+\item[Usage]		
+\begin{verbatim}
+
+MakeImage(<filename>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	MakeLabel()
+
+\item[Description]	Makes a text label for display on-screen. Text will be 
+		on a single line, and the Move() command centers \verb+<text>+
+		on the specified point.
+
+\item[Usage]
+\begin{verbatim}
+MakeLabel(<text>, <font>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	MakeMap()
+
+\item[Description]	NOT IMPLEMENTED.
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	MakeSawtoothWave()     
+
+\item[Description]	NOT IMPLEMENTED.
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	MakeSquareWave(), MakeSineWave(), MakeChirp()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	MakeSineWave()     
+
+\item[Description]	NOT IMPLEMENTED.
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	MakeSquareWave(), MakeSawtoothWave(), MakeChirp()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	MakeSquareWave()     
+
+\item[Description]	NOT IMPLEMENTED.
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	MakeSineWave(), MakeSawtoothWave(), MakeChirp()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	MakeTextBox()
+
+\item[Description]	Creates a textbox in which to display text. 
+		Textboxes allow multiple lines of text to be rendered;
+		automatically breaking the text into lines. 
+
+\item[Usage]
+\begin{verbatim}
+MakeWindow(<text>,<font>,<width>,<height>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+font <-MakeFont("Vera.ttf", 1, 12, MakeColor("red"), 
+MakeColor("green"), 1)
+tb <- MakeTextBox("This is the text in the textbox", 
+font, 100, 250)
+\end{verbatim}
+
+\item[See Also]	MakeLabel(), GetText(), SetText(), SetCursorPosition(),
+		GetCursorPosition(), SetEditable()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	MakeWindow() 
+
+\item[Description]	Creates a window to display things in.
+		Background is specified by \verb+<color>+.
+
+\item[Usage]		
+\begin{verbatim}
+MakeWindow(<color>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Max()            
+
+\item[Description]	NOT IMPLEMENTED. Returns the largest of \verb+<list>+.
+
+\item[Usage]		
+\begin{verbatim}
+Max(<list>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	Min(), Mean(), StDev()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Merge()
+
+\item[Description]	Combines two lists, \verb+<lista>+ and \verb+<listb>+, into a single list.
+
+\item[Usage]		
+\begin{verbatim}
+Merge(<lista>,<listb>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+Merge([1,2,3],[8,9]) 	# == [1,2,3,8,9]
+\end{verbatim}
+
+\item[See Also]	\verb+[]+, Append(), List()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Min() 
+
+\item[Description]	NOT IMPLEMENTED.  Returns the `smallest' element of a list.
+
+\item[Usage]	
+\begin{verbatim}
+Min(<list>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	Max()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Mod()
+
+\item[Description]	NOT IMPLEMENTED. Returns \verb+<num>+, \verb+<mod>+, or remainder of \verb+<num>/<mod>+
+
+\item[Usage]		
+\begin{verbatim}
+Mod( <num> <mod>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+Mod(34, 10)	# == 4
+Mod(3, 10)	# == 3
+\end{verbatim}
+
+\item[See Also]	Div()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Move()
+
+\item[Description]	Moves an object to a specified location.  
+		Images and Labels are moved according to their center; 
+		TextBoxes are moved according to their upper left corner.
+
+\item[Usage]
+\begin{verbatim}
+Move(<object>, <x>, <y>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+Move(label, 33, 100)
+\end{verbatim}
+
+\item[See Also]	MoveCorner(), MoveCenter()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	MoveCorner()
+
+\item[Description]	Moves a label or image to a specified location
+		according to its upper left corner, instead of its center. 
+
+\item[Usage]
+\begin{verbatim}
+MoveCorner(<object>, <x>, <y>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+MoveCorner(label, 33, 100)
+\end{verbatim}
+
+\item[See Also]	Move(), MoveCenter()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	MoveCenter()
+
+\item[Description]	Moves a TextBox to a specified location
+		according to its center, instead of its upper left corner.
+
+\item[Usage]
+\begin{verbatim}
+MoveCenter(<object>, <x>, <y>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+MoveCenter(TextBox, 33, 100)
+\end{verbatim}
+
+\item[See Also]	Move(), MoveCorner()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	not
+
+\item[Description]	Logical not
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	and, or
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Nth()
+
+\item[Description]	Extracts the Nth item from a list.  Indexes from 1 upwards.
+		Last() provides faster access than Nth() to the end of a list, 
+		which must walk along the list to the desired position.
+
+\item[Usage]
+\begin{verbatim}
+Nth(<list>, <index>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+a <- ["a","b","c","d"]
+Print(Nth(a,3)) 		# == 'c'
+\end{verbatim}
+
+\item[See Also]	First(), Last() 
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	NthRoot()
+
+\item[Description]	\verb+<num>+ to the power of  1/\verb+<root>+.
+
+\item[Usage]		
+\begin{verbatim}
+NthRoot(<num>, <root>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	or                   
+
+\item[Description]	Logical or
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	and, not
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	PlayForeground()  
+
+\item[Description]	Plays the sound `in the foreground'; 
+		does not return until the sound is complete.
+
+\item[Usage]		
+\begin{verbatim}
+PlayForeground(<sound>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	PlayBackground(), Stop()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	PlayBackground()
+ 
+\item[Description]	Plays the sound `in the background', returning immediately.
+
+\item[Usage]		
+\begin{verbatim}
+PlayBackground(<sound>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	PlayForeground(), Stop()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Pow() 
+
+\item[Description]	Raises or lowers \verb+<num>+ to the power of \verb+<pow>+.
+
+\item[Usage]		
+\begin{verbatim}
+Pow(<num>, <pow>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+Pow(2,6)	# == 64
+Pow(5,0)	# == 1
+\end{verbatim}
+
+\item[See Also]     
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Print()
+
+\item[Description]	Prints \verb+<value>+ to stdout (the console [Linux] or the file \texttt{stdout.txt} [Windows]), and then appends a newline afterwards.
+
+\item[Usage]		
+\begin{verbatim}
+Print(<value>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	\verb+Print_()+, \verb+FilePrint()+
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+Print_()+
+
+\item[Description]	Prints \verb+<value>+ to stdout; doesn't append a newline afterwards.
+
+\item[Usage]		
+\begin{verbatim}
+Print_(<value>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+Print_("This line")
+Print_(" ")
+Print_("and")
+Print_(" ")
+Print("Another line")
+# prints out: 'This line and Another line'
+\end{verbatim}
+
+\item[See Also]	Print(), FilePrint()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Quantile()
+
+\item[Description]	NOT IMPLEMENTED. Returns the \verb+<num>+ quantile of
+		the numbers in \verb+<list>+.
+
+\item[Usage]		
+\begin{verbatim}
+Quantile(<list>, <num>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	StDev(), Median(), Mean(), Max(), Min()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Random()
+
+\item[Description]	Returns a random number between 0 and 1.
+
+\item[Usage]
+\begin{verbatim}
+Random()
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+a <- Random()
+\end{verbatim}
+
+\item[See Also]		Random(), RandomBernoulli(), RandomBinomial(), RandomDiscrete(), RandomExponential(), RandomLogistic(), RandomLogNormal(), RandomNormal(), RandomUniform(), RandomizeTimer(), SeedRNG()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	RandomBernoulli()
+
+\item[Description]	Returns 0 with probability \verb+(1-<p>)+ and 1 with probability \verb+<p>+.
+
+\item[Usage]		
+\begin{verbatim}
+RandomBernoulli(<p>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+RandomBernoulli(.3)
+\end{verbatim}
+
+\item[See Also]		Random(), RandomBernoulli(), RandomBinomial(), RandomDiscrete(), RandomExponential(), RandomLogistic(),
+	    	RandomLogNormal(), RandomNormal(), RandomUniform(),
+	    	RandomizeTimer(), SeedRNG()    
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	RandomBinomial()
+
+\item[Description]	Returns a random number according to the Binomial distribution 
+		with probability \verb+<p>+ and repetitions \verb+<n>+, i.e., the number of 
+		\verb+<p>+ Bernoulli trials that succeed out of \verb+<n>+ attempts.
+
+\item[Usage]		
+\begin{verbatim}
+RandomBinomial(<p> <n>)  
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+RandomBinomial(.3, 10)		# returns a number from 0 to 10
+\end{verbatim}
+
+\item[See Also]	Random(), RandomBernoulli(), RandomBinomial(),
+		RandomDiscrete(), RandomExponential(), RandomLogistic(),
+		RandomLogNormal(), RandomNormal(), RandomUniform(),    
+		RandomizeTimer(), SeedRNG()    
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	RandomDiscrete()
+
+\item[Description]	Returns a random integer between 1 and the argument 
+		(inclusive), each with equal probability.  If the argument is 
+		a floating-point value, it will be truncated down; if it is 
+		less than 1, it will return 1, and possibly a warning message. 
+
+\item[Usage]		
+\begin{verbatim}
+RandomDiscrete(<num>)
+\end{verbatim}
+         
+\item[Example]	
+\begin{verbatim}
+RandomDiscrete(30) # Returns a random integer between 1 and 30
+\end{verbatim}
+
+\item[See Also]	Random(), RandomBernoulli(), RandomBinomial(), 
+		RandomDiscrete(), RandomExponential(), RandomLogistic(),
+		RandomLogNormal(), RandomNormal(), RandomUniform(),
+		RandomizeTimer(), SeedRNG()    
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	RandomExponential()
+
+\item[Description]	Returns a random number according to exponential 
+		distribution with mean \verb+<mean>+ (or decay 1/mean).
+
+\item[Usage]		
+\begin{verbatim}
+RandomExponential(<mean>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+RandomExponential(100)
+\end{verbatim}
+
+\item[See Also]	Random(), RandomBernoulli(), RandomBinomial(),
+		RandomDiscrete(), RandomLogistic(),RandomLogNormal(), 
+		RandomNormal(), RandomUniform(), RandomizeTimer, SeedRNG()
+\end{desc}
+
+\rl                            
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	RandomizeTimer()
+
+\item[Description]	Seeds the RNG with the current time.
+
+\item[Usage]
+\begin{verbatim}
+RandomizeTimer()
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+RandomizeTimer()
+x <- Random()
+\end{verbatim}
+	     
+\item[See Also]	Random(), RandomBernoulli(), RandomBinomial(),
+		RandomDiscrete(), RandomExponential(), RandomLogistic(),
+		RandomLogNormal(), RandomNormal(), RandomUniform(), SeedRNG()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	RandomLogistic()  
+
+\item[Description]	Returns a random number according to the logistic distribution 
+		with parameter \verb+<p>+: f(x) = exp(x)/(1+exp(x))
+
+\item[Usage]		
+\begin{verbatim}
+RandomLogistic(<p>)
+\end{verbatim}
+
+\item[Example]	RandomLogistic(.3)
+
+\item[See Also]	Random(), RandomBernoulli(), RandomBinomial(), 
+		RandomDiscrete(), RandomExponential(), RandomLogNormal(), 
+		RandomNormal(), RandomUniform(), RandomizeTimer, SeedRNG()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	RandomLogNormal()
+
+\item[Description]  	Returns a random number according to the log-normal 
+		distribution with parameters \verb+<median>+ and \verb+<spread>+. Generated 
+		by calculating median \verb!*! exp(spread \verb!*! RandomNormal(0,1)). 
+		\verb+<spread>+ is a shape parameter, and only affects the variance 
+		as a function of the median; similar to the coefficient of 
+		variation.  A value near 0 is a sharp distribution (.1-.3), 
+		larger values are more spread out; values greater than 2 make 
+		little difference in the shape.
+
+\item[Usage]
+\begin{verbatim}
+RandomLogNormal(<median>, <spread>)
+\end{verbatim}
+
+\item[Example]      	
+\begin{verbatim}
+RandomLogNormal(5000, .1)
+\end{verbatim}
+
+\item[See Also]	Random(), RandomBernoulli(), RandomBinomial(), 
+		RandomDiscrete(), RandomExponential(), RandomLogistic(),
+		RandomNormal(), RandomUniform(), RandomizeTimer, SeedRNG()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	RandomNormal()
+
+\item[Description] 	Returns a random number according to the standard
+             	normal distribution with \verb+<mean>+ and \verb+<stdev>+.
+
+\item[Usage]       	
+\begin{verbatim}
+RandomNormal(<mean>, <stdev>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	Random(), RandomBernoulli(), RandomBinomial(),
+		RandomDiscrete(), RandomExponential(), RandomLogistic(), 
+		RandomLogNormal(), RandomUniform(), RandomizeTimer, SeedRNG()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	RandomUniform()
+
+\item[Description]	Returns a random floating-point number between 0 and \verb+<num>+.
+
+\item[Usage]		
+\begin{verbatim}
+RandomUniform(<num>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]    	Random(), RandomBernoulli(), RandomBinomial(), 
+			RandomDiscrete(), RandomExponential(), RandomLogistic(), 
+			RandomLogNormal(), RandomNormal(), RandomizeTimer, SeedRNG()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	RadToDeg() 
+
+\item[Description] 	Converts \verb+<rad>+ radians to degrees.
+
+\item[Usage]		
+\begin{verbatim}
+RadToDeg( <rad>)			 
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]     	DegToRad(), Tan(), Cos(), Sin(), ATan(), ASin(), ACos()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	RegisterEvent()
+
+\item[Description]	NOT IMPLEMENTED.  Advanced event loop management.
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	Remove()
+
+\item[Description]  	NOT IMPLEMENTED.  Removes an item from a list
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	RemoveDuplicates()
+
+\item[Description]	NOT IMPLEMENTED.
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	 
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	RemoveObject()
+
+\item[Description]  	Removes a child widget from a parent.  Useful if you are 
+		adding a local widget to a global window inside a loop.  If 
+		you do not remove the object and only Hide() it, drawing will 
+	be sluggish.  Objects that are local to a function are removed 
+	automatically when the function terminates, so you do not need 
+	to call RemoveObject() on them at the end of a function.
+
+\item[Usage]
+\begin{verbatim}
+RemoveObject( <object>, <parent>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	Repeat()
+
+\item[Description] 	Makes and returns a list by repeating \verb+<object>+ \verb+<n>+ times. 
+		Has no effect on the object. Repeat will not make new copies 
+		of the object. If you later change the object, 
+		you will change every object in the list.
+
+\item[Usage]       	
+\begin{verbatim}
+Repeat(<object>, <n>)
+\end{verbatim}
+	    	
+\item[Example]     	
+\begin{verbatim}
+x <- "potato"
+y <- repeat(x, 10)
+Print(y)
+# produces ["potato","potato","potato","potato","potato", 
+#           "potato","potato","potato","potato","potato"]
+\end{verbatim}
+	     	     
+\item[See Also]    	RepeatList()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	RepeatList()
+
+\item[Description]  	Makes a longer list by repeating a shorter list \verb+<n>+ times. 
+	Has no effect on the list itself, but changes made to objects 
+	in the new list will also affect the old list.
+
+\item[Usage]       	
+\begin{verbatim}
+RepeatList(<list>, <n>)
+\end{verbatim}
+
+\item[Example]     	
+\begin{verbatim}
+RepeatList([1,2],3) # == [1,2,1,2,1,2]
+\end{verbatim}
+
+\item[See Also]    	Repeat(), Merge(), []
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	Replace()
+
+\item[Description]  	Creates a copy of a (possibly nested) list in which
+		items matching some list are replaced for other items.  
+		\verb+<template>+ can be any data structure, and can be nested.  
+		\verb+<replacementList>+ is a list containing two-item list pairs:
+		the to-be-replaced item and to what it should be transformed.\\
+		Note: replacement searches the entire \verb+<replacementList>+ for 
+		matches.  If multiple keys are identical, the item will be 
+		replaced with the last item that matches.
+
+\item[Usage]        	
+\begin{verbatim}
+Replace(<template>,<replacementList>)
+\end{verbatim}
+			  
+\item[Example]     	
+\begin{verbatim}
+
+x <- ["a","b","c","x"]
+rep <- [["a","A"],["b","B"],["x","D"]]
+Print(Replace(x,rep))
+# Result:  [A, B, c, D] 
+\end{verbatim}
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	return
+
+\item[Description]  	Enables a function to return a value.
+
+\item[Usage]
+\begin{verbatim}
+define funcname()
+{
+ return 0
+}
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Rotate()
+
+\item[Description] 	Returns a list created by rotating a list by \verb!<n>! items.  
+		The new list will begin with the \verb!<n+1>!th item of the old 
+		list (modulo its length), and contain all of its items in 
+		order, jumping back to the beginning and ending with the \verb!<n>!th
+		item. Rotate(\verb!<list>!,0) has no effect.  Rotate does not modify 
+		the original list.
+
+\item[Usage]
+\begin{verbatim}
+Rotate(<list-of-items>, <n>)
+\end{verbatim}
+
+\item[Example]     	
+\begin{verbatim}
+Rotate([1,11,111],1)  # == [11,111,1]
+\end{verbatim}
+
+\item[See Also]    	Transpose()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	Round()
+
+\item[Description] 	Rounds \verb+<num>+ to nearest integer.
+
+\item[Usage]        	
+\begin{verbatim}
+Round(<num>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+Round(33.23)  # == 33
+Round(56.65)  # == 57
+\end{verbatim}
+
+\item[See Also]     	Ceiling(), Floor(), AbsFloor(), ToInt()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	SampleN()
+
+\item[Description] 	Samples \verb+<number>+ items from list, returning a randomly-
+		ordered list. Items are sampled without replacement, so once
+an item is chosen it will not be chosen again. If \verb+<number>+ is larger than the length of the list, the entire list is returned shuffled.  It differs from ChooseN in that ChooseN returns items in the order they appeared in the originial list.  It is implemented as Shuffle(ChooseN()).  SampleN is not a precompiled function, but rather is written in PEBL, and is located in \texttt{pebl-lib/Design.pbl}.
+
+\item[Usage]       	
+\begin{verbatim}
+SampleN(<list>, <n>)
+\end{verbatim}
+
+\item[Example]   	
+\begin{verbatim}
+SampleN([1,1,1,2,2], 5)     # Returns 5 numbers
+SampleN([1,2,3,4,5,6,7], 3) # Returns 3 numbers from 1 and 7
+\end{verbatim}
+
+\item[See Also]    	ChooseN(), SampleNWithReplacement(), Subset()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	SampleNWithReplacement()
+
+\item[Description] 	SampleNWithReplacement samples \verb+<number>+ items from \verb+<list>+, 
+		replacing after each draw so that items can be sampled again. 
+		\verb+<number>+ can be larger than the length of the list. It has no 
+		side effects on its arguments.  
+		Is implemented as a PEBL function in \texttt{pebl-lib/Design.pbl}
+
+\item[Usage]        	
+\begin{verbatim}
+SampleNWithReplacement(<list>, <number>)
+\end{verbatim}
+
+\item[Example] 	
+\begin{verbatim}
+x <- Sequence(1:100,1)
+SampleNWithReplacement(x, 10)
+# Produces 10 numbers between 1 and 100, possibly 
+# repeating some.
+\end{verbatim}
+
+\item[See Also]     	SampleN(), ChooseN(), Subset()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]   SeedRNG()
+
+\item[Description]   Seeds the random number generator with \verb+<num>+ to reproduce a 
+		random sequence.  This function can be used cleverly to create 
+		a multi-session experiment: Start by seeding the RNG with a 
+		single number for each subject; generate the stimulus 
+		sequence, then extract the appropriate stimuli for the current 
+		block. Remember to RandomizeTimer() afterward if necessary.
+
+\item[Usage] 
+\begin{verbatim}
+SeedRNG(<num>) 
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]   	Sequence()
+
+\item[Description]	Makes a sequence of numbers from \verb+<start>+ to \verb+<end>+ at \verb+<step>+-sized increments. If \verb+<step>+ is positive, \verb+<end>+ must be larger 
+		than \verb+<start>+, and if \verb+<step>+ is negative, \verb+<end>+ must be smaller than \verb+<start>+. If \verb!<start> + n*<step>! does not exactly equal 
+	\verb+<end>+, the last item in the sequence will be the number 
+	closest number to \verb+<end>+ in the direction of \verb+<start>+ (and thus 
+	\verb+<step>+).
+
+\item[Usage] 
+\begin{verbatim}
+Sequence(<start>, <end>, <step>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+Sequence(0,10,3)    # == [0,3,6,9]
+Sequence(0,10,1.5)  # == [0,1.5,3,4.5, 6, 7.5, 9]
+Sequence(10,1,3)    # error
+Sequence(10,0,-1)   # == [10,9,8,7,6,5,4,3,2,1]
+\end{verbatim}
+
+\item[See Also]    	Repeat(), RepeatList()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	SetCursorPosition()
+
+\item[Description] 	Moves the editing cursor to a specified character
+		position in a textbox.
+
+\item[Usage]
+\begin{verbatim}
+SetCursorPosition(<textbox>, <integer>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+SetCursorPosition(tb, 23)
+\end{verbatim}
+
+\item[See Also]   	SetEditable(), GetCursorPosition(), SetText(), GetText()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	SetEditable()
+
+\item[Description] 	Sets the ``editable'' status of the textbox.  All this really does is turns on or off the cursor; editing must be done with the (currently unsupported) device function GetInput().
+
+\item[Usage] 
+\begin{verbatim}
+SetEditable()
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+
+SetEditable(tb, 0)
+SetEditable(tb, 1)
+\end{verbatim}
+
+\item[See Also]    	GetEditable()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	SetFont()
+
+\item[Description] 	Resets the font of a textbox or label.  Change will not appear 
+		until the next Draw() function is called.  Can be used, for 
+		example, to change the color of a label to give richer 
+		feedback about correctness on a trial (see example below).
+
+\item[Usage]
+\begin{verbatim}
+SetFont(<text-widget>, <font>)
+\end{verbatim}
+
+\item[Example]   	
+\begin{verbatim}
+fontGreen <- MakeFont("vera.ttf",1,22,MakeColor("green"),
+MakeColor("black"), 1)
+fontRed   <- MakeFont("vera.ttf",1,22,MakeColor("red"),
+MakeColor("black"), 1)
+label <- MakeLabel(fontGreen, "Correct")
+
+#Do trial here.       	
+
+if(response == 1)
+{
+SetText(label, "CORRECT")
+SetFont(label, fontGreen)
+} else {
+SetText(label, "INCORRECT")
+SetFont(label, "fontRed)
+}
+Draw()
+\end{verbatim}
+
+\item[See Also]    	SetText()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol] 	SetText()
+
+\item[Description] 	Resets the text of a textbox or label.  Change will not
+		appear until the next Draw() function is called.
+
+\item[Usage]
+\begin{verbatim}
+SetText(<text-widget>, <text>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+# Fixation Cross:
+label <- MakeLabel(font, "+")
+Draw()
+
+SetText(label, "X")
+Wait(100)
+Draw()
+\end{verbatim}
+
+\item[See Also]    	GetText(), SetFont()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	Show()
+
+\item[Description] 	Sets a widget to visible, once it has been added to a parent 
+			widget.  This just changes the visibility property, it does 
+			not make the widget appear.  The widget will not be displayed 
+			until the Draw() function is called.
+
+\item[Usage]
+\begin{verbatim}
+Show(<object>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+window <- MakeWindow()
+image1  <- MakeImage("pebl.bmp")
+image2  <- MakeImage("pebl.bmp")
+AddObject(image1, window)
+AddObject(image2, window)
+Hide(image2)
+Draw()
+Wait(300)
+Show(image2)
+Draw()
+\end{verbatim}
+
+\item[See Also]     	Hide()
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	Shuffle()
+
+\item[Description] 	Randomly Shuffles a list.
+
+\item[Usage]    
+\begin{verbatim}
+Shuffle(list)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+Print(Shuffle([1,2,3,4,5]))
+# Results might be anything, like [5,3,2,1,4]
+\end{verbatim}
+
+\item[See Also]    	Sort(), SortBy()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	Sign()
+
+\item[Description] 	Returns +1 or -1, depending on sign of argument.
+
+\item[Usage]
+\begin{verbatim}
+Sign(<num>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+Sign(-332.1)  # == -1
+Sign(65)      # == 1
+
+\end{verbatim}
+
+\item[See Also]     	Abs()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	SignalFatalError()
+
+\item[Description] 	Stops PEBL and prints <message> to stderr.  Useful for
+		type-checking in user-defined functions. 
+
+\item[Usage]
+\begin{verbatim}
+SignalFatalError(<message>)
+\end{verbatim}
+If(not IsList(x))
+{
+ SignalFatalError("Tried to frobnicate a List.")
+}
+\item[Example]
+
+\item[See Also]     	Print()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	Sin()
+
+\item[Description]  	Sine of \verb+<deg>+ degrees.
+
+\item[Usage]        	
+\begin{verbatim}
+Sin(<deg>)
+\end{verbatim}
+Sin(180)
+Sin(0)
+\item[Example]
+
+\item[See Also]    	Cos(), Tan(), ATan(), ACos(), ATan() 
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	Sort()
+
+\item[Description] 	Sorts a list by its values from smallest to largest.
+
+\item[Usage]       	
+\begin{verbatim}
+Sort(<list>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+Sort([3,4,2,1,5]) # == [1,2,3,4,5]
+\end{verbatim}
+
+\item[See Also]    	SortBy(), Shuffle()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	SortBy()
+
+\item[Description] 	Sorts a list by the values in another list, in ascending
+		order.
+
+\item[Usage]
+\begin{verbatim}
+SortBy(<value-list>, <key-list>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+SortBy(["Bobby","Greg","Peter"], [3,1,2]) 
+# == ["Greg","Peter","Bobby"]
+\end{verbatim}
+
+\item[See Also]    	Shuffle(), Sort()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	SplitString()
+
+\item[Description]	Splits a string into tokens. \verb+<split>+ must be a string. If 
+		\verb+<split>+ is not found in \verb+<string>+, a list containing the entire 
+		string is returned; if split is equal to \verb+""+, the each letter 
+		in the string is placed into a different item in the list.  
+		Multiple delimiters, as well as delimiters at the beginning 
+		and end of a list, will produce empty list items. 
+		Is implemented as a PEBL function in \texttt{pebl-lib/Design.pbl}
+
+\item[Usage]
+\begin{verbatim}
+SplitString(<string>, <split>)
+\end{verbatim}
+
+\item[Example]      	
+\begin{verbatim}
+SplitString("Everybody Loves a Clown", " ") 
+# Produces ["Everybody", "Loves", "a", "Clown"]
+\end{verbatim}
+
+\item[See Also]     	FindInString()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	Sqrt() 
+
+\item[Description]  	Square root of \verb+<num>+.
+
+\item[Usage]        	
+\begin{verbatim}
+Sqrt(<num>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+Sqrt(100)  # == 10
+\end{verbatim}
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	StDev() 
+
+\item[Description] 	NOT IMPLEMENTED. Returns the standard deviation of \verb+<list>+.
+
+\item[Usage]       	
+\begin{verbatim}
+StDev(<list>)        
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]     	Min(), Max(), Mean(), Median(), Quantile()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	StartEventLoop()
+
+\item[Description]  	NOT IMPLEMENTED. Advanced control of event loop.
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	Stop()	
+
+\item[Description]  	Stops a sound playing in the background from playing.
+		Calling Stop() on a sound object that is not playing should 
+		have no effect, but if an object is aliased, Stop() will stop 
+		the file.  Note that sounds play in a separate thread, so 
+		interrupting the thread has a granularity up to the duration 
+		of the thread-switching quantum on your computer; this may be 
+		tens of milliseconds.
+
+\item[Usage]
+\begin{verbatim}
+Stop(<sound-object>)
+\end{verbatim}
+
+\item[Example]     	
+\begin{verbatim}
+buzz <- LoadSound("buzz.wav")
+PlayBackground(buzz)
+Wait(50)
+Stop(buzz)
+\end{verbatim}
+
+\item[See Also]    	PlayForeground() PlayBackGround()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	StringLength()
+
+\item[Description] 	Determines the length of a string, in characters.
+
+\item[Usage]
+\begin{verbatim}
+StringLength(<string>)
+\end{verbatim}
+
+\item[Example]     	
+\begin{verbatim}
+StringLength("absolute")     # == 8
+StringLength("   spaces   ") # == 12
+StringLength("")             # == 0
+\end{verbatim}
+
+\item[See Also]    	Length(), SubString()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	SubList()
+
+\item[Description] 	Extracts a list from another list, by specifying 
+	     	beginning and end points of new sublist.
+
+\item[Usage]
+\begin{verbatim}
+SubList(<list>, <begin>, <end>)
+\end{verbatim}
+
+\item[Example]     	
+\begin{verbatim}
+SubList([1,2,3,4,5,6],3,5)	# == [3,4,5]
+\end{verbatim}
+
+\item[See Also]    	SubSet(), ExtractListItems()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	Subset()
+
+\item[Description] 	Extracts a subset of items from another list, returning a
+	     	new list that includes items from the original list only
+	     	once and in their original orders.  Item indices in the
+	     	second argument that do not exist in the first argument
+	     	are ignored.  It has no side effects on its arguments.
+	     	Is implemented as a PEBL function in \verb+pebl-lib/Design.pbl+
+
+\item[Usage]       	
+\begin{verbatim}
+Subset(<list>, <list-of-indices>)
+\end{verbatim}
+
+\item[Example]     	
+\begin{verbatim}
+Subset([1,2,3,4,5,6],[5,3,1,1])	# == [1,3,5]
+Subset([1,2,3,4,5], [23,4,2])		# == [2,4]
+\end{verbatim}
+
+\item[See Also]   	SubList(), ExtractItems(), SampleN()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	SubString()
+
+\item[Description]  	Extracts a substring from a longer string.
+
+\item[Usage]
+\begin{verbatim}
+SubString(<string>,<position>,<length>)
+\end{verbatim}
+ If position is
+	      	larger than the length of the string, an empty string is
+	      	returned.  If position + length exceeds the length of
+      	the string, a string from \verb+<position>+ to the last character of 
+	the string is returned.
+
+\item[Example]
+\begin{verbatim}
+SubString("abcdefghijklmnop",3,5)	# == "cdefg"
+\end{verbatim}
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	Tan()	
+
+\item[Description] 	Tangent of \verb+<deg>+ degrees.
+
+\item[Usage]       	
+\begin{verbatim}
+Tan(<deg>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+Tan(180)
+\end{verbatim}
+
+\item[See Also]    	Cos(), Sin(), ATan(), ACos(), ATan() 
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	TimeStamp()
+
+\item[Description]  	Returns a string containing the date-and-time, formatted
+	     	according to local conventions. Should be used for
+	     	documenting the time-of-day and date an experiment was
+	     	run, but not for keeping track of timing accuracy.  For
+	     	that, use GetTime().
+	     
+\item[Usage]
+\begin{verbatim}
+TimeStamp()
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+a <- TimeStamp()
+Print(a)
+\end{verbatim}
+
+\item[See Also]     	GetTime()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	ToInteger()
+              
+\item[Description]  	Rounds a number to an integer, changing internal 
+		representation.
+
+\item[Usage]
+\begin{verbatim}
+ToInteger(<number>)
+ToInteger(<floating-point>)
+ToInteger(<string-as-number>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+ToInteger(33.332)  # == 33
+ToInteger("3213")  # == 3213
+\end{verbatim}
+
+\item[See Also]    	Round(), Ceiling(), AbsCeiling(), Floor(), AbsFloor()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	ToFloat()
+
+\item[Description] 	Converts number to internal floating-point representation.
+
+\item[Usage]
+\begin{verbatim}
+ToFloat(<number>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	Token()
+
+\item[Description]  	NOT IMPLEMENTED.
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	ToNumber()
+
+\item[Description]  	Converts a variant to a number. Most useful for character 
+			strings that are interpretable as a number, but may also work 
+			for other subtypes.
+
+\item[Usage]     
+\begin{verbatim}
+ToNumber(<string)
+ToNumber(<number>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+a <- ToNumber("3232")
+Print(a + 1)		# produces the output 3233. 
+\end{verbatim}
+
+\item[See Also]     	ToString(), ToFloat() Round()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	ToString()
+
+\item[Description]  	Converts value to a string representation. Most useful for 
+		numerical values.  This conversion is done automatically when 
+		strings are combined with numbers.
+
+\item[Usage]     
+\begin{verbatim}
+ToString(<number>)
+ToString(<string>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+a <- ToString(333.232)
+Print(a + "111")
+# produces the output '333.232111'.
+\end{verbatim}
+		
+
+\item[See Also]    	ToString(), +.
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	TranslateKeyCode()
+
+\item[Description] 	Translates a code corresponding to a keyboard key into a 
+		keyboard value.  This code is returned by some event/device 
+		polling functions.
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	Transpose()
+
+\item[Description] 	Transposes or ``rotates'' a list of lists.  Each sublist
+	     	must be of the same length.
+
+\item[Usage]       	
+\begin{verbatim}
+Transpose(<list-of-lists>)
+\end{verbatim}
+
+\item[Example]     	
+\begin{verbatim}
+Transpose([[1,11,111],[2,22,222],[3,33,333], [4,44,444]])
+# == [[1,2,3,4],[11,22,33,44],[111,222,333,444]]
+\end{verbatim}
+
+\item[See Also]    	Rotate()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	Uppercase()
+
+\item[Description]  	Changes a string to uppercase.  Useful for testing user
+	      	input against a stored value, to ensure case differences
+	      	are not detected.
+
+\item[Usage]
+\begin{verbatim}
+Uppercase(<string>)
+\end{verbatim}
+
+\item[Example]     
+\begin{verbatim}
+Uppercase("POtaTo")  # == "POTATO"
+\end{verbatim}
+
+\item[See Also]     	Uppecase()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	Wait() 
+
+\item[Description] 	Waits the specified number of milliseconds, then returns. 
+
+\item[Usage]
+\begin{verbatim}
+Wait(<time>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+Wait(100)
+Wait(15)
+\end{verbatim}
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	WaitForAllKeysUp()
+
+\item[Description]	
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	WaitForAnyKeyDown()
+
+\item[Description]	
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	WaitForAnyKeyDownWithTimeout()
+
+\item[Description]  	Waits until any key is pressed, but will return after a 
+		specified number of milliseconds.
+
+\item[Usage]
+\begin{verbatim}
+WaitForAnyKeyDownWithTimeout(<time>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	WaitForKeyDown()
+
+\item[Description]	
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	WaitForKeyListDown()
+
+\item[Description]  	Returns when any one of the keys specified in the argument is 
+		pressed.
+
+\item[Usage]
+\begin{verbatim}
+WaitForKeyListDown(<list-of-keys>)
+\end{verbatim}
+
+\item[Example]     	
+\begin{verbatim}
+WaitForKeyListDown(["a","z"])
+\end{verbatim}
+
+\item[See Also]	
+ \end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	WaitForKeyPress()
+
+\item[Description]  	Waits for a keypress event that matches the specified key. 
+			Usage of this function is preferred over WaitForKeyDown(), 
+			which tests the state of the key. Returns the value of the key 
+			pressed.	      
+
+\item[Usage]
+\begin{verbatim}
+WaitForKeyPress(<key>)
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]     	WaitForAnyKeyPress(), WaitForKeyRelease(), WaitForListKeyPress()
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	WaitForKeyUp()
+
+\item[Description]	
+
+\item[Usage]		
+
+\item[Example]	
+
+\item[See Also]	
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	while
+
+\item[Description] 	`while' is a keyword, and so is part of the syntax, not a 
+		function per se.  It executes the code inside the \verb+{}+ brackets 
+		until the test inside the () executes as false.  This can 
+		easily lead to an infinite loop if conditions are not met.  
+		Also, there is currently no break statement to allow execution 
+		to halt early.  Unlike some other languages, PEBL requires 
+		that the \verb+{}+ be present.
+
+\item[Usage]
+\begin{verbatim}
+
+while(<test expression)
+{
+ code line 1
+ code line 2
+}
+\end{verbatim}
+
+\item[Example] 
+\begin{verbatim}
+i <- 1
+while(i <= 10)
+{
+ Print(i)
+ i <- i + 1
+}		# prints out the numbers 1 through 10
+\end{verbatim}
+
+\item[See Also] 	loop(), {}
+
+
+\end{desc}
+
+\rl
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 

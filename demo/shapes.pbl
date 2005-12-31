@@ -1,0 +1,171 @@
+define Start(par)
+{
+
+  ##Test another new feature: change video dimensions within script.
+  gVideoWidth <- 800
+  gVideoHeight <- 600
+
+  win <- MakeWindow("grey")
+  red <- MakeColor("red4")
+  col <- MakeColor("grey") 
+  col2 <- MakeColor("darkgreen")
+  black <- MakeColor("black")
+
+  font <- MakeFont("Vera.ttf",0,22,black,col,1)
+  lab <- MakeLabel("FILLED CIRCLE",font)
+  AddObject(lab,win)
+  Move(lab, 600,200)
+
+  ##################################
+  ##  A Circle
+  ##################################
+
+  shape <- Circle(200, 200, 30, red,1)
+  Print(shape)
+  AddObject(shape,win)
+  Draw()
+  WaitForAnyKeyPress()
+  
+
+  lab.TEXT <- "OPEN CIRCLE"
+  shape.FILLED <- 0
+  Draw()
+  WaitForAnyKeyPress()
+
+  ##Change the size of the circle
+  lab.text <- "Larger Circle"
+  shape.R <- 35
+  Draw()
+  WaitForAnyKeyPress()
+
+  RemoveObject(shape,win)
+
+
+  ##################################
+  ##  An ellipse
+  ##################################
+
+  shape <- Ellipse(200,200, 30,50, col2,1)
+  Print(shape)
+  AddObject(shape,win)
+  lab.text <- "FILLED ELLIPSE"
+  Draw()
+  WaitForAnyKeyPress()
+
+  lab.text <- "OPEN ELLIPSE"
+  shape.filled <- 0
+  Draw() 
+  WaitForAnyKeyPress()
+
+  shape.rx <- 60
+  lab.text <- "Wider Ellipse"
+  Draw()
+  WaitForAnyKeyPress()
+   
+
+  shape.ry <- 10
+  lab.text <- "Shorter Ellipse"
+  Draw()
+  WaitForAnyKeyPress()
+   
+  RemoveObject(shape,win)
+
+  ##################################
+  ##  A Square
+  ##################################
+
+  shape <- Square(200,200, 50, col2,1)
+  Print(shape)
+  AddObject(shape,win)
+  lab.text <- "FILLED SQUARE"
+  Draw()
+  WaitForAnyKeyPress()
+
+  lab.text <- "OPEN SQUARE"
+  shape.filled <- 0
+  Draw() 
+  WaitForAnyKeyPress()
+
+  lab.TEXT <- "Growing square"
+  shape.DX <- 55
+  Print(shape)
+  Draw()
+  WaitForAnyKeyPress()	 
+
+  shape.dy <- 60
+  Print(shape)
+  Draw()
+  WaitForAnyKeyPress()	 
+ 
+  shape.size <- 65
+  Print(shape)
+  Draw()
+  WaitForAnyKeyPress()	 
+  RemoveObject(shape,win)
+ 
+  ##################################
+  ##  A Rectangle
+  ##################################
+
+  shape <- Rectangle(200,200, 50,20, col2,1)
+  Print(shape)
+  AddObject(shape,win)
+  lab.text <- "FILLED RECTANGLE"
+  Draw()
+  WaitForAnyKeyPress()
+
+  lab.text <- "OPEN RECTANGLE"
+  shape.filled <- 0
+  Draw() 
+  WaitForAnyKeyPress()
+
+  lab.text <- "Taller RECTANGLE"
+  shape.dy <- 100
+  Draw() 
+  WaitForAnyKeyPress()
+
+  lab.text <- "square RECTANGLE"
+  shape.dx <- 100
+  Draw() 
+  WaitForAnyKeyPress()
+
+
+
+  RemoveObject(shape,win)
+
+  ##################################
+  ##  A Line
+  ##################################
+
+  shape <- Line(200,200, 50,20, col2)
+  Print(shape)
+  AddObject(shape,win)
+  lab.text <- "LINE"
+  Draw()
+  WaitForAnyKeyPress()
+
+  ##################################
+  #Add a circle and rotate line like a clock
+
+  circ <- Circle(200, 200, 50, red,0)
+  AddObject(circ,win)
+
+  lab.txt <- "Rotating Line"
+  
+  r <- 50
+  i <- 0
+  while(i <= 360)
+  {
+
+    rad <- i /360*2*3.14159
+    shape.dx <- r * Cos(rad)
+    shape.dy <- r * Sin(rad)
+    lab.text <- "Rotating Line " + (i) + " degrees."
+
+    Draw()
+    i <- i + 2
+  }
+
+  WaitForAnyKeyPress()
+
+}

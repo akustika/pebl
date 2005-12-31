@@ -1,0 +1,459 @@
+\chapter
+{Overview  of  Object Subsystems}
+
+In PEBL, complex objects are stored and automatically self-managed.
+These objects include lists, graphical display widgets like images and
+text displays, fonts, colors, audio files, and input or output files.
+Objects are created and modified with special functions, but many of their
+properties available directly for access and modification with a
+\texttt{variable.property} syntax.  For example, the position of a
+textbox is controlled by .X and .Y properties, and can also be changed
+with the Move() function.  To move the label \texttt{lab}, which is
+located at 100,100,  to 150,100, you can either do
+\texttt{Move(lab,150,100)} ore lab.X <- 150.  The available properties
+and accessor function are listed in the decriptions of their relevant
+objects below.
+
+
+\section{Lists}
+
+Lists are  incredibly useful and flexible storage
+structures that play an important role in PEBL. A list is
+simply a series of variables. It is  like an array, except
+that it takes longer to access items later in the
+list than items at the beginning. But it is much easier to
+do things like split and combine lists of items than arrays of items. And given the speed of 
+computers, accessing elements of a list is not too costly,
+unless the list is really long (thousands of items). The \texttt{Nth} function can extract items from a list, but it is somewhat costly, and there are often better ways.
+
+
+For example, suppose you want to print out every item in a list. Looping through, accessing, and printing all the items of a list is a traditional approach:
+\begin{verbatim}
+  list <- Sequence(1,9,1) #could also be written [1,2,3,4,5,6,7,8,9]
+  len <- Length(list)
+  i <- 1
+  while (i <= len)
+   {
+     item <- Nth(list,i) 
+     Print(item)
+     i <- i + 1
+  } 
+
+\end{verbatim}
+But this is inefficient for many reasons (it could be made more
+efficient, but only with a loss in clarity). The biggest problem is
+that the proper element of the list must be found during each
+iteration, which takes longer as \texttt{i} grows. This poses a
+considerable problem for larger lists.
+
+However, there is an alternative.  Items from
+lists can be iterated over using the `\texttt{loop}' command:  
+\begin{verbatim}
+  list <- Sequence(1,9,1)#could also be written [1,2,3,4,5,6,7,8,9]
+  loop(item, list) 
+  {
+    Print(item)
+  }
+\end{verbatim}
+These two code blocks produce identical output, but in the former block, each item of the list must be found on each iteration, which takes longer as \texttt{i} grows. In the latter block, a list item is bound directly to `\texttt{item}' on each iteration, so every item on the list takes the same amount of time. Not only is the latter more efficient, it is implemented in fewer lines of code, and so fewer errors (like forgetting to increment \texttt{i}) are possible.
+
+A caveat when using lists: Some functions operate on lists to produce
+new lists (sub-lists, re-ordered lists, etc.). When the lists contain
+simple data types (numbers, strings, etc.), entirely new data
+structures are created. But when the data structures are complex
+(windows, sounds, images, etc.), the objects are not copied. Only new
+pointers to the original objects are created. So if you change the
+original object, you may end up accidentally changing the new
+object. Although that is relatively difficult, because PEBL allows
+only limited modification of existing data structures, it is still
+possible. This is a special case of the copy/assignment issue
+discussed in Section~\ref{sec:copies_and_ass}:~Copies and Assignment.
+
+
+
+
+\section{Fonts}
+
+PEBL uses truetype fonts for the display of text in labels and other text
+widgets.  In addition to the filename, font objects have the following properties: style (i.e., normal, bold, italic, underline), size (in points),
+foreground color, background color, and whether it should be rendered
+anti-aliased.
+
+We distribute a series of ten high-quality freely available
+and redistributable fonts: the Bitstream Vera series.  These include
+the typeface/files shown in table \ref{tab:fonts}:
+
+\begin{table}[htbp]
+\caption{Typeface/Files Available in PEBL}
+\begin{tabular}{ll}
+\toprule
+\textbf{Filename}&\textbf{Description}\\
+\midrule
+\texttt{Vera.ttf}    &     Sans serif Roman-style base font\\
+\texttt{VeraMono.ttf}&     Sans serif Roman-style mono-spaced base font\\
+\texttt{VeraSe.ttf}  &     Serif Roman-style base font (similar to times)\\
+\texttt{VeraBd.ttf}  &     Bold Vera\\
+\texttt{VeraIt.ttf}  &     Italic Vera\\
+\texttt{VeraBI.ttf}  &     Bold Italic Vera\\
+\texttt{VeraMoBd.ttf}&     Bold Vera Mono\\
+\texttt{VeraMoIt.ttf}&     Italic Vera Mono\\
+\texttt{VeraMoBI.ttf}&     Bold Italic Vera Mono\\
+\texttt{VeraSeBd.ttf}&     Bold Serif Vera\\
+\bottomrule
+\end{tabular}
+\label{tab:fonts}
+\end{table}
+
+
+
+These should always be available for use in experiments. 
+To use, you need only specify the font name in the \texttt{MakeFont()} function:
+\begin{verbatim}
+  colorRed  <- MakeColor("red")
+  colorGrey <- MakeColor("grey")
+  myFont    <- MakeFont("VeraMono.ttf",0,22,colorRed,colorGrey,1)
+\end{verbatim}
+This code makes a red 22-point anti-aliased font on a grey background. 
+Other fonts may be used by specifying their absolute pathname 
+or copying them to the working directory.
+
+
+Accessible font properties:\\
+ font.FILENAME\\
+ font.BOLD\\
+ font.UNDERLINE\\
+ font.ITALIC\\
+ font.SIZE\\
+ font.FGCOLOR\\
+ font.BGCOLOR\\
+ font.ANTIALIASED\\
+
+
+\section{Colors} 
+
+Colors are PEBL objects.  A color can be created by specifying its name 
+using the \texttt{MakeColor()} function, or by specifying its RGB values using the \texttt{MakeColorRGB()} function. A list of colors and their respective RGB values can be found in the \texttt{Colors.txt} file in the documentation directory. There are nearly 800 from which to choose, so you can create 
+just about anything you can imagine.
+
+Accessible color properties:\\
+ color.RED\\
+ color.GREEN\\
+ color.BLUE\\
+ color.ALPHA\\
+
+\section{Windows}
+
+To run an experiment, you usually need to create a window in which 
+to display stimuli.  This is done with the \texttt{MakeWindow()} function. \texttt{MakeWindow()} will create a grey window by default, or you can 
+specify a color.  Currently, an experiment can have only one window.
+
+
+\section{Graphical Widgets}
+
+Graphical widgets are the building blocks of experimental stimuli. 
+Currently, three widgets are available: images, labels, and textboxes.  
+More complicated widgets are in progress or planned.
+
+To be used, a widget must be created and added to a parent window, and
+then the parent window must be drawn.  You can hide widgets with the
+\texttt{Hide()} function, and show them with the \texttt{Show()}
+function; however, this affects only the visibility of the widget: it
+is still present and consuming memory. Widgets can be moved around on
+the parent window using the \texttt{Move()} function. \texttt{Move()}
+moves the center of an image or label to the specified pixel, counting
+from the upper-left corner of the screen. \texttt{Move()} moves the
+upper left-hand corner of textboxes.  For the sake of convenience, the
+\texttt{MoveCorner} function is available, which will move an image or
+label by its upper left-hand corner.
+
+You should remove widgets from their parent window when you are
+finished using them.
+
+All widgets have several properties available for controlling their
+behavior.
+
+
+  widget.X
+  widget.Y
+  widget.WIDTH
+  widget.HEIGHT
+  widget.VISIBLE
+
+
+\section{Images}
+
+PEBL can read numerous image types, courtesy of the
+\texttt{SDL\_image} library.  Use the \texttt{MakeImage()} function to
+read an image into an image object.  As images are often used as
+stimuli, \texttt{Move()} centers the image on the specified point.  To
+move by the upper-left hand corner, use the PEBL-defined
+\texttt{MoveCorner()} function:
+\begin{verbatim}
+  define MoveCorner(object, x, y)
+  {
+   size    <- GetSize(object)
+   centerX <- x + First(size)/2
+   centerY <- y + Last(size)/2
+   Move(object, centerX, centerY)
+  }
+\end{verbatim}
+
+Images have all the properties available for widgets, but the width
+and height can only be read, and not set.  Width and height are
+controlled by the dimensions of the image file.
+
+
+\section{Text Labels}
+
+You can create a text label object with the \texttt{MakeLabel()} function, 
+which requires specifying a font, and the foreground and background colors.  Labels are only a single line of text. Like images, when you move them,
+they center on the specified point.
+
+The text inside a label can be extracted with \texttt{GetText()} 
+and set with \texttt{SetText()}. When you change a text object, 
+it will not appear until the next time you call a \texttt{Draw()} function.
+
+text labels have all the regular widget properties, plus:
+
+ label.TEXT \\
+ label.FONT \\
+
+
+The .HEIGHT and .WIDTH accessible, but cannot be changed because they
+are controlled by the text and the font size.
+
+
+\section{Text Boxes}
+
+A text box is a graphical widget that contains a body of text.  Text
+automatically wraps when it is too long to fit on a single line.  Like
+labels, the text inside a TextBox can be extracted with
+\texttt{GetText()} and set with \texttt{SetText()}. When a text object
+is changed, it rerenders immediately, but does not appear until the
+next time a \texttt{Draw()} function is called.
+
+
+textbox properties:\\
+  textbox.EDITABLE\\
+  textbox.CURSORPOS \\
+
+
+\section{User-Editable Text Boxes}
+
+Text box editing can be performed using the \verb+GetInput(<textbox>,<escape-key>)+ function.  This returns the text that is present in the box when the participant hits the key associated with \verb+<escape-key>+.  
+\verb+<escape-key>+ is just a text-based code that describes the keypress 
+that should be checked for exit. Typical escape-key options include:
+\begin{verbatim}
+  "<return>"
+  "<esc>"
+  "<backspace>"
+  " "
+  "A"
+\end{verbatim}
+ 
+
+Translation from string to keyboard input is still crude, 
+and is handled in \texttt{src/utility/PEBLUtility.cpp:TranslateString} 
+
+
+\section{Audio}
+
+Currently, audio output is very primitive, and there are no facilities for recording or analyzing audio input. Audio \texttt{.wav} files can be loaded with the \texttt{LoadSound()} function, which returns an audio stream object that can be played  with either the \texttt{PlayForeground()} or \texttt{PlayBackground()} functions.  
+The \texttt{PlayForeground()} function returns once the sound is finished playing; \texttt{PlayBackground()} returns immediately and the sound plays in a separate thread.  When using PlayBackground, playing can be stopped using the \texttt{Stop()} function.  If another \texttt{PlayForeground()} or \texttt{PlayBackground()} is then used,
+the initial sound will immediately terminate and the new file will play. Currently, PEBL can only play one sound at a time.
+
+
+\section{Keyboard Entry}
+
+PEBL can examine the state of the keyboard, and wait for various keyboard events to happen. Functions such as \texttt{WaitForKeyDown()}, \texttt{WaitForAnyKeyDown()}, etc., allow you to collect responses from subjects.
+
+
+\section{Files}
+
+Files are objects that can be read from or written to using several PEBL functions. To use a file object, create one using one of the functions 
+listed below.  Each function returns a file object:
+\begin{verbatim}
+FileOpenRead()
+FileOpenWrite()
+FileOpenAppend()
+\end{verbatim}
+
+For example, you can use the command \texttt{myfile <- FileOpenRead("stimuli.txt")} to create `\texttt{myfile}', a readable file stream.
+
+Other Functions described below allow filestreams to be written to 
+or read from.  When you are finished, you can close a filestream 
+Using the `\texttt{FileClose()}' function.
+
+
+\section{The Event Loop}
+
+To assist in testing for multiple input events simultaneously, 
+PEBL implements an event loop that will quickly scan multiple conditions
+and execute proper results whenever any one condition is met.  
+This is currently primarily a back-end system 
+which will be developed more in the future.
+
+
+\section{Errors and Warnings}
+
+PEBL does a great deal of error-checking to ensure that your program
+will run.  If you crash with a segmentation fault, this is an error
+and you should report it.  When a fatal error or non-fatal warning occurs, PEBL attempts to identify the location in your input file that led to 
+the warning.  On Linux, the warning and this location are printed to the command-line upon exit; on MS Windows, they are printed to the file \texttt{stderr.txt}.
+
+
+\section{Paths and Path Searching}
+
+Numerous functions and objects open files on your computer to read in
+information such as graphics, sounds, fonts, program files, and text files.  When you attempt to open a file, PEBL will search in a number of places, 
+in this order:
+\begin{itemize}
+\item
+The (current) working directory
+\item
+The directory of each file specified in the command line arguments
+\item
+media/fonts
+\item
+media/sounds
+\item
+media/images
+\item
+media/text
+\end{itemize}
+  
+You can also specify other paths to be searched by specifying them on the command line.  Be sure to end the directory with whatever is appropriate for your platform, e.g.~ `\char92' on Microsoft Windows or `/' on Linux.
+
+\section{Provided Media Files}
+
+PEBL comes with various media files that can be specified from 
+any script without including the complete path.  If a user's file has
+the same name, it will be loaded before the PEBL-provided version.
+Table \ref{tab:media} describes the files included.
+\vspace{1cm}
+
+\begin{longtable}{ll}
+\caption{Media Files Provided with PEBL} \label{tab:media}\\
+\toprule
+\textbf{Name}& \textbf{Description} \\
+\midrule
+\addlinespace[.2cm]
+\endfirsthead
+
+\midrule
+\textbf{Name}& \textbf{Description} \\
+\midrule
+\addlinespace[.2cm]
+\endhead
+
+\midrule
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+\multicolumn{2}{l}{\textbf{In `media/fonts/'}:}\\
+\addlinespace[.2cm]
+%\cmidrule(l{0cm}r{1cm}){1-1}
+
+\texttt{Vera.ttf}    &     Sans serif Roman-style base font\\
+\texttt{VeraMono.ttf}&     Sans serif Roman-style mono-spaced base font\\
+\texttt{VeraSe.ttf}  &     Serif Roman-style base font (similar to times)\\
+\texttt{VeraBd.ttf}  &     Bold Vera font\\
+\texttt{VeraIt.ttf}  &     Italic Vera font\\
+\texttt{VeraBI.ttf}  &     Bold Italic Vera font\\
+\texttt{VeraMoBd.ttf}&     Bold Vera Mono font\\
+\texttt{VeraMoIt.ttf}&     Italic Vera Mono font\\
+\texttt{VeraMoBI.ttf}&     Bold Italic Vera Mono\\
+\texttt{VeraSeBd.ttf}&     Bold Serif Vera font\\
+\addlinespace[.1cm]
+\midrule
+\addlinespace[.2cm]
+\multicolumn{2}{l}{\textbf{In `media/images/'}:} \\
+%\cmidrule(l{0cm}r{1cm}){1-1}
+\addlinespace[.2cm]
+
+\texttt{pebl.bmp}         & Demonstration bitmap image \\
+\texttt{pebl.png}         &Demonstration PNG image \\
+\texttt{smiley-small.png} &25x25 smiley face\\
+\texttt{frowney-small.png}&25x25 frowney face\\
+\texttt{smiley-large.png} &100x100 smiley face\\
+\texttt{frowney-large.png}&100x100 frowney face\\
+\addlinespace[.1cm]
+\midrule
+\addlinespace[.2cm]
+\multicolumn{2}{l}{\textbf{In `media/sounds/'}:}\\
+%\cmidrule(l{0cm}r{1cm}){1-1}
+\addlinespace[.2cm]
+
+\texttt{buzz500ms.wav}   &A 500-ms buzzer\\
+\texttt{chirp1.wav}      &A chirp stimulus\\
+\texttt{boo.wav}         &A really bad booing sound\\
+\texttt{cheer.wav}       &A pretty lame cheering sound\\
+\addlinespace[.1cm]
+\midrule
+\addlinespace[.2cm]
+\multicolumn{2}{l}{\textbf{In `media/text/'}:}\\
+%\cmidrule(l{0cm}r{1cm}){1-1}
+\addlinespace[.2cm]
+\texttt{Consonants.txt}  &List of all consonants, both cases\\
+\texttt{Digits.txt}               &List of digits 0-9\\
+\texttt{Letters.txt}              &All letters, both cases\\
+\texttt{Lowercase.txt}            &Lowercase letters\\
+\texttt{LowercaseConsonants.txt}  &Lowercase Consonants\\
+\texttt{LowercaseVowels.txt}      &Lowercase Vowels\\
+\texttt{Uppercase.txt}            &Uppercase Letters\\
+\texttt{UppercaseConsonants.txt}  &Uppercase Consonants\\
+\texttt{UppercaseVowels.txt}      &Uppercase Vowels\\
+\texttt{Vowels.txt}               &Vowels (both cases)\\
+
+\end{longtable}
+
+\vspace{1cm}
+
+
+\section{Special Variables}
+
+There are a number of special variables that be set by PEBL, 
+and can later be accessed by an experiment. These are described in table~\ref{tab:special}.
+
+\begin{table}[htbp]
+\caption{Special Variables in PEBL}
+
+\begin{tabular}{ll}
+\toprule
+\textbf{Name}&\textbf{Purpose}\\
+\midrule
+gKeepLooping & Controls continued execution in event loop. \\
+ &           (Not currently useful).\\
+\addlinespace[.2cm]
+gVideoWidth  &	The width in pixels of the display (set by\\
+             &  default or command-line option). Changing\\
+             &  this before calling MakeWindow() will change\\
+             &  display width, if that width is available. \\
+\addlinespace[.2cm]
+gVideoHeight & 	The height in pixels of the display (set by\\
+             & 	default or command-line). Changing this before calling
+             &  MakeWindow() will change the display height, if that
+             &  height is available.\\
+\addlinespace[.2cm]
+gVideoDepth    &      	The bit depth of the video.\\
+
+\addlinespace[.2cm]
+gSubNum      &  A global variable set to whatever follows the --s or
+--S command-line argument.  If no argument is given, 
+
+\bottomrule
+\end{tabular}
+\label{tab:special}
+\end{table}
+
+
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 
