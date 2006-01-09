@@ -1,14 +1,16 @@
 VERSION 5.00
+Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "RICHTX32.OCX"
+Object = "{0D452EE1-E08F-101A-852E-02608C4D0BB4}#2.0#0"; "FM20.DLL"
 Begin VB.Form Form1 
    Caption         =   "PEBL Launcher"
-   ClientHeight    =   7485
-   ClientLeft      =   4875
-   ClientTop       =   2850
-   ClientWidth     =   8370
+   ClientHeight    =   9015
+   ClientLeft      =   17805
+   ClientTop       =   975
+   ClientWidth     =   11325
    Icon            =   "Form1.frx":0000
    LinkTopic       =   "Form1"
-   ScaleHeight     =   7485
-   ScaleWidth      =   8370
+   ScaleHeight     =   0
+   ScaleWidth      =   0
    Begin VB.ComboBox Combo2 
       Height          =   315
       ItemData        =   "Form1.frx":08CA
@@ -39,7 +41,7 @@ Begin VB.Form Form1
       Width           =   1215
    End
    Begin VB.TextBox Text1 
-      Height          =   495
+      Height          =   375
       Index           =   0
       Left            =   2040
       TabIndex        =   5
@@ -49,7 +51,7 @@ Begin VB.Form Form1
       Width           =   2055
    End
    Begin VB.CommandButton Command2 
-      Caption         =   "Cancel"
+      Caption         =   "Quit"
       Height          =   735
       Left            =   1920
       TabIndex        =   4
@@ -72,12 +74,12 @@ Begin VB.Form Form1
    End
    Begin VB.FileListBox File1 
       Archive         =   0   'False
-      Height          =   3600
-      Left            =   4200
+      Height          =   3210
+      Left            =   7680
       MultiSelect     =   2  'Extended
       Pattern         =   "*.pbl"
       TabIndex        =   1
-      Top             =   3720
+      Top             =   360
       Width           =   3255
    End
    Begin VB.CommandButton Command1 
@@ -87,6 +89,82 @@ Begin VB.Form Form1
       TabIndex        =   0
       Top             =   120
       Width           =   1455
+   End
+   Begin RichTextLib.RichTextBox RichTextBox1 
+      Height          =   4455
+      Index           =   1
+      Left            =   600
+      TabIndex        =   11
+      Top             =   4200
+      Visible         =   0   'False
+      Width           =   10215
+      _ExtentX        =   18018
+      _ExtentY        =   7858
+      _Version        =   393217
+      Enabled         =   -1  'True
+      ScrollBars      =   3
+      TextRTF         =   $"Form1.frx":095E
+      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+         Name            =   "Lucida Console"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+   End
+   Begin RichTextLib.RichTextBox RichTextBox1 
+      Height          =   4455
+      Index           =   0
+      Left            =   600
+      TabIndex        =   10
+      Top             =   4200
+      Visible         =   0   'False
+      Width           =   10215
+      _ExtentX        =   18018
+      _ExtentY        =   7858
+      _Version        =   393217
+      ScrollBars      =   3
+      TextRTF         =   $"Form1.frx":09EA
+      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+         Name            =   "Lucida Console"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+   End
+   Begin VB.Label Label2 
+      Caption         =   "Launcher for PEBL 0.06"
+      Height          =   255
+      Left            =   9120
+      TabIndex        =   13
+      Top             =   0
+      Width           =   2055
+   End
+   Begin MSForms.TabStrip TabStrip1 
+      Height          =   5175
+      Left            =   240
+      TabIndex        =   12
+      Top             =   3720
+      Width           =   10815
+      ListIndex       =   0
+      Size            =   "19076;9128"
+      Items           =   "Tab1;Tab2;"
+      TipStrings      =   ";;"
+      Names           =   "Tab1;Tab2;"
+      NewVersion      =   -1  'True
+      TabsAllocated   =   2
+      Tags            =   ";;"
+      TabData         =   2
+      Accelerator     =   ";;"
+      FontHeight      =   165
+      FontCharSet     =   0
+      FontPitchAndFamily=   2
+      TabState        =   "3;3"
    End
    Begin VB.Label Label1 
       Caption         =   "Label1"
@@ -108,15 +186,16 @@ Dim myPathname
 Dim PEBL_Executable
 Dim MyFilenames
 Dim NUMBER
+Private SelectedTab As Integer
 
 Private Sub Command1_Click()
 
- execute = """" + PEBL_Executable + """"
+ Execute = """" + PEBL_Executable + """"
  
  'add any command-line arguments
   For i = 1 To NUMBER
     If Text1(i) <> "" Then
-      execute = execute + " -v " + Text1(i)
+      Execute = Execute + " -v " + Text1(i)
     End If
    Next i
    
@@ -124,7 +203,7 @@ Private Sub Command1_Click()
 For j = 0 To File1.ListCount - 1
    
    If File1.Selected(j) Then
-    execute = execute + " " + """" + File1.Path + "\" + File1.List(j) + """"
+    Execute = Execute + " " + """" + File1.Path + "\" + File1.List(j) + """"
    End If
    
 Next j
@@ -132,58 +211,74 @@ Debug.Print Check1
 
 'add fullscreen mode
 If Check1 Then
- execute = execute + " --fullscreen "
+ Execute = Execute + " --fullscreen "
 Else
- execute = execute + " --windowed "
+ Execute = Execute + " --windowed "
 End If
 
 'add display size
-execute = execute + " --display "
+Execute = Execute + " --display "
 Select Case Combo1.ListIndex
 Case 1:
- execute = execute + " 512x384 "
+ Execute = Execute + " 512x384 "
 Case 2:
- execute = execute + " 640x480 "
+ Execute = Execute + " 640x480 "
 Case 3:
- execute = execute + " 800x600 "
+ Execute = Execute + " 800x600 "
 
 Case 4:
- execute = execute + " 960x720 "
+ Execute = Execute + " 960x720 "
 Case 5:
- execute = execute + " 1024x786 "
+ Execute = Execute + " 1024x786 "
 Case 6:
- execute = execute + " 1152x864 "
+ Execute = Execute + " 1152x864 "
 Case 7:
- execute = execute + " 1280x1024 "
+ Execute = Execute + " 1280x1024 "
 
 Case Else:
-execute = execute + " 800x600 "
+Execute = Execute + " 800x600 "
 End Select
 
 'add color depth
-execute = execute + " --depth "
+Execute = Execute + " --depth "
 Select Case Combo2.ListIndex
 Case 1:
- execute = execute + " 15 "
+ Execute = Execute + " 15 "
 Case 2:
- execute = execute + " 16 "
+ Execute = Execute + " 16 "
 Case 3:
- execute = execute + " 24 "
+ Execute = Execute + " 24 "
 
 Case 4:
- execute = execute + " 32 "
+ Execute = Execute + " 32 "
 
 Case Else:
-execute = execute + " 16 "
+Execute = Execute + " 16 "
 End Select
 
-Debug.Print execute
 
  
+ 'execute the command in a separate process, waiting for it to return.
+ ExecCmd (Execute)
  
- Shell (execute)
- End
+ reload
  
+End Sub
+Private Sub reload()
+
+ Set fs = CreateObject("Scripting.FileSystemObject")
+ 
+ If fs.fileexists(File1.Path & "\stdout.txt") Then
+   RichTextBox1(0).LoadFile File1.Path & "\stdout.txt"
+  Else
+   RichTextBox1(0).Text = "Failed to load [" & File1.Path & "\stdout.txt]."
+ End If
+ 
+ If fs.fileexists(File1.Path & "\stderr.txt") Then
+   RichTextBox1(1).LoadFile File1.Path & "\stderr.txt"
+  Else
+   RichTextBox1(1).Text = "Failed to load " & File1.Path & "\stderr.txt]."
+ End If
 End Sub
 
 Private Sub Command2_Click()
@@ -202,29 +297,30 @@ Private Sub Form_Load()
 
 Combo1.ListIndex = 2
 Combo2.ListIndex = 2
-
-
 'Try to find the file pebl-init.txt.  If it doesn't exist,
 'no worries
-Open "pebl-init.txt" For Input As #1
+If Len(Dir$("pebl-init.txt")) = 0 Then
+  MsgBox ("Unable to find file pebl-init.txt in current directory.")
+  End
+Else
+ Open "pebl-init.txt" For Input As #1
+ 'The first line is the executable location
+ Input #1, PEBL_Executable
+ 'Debug.Print ("PEBL Executable: [" + PEBL_Executable + "]")
 
+ Input #1, myPathname
+ 'Debug.Print ("Pathname: [" + myPathname + "]")
 
+ Line Input #1, myfilenamelist
+ 'Debug.Print ("filename: [" + myfilenamelist + "]")
+End If
 
-'The first line is the executable location
-Input #1, PEBL_Executable
-Debug.Print ("PEBL Executable: [" + PEBL_Executable + "]")
-
-Input #1, myPathname
-Debug.Print ("Pathname: [" + myPathname + "]")
-
-Line Input #1, myfilenamelist
-Debug.Print ("filename: [" + myfilenamelist + "]")
 
 MyFilenames = Split(myfilenamelist)
 'myfilenames is now an array, each containing a filename.
  For j = 0 To UBound(MyFilenames)
    MyFilenames(j) = Mid$(MyFilenames(j), 2, Len(MyFilenames(j)) - 2)
-   Debug.Print MyFilenames(j)
+   'Debug.Print MyFilenames(j)
    
  Next j
  
@@ -263,7 +359,7 @@ While Not EOF(1)
  Label1(NUMBER).Top = toplabel
  Text1(NUMBER).Top = toplabel
  
- toplabel = toplabel + 800
+ toplabel = toplabel + 600
  
   Label1(NUMBER).Visible = True
   Text1(NUMBER).Visible = True
@@ -277,5 +373,27 @@ While Not EOF(1)
  Debug.Print namevaluearray(1)
  
 Wend
+TabStrip1.Tabs.Clear
+TabStrip1.Tabs.Add "User Output", "User Output (stdout.txt)"
+TabStrip1.Tabs.Add "Warnings and Errors", "Warnings and Errors (stderr.txt)"
+
+
+RichTextBox1(0).Text = ""
+RichTextBox1(1).Text = ""
+RichTextBox1(0).Visible = True
+SelectedTab = 0
 
 End Sub
+
+
+Private Sub TabStrip1_Change()
+
+clicked = TabStrip1.SelectedItem.Index
+If (clicked = SelectedTab) Then Exit Sub
+
+RichTextBox1(clicked).Visible = True
+RichTextBox1(1 - clicked).Visible = False
+SelectedTab = clicked
+
+End Sub
+
