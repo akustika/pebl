@@ -1,7 +1,7 @@
 [Project]
 FileName=pebl.dev
 Name=PEBL
-UnitCount=103
+UnitCount=107
 Type=1
 Ver=1
 ObjFiles=
@@ -12,7 +12,7 @@ ResourceIncludes=
 MakeIncludes=
 Compiler=-Dmain=SDL_main_@@_-DHAVE_OPENGL_@@_
 CppCompiler=-Wno-deprecated_@@_-DPEBL_WIN32_@@_-Dmain=SDL_main_@@_
-Linker=-lmingw32_@@_-lSDLmain_@@_-lSDL_@@_-mwindows_@@_-lSDL_image_@@_-lSDL_ttf_@@_
+Linker=-lmingw32_@@_-lSDLmain_@@_-lSDL_@@_-mwindows_@@_-lSDL_image_@@_-lSDL_ttf_@@_-lSDL_gfx_@@_
 IsCpp=1
 Icon=pebl.ico
 ExeOutput=..\bin
@@ -89,8 +89,8 @@ BuildCmd=
 
 [VersionInfo]
 Major=0
-Minor=3
-Release=1
+Minor=0
+Release=6
 Build=1
 LanguageID=1033
 CharsetID=1252
@@ -345,47 +345,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit32]
-FileName=..\src\objects\PObject.cpp
-CompileCpp=1
-Folder=objects
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit33]
-FileName=..\src\objects\PObject.h
-CompileCpp=1
-Folder=objects
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit34]
-FileName=..\src\objects\PWidget.cpp
-CompileCpp=1
-Folder=objects
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit35]
-FileName=..\src\objects\PWidget.h
-CompileCpp=1
-Folder=objects
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit36]
 FileName=..\src\objects\PWindow.cpp
 CompileCpp=1
 Folder=objects
@@ -395,67 +355,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit39]
-FileName=..\src\utility\PEBLUtility.cpp
-CompileCpp=1
-Folder=utility
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit40]
-FileName=..\src\devices\PDevice.cpp
-CompileCpp=1
-Folder=devices
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit41]
-FileName=..\src\devices\PDevice.h
-CompileCpp=1
-Folder=devices
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit42]
-FileName=..\src\devices\PKeyboard.cpp
-CompileCpp=1
-Folder=devices
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit43]
-FileName=..\src\devices\PKeyboard.h
-CompileCpp=1
-Folder=devices
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit44]
-FileName=..\src\devices\PTimer.cpp
-CompileCpp=1
-Folder=devices
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit37]
+[Unit35]
 FileName=..\src\objects\PWindow.h
 CompileCpp=1
 Folder=objects
@@ -465,7 +365,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit38]
+[Unit36]
 FileName=..\src\utility\PEBLUtility.h
 CompileCpp=1
 Folder=utility
@@ -475,7 +375,47 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit45]
+[Unit39]
+FileName=..\src\devices\PDevice.h
+CompileCpp=1
+Folder=devices
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit40]
+FileName=..\src\devices\PKeyboard.cpp
+CompileCpp=1
+Folder=devices
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit41]
+FileName=..\src\devices\PKeyboard.h
+CompileCpp=1
+Folder=devices
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit42]
+FileName=..\src\devices\PTimer.cpp
+CompileCpp=1
+Folder=devices
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit43]
 FileName=..\src\devices\PTimer.h
 CompileCpp=1
 Folder=devices
@@ -485,7 +425,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit46]
+[Unit44]
 FileName=..\src\devices\DeviceState.h
 CompileCpp=1
 Folder=devices
@@ -495,7 +435,27 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit47]
+[Unit37]
+FileName=..\src\utility\PEBLUtility.cpp
+CompileCpp=1
+Folder=utility
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit38]
+FileName=..\src\devices\PDevice.cpp
+CompileCpp=1
+Folder=devices
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit45]
 FileName=..\src\devices\DeviceState.cpp
 CompileCpp=1
 Folder=devices
@@ -505,7 +465,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit48]
+[Unit46]
 FileName=..\src\devices\PEventLoop.cpp
 CompileCpp=1
 Folder=devices
@@ -515,7 +475,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit49]
+[Unit47]
 FileName=..\src\devices\PEventLoop.h
 CompileCpp=1
 Folder=devices
@@ -525,10 +485,30 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit50]
+[Unit48]
 FileName=..\src\apps\PEBL.cpp
 CompileCpp=1
 Folder=apps
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit49]
+FileName=..\src\base\Evaluator.cpp
+CompileCpp=1
+Folder=base
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit50]
+FileName=..\src\base\Evaluator.h
+CompileCpp=1
+Folder=base
 Compile=1
 Link=1
 Priority=1000
@@ -546,26 +526,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit51]
-FileName=..\src\base\Evaluator.cpp
-CompileCpp=1
-Folder=base
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit52]
-FileName=..\src\base\Evaluator.h
-CompileCpp=1
-Folder=base
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit53]
 FileName=..\src\base\FunctionMap.cpp
 CompileCpp=1
 Folder=base
@@ -575,7 +535,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit54]
+[Unit52]
 FileName=..\src\base\FunctionMap.h
 CompileCpp=1
 Folder=base
@@ -585,7 +545,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit55]
+[Unit53]
 FileName=..\src\base\grammar.tab.cpp
 CompileCpp=1
 Folder=base
@@ -595,7 +555,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit56]
+[Unit54]
 FileName=..\src\base\grammar.tab.hpp
 CompileCpp=1
 Folder=base
@@ -605,7 +565,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit57]
+[Unit55]
 FileName=..\src\base\lex.yy.c
 CompileCpp=1
 Folder=base
@@ -615,7 +575,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit58]
+[Unit56]
 FileName=..\src\base\Loader.cpp
 CompileCpp=1
 Folder=base
@@ -625,7 +585,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit59]
+[Unit57]
 FileName=..\src\base\Loader.h
 CompileCpp=1
 Folder=base
@@ -635,7 +595,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit60]
+[Unit58]
 FileName=..\src\base\PNode.cpp
 CompileCpp=1
 Folder=base
@@ -645,7 +605,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit61]
+[Unit59]
 FileName=..\src\base\PNode.h
 CompileCpp=1
 Folder=base
@@ -655,7 +615,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit62]
+[Unit60]
 FileName=..\src\base\VariableMap.cpp
 CompileCpp=1
 Folder=base
@@ -665,7 +625,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit63]
+[Unit61]
 FileName=..\src\base\VariableMap.h
 CompileCpp=1
 Folder=base
@@ -675,7 +635,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit64]
+[Unit62]
 FileName=..\src\libs\Functions.h
 CompileCpp=1
 Folder=libs
@@ -685,7 +645,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit65]
+[Unit63]
 FileName=..\src\libs\PEBLEnvironment.cpp
 CompileCpp=1
 Folder=libs
@@ -695,7 +655,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit66]
+[Unit64]
 FileName=..\src\libs\PEBLEnvironment.h
 CompileCpp=1
 Folder=libs
@@ -705,7 +665,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit67]
+[Unit65]
 FileName=..\src\libs\PEBLList.cpp
 CompileCpp=1
 Folder=libs
@@ -715,17 +675,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit69]
-FileName=..\src\libs\PEBLMath.cpp
-CompileCpp=1
-Folder=libs
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit68]
+[Unit66]
 FileName=..\src\libs\PEBLList.h
 CompileCpp=1
 Folder=libs
@@ -735,8 +685,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit70]
-FileName=..\src\libs\PEBLMath.h
+[Unit67]
+FileName=..\src\libs\PEBLMath.cpp
 CompileCpp=1
 Folder=libs
 Compile=1
@@ -745,7 +695,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit71]
+[Unit69]
 FileName=..\src\libs\PEBLObjects.cpp
 CompileCpp=1
 Folder=libs
@@ -755,7 +705,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit72]
+[Unit68]
+FileName=..\src\libs\PEBLMath.h
+CompileCpp=1
+Folder=libs
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit70]
 FileName=..\src\libs\PEBLObjects.h
 CompileCpp=1
 Folder=libs
@@ -765,7 +725,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit73]
+[Unit71]
 FileName=..\src\libs\PEBLStream.cpp
 CompileCpp=1
 Folder=libs
@@ -775,7 +735,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit74]
+[Unit72]
 FileName=..\src\libs\PEBLStream.h
 CompileCpp=1
 Folder=libs
@@ -785,7 +745,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit75]
+[Unit73]
 FileName=..\src\devices\PStream.h
 CompileCpp=1
 Folder=devices
@@ -795,7 +755,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit76]
+[Unit74]
 FileName=..\src\devices\PStream.cpp
 CompileCpp=1
 Folder=devices
@@ -805,7 +765,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit77]
+[Unit75]
 FileName=..\src\utility\rc_ptrs.h
 CompileCpp=1
 Folder=utility
@@ -815,7 +775,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit78]
+[Unit76]
 FileName=..\src\utility\PEBLPath.cpp
 CompileCpp=1
 Folder=utility
@@ -825,7 +785,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit79]
+[Unit77]
 FileName=..\src\utility\PEBLPath.h
 CompileCpp=1
 Folder=utility
@@ -835,7 +795,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit80]
+[Unit78]
 FileName=..\src\utility\PError.cpp
 CompileCpp=1
 Folder=utility
@@ -845,7 +805,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit81]
+[Unit79]
 FileName=..\src\utility\PError.h
 CompileCpp=1
 Folder=utility
@@ -855,7 +815,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit82]
+[Unit80]
 FileName=..\src\devices\PAudioOut.h
 CompileCpp=1
 Folder=devices
@@ -865,7 +825,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit83]
+[Unit81]
 FileName=..\src\devices\PAudioOut.cpp
 CompileCpp=1
 Folder=devices
@@ -875,7 +835,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit84]
+[Unit82]
 FileName=..\src\platforms\sdl\PlatformAudioOut.cpp
 CompileCpp=1
 Folder=platforms/sdl
@@ -885,7 +845,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit85]
+[Unit83]
 FileName=..\src\platforms\sdl\PlatformAudioOut.h
 CompileCpp=1
 Folder=platforms/sdl
@@ -895,7 +855,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit86]
+[Unit84]
 FileName=..\src\platforms\sdl\PlatformLabel.cpp
 CompileCpp=1
 Folder=platforms/sdl
@@ -905,7 +865,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit87]
+[Unit85]
 FileName=..\src\platforms\sdl\PlatformLabel.h
 CompileCpp=1
 Folder=platforms/sdl
@@ -915,7 +875,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit88]
+[Unit86]
 FileName=..\src\objects\PLabel.cpp
 CompileCpp=1
 Folder=objects
@@ -925,7 +885,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit89]
+[Unit87]
 FileName=..\src\objects\PLabel.h
 CompileCpp=1
 Folder=objects
@@ -935,7 +895,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit90]
+[Unit88]
 FileName=..\src\objects\PTextObject.cpp
 CompileCpp=1
 Folder=objects
@@ -945,7 +905,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit91]
+[Unit89]
 FileName=..\src\objects\PTextObject.h
 CompileCpp=1
 Folder=objects
@@ -955,7 +915,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit92]
+[Unit90]
 FileName=..\src\platforms\sdl\PlatformTextBox.h
 CompileCpp=1
 Folder=platforms/sdl
@@ -965,7 +925,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit93]
+[Unit91]
 FileName=..\src\platforms\sdl\PlatformTextBox.cpp
 CompileCpp=1
 Folder=platforms/sdl
@@ -975,7 +935,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit94]
+[Unit92]
 FileName=..\src\objects\PTextBox.h
 CompileCpp=1
 Folder=objects
@@ -985,7 +945,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit95]
+[Unit93]
 FileName=..\src\objects\PTextBox.cpp
 CompileCpp=1
 Folder=objects
@@ -995,7 +955,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit96]
+[Unit94]
 FileName=..\src\devices\PEventQueue.cpp
 CompileCpp=1
 Folder=devices
@@ -1005,7 +965,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit97]
+[Unit95]
 FileName=..\src\devices\PEventQueue.h
 CompileCpp=1
 Folder=devices
@@ -1015,7 +975,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit98]
+[Unit96]
 FileName=..\src\devices\PEvent.cpp
 CompileCpp=1
 Folder=devices
@@ -1025,7 +985,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit99]
+[Unit97]
 FileName=..\src\devices\PEvent.h
 CompileCpp=1
 Folder=devices
@@ -1035,7 +995,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit100]
+[Unit98]
 FileName=..\src\platforms\sdl\PlatformEventQueue.h
 CompileCpp=1
 Folder=platforms/sdl
@@ -1045,7 +1005,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit101]
+[Unit99]
 FileName=..\src\platforms\sdl\PlatformEventQueue.cpp
 CompileCpp=1
 Folder=platforms/sdl
@@ -1055,7 +1015,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit102]
+[Unit100]
 FileName=..\src\libs\PEBLString.cpp
 CompileCpp=1
 Folder=libs
@@ -1065,10 +1025,90 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit103]
+[Unit101]
 FileName=..\src\libs\PEBLString.h
 CompileCpp=1
 Folder=libs
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit102]
+FileName=..\src\base\PEBLObject.h
+CompileCpp=1
+Folder=base
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit103]
+FileName=..\src\base\PEBLObject.cpp
+CompileCpp=1
+Folder=base
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit32]
+FileName=..\src\objects\PWidget.cpp
+CompileCpp=1
+Folder=objects
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit33]
+FileName=..\src\objects\PWidget.h
+CompileCpp=1
+Folder=objects
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit104]
+FileName=..\src\objects\PDrawObject.h
+CompileCpp=1
+Folder=objects
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit105]
+FileName=..\src\objects\PDrawObject.cpp
+CompileCpp=1
+Folder=objects
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit106]
+FileName=..\src\platforms\sdl\PlatformDrawObject.h
+CompileCpp=1
+Folder=platforms/sdl
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit107]
+FileName=..\src\platforms\sdl\PlatformDrawObject.cpp
+CompileCpp=1
+Folder=platforms/sdl
 Compile=1
 Link=1
 Priority=1000
