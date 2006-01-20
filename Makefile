@@ -383,7 +383,7 @@ install:
 	rm -Rf /usr/local/share/pebl/media/fonts/CVS
 	rm -Rf /usr/local/share/pebl/media/text/CVS
 	rm -Rf /usr/local/share/pebl/pebl-lib/CVS
-	chmod uga+r /usr/local/share/pebl/ -R
+	chmod -R uga+r /usr/local/share/pebl/
 
 ifeq (.depend,$(wildcard .depend))
 include .depend
