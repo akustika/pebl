@@ -1,6 +1,6 @@
 
 
-\chapter{Detailed Function and Keyword Reference. (incomplete)}
+\chapter{Detailed Function and Keyword Reference.}
 \label{sec:six}
 \setlength{\parindent}{0pt}
 
@@ -13,6 +13,11 @@
    \setlength\leftmargin{\labelwidth+\labelsep}}}%
  {\end{list}}
 
+
+
+
+\rl
+\section{Symbols}
 
 \rl
 
@@ -378,7 +383,8 @@ if(j >= 55)
 
 \rl 
 
-
+\section{A} 
+\rl
 
 \begin{desc}{Name/Symbol}
 
@@ -548,6 +554,9 @@ ASin(<num>)
 
 \rl
 
+\section{B}
+\rl
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	break
@@ -574,6 +583,8 @@ loop(i ,[1,3,5,9,2,7])
 \rl
 
 
+\section{C}
+\rl
 
 
 \begin{desc}{Name/Symbol}
@@ -615,6 +626,34 @@ ChooseN(<list>, <number>)
 
 \rl
 
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Circle()
+
+\item[Description]	Creates a circle for graphing at x,y with radius
+  r. Circles  must be added to a parent widget before it can be drawn; it may be added to
+  widgets other than a base window. The properties of circles may be
+  changed by accessing their properties directly, including the FILLED
+  property which makes the object an outline versus a filled shape.
+
+
+\item[Usage]
+\begin{verbatim}
+Circle(<x>, <y>, <r>,<color>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+  
+  c <- Circle(30,30,20, MakeColor(green))
+  AddObject(c, win)
+  Draw()
+
+\end{verbatim}
+\item[See Also]	Square(), Ellipse(), Rectangle(), Line()
+\end{desc}
+
+\rl
 
 
 
@@ -672,6 +711,8 @@ CrossFactorWithoutDuplicates([a,b,c])
   		RepeatList(), Shuffle()
 \end{desc}
 
+\rl
+\section{D}
 \rl
 
 
@@ -912,7 +953,40 @@ DrawFor( <object>, <cycles>)
 \end{desc}
 
 \rl
+\section{E}
+\rl
 
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Ellipse()
+  
+\item[Description]	Creates a ellipse for graphing at x,y with radii
+  rx and ry. Ellipses are only currently definable oriented in
+  horizontal/vertical directions.  Ellipses  must be added
+  to a parent widget before it can be drawn; it may be added to
+  widgets other than a base window.  The properties of ellipses may be
+  changed by accessing their properties directly, including the FILLED
+  property which makes the object an outline versus a filled shape.
+
+\item[Usage]
+\begin{verbatim}
+Ellipse(<x>, <y>, <rx>, <ry>,<color>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+  
+  e <- Ellipse(30,30,20,10, MakeColor(green))
+  AddObject(e, win)
+  Draw()
+
+\end{verbatim}
+\item[See Also]	Square(), Circle(), Rectangle(), Line()
+\end{desc}
+
+\rl
 
 
 
@@ -1009,6 +1083,8 @@ ExtractListItems(myList, [2,4,5,1,4])
 
 \rl
 
+\section{F}
+\rl
 
 
 
@@ -1437,6 +1513,8 @@ Format(<value>)
 \end{desc}
 
 \rl
+\section{G}
+\rl
 
 
 \begin{desc}{Name/Symbol}
@@ -1607,6 +1685,8 @@ Print("Response time is: " + (b - a))
 
 \rl
 
+\section{H}
+\rl
 
 
 
@@ -1649,6 +1729,8 @@ Draw()		# image1 will appear.
 \rl
 
 
+\section{I}
+\rl
 
 
 \begin{desc}{Name/Symbol}
@@ -2141,6 +2223,8 @@ if(IsWidget(x))
 
 \rl
 
+\section{L}
+\rl
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	Last()
@@ -2165,6 +2249,32 @@ Last([1,2,3,444])	# == 444
 
 
 
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Line()
+
+\item[Description]	Creates a line for graphing at x,y ending at x+dx,
+  y+dy.  dx and dy describe the size of the line.  Lines must be added
+  to a parent widget before it can be drawn; it may be added to
+  widgets other than a base window. Properties of lines may be
+  accessed and set later.
+
+\item[Usage]
+\begin{verbatim}
+Line(<x>, <y>, <dx>, <dy>, <color>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+  l <- Line(30,30,20,20, MakeColor("green")
+  AddObject(l, win)
+  Draw()
+
+\end{verbatim}
+\item[See Also]	Square(), Ellipse(), Rectangle(), Circle()
+\end{desc}
+
+\rl
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	List()
@@ -2353,37 +2463,7 @@ loop(<counter>, <list>)
 
 \rl
 
-
-
-
-\begin{desc}{Name/Symbol}
-\item[Name/Symbol]	Mean()
-
-\item[Description] 	NOT IMPLEMENTED. Returns the mean of the numbers in \verb+<list>+.
-
-\item[Usage]		
-
-\item[Example]	
-
-\item[See Also]	Median(), Quantile(), StDev(), Min(), Max()
-\end{desc}
-
-\rl
-
-
-
-\begin{desc}{Name/Symbol}
-\item[Name/Symbol]	Median()
-
-\item[Description]	NOT IMPLEMENTED. Returns the median of the numbers in \verb+<list>+.
-
-\item[Usage]		
-
-\item[Example]	
-
-\item[See Also]	Mean(), Quantile(), StDev(), Min(), Max()
-\end{desc}
-
+\section{M}
 \rl
 
 
@@ -2618,7 +2698,7 @@ MakeWindow(<color>)
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	Max()            
 
-\item[Description]	NOT IMPLEMENTED. Returns the largest of \verb+<list>+.
+\item[Description] Returns the largest of \verb+<list>+.
 
 \item[Usage]		
 \begin{verbatim}
@@ -2626,6 +2706,10 @@ Max(<list>)
 \end{verbatim}
 
 \item[Example]	
+\begin{verbatim} 
+  c <- [3,4,5,6]
+  m <- Max(c) # m == 6
+\end{verbatim}
 
 \item[See Also]	Min(), Mean(), StDev()
 \end{desc}
@@ -2633,6 +2717,46 @@ Max(<list>)
 \rl
 
 
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Mean()
+
+\item[Description] 	Returns the mean of the numbers in \verb+<list>+.
+
+\item[Usage]	Mean(<list-of-numbers>)	
+
+\item[Example]	
+\begin{verbatim} 
+  c <- [3,4,5,6]
+  m <- Mean(c) # m == 4.5
+\end{verbatim}
+
+\item[See Also]	Median(), Quantile(), StDev(), Min(), Max()
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Median()
+
+\item[Description]	Returns the median of the numbers in
+  \verb+<list>+.  Implemented as a PEBL function.
+
+\item[Usage]	Median(<list-of-numbers>)
+
+\item[Example]	
+  \begin{verbatim} 
+  c <- [3,4,5,6,7]
+  m <- Median(c) # m == 5
+\end{verbatim}
+\item[See Also]	Mean(), Quantile(), StDev(), Min(), Max()
+\end{desc}
+
+\rl
 
 
 \begin{desc}{Name/Symbol}
@@ -2659,7 +2783,7 @@ Merge([1,2,3],[8,9]) 	# == [1,2,3,8,9]
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	Min() 
 
-\item[Description]	NOT IMPLEMENTED.  Returns the `smallest' element of a list.
+\item[Description]	Returns the `smallest' element of a list.
 
 \item[Usage]	
 \begin{verbatim}
@@ -2667,6 +2791,10 @@ Min(<list>)
 \end{verbatim}
 
 \item[Example]	
+\begin{verbatim}
+  c <- [3,4,5,6]
+  m <-  Min(c) # == 3
+\end{verbatim}
 
 \item[See Also]	Max()
 \end{desc}
@@ -2677,7 +2805,7 @@ Min(<list>)
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	Mod()
 
-\item[Description]	NOT IMPLEMENTED. Returns \verb+<num>+, \verb+<mod>+, or remainder of \verb+<num>/<mod>+
+\item[Description]	Returns \verb+<num>+, \verb+<mod>+, or remainder of \verb+<num>/<mod>+
 
 \item[Usage]		
 \begin{verbatim}
@@ -2713,7 +2841,7 @@ Move(<object>, <x>, <y>)
 Move(label, 33, 100)
 \end{verbatim}
 
-\item[See Also]	MoveCorner(), MoveCenter()
+\item[See Also]	MoveCorner(), MoveCenter(), .X and .Y properties.
 \end{desc}
 
 \rl
@@ -2735,7 +2863,7 @@ MoveCorner(<object>, <x>, <y>)
 MoveCorner(label, 33, 100)
 \end{verbatim}
 
-\item[See Also]	Move(), MoveCenter()
+\item[See Also]	Move(), MoveCenter(), .X and .Y properties
 \end{desc}
 
 \rl
@@ -2759,7 +2887,7 @@ MoveCenter(<object>, <x>, <y>)
 MoveCenter(TextBox, 33, 100)
 \end{verbatim}
 
-\item[See Also]	Move(), MoveCorner()
+\item[See Also]	Move(), MoveCorner(), .X and .Y properties
 \end{desc}
 
 \rl
@@ -2778,6 +2906,9 @@ MoveCenter(TextBox, 33, 100)
 \end{desc}
 
 \rl
+\section{N}
+\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -2820,6 +2951,8 @@ NthRoot(<num>, <root>)
 \end{desc}
 
 \rl
+\section{O}
+\rl
 
 
 \begin{desc}{Name/Symbol}
@@ -2834,6 +2967,35 @@ NthRoot(<num>, <root>)
 \item[See Also]	and, not
 \end{desc}
 
+\rl
+
+
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Order()
+
+\item[Description]	Returns a list of indices describing the order of values by position, from min to max. 
+
+\item[Usage]
+\begin{verbatim}
+		Order(<list-of-numbers>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+	n <- [33,12,1,5,9]
+  	o <- Order(n)
+    Print(o) #should print [3,4,5,2,1]
+\end{verbatim}
+
+\item[See Also]	Rank()
+\end{desc}
+
+\rl
+\section{P}
 \rl
 
 
@@ -2939,6 +3101,8 @@ Print("Another line")
 
 \rl
 
+\section{Q}
+\rl
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	Quantile()
@@ -2958,6 +3122,27 @@ Quantile(<list>, <num>)
 
 \rl
 
+
+\section{R}
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	RadToDeg() 
+
+\item[Description] 	Converts \verb+<rad>+ radians to degrees.
+
+\item[Usage]		
+\begin{verbatim}
+RadToDeg( <rad>)			 
+\end{verbatim}
+
+\item[Example]	
+
+\item[See Also]     	DegToRad(), Tan(), Cos(), Sin(), ATan(), ASin(), ACos()
+\end{desc}
+
+\rl
 
 
 
@@ -3198,22 +3383,62 @@ RandomUniform(<num>)
 \rl
 
 
+
 \begin{desc}{Name/Symbol}
-\item[Name/Symbol] 	RadToDeg() 
+\item[Name/Symbol]	Rank()
 
-\item[Description] 	Converts \verb+<rad>+ radians to degrees.
+\item[Description]	Returns a list of numbers describing the rank of
+  each position, from min to max.  The same as calling Order(Order(x))
 
-\item[Usage]		
+\item[Usage]
 \begin{verbatim}
-RadToDeg( <rad>)			 
+		Rank(<list-of-numbers>)
 \end{verbatim}
 
 \item[Example]	
+\begin{verbatim}
+	n <- [33,12,1,5,9]
+  	o <- Rank(n)
+    Print(o) #should print [5,4,1,2,3]
+\end{verbatim}
 
-\item[See Also]     	DegToRad(), Tan(), Cos(), Sin(), ATan(), ASin(), ACos()
+\item[See Also]	Order()
 \end{desc}
 
 \rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Rectangle()
+  
+\item[Description]	Creates a rectangle for graphing at x,y with size
+  dx and dy. Rectangles are only currently definable oriented in
+  horizontal/vertical directions.  A rectangle  must be added
+  to a parent widget before it can be drawn; it may be added to
+  widgets other than a base window.  The properties of rectangles may be
+  changed by accessing their properties directly, including the FILLED
+  property which makes the object an outline versus a filled shape.
+
+\item[Usage]
+\begin{verbatim}
+Rectangle(<x>, <y>, <dx>, <dy>, <color>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+  
+  r <- Rectangle(30,30,20,10, MakeColor(green))
+  AddObject(r, win)
+  Draw()
+
+\end{verbatim}
+\item[See Also]	 Circle(), Ellipse(), Square(), Line()
+\end{desc}
+
+\rl
+
+
 
 
 \begin{desc}{Name/Symbol}
@@ -3438,7 +3663,8 @@ Round(56.65)  # == 57
 \end{desc}
 
 \rl
-
+\section{S}
+\rl
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	SampleN()
@@ -3850,6 +4076,39 @@ SplitString("Everybody Loves a Clown", " ")
 \rl
 
 
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	Square()
+  
+\item[Description]	Creates a square for graphing at x,y with size
+  <size>. Squares are only currently definable oriented in
+  horizontal/vertical directions.  A square  must be added
+  to a parent widget before it can be drawn; it may be added to
+  widgets other than a base window.  The properties of squares may be
+  changed by accessing their properties directly, including the FILLED
+  property which makes the object an outline versus a filled shape.
+
+\item[Usage]
+\begin{verbatim}
+Ellipse(<x>, <y>, <size>, <color>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+  
+  s <- Square(30,30,20, MakeColor(green))
+  AddObject(s, win)
+  Draw()
+
+\end{verbatim}
+\item[See Also]	 Circle(), Ellipse(), Rectangle(), Line()
+\end{desc}
+
+\rl
+
+
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	Sqrt() 
 
@@ -3874,7 +4133,7 @@ Sqrt(100)  # == 10
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	StDev() 
 
-\item[Description] 	NOT IMPLEMENTED. Returns the standard deviation of \verb+<list>+.
+\item[Description]  Returns the standard deviation of \verb+<list>+.
 
 \item[Usage]       	
 \begin{verbatim}
@@ -3882,8 +4141,11 @@ StDev(<list>)
 \end{verbatim}
 
 \item[Example]	
+\begin{verbatim}
+   sd <- StDev([3,5,99,12,1.3,15])        
+\end{verbatim}
 
-\item[See Also]     	Min(), Max(), Mean(), Median(), Quantile()
+\item[See Also]     	Min(), Max(), Mean(), Median(), Quantile(), Sum()
 \end{desc}
 
 \rl
@@ -4031,6 +4293,32 @@ SubString("abcdefghijklmnop",3,5)	# == "cdefg"
 
 \rl
 
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	Sum() 
+
+\item[Description]  Returns the sum  of \verb+<list>+.
+
+\item[Usage]       	
+\begin{verbatim}
+Sum(<list>)        
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+   sum <- StDev([3,5,99,12,1.3,15])      # == 135.3
+\end{verbatim}
+
+\item[See Also]     	Min(), Max(), Mean(), Median(), Quantile(), StDev()
+\end{desc}
+
+\rl
+
+\section{T}
+\rl
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	Tan()	
@@ -4227,6 +4515,8 @@ Transpose([[1,11,111],[2,22,222],[3,33,333], [4,44,444]])
 \end{desc}
 
 \rl
+\section{U}
+\rl
 
 
 \begin{desc}{Name/Symbol}
@@ -4249,6 +4539,8 @@ Uppercase("POtaTo")  # == "POTATO"
 \item[See Also]     	Uppecase()
 \end{desc}
 
+\rl
+\section{W}
 \rl
 
 

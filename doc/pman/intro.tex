@@ -8,19 +8,20 @@ suit your needs as long as you follow the terms of the GPL, under
 which the source code is licensed. PEBL is written primarily in
 \texttt{C++}, but requires a few other tools (\texttt{flex},
 \texttt{yacc}) and libraries (\texttt{SDL}, \texttt{SDL\_image},
-\texttt{SDL\_ttf}) to use. It currently compiles and runs on Linux
+\texttt{SDL\_gfx}, and \texttt{SDL\_ttf}) to use. It currently compiles and runs on Linux
 (using \texttt{g++}), Mac OSX (also using \texttt{g++}), and Microsoft
 Windows (using \texttt{Dev-cpp} and \texttt{mingw}) platforms using
 free tools. It has been developed primarily by Shane T.~Mueller,
 Ph.D.~(\href{mailto:smueller@obereed.net}{smueller@obereed.net}).
-Contributions are welcome and encouraged.
+This document prepared with editorial and formatting help from Gulab
+Parab and Samuele Carcigano. Contributions are welcome and encouraged.
 
 \chapter{Usage}
 
 \section{How to Compile}
 
 Currently, there is no automated compile procedure.  PEBL requires the
-\texttt{SDL}, \texttt{SDL-image}, and \texttt{SDL-ttf} libraries and
+\texttt{SDL}, \texttt{SDL-image}, \texttt{SDL-gfx} and \texttt{SDL-ttf} libraries and
 development headers.  It also uses \texttt{flex} and \texttt{bison},
 but you can compile without these tools. PEBL compiles on both Linux
 and Windows using the free \texttt{gcc} compiler. Note that
@@ -75,9 +76,12 @@ to do this, and you can just as easily do it by hand.
 
 \subsection{Microsoft Windows}
 
-In Microsoft Windows, we provide an installer package that  contains
-all necessary executable binary files and \texttt{.dlls}. This installer places
-PEBL in \texttt{c:\char92 Program Files\char92PEBL}, and creates a directory \texttt{pebl-exp} in \texttt{My Documents} with a shortcut that allows PEBL to be launched  and  programs that reside there to be run.
+In Microsoft Windows, we provide an installer package that contains
+all necessary executable binary files and \texttt{.dlls}. This
+installer places PEBL in \texttt{c:\char92 Program Files\char92PEBL},
+and creates a directory \texttt{pebl-exp} in \texttt{My Documents}
+with a shortcut that allows PEBL to be launched and programs that
+reside there to be run.
 
 \subsection{Macintosh OSX}
 
@@ -110,34 +114,46 @@ You can also specify directories without a filename on the command-line (as long
 \subsection{ Microsoft Windows}
 
 PEBL can be launched from the command line in Windows by going to the
-\texttt{pebl\char92bin} directory and typing `\texttt{pebl.exe}'.  PEBL requires you to specify one or more source files that it will compile and run.  For
-example, the command
+\texttt{pebl\char92bin} directory and typing `\texttt{pebl.exe}'.
+PEBL requires you to specify one or more source files that it will
+compile and run.  For example, the command
 \begin{verbatim}
   > pebl stroop.pbl library.pbl
 \end{verbatim}
 loads the experiment described in \texttt{stroop.pbl}, and loads supplementary library functions in \texttt{library.pbl}.
 
 
-Additionally, PEBL can take the \texttt{-v} or \texttt{-V} command-line parameter, which allows you to pass values in to the script.  This is useful for
-entering subject numbers and condition types using an outside program
-like a batch file. You can also specify directories without a file (as long as they end with `\texttt{\char92}').  Doing so will add that directory to the search path when files are opened. See Section \ref{sec:2.5}: Command-Line Arguments.
+Additionally, PEBL can take the \texttt{-v} or \texttt{-V}
+command-line parameter, which allows you to pass values in to the
+script.  This is useful for entering condition
+types using an outside program like a batch file. the \texttt{-s} and
+\texttt{-S} allow one to specify a subject code, which gets bound to
+the gSubNum variable.  If no value is specified, gSubNum is
+initialized to 0.  You can also specify
+directories without a file (as long as they end with
+`\texttt{\char92}').  Doing so will add that directory to the search
+path when files are opened. See Section \ref{sec:2.5}: Command-Line
+Arguments.
 
 Launching programs from the command-line on Windows is cumbersome.
-One easy way to launch PEBL on Windows is to create a shortcut to
-the executable file and then edit the properties so that the shortcut
+One easy way to launch PEBL on Windows is to create a shortcut to the
+executable file and then edit the properties so that the shortcut
 launches PEBL with the proper script and command-line parameters.
-Another way is to write and launch a batch file, which is
-especially useful if you wish to enter configuration data before loading the script.
+Another way is to write and launch a batch file, which is especially
+useful if you wish to enter configuration data before loading the
+script.
 
 \subsubsection{ Win32 Launcher}
-PEBL comes with a launcher program that launches PEBL scripts in Microsoft Windows (tm).  It will allows you to specify 
-variables to pass into PEBL on execution, select multiple source files
-to load, and configure with a text file.
+PEBL comes with a launcher program that launches PEBL scripts in
+Microsoft Windows (tm).  It will allows you to specify variables to
+pass into PEBL on execution, select multiple source files to load, and
+configure with a text file.
 
 The launcher is written in Visual Basic, and so you might need some
 \texttt{.dll} files in order for it to run.
 
-When the launcher is run, it first looks for a file called \texttt{pebl-init.txt}. This file should have the following format:
+When the launcher is run, it first looks for a file called
+\texttt{pebl-init.txt}. This file should have the following format:
 \begin{verbatim}
 ---------------Beginning of file----------------------
 "Quoted_Path_To_PEBL_Executable"
@@ -162,9 +178,18 @@ Condition|fast
 -------------
 \end{verbatim}
 
-The Launcher will select the specified files in the listed
-directory (this can be changed by selecting other files).
-After the third line, every pair separated with a `\texttt{|}'  will appear as a text-entry box with the pre-specified default value. This can be used to specify subject numbers, conditions, and such, which are then fed into the PEBL script.
+The Launcher will select the specified files in the listed directory
+(this can be changed by selecting other files).  After the third line,
+every pair separated with a `\texttt{|}' will appear as a text-entry
+box with the pre-specified default value. This can be used to specify
+subject numbers, conditions, and such, which are then fed into the
+PEBL script.
+
+As of version 0.06, the launcher is improved so that it will open the
+stdout.txt and stderr.txt files after a script has been run and
+display them in a tabbed interface at the bottom of the launcher
+window.
+
 
 \subsection{ Macintosh OSX}
 
@@ -189,8 +214,9 @@ Then you can run:
 $  pebl Documents/test.pbl
 \end{verbatim}
 
-On OSX, there is no such thing as double-buffering.  
-However, under fullscreen mode, drawing can be synced to the vertical refresh. But as a caveat, this has not yet been implemented.
+On OSX, there is no such thing as double-buffering.  However, under
+fullscreen mode, drawing can be synced to the vertical refresh. But as
+a caveat, this has not yet been implemented.
 
 \section{How to stop running a program}
 
@@ -293,10 +319,13 @@ command-line argument.  If it does not, PEBL should exit
 and disply a useful error message; of course, it could
 possibly damage your hardware. 
 
-For the sake of convenience, the width, height, and bit depth can be accessed from within
-a PEBL script using the global variables \texttt{gVideoWidth}, \texttt{gVideoHeight}, and \texttt{gVideoDepth}.  These values are not protected from being changed in a script, but changing them will not change the display. However, if you change them, they will no longer be accurate.
+For the sake of convenience, the width, height, and bit depth can be
+accessed from within a PEBL script using the global variables
+\texttt{gVideoWidth}, \texttt{gVideoHeight}, and \texttt{gVideoDepth}.
+If these values are set within a script before the function
+MakeWindow() is called,  the window will be created with these values,
+overriding any command-line parameters.
   
-
 \item
 \begin{verbatim}
 --depth
@@ -314,10 +343,6 @@ a PEBL script using the global variables \texttt{gVideoWidth}, \texttt{gVideoHei
 
 Controls whether the script will run in a window or fullscreen.  
 \end{description}
-
-
-
-
 
 
 
