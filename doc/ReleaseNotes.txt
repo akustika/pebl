@@ -42,12 +42,16 @@ directly with a variable.property syntax, and a few new statistical
 functions.  A new command-line option, -s, enables you to set the
 variable gSubNum automatically at initiation, and the global variables
 gVideoWidth and gVideoHeight can now be changed at the beginning of a
-script, affecting the display screen size when MakeWindow() is
-called.  We also have a nicely improved manual thanks to Gulab Parab and
-Samuele Carcegeno, a new tutorial for beginners trying to learn PEBL,
-and a WIKI available on the website for help and tips, and where you can
-post your own experiments.  
-
+script, affecting the display screen size when MakeWindow() is called.
+We also have a nicely improved 100-page manual in pdf and html format
+thanks to the efforts of Gulab Parab and Samuele Carcegeno, a new
+tutorial for beginners trying to learn PEBL, and a WIKI available on
+the website for help and tips, and where you can post your own
+experiments.  We have improved PEBL's handling of international
+keyboards, and so a number of non-US keyboards may now work better, albeit
+with a few problems.  The windows version seems to not work however, so please
+test your favorite keyboard setup with the testinput.pbl script and
+send us feedback. This will be a priority for version 0.07.
 
 SHAPES. 
  Now, several graphical 'shape' objects can be created and
@@ -59,6 +63,8 @@ Move() function or .x and .y properties.  Like regular images, they
 must be added to the parent window with the AddObject() function, and
 are drawn when the Draw() function is called.  Shapes definition
 function include their initial coordinates in the parent window.
+Shapes come courtesy of the sdl_gfx library, so if you are compiling
+on linux, you need this library installed.
 
 Object/Properties.
 Previously, properties of objects were held privately by the object
@@ -97,7 +103,7 @@ Ellipse:              .rX, .rY
 Line:                 .dX, dY
      
 
- 
+
 
 New Functions:
   PEBL 0.06 introduces several new for creating shapes:  Circle(),
