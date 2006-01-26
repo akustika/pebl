@@ -8,26 +8,29 @@ suit your needs as long as you follow the terms of the GPL, under
 which the source code is licensed. PEBL is written primarily in
 \texttt{C++}, but requires a few other tools (\texttt{flex},
 \texttt{yacc}) and libraries (\texttt{SDL}, \texttt{SDL\_image},
-\texttt{SDL\_gfx}, and \texttt{SDL\_ttf}) to use. It currently compiles and runs on Linux
-(using \texttt{g++}), Mac OSX (also using \texttt{g++}), and Microsoft
-Windows (using \texttt{Dev-cpp} and \texttt{mingw}) platforms using
-free tools. It has been developed primarily by Shane T.~Mueller,
+\texttt{SDL\_gfx}, and \texttt{SDL\_ttf}) to use. It currently
+compiles and runs on Linux (using \texttt{g++}), Mac OSX (also using
+\texttt{g++}), and Microsoft Windows (using \texttt{Dev-cpp} and
+\texttt{mingw}) platforms using free tools. It has been developed
+primarily by Shane T.~Mueller,
+
 Ph.D.~(\href{mailto:smueller@obereed.net}{smueller@obereed.net}).
-This document prepared with editorial and formatting help from Gulab
-Parab and Samuele Carcigano. Contributions are welcome and encouraged.
+This document was prepared with editorial and formatting help from
+Gulab Parab and Samuele Carcagno. Contributions are welcome and
+encouraged.
 
 \chapter{Usage}
 
 \section{How to Compile}
 
 Currently, there is no automated compile procedure.  PEBL requires the
-\texttt{SDL}, \texttt{SDL-image}, \texttt{SDL-gfx} and \texttt{SDL-ttf} libraries and
-development headers.  It also uses \texttt{flex} and \texttt{bison},
-but you can compile without these tools. PEBL compiles on both Linux
-and Windows using the free \texttt{gcc} compiler. Note that
-\texttt{SDL-image} may require \texttt{jpeg}, \texttt{png}, and a
-\texttt{zlib} compression library, while \texttt{SDL-ttf} requires
-\texttt{truetype 2.0}.
+\texttt{SDL}, \texttt{SDL-image}, \texttt{SDL-gfx} and
+\texttt{SDL-ttf} libraries and development headers.  It also uses
+\texttt{flex} and \texttt{bison}, but you can compile without these
+tools. PEBL compiles on both Linux and Windows using the free
+\texttt{gcc} compiler. Note that \texttt{SDL-image} may require
+\texttt{jpeg}, \texttt{png}, and a \texttt{zlib} compression library,
+while \texttt{SDL-ttf} requires \texttt{truetype 2.0}.
 
 \subsection{Linux}
 
@@ -107,7 +110,7 @@ supplementary library functions in \texttt{library.pbl}.
 
 Additionally, PEBL can take the \texttt{-v} or \texttt{-V} command-line parameter, which allows you to pass values into the script.  This is useful for
 entering subject numbers and condition types using an outside program
-like a bash script (possibly one that invokes dialog or zenity). A sample zenity script that asks for subject number and then runs a sample experiment which uses that input resides in the \texttt{bin} directory. The script can be edited to use fullscreen mode or change the display dimensions, for example. See Section \ref{sec:2.5}: Command-Line Arguments.
+like a bash script (possibly one that invokes dialog or zenity). A sample zenity script that asks for subject number and then runs a sample experiment which uses that input resides in the \texttt{bin} directory. The script can be edited to use fullscreen mode or change the display dimensions, for example. See Section~\ref{sec:2.5}: Command-Line Arguments.
 
 You can also specify directories without a filename on the command-line (as long as they end with `\texttt{/}').  Doing so will add that directory to the search path when files are opened.
 
@@ -122,18 +125,17 @@ compile and run.  For example, the command
 \end{verbatim}
 loads the experiment described in \texttt{stroop.pbl}, and loads supplementary library functions in \texttt{library.pbl}.
 
-
 Additionally, PEBL can take the \texttt{-v} or \texttt{-V}
 command-line parameter, which allows you to pass values in to the
-script.  This is useful for entering condition
-types using an outside program like a batch file. the \texttt{-s} and
-\texttt{-S} allow one to specify a subject code, which gets bound to
-the gSubNum variable.  If no value is specified, gSubNum is
-initialized to 0.  You can also specify
-directories without a file (as long as they end with
+script.  This is useful for entering condition types using an outside
+program like a batch file. the \texttt{-s} and \texttt{-S} allow one
+to specify a subject code, which gets bound to the gSubNum variable.
+If no value is specified, gSubNum is initialized to 0.  You can also
+specify directories without a file (as long as they end with
 `\texttt{\char92}').  Doing so will add that directory to the search
 path when files are opened. See Section \ref{sec:2.5}: Command-Line
 Arguments.
+
 
 Launching programs from the command-line on Windows is cumbersome.
 One easy way to launch PEBL on Windows is to create a shortcut to the
@@ -178,6 +180,7 @@ Condition|fast
 -------------
 \end{verbatim}
 
+
 The Launcher will select the specified files in the listed directory
 (this can be changed by selecting other files).  After the third line,
 every pair separated with a `\texttt{|}' will appear as a text-entry
@@ -186,10 +189,9 @@ subject numbers, conditions, and such, which are then fed into the
 PEBL script.
 
 As of version 0.06, the launcher is improved so that it will open the
-stdout.txt and stderr.txt files after a script has been run and
+\verb+stdout.txt+ and \verb+stderr.txt+ files after a script has been run and
 display them in a tabbed interface at the bottom of the launcher
 window.
-
 
 \subsection{ Macintosh OSX}
 
@@ -242,7 +244,7 @@ and  command-line arguments.\\
 \\
 Examples:
 \begin{verbatim}
-pebl experiment.pbl -v sub1 --fullscreen --display 800x600 --driver dga
+pebl experiment.pbl -s sub1 --fullscreen --display 800x600 --driver dga
 pebl experiment.pbl --driver xf86
 pebl experiment.pbl -v 33 -v 2 --fullscreen --display 640x480 
 \end{verbatim}
@@ -258,22 +260,31 @@ pebl experiment.pbl -v 33 -v 2 --fullscreen --display 640x480
 \end{verbatim}
   Invokes script and passes \texttt{VALUE1} and \texttt{VALUE2} (or any text
   immediately following a \texttt{-v}) to a list in the argument of
-  the\texttt{Start()}  function. \newline This is useful for passing in
+  the \texttt{Start()}  function. \newline This is useful for passing in
   conditions, subject numbers, randomization cues, and other
   entities that are easier to control from outside  the
   script.  Variables appear as strings, so numeric values
   need to be converted to be used as numbers.
 
+\item
+\begin{verbatim}
+ -s VALUE
+ -S VALUE
+\end{verbatim}
+  Binds \texttt{VALUE} to the global variable gSubNum, which is set by
+  default to 0.
+
 \item 
 \begin{verbatim}
 --driver <drivername>
 \end{verbatim}
-  Sets the video driver, when there is more than one.  In Linux
-  SDL, options  \texttt{xf86}, \texttt{dga}, \texttt{svgalib} (from console), itcan also be controlled
-  via environment variables.  In fact, for SDL versions of
-  PEBL simply set the \texttt{SDL\_VIDEO\_DRIVER} environment variable
-  to the passed-in argument, without doing any checking, and
-  without checking or returning it to its original state.  
+  Sets the video driver, when there is more than one.  In Linux SDL,
+  options \texttt{xf86}, \texttt{dga}, \texttt{svgalib} (from
+  console), itcan also be controlled via environment variables.  In
+  fact, for SDL versions of PEBL simply set the
+  \texttt{SDL\_VIDEO\_DRIVER} environment variable to the passed-in
+  argument, without doing any checking, and without checking or
+  returning it to its original state.
 
 \item
 \begin{verbatim}
@@ -319,11 +330,12 @@ command-line argument.  If it does not, PEBL should exit
 and disply a useful error message; of course, it could
 possibly damage your hardware. 
 
+
 For the sake of convenience, the width, height, and bit depth can be
 accessed from within a PEBL script using the global variables
 \texttt{gVideoWidth}, \texttt{gVideoHeight}, and \texttt{gVideoDepth}.
 If these values are set within a script before the function
-MakeWindow() is called,  the window will be created with these values,
+\verb+MakeWindow()+ is called,  the window will be created with these values,
 overriding any command-line parameters.
   
 \item

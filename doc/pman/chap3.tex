@@ -285,11 +285,11 @@ This produces the output:
 \begin{verbatim}
   55  33
 \end{verbatim} 
-This may seem  confusing at first, but the consistency pays off in time.  The`\verb+<-+'
-assignment operator never changes the value of the data attached to a
-variable, it just changes what the variable points to.  PEBL is 
-functional in its handling of simple data types, so you can't, for
-example, directly modify the contents of a string.
+This may seem confusing at first, but the consistency pays off in
+time.  The `\verb+<-+' assignment operator never changes the value of
+the data attached to a variable, it just changes what the variable
+points to.  PEBL is functional in its handling of simple data types,
+so you can't, for example, directly modify the contents of a string.
 \begin{verbatim}
   a  <- "my string"    #assigns a string literal to a
   b  <- a              #makes b refer to a's string literal

@@ -4,15 +4,15 @@
 In PEBL, complex objects are stored and automatically self-managed.
 These objects include lists, graphical display widgets like images and
 text displays, fonts, colors, audio files, and input or output files.
-Objects are created and modified with special functions, but many of their
-properties available directly for access and modification with a
+Objects are created and modified with special functions, but many of
+their properties available directly for access and modification with a
 \texttt{variable.property} syntax.  For example, the position of a
-textbox is controlled by .X and .Y properties, and can also be changed
-with the Move() function.  To move the label \texttt{lab}, which is
-located at 100,100,  to 150,100, you can either do
-\texttt{Move(lab,150,100)} ore lab.X <- 150.  The available properties
-and accessor function are listed in the decriptions of their relevant
-objects below.
+textbox is controlled by \verb+.X+ and \verb+.Y+ properties, and can
+also be changed with the \verb+Move()+ function.  To move the label
+\texttt{lab}, which is located at 100,100, to 150,100, you can either
+do \texttt{Move(lab,150,100)} or \verb+lab.X <- 150+.  The available
+properties and accessor function are listed in the decriptions of
+their relevant objects below.
 
 
 \section{Lists}
@@ -118,15 +118,18 @@ Other fonts may be used by specifying their absolute pathname
 or copying them to the working directory.
 
 
-Accessible font properties:\\
- font.FILENAME\\
- font.BOLD\\
- font.UNDERLINE\\
- font.ITALIC\\
- font.SIZE\\
- font.FGCOLOR\\
- font.BGCOLOR\\
- font.ANTIALIASED\\
+Accessible font properties:
+\begin{verbatim}
+  font.FILENAME
+  font.BOLD
+  font.UNDERLINE
+  font.ITALIC
+  font.SIZE
+  font.FGCOLOR
+  font.BGCOLOR
+  font.ANTIALIASED
+\end{verbatim}
+ 
 
 
 \section{Colors} 
@@ -135,11 +138,14 @@ Colors are PEBL objects.  A color can be created by specifying its name
 using the \texttt{MakeColor()} function, or by specifying its RGB values using the \texttt{MakeColorRGB()} function. A list of colors and their respective RGB values can be found in the \texttt{Colors.txt} file in the documentation directory. There are nearly 800 from which to choose, so you can create 
 just about anything you can imagine.
 
-Accessible color properties:\\
- color.RED\\
- color.GREEN\\
- color.BLUE\\
- color.ALPHA\\
+Accessible color properties:
+\begin{verbatim}
+  color.RED
+  color.GREEN
+  color.BLUE
+  color.ALPHA
+\end{verbatim}
+ 
 
 \section{Windows}
 
@@ -171,13 +177,15 @@ finished using them.
 
 All widgets have several properties available for controlling their
 behavior.
-
-
+\begin{verbatim}
   widget.X
   widget.Y
   widget.WIDTH
   widget.HEIGHT
   widget.VISIBLE
+\end{verbatim}
+
+  
 
 
 \section{Images}
@@ -213,14 +221,16 @@ The text inside a label can be extracted with \texttt{GetText()}
 and set with \texttt{SetText()}. When you change a text object, 
 it will not appear until the next time you call a \texttt{Draw()} function.
 
-text labels have all the regular widget properties, plus:
+Text labels have all the regular widget properties, plus:
+\begin{verbatim}
+  label.TEXT 
+  label.FONT
+\end{verbatim}
+  
 
- label.TEXT \\
- label.FONT \\
 
-
-The .HEIGHT and .WIDTH accessible, but cannot be changed because they
-are controlled by the text and the font size.
+The \verb+.HEIGHT+ and \verb+.WIDTH+ accessible, but cannot be changed
+because they are controlled by the text and the font size.
 
 
 \section{Text Boxes}
@@ -233,9 +243,12 @@ is changed, it rerenders immediately, but does not appear until the
 next time a \texttt{Draw()} function is called.
 
 
-textbox properties:\\
-  textbox.EDITABLE\\
-  textbox.CURSORPOS \\
+Textbox properties:
+\begin{verbatim}
+   textbox.EDITABLE
+   textbox.CURSORPOS 
+\end{verbatim}
+ 
 
 
 \section{User-Editable Text Boxes}
@@ -259,7 +272,7 @@ and is handled in \texttt{src/utility/PEBLUtility.cpp:TranslateString}
 \section{Audio}
 
 Currently, audio output is very primitive, and there are no facilities for recording or analyzing audio input. Audio \texttt{.wav} files can be loaded with the \texttt{LoadSound()} function, which returns an audio stream object that can be played  with either the \texttt{PlayForeground()} or \texttt{PlayBackground()} functions.  
-The \texttt{PlayForeground()} function returns once the sound is finished playing; \texttt{PlayBackground()} returns immediately and the sound plays in a separate thread.  When using PlayBackground, playing can be stopped using the \texttt{Stop()} function.  If another \texttt{PlayForeground()} or \texttt{PlayBackground()} is then used,
+The \texttt{PlayForeground()} function returns once the sound is finished playing; \texttt{PlayBackground()} returns immediately and the sound plays in a separate thread.  When using \texttt{PlayBackground}, playing can be stopped using the \texttt{Stop()} function.  If another \texttt{PlayForeground()} or \texttt{PlayBackground()} is then used,
 the initial sound will immediately terminate and the new file will play. Currently, PEBL can only play one sound at a time.
 
 
@@ -325,6 +338,7 @@ media/text
 You can also specify other paths to be searched by specifying them on the command line.  Be sure to end the directory with whatever is appropriate for your platform, e.g.~ `\char92' on Microsoft Windows or `/' on Linux.
 
 \section{Provided Media Files}
+\label{sec:media}
 
 PEBL comes with various media files that can be specified from 
 any script without including the complete path.  If a user's file has
@@ -424,24 +438,24 @@ and can later be accessed by an experiment. These are described in table~\ref{ta
 \toprule
 \textbf{Name}&\textbf{Purpose}\\
 \midrule
-gKeepLooping & Controls continued execution in event loop. \\
+\verb+gKeepLooping+ & Controls continued execution in event loop. \\
  &           (Not currently useful).\\
 \addlinespace[.2cm]
-gVideoWidth  &	The width in pixels of the display (set by\\
+\verb+gVideoWidth+  &	The width in pixels of the display (set by\\
              &  default or command-line option). Changing \\
-             &  this before calling MakeWindow will change \\
+             &  this before calling \verb+MakeWindow+ will change \\
              &  display width, if that width is available. \\
 \addlinespace[.2cm]
-gVideoHeight & 	The height in pixels of the display (set by\\
+\verb+gVideoHeight+ & 	The height in pixels of the display (set by\\
              & 	default or command-line). Changing this before calling \\
-             &  MakeWindow() will change the display height, if that \\
+             &  \verb+MakeWindow()+ will change the display height, if that \\
              &  height is available.\\
 \addlinespace[.2cm]
-gVideoDepth    &      	The bit depth of the video.\\
+\verb+gVideoDepth+    &      	The bit depth of the video.\\
 
 \addlinespace[.2cm]
-gSubNum      &  A global variable set to whatever follows the --s or \\
-             & --S command-line argument.  If no argument is given, \\
+\verb+gSubNum+      &  A global variable set to whatever follows the \verb+--s+ or \\
+             & \verb+--S+ command-line argument.  If no argument is given, \\
              & defaults to 0.\\
 \bottomrule
 \end{tabular}

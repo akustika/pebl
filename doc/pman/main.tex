@@ -1,10 +1,8 @@
 \documentclass[a4paper,11pt]{report}
 
 %\usepackage[hmargin={3.6cm}]{geometry}
-%\usepackage{mathpazo,bm}
 \usepackage[T1]{fontenc}
-\usepackage{lmodern} %lmodern,euler
-%\usepackage{ctable}
+\usepackage{lmodern} 
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{xtab}
@@ -16,7 +14,7 @@
 \captionsetup[table]{aboveskip=5pt,belowskip=5pt,position=top,margin=10pt,font=small,labelfont=bf,format=hang}
 \captionsetup[figure]{aboveskip=0pt,belowskip=0pt,position=top,margin=10pt,font=small,labelfont=bf,format=hang}
 
-%\setlength{\parindent}{10pt}
+
 \setcounter{secnumdepth}{2}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -40,7 +38,7 @@
 } 
 
 \begin{document}
-%\renewcommand{\bibname}{References}
+
 \pagenumbering{roman}
 \begin{center}
 \LARGE
@@ -51,7 +49,7 @@
 
 
 \vspace{.4cm}
-%\linespread{1}
+
 \normalsize
 \noindent\copyright 2003-2006 Shane T.~Mueller \href{mailto:smueller@obereed.net}{smueller@obereed.net}\\
 Current for PEBL Version 0.06 -- January 2006 \\
@@ -64,20 +62,14 @@ Current for PEBL Version 0.06 -- January 2006 \\
 \include{chap3}
 \include{chap4}
 \include{chap5}
-\include{chap6}
+\include{chap6_a-i}
+\include{chap6_l-r}
+\include{chap6_s-z}
+
 
 
 
 \appendix
-%\renewcommand{\arraystretch}{1.5}
-%\include{commands}
 
-
-%\cleardoublepage
-%\phantomsection
-%\addcontentsline{toc}{chapter}{References}
-%\bibliographystyle{abbrv}
-%\bibliography{r}
-%\nocite{*}
 
 \end{document}
