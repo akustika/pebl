@@ -375,7 +375,7 @@ install:
 	rm -Rf /usr/local/share/pebl
 	mkdir /usr/local/share/pebl
 	cp -R media/ /usr/local/share/pebl
-	cp -R pebl-lib/ /usr/local/share/pebl/pebl-lib/
+	cp -R pebl-lib/ /usr/local/share/pebl
 
 	rm -Rf /usr/local/share/pebl/media/CVS
 	rm -Rf /usr/local/share/pebl/media/images/CVS
