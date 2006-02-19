@@ -72,6 +72,11 @@ define StdDev(list)
 	SignalFatalError("Argument of function [StdDev(<list>)] is not a list")
 	}
   n <- Length(list)
+  if(n == 0 ) 
+  {
+    stdv <- 0
+ 
+  } else {
   sumX <- 0
   sumXX <- 0
   loop(i, list)
@@ -79,7 +84,10 @@ define StdDev(list)
     sumX <- sumX + i
     sumXX <- sumXX + i * i
   }
- return Sqrt(n * sumXX - sumX * sumX ) / n
+
+   stdv <- Sqrt(n * sumXX - sumX * sumX ) / n
+  }
+ return stdv
 }
 
 ##Min

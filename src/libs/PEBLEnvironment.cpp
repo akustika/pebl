@@ -388,6 +388,75 @@ Variant PEBLEnvironment::WaitForAnyKeyDownWithTimeout(Variant v)
 }
 
 
+// This takes a list of keys, a timeout duration, and an integer specifying
+// the style: 
+//  1 == return after whichever happens first
+//  2 == return only after timeout occurs
+//  3 == return after both occur (response and min duration necessary)
+//  In all cases, the key pressed is returned.  If a key has not been pressed, 
+//  the empty string "" is returned.
+
+Variant PEBLEnvironment::WaitForListKeyPressWithTimeout(Variant v)
+{
+  
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_LIST, "Argument error in first parameter of function [WaitForListKeyPressWithTimeout(<list-of-keys>,<timeout>,<style>)]:  ");    
+
+
+    //Use plist to get the actual list of items.
+    PList * keylist = (PList*)((v1.GetComplexData())->GetObject().get());
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in second parameter of function [WaitForListKeyPressWithTimeout(<list-of-keys>,<timeout>,<style>)]:  ");    
+    int delay  = plist->First(); plist->PopFront();
+    delay += myTimer.GetTime();
+
+    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in third parameter of function [WaitForListKeyPressWithTimeout(<list-of-keys>,<timeout>,<style>)]:  ");    
+    Variant v3 = plist->First(); plist->PopFront();
+
+    
+
+
+
+    std::list<Variant>::iterator p = keylist->Begin();
+    std::list<Variant>::iterator end = keylist->End();
+
+    ValueState * state;
+    string funcname = "";
+    PList* params = NULL;
+    PEBLKey key;
+
+    while(p != end)
+        {
+            //Create a keyboard tests correspending to each item in v1. 
+            //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
+            key = PEBLUtility::TranslateString(*p);
+            state = new ValueState(PEBL_PRESSED, DT_EQUAL, key, gEventQueue, PDT_KEYBOARD);
+            //NULL,NULL will terminate the looping
+            Evaluator::mEventLoop.RegisterEvent(state,funcname, params);
+            p++;
+        }
+
+
+                                                                                                                   
+    //Create a timer test correspending to keydown.
+    //1 is the value (down), DT_GREATERTHAN is the test, key is the interface (e.g., the 'A' key)
+    PDevice * timer = new PlatformTimer(myTimer);
+    ValueState  * timestate = new ValueState(delay, DT_GREATER_THAN_OR_EQUAL, 1, timer, PDT_TIMER);
+
+
+    //NULL,NULL will terminate the looping
+    Evaluator::mEventLoop.RegisterState(timestate, funcname, params);
+    PEvent returnval = Evaluator::mEventLoop.Loop();
+
+    //Now, clear the event loop tests
+    Evaluator::mEventLoop.Clear();
+
+    return Variant(returnval.GetDummyEvent().value);
+
+}
+
+
 //This function will block until one of the keys listed in the argument is depressed, 
 //and then return the value of the key that was hit.
 Variant PEBLEnvironment::WaitForKeyListDown(Variant v)

@@ -220,6 +220,7 @@ namespace PEBLEnvironment
             {"WAITFORALLKEYSUP",                WaitForAllKeysUp,  0, 0},
             {"WAITFORANYKEYDOWNWITHTIMEOUT",    WaitForAnyKeyDownWithTimeout,  1, 1},
             {"WAITFORKEYLISTDOWN",              WaitForKeyListDown, 1, 1},
+            {"WAITFORLISTKEYPRESSWITHTIMEOUT",  WaitForListKeyPressWithTimeout, 3,3},
             {"CLEAREVENTLOOP",                  ClearEventLoop,     0, 0},
             {"GETINPUT",                        GetInput,           2, 2},
             {"SIGNALFATALERROR",                SignalFatalError,   1,1},
