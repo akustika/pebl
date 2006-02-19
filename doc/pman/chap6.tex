@@ -639,13 +639,13 @@ ChooseN(<list>, <number>)
 
 \item[Usage]
 \begin{verbatim}
-Circle(<x>, <y>, <r>,<color>)
+Circle(<x>, <y>, <r>,<color>,<filled>)
 \end{verbatim}
 
 \item[Example]	
 \begin{verbatim}
   
-  c <- Circle(30,30,20, MakeColor(green))
+  c <- Circle(30,30,20, MakeColor(green),1)
   AddObject(c, win)
   Draw()
 
@@ -972,13 +972,13 @@ DrawFor( <object>, <cycles>)
 
 \item[Usage]
 \begin{verbatim}
-Ellipse(<x>, <y>, <rx>, <ry>,<color>)
+Ellipse(<x>, <y>, <rx>, <ry>,<color>,<filled>)
 \end{verbatim}
 
 \item[Example]	
 \begin{verbatim}
   
-  e <- Ellipse(30,30,20,10, MakeColor(green))
+  e <- Ellipse(30,30,20,10, MakeColor(green),0)
   AddObject(e, win)
   Draw()
 
@@ -3422,13 +3422,13 @@ RandomUniform(<num>)
 
 \item[Usage]
 \begin{verbatim}
-Rectangle(<x>, <y>, <dx>, <dy>, <color>)
+Rectangle(<x>, <y>, <dx>, <dy>, <color>,<filled>)
 \end{verbatim}
 
 \item[Example]	
 \begin{verbatim}
   
-  r <- Rectangle(30,30,20,10, MakeColor(green))
+  r <- Rectangle(30,30,20,10, MakeColor(green),1)
   AddObject(r, win)
   Draw()
 
@@ -4091,13 +4091,13 @@ SplitString("Everybody Loves a Clown", " ")
 
 \item[Usage]
 \begin{verbatim}
-Ellipse(<x>, <y>, <size>, <color>)
+Ellipse(<x>, <y>, <size>, <color>,<filled>)
 \end{verbatim}
 
 \item[Example]	
 \begin{verbatim}
   
-  s <- Square(30,30,20, MakeColor(green))
+  s <- Square(30,30,20, MakeColor(green),1)
   AddObject(s, win)
   Draw()
 
