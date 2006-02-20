@@ -1,3 +1,4 @@
+#!/usr/local/bin/pebl
 ###########################################################
 ## Digit Span, Version 0.1
 ## For use with PEBL 0.06 or later
@@ -5,7 +6,6 @@
 ## Part of  The PEBL Psychological Testing Battery
 ## 2006-02 Released into Public Domain
 ## by Shane T. Mueller, Ph.D. (smueller at obereed dot net)
-##
 ##
 ##
 ## This conducts a digit span task with visual presentation
@@ -17,6 +17,7 @@
 ## This saves two files, a basic data file in regular format and one
 ## line per trial; and a second log file which lists stimuli, responses 
 ## response times, etc.
+###########################################################
 
 define Start(lPar)
 {
@@ -38,7 +39,7 @@ define Start(lPar)
   perlength  <- 3             ## The number of trials at each length
   criterion  <- 2             ## The number that must be correct to proceed
   staircasetrials <- 16       ## Number of staircase trials.
-  gISI <- 700                 ## Inter-stimulus interval in ms
+  gISI <- 1000                ## Inter-stimulus interval in ms
 
 
   if(gVersion == 1)
@@ -67,9 +68,6 @@ define Start(lPar)
   ## Begin presenting and collecting data
   ####################################################
 
-
-   ## Good researchers collect demographic data anonymously.
-   ##  GetNIMHDemographics(gSubNum, gWin, "dspan-demographics.txt")
 
    ## Give instructions; wait for them to hit a key, 
    inst <- "You are about to take part in a memory test.  You will
@@ -262,4 +260,27 @@ define ListToString(list)
     tmp <- tmp + i
   }
  return tmp
+}
+
+## This makes a 'formatted' text string,  
+## making sure it has length size.  If val is too short,
+## it chops off the end of val; if it is too short, it pads
+## the end of val with spaces.  
+define Format(val, size)
+{
+
+  string <- "" + val
+
+  len <- StringLength(string)
+ 
+  #If size is smaller than length, 
+  if(size <= len)
+  {
+    string <- SubString(string,1,size) 
+  }else {
+   pad <- ListToString(Repeat(" ",size - len))
+   string <- string + pad
+  }
+
+  return string
 }

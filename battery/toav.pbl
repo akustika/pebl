@@ -1,40 +1,44 @@
+#!/usr/local/bin/pebl
+#################################################################
+##  Test of Attentional Vigilance, (TOAV),  PEBL's version of the
+##  Test of Variables of Attention (TOVA)(tm), 
+##  For use with PEBL 0.07 or later
+##  http://pebl.sf.net
+##  Part of  The PEBL Psychological Test Battery
+##  2006-02 Released into Public Domain
+##  by Shane T. Mueller, Ph.D. (smueller at obereed dot net)
+##
+##
+##  Implementation based on description in:
+##  Forbes, G. B. (1998). Clinical Utility of the Test of 
+##      Variables of Attention (TOVA) in the Diagnosis of 
+##      Attention-Deficit/Hyperactivity Disorder. Journal 
+##      of Clinical Psychology, 54 (4), 461-476.
+##
+##  The following text is paraphrased from method section of above article:
+##  In this procedure, the test stimulus is a square containing a square hole
+##  near either the top or bottom edge.  Targets are holes on the top; 
+##  subjects are to make responses when the target is on top and not on bottom.
+## 
+##  Stimuli are presented for 100 ms, with SOA of 2000 ms.  The entire test
+##  takes 22.5 minutes.  For the first half, targets are present 22.5 % of 
+##  the time, the second half present 77.5% of the time.
+## 
+##  To approximate this schedule, we use 640 stimuli:   
+##  In the first half of 320 stimuli, 72 signals and 248 non-signals.
+##  In the second half of 320 stimuli, 248 non-signals and 72 signals.
+##
+##  Norms are available in:
+##
+##  Greenberg, L. M. , & Waldman, I D. (1993). Developmental normative data 
+##      on the Test of Variable of Attention (T.O.V.A. tm). Journal of Child 
+##      Psychology and Psychiatry, 34, 1019-1030.
+##
+#################################################################
+
 define Start(lPar)
 {
- ## (c) 2006 Shane T. Mueller
- ## stmuelle @ indiana.edu
- ## Attentional Vigilance Test, PEBL's version of the
- ## Test of Variables of Attention (TOVA)(tm), based on description in:
- ##
- ## Forbes, G. B. (1998). Clinical Utility of the Test of 
- ## Variables of Attention (TOVA) in the Diagnosis of 
- ## Attention-Deficit/Hyperactivity Disorder. Journal of Clinical Psychology,
- ## 54 (4), 461-476.
- ##
- ## The following text is paraphrased from method section of above article:
- ## In this procedure, the test stimulus is a square containing a square hole
- ## near either the top or bottom edge.  Targets are holes on the top; 
- ## subjects are to make responses when the target is on top and not on bottom.
- ## 
- ## Stimuli are presented for 100 ms, with SOA of 2000 ms.  The entire test
- ## takes 22.5 minutes.  For the first half, targets are present 22.5 % of 
- ## the time, the second half present 77.5% of the time.
- ## 
- ## To approximate this schedule, we use 640 stimuli:   
- ##  In the first half of 320 stimuli, 72 signals and 248 non-signals.
- ##  In the second half of 320 stimuli, 248 non-signals and 72 signals.
- ## Norms are available in:
- ##
- ## Greenberg, L. M. , & Waldman, I D. (1993). Developmental normative data 
- ## on the Test of Variable of Attention (T.O.V.A. tm). Journal of Child 
- ## Psychology and Psychiatry, 34, 1019-1030.
- ##
- ## For use with PEBL 0.06 or later
- ## http://pebl.sf.net
- ## Part of  The PEBL Psychological Test Battery
 
-
-  ## results are stored in tmpresults.dat
-  gFileOut <-FileOpenAppend("avt-" + gSubNum +".txt")
  
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
@@ -87,6 +91,8 @@ Press any key to begin.")
    AddObject(gInnerTarg,gWin)
    AddObject(gInnerFoil,gWin)
 
+  datafile   <- FileOpenWrite("toav-"+ gSubNum + ".txt")
+  reportfile <- FileOpenWrite("toav-report-" + gSubNum + ".txt")
 
 
    ## 
@@ -114,7 +120,7 @@ Press any key to begin.")
    totalTrials2 <- 0   # 
 
 
-   Print("sub trial targ toofast responded corr mult time rt")
+   FilePrint(datafile,"sub trial targ toofast responded corr mult time rt")
 
 
     half <- 1  
@@ -223,7 +229,7 @@ Press any key to begin.")
      }
 
      corr <- (i == responded)
-     Print(gSubNum + "   " + trialnum + "     " + i + "    " + toofast + "       " +  responded + "         " + corr + "    " + mult + "    " + timeStart + " " + rt)
+     FilePrint(datafile,gSubNum + "   " + trialnum + "     " + i + "    " + toofast + "       " +  responded + "         " + corr + "    " + mult + "    " + timeStart + " " + rt)
 
      ##Now, update counters/structures. based on the stats
 
@@ -292,27 +298,38 @@ Press any key to begin.")
 
 
 ##Print out report
-   Print("---------------------------------------------------")
-   Print("Variable           Half 1     Half 2     Pooled")
-   Print("---------------------------------------------------")
-   Print("Total Trials       " + totalTrials1 + "          " + totalTrials2  + "       " + (totalTrials1 + totalTrials2))
-   Print("Correct Targets    " + corrTarg1 + "           " + corrTarg2  + "        " + (corrTarg1 + corrTarg2))
-   Print("Correct Foils      " + corrFoil1 + "           " + corrFoil2  + "        " + (corrFoil1 + corrFoil2))
-   Print("Correct Trials     " + (corrTarg1 + corrFoil1) + "           " + (corrTarg2 + corrFoil2) + "        " + (corrTarg1 + corrTarg2 + corrFoil1 + corrFoil2))
-   Print("Commission Errors  " + commissions1 + "           " + commissions2 + "        " + (commissions1 + commissions2))
-   Print("Ommission Errors   " + ommissions1  + "           " + ommissions2  + "        " + (ommissions1 + ommissions2))  
-   Print("Correct RT Mean    " + Round(Mean(rtCorr1)) +   "        " + Round(Mean(rtCorr2)) +   "      " + Round(Mean(Merge(rtCorr1,rtCorr2))))
-   Print("Error RT Mean      " + Round(Mean(rtInc1)) +   "        " + Round(Mean(rtInc2)) +   "      " + Round(Mean(Merge(rtInc1,rtInc2))))
-   Print("RT Mean            " + Round(Mean(Merge(rtCorr1,rtInc1))) +   "        " + Round(Mean(Merge(rtCorr2,rtInc2))) +   "      " + Round(Mean(Flatten([rtCorr1,rtInc1, rtCorr2, rtInc2]))))
-   Print("RT SD              " + Round(StdDev(Merge(rtCorr1,rtInc1))) +   "        " + Round(StdDev(Merge(rtCorr2,rtInc2))) +   "      " + Round(StdDev(Flatten([rtCorr1,rtInc1, rtCorr2, rtInc2]))))
-   Print("Anticipations      " + antic1       + "            " + antic2       + "         " + (antic1 + antic2))
-   Print("Multiple Responses " + multiples1   + "            " + multiples2   + "         " + (multiples1 + multiples2))
-   Print("---------------------------------------------------")
+   FilePrint(reportfile,"---------------------------------------------------")
+   FilePrint(reportfile," Report for PEBL Test of Attentional Vigilance")
+   FilePrint(reportfile,"  (TOAV) Version 0.1")
+   FilePrint(reportfile, " "+GetPEBLVersion())
+   FilePrint(reportfile, " "+TimeStamp())
+   FilePrint(reportfile, " Participant Code: " + gSubNum)
+   
+   FilePrint(reportfile," http://pebl.sf.net")
+   FilePrint(reportfile,"---------------------------------------------------")
+   FilePrint(reportfile,"Statistic           Half 1     Half 2     Pooled")
+   FilePrint(reportfile,"---------------------------------------------------")
+   FilePrint(reportfile,"Total Trials       " + Format(totalTrials1,12) + Format(totalTrials2,12)   + (totalTrials1 + totalTrials2))
+   FilePrint(reportfile,"Correct Targets    " + Format(corrTarg1,12) +    Format(corrTarg2 ,12)     + (corrTarg1 + corrTarg2))
+   FilePrint(reportfile,"Correct Foils      " + Format(corrFoil1,12) +    Format(corrFoil2,12)      + (corrFoil1 + corrFoil2))
+   FilePrint(reportfile,"Correct Trials     " + Format((corrTarg1 + corrFoil1),12) + Format((corrTarg2 + corrFoil2),12) + (corrTarg1 + corrTarg2 + corrFoil1 + corrFoil2))
+   FilePrint(reportfile,"Commission Errors  " + Format(commissions1,12) + Format(commissions2,12)   + (commissions1 + commissions2))
+   FilePrint(reportfile,"Ommission Errors   " + Format(ommissions1,12)  + Format(ommissions2 ,12)   + (ommissions1 + ommissions2))  
+   FilePrint(reportfile,"Correct RT Mean    " + Format(Round(Mean(rtCorr1)),12) + Format(Round(Mean(rtCorr2)),12) + Round(Mean(Merge(rtCorr1,rtCorr2))))
+   FilePrint(reportfile,"Error RT Mean      " + Format(Round(Mean(rtInc1)),12)  + Format(Round(Mean(rtInc2)),12) + Round(Mean(Merge(rtInc1,rtInc2))))
+   FilePrint(reportfile,"RT Mean            " + Format(Round(Mean(Merge(rtCorr1,rtInc1))),12)   + Format(Round(Mean(Merge(rtCorr2,rtInc2))),12) + Round(Mean(Flatten([rtCorr1,rtInc1, rtCorr2, rtInc2]))))
+   FilePrint(reportfile,"RT SD              " + Format(Round(StdDev(Merge(rtCorr1,rtInc1))),12) + Format(Round(StdDev(Merge(rtCorr2,rtInc2))),12) + Round(StdDev(Flatten([rtCorr1,rtInc1, rtCorr2, rtInc2]))))
+   FilePrint(reportfile,"Anticipations      " + Format(antic1,12)      + Format(antic2,12)          + (antic1 + antic2))
+   FilePrint(reportfile,"Multiple Responses " + Format(multiples1,12)  + Format(multiples2,12)      +  (multiples1 + multiples2))
+   FilePrint(reportfile,"---------------------------------------------------")
    
 
 
    ##Now, show debriefing info.
-   SetText(gInstructions, "Thank you for participating in the experiment.  You may now leave.  (Press secret key 'X' to finish experiment)")
+   SetText(gInstructions, "Thank you for participating in the experiment.  You may now leave.
+  Report found in file: [toav-report-" +gSubNum  + ".dat]
+  Data found in file:   [toav-"  + gSubNum + ".dat] 
+  (Press 'X' to finish experiment)")
    Show(gInstructions)
    Draw()
    WaitForKeyPress("X")
@@ -344,6 +361,41 @@ define Initialize()
  }
 
 
+
+## This makes a 'formatted' text string,  
+## making sure it has length size.  If val is too short,
+## it chops off the end of val; if it is too short, it pads
+## the end of val with spaces.  
+define Format(val, size)
+{
+
+  string <- "" + val
+
+  len <- StringLength(string)
+ 
+  #If size is smaller than length, 
+  if(size <= len)
+  {
+    string <- SubString(string,1,size) 
+  }else {
+   pad <- ListToString(Repeat(" ",size - len))
+   string <- string + pad
+  }
+
+  return string
+}
+
+
+define ListToString(list)
+{
+  tmp <- ""
+  loop(i,list)
+  {
+    tmp <- tmp + i
+  }
+ return tmp
+}
+
 define DrawTarg()
 { 
    Show(gOuter)
@@ -368,3 +420,5 @@ define HideAll()
    Hide(gInnerFoil)
    Draw()
 }
+
+
