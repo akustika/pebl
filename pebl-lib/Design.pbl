@@ -111,11 +111,16 @@ define DesignBalancedSampling(list, number)
   while(i <= multiply)
   {
    tmp <- Shuffle(list)
-   if(First(tmp) == Nth(fullStim,Length(fullStim)))
-   {
-     tmp <- Rotate(tmp,1)
-   }
 
+   ## make sure that we don't repeat any first-to-last, 
+   ## skip the test when length == 0.
+   if(Length(fullStim) !=  0)
+   {
+     if(First(tmp) == Nth(fullStim,Length(fullStim)))
+     {
+       tmp <- Rotate(tmp,1)
+     }
+   }
    fullStim <- Merge(fullStim, tmp)
    i <- i + 1
   }

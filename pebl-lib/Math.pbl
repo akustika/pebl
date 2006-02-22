@@ -74,15 +74,15 @@ define StdDev(list)
   n <- Length(list)
   if(n == 0 ) 
   {
-    stdv <- 0
+    stdv <- 0.0
  
   } else {
-  sumX <- 0
-  sumXX <- 0
+  sumX <- 0.0
+  sumXX <- 0.0
   loop(i, list)
   {
     sumX <- sumX + i
-    sumXX <- sumXX + i * i
+    sumXX <- sumXX + 1.0 * i * i
   }
 
    stdv <- Sqrt(n * sumXX - sumX * sumX ) / n
