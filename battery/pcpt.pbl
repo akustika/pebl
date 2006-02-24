@@ -109,8 +109,8 @@ define Start(lPar)
   Initialize()
  
   
-   numBlocks <- 18
-   blockSize <- 5
+   numBlocks <- 2      #18
+   blockSize <- 10     #20
    presTime  <- 250
    isiVals   <- [1000, 2000, 4000]
    letters     <- ["A","B","C","D","E","F","G","H","I",
@@ -119,7 +119,7 @@ define Start(lPar)
    ################################################
   ##  Create the randomized block structure stimuli.
   isiSeq <- []
-  loop(i, [1,2,3,4,5,6])
+  loop(i, [1])#,2,3,4,5,6])
   {
     #Figure out the ISIs across the 18 blocks
     loop(j, Shuffle(isiVals))
@@ -190,6 +190,7 @@ Press any key to begin.")
      {
       trialNum <- trialNum + 1
       blocktrial<- blocktrial + 1
+      Hide(gFeedback)
 
       ## See if we should stop at the end of the block.
       ## 
@@ -212,6 +213,12 @@ Press any key to begin.")
 
       gStim.text <- stim
 
+      if(stim == "X")
+      {
+          SetFont(gFeedback, gIncFont)
+      } else {
+          SetFont(gFeedback,gCorrFont)
+      }
       resp1     <- 0  ## Was there a response during initial presentation?
       resp2     <- 0  ## Was there a response during ISI
       respMult  <- 0  ## were there multiple responses on trial?      
@@ -228,8 +235,19 @@ Press any key to begin.")
       Draw()
       r1 <- WaitForListKeyPressWithTimeout(["Z"],presTime,1)
       time1 <- GetTime()
-      Hide(gStim) 
+
+      Hide(gStim)       
+      if(r1 == 0)
+      {
+        Show(gFeedback)
+        Draw()
+        Wait(50)
+
+        Hide(gFeedback)
+      }
       Draw()
+
+
 
       if(r1 == 1)
       {
@@ -238,55 +256,72 @@ Press any key to begin.")
         r2 <- WaitForListKeyPressWithTimeout(["Z"],endTime - time1,1)
         time2 <- GetTime()
 
-        rMult <- WaitForListKeyPressWithTimeout(["Z"],endTime - time2,1)
+        if(r2 == 0)
+         {
+           Show(gFeedback)
+           Draw()
+           Wait(50)
+           Hide(gFeedback)
+           Draw()
+          }
+
+
+        rMult <- WaitForListKeyPressWithTimeout(["Z"],endTime - GetTime(),1)
         time3 <- GetTime()
         Wait(endtime - time3)
 
       } else {
+   
         ## A response was given during presentation
-        rMult <- WaitForListKeyPressWithTimeout(["Z"],endtime - time1,1)
+        rMult <- WaitForListKeyPressWithTimeout(["Z"],endtime - GetTime(),1)
         time2 <- GetTime()
         r2 <- 0
-        Wait(endtime - time2)
+        Wait(endtime - GetTime())
         time3 <- GetTime()
       }
        
 
      rt <- -1
+     toofast <- 0
      responded <- (1-r1) or (1-r2)
      mult <- 1-rMult 
 
      ##if r1 == 0, the key was struck during stimulus presentation.
      if (r1 == 0)
      {
-      toofast <- 1
+
       rt <- (time1 - timeStart)
 
      } else {
       if(responded)
       {      
         rt <- time2 - timeStart
-        toofast <- rt < 120
-      } else {
-
-        toofast <- 0
+       
+      }
       }
 
+      if(rt < 120)
+      {
+       toofast <- 1
+      }
+
+    
+     if(stim == "X")
+     { 
+       corr <- 1-responded
+       corrFoil <- corrFoil + corr
+     } else { 
+       corr <- responded
+       corrTarg <- corrTarg + corr
      }
 
-     corr <- (i == responded)
+
      FilePrint(datafile,gSubNum + "   " + trialnum + " " + isi + "  " + stim + "  "+ toofast + "       " +  responded + "         " + corr + "    " + mult + "    " + timeStart + " " + rt)
 
      ##Now, update counters/structures. based on the stats
 
        totalTrials <- totalTrials + 1
       ## i indicates target/foil trial
-      if(i)
-      {
-        corrTarg <- corrTarg + corr
-      } else { 
-        corrFoil <- corrFoil + corr
-      }
  
       if(responded)
        {
@@ -363,9 +398,12 @@ define Initialize()
    black <- MakeColor("black")
    white <- MakeColor("white")
 
+
    gInstructionsFont <- MakeFont("Vera.ttf",0,16, black,white,1)  
    gStimFont <- MakeFont("VeraMono.ttf",0,54, white, black,1)  
- 
+   gCorrFont <-  MakeFont("VeraMono.ttf",0,54, MakeColor("green"), black,1)  
+   gIncFont <-  MakeFont("VeraMono.ttf",0,54, MakeColor("red"), black,1)  
+
    ## Make and place the instruction box, then hide it  
    gInstructions <- MakeTextBox("", gInstructionsFont, 600,300)
    AddObject(gInstructions, gWin)
@@ -376,6 +414,11 @@ define Initialize()
    AddObject(gStim, gWin) 
    Move(gStim, gVideoWidth/2, gVideoHeight/2)
    Hide(gStim)
+   
+   gFeedback <- MakeLabel("-",gStimFont)
+   AddObject(gFeedback, gWin) 
+   Move(gFeedback, gVideoWidth/2, gVideoHeight/2)
+   Hide(gFeedback)
  }
 
 
