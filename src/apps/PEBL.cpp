@@ -272,7 +272,8 @@ int PEBLInterpret( int argc, char *argv[] )
 
     
     //Now, set the priority to the highest it can go.
-    setpriority(PRIO_PROCESS,0,PRIO_MIN);
+    //    setpriority(PRIO_PROCESS,0,PRIO_MIN);
+    setpriority(PRIO_PROCESS,0,0);
     int priority = getpriority(PRIO_PROCESS,0);
     cerr << "Process running at a nice value of " << priority << endl;
     
