@@ -21,6 +21,8 @@ high-quality publications". Doulos SIL provides glyphs for a wide
 range of Latin and Cyrillic characters.  Charis is similar (and
 apparantly based upon) Bitstream Charter
 
+George Williams' fontforge fonts are distributed under a BSD-like license.l
+
 List of fonts distributed with PEBL:
 
 
@@ -30,9 +32,8 @@ SIL Fonts:
  CharisSILI.ttf         Charis Italic
  CharisSILR.ttf         Charis Regular
  DoulosSILR.ttf         Doulos Regular
- GenI102.TTF            Gentium Italic  
- GenR102.TTF            Gentium Regular
-
+ GenI102.ttf            Gentium Italic  
+ GenR102.ttf            Gentium Regular
 
 Bitstream Vera:
 
