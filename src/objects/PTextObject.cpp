@@ -74,9 +74,12 @@ PTextObject::PTextObject( PTextObject &object):
 bool PTextObject::SetProperty(std::string name, Variant v)
 {
 
-    if(PWidget::SetProperty(name,v))
-        return true;
 
+    if(PWidget::SetProperty(name,v))
+        {
+            mTextChanged = true;
+            return true;
+        }
     else 
         {
             if (name == "TEXT") 

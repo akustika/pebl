@@ -44,7 +44,7 @@ namespace PEBLEnvironment
     Variant IsKeyUp(Variant v);
     Variant IsAnyKeyDown(Variant v);
     
-    
+    Variant ShowCursor(Variant v);
     
     //Simple eventloop construction
     Variant WaitForKeyDown(Variant v);

@@ -36,6 +36,7 @@ using std::cout;
 using std::cerr;
 using std::endl;
 using std::flush;
+//using std::list;
 using std::list;
 using std::multimap;
 using std::pair;
@@ -53,7 +54,7 @@ PList::PList(PList & tmpList): PEBLObjectBase(CDT_LIST)
 {
 
     //mCDT=CDT_LIST;
-    list<Variant> * tmp = tmpList.GetList();
+    std::list<Variant> * tmp = tmpList.GetList();
 
     //Make an item-by-item copy of list into mList.
     //Couldn't figure out how to use the stl copy algorithm to 
@@ -61,7 +62,7 @@ PList::PList(PList & tmpList): PEBLObjectBase(CDT_LIST)
     ///Defunct code attempt: Using STL copy algorithm 
     //  std::copy(tmp->begin(), tmp->end(), mList.begin());  
 
-    list<Variant>::iterator p;
+    std::list<Variant>::iterator p;
     for(p = tmp->begin(); p!=tmp->end(); p++)
         {
             mList.push_back(Variant(*p));
@@ -81,7 +82,7 @@ PList * PList::Clone()
     ///Defunct code attempt: Using STL copy algorithm 
     //  std::copy(tmp->begin(), tmp->end(), mList.begin());  
 
-    list<Variant>::iterator p;
+    std::list<Variant>::iterator p;
     for(p = mList.begin(); p!=mList.end(); p++)
         {
             // This does not work.  Need to make the contained list and then embed it.  
@@ -163,7 +164,7 @@ Variant PList::Nth(unsigned int n)
         PError::SignalFatalError("Attempting to get Nth element element of  too-short list.");
 
 
-    list<Variant>::iterator p = mList.begin();
+    std::list<Variant>::iterator p = mList.begin();
     for(unsigned int i = 1; i< n; i++,p++);
     return *p;
 }
@@ -176,7 +177,7 @@ Variant PList::Last()
         PError::SignalFatalError("Attempting to get last element element of empty list.");
 
 
-    list<Variant>::iterator p = mList.end();
+    std::list<Variant>::iterator p = mList.end();
     p--;
     return *p;
 }
@@ -193,8 +194,8 @@ counted_ptr<PEBLObjectBase> PList::SortBy(const PList & key)
     
     //Iterators for the key/data lists.  Woe to he who allows
     //these to be of different sizes.
-    list<Variant>::const_iterator keyIterator  = key.Begin();
-    list<Variant>::const_iterator dataIterator = Begin();
+    std::list<Variant>::const_iterator keyIterator  = key.Begin();
+    std::list<Variant>::const_iterator dataIterator = Begin();
     
     //Go through the entire data list, inserting pairs into the map.
     while(dataIterator != End())
@@ -220,7 +221,7 @@ counted_ptr<PEBLObjectBase> PList::SortBy(const PList & key)
 }
 
 
-list<Variant> * PList::GetList()
+std::list<Variant> * PList::GetList()
 {
     return &mList;
 }
@@ -239,7 +240,7 @@ ostream & operator <<(std::ostream & out, const PList & list )
 ///operator for variants.
 ostream & PList::SendToStream(ostream& out) const
 {
-    list<Variant>::const_iterator p;
+    std::list<Variant>::const_iterator p;
     p = mList.begin();
   
     out << "[" ;

@@ -35,11 +35,7 @@
 
 #include <string>
 
-///  This class simply represent a visual word.  It contains a pointer to a PFont structure
-///  and a character string. It can be used by a higher-level class to represent a string of
-///  text; but do so while keeping track of the specific locations of words. 
-///  It actually can represent multiple words, but only displays a single line.
-
+///  This class simply represent an abstract text-based object.
 
 class PTextObject: virtual public PWidget
 {

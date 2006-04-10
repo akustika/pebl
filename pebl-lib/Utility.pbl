@@ -272,3 +272,31 @@ define SplitString(string, split)
 
    return(returnList)
 }
+
+
+
+define CR()
+{
+  x <- "
+"
+return x
+}
+
+define Tab(n)
+{
+ x <- "	"
+ y <- Repeat(x,n)
+ return ListToString(y)   
+}
+
+define ListToString(list)
+{
+   x <- ""
+   loop(i,list)
+    {
+      x <- x + i
+    }
+  return x
+}
+
+

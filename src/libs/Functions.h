@@ -204,7 +204,7 @@ namespace PEBLEnvironment
             {"GETTIME",                         GetTime,           0, 0},
             {"WAIT",                            Wait,              1, 1},
 
-    
+            {"SHOWCURSOR",                      ShowCursor,        1, 1},
             {"ISKEYDOWN",                       IsKeyDown,         1, 1},
             {"ISKEYUP",                         IsKeyUp,           1, 1},
             {"ISANYKEYDOWN",                    IsAnyKeyDown,      0, 0},

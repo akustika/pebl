@@ -138,6 +138,14 @@ Variant PEBLEnvironment::IsAnyKeyDown(Variant v)
     return Variant(myKeyboard.IsKeyDown(PEBLKEY_ANYKEY));
 }
 
+Variant PEBLEnvironment::ShowCursor(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in function [ShowCursor(<bool>)]: ");
+    int val = plist->First();
+    return Variant(myEnv->ShowCursor(val));
+}
+
 
 /// This function uses the event loop to schedule a single
 /// device-test, which checks for the selected key.
