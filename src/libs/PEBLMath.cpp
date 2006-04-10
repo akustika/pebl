@@ -55,7 +55,7 @@ Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
     
     PList * plist = v.GetComplexData()->GetList();
     //Make a results list
-
+    std::cout << *plist << std::endl;
     PList * resultslist = new PList();
     //Declare a temporary argument list.
     PList* arglist = new PList();
@@ -63,8 +63,12 @@ Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
     //Now, apply 
     std::list<Variant>::iterator p = plist->Begin();
     
+
+    std::cout << plist->Length() << std::endl;
+
     while(p != plist->End())
         {
+            std::cout << "---\n";
             //Not sure why I add and then subtract the item from the list.
             arglist->PushFront(*p);                              
             resultslist->PushBack(funcname(*p));
@@ -133,7 +137,7 @@ Variant PEBLMath::Log10(Variant v)
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, Log10);
+            return Recurse(v1, Log10);
 
         }
     else
@@ -666,23 +670,28 @@ Variant PEBLMath::Div(Variant v)
 Variant PEBLMath::ToInt(Variant v)
 {
     
-    return Variant(v.GetInteger());
+    
+    PList * plist = v.GetComplexData()->GetList();
+    return Variant(plist->First().GetInteger());
 }
 
 Variant PEBLMath::ToFloat(Variant v)
 {
-    return Variant(v.GetFloat());
+    PList * plist = v.GetComplexData()->GetList();
+    return Variant(plist->First().GetFloat());
+
 }
 
 Variant PEBLMath::ToString(Variant v)
 {
-    return Variant(v.GetString());
+    PList * plist = v.GetComplexData()->GetList();
+    return Variant(plist->First().GetString());
 }
 
 
 Variant PEBLMath::ToNumber(Variant v)
 {
-    
+   
     PList * plist = v.GetComplexData()->GetList();
 
     Variant v1 = plist->First();
