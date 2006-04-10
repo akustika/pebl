@@ -467,7 +467,7 @@ void PrintOptions()
 {
     cout << "-------------------------------------------------------------------------------\n";
     cout << "PEBL: The Psychology Experiment Building Language\n";
-    cout << "Version 0.06\n";
+    cout << "Version 0.07\n";
     cout << "(c) 2003-2006 Shane T. Mueller, Ph.D.\n";
     cout << "smueller@obereed.net   http://pebl.sf.net\n";
     cout << "-------------------------------------------------------------------------------\n";

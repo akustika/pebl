@@ -66,6 +66,7 @@ public:
 //     virtual ObjectValidationError ValidateProperty(std::string)const;
     
 
+    virtual int ShowCursor(int val);
 protected:
     virtual std::ostream & SendToStream(std::ostream& out) const;    
 

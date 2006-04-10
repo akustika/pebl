@@ -207,12 +207,30 @@ std::string PlatformFont::StripText(const std::string & text)
     
     for(unsigned int i = 0; i < text.size(); i++)
         {
+            
+
             if(text[i] == 10 ||
                text[i] == 13 ||
                text[i] == 18)
                 {
                     //Do nothing.;
                     
+                }
+            else if(text[i] == 9)
+                {
+                    //This is a tab character. First, figure out 
+                    //what absolute position it should be in: round 
+                    //the length eof toBeRendered up to the next value
+                    //i mod 4.
+                    
+                    int x = 8*((toBeRendered.length()+1) /8 + 1 );
+                    int diff = x-toBeRendered.length();
+                    string tmp = " ";
+                    for(int j = 0; j < diff; j++)
+                        {
+                            toBeRendered.push_back(tmp[0]);
+                        }
+
                 }
             else
                 {

@@ -30,6 +30,7 @@
 #include "PlatformFont.h"
 #include "SDLUtility.h"
 
+#include "../../base/PComplexData.h"
 #include "../../devices/PKeyboard.h"
 
 #include "../../utility/rc_ptrs.h"
@@ -187,12 +188,30 @@ bool  PlatformTextBox::RenderText()
 }
 
 
+bool PlatformTextBox::SetProperty(std::string name, Variant v)
+{
+
+
+    if(PTextBox::SetProperty(name,v))
+    {
+        // If we set it at higher level, don't worry.
+    }
+    else if (name == "FONT") SetFont(v.GetComplexData()->GetObject());
+    else return false;
+    
+    return true;
+}
+
+
+
 void PlatformTextBox::SetFont(counted_ptr<PEBLObjectBase> font)
 {
+
 
     mFontObject = font;
     mFont = dynamic_cast<PlatformFont*>(mFontObject.get());
     PWidget::SetBackgroundColor(mFont->GetBackgroundColor());
+    mTextChanged = true;
     //Re-render the text onto mSurface
     if(!RenderText()) cerr << "Unable to render text.\n";
 

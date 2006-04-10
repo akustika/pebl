@@ -139,3 +139,16 @@ Variant PlatformEnvironment::GetProperty(std::string name )const
 
 // ObjectValidationError PlatformEnvironment::ValidateProperty(std::string)const;
    
+
+int PlatformEnvironment::ShowCursor(int val)
+{
+
+    if(val)
+        {
+            return SDL_ShowCursor(SDL_ENABLE);
+        }
+    else
+        {
+            return SDL_ShowCursor(SDL_DISABLE);
+        }
+}
