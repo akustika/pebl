@@ -197,11 +197,25 @@ define Quantile(list,q)
 	{
 	SignalFatalError("First argument of function [Quantile(<list>,<q>)] is not a list")
 	}
-
   sorted <- Sort(list)
-  
- ## Determine which element to take.
 
- quant <- Round(q/100 * Length(list))
- return Nth(sorted,quant)
+   if(IsList(q))
+   {
+      elts <- []
+      loop(i,q)
+      { 
+        elts <- Append(elts,1+Round(i/100*(Length(list)-1)))
+
+      }
+      Print(elts)
+      ret <- ExtractListItems(sorted,elts)
+
+   }else{
+      ret <- Nth(sorted,1+Round(q/100*(Length(list)-1)))
+   }
+
+
+ 
+
+ return ret
 }

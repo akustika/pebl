@@ -865,13 +865,6 @@ Variant PEBLMath::Abs(Variant v)
 
 // } 
 
-Variant PEBLMath::Quantile(Variant v)
-{
-    PError::SignalFatalError("Function [Quantile] Not implemented.");
-    return Variant(0);
-}
-
-
 
 ///This will explicitly re-seed the RNG with the time of day.  Useful for
 /// multi-session experiments where you want to use the same random seed across

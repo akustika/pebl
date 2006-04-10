@@ -97,7 +97,7 @@ namespace PEBLMath
 //             {"MAX",           Max,      1, 9999},
 //             {"STDEV",         StDev,    1, 1},
 //             {"MEDIAN",        Median,   1, 1},
-            {"QUANTILE",      Quantile, 2, 2},
+//            {"QUANTILE",      Quantile, 2, 2},
 
             {"RANDOMIZETIMER",     RandomizeTimer,    0, 0},
             {"SEEDRNG",            SeedRNG,           1, 1},
