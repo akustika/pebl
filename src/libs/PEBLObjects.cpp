@@ -248,7 +248,7 @@ Variant PEBLObjects::MakeColorRGB(Variant v)
     PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in first parameter of function [MakeColorRGB(<red>, <green>, <blue>)]: "); 
     int blue  = plist->First(); plist->PopFront();
     
-    PColor * tmpColor = new PColor(red,green,blue, 0);
+    PColor * tmpColor = new PColor(red,green,blue, 255);
     counted_ptr<PEBLObjectBase> myColor = counted_ptr<PEBLObjectBase>(tmpColor);
     PComplexData *  pcd = new PComplexData(myColor);
     return     Variant(pcd);
