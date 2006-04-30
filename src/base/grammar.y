@@ -96,14 +96,14 @@
 
 /* Lets inform Bison about the type of each terminal and non-terminal */
 %type <exp>  variable exp function functions varlist list explist arglist datum 
-%type <exp>  statement sequence block
-%type <exp>   newlines  nlornone
+%type <exp>  statement ustatement endstatement sequence block 
+%type <exp>   newlines  nlornone 
 %type <exp>  functionsequence returnstatement functionblock
 
 			
 
 /* Precedence information to resolve ambiguity */
-%left PEBL_NEWLINE
+%left PEBL_NEWLINE 
 %left PEBL_ASSIGN
 %left PEBL_AND PEBL_OR PEBL_NOT
 %left PEBL_GE PEBL_LE PEBL_EQ PEBL_NE PEBL_GT PEBL_LT
@@ -163,7 +163,11 @@ functionsequence:   returnstatement  nlornone          { $$ = $1;}
 
 		/*============================================================================*/
 block:		PEBL_LBRACE nlornone sequence nlornone PEBL_RBRACE   { $$ = $3;}
-	;
+|           PEBL_LBRACE nlornone endstatement {$$ = $3;}
+|           PEBL_LBRACE nlornone sequence nlornone  endstatement {
+                     $$  = new OpNode(PEBL_STATEMENTS, $3, $5, sourcefilename, yylineno);
+}
+;
 
 
 		/*============================================================================*/
@@ -174,18 +178,25 @@ sequence:	statement              { $$ = $1; }
 	|	sequence nlornone statement        { $$ = new OpNode(PEBL_STATEMENTS, $1, $3, sourcefilename, yylineno);}
 
 ;
+/*Normal statement, ending in a newline*/
+statement: ustatement PEBL_NEWLINE {$$ = $1;}
+	;
 
-statement: 	/*============================================================================*/
+/*Allow the last statement in a block to be terminated by a }*/
+endstatement: ustatement PEBL_RBRACE {$$ = $1;}
+;
+
+ustatement: 	/*============================================================================*/
 
 
 
 
 		/******************************************************************************/
-	 	exp PEBL_NEWLINE                 {$$ = $1;}
+	 	exp                   {$$ = $1;}
 
     |   PEBL_BREAK PEBL_NEWLINE           {$$ = new OpNode(PEBL_BREAK, NULL, NULL, sourcefilename, yylineno);}
 		/******************************************************************************/
-	| 	PEBL_LOCALVAR PEBL_ASSIGN exp  PEBL_NEWLINE 
+	| 	PEBL_LOCALVAR PEBL_ASSIGN exp   
 		{ 
 	        Variant tmpV($1,P_DATA_LOCALVARIABLE);       /*create a new temporary variant*/
 		    free($1);
@@ -194,7 +205,7 @@ statement: 	/*==================================================================
 		}
 
 		/******************************************************************************/
-	| 	PEBL_GLOBALVAR PEBL_ASSIGN exp  PEBL_NEWLINE 
+	| 	PEBL_GLOBALVAR PEBL_ASSIGN exp  
 		{ 
 	        Variant tmpV($1,P_DATA_GLOBALVARIABLE);      /*create a new temporary variant*/
 		PNode * tmpNode = new DataNode(tmpV, sourcefilename, yylineno);        /*create basic pnode*/
@@ -202,7 +213,7 @@ statement: 	/*==================================================================
 		}
 
 		/******************************************************************************/
-	| 	PEBL_WHILE PEBL_LPAREN exp PEBL_RPAREN nlornone block PEBL_NEWLINE {;
+	| 	PEBL_WHILE PEBL_LPAREN exp PEBL_RPAREN nlornone block  {;
 		$$ = new OpNode(PEBL_WHILE, $3, $6, sourcefilename, yylineno); }
  
 
@@ -215,13 +226,13 @@ statement: 	/*==================================================================
 		*** the test on the left and a PEBL_ELSE node on the right.  PEBL_ELSE
 		*** just pops the stack and executes left if true, right if false.*/
 
-        | 	PEBL_IF PEBL_LPAREN exp PEBL_RPAREN nlornone block  PEBL_NEWLINE {
+        | 	PEBL_IF PEBL_LPAREN exp PEBL_RPAREN nlornone block  {
 		$$ = new OpNode(PEBL_IF, $3, $6, sourcefilename, yylineno); }
 
 
 
 		/******************************************************************************/
-        | 	PEBL_IF PEBL_LPAREN exp PEBL_RPAREN nlornone block  PEBL_ELSE nlornone block PEBL_NEWLINE {
+        | 	PEBL_IF PEBL_LPAREN exp PEBL_RPAREN nlornone block  PEBL_ELSE nlornone block {
 		/*First make the else node*/
 		PNode * tmpNode = new OpNode(PEBL_ELSE, $6, $9, sourcefilename, yylineno);
 		/*Put the else node in the IF node*/
@@ -237,7 +248,7 @@ statement: 	/*==================================================================
 		*** iteratively to the variable and the code block is executed, until
 		*** the datum is finished.
 		***/
-		PEBL_LOOP PEBL_LPAREN variable PEBL_COMMA exp PEBL_RPAREN nlornone  block PEBL_NEWLINE {
+		PEBL_LOOP PEBL_LPAREN variable PEBL_COMMA exp PEBL_RPAREN nlornone  block {
 		PNode * tmpNode = new OpNode(PEBL_VARIABLEDATUM, $3, $5, sourcefilename, yylineno);
 		$$ = new OpNode(PEBL_LOOP, tmpNode, $8, sourcefilename, yylineno); }
         
@@ -424,8 +435,8 @@ extern int yy_flex_debug;
 
 PNode * parse (const char* filename)
 {
-  //  yydebug=1;          /*Bison must be run with -t option to use debugging*/
-  //    yy_flex_debug = 1;   /*Flex must be run with -d option to use*/
+  //yydebug=1;          /*Bison must be run with -t option to use debugging*/
+  //yy_flex_debug = 1;   /*Flex must be run with -d option to use*/
   /*This is currently only called once, so use
    *it to open a hard-coded file for testing
    */
