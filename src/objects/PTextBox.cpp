@@ -95,6 +95,13 @@ bool PTextBox::SetProperty(std::string name, Variant v)
     }
     else if (name == "WIDTH") SetWidth(v);
     else if(name == "HEIGHT") SetHeight(v);
+    else if(name == "TEXT"){
+        SetText(v.GetString());
+        mCursorChanged=true;
+        mTextChanged=true;}
+    else if(name == "EDITABLE")SetEditable(v);
+    else if(name == "CURSORPOS") SetCursorPosition(v);
+        
     else return false;
     
     return true;
@@ -119,7 +126,8 @@ ObjectValidationError PTextBox::ValidateProperty(std::string name)const
        name == "VISIBLE" ||
        name == "WIDTH" ||
        name == "HEIGHT" ||
-       name == "TEXT" )
+       name == "TEXT" ||
+       name == "CURSORPOS")
         return OVE_VALID;
     else
         return OVE_INVALID_PROPERTY_NAME;
@@ -132,10 +140,15 @@ ObjectValidationError PTextBox::ValidateProperty(std::string name)const
 //Inserts text at cursor
 void PTextBox::InsertText(std::string text)
 {
+    cout << "[" << text << "]" << endl;
+
+    if(mCursorPos>mText.length())
+        mCursorPos=mText.length();
 
     mText.insert(mCursorPos, text);
     mCursorPos += text.length();
     mTextChanged= true;
+    mCursorChanged = true;
     SetProperty("TEXT",mText);
 }
 
