@@ -49,7 +49,6 @@ PStream::PStream(const string & filename, StreamDirection dir, StreamType type):
 
     mCDT = CDT_FILESTREAM;
     //Standard Constructor
-          
     
     //Now, create the stream with proper flags and ready it for
     //input/output.
@@ -58,19 +57,34 @@ PStream::PStream(const string & filename, StreamDirection dir, StreamType type):
         {
         case sdRead:
             mFileStream = new fstream(mStreamFileName.c_str(),  ios_base::in);        
+            if(!mFileStream->is_open())
+                {
+                    PError::SignalFatalError("Unable to open file ["+ mStreamFileName+"] for reading");
+                }
+
             break;
 
         case sdWrite:
             mFileStream = new fstream(mStreamFileName.c_str(),  ios_base::out);
+            if(!mFileStream->is_open())
+                {
+                    PError::SignalFatalError("Unable to open file ["+ mStreamFileName+"] for writing");
+                }
+
             break;
 
         case sdAppend:
             mFileStream = new fstream(mStreamFileName.c_str(), ios_base::out | ios_base::app);
+            if(!mFileStream->is_open())
+                {
+                    PError::SignalFatalError("Unable to open file ["+ mStreamFileName+"] for appending");
+                }
+
             break;
         default:
 
             //error
-            std::cout << "Error occurred in PStream Constructor\n";
+            PError::SignalFatalError("Error occurred in PStream Constructor\n");
         }
     //Binary/ascii/unicode/etc could be done here as well.
 
@@ -94,24 +108,37 @@ void PStream::Open(const string & filename, StreamDirection dir, StreamType type
 
     //Now, create the stream with proper flags and ready it for
     //input/output.
+
     
     if(mStreamDirection==sdRead)
         {
             mFileStream->open(mStreamFileName.c_str(),  ios_base::in);        
+            if(!mFileStream->is_open())
+                {
+                    PError::SignalFatalError("Unable to open file ["+ mStreamFileName+"] for reading");
+                }
         }
     else if (mStreamDirection==sdWrite)
         {
             mFileStream->open(mStreamFileName.c_str(),  ios_base::out);        
+            if(!mFileStream->is_open())
+                {
+                    PError::SignalFatalError("Unable to open file ["+ mStreamFileName+"] for writing");
+                }
             
         }
     else if (mStreamDirection == sdAppend)
         {
             mFileStream->open(mStreamFileName.c_str(), ios_base::out | ios_base::app);
+            if(!mFileStream->is_open())
+                {
+                    PError::SignalFatalError("Unable to open file ["+ mStreamFileName+"] for appending");
+                }
         }
     else
         {
             //error
-            std::cout << "Error occurred in PStream::Open\n";
+            PError::SignalFatalError("Error occurred in PStream::Open");
         }
     //Binary/ascii/unicode/etc could be done here as well.
     
