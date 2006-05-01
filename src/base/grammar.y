@@ -47,6 +47,7 @@
 %token   PEBL_DIVIDE
 %token   PEBL_DOT
 %token   PEBL_ELSE
+%token   PEBL_ELSEIF
 %token   PEBL_END
 %token   PEBL_EOF
 %token   PEBL_EQ
@@ -97,7 +98,7 @@
 /* Lets inform Bison about the type of each terminal and non-terminal */
 %type <exp>  variable exp function functions varlist list explist arglist datum 
 %type <exp>  statement ustatement endstatement sequence block 
-%type <exp>   newlines  nlornone 
+%type <exp>   newlines  nlornone elseifseq
 %type <exp>  functionsequence returnstatement functionblock
 
 			
@@ -232,9 +233,9 @@ ustatement: 	/*=================================================================
 
 
 		/******************************************************************************/
-        | 	PEBL_IF PEBL_LPAREN exp PEBL_RPAREN nlornone block  PEBL_ELSE nlornone block {
+        | 	PEBL_IF PEBL_LPAREN exp PEBL_RPAREN nlornone block elseifseq {
 		/*First make the else node*/
-		PNode * tmpNode = new OpNode(PEBL_ELSE, $6, $9, sourcefilename, yylineno);
+		PNode * tmpNode = new OpNode(PEBL_ELSE, $6, $7, sourcefilename, yylineno);
 		/*Put the else node in the IF node*/
 		$$ = new OpNode(PEBL_IFELSE, $3, tmpNode, sourcefilename, yylineno); }
  
@@ -259,6 +260,31 @@ returnstatement: PEBL_RETURN statement    {$$ = new OpNode(PEBL_RETURN, $2, NULL
 		
 	;
 
+elseifseq:   PEBL_ELSE nlornone block {
+
+		$$ = $3; }
+ 
+
+|
+
+        PEBL_ELSEIF PEBL_LPAREN exp PEBL_RPAREN  nlornone block {
+		/*First make the else node*/
+		PNode * tmpNode = new OpNode(PEBL_ELSE, $6, NULL, sourcefilename, yylineno);
+		/*Put the else node in the IF node*/
+		$$ = new OpNode(PEBL_IFELSE, $3, tmpNode, sourcefilename, yylineno); 
+
+  ;}
+|      PEBL_ELSEIF PEBL_LPAREN exp PEBL_RPAREN nlornone block  elseifseq {
+
+		/*First make the else node*/
+		PNode * tmpNode = new OpNode(PEBL_ELSE, $6, $7, sourcefilename, yylineno);
+		/*Put the else node in the IF node*/
+		$$ = new OpNode(PEBL_IFELSE, $3, tmpNode, sourcefilename, yylineno); }
+  
+  
+;
+
+ 
 
 arglist:	/*============================================================================*/
 		/******************************************************************************

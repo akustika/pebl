@@ -2,7 +2,7 @@
 //    Name:       src/base/Pebl.l
 //    Purpose:    Defines lexer for use with Flex
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2006 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -49,6 +49,7 @@ if         [Ii][Ff]
 loop       [Ll][Oo][Oo][Pp]
 return     [Rr][Ee][Tt][Uu][Rr][Nn]
 else       [Ee][Ll][Ss][Ee]
+elseif     [Ee][Ll][Ss][Ee][Ii][Ff]
 while      [Ww][Hh][Ii][Ll][Ee]
 define     [Dd][Ee][Ff][Ii][Nn][Ee]
 and        [Aa][Nn][Dd]
@@ -99,6 +100,7 @@ localprop {localvar}"."{property}
 {loop}          return  PEBL_LOOP;
 {return}        return  PEBL_RETURN;
 {else}          return  PEBL_ELSE;
+{elseif}        return  PEBL_ELSEIF;
 {while}         return  PEBL_WHILE;
 {define}        return  PEBL_DEFINE;
 {and}           return PEBL_AND;
