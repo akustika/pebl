@@ -95,7 +95,7 @@ FreeFont typefaces
 
 PEBL Custom Font
  Stimulasia.ttf         Small set of characters mapped onto letters of 
-						alphabet. Currently 0-9 and A-O are used. 0-9
-						are each spaces, with 0 being about 1/5
-						character width, 1 being 10/500, 2 is 20/500, etc.
+			alphabet. Currently 0-9 and A-O are used. 0-9
+			are each spaces, with 0 being about 1/5
+			character width, 1 being 10/500, 2 is 20/500, etc.
  
