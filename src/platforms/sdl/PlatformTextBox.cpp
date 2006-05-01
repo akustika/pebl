@@ -191,8 +191,11 @@ bool  PlatformTextBox::RenderText()
 bool PlatformTextBox::SetProperty(std::string name, Variant v)
 {
 
-
-    if(PTextBox::SetProperty(name,v))
+    if(name == "TEXT")
+        {
+            SetText(v);
+        }
+    else if(PTextBox::SetProperty(name,v))
     {
         // If we set it at higher level, don't worry.
     }
@@ -222,7 +225,7 @@ void PlatformTextBox::SetText(string text)
 {
     //Chain up to parent method.
     PTextObject::SetText(text);
-    mCursorPos = 0;
+    //mCursorPos = 0;
     mCursorChanged = true;
     mTextChanged = true;
     Draw();
