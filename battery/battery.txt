@@ -1,0 +1,49 @@
+PEBL PSYCHOLOGICAL TEST BATTERY
+
+About:
+The PEBL Psychological Test Battery (PPTB) is a set of psychological
+tests available for the PEBL Experiment Building Language
+(http://pebl.sourceforge.net).  The consist of freely usable and
+modifiable versions of commonly-used psychological tests. They will
+run on Microsoft Windows, OSX, or Linux operating systems.  They are
+all intended to run using only visual stimuli, although the digit span
+has the option to use auditory presentation as well.
+
+Tasks:
+
+The following 10 tests are currently available:
+
+Berg's Wisconsin Card Sorting Test
+ (in bcst directory)
+
+Choice Response Time
+ (in crt directory)
+
+Digit Span
+ (in dspan directory)
+
+Implicit Association Task
+ (in iat directory)
+
+Iowa Gambling Task
+ (in iowa directory)
+
+Continuous Performance Task
+ (in pcpt directory)
+
+Probabilistic Reversal Learning Test
+ (in probrev directory)
+
+Simple Response Time
+ (in srt directory)
+
+Symbol-Counter 
+ (in symbolcounter directory)
+
+Test of Attentional Vigilance (TOAV)
+ (in toav directory)
+
+	 Our implementation of the T.O.V.A. (Test of variables of
+	 attention).
+
+
