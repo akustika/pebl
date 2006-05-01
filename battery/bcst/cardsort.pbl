@@ -1,0 +1,291 @@
+#!/usr/local/bin/pebl
+###########################################################
+##  Berg's Card Sorting Task, Version 0.1
+##  (better known as the Wisconsin Card Sorting Test (tm).
+##  For use with PEBL 0.06 or later
+##  http://pebl.sf.net
+##  Part of  The PEBL Psychological Testing Battery
+##  2006-03 Released into Public Domain
+##  by Shane T. Mueller, Ph.D. (smueller at obereed dot net)
+##
+##  as found in:
+##  E. A. Berg. (1948). A simple objective technique for measuring
+##     flexibility in thinking. J. Gen. Psychol. 39: 15-22.
+## 
+## 
+## 
+## 
+##   Program calculates and reports: 
+##    * Number of categories achieved
+##    * Number of trials
+##    * Number of errors
+##    * Number of perseverative errors
+##    * Percentage perseverative errors
+##
+##
+##
+##
+###########################################################
+
+define Start(lPar)
+{
+
+
+
+  ## repeats is the number of times you go through the 64-item deck
+  repeats <- 2
+
+  ## This is how long of a run is required before switching categories.
+  runlength <- 5
+
+  ## useCanonical determines whether the 'stimulus' cards are the same
+  ## as in Berg, or whether they are chosen randomly.
+  useCanonical <- 1
+
+  ## results are stored in tmpresults.dat
+  gFileOut <-FileOpenWrite("bcst-" + gSubNum +".txt")
+ 
+  ## Initialize global objects for use later. Defined at end of file
+  Initialize()
+   
+
+   gColors <-  ["Red", "Green","Yellow","Blue"]
+   gShapes <-  ["Triangle","Star","Cross","Circle"]
+   gNumbers <- ["1","2","3","4"]
+
+  ##Mix up the order if we aren't using canonical stimulus cards.
+  if(not useCanonical)
+   {
+     gColors <- Shuffle(gColors)
+     gShapes <- Shuffle(gShapes)
+   }
+  
+  csn <- DesignFullCounterbalance(DesignFullCounterbalance(gColors,gShapes),gNumbers)
+  stimcat <- FoldList(Flatten(Repeat(csn,repeats)),3)
+
+  images<-[]
+ 
+  loop(i,stimcat)
+  {
+    filename <- "png/" + ListToString(i) + ".png"
+    x <- MakeImage(filename)
+    images <- Append(images,x)
+
+  }
+  Draw()
+  stim <-	Shuffle(Transpose(Append( Transpose(stimcat),images)))
+
+   ## Give instructions; wait for them to hit a key, 
+   SetText(gInstructions,"You are about to take part in an experiment in which you need to categorize cards based on the pictures appearing on them.  To begin, you will see four piles (press any key to see the four piles.)
+")
+   Show(gInstructions)
+   Draw()  
+   WaitForAnyKeyPress()
+
+   ## load canonical comparison cards.  This is perhaps supposed to
+   ## be randomized.
+
+   comps <- Transpose([gColors,gShapes,gNumbers])
+   comp1 <- MakeImage("png/"+ListToString(First(comps))+".png")
+   comp2 <- MakeImage("png/"+ListToString(Nth(comps,2))+".png")
+   comp3 <- MakeImage("png/"+ListToString(Nth(comps,3))+".png")
+   comp4 <- MakeImage("png/"+ListToString(Nth(comps,4))+".png")
+
+
+   AddObject(comp1,gWin)
+   AddObject(comp2,gWin)
+   AddObject(comp3,gWin)
+   AddObject(comp4,gWin)
+   Move(comp1, 28 + 125/2, 105)
+   Move(comp2, 28*2 + 125 + 125/2,105)
+   Move(comp3, 28*3 + 125*2 + 125/2,105)
+   Move(comp4, 28*4 + 125*3 + 125/2,105)
+
+   gHeader.text <- "1           2            3            4"
+   Move(gHeader,320,220)
+   Show(gHeader)
+
+	gInstructions.text <- "Each pile has a different number, color, and shape.  You will see a series of cards and need to determine which pile each belongs to. Press the 1-4 keys along the top of the keyboard to determine the pile each new card belongs in.  The correct answer depends upon a rule, but you will not know what the rule is.  But, we will tell you on each trial whether or not you were correct. Press any key to continue."
+   Draw()
+WaitForAnyKeyPress()
+
+   gInstructions.text <- "Finally, the rule may change during the task, so when it does, you should figure out what the rule is as quickly as possible and change with it. Press any key to begin."
+ Draw()
+ WaitForAnyKeyPress()
+
+   Hide(gInstructions)
+   Show(gPrompt)
+   Draw()
+                 
+
+
+  ####################################################
+  ## Begin presenting and collecting data
+  ####################################################
+ 
+
+####################################################
+##  Start the experimental trials.
+## 
+  rule <- RandomDiscrete(3)
+  run <- 0
+  trialnum <- 1
+   loop(s,stim)
+   {
+      card <- Nth(s,4)
+      AddObject(card,gWin)
+      Move(card,500,350)
+ 	  Draw()
+      time0 <- GetTime()
+      resp <- WaitForListKeyPress(["1","2","3","4"])
+      time1 <- GetTime()
+      rt <- time1 - time0
+
+      corr <- ScoreTrial(s,resp,rule)
+      RemoveObject(card,gWin)
+      if(corr)
+      {
+       run <- run + 1
+       feedback <- gCorrect
+      }else{
+       feedback <- gIncorrect
+       run <- 0
+      }
+      
+
+      
+	  FilePrint_(gFileOut, gSubNum + " " + trialnum + " ")
+      index <- 1
+      ##Print out the trial data.
+      loop(i,s)
+      {
+        if(index !=4)
+        {
+         FilePrint_(gFileOut,i+" ")
+        }
+       index <- index + 1
+      }
+
+	  FilePrint(gFileOut,resp + " " + corr + " " + time0 + " " + rt )
+      Show(feedback)
+      Draw()   
+      Wait(400)
+      Hide(feedback)
+      Draw()
+
+      ##if you have a run of runlength correct, change rules.
+      if(run >= runlength)
+      {
+        rule <- SampleNewRule(rule)
+        run <- 0
+      }
+      trialnum <- trialnum + 1
+    }
+   FileClose(gFileOut)
+
+
+   ##Now, show debriefing info.
+
+   feedback <-  "You may now leave.  Please alert the experimenter that you are done. Press the X key to exit."
+
+   SetText(gInstructions, feedback)
+   Show(gInstructions)
+   Draw()
+   WaitForKeyPress("X")
+ 
+ }
+
+
+##  This is a standard initializer function that sets up typical
+##  objects used in experiments.
+define Initialize()
+{
+  ##Initialize Window, etc.
+  gWin <- MakeWindow("grey60")   
+            
+  ##Initialize Font and colors
+
+   bg <- MakeColor("grey60")
+   fg <- MakeColor("black")
+   bg2 <- MakeColor("white")
+   
+   colGreen <- MakeColor("darkgreen")
+   colRed   <- MakeColor("red")
+ 
+   gStimFont         <- MakeFont("VeraMono.ttf", 0, 24,fg,bg,1)       
+   gCorrFont         <- MakeFont("VeraMono.ttf", 0, 24,colGreen, bg,1)
+   gIncorrFont       <- MakeFont("VeraMono.ttf", 0, 24,colRed,   bg,1)
+
+   gInstructionsFont <- MakeFont("Vera.ttf",0,18, fg,bg2,1)  
+   gHeaderFont       <- MakeFont("Vera.ttf", 0,36,fg,bg,1)       
+ 
+   ## Make and place the instruction box, then hide it  
+   gInstructions <- MakeTextBox("", gInstructionsFont, 600,200)
+   AddObject(gInstructions, gWin)
+   Move(gInstructions, gVideoWidth/2-300, gVideoHeight/2+5)
+   Hide(gInstructions)
+
+   ## Make and hide a header label
+   gHeader <- MakeLabel("",gHeaderFont)
+   AddObject(gHeader,gWin)
+   Move(gHeader, gVideoWidth/2, 100)
+   Hide(gHeader)
+
+   gPrompt <- MakeLabel("Press 1-4 to sort card",gStimFont)
+   AddObject(gPrompt,gWin)
+   Move(gPrompt,200,350)
+   Hide(gPrompt)
+   gCorrect <- MakeLabel("Correct!",gCorrFont)
+   AddObject(gCorrect,gWin)
+   Move(gCorrect,500,350)
+   Hide(gCorrect)
+  
+   gIncorrect <- MakeLabel("Incorrect",gIncorrFont)
+   AddObject(gIncorrect,gWin)
+   Move(gIncorrect,500,350)
+   Hide(gIncorrect)
+
+ }
+
+
+define ListToString(par)
+{
+     x <- ""
+    loop(i,par)
+    {
+         x <- x + i
+    }
+  return x
+} 
+
+
+define ScoreTrial(triallist, resp, rule)
+{
+  ##The piles are defined by:
+  ## Rule 1: COLOR:  red green blue yellow
+  ## Rule 2: SHAPE:  circle star triangle cross
+  ## Rule 3: NUMBER: 1 2 3 4
+  ## Depending upon the rule (triallist[5]),
+  ## the correct response depends upon column 1,2,3
+
+  dimensions <- [gColors, gShapes, gNumbers]
+  dimension <- Nth(triallist, rule)
+  dimlist <- Nth(dimensions,rule)
+
+  ##So, the trial is correct if, along the chosen dimension,
+  ## the response is the same as the pile.
+
+   corr <- (Nth(dimlist,ToNumber(resp)) == dimension)
+  return corr
+}
+
+##Sample a new rule, but make sure it is different from the current rule
+define SampleNewRule(oldrule)
+{
+  x <- oldrule
+  while(x == oldrule)
+  {
+	 x <- RandomDiscrete(3)
+  }
+  return x
+}

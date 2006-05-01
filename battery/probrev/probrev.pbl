@@ -1,0 +1,272 @@
+#!/usr/local/bin/pebl
+#################################################################
+##  PEBL Probabilistic Reversal Learning Task, as
+##  described by Cools et al, 2002.
+##  For use with PEBL 0.07 or later
+##  http://pebl.sf.net
+##  Part of  The PEBL Psychological Test Battery
+##  2006-02 Released into Public Domain
+##  by Shane T. Mueller, Ph.D. (smueller at obereed dot net)
+##
+##
+##  Reference:
+## 
+## Cools, R, Clark, L., Owen, A. M., Robbins, T. W. (2002) Defining the
+##    Neural Mechanisms of Probabilistic Reversal Learning Using
+##    Event-Related Functional Magnetic Resonance Imaging.
+##
+##  
+##  
+##  
+## Inhibitory control/learning task.
+##
+##
+##
+##
+#################################################################
+
+define Start(lPar)
+{
+
+ 
+  ## Initialize global objects for use later. Defined at end of file
+  Initialize()
+   
+   blockSize <- 40     #20
+
+   stimnames <- Shuffle(["png/abstractfig1.png","png/abstractfig2.png",	"png/abstractfig3.png","png/abstractfig4.png"])
+   stimuli <- []
+   loop(i, stimnames)
+   {
+     stimuli <- Append(stimuli, MakeImage(i))
+   }
+
+
+
+
+  ####################################################
+  ## Instructions
+  ####################################################
+
+
+   ## Give instructions; wait for them to hit a key, 
+   SetText(gInstructions,"You are about to take part in an experiment that " +
+           "involves learning a rule.
+Press any key to begin.")
+   Show(gInstructions)
+   Draw()  
+   WaitForAnyKeyPress()
+   Hide(gInstructions)
+   Draw()
+    
+   gInstructions.text <- "You may now take a short break.  Press the 'Z' key to continue on to the next block."
+
+  ##############################################
+  ##############################################
+  ##
+  ## Set up the basic  environment 
+  ##
+
+   datafile   <- FileOpenWrite("probrev-"+ gSubNum + ".txt")
+   reportfile <- FileOpenWrite("probrev-report-" + gSubNum + ".txt")
+
+
+
+   ## Global data structures which save data for analysis and
+   ## report at end of study. 
+
+   rtCorr <- []
+   rtInc <- []
+   ommissions  <- 0   # Ommission error (failure to respond to target)
+   commissions <- 0   # Commission error (false alarm to foil)
+   multiples   <- 0   # multiple responses on a trial
+   antic       <- 0   # too fast
+   corrTarg    <- 0   # Number of correct Targets
+   corrFoil    <- 0   # Number of correct Foils
+   totalTrials <- 0   # Total Number of trials
+
+
+   FilePrint(datafile,"sub trial targ toofast responded corr mult time rt")
+
+
+    stimA <- First(stimuli)
+    stimB <- Nth(stimuli,2)
+    AddObject(stimA,gWin)
+    AddObject(stimB,gWin)
+    Hide(stimA)
+    Hide(stimB)
+    Wait(2000)
+    trialNum <- 0
+    while(trialNum < blocksize)
+    {
+
+      trialNum <- trialNum + 1
+
+	  order <- (RandomBernoulli(.5)+1)+""
+	  corr <- PresentStim(stimA,stimB,order)
+
+      if(corr) 
+      {
+        feedback <- gCorr
+      }else{
+        feedback <- gInc
+      }
+      Show(feedback)
+      Draw()
+      Wait(250)
+      Hide(feedback)
+      Draw()
+      Wait(250)
+    }
+
+
+
+##Print out report
+   FilePrint(reportfile,"---------------------------------------------------")
+   FilePrint(reportfile," Report for PEBL Probalistic Reversal Learning Task")
+   FilePrint(reportfile, " Version 0.1")
+   FilePrint(reportfile, " "+GetPEBLVersion())
+   FilePrint(reportfile, " "+TimeStamp())
+   FilePrint(reportfile, " Participant Code: " + gSubNum)
+   
+   FilePrint(reportfile," http://pebl.sf.net")
+   FilePrint(reportfile,"---------------------------------------------------")
+   FilePrint(reportfile,"Statistic           Value ")
+   FilePrint(reportfile,"---------------------------------------------------")
+   FilePrint(reportfile,"Total Trials       " + totalTrials)
+   FilePrint(reportfile,"Correct Targets    " + corrTarg)
+   FilePrint(reportfile,"Correct Foils      " + corrFoil)
+   FilePrint(reportfile,"Correct Trials     " + (corrTarg + corrFoil))
+   FilePrint(reportfile,"Commission Errors  " + commissions)
+   FilePrint(reportfile,"Ommission Errors   " + ommissions)
+   FilePrint(reportfile,"Correct RT Mean    " + rtCorr)
+   FilePrint(reportfile,"Error RT Mean      " + rtInc)
+   FilePrint(reportfile,"RT Mean            " + Round(Mean(Merge(rtCorr,rtInc))))
+   FilePrint(reportfile,"RT SD              " + Round(StdDev(Merge(rtCorr,rtInc))))
+   FilePrint(reportfile,"Anticipations      " + antic)
+   FilePrint(reportfile,"Multiple Responses " + multiples)
+   FilePrint(reportfile,"---------------------------------------------------")
+   
+
+
+   ##Now, show debriefing info.
+   SetText(gInstructions, "Thank you for participating in the experiment.  You may now leave.
+  Report found in file: [probrev-report-" +gSubNum  + ".dat]
+  Data found in file:   [probrev-"  + gSubNum + ".dat] 
+  (Press 'X' to finish experiment)")
+   Show(gInstructions)
+   Draw()
+   WaitForKeyPress("X")
+  
+ }
+
+
+##  This is a standard initializer function that sets up typical
+##  objects used in experiments.
+define Initialize()
+{
+
+  gVideoWidth <- 800
+  gVideoHeight <- 600
+
+  ##Initialize Window, etc.
+  gWin <- MakeWindow("black")   
+            
+  ##Initialize Font and colors
+
+
+   black <- MakeColor("black")
+   white <- MakeColor("white")
+
+
+   gInstructionsFont <- MakeFont("Vera.ttf",0,16, black,white,1)  
+   gStimFont <- MakeFont("VeraMono.ttf",0,54, white, black,1)  
+   gCorrFont <-  MakeFont("VeraMono.ttf",0,54, MakeColor("green"), black,1)  
+   gIncFont <-  MakeFont("VeraMono.ttf",0,54, MakeColor("red"), black,1)  
+
+   ## Make and place the instruction box, then hide it  
+   gInstructions <- MakeTextBox("", gInstructionsFont, 600,300)
+   AddObject(gInstructions, gWin)
+   Move(gInstructions, gVideoWidth/2-300, gVideoHeight/2-150)
+   Hide(gInstructions)
+
+   gStim <- MakeLabel("",gStimFont)
+   AddObject(gStim, gWin) 
+   Move(gStim, gVideoWidth/2, gVideoHeight/2)
+   Hide(gStim)
+   
+   gFeedback <- MakeLabel("-",gStimFont)
+   AddObject(gFeedback, gWin) 
+   Move(gFeedback, gVideoWidth/2, gVideoHeight/2)
+   Hide(gFeedback)
+
+
+  
+   gCorr <- MakeImage("png/happygreen.png")
+   gInc  <- MakeImage("png/sadred.png")
+   AddObject(gCorr,gWin)
+   AddObject(gInc,gWin)
+   Move(gCorr,400,300)
+   Move(gInc,400,300)
+   Hide(gCorr)
+   Hide(gInc)
+
+ }
+
+## order will be "1" or "2"
+##
+define  PresentStim(stimA,stimB,order)
+{
+   Print(order)
+	if(order=="1"){
+       Move(stimA,200,300)
+       Move(stimB,600,300)
+
+    } else {
+       Move(stimB,200,300)
+       Move(stimA,600,300)
+    }
+  Show(stimA)
+  Show(stimB)
+  Draw()
+  
+  resp <- WaitForListKeyPress(["1","2"])
+  Hide(stimA)
+  Hide(stimB)
+  Draw()
+  return (resp == order)
+}
+
+## This makes a 'formatted' text string,  
+## making sure it has length size.  If val is too short,
+## it chops off the end of val; if it is too short, it pads
+## the end of val with spaces.  
+define Format(val, size)
+{
+
+  string <- "" + val
+
+  len <- StringLength(string)
+ 
+  #If size is smaller than length, 
+  if(size <= len)
+  {
+    string <- SubString(string,1,size) 
+  }else {
+   pad <- ListToString(Repeat(" ",size - len))
+   string <- string + pad
+  }
+
+  return string
+}
+
+
+define ListToString(list)
+{
+  tmp <- ""
+  loop(i,list)
+  {
+    tmp <- tmp + i
+  }
+ return tmp
+}
