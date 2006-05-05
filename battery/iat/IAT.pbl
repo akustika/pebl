@@ -80,7 +80,7 @@ define Start(lPar)
 
   gCorr <- 0
 
-  numStim <- 4
+  numStim <- 40
   
   gFileOut <- FileOpenWrite("iat-" + gSubNum + ".dat")
   reportFile <- FileOpenWrite("iat-report-" + gSubNum + ".dat")
