@@ -1,8 +1,11 @@
-hammer
-anvil
-chain
-steel
-wrench
-screwdriver
-mallet
-pliers
+#Physical Description
+BRIGHT
+GREEN
+DARK
+RED
+HEAVY
+LARGE
+SMALL
+THIN
+SOLID
+SOFT
