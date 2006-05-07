@@ -128,9 +128,9 @@ public:
     operator long int();
     operator long unsigned int();
     operator int();
-    operator const char*();
+    //    operator const char*();
     operator const std::string() const;
-    operator char*();
+    //operator char*();
     operator bool();
 
     VariantDataType GetDataType() const;
@@ -150,12 +150,12 @@ public:
 
     long int GetInteger() const;
     long double GetFloat() const;
-    const char * GetVariableName() const;
-    const char * GetVariableBaseName() const;
-    const char * GetVariablePropertyName() const;
+    std::string GetVariableName() const;
+    std::string GetVariableBaseName() const;
+    std::string GetVariablePropertyName() const;
 
-    const char * GetFunctionName() const;
-    const char * GetString() const;
+    std::string  GetFunctionName() const;
+    std::string GetString() const;
     StackSignalType GetSignal()const;
     pFunc GetFunctionPointer() const;
     PComplexData * GetComplexData() const;

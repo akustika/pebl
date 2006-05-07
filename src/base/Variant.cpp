@@ -245,16 +245,16 @@ Variant::Variant(const Variant &v):
             break;
 
         case P_DATA_STRING:
-            mData.String = strdup(v.GetString());
+            mData.String = strdup(v.GetString().c_str());
             break;
 
         case P_DATA_LOCALVARIABLE:        // a variable name
         case P_DATA_GLOBALVARIABLE:        // a variable name
-            mData.Variable = strdup(v.GetVariableName());
+            mData.Variable = strdup(v.GetVariableName().c_str());
             break;
 
         case P_DATA_FUNCTION:
-            mData.Function = strdup(v.GetFunctionName());
+            mData.Function = strdup(v.GetFunctionName().c_str());
             break;
 
         case P_DATA_FUNCTION_POINTER:
@@ -328,7 +328,7 @@ Variant Variant::operator +(const Variant & rhs) const
             tmp1 = GetString();
             tmp2 = rhs.GetString();
             tmp1 += tmp2;
-            return Variant(tmp1.c_str());
+            return Variant(tmp1);
         }
     else
         //There should be an error emmitted here
@@ -429,11 +429,11 @@ bool Variant::Equal(const Variant & rhs) const
         { //If both are strings, compare them
 
             //Get copies of the strings.
-            const char * str1 = this->GetString();
-            const char * str2 = rhs.GetString();
+            std::string str1 = this->GetString();
+            std::string str2 = rhs.GetString();
 
             //strcmp returns 0 if they are identical, a number otherwise
-            bool b = !strcmp(str1, str2);
+            bool b = (str1 == str2);
             return b;
         }
     else if (this->IsStackSignal() && rhs.IsStackSignal())
@@ -457,24 +457,19 @@ bool Variant::Less(const Variant & rhs) const
 	    { //If both are strings, compare them
 
             //Get copies of the strings.
-            const char * str1 = this->GetString();
-            const char * str2 = rhs.GetString();
+            std::string  str1 = this->GetString();
+            std::string  str2 = rhs.GetString();
 
-            //strcmp returns 0 if they are identical, a number otherwise
-            bool b = (strcmp(str1, str2)<0);
-            return b;
+            return str1 < str2;
 	    }
 	else if (this->IsFunction() && rhs.IsFunction())
         {
-                 //Get copies of the strings.
-            const char * str1 = this->GetFunctionName();
-            const char * str2 = rhs.GetFunctionName();
+            //Get copies of the strings.
 
-            //strcmp returns 0 if they are identical, a number otherwise
-            bool b = (strcmp(str1, str2)<0);
-            return b;
+            std::string  str1 = this->GetFunctionName();
+            std::string  str2 = rhs.GetFunctionName();
 
-
+            return (str1 < str2);
         }
 	    //This should be handled more elegantly.
 	    return false;
@@ -537,16 +532,16 @@ Variant Variant::operator = (const Variant & value)
             break;
 
         case P_DATA_STRING:
-            mData.String = strdup(value.GetString());
+            mData.String = strdup(value.GetString().c_str());
             break;
 
         case P_DATA_LOCALVARIABLE:        // a char* variable name
         case P_DATA_GLOBALVARIABLE:        // a char* variable name
-            mData.Variable = strdup(value.GetVariableName());
+            mData.Variable = strdup(value.GetVariableName().c_str());
             break;
 
         case P_DATA_FUNCTION:
-            mData.Function = strdup(value.GetFunctionName());
+            mData.Function = strdup(value.GetFunctionName().c_str());
             break;
 
         case P_DATA_FUNCTION_POINTER:
@@ -751,21 +746,21 @@ Variant::operator long double()
     return GetFloat();
 }
 
-Variant::operator const char* ()
-{
-    return GetString();
-}
+// Variant::operator const char* ()
+// {
+//     return GetString();
+// }
 
 
 Variant::operator const std::string () const
 {
-    return string(GetString());
+    return GetString();
 }
 
-Variant::operator char* ()
-{
-    return strdup(GetString());
-}
+// Variant::operator char* ()
+// {
+//     return strdup(GetString());
+// }
 
 
 Variant::operator bool ()
@@ -958,44 +953,34 @@ long double Variant::GetFloat() const
 
 
 
-const char *  Variant::GetString() const
+std::string Variant::GetString() const
 {
 
     switch(mDataType)
         {
         case P_DATA_NUMBER_INTEGER: // an integer
             {
-                std::stringstream tmp;
-                tmp << mData.iNumber;
-
-                std::string tmpstring;
-                tmp >> tmpstring;
-
-                return tmpstring.c_str();
+                std::ostringstream o;
+                o <<  mData.iNumber;
+                return o.str();
             }
 
         case P_DATA_NUMBER_FLOAT:   // a float
             {
-                std::stringstream tmp;
-                tmp << mData.fNumber;
-
-                std::string tmpstring;
-                tmp >> tmpstring;
-
-                return tmpstring.c_str();
-
+                std::ostringstream o;
+                o <<  mData.fNumber;
+                return o.str();
             }
 
-
         case P_DATA_STRING:
-            return mData.String;
+            return std::string(mData.String);
         case P_DATA_FUNCTION:
             return mData.Function;
 
 
         case P_DATA_LOCALVARIABLE:
         case P_DATA_GLOBALVARIABLE:
-            return mData.Variable;
+            return std::string(mData.Variable);
 
         case P_DATA_COMPLEXDATA:
             {
@@ -1003,7 +988,7 @@ const char *  Variant::GetString() const
                 counted_ptr<PEBLObjectBase> pob = pcd->GetObject();
 
                 std::string tmp = pob->ObjectName();
-                return tmp.c_str();
+                return tmp;
 
 //                 cout << *pob << endl;
                 
@@ -1043,12 +1028,12 @@ const char *  Variant::GetString() const
 
 
 //This returns a pointer to the name of the variable.
-const char *  Variant::GetVariableName() const
+std::string  Variant::GetVariableName() const
 {
 
     if( mDataType == P_DATA_LOCALVARIABLE || mDataType == P_DATA_GLOBALVARIABLE)
         {
-            return mData.Variable;
+            return std::string(mData.Variable);
         }
     else
         {
@@ -1065,7 +1050,7 @@ const char *  Variant::GetVariableName() const
 
 //This returns the name of the variable; if this is a variable.property, it returns
 //just the first part, and in all caps.
-const char *Variant::GetVariableBaseName() const
+std::string Variant::GetVariableBaseName() const
 {
 
     if( mDataType == P_DATA_LOCALVARIABLE || mDataType == P_DATA_GLOBALVARIABLE)
@@ -1074,9 +1059,9 @@ const char *Variant::GetVariableBaseName() const
             std::string tmp = PEBLUtility::ToUpper(mData.Variable);
             std::string::size_type pos = tmp.find(".");
             if(pos == std::string::npos)
-                return tmp.c_str();
+                return tmp;
             else
-                return tmp.substr(0, pos).c_str();
+                return tmp.substr(0, pos);
 
         }
     else
@@ -1090,7 +1075,7 @@ const char *Variant::GetVariableBaseName() const
 
 //This returns the name of the variable; if this is a variable.property, it returns
 //just the first part.
-const char *  Variant::GetVariablePropertyName() const
+std::string  Variant::GetVariablePropertyName() const
 {
 
     if( mDataType == P_DATA_LOCALVARIABLE || mDataType == P_DATA_GLOBALVARIABLE)
@@ -1101,7 +1086,7 @@ const char *  Variant::GetVariablePropertyName() const
             if(pos == std::string::npos)
                 return "";
             else
-                return tmp.substr(pos+1,tmp.size()).c_str();
+                return tmp.substr(pos+1,tmp.size());
         }
     else
         {
@@ -1118,12 +1103,12 @@ const char *  Variant::GetVariablePropertyName() const
 
 
 //This returns a pointer to the name of the function.
-const char *  Variant::GetFunctionName() const
+std::string   Variant::GetFunctionName() const
 {
 
     if( mDataType == P_DATA_FUNCTION)
         {
-            return mData.Function;
+            return std::string(mData.Function);
         }
     else
         {
