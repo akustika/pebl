@@ -215,6 +215,7 @@ long int PEBLUtility::Truncate(long double val)
 PEBLKey PEBLUtility::TranslateString(const std::string & letters)
 {
 
+
     //Use as a default the first letter.
     
     PEBLKey code = PEBLKey(int(letters[0]));
@@ -236,6 +237,10 @@ PEBLKey PEBLUtility::TranslateString(const std::string & letters)
        )
         return PEBLKEY_BACKSPACE;
 
+    if(letters == "<left>")  return PEBLKEY_LEFT;
+    if(letters == "<right>") return PEBLKEY_RIGHT;
+    if(letters == "<down>")  return PEBLKEY_DOWN;
+    if(letters == "<up>")    return PEBLKEY_UP;
 
     //More extravagent things can be done to get other keys.
 
