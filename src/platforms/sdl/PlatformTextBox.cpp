@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformTextBox.cpp
 //    Purpose:    Contains SDL-specific interface for the text boxes.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2006 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -239,6 +239,7 @@ void PlatformTextBox::SetText(string text)
 void PlatformTextBox::FindBreaks()
 {
        
+
     //First, find the height and width of the text when rendered with the font.
     int height = mFont->GetTextHeight(mText);
 
@@ -289,10 +290,15 @@ int PlatformTextBox::FindNextLineBreak(unsigned int curposition)
         {
 
             //Test to see if curposition is a '10'.  If so, this is a line break.
+            //we need to test whether the line is too long now.if so, return the
 
             if(mText[curposition + sublength] == 10 )
                 {
-                    return sublength;
+                    tmpstring = mText.substr(curposition,sublength);
+                    if(mFont->GetTextWidth(tmpstring) > (unsigned int)mWidth)
+                        return sep;
+                    else
+                        return sublength;
                 }
             
      
