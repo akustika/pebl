@@ -28,7 +28,10 @@
 #define __PERROR_H__
 
 #include <string>
+#include <list>
 #include "../base/Variant.h"
+#include "../base/PNode.h"
+
 enum PErrorAssertType
     {
         //These are based on variant types:
@@ -66,8 +69,6 @@ enum PErrorAssertType
 
 namespace PError
 {
-
-    
     
     //These functions handle error detection and reporting.  To use, include this file
     //in a source file, and then call PError::Signal....().  SignalFatalError will cause the program
@@ -83,5 +84,35 @@ namespace PError
     void AssertType(Variant v, int type, const std::string & outsidemessage );
     std::string GetTypeName(Variant v);
 }
+
+
+class PCallStack
+{
+public:
+    PCallStack(){};
+    ~PCallStack(){};
+    void Push(const PNode* node){mNodes.push_back(node);};
+    void Pop(){mNodes.pop_back();};
+    
+    std::ostream & PrintCallStack(std::ostream & out) const
+    {
+        std::string indent = "";
+        std::list<const PNode*>::const_iterator i = mNodes.begin();
+
+        while(i != mNodes.end())
+            {
+                out << indent << "Called from line ["<<(*i)->GetLineNumber() << "] of file [" << (*i)->GetFilename() << "]\n";
+                indent = indent + "   ";
+                i++;
+            }
+        return out;
+    }
+
+private:
+    std::list<const PNode*> mNodes;
+};
+
+
+
 
 #endif

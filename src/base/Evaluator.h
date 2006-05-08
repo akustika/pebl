@@ -30,13 +30,16 @@
 #define __EVALUATOR_H__
 
 #include <stack>
+#include <list>
 //#include "PNode.h"
 #include "Variant.h"
 
 #include "FunctionMap.h"
 #include "../utility/PEBLPath.h"
 #include "VariableMap.h"
+#include "../utility/PError.h"
 //#include "../devices/PEventLoop.h"
+
 
 class PNode;
 class OpNode;
@@ -54,14 +57,16 @@ class Evaluator
 public:
 
     Evaluator();
-    Evaluator(Variant & v, std::string scope);
+    Evaluator(Variant & stacktop, string scope);
     ~Evaluator();
   
     void CallFunction(const OpNode * node);
 
-    void Evaluate(const PNode * node);
-    void Evaluate(const OpNode * node);
-    void Evaluate(const DataNode * node);
+
+    //If Evaluate returns with true, continue; otherwise, exit.
+    bool Evaluate(const PNode * node);
+    bool Evaluate(const OpNode * node);
+    bool Evaluate(const DataNode * node);
   
     void Push(Variant v);
     Variant Pop();
@@ -86,16 +91,27 @@ public:
 
     static PEBLPath gPath;
 
+
+
     /// This is used for error detection.  Every time mEvalNode is 
     /// updated, this is set to mEvalNode.  But, it is done for 
     /// all evaluators.  Thus, it always points to the last node
     /// processed, and error reporting routines can look for it and
     /// find out where it came from.
-    static  const  PNode * gEvalNode;
+    static const  PNode * gEvalNode;
+
+
+    static PCallStack gCallStack;
 
 
     
 private:
+
+    //This list keeps track of the call sequence 
+    //of evaluators, so that when an error is found,
+    //all the calls can be traced back.  It is a list
+    //instead of a stack so that we can examine it easily.
+
 
 
     /// This is the main data stack for the evaluator
@@ -105,7 +121,6 @@ private:
     /// the depth of the stack in case problems happen. Checking only
     /// goes on within Push().
     unsigned int mStackMax;
-
 
     /// This holds variables local to the current thread.
     VariableMap mLocalVariableMap; 

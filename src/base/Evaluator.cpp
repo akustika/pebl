@@ -46,7 +46,6 @@
 //#define PEBL_DEBUG_PRINT 1
 
 using std::cout;
-using std::cout;
 using std::endl;
 using std::flush;
 using std::list;
@@ -56,24 +55,36 @@ Evaluator::Evaluator():
     mStackMax(10000),
     mScope("Base Scope")
 {
+    gCallStack.Push(gEvalNode);
 
 }
-
+ 
 
 Evaluator::Evaluator(Variant & stacktop, string scope):
+    //    mCallStack(callstack),
     mStackMax(10000),
     mScope(scope)
 {
+    
+    //add everything in callstack onto mCallStack
+    //mCallStack = callstack;
+
+    //Push the current evalnode onto the stack, if
+    //it exists.
+    if(gEvalNode)
+        {
+            gCallStack.Push(gEvalNode);
+
+        }
     //Initialize the evaluator scope with a variant which is a list of variables
     Push(stacktop);
-
 }
 
 
 Evaluator::~Evaluator()
 
 {
-#ifdef PEBL_DEBUG_PRINT
+#ifdef PEBL_DEBUG_PRINT 
     cout << "Deleting Evaluator: " << mScope << endl;
 #endif
 
@@ -86,8 +97,9 @@ Evaluator::~Evaluator()
 /// This is the generic PNode evaluator
 ///
 
-void Evaluator::Evaluate(const PNode * node)
+bool Evaluator::Evaluate(const PNode * node)
 {
+
 
     if(node == NULL) PError::SignalFatalError("Trying to evaluate null node\n");
     //Set up the globally-accessible structure to allow
@@ -105,23 +117,26 @@ void Evaluator::Evaluate(const PNode * node)
 
     if(node->GetType() ==  PEBL_OP_NODE)
         {
-            Evaluate((OpNode*)node);
+            return Evaluate((OpNode*)node);
         }
     else if (node->GetType() ==  PEBL_DATA_NODE)
         {
-            Evaluate((DataNode*)node);
+            return Evaluate((DataNode*)node);
         }
     else
         {
 #ifdef PEBL_DEBUG_PRINT 
             cout << "ERROR IN GENERIC EVALUATOR::EVALUATE" << endl;
 #endif
+            return false;
         }
+
+    return true;
 }
 
 
 ///  This method evaluates OpNodes
-void Evaluator::Evaluate(const OpNode * node)
+bool Evaluator::Evaluate(const OpNode * node)
 {
 
     if(node == NULL) PError::SignalFatalError("Trying to evaluate null node\n");
@@ -1044,8 +1059,11 @@ void Evaluator::Evaluate(const OpNode * node)
 
         default:
             //Signal an error here.
+            return false;
             break;
+
         }
+    return true;
 }      
 
 
@@ -1053,7 +1071,7 @@ void Evaluator::Evaluate(const OpNode * node)
 
 ///
 ///  This method evaluates DataNodes
-void Evaluator::Evaluate(const DataNode * node)
+bool Evaluator::Evaluate(const DataNode * node)
 {
 
     //Set up the globally-accessible structure to allow
@@ -1129,9 +1147,11 @@ void Evaluator::Evaluate(const DataNode * node)
         default:
             //This should signal an error.
             PError::SignalFatalError("In Function [" + mScope + "Undefined Data Type in Evaluate::Evaluate(DataNode)");
+            return false;
             break;
         }
 
+    return true;
 }
   
 
@@ -1141,6 +1161,7 @@ void Evaluator::Evaluate(const DataNode * node)
 /// Evaluates that code.
 void Evaluator::CallFunction(const OpNode * node)
 {
+
 
     // First get the right node (the argument list) and evaluate it.
     // This will end up with a list Variant on top of the stack. 
@@ -1179,11 +1200,20 @@ void Evaluator::CallFunction(const OpNode * node)
                 //get the top item of the stack.
                 Variant v = Pop();
                 
+                
                 //Make a new evaluator for the function scope and v at the top of the stack.
-                Evaluator  myEval(v,funcname);
+                Evaluator  myEval(v,funcname.GetFunctionName());
+                
+                //The callstack just keeps track of the series of
+                //evaluators for debugging purposes.
                 
                 //Evaluate the lambda function in new scope.
+
                 myEval.Evaluate(node2);
+
+                //Now that myEval is finished, take the
+                //node off the callstack.
+                gCallStack.Pop();
                 
                 //If myEval has a stack depth of 1, it does not return anything.
                 //If myEval has a stack depth of 2, it wants to return the top value.
@@ -1203,7 +1233,9 @@ void Evaluator::CallFunction(const OpNode * node)
             break;
             
         case PEBL_LIBRARYFUNCTION:
+
             Evaluate(node2);
+
             break;
 
 
@@ -1267,3 +1299,4 @@ Variant Evaluator::Peek()
     Variant v = mStack.top();
     return v;
 }
+

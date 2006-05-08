@@ -45,21 +45,22 @@ void PError::SignalFatalError(const string & message)
 
     const PNode * node = Evaluator::gEvalNode;
 
+    Evaluator::gCallStack.PrintCallStack(cerr);
     if(node)
         {
-            cerr << "Error near line " << node->GetLineNumber() <<   " of file " << node->GetFilename()  << ":\n\t";
+            cerr << "\nError near line " << node->GetLineNumber() <<   " of file " << node->GetFilename()  << ":\n\t";
             cerr << message << endl;
         }
     else
         {
-            cerr << "Error before files are loaded.\n";
+            cerr << "\nError before files are loaded.\n";
             cerr << message << endl;
         }
  
     raise(SIGTERM);
     exit(0);
 }
-
+ 
 
 void PError::SignalWarning(const string &  message)
 {
@@ -410,3 +411,6 @@ string PError::GetTypeName(Variant v)
 
 	return typeName;
 }
+
+
+

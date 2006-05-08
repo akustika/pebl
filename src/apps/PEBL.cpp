@@ -48,6 +48,7 @@
 
 #include <iostream>
 #include <signal.h>
+#include <list>
 
 //Unix-specific definitions
 #if defined(PEBL_UNIX)
@@ -83,9 +84,13 @@ PEventLoop Evaluator::mEventLoop;
 VariableMap Evaluator::gGlobalVariableMap;
 const PNode * Evaluator::gEvalNode = NULL;
 PEBLPath  Evaluator::gPath;
+PCallStack Evaluator::gCallStack;
 
 Loader* myLoader;
 PNode * head;
+
+//std::list<PNode> PError::gCallStack;
+
 
 int PEBLInterpret( int argc, char *argv[] )
 { 
@@ -342,6 +347,7 @@ int PEBLInterpret( int argc, char *argv[] )
     Variant v = Variant(pcd);
     
 
+    std::list<PNode> tmpcallstack;
     Evaluator myEval = Evaluator(v,"Start");
 
 
@@ -358,7 +364,9 @@ int PEBLInterpret( int argc, char *argv[] )
         {
             cerr << "---------Evaluating Program-----" << endl;
             //Execute everything
+
             myEval.Evaluate(head);
+
             delete myLoader; 
             
             Evaluator::mFunctionMap.Destroy();

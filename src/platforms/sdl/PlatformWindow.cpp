@@ -110,6 +110,7 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
                                 bool windowed)
 {  
     Variant v = 0;
+
     Evaluator * myEval = new Evaluator(v,"Window");
     //gVideoWidth and gVideoHeight may have been set by the user
     //in the script.  First, get these values, and try them.
