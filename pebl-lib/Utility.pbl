@@ -1,4 +1,4 @@
-#/////////////////////////////////////////////////////////////////////////////////
+#//////////////////////////////////////////////////////////////////////////////
 #//    Name:       src/pebl-lib/Utility.pbl
 #//    Purpose:    Contains PEBL functions used for various purposes
 #//    Author:     Shane T. Mueller, Ph.D.
@@ -19,16 +19,16 @@
 #//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #//    GNU General Public License for more details.
 #//
-#//    You should have received a copy of the GNU General Public License
-#//    along with PEBL; if not, write to the Free Software
-#//    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-#////////////////////////////////////////////////////////////////////////////////
+#//   You should have received a copy of the GNU General Public License
+#//   along with PEBL; if not, write to the Free Software
+#//   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#//////////////////////////////////////////////////////////////////////////////
 
 
 #  The functions defined here are available for use in any PEBL program.
 #  They are written in PEBL itself, and so are interpreted, but the ease of
-#  writing them in PEBL far outweighed the possible speed-up that might be gained
-#  by writing them directly in C++.
+#  writing them in PEBL far outweighed the possible speed-up that
+#   might be gained by writing them directly in C++.
 
 
 define GetNIMHDemographics(code,window, file)
@@ -275,6 +275,38 @@ define SplitString(string, split)
 
 
 
+##These helper functions require gTextBox, gHeader, and gFooter to work.
+define LikertTrial(text)
+{
+  SetText(gTextBox,text)
+  SetText(gHeader,"How much you agree with the following statement:")
+  SetText(gFooter,"   1     2     3     4     5     6")
+  SetText(gFooter2,"Not at all                       Strongly")
+  Draw()
+
+  t1 <- GetTime()
+  response <-WaitForListKeyPress(["1","2","3","4","5","6"])
+  t2 <- GetTime()
+  return "LK " + response + " " + (t2 - t1)
+}
+
+##These helper functions require gTextBox, gHeader, and gFooter to work.
+define YesNoTrial(text)
+{
+  SetText(gTextBox,text)
+  SetText(gHeader,"Do you agree or disagree with the following statement::")
+  SetText(gFooter," 'Z'                   '/'")
+  SetText(gFooter2,"YES                      NO")
+
+  Draw()
+  t1 <- GetTime()
+  response <-WaitForListKeyPress(["Z","/"])
+  t2 <- GetTime()
+  return "YN " + response + " " + (t2 - t1)
+}
+
+
+
 define CR()
 {
   x <- "
@@ -291,6 +323,10 @@ define Tab(n)
 
 define ListToString(list)
 {
+  if(not IsList(list))
+   {
+     SignalFatalError("Object" + list + "is not a list in ListToString")
+   }
    x <- ""
    loop(i,list)
     {
@@ -300,3 +336,43 @@ define ListToString(list)
 }
 
 
+## This makes a 'formatted' text string,  
+## making sure it has length size.  If val is too short,
+## it chops off the end of val; if it is too short, it pads
+## the end of val with spaces.  
+define Format(val, size)
+{
+
+  string <- "" + val
+
+  len <- StringLength(string)
+ 
+  #If size is smaller than length, 
+  if(size <= len)
+  {
+    string <- SubString(string,1,size) 
+  }else {
+   pad <- ListToString(Repeat(" ",size - len))
+   string <- string + pad
+  }
+
+  return string
+}
+
+define ConvertIPString(ip)
+{
+	nums <- SplitString(ip,".")
+	if(not Length(nums) == 4)
+    { 
+        SignalFatalError("IP Address must have four parts")
+    }
+   
+   base <- 1
+   address <- 0
+
+   loop(i,Reverse(nums))
+   {
+      address <- 256*address + ToNumber(i)
+   }
+   return address
+}

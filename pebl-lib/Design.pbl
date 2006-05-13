@@ -54,6 +54,28 @@ define DesignLatinSquare(list1, list2)
     return returnlist
 }
 
+##This is a simple version of above, taking only one list, and outputting a slightly different form.
+define LatinSquare(list)
+{
+    #Ensure that both arguments are actually lists
+   if(not IsList(list))
+      {
+	SignalFatalError("First argument of function [LatinSquare(<list>)] is not a list")
+      }
+
+   n <- Length(list)
+   sequence <- [list]
+   tmp <- list
+   ## Go through the list N times, rotating the temporary list 1 on each iteration,
+   ## and adding the result to sequence.
+   loop(l, Sequence(1,(n-1),1))
+    {
+      tmp <- Rotate(tmp,1)
+      sequence <- Append(sequence, tmp)
+    }
+  return sequence
+}
+
 
 
 ##This will return ABC triplets counterbalanced in a greco-latin square fashion.
@@ -400,4 +422,152 @@ define Replace(template, replacementList)
 	}
 
 	return returnVal
+}
+
+
+
+define Reverse(list)
+{
+
+   newlist <- []
+   loop(i, list)
+   {
+     newlist <- Merge([i], newList)
+   }
+
+ return(newlist)
+}
+
+
+
+define ShuffleRepeat(list, n)
+{
+
+   tmp <- []
+   loop(i, Sequence(1,n,1))
+    {
+       tmp <- Append(tmp, Shuffle(list))
+    }
+  return tmp
+}
+
+define ShuffleWithoutAdjacents(list)
+{
+  #This does mixed shuffling of a list of subset, so that
+  #within-set tokens are not adjacent in the outcome list.
+
+  # Make a template with integers describing the tokens to be shuffled 
+  # in this crazy way.
+
+  template <- []
+  index <- 1
+
+  ##shuffledList shuffles items within the class for later use.
+  shuffledList <- []
+
+  loop(i,list)
+    { 
+
+
+      if(IsList(i))
+       {
+         tmpList <- []
+         loop(j, i)
+          {
+           tmpList <- Append(tmpList, index)
+          }
+         template <- Append(template,tmpList)
+         index <- index + 1
+
+       shuffledList <- Append(shuffledList, Shuffle(i))
+       } else {
+         template <- Append(template,index)
+         index <- index + 1
+        shuffledList <- Append(shuffledList, i)
+      }
+    }
+
+
+    ## now, template is a list with unique integers that map the classes of items on the list.
+    ## that can't touch.
+
+    flatTemplate <-Shuffle(Flatten(template))
+    finalTemplate <- []
+    last <- 0
+    rest <- flatTemplate
+    while(Length(rest) > 0)
+    {
+
+     next <- First(rest)
+     ##If the transition is bad, try to find one that works:
+     tries <- 0
+     maxTries <- Length(rest)
+     while(next == last and tries <= maxTries)
+      {
+
+       rest <- Rotate(rest,1)
+       next <- First(rest)
+       tries <- tries + 1
+      }
+      
+     ##Add the next legal item to the final template.
+     finalTemplate <- Append(finalTemplate, next)    
+     last <- next
+     if(Length(rest)==1)
+     {
+      rest <- []
+     } else {
+       rest <- SubList(rest,2,Length(rest))
+     }  
+    i <- i + 1
+    }
+
+
+   #OK, now finaltemplate shows us how to order things from the shuffledList
+
+
+   flatList <- FlattenN(shuffledList,1)
+   key <- SortBy(Sequence(1,Length(flatList),1), finalTemplate)
+ 
+   return SortBy(flatList, key)
+}
+
+## This replaces all instances of a character in a string with another character.
+## Useful for saving participant input that might have spaces.
+
+define ReplaceChar(word,char, char2)
+{
+   list <- SplitString(word, char)
+   newString <- ""
+   begin <- 0
+   loop(i,list)
+   {
+     if(begin == 0)
+     {
+       newString <- newString + i
+       begin <- 1
+     } else {
+       newString <- newString + char2 + i
+     }
+   }
+    return newString
+}
+
+## Returns the element of database corresponding to the first match of
+## key to items in keylist.  If nothing is found, it returns an empty list.
+define Lookup(key, keylist, database)
+{
+  found <- []
+  table <- Transpose([keylist, database])
+  loop(i, table)
+  {
+
+     if(key == First(i))
+     {
+       found <- Nth(i,2)
+       break
+     }
+  }
+
+   return found
 }
