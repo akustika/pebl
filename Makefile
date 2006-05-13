@@ -26,9 +26,9 @@
 #//////////////////////////////////////////////////////////////////////////////
 
 C   = gcc
-CXX = g++
+CXX = g++ 
 DEBUGFLAGS = -lefence -DPEBL_DEBUG
-CFLAGS =   -O3 -std=c99 
+CFLAGS =   -O3 -std=c99
 CXXFLAGS =   -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX 
 
 
@@ -43,7 +43,7 @@ SDL_LIBS = -L/usr/lib -Wl,-rpath,/usr/local/lib -lSDL -lpthread
 OSX_FLAGS =
 
 SDLIMG_FLAGS =  -L/usr/lib -Wl,-rpath,/usr/lib
-SDLIMG_LIBS =   -lSDL -lpthread -lSDL_image
+SDLIMG_LIBS =   -lSDL -lpthread -lSDL_image -lSDL_net
 
 
 SHELL = /bin/bash
@@ -126,7 +126,8 @@ PDEVICES_SRC =  $(DEVICES_DIR)/PDevice.cpp \
 	$(DEVICES_DIR)/PTimer.cpp \
 	$(DEVICES_DIR)/DeviceState.cpp \
 	$(DEVICES_DIR)/PStream.cpp \
-	$(DEVICES_DIR)/PAudioOut.cpp
+	$(DEVICES_DIR)/PAudioOut.cpp \
+	$(DEVICES_DIR)/PNetwork.cpp 
 
 
 PDEVICES_OBJ  = $(patsubst %.cpp, %.o, $(PDEVICES_SRC))
@@ -146,7 +147,8 @@ PLATFORM_SDL_SRC  =	$(SDL_DIR)/PlatformEnvironment.cpp \
 			$(SDL_DIR)/PlatformDrawObject.cpp \
 			$(SDL_DIR)/SDLUtility.cpp \
 		   	$(SDL_DIR)/PlatformEventQueue.cpp \
-			$(SDL_DIR)/PlatformAudioOut.cpp
+			$(SDL_DIR)/PlatformAudioOut.cpp \
+			$(SDL_DIR)/PlatformNetwork.cpp
 
 PLATFORM_SDL_OBJ  = 	$(patsubst %.cpp, %.o, $(PLATFORM_SDL_SRC))
 PLATFORM_SDL_INC  = 	$(patsubst %.cpp, %.h, $(PLATFORM_SDL_SRC))
@@ -274,7 +276,7 @@ DIRS = \
 
 main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
 	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/pebl -I/usr/local/include/SDL -D_REENTRANT \
-	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  $(OSX_FLAGS) \
+	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  -lSDL_net $(OSX_FLAGS) \
 	 $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(PEBLMAIN_OBJ))
 
 parse:
