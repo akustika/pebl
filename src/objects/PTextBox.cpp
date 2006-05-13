@@ -140,7 +140,7 @@ ObjectValidationError PTextBox::ValidateProperty(std::string name)const
 //Inserts text at cursor
 void PTextBox::InsertText(std::string text)
 {
-    cout << "[" << text << "]" << endl;
+    //cout << "[" << text << "]" << endl;
 
     if(mCursorPos>mText.length())
         mCursorPos=mText.length();
