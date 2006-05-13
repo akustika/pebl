@@ -110,9 +110,9 @@
 %left PEBL_GE PEBL_LE PEBL_EQ PEBL_NE PEBL_GT PEBL_LT
 %left PEBL_ADD PEBL_SUBTRACT
 %left PEBL_MULTIPLY PEBL_DIVIDE
+%left PEBL_POWER
 %nonassoc PEBL_UMINUS 
 %%
-
 
 
 		/*============================================================================*/
@@ -357,6 +357,9 @@ exp:	        datum                   { $$ = $1;}
 
 		/******************************************************************************/
 	| 	exp PEBL_MULTIPLY nlornone exp    { $$ = new OpNode(PEBL_MULTIPLY, $1, $4, sourcefilename, yylineno);} 
+
+		/******************************************************************************/
+	| 	exp PEBL_POWER nlornone exp    { $$ = new OpNode(PEBL_POWER, $1, $4, sourcefilename, yylineno);} 
 
 		/******************************************************************************/
 	| 	exp PEBL_SUBTRACT nlornone exp    { $$ = new OpNode(PEBL_SUBTRACT, $1, $4, sourcefilename, yylineno); } 
