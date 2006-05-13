@@ -21,19 +21,21 @@ define Start (lParameter )
 
    #Wait 2 seconds before we start to make sure everything gets processed.
 	Wait(2000)
+    cycs <- []
+    rts <- []
 
 	while(i < 250)
 	{
-
-      cycles <- RandomDiscrete(4)
+        cycles <- RandomDiscrete(5)
 		Draw()
 		Draw()
 		Draw()
  		time1 <- GetTime()
 		DrawFor(gWindow,cycles)	
 		time2 <- GetTime()
-
-      Print(cycles + "   " + (time2 - time1))
+        cycs <- Append(cycs,cycles)
+        rts <- Append(rts,(time2-time1))
+	
       i <- i + 1
 	}
 
@@ -44,7 +46,55 @@ define Start (lParameter )
 	AddObject(lText2,gWindow)	
 	MOVE(lText2, 200, 300)	
 	Draw()
+	stats <- AggregateRTs(rts,cycs)
+    Print("Cycles Num Mean SD")
+	Print(stats)
+    Print(Transpose([cycs,rts]))
 
 	WaitForKeyDown("X")
 	Wait(300)
+}
+
+
+## This finds mean and SD RT for 
+## each of the conditions specified in delays
+##
+define AggregateRTs(rts, delays)
+{
+
+  ## start by sorting both rts and delays by delays;
+  ## then move through them and analyze subparts.
+  rtX <- SortBy(rts,delays)
+  deX <- Sort(delays)
+  trials <- Transpose([deX,rtX])
+  
+  stats <- []
+
+  lastdelay <- First(deX)
+
+  tmpRT <- []  
+
+  loop(i, trials)
+  {
+
+     ## if the current delay differs from the previous delay,
+	 ## we should analyze what is in tmp right now.
+     if(First(i) != lastdelay)
+     {
+
+       stats <- Append(stats,
+                      [lastdelay, Length(tmpRT),
+	                  Mean(tmpRT), StdDev(tmpRT)])
+       tmpRT <- []
+     }
+
+    lastdelay <- First(i) 
+    tmpRT <- Append(tmpRT, Nth(i, 2))
+  }
+ 
+ stats <- Append(stats,
+                [lastdelay, Length(tmpRT),
+                 Mean(tmpRT), StdDev(tmpRT)])
+
+ return stats
 }
