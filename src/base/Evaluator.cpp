@@ -89,8 +89,9 @@ Evaluator::~Evaluator()
 #endif
 
     //Delete all local variables now.
-
-} 
+    if( gCallStack.Size())
+        gCallStack.Pop();
+}
  
 
 ///
@@ -1209,11 +1210,12 @@ void Evaluator::CallFunction(const OpNode * node)
                 
                 //Evaluate the lambda function in new scope.
 
+                
                 myEval.Evaluate(node2);
 
                 //Now that myEval is finished, take the
                 //node off the callstack.
-                gCallStack.Pop();
+                //gCallStack.Pop();
                 
                 //If myEval has a stack depth of 1, it does not return anything.
                 //If myEval has a stack depth of 2, it wants to return the top value.

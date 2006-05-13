@@ -43,7 +43,9 @@
 #include "../platforms/sdl/PlatformDrawObject.h"
 #include "../devices/PStream.h"
 #include "../platforms/sdl/PlatformAudioOut.h"
+#include "../platforms/sdl/PlatformNetwork.h"
 #include "../utility/rc_ptrs.h"
+
 #include <iostream>
 
 
@@ -149,6 +151,7 @@ public:
     bool IsKeyboard() const;
     bool IsFileStream() const;
     bool IsAudioOut() const;
+    bool IsNetworkConnection() const;
 
     bool IsDrawObject() const;
 

@@ -135,6 +135,9 @@ std::string PComplexData::GetTypeName() const
     case CDT_DRAWOBJECT:
       return "Complex Data: Drawing Object";
 
+  case CDT_NETWORKCONNECTION:
+      return "Complex Data: Network Connection";
+
     case CDT_UNDEFINED:
     default:
       return "Complex Data: Undefined";
@@ -239,6 +242,13 @@ bool PComplexData::IsAudioOut() const
 bool PComplexData::IsDrawObject() const
 {
   return GetType() == CDT_DRAWOBJECT;
+}
+
+
+
+bool PComplexData::IsNetworkConnection() const
+{
+  return GetType() == CDT_NETWORKCONNECTION;
 }
 
 
