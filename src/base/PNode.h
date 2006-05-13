@@ -44,8 +44,6 @@ enum PNODE_TYPE {
 
 class PNode {
 
-
-
 public:
   
     ///The Standard constructor.  
