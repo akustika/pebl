@@ -26,6 +26,123 @@ obsolete.
 
 
                  RELEASE NOTES
+--------------------------------------------------
+Version 0.07
+June 2006
+
+The seventh release of PEBL has arrived. This release incorporates a
+set of functions allowing network communication via tcp/ip, a 
+number of bugfixes for the property system, a bunch of new functions,
+new fonts, and several new mini-projects associated with PEBL.  Along with
+releasing the standard PEBL distribution, we are releasing (1) The
+PEBL Test Battery, a set of tasks often used for clinical and
+neuropsychological purposes; (2) PEBL image archive, a set of
+public-domain images for use in experiments, (3) PEBL sound archive, a
+set of .wav files useful in experiments (4). Free font archive, a
+re-distribution of a 40 free fonts that can be used and redistributed
+(with some restrictions)
+
+New fonts:
+ I've tracked down a bunch of fonts with really liberal licensing,
+ which should fill in a few gaps left in the Bitstream Vera fonts.  
+New fonts are listed below, and all fonts are viewable by running the 
+fonts.pbl script in the demo directory.  One font, called
+ Stimulasia.ttf, is our own custom font that will be used to put
+ custom glyphs useful in experimental research.  
+
+Caliban.ttf       CharisSILR.ttf           FreeSansOblique.ttf     
+Caslon-Black.ttf  DoulosSILR.ttf           FreeSans.ttf            
+CaslonBold.ttf    FreeMonoBoldOblique.ttf  FreeSerifBoldItalic.ttf  
+CaslonItalic.ttf  FreeMonoBold.ttf         FreeSerifBold.ttf        
+CaslonRoman.ttf   FreeMonoOblique.ttf      FreeSerifItalic.ttf      
+CharisSILBI.ttf   FreeMono.ttf             FreeSerif.ttf            
+CharisSILB.ttf    FreeSansBoldOblique.ttf  GenI102.ttf              
+CharisSILI.ttf    FreeSansBold.ttf         GenR102.ttf              
+Humanistic.ttf    Stimulasia.ttf
+
+These new fonts add considerably to the download size, but it is still
+pretty small, and it is pretty important to have a common set that can
+be counted on being present.
+
+Network Communication:
+ To enable synchronizing and communicating between computers, a set of
+ functions have been added that allows primitive communication via
+ TCP/IP. 
+
+Syntax:  
+ Syntax has been polished to allow a bit more freedom in where
+ brackets { and } are placed, and we've added an elseif (){}
+ continuation to the if() statement, so you can do things like:
+
+##This should print out "THREE"
+  if(3 == 1) {
+             Print("ONE")
+  }elseif(3==4){
+             Print("TWO")
+  }elseif(4==4){
+             Print("THREE")
+  }elseif(4==4){
+             Print("FOUR")
+  }else{Print("FIVE")}
+
+
+New functions:
+Tab()          Adds a tab character to a text string
+CR()           Adds newline/carriage return
+ShowCursor()   Hides or shows cursor
+Format()       Prints a number/string with a specific number of
+               characters, either by truncating or padding with spaces.
+ListToString() Concatenates everything in a list into a string.
+
+WaitForListKeyPressWithTimeout()
+               Waits for either a keypress from a specified set or a timeout.
+Quantile()     Computes specific quantile of a list of data.
+          
+ShuffleRepeat()  Repeats a list, shuffling each time.
+
+ShuffleWithoutAdjacents() 
+               Shuffles a list, allowing one to specify 
+               items that should not be adjacent in output list
+                          
+LatinSquare()  Quick-and-dirty latin square
+
+ConnectToIP(<ip>,<port>)   
+               Connects to a port on another computer, returning network object.
+
+ConnectToHost(<hostname>,<port>) 
+               Connects to a port on another computer, returning network object.
+
+WaitForNetworkConnection(<port>)
+               Listens on a port until another computer connects,
+               returning a network object
+
+*CloseNetworkConnection(<network>)  
+               Closes network connection
+*SendData(<network>,<datastring>)  
+               Sends a data string over connection.
+*GetData(<network>,<length>) 
+               Return a string from network connection
+ConvertIPString(<ip-as-string>)  
+               Changes an ip-string into integer
+
+Misc & Bugfixes:
+ * Arrow keys can be used--use "<left>", "<right>", "<up>" and "<down>" in
+ functions like WaitForKeyPress().
+ * The mathematical power operator (^) now works.
+ * Fixed a bug that introduced garbage characters when converting
+ number to string or printing numbers
+ * Fixed a wrapping bug in textboxes where a single letter followed
+ by a return would not wrap to the next line.
+ * When creating a file in a non-existent directory, PEBL did not
+ previously complain, but no file would be created.  Now, the script
+ fails with appropriate warning.
+ * Fixed MakeColorRGB(). Previously, this function had defined colors with an
+alpha transparency set to completely transparent, rather than
+solid. Now it should be possible to create colors that can be seen!
+
+
+
+ 
 
 
 --------------------------------------------------

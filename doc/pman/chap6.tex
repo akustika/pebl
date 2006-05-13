@@ -1760,28 +1760,41 @@ if(test)
 
 
 \begin{desc}{Name/Symbol}
-\item[Name/Symbol]	\verb+if...else+            
+\item[Name/Symbol]	\verb+if..elseif...else+            
 
-\item[Description]	Complex conditional test.  Be careful of spacing 
-		the else---if you put carriage returns on either side 
-		of it, you will get a syntax error.
+\item[Description]	Complex conditional test chain.  Efficiently and
+  succinctly test a chain of conditionals.  Note that the $else$ and
+  $elseif$ must occur on the same line as the closing bracket of the 
+  previous statement block, or else the previous block forms a
+  complete legal statement on its own and a syntax error results.
 
 \item[Usage]
 \begin{verbatim}
 if(test)
 {
  statements if true
+} elseif(test2) {
+ statements if test1 false and test2 true
 } else {
- statements if false
+ statements of test1 and test2 false
 }
 \end{verbatim}
 
+
 \item[Example]	
+\begin{verbatim}
+ a <- 33
+ if(a == 34)      { Print("One")
+ }elseif(a == 399){ Print("Two")
+ }elseif(a == 33) { Print("Three")
+ }else            { Print("Four")}
+\end{verbatim}
 
 \item[See Also]	
 \end{desc}
 
 \rl
+
 
 
 \begin{desc}{Name/Symbol}

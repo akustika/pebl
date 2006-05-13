@@ -70,7 +70,7 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+SeedRNG+ &\verb+<num>+ &Seeds the random number generator with \verb+<num>+ to reproduce a random sequence\\ 
 \verb+RandomizeTimer+ & - & Seeds the RNG with the current time\\ 
 \verb+Random+ & - & Returns a random number between 0 and 1\\ 
-RandomDiscrete &\verb+<num>+ &Returns a random integer between 1 and \verb+<num>+ \\ 
+\verb+RandomDiscrete+ &\verb+<num>+ &Returns a random integer between 1 and \verb+<num>+ \\ 
 \verb+RandomUniform+ &\verb+<num>+ &Returns a random floating-point number between 0 and \verb+<num>+ \\ 
 \verb+RandomNormal+ &\verb+<mean> <stdev>+ &Returns a random number according to the standard normal distribution with \verb+<mean>+ and \verb+<stdev>+\\ 
 \verb+RandomExponential+ &\verb+<mean>+ &Returns a random number according to exponential distribution with mean \verb+<mean>+ (or decay 1/mean)\\ 
@@ -82,12 +82,12 @@ RandomDiscrete &\verb+<num>+ &Returns a random integer between 1 and \verb+<num>
 
 \addlinespace[0.2cm] 
 \midrule 
-\multicolumn{3}{c}{\textbf{File/Stream Functions}}\\ 
+\multicolumn{3}{c}{\textbf{File/NetworkStream Functions}}\\ 
 \cmidrule(l{.5cm}r{.5cm}){1-3} 
 
 \verb+Print+ &\verb+<value>+ &Prints \verb+<value>+ to \texttt{stdout}, appending a new line afterwards. \texttt{stdout} is the console (in Linux) or the file \texttt{stdout.txt} (in Windows)\\ 
 \verb+Print_+ &\verb+<value>+ &Prints \verb+<value>+ to stdout, without appending a newline afterwards\\ 
-\verb+Format+ &\verb+<value>+ & UNIMPLEMENTED \\ 
+\verb+Format+ &\verb+<object>+ \verb+<size>+ &Prints a number in size spaces by truncating or padding \\ 
 \verb+FileOpenRead+ &\verb+<filename>+ &Opens a filename, returning a stream to be used for reading information\\ 
 \verb+FileOpenWrite+ &\verb+<filename>+ &Opens a filename, returning a stream that can be used for writing information. Overwrites if file already exists\\ 
 \verb+FileOpenAppend+ &\verb+<filename>+ &Opens a filename, returning a stream that can be used for writing info. Appends if the file already exists, opens if file does not\\ 
@@ -102,8 +102,15 @@ RandomDiscrete &\verb+<num>+ &Returns a random integer between 1 and \verb+<num>
 \verb+FileReadText+ &\verb+<filename>+ &Reads all of the text in the file into a variable\\ 
 \verb+EndOfLine+ &\verb+<filestream>+&Returns true if at end of line \\ 
 \verb+EndOfFile+ &\verb+<filestream>+&Returns true if at the end of a file\\ 
-
-
+\verb+ConnectToIP+ &\verb+<ip>+ \verb+<port>+&Connects to a port on another computer, returning network object.   \\
+\verb+ConnectToHost+&\verb+<hostname>+ \verb+<port>+&Connects to a port on another computer, returning network object.   \\
+\verb+WaitForNetworkConnection+& & \\ 
+& \verb+<port>+&Listens on a port until another computer connects, returning a network object\\
+\verb+CloseNetworkConnection+& &\\
+& \verb+<network>+& Closes network connection\\
+\verb+SendData+&\verb+<network>+ \verb+<datastring>+&  Sends a data string over connection.\\
+\verb+GetData+&\verb+<network>+ \verb+<length>+&return a string from network connection\\
+\verb+ConvertIPString+&\verb+<ip-as-string>+&   \\
 
 \addlinespace[0.2cm] 
 \midrule 
@@ -134,17 +141,17 @@ RandomDiscrete &\verb+<num>+ &Returns a random integer between 1 and \verb+<num>
 \verb+Hide+ &\verb+<object>+ &Hides an object\\ 
 \verb+Draw+ &\verb+<object>+ &Redraws a widget and its children\\ 
 \verb+DrawFor+ &\verb+<object>+ \verb+<cycles>+ &Draws for exactly \verb+<cycles>+ cycles, then returns\\ 
-\verb+Circle+ &\verb+<x>+ \verb+<y>+ \verb+<r>+  +<color>+ +<filled>+&Creates circle with 
+\verb+Circle+ &\verb+<x>+ \verb+<y>+ \verb+<r>+  \verb+<color>+ \verb+<filled>+&Creates circle with 
 radius r centered at position x,y\\ 
 \verb+Ellipse+ &\verb+<x>+ \verb+<y>+ \verb+<rx>+ \verb+<ry>+
-+<color>+ +<filled>+&Creates 
+\verb+<color>+ \verb+<filled>+&Creates 
 ellipse with radii rx and ry centered at position x,y\\ 
-\verb+Square+ &\verb+<x>+ \verb+<y>+ \verb+<size>+ +<color>+ +<filled>+&Creates square with 
+\verb+Square+ &\verb+<x>+ \verb+<y>+ \verb+<size>+ \verb+<color>+ \verb+<filled>+&Creates square with 
 width size centered at position x,y\\ 
 \verb+Rectangle+ &\verb+<x>+ \verb+<y>+ \verb+<dx>+ \verb+<dy>+
-+<color>+ +<filled>+ &Creates 
+\verb+<color>+ \verb+<filled>+ &Creates 
 rectangle with size (dx, dy) centered at position x,y\\ 
-\verb+Line+ &\verb+<x>+ \verb+<y>+ \verb+<dx>+ \verb+<dy>+  +<color>+ +<filled>+&Creates 
+\verb+Line+ &\verb+<x>+ \verb+<y>+ \verb+<dx>+ \verb+<dy>+  \verb+<color>+ \verb+<filled>+&Creates 
 line starting at x,y and ending at x+dx, y+dy\\ 
 
 
@@ -187,7 +194,11 @@ line starting at x,y and ending at x+dx, y+dy\\
 \verb+WaitForKeyPress+ &\verb+<key>+ &Waits until \verb+<key>+ is pressed\\ 
 \verb+WaitForAnyKeyPress+ &\hspace{0.5cm} \verb+<>+ &Waits until any key is pressed\\ 
 \verb+WaitForKeyRelease+ &\hspace{0.5cm} \verb+<key>+ & Waits until \verb+<key>+ is released\\ 
-\verb+WaitForListKeyPress+ &\hspace{0.5cm}\verb+<list-of-keys>+ & Waits until one of \verb+<list-of-keys>+ is pressed \\ 
+\verb+WaitForListKeyPress+ &\hspace{0.5cm}\verb+<list-of-keys>+ &Waits until one of \verb+<list-of-keys>+ is pressed \\ 
+\verb+WaitForListKeyPressWithTimeout+&\\
+&\verb+<list-of-keyvals>+ \verb+<timeout>+ \verb+<type>+ & Waits for
+either a key to be pressed or a time to pass.\\
+
 \verb+RegisterEvent+ &\verb+<>+ & NOT IMPLEMENTED\\ 
 \verb+StartEventLoop+ &\verb+<>+ & NOT IMPLEMENTED\\ 
 \verb+ClearEventLoop+ &\verb+<>+ & NOT IMPLEMENTED\\ 
@@ -217,6 +228,9 @@ line starting at x,y and ending at x+dx, y+dy\\
 \cmidrule(l{.5cm}r{.5cm}){1-3} 
 
 \verb+Shuffle+ & \verb+<list>+ & Returns a new list with the items in list shuffled randomly. \\ 
+
+\verb+ShuffleRepeat+&\verb+<list>+ \verb+<times>+&Generates a list of {{{n}}} shuffled versions of \verb+<list>+\\
+\verb+ShuffleWithoutAdjacents+&\verb+<nested-list>+&Shuffle specifying items that should not appear adjacently\\
 \verb+Repeat+ & \verb+<item> <n>+& Repeats an item \verb+n+ times in a list\\ 
 \verb+RepeatList+ & \verb+<list> <n>+ & Makes a new list containing 
 the elements of \verb+<list>+ repeated \verb+<n>+ times\\ 
@@ -228,6 +242,7 @@ list, in the order they appear in the original list\\
 \verb+SampleN+ & \verb+<list>+ \verb+<n>+ & Returns a randomly-ordered sublist of \verb+<n>+ items from a list\\ 
 \verb+SampleNWithReplacement+ &\hspace{1.5cm} \verb+<list>+ \verb+<n>+& Returns a sublist of \verb+<n>+ items from a list \\ 
 \verb+DesignLatinSquare+ &\verb+<list1>+ \verb+<list2>+ & \\ 
+\verb+LatinSquare+ &\verb+<list>+& A simple latin square constructor\\ 
 \verb+DesignGrecoLatinSquare+ &\hspace{1.5cm}\verb+<list1>+ &\verb+<list2>+ \verb+<list3>+ \\ 
 \verb+DesignBalancedSampling+ &\hspace{1.5cm}\verb+<list>+ & \verb+<number>+ \\ 
 \verb+DesignFullCounterbalance+ &\hspace{1.5cm}\verb+<list1>+ &\verb+<list2>+ \\ 
@@ -255,7 +270,7 @@ list, in the order they appear in the original list\\
 \verb+Transpose+ &\verb+<list-of-lists>+ &Transposes a list of equal-length lists.\\ 
 \verb+SubList+ &\verb+<list>+ \verb+<start>+ \verb+<finish>+ & Returns a sublist of a list.\\ 
 \verb+Remove+ &\verb+<list>+ \verb+<n>+ & Removes an item from a list. Unimplemented\\ 
-
+\verb+ListToString+ &\verb+<list>+ & Concatenates all elements of a list into a single string\\
 
 \addlinespace[0.2cm] 
 \midrule 

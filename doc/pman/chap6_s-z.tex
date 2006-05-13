@@ -77,7 +77,51 @@ SeedRNG(<num>)
 
 \item[Example]	
 
+\begin{verbatim}
+    ##This makes sure you get the same random order across sessions
+    ## for individual subjects.
+     SeedRNG(gSubNum)
+     stimTmp <- Sequence(1:100,1)
+     stim <- Shuffle(stimTmp)
+     RandomizeTimer()
+\end{verbatim}
+
 \item[See Also]	
+     \verb+RandomizeTimer+
+\end{desc}
+
+\rl
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+SendData()+
+
+\item[Description]	Sends data on network connection.  Example of
+  usage in demo/nim.pbl. You can only send text data.
+
+\item[Usage]
+\begin{verbatim}
+ SendData(<network>,<data_as_string>)
+\end{verbatim}
+
+\item[Example]	
+
+On 'server':
+\begin{verbatim}
+  net <- WaitForNetworkConnection("localhost",1234)
+  SendData(net,"Watson, come here. I need you.")
+  CloseNetworkConnection(net)
+\end{verbatim}
+On Client:
+\begin{verbatim}
+  net <- ConnectToHost("localhost",1234)
+  value <-  GetData(net,20)
+  Print(value)
+  CloseNetworkConnection(net)
+##should print out "Watson, come here. I need you."
+\end{verbatim}
+\item[See Also]
+  \verb+ConnectToIP+,\verb+ConnectToHost+,\verb+WaitForNetworkConnection+,
+   \verb+GetData+,\verb+ConvertIPString+, \verb+CloseNetworkConnection+
 \end{desc}
 
 \rl
@@ -281,7 +325,8 @@ Print(Shuffle([1,2,3,4,5]))
 # Results might be anything, like [5,3,2,1,4]
 \end{verbatim}
 
-\item[See Also]    	\verb+Sort()+, \verb+SortBy()+
+\item[See Also]    	\verb+Sort()+, \verb+SortBy()+ \verb+ShuffleRepeat()+,
+                    \verb+ShuffleWithoutAdjacents()+
 \end{desc}
 
 \rl

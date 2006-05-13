@@ -673,14 +673,45 @@ Circle(<x>, <y>, <r>,<color>)
 \rl
 
 
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+CloseNetworkConnection()+
+
+\item[Description]	Closes network connection
+
+\item[Usage]
+\begin{verbatim}
+   CloseNetwork(<network>)
+\end{verbatim}
+
+\item[Example]	
+
+\begin{verbatim}
+  net <- WaitForNetworkConnection("localhost",1234)
+  SendData(net,"Watson, come here. I need you.")
+  CloseNetwokrConnection(net)
+\end{verbatim}
+
+\item[See Also]
+  \verb+ConnectToIP+,\verb+ConnectToHost+,\verb+GetData+,\verb+WaitForNetworkConnection+,
+   \verb+SendData+,\verb+ConvertIPString+
+\end{desc}
+
+\rl
+
+
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+Cos()+
 			 
 \item[Description] 	Cosine of \verb+<deg>+ degrees.
 
 \item[Usage]		
-
 \item[Example]	
+\begin{verbatim}
+  Cos(33.5)
+  Cos(-32)
+\end{verbatim}
 
 \item[See Also]     	\verb+Sin()+, \verb+Tan()+, \verb+ATan()+, \verb+ACos()+, \verb+ATan()+
 \end{desc}
@@ -1545,6 +1576,42 @@ GetCursorPosition(<textbox>)
 
 
 \begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+GetData()+
+
+\item[Description]	Gets Data from network connection.  Example of
+  usage in demo/nim.pbl.
+
+\item[Usage]
+\begin{verbatim}
+val <- GetData(<network>,<size>)
+\end{verbatim}
+
+\item[Example]	
+
+On 'server':
+\begin{verbatim}
+  net <- WaitForNetworkConnection("localhost",1234)
+  SendData(net,"Watson, come here. I need you.")
+  value <-  GetData(net,10)
+  Print(value)
+
+\end{verbatim}
+On Client:
+\begin{verbatim}
+  net <- ConnectToHost("localhost",1234)
+  value <-  GetData(net,20)
+  Print(value)
+##should print out "Watson, come here. I need you."
+\end{verbatim}
+\item[See Also]
+  \verb+ConnectToIP+,\verb+ConnectToHost+,\verb+WaitForNetworkConnection+,
+   \verb+SendData+,\verb+ConvertIPString+, \verb+CloseNetworkConnection+
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+GetInput()+
 
 \item[Description]	Allows user to type input into a textbox.
@@ -1769,25 +1836,40 @@ if(test)
 
 
 \begin{desc}{Name/Symbol}
-\item[Name/Symbol]	\verb+if...else+            
+\item[Name/Symbol]	\verb+if...elseif...else+            
 
 \item[Description] Complex conditional test.  Be careful of spacing
   the else---if you put carriage returns on either side of it, you
-  will get a syntax error.
+  will get a syntax error. The \verb+elseif+ is optional, but
+  multiple \verb+elseif+ statements can be strung together.  The
+  \verb+else+ is also optional, although only one can appear.
 
 \item[Usage]
 \begin{verbatim}
 if(test)
 {
  statements if true
+} elseif (newtest) {
+ statements if newtest true; test false
 } else {
- statements if false
-}
+ other statements
+} 
 \end{verbatim}
 
 \item[Example]	
-
+\begin{verbatim}
+ if(3 == 1) {
+             Print("ONE")
+  }elseif(3==4){
+             Print("TWO")
+  }elseif(4==4){
+             Print("THREE")
+  }elseif(4==4){
+             Print("FOUR")
+  }else{Print("FIVE")}
+\end{verbatim}
 \item[See Also]	
+if
 \end{desc}
 
 \rl
