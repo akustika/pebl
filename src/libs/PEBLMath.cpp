@@ -55,7 +55,7 @@ Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
     
     PList * plist = v.GetComplexData()->GetList();
     //Make a results list
-    std::cout << *plist << std::endl;
+    //std::cout << *plist << std::endl;
     PList * resultslist = new PList();
     //Declare a temporary argument list.
     PList* arglist = new PList();
@@ -64,11 +64,11 @@ Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
     std::list<Variant>::iterator p = plist->Begin();
     
 
-    std::cout << plist->Length() << std::endl;
+    //std::cout << plist->Length() << std::endl;
 
     while(p != plist->End())
         {
-            std::cout << "---\n";
+            //std::cout << "---\n";
             //Not sure why I add and then subtract the item from the list.
             arglist->PushFront(*p);                              
             resultslist->PushBack(funcname(*p));

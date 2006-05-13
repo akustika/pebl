@@ -81,5 +81,18 @@ namespace PEBLStream
     
     Variant EndOfLine(Variant v);
     Variant EndOfFile(Variant v);
+
+
+    // The following control TCP/IP connections and communications.
+
+    Variant ConnectToIP(Variant v);
+    Variant ConnectToHost(Variant v);
+    Variant WaitForNetworkConnection(Variant v);
+    Variant CloseNetworkConnection(Variant v);
+
+    Variant SendData(Variant v);
+    Variant GetData(Variant v);
+
+
 }
 #endif

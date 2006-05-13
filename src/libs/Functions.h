@@ -141,6 +141,15 @@ namespace PEBLStream
             {"ENDOFLINE",            EndOfLine,        1, 1},
             {"ENDOFFILE",            EndOfFile,        1, 1},
 
+
+            {"CONNECTTOIP", ConnectToIP,               2, 2},
+            {"CONNECTTOHOST", ConnectToHost,           2, 2},
+            {"WAITFORNETWORKCONNECTION", WaitForNetworkConnection, 1,1},
+            {"CLOSENETWORKCONNECTION", CloseNetworkConnection,    1,1},
+                
+            {"SENDDATA", SendData,                     2,2},
+            {"GETDATA", GetData,                       2,2},
+
             {0,            0,  0, 0}
         };
 }

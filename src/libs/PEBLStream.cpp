@@ -3,7 +3,7 @@
 //    Name:       libs/PEBLStream.cpp
 //    Purpose:    Built-in stream functions for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2006 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -147,9 +147,11 @@ Variant PEBLStream::FilePrint(Variant v)
     counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
     PStream * mystream = dynamic_cast<PStream*>(tmp2.get());
 
+
     Variant v2 = plist->First(); plist->PopFront();
-   
-    mystream->WriteString(v2 + Variant("\n"));
+    std::string s = v2.GetString();
+        
+    mystream->WriteString(s + "\n");
     return (v2+Variant("\n"));
 }  
 
@@ -400,4 +402,131 @@ Variant PEBLStream::EndOfFile(Variant v)
     counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
     PStream * mystream = dynamic_cast<PStream*>(tmp2.get());
     return Variant(mystream->Eof());
+}
+
+
+
+Variant PEBLStream::ConnectToIP(Variant v)
+{
+    //v[1] should have the IP Number as an integer
+    //v[2] should have the port number
+
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_INTEGER, "Argument error in first parameter of function [ConnectToHost(<hostname>,<port>)]: ");
+
+    Variant v2 = plist->First();
+    PError::AssertType(v2, PEAT_INTEGER, "Argument error in second parameter of function [ConnectToHost(<hostname>,<port>)]: ");   
+
+    
+    counted_ptr<PEBLObjectBase> tmp2 = counted_ptr<PEBLObjectBase>(new PlatformNetwork());
+    PlatformNetwork * mynet = dynamic_cast<PlatformNetwork*>(tmp2.get());
+
+    mynet->Init();
+    mynet->SetHostIP((long unsigned int)v1);
+    mynet->SetPort((int)v2);
+    mynet->Open();
+
+    PComplexData * pcd = new PComplexData(tmp2);
+    return Variant(pcd);
+
+}
+
+Variant PEBLStream::ConnectToHost(Variant v)
+{
+
+    //v[1] should have the host name
+    //v[2] should have the port number
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_STRING, "Argument error in first parameter of function [ConnectToHost(<hostname>,<port>)]: ");
+
+    Variant v2 = plist->First();
+    PError::AssertType(v2, PEAT_INTEGER, "Argument error in second parameter of function [ConnectToHost(<hostname>,<port>)]: ");   
+    
+    
+    counted_ptr<PEBLObjectBase> tmp2 = counted_ptr<PEBLObjectBase>(new PlatformNetwork());
+    PlatformNetwork * mynet = dynamic_cast<PlatformNetwork*>(tmp2.get());
+
+    mynet->Init();
+    mynet->SetHostName(v1);
+    mynet->SetPort((int)v2);
+    mynet->Open();
+
+    PComplexData * pcd = new PComplexData(tmp2);
+    return Variant(pcd);
+
+}
+
+
+
+Variant PEBLStream::WaitForNetworkConnection(Variant v)
+{
+    //v[1] should have the port number
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+
+    PError::AssertType(v1, PEAT_INTEGER, "Argument error in first parameter of function [WaitForNetworkConnection(<port>)]: ");
+
+    
+    counted_ptr<PEBLObjectBase> tmp2 = counted_ptr<PEBLObjectBase>(new PlatformNetwork());
+    PlatformNetwork * mynet = dynamic_cast<PlatformNetwork*>(tmp2.get());
+    mynet->Init();
+    mynet->SetHostName("");
+    mynet->SetPort((int)v1);
+    mynet->Accept();
+
+    PComplexData * pcd = new PComplexData(tmp2);
+    return Variant(pcd);
+  
+}
+
+Variant PEBLStream::CloseNetworkConnection(Variant v)
+{
+    //v[1] should have the network connection
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_NETWORKCONNECTION, "Argument error in function [CloseNetworkConnection(<network>)]: ");   
+
+    counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
+    PlatformNetwork * mynet = dynamic_cast<PlatformNetwork*>(tmp2.get());
+    mynet->Close();
+
+    return Variant(1);
+    
+}
+
+Variant PEBLStream::SendData(Variant v)
+{
+    //v[1] should have the Network connection object
+    //v[2] should have the data
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_NETWORKCONNECTION, "Argument error in first parameter of function [SendData(<network>,<data>)]: ");   
+    counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
+    PlatformNetwork * mynet = dynamic_cast<PlatformNetwork*>(tmp2.get());
+
+    Variant v2 = plist->First();
+    PError::AssertType(v2, PEAT_STRING, "Argument error in second parameter of function [SendData(<network>,<data>)]: ");   
+    mynet->SendString(v2);
+    return Variant(1);
+}
+
+Variant PEBLStream::GetData(Variant v)
+{
+    //v[1] should have the Network connection object
+    //v[2] should have the max length of the data we are looking for.
+
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_NETWORKCONNECTION, "Argument error in first parameter of function [GetData(<network>,<size>)]: ");   
+    counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
+    PlatformNetwork * mynet = dynamic_cast<PlatformNetwork*>(tmp2.get());
+
+    Variant v2 = plist->First();
+    PError::AssertType(v2, PEAT_INTEGER, "Argument error in second parameter of function [GetData(<network>,<size>)]: ");   
+
+    Variant ret = mynet->Receive(v2);
+    return ret;
+
 }

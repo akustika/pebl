@@ -1,9 +1,9 @@
 //* -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*- */
-/////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 //    Name:       src/libs/PEBLEnvironment.cpp
 //    Purpose:    General Environment Function Library for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2004 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2006 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -23,7 +23,7 @@
 //    You should have received a copy of the GNU General Public License
 //    along with PEBL; if not, write to the Free Software
 //    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 #include "PEBLEnvironment.h"
 #include "PEBLObjects.h"
 
@@ -145,6 +145,36 @@ Variant PEBLEnvironment::ShowCursor(Variant v)
     int val = plist->First();
     return Variant(myEnv->ShowCursor(val));
 }
+
+
+// /// This function uses the event loop to schedule a single
+// /// device-test, which checks for the selected key.
+// Variant PEBLEnvironment::WaitForMouseOverRegion(Variant v)
+// {
+//     //v[1-4] should specify a rectangle
+//     PList * plist = v.GetComplexData()->GetList();
+
+//     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyPress(<string>)]:  ");    
+
+//     string mystring = plist->First(); plist->PopFront();
+//     PEBLKey key = PEBLUtility::TranslateString(mystring);
+    
+ 
+
+//     RegionState  * state = new RegionState(10,100,10,100, DT_INSIDE, , gEventQueue, PDT_MOUSEMOTION);
+
+//     //NULL,NULL will terminate the looping
+//     string funcname = "";
+//     PList* params = NULL;
+//     Evaluator::mEventLoop.RegisterEvent(state,funcname, params);
+//     PEvent returnval = Evaluator::mEventLoop.Loop();
+
+//     //Now, clear the event loop tests
+//     Evaluator::mEventLoop.Clear();
+
+//     return Variant(PEBLUtility::TranslateKeyCode(returnval.GetKeyboardEvent().key,0));
+// }
+
 
 
 /// This function uses the event loop to schedule a single
@@ -591,8 +621,8 @@ Variant PEBLEnvironment::GetInput(Variant v)
 
     while(pke.key != PEBLUtility::TranslateString(myString))
         {
+            
 
-            // cout << pke.key << endl;
             //Process the input and redraw the textbox.
             textbox->HandleKeyPress(pke.key, pke.modkeys);
 
