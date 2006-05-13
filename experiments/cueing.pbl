@@ -95,7 +95,7 @@ define Start(par)
     trialnum <- 1
     loop(i, stimSequence)
     {
-    FilePrint_(gFileOut,subnum + " " + trialnum + " ")
+    FilePrint_(gFileOut,gSubNum + " " + trialnum + " ")
     Trial(First(i), Nth(i,2))
     trialnum <- trialnum + 1
     }
