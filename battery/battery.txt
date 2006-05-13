@@ -28,7 +28,7 @@ Implicit Association Task
 Iowa Gambling Task
  (in iowa directory)
 
-Continuous Performance Task
+*Continuous Performance Task
  (in pcpt directory)
 
 Probabilistic Reversal Learning Test

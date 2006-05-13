@@ -248,15 +248,6 @@ define Initialize()
  }
 
 
-define ListToString(par)
-{
-     x <- ""
-    loop(i,par)
-    {
-         x <- x + i
-    }
-  return x
-} 
 
 
 define ScoreTrial(triallist, resp, rule)

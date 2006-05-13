@@ -43,6 +43,7 @@ define Start(lPar)
   lowerbound <- 3             ## The shortest list length
   perlength  <- 3             ## The number of trials at each length
   criterion  <- 2             ## The number that must be correct to proceed
+  starcasestart  <- 4         ## starting point for staircasestart.
   staircasetrials <- 16       ## Number of staircase trials.
   gISI <- 1000                ## Inter-stimulus interval in ms
 
@@ -83,12 +84,7 @@ define Start(lPar)
 
 
    ## Give instructions; wait for them to hit a key, 
-   inst <- "You are about to take part in a memory test.  You will
- be presented with a sequence of digits, one at a time on the screen.
-Each digit will occur only once during a list.  You will then
- be asked to type the list of digits exactly in order.  If you do not know 
- what digit comes next, you can skip over it by typing the 'X' key.  Once entered, you 
- cannot go back to edit your responses. "
+   inst <- "You are about to take part in a memory test.  You will be presented with a sequence of digits, one at a time on the screen.Each digit will occur only once during a list.  You will then be asked to type the list of digits exactly in order.  If you do not know  what digit comes next, you can skip over it by typing the 'X' key.  Once entered, you cannot go back to edit your responses. "
 
    lthInst <- inst + " You will start with a list of three items, and will get three different lists at each length.  If you are able to recall two out of three lists completely correctly, you will move on to the next longest list length."
    htlInst <- inst + " You will start with a list of ten digits, and will get three chances to recall at each length.  After three trials, you will move down to the next lower list length.  You will continue until you are able to recall all 
@@ -103,29 +99,91 @@ three lists at a specific length completely correctly."
    Hide(gInstructions)
    Draw()
 
-
-  ##############################################
-  ##############################################
-  ##
-  ## Set up the basic graphical environment 
-  ##
-
  
 ####################################################
 ####################################################
 ##  Start the experimental trials.
 ##  
+
+
    trialnum <- 1
-   length <- startlength
-
-   while(trialnum <= 5)
+   continue <- 1
+   currcorrect <- 0
+   try <- 0
+   while(continue)
     {
-
       stimuli <- SampleN(stim,length)
-      Trial(stimuli,0)
+      corr <-  Trial(stimuli,0)
+
+    if(gVersion == 1 )
+      {
+       startlength <- lowerbound
+      } elseif(gVersion == 2) {
+       startlength <- upperbound
+      } else {
+       startlength <- staircasestart
+      }
+
+	  #############################
+      ##Standard Memory Span 
+
+
+    if(gVersion == 1)
+      {
+       try <- try + 1
+      currcorrect <- currcorrect + corr
+      if(currcorrect >=  criterion)
+       {
+         length <- length + 1
+         currcorrect <- 0
+       } elseif(try >= perlength ) {
+         ##We did not pass the threshold; we are done.
+         continue <- 0
+       }
+	   if(length > upperbound)
+       {
+         continue <- 0
+       }
+
+      } elseif(gVersion == 2) {
+	  #############################
+      ## Backward Memory Span (from longest to short)
+
+      try <- try + 1
+      currcorrect <- currcorrect + corr
+      if(currcorrect >=  criterion)
+       {
+         continue <- 0
+
+       } elseif(try >= perlength ) {
+         ##We we have used all the tries, go one length lower.
+         length <- length - 1
+	     currcorrect <- 0
+         try <- 0
+       }
+	   if(length < lowerbound)
+       {
+ 	     continue <- 0
+       }
+
+ 
+      } else { 
+	  #############################
+      ## Staircase
+        if(corr)
+        {
+         length <- Min([length + 1,upperbound])
+        } else {
+         length <- Max([lowerbound,length-1])
+        }
+        if(trialnum >= staircasetrials)
+        {
+          continue <- 0
+        }
+      }
+
 
       trialnum <- trialnum + 1
-      length <- length + 1
       Wait(1500)
  
     }
@@ -307,36 +365,3 @@ define Initialize()
   
 
  }
-
-define ListToString(list)
-{
-  tmp <- ""
-  loop(i,list)
-  {
-    tmp <- tmp + i
-  }
- return tmp
-}
-
-## This makes a 'formatted' text string,  
-## making sure it has length size.  If val is too short,
-## it chops off the end of val; if it is too short, it pads
-## the end of val with spaces.  
-define Format(val, size)
-{
-
-  string <- "" + val
-
-  len <- StringLength(string)
- 
-  #If size is smaller than length, 
-  if(size <= len)
-  {
-    string <- SubString(string,1,size) 
-  }else {
-   pad <- ListToString(Repeat(" ",size - len))
-   string <- string + pad
-  }
-
-  return string
-}

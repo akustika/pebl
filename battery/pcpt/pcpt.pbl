@@ -1,77 +1,3 @@
-#Conners Continuous Performance Test. The CCPT is a vigilance task in
-#which respondents are asked to press a button when any letter but
-#\u201cX\u2019 appears on the screen. The test includes 6 blocks with
-#different interstimulus intervals and takes 14 minutes to
-#complete. The major variables include number correct, omission errors,
-#commission errors, and various reaction times. Test results can be
-#obtained in six different forms that provide interpretive guidelines,
-#reaction times as well as raw scores, t-score and percentiles for all
-#of the major variables. T-scores and percentiles are available
-#comparing results to the general population norms or the ADHD
-#normative group. However, it is highly recommended that the general
-#population norms be used for interpreting the CCPT results. The norms
-#for the CCPT are based on a sample of over 1200 children and adults
-#ranging in age from 4 to 70 (majority of adult sample between 18 and
-#30 years old). Conners (1995) indicates that the CCPT may be most
-#effective for individuals 6 to 17 years of age. A false positive and
-#false negative rate of 10-15% or lower is reported in the CCPT
-#manual. Conner\u2019s presents brief summaries of several published
-#research articles as support for the validity of the CCPT. Specific
-#information regarding reliability is not reported.
-#
-#An updated Windows version of the CPPT, the CPT-II, has been recently
-#developed and will be available for purchase in the Spring of
-#2000. Available information on the CPT-II indicates that the revised
-##test includes a larger normative sample, newly designed reports, a
-#more comprehensive software manual and inclusion of a validity
-#scale. A preschool version of the CPT-II, the K-CPT, will also be
-#available soon. The K-CPT uses pictures of common objects as test
-#stimuli rather than letters. Psychometric information on the CPT-II
-#and the K-CPT are not currently available.
-
-
-# The CPT task was completed on an IBM-compatible laptop computer in
-#the child's parents' home. Each subject completed a practice session
-#until the examiner was confident that the child understood the task
-#completely. The task consisted of 360 letters (approximately 1 in. in
-#size) which appeared on the computer screen, one at a time, for
-#approximately 250 ms. The 360 trials were presented in 18 consecutive
-#blocks of 20 trials. The 18 ISI blocks consisted of a separate ISI (1,
-#2, or 4 s). The ISIs were block-randomized so that all three ISI
-#conditions would occur every three blocks but in a different
-#order. Therefore, the entire CPT could be divided into six consecutive
-#time blocks with each time block containing all three ISI
-#conditions. Participants were required to depress the spacebar when
-#any letter except the letter "X" appeared on the screen. The event
-#rate, or percentage of trials when letters other than "X" appeared,
-#was 90% and this percentage was constant across ISI and time
-#blocks. The total CPT task takes approximately 14 min for the patient
-#to complete. The CPT generates multiple dependent measures including
-#RT to correct responses (hit reaction time or hit RT), standard error
-#(SE) of hit RT, percentage of commissions, percentage of omissions,
-#and the signal detection parameters, d' and [beta]. Errors of omission
-#occurred when subjects failed to depress the spacebar on trials
-#containing target letters (all non-"X" letters). Errors of commission
-#occurred when subjects depressed the spacebar on trials when the
-#letter "X" was presented. The signal detection measure, d', reflects
-#the subject's perceptual sensitivity to targets; it is the distance
-#between the signal distribution and noise distribution in standard
-#score units. Higher d' values indicate higher amounts of signal
-#detection relative to noise and suggests better discrimination between
-#target and foil stimuli. [beta] can be intuitively understood by
-#noting that in a task in which there are 90% targets and 10%
-#nontargets, the subject should be responding (optimally) 90% of the
-#time. More responding than this will increase errors of
-#commission. Less responding than this will increase errors of
-#omission, [beta] is a function of the ratio of target to nontarget
-#stimuli and the subject's tendency to respond too little or too much
-#relative to the actual distribution of the signal. Lower values of
-#[beta] indicate a greater percentage of responding than is required by
-#the task parameters or a "risky" response style.
-
-
-
-
 
 
 #!/usr/local/bin/pebl
@@ -86,17 +12,22 @@
 ##
 ##
 ##
+##
+##  Continuous performance task modeled after Conners Continuous 
+##  Performance Task.  This is a vigilance task, which takes approx
+##  14 minutes to complete.  360 letters approx 1 inch in size are 
+##  presented one at a time.  Participant must respond by pressing 
+##  the space bar to all stimuli except the X.  
+##
+##  The PCPT will give a short (50ms) feedback cue indicating whether
+##  the response was correct or not--a green + for correct, and a red -
+##  for incorrect.  This feedback was not present in Conners task, and can
+##  be turned off by setting the giveFeedback parameter to 0
+## 
+##  References:
 ##  C. Keith Conners,  Jeffery N. Epstein,  Adrian Angold,  
 ##      John Klaric (2003) Continuous performance test performance 
 ##      in a normative epidemiological sample Journal of Abnormal Child Psychology,
-##
-##  In this procedure, the test stimulus is a square containing a square hole
-##  near either the top or bottom edge.  Targets are holes on the top; 
-##  subjects are to make responses when the target is on top and not on bottom.
-## 
-##  
-##
-##
 ##
 ##
 #################################################################
@@ -107,49 +38,43 @@ define Start(lPar)
  
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
- 
-  
-   numBlocks <- 2      #18
-   blockSize <- 10     #20
-   presTime  <- 1250
+  Print(TimeStamp())
+
+   cycles   <-  6          ## Number of times the 3-ISI cycle is repeated
+   blockSize <- 2          ## Number of trials per block
+   presTime  <- 250        ## Presentation time in ms.
    isiVals   <- [1000, 2000, 4000]
+   probX     <- 0.1
    letters     <- ["A","B","C","D","E","F","G","H","I",
 	               "J","L","M","O","P","Q","R","S","U"]
+   numBlocks <- cycles * Length(isiVals)
+ 
+   giveFeedback <- 1
+   
 
    ################################################
-  ##  Create the randomized block structure stimuli.
-  isiSeq <- []
-  loop(i, [1])#,2,3,4,5,6])
-  {
-    #Figure out the ISIs across the 18 blocks
-    loop(j, Shuffle(isiVals))
-    {
-       isiSeq <- Append(isiSeq, j)
-    }
-  }
+   ##  Create the randomized block structure stimuli.
 
-
+   isiSeq <- Flatten(ShuffleRepeat(isiVals,cycles))
 
   ####################################################
   ## Begin presenting and collecting data
   ####################################################
-
-
    ## Give instructions; wait for them to hit a key, 
    SetText(gInstructions,"You are about to take part in an experiment that " +
            "involves attending to stimuli on a screen.  It will take " +
            "approximately 14 minutes.  You will see letters presented on "+
-           "a screen briefly. Your goal is to press the 'Z' key as quickly" +
-           "as possible after each letter, except if the letter is an 'X'. "  + 
-           "DO NOT RESPOND to X stimuli.
-Press any key to begin.")
+           "a screen briefly. Your goal is to press the spacebar as quickly " +
+           "as possible after each letter, except if the letter is an 'X'. " + 
+           "DO NOT RESPOND to X stimuli.  To begin, press the spacebar.")
+
    Show(gInstructions)
    Draw()  
-   WaitForAnyKeyPress()
+   WaitForKeyPress(" ")
    Hide(gInstructions)
    Draw()
     
-   gInstructions.text <- "You may now take a short break.  Press the 'Z' key to continue on to the next block."
+   gInstructions.text <- "You may now take a short break.  Press the spacebar to continue on to the next block."
 
   ##############################################
   ##############################################
@@ -162,32 +87,48 @@ Press any key to begin.")
 
 
 
-   ## Global data structures which save data for analysis and
+   ## data structures which save data for analysis and
    ## report at end of study. 
 
-   rtCorr <- []
-   rtInc <- []
-   ommissions  <- 0   # Ommission error (failure to respond to target)
-   commissions <- 0   # Commission error (false alarm to foil)
-   multiples   <- 0   # multiple responses on a trial
-   antic       <- 0   # too fast
-   corrTarg    <- 0   # Number of correct Targets
-   corrFoil    <- 0   # Number of correct Foils
-   totalTrials <- 0   # Total Number of trials
+   rtCorr1000 <- []
+   rtCorr2000 <- []
+   rtCorr4000 <- []
+   rtInc1000  <- []
+   rtInc2000  <- []
+   rtInc4000  <- []
+   om1000 <- 0   # Ommission error (failure to respond to target)
+   om2000 <- 0
+   om4000 <- 0
+   co1000 <- 0   # Commission error (false alarm to foil)
+   co2000 <- 0
+   co4000 <- 0
+
+   targ1000 <- 0  # Number of targets (Non-X stimuli)
+   targ2000 <- 0
+   targ4000 <- 0
+   corT1000 <- 0  # Number of correct Targets
+   corT2000 <- 0
+   corT4000 <- 0
+   corF1000 <- 0  # Number of correct Foils
+   corF2000 <- 0
+   corF4000 <- 0
 
 
-   FilePrint(datafile,"sub trial targ toofast responded corr mult time rt")
+   FilePrint(datafile,"sub block trial cond targ responded corr time rt")
 
 
 
-    Wait(2000)
+    Wait(1000)
     trialNum <- 0
+    block <- 0
     loop(isi,isiSeq)
     {
 
+      block <- block + 1
       blocktrial <- 1
       while(blocktrial <= blocksize)
-     {
+      {
+
       trialNum <- trialNum + 1
       blocktrial<- blocktrial + 1
       Hide(gFeedback)
@@ -198,31 +139,33 @@ Press any key to begin.")
       { 
           Show(gInstructions)
 	      Draw()
-          WaitForKeyPress("Z")
+	      Wait(500)
+          WaitForKeyPress(" ")
           Hide(gInstructions)
           Draw()
-          Wait(1000+isi)
+          Wait(1000)
       } 
 
 
       stim  <-First(SampleN(letters,1))
-      if(Random() < 0.1)
+      if(Random() < probX)
       {
        stim <- "X"
       }
 
       gStim.text <- stim
 
-      if(stim == "X")
+      if(giveFeedback)
       {
+        if(stim == "X")
+        {
           SetFont(gFeedback, gIncFont)
-      } else {
+          gFeedback.text <- "-"
+        }else {
           SetFont(gFeedback,gCorrFont)
+          gFeedback.text <- "+"
+        }
       }
-      resp1     <- 0  ## Was there a response during initial presentation?
-      resp2     <- 0  ## Was there a response during ISI
-      respMult  <- 0  ## were there multiple responses on trial?      
-
       timeStart <- GetTime()
 	  endTime   <- timeStart + isi
 
@@ -230,147 +173,173 @@ Press any key to begin.")
       ### Present Stimulus.
       ###
 
-
+ 
+      rt <- -1
+      responded <- 0
       Show(gStim)
       Draw()
-      r1 <- WaitForListKeyPressWithTimeout(["Z"],presTime,1)
       time1 <- GetTime()
-
+	  r1 <- WaitForListKeyPressWithTimeout([" "],presTime,1)
+      time2 <- GetTime()
       Hide(gStim)       
-      if(r1 == 0)
-      {
-        Show(gFeedback)
-        Draw()
-        Wait(50)
-
-        Hide(gFeedback)
-      }
-      Draw()
-
-
-
-      if(r1 == 1)
-      {
-        ## No response was given during stimulus presentation
-        ##
-        r2 <- WaitForListKeyPressWithTimeout(["Z"],endTime - time1,1)
-        time2 <- GetTime()
-
-        if(r2 == 0)
-         {
-           Show(gFeedback)
+      if(r1 == 0)  #if r1==0 we pressed the key
+        {
+          if(giveFeedback)
+            {
+             Show(gFeedback)
+             Draw()
+             Wait(50)
+             Hide(gFeedback)
+            }
            Draw()
-           Wait(50)
-           Hide(gFeedback)
-           Draw()
+           rt <- time2-time1
+           responded <- 1
+	       Wait(endtime - GetTime())
+          
+        } else {
+          Draw()
+          #if we haven't hit the key before the stimulus disappeared, do so now.
+          r2 <- WaitForListKeyPressWithTimeout([" "],endTime - GetTime(),1)
+          time3 <- GetTime()
+          if(r2 == 0)  #if r2==0 we pressed the key
+          {
+            if(giveFeedback)
+             {
+               Show(gFeedback)
+               Draw()
+               Wait(50)
+               Hide(gFeedback)
+             }
+            Draw()
+            rt <- time3-time1
+            responded <- 1
+            Wait(endtime - GetTime())
           }
 
+       }
 
-        rMult <- WaitForListKeyPressWithTimeout(["Z"],endTime - GetTime(),1)
-        time3 <- GetTime()
-        Wait(endtime - time3)
-
-      } else {
-   
-        ## A response was given during presentation
-        rMult <- WaitForListKeyPressWithTimeout(["Z"],endtime - GetTime(),1)
-        time2 <- GetTime()
-        r2 <- 0
-        Wait(endtime - GetTime())
-        time3 <- GetTime()
-      }
-       
-
-     rt <- -1
-     toofast <- 0
-     responded <- (1-r1) or (1-r2)
-     mult <- 1-rMult 
-
-     ##if r1 == 0, the key was struck during stimulus presentation.
-     if (r1 == 0)
-     {
-
-      rt <- (time1 - timeStart)
-
-     } else {
-      if(responded)
-      {      
-        rt <- time2 - timeStart
-       
-      }
-      }
-
-      if(rt < 120)
-      {
-       toofast <- 1
-      }
-
-    
+     #Score trial as correct or incorrect.
      if(stim == "X")
      { 
        corr <- 1-responded
-       corrFoil <- corrFoil + corr
      } else { 
        corr <- responded
-       corrTarg <- corrTarg + corr
      }
 
 
-     FilePrint(datafile,gSubNum + "   " + trialnum + " " + isi + "  " + stim + "  "+ toofast + "       " +  responded + "         " + corr + "    " + mult + "    " + timeStart + " " + rt)
+    ##Update the correct targets/foils counters
+     if(isi == 1000)
+     {
+       if(stim == "X")
+       {
+         corF1000 <- corF1000+corr
 
-     ##Now, update counters/structures. based on the stats
+       }else{
+         corT1000 <- corT1000+corr
+         targ1000 <- targ1000 + 1
+       }
 
-       totalTrials <- totalTrials + 1
-      ## i indicates target/foil trial
- 
       if(responded)
        {
          if(corr)
          {
-           rtCorr <- Append(rtCorr, rt)
+           rtCorr1000 <- Append(rtCorr1000, rt)
          } else {
-           rtInc  <- Append(rtInc, rt)
+           rtInc1000 <- Append(rtInc1000, rt)
+           co1000 <- co1000 + 1
          }
 
-         commissions <- commissions + (1-corr)
-         multiples   <- multiples + mult
-         antic       <- antic + toofast
+	
        } else {
-
-         ommissions <- ommissions + (1-corr)
+         om1000 <- om1000 + (1-corr)
        }
-    }    
 
-  }
- 
+
+     } elseif(isi == 2000)
+     {
+       if(stim == "X")
+       {
+         corF2000 <- corF2000+corr
+       }else{
+         corT2000 <- corT2000+corr
+         targ2000 <- targ2000 + 1
+       }
+      if(responded)
+       {
+         if(corr)
+         {
+           rtCorr2000 <- Append(rtCorr2000, rt)
+         } else {
+           rtInc2000 <- Append(rtInc2000, rt)
+           co2000 <- co2000 + 1
+         }
+
+	
+       } else {
+         om2000 <- om2000 + (1-corr)
+       }
+
+
+
+     } elseif( isi == 4000) {
+       if(stim == "X")
+       {
+         corF4000 <- corF4000+corr
+       }else{
+         corT4000 <- corT4000+corr
+         targ4000 <- targ4000 + 1
+       }
+       if(responded)
+       {
+          if(corr)
+          {
+           rtCorr4000 <- Append(rtCorr4000, rt)
+          } else {
+           rtInc4000 <- Append(rtInc4000, rt)
+           co4000 <- co4000 + 1
+          }
+        } else {
+         om4000 <- om4000 + (1-corr)
+       }
+	}
+
+
+     FilePrint(datafile,gSubNum + " " + block + "  " + trialnum + " " + isi + "  " + stim + "  "+  responded + " " + corr + " "  + timeStart + " " + rt)
+     }
+    }
+
+   trialspercond <- blockSize * cycles
+   foil1000 <- trialspercond-targ1000 
+   foil2000 <- trialspercond-targ2000
+   foil4000 <- trialspercond-targ4000
 
 
 ##Print out report
-   FilePrint(reportfile,"---------------------------------------------------")
-   FilePrint(reportfile," Report for PEBL Continuous Performance Task (PCPT)")
-   FilePrint(reportfile, " Version 0.1")
-   FilePrint(reportfile, " "+GetPEBLVersion())
-   FilePrint(reportfile, " "+TimeStamp())
-   FilePrint(reportfile, " Participant Code: " + gSubNum)
-   
-   FilePrint(reportfile," http://pebl.sf.net")
-   FilePrint(reportfile,"---------------------------------------------------")
-   FilePrint(reportfile,"Statistic           Value ")
-   FilePrint(reportfile,"---------------------------------------------------")
-   FilePrint(reportfile,"Total Trials       " + totalTrials)
-   FilePrint(reportfile,"Correct Targets    " + corrTarg)
-   FilePrint(reportfile,"Correct Foils      " + corrFoil)
-   FilePrint(reportfile,"Correct Trials     " + (corrTarg + corrFoil))
-   FilePrint(reportfile,"Commission Errors  " + commissions)
-   FilePrint(reportfile,"Ommission Errors   " + ommissions)
-   FilePrint(reportfile,"Correct RT Mean    " + rtCorr)
-   FilePrint(reportfile,"Error RT Mean      " + rtInc)
-   FilePrint(reportfile,"RT Mean            " + Round(Mean(Merge(rtCorr,rtInc))))
-   FilePrint(reportfile,"RT SD              " + Round(StdDev(Merge(rtCorr,rtInc))))
-   FilePrint(reportfile,"Anticipations      " + antic)
-   FilePrint(reportfile,"Multiple Responses " + multiples)
-   FilePrint(reportfile,"---------------------------------------------------")
-   
+   PrintMe(reportfile,"--------------------------------------------------------")
+   PrintMe(reportfile," Report for PEBL Continuous Performance Task (PCPT)")
+   PrintMe(reportfile, " Version 0.1")
+   PrintMe(reportfile, " http://pebl.sf.net")
+   PrintMe(reportfile, " (c) 2006 Shane T. Mueller, Ph.D.")
+   PrintMe(reportfile, " "+GetPEBLVersion())
+   PrintMe(reportfile, " "+TimeStamp())
+   PrintMe(reportfile, " Participant Code: " + gSubNum)
+   PrintMe(reportfile,"--------------------------------------------------------")
+   PrintMe(reportfile,"Statistic        ISI:   1000" + Tab(1) +"2000" + Tab(1) + "4000")
+   PrintMe(reportfile,"--------------------------------------------------------")
+   PrintMe(reportfile,"Correct Trials   " +Tab(1)+ (corT1000 + corF1000) + "/" + trialspercond+ Tab(1) + (corT2000 + corF2000)+ "/" + trialspercond + Tab(1) + (corT4000 + corF4000) + "/" + trialspercond )
+   PrintMe(reportfile,"Correct Targets  " +Tab(1)+ corT1000 + "/" + targ1000 + Tab(1) + corT2000 + "/" + targ2000 + Tab(1) + corT4000 + "/" + targ4000)
+   PrintMe(reportfile,"Correct Foils    " +Tab(1)+ corF1000 + "/" + foil1000 + Tab(1) + corF2000 + "/" + foil2000 + Tab(1) + corF4000 + "/" + foil4000)
+   PrintMe(reportfile,"Target Acc Rate  " +Tab(1)+ Rnd(corT1000/targ1000,3) + Tab(1) + Rnd(corT2000/targ2000,3) + Tab(1) + Rnd(corT4000/targ4000,3))
+   PrintMe(reportfile,"Foil Acc Rate    " +Tab(1)+ Rnd(corF1000/Max([1,foil1000]),3) + Tab(1) + Rnd(corF2000/Max([1,foil2000]),3) + Tab(1) + Rnd(corF4000/Max([1,foil4000]),3))
+
+
+   PrintMe(reportfile,"Commission Errors" +Tab(1)+ co1000 + Tab(1) + co2000 + Tab(1) + co4000)
+   PrintMe(reportfile,"Ommission Errors " +Tab(1)+ om1000 + Tab(1) + om2000 + Tab(1) + om4000)
+   PrintMe(reportfile,"Correct RT Mean  " +Tab(1)+ MeanX(rtCorr1000) + Tab(1) + MeanX(rtCorr2000) + Tab(1) + MeanX(rtCorr4000))
+   PrintMe(reportfile,"Correct RT SD    " +Tab(1)+ SD(rtCorr1000) + Tab(1) +SD(rtCorr2000) + Tab(1) + SD(rtCorr4000))
+   PrintMe(reportfile,"Error RT Mean    " +Tab(1)+ MeanX(rtInc1000) + Tab(1) + MeanX(rtInc2000) + Tab(1) + MeanX(rtInc4000))
+   PrintMe(reportfile,"Error RT SD      " +Tab(1)+ SD(rtInc1000) + Tab(1) + SD(rtInc2000) + Tab(1) + SD(rtInc4000))
+   PrintMe(reportfile,"--------------------------------------------------------")   
 
 
    ##Now, show debriefing info.
@@ -381,7 +350,7 @@ Press any key to begin.")
    Show(gInstructions)
    Draw()
    WaitForKeyPress("X")
-  
+   ShowCursor(1)
  }
 
 
@@ -400,9 +369,9 @@ define Initialize()
 
 
    gInstructionsFont <- MakeFont("Vera.ttf",0,16, black,white,1)  
-   gStimFont <- MakeFont("VeraMono.ttf",0,54, white, black,1)  
-   gCorrFont <-  MakeFont("VeraMono.ttf",0,54, MakeColor("green"), black,1)  
-   gIncFont <-  MakeFont("VeraMono.ttf",0,54, MakeColor("red"), black,1)  
+   gStimFont <- MakeFont("FreeMono.ttf",0,54, white, black,1)  
+   gCorrFont <-  MakeFont("VeraMono.ttf",0,30, MakeColor("green"), black,1)  
+   gIncFont <-  MakeFont("VeraMono.ttf",0,30, MakeColor("red"), black,1)  
 
    ## Make and place the instruction box, then hide it  
    gInstructions <- MakeTextBox("", gInstructionsFont, 600,300)
@@ -419,40 +388,43 @@ define Initialize()
    AddObject(gFeedback, gWin) 
    Move(gFeedback, gVideoWidth/2, gVideoHeight/2)
    Hide(gFeedback)
+   ShowCursor(0)
  }
 
 
 
-## This makes a 'formatted' text string,  
-## making sure it has length size.  If val is too short,
-## it chops off the end of val; if it is too short, it pads
-## the end of val with spaces.  
-define Format(val, size)
+define PrintMe(file,text)
 {
+  FilePrint(file,text)
+  Print(text)
+}
 
-  string <- "" + val
-
-  len <- StringLength(string)
- 
-  #If size is smaller than length, 
-  if(size <= len)
+define SD(list)
+{
+  if(Length(list)==0)
   {
-    string <- SubString(string,1,size) 
-  }else {
-   pad <- ListToString(Repeat(" ",size - len))
-   string <- string + pad
+    ret <- "NA" 
+  } else {
+    ret <- Round(StdDev(list)*100)/100
   }
 
-  return string
+  return ret
 }
 
 
-define ListToString(list)
+define MeanX(list)
 {
-  tmp <- ""
-  loop(i,list)
+  if(Length(list)==0)
   {
-    tmp <- tmp + i
+   ret <- "NA"  
+  } else {
+   ret <- Round(Mean(list)*100)/100
   }
- return tmp
+  return ret
+}
+
+define Rnd(num,sig)
+{
+   x <-    Round( num *(10 ^ sig))/(10^sig)
+  return x 
 }

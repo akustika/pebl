@@ -236,37 +236,3 @@ define  PresentStim(stimA,stimB,order)
   Draw()
   return (resp == order)
 }
-
-## This makes a 'formatted' text string,  
-## making sure it has length size.  If val is too short,
-## it chops off the end of val; if it is too short, it pads
-## the end of val with spaces.  
-define Format(val, size)
-{
-
-  string <- "" + val
-
-  len <- StringLength(string)
- 
-  #If size is smaller than length, 
-  if(size <= len)
-  {
-    string <- SubString(string,1,size) 
-  }else {
-   pad <- ListToString(Repeat(" ",size - len))
-   string <- string + pad
-  }
-
-  return string
-}
-
-
-define ListToString(list)
-{
-  tmp <- ""
-  loop(i,list)
-  {
-    tmp <- tmp + i
-  }
- return tmp
-}
