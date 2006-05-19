@@ -42,6 +42,7 @@ define Start(lPar)
  
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
+  ShowCursor(0)
  
   
   ####################################################
@@ -63,15 +64,6 @@ define Start(lPar)
    ## Good researchers collect demographic data anonymously.
    ##  GetNIMHDemographics(gSubNum, gWin, "avt-demographics.txt")
 
-   ## Give instructions; wait for them to hit a key, 
-   SetText(gInstructions,"You are about to take part in an experiment that involves attending to stimuli on a screen.  It will take approximately 24 minutes.
-Press any key to begin.")
-   Show(gInstructions)
-   Draw()  
-   WaitForAnyKeyPress()
-   Hide(gInstructions)
-   Draw()
-
 
   ##############################################
   ##############################################
@@ -83,6 +75,7 @@ Press any key to begin.")
    white <- MakeColor("white")
 
    gOuter <- Square(gVideoWidth/2,gVideoHeight/2,250,white,1)
+   #Targets are on top; foils are on bottom.
    gInnerTarg <- Square(gVideoWidth/2,gVideoHeight/2 - 75,50,black,1)
    gInnerFoil <- Square(gVideoWidth/2,gVideoHeight/2 + 75,50,black,1)
 
@@ -90,6 +83,39 @@ Press any key to begin.")
    AddObject(gOuter,gWin)
    AddObject(gInnerTarg,gWin)
    AddObject(gInnerFoil,gWin)
+   Hide(gInnerTarg)
+   Hide(gInnerFoil) 
+   Hide(gOuter)
+
+
+   ## Give instructions; wait for them to hit a key, 
+   SetText(gInstructions,"You are about to take part in an experiment that involves attending to stimuli on a screen.  It will take approximately 24 minutes.
+
+  On each trial, you will see one of two stimuli on the screen. Each will be a white square with a black square inside it.  On some trials, this inner square will be near the top of the white square; on other trials it will be near the bottom. Press any key to see the stimuli.")
+   Show(gInstructions)
+   Draw()  
+   WaitForAnyKeyPress()
+   DrawTarg()
+   gInstructions.Height <- 100
+   SetText(gInstructions, "When the square is on the top, it is a target.  During the task, you should press the space bar whenever you see the target stimulus.   Press any key to continue.")
+   Draw()
+   WaitForAnyKeyPress()
+   Hide(gInnerTarg)
+   Show(gInnerFoil)
+   SetText(gInstructions, "When the square is on the bottom, it is NOT a target.  During the task, you should not press the space bar when the non-target is displayed.   Press any key to continue.")
+  
+   Draw()
+   WaitForAnyKeyPress()
+   DrawFoil()
+
+   gInstructions.Height <- 200
+   SetText(gInstructions, "During the task, you will see a series of targets and non-targets.  Press the space bar as quickly as you can whenever you see a target (top square).  Do nothing when you see a non-target (bottom square).  The task lasts approximately 24 minutes, so you need to concentrate on the task in order to perform well." + CR(2) + "Press the space bar to begin.")
+   HideAll()
+   Draw()
+   WaitForKeyPress(" ")
+   Hide(gInstructions)
+   Draw()
+
 
   datafile   <- FileOpenWrite("toav-"+ gSubNum + ".txt")
   reportfile <- FileOpenWrite("toav-report-" + gSubNum + ".txt")
@@ -148,24 +174,24 @@ Press any key to begin.")
       ###
 
 	  DrawTarg()
-      r1 <- WaitForListKeyPressWithTimeout(["X"],100,1)
+      r1 <- WaitForListKeyPressWithTimeout([" "],100,1)
       time1 <- GetTime()
 
       HideAll()
       if(r1 == 1)
       {
 
-        r2 <- WaitForListKeyPressWithTimeout(["X"],1850,1)
+        r2 <- WaitForListKeyPressWithTimeout([" "],1850,1)
         time2 <- GetTime()
 
         remains <- 1850-(time2-time1)
-        rMult <- WaitForListKeyPressWithTimeout(["X"],remains,1)
+        rMult <- WaitForListKeyPressWithTimeout([" "],remains,1)
         time3 <- GetTime()
         Wait(1850 - (time3 - time1))
 
       } else {
 
-        rMult <- WaitForListKeyPressWithTimeout(["X"],1850,1)
+        rMult <- WaitForListKeyPressWithTimeout([" "],1850,1)
         time2 <- GetTime()
         r2 <- 0
         Wait(1850 - (time2- time1))
@@ -179,24 +205,24 @@ Press any key to begin.")
       ###
 
 	  DrawFoil()
-      r1 <- WaitForListKeyPressWithTimeout(["X"],100,1)
+      r1 <- WaitForListKeyPressWithTimeout([" "],100,1)
       time1 <- GetTime()
 
       HideAll()
       if(r1 == 1) 
       {
 
-        r2 <- WaitForListKeyPressWithTimeout(["X"],1850,1)
+        r2 <- WaitForListKeyPressWithTimeout([" "],1850,1)
         time2 <- GetTime()
         remains <- 1850-(time2-time1)
 
-        rMult <- WaitForListKeyPressWithTimeout(["X"],remains,1)
+        rMult <- WaitForListKeyPressWithTimeout([" "],remains,1)
         time3 <- GetTime()
         Wait(1850 - (time3-time1))
 
       } else {
         ## A response was made in phase 1.
-        rMult <- WaitForListKeyPressWithTimeout(["X"],1850,1)
+        rMult <- WaitForListKeyPressWithTimeout([" "],1850,1)
         time2 <- GetTime()
         r2 <- 0
         Wait(1850 - (time2-time1))
@@ -333,7 +359,7 @@ Press any key to begin.")
    Show(gInstructions)
    Draw()
    WaitForKeyPress("X")
-  
+   ShowCursor(1)
  }
 
 
@@ -353,9 +379,9 @@ define Initialize()
    gInstructionsFont <- MakeFont("Vera.ttf",0,16, fg,bg,1)  
  
    ## Make and place the instruction box, then hide it  
-   gInstructions <- MakeTextBox("", gInstructionsFont, 600,300)
+   gInstructions <- MakeTextBox("", gInstructionsFont, 600,200)
    AddObject(gInstructions, gWin)
-   Move(gInstructions, gVideoWidth/2-300, gVideoHeight/2-150)
+   Move(gInstructions, gVideoWidth/2-300, 10)
    Hide(gInstructions)
 
  }
