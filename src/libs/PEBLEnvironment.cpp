@@ -409,7 +409,7 @@ Variant PEBLEnvironment::WaitForAnyKeyDownWithTimeout(Variant v)
     //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
 
     PDevice * device = new PlatformKeyboard(myKeyboard);
-    ValueState  * state = new ValueState(1, DT_EQUAL, key, device, PDT_KEYBOARD);
+    ValueState  * state = new ValueState(PEBL_PRESSED, DT_EQUAL, key, gEventQueue, PDT_KEYBOARD);
 
     //NULL,NULL will terminate the looping
     string  funcname = "";
@@ -423,6 +423,50 @@ Variant PEBLEnvironment::WaitForAnyKeyDownWithTimeout(Variant v)
 
     return Variant(returnval.GetDummyEvent().value);
 
+}
+
+// This returns the key pressed, and not the timeout.
+// The keypress object will eventually be time-stamped,
+// or the time can be obtained from GetTime()
+
+Variant PEBLEnvironment::WaitForAnyKeyPressWithTimeout(Variant v)
+{
+
+   //v[1] should have the parameter: a time to wait.
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in function [WaitForAnyKeyPressWithTimeout(<number>)]:  ");    
+
+    int delay = plist->First(); plist->PopFront();
+    delay += myTimer.GetTime();
+                                                                                                                   
+    //Create a timer test correspending to keydown.
+    //1 is the value (down), DT_GREATERTHAN is the test, key is
+    // the interface (e.g., the 'A' key)
+    PDevice * timer = new PlatformTimer(myTimer);
+    ValueState  * timestate = new ValueState(delay, DT_GREATER_THAN_OR_EQUAL, 1, timer, PDT_TIMER);
+
+
+    PEBLKey key = PEBLKEY_ANYKEY;
+    //Create a keyboard test correspending to keydown. 
+    //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
+
+    PDevice * device = new PlatformKeyboard(myKeyboard);
+    ValueState  * state = new ValueState(1, DT_EQUAL, key, device, PDT_KEYBOARD);
+
+    //NULL,NULL will terminate the looping
+    string  funcname = "";
+    PList* params = NULL;
+    Evaluator::mEventLoop.RegisterState(state,funcname, params);
+    Evaluator::mEventLoop.RegisterState(timestate, funcname, params);
+    PEvent returnval = Evaluator::mEventLoop.Loop();
+
+    std::cout << "Returnval: "<<returnval.GetType() << std::endl;
+    //Now, clear the event loop tests
+    Evaluator::mEventLoop.Clear();
+    //    return Variant(returnval.GetDummyEvent().value);
+
+    return Variant(PEBLUtility::TranslateKeyCode(returnval.GetKeyboardEvent().key,0));
 }
 
 
@@ -490,7 +534,7 @@ Variant PEBLEnvironment::WaitForListKeyPressWithTimeout(Variant v)
     //Now, clear the event loop tests
     Evaluator::mEventLoop.Clear();
 
-    return Variant(returnval.GetDummyEvent().value);
+    return Variant(PEBLUtility::TranslateKeyCode(returnval.GetKeyboardEvent().key,0));
 
 }
 

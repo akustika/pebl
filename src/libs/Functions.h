@@ -228,6 +228,7 @@ namespace PEBLEnvironment
 
             {"WAITFORALLKEYSUP",                WaitForAllKeysUp,  0, 0},
             {"WAITFORANYKEYDOWNWITHTIMEOUT",    WaitForAnyKeyDownWithTimeout,  1, 1},
+            {"WAITFORANYKEYPRESSWITHTIMEOUT",   WaitForAnyKeyPressWithTimeout, 1, 1},
             {"WAITFORKEYLISTDOWN",              WaitForKeyListDown, 1, 1},
             {"WAITFORLISTKEYPRESSWITHTIMEOUT",  WaitForListKeyPressWithTimeout, 3,3},
             {"CLEAREVENTLOOP",                  ClearEventLoop,     0, 0},

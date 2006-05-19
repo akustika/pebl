@@ -1,9 +1,9 @@
 //* -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*- */
-/////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 //    Name:       src/libs/PEBLMATH.cpp
 //    Purpose:    Built-in math functions for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2006 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -23,7 +23,7 @@
 //    You should have received a copy of the GNU General Public License
 //    along with PEBL; if not, write to the Free Software
 //    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 #include "PEBLMath.h"
 #include "../base/Variant.h"
 #include "../base/PList.h"
@@ -52,30 +52,32 @@ Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
     //a list of the results, turn this into a variant, and return it.
 
     //Get the list of variants.
-    
+
     PList * plist = v.GetComplexData()->GetList();
     //Make a results list
-    //std::cout << *plist << std::endl;
     PList * resultslist = new PList();
     //Declare a temporary argument list.
+
     PList* arglist = new PList();
    
     //Now, apply 
     std::list<Variant>::iterator p = plist->Begin();
     
-
-    //std::cout << plist->Length() << std::endl;
-
     while(p != plist->End())
         {
             //std::cout << "---\n";
             //Not sure why I add and then subtract the item from the list.
+
             arglist->PushFront(*p);                              
-            resultslist->PushBack(funcname(*p));
+            std::cout << "E\n";
+            std::cout<<"<"<<*arglist <<">\n";
+
+            resultslist->PushBack(funcname(Variant(arglist)));
+            std::cout << "F\n";
             arglist->PopFront();
             p++;
         }
-
+    std::cout << "G\n";
     //Now, resultslist is a PList.  Put it into a PCD.
     counted_ptr<PEBLObjectBase> tmp = counted_ptr<PEBLObjectBase>(resultslist);
     PComplexData * pcd = new PComplexData(tmp);
@@ -127,10 +129,12 @@ Variant PEBLMath::Recurse2(Variant v, Variant (*funcname)(Variant), Variant argu
 //Logarithmic Functions
 Variant PEBLMath::Log10(Variant v)
 {
-    
+
+    std::cout << "log10a\n";
+    std::cout << "(" << v << ")" << std::endl;
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First();
-
+    std::cout << "v1: " << v1 << std::endl;
     if(v1.IsNumber())
         {
             return Variant(log10l(v1.GetFloat()));
