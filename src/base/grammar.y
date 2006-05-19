@@ -269,11 +269,10 @@ elseifseq:   PEBL_ELSE nlornone block {
 
         PEBL_ELSEIF PEBL_LPAREN exp PEBL_RPAREN  nlornone block {
 		/*First make the else node*/
-		PNode * tmpNode = new OpNode(PEBL_ELSE, $6, NULL, sourcefilename, yylineno);
-		/*Put the else node in the IF node*/
-		$$ = new OpNode(PEBL_IFELSE, $3, tmpNode, sourcefilename, yylineno); 
 
-  ;}
+		  $$ =  new OpNode(PEBL_IF, $3, $6, sourcefilename, yylineno);
+
+   }
 |      PEBL_ELSEIF PEBL_LPAREN exp PEBL_RPAREN nlornone block  elseifseq {
 
 		/*First make the else node*/
