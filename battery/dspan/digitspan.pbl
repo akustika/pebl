@@ -110,12 +110,7 @@ three lists at a specific length completely correctly."
    continue <- 1
    currcorrect <- 0
    try <- 0
-   while(continue)
-    {
-      stimuli <- SampleN(stim,length)
-      corr <-  Trial(stimuli,0)
-
-    if(gVersion == 1 )
+   if(gVersion == 1 )
       {
        startlength <- lowerbound
       } elseif(gVersion == 2) {
@@ -123,6 +118,14 @@ three lists at a specific length completely correctly."
       } else {
        startlength <- staircasestart
       }
+   length <- startlength 
+
+
+   while(continue)
+    {
+      stimuli <- SampleN(stim,length)
+      corr <-  Trial(stimuli,0)
+
 
 	  #############################
       ##Standard Memory Span 
@@ -131,19 +134,24 @@ three lists at a specific length completely correctly."
     if(gVersion == 1)
       {
        try <- try + 1
-      currcorrect <- currcorrect + corr
-      if(currcorrect >=  criterion)
-       {
-         length <- length + 1
-         currcorrect <- 0
-       } elseif(try >= perlength ) {
-         ##We did not pass the threshold; we are done.
-         continue <- 0
-       }
-	   if(length > upperbound)
-       {
-         continue <- 0
-       }
+       currcorrect <- currcorrect + corr
+       	   Print("here0")
+       if(currcorrect >=  criterion)
+        {
+   	   Print("here01")
+           length <- length + 1
+           currcorrect <- 0
+        } elseif(try >= perlength ) {
+   	   Print("here02")
+           ##We did not pass the threshold; we are done.
+           continue <- 0
+        } 
+	   Print("here1")
+       if(length > upperbound)
+        {
+           Print("here2")
+           continue <- 0
+        }
 
       } elseif(gVersion == 2) {
 	  #############################
