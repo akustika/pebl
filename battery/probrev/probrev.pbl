@@ -14,12 +14,10 @@
 ## Cools, R, Clark, L., Owen, A. M., Robbins, T. W. (2002) Defining the
 ##    Neural Mechanisms of Probabilistic Reversal Learning Using
 ##    Event-Related Functional Magnetic Resonance Imaging.
-##
 ##  
 ##  
 ##  
 ## Inhibitory control/learning task.
-##
 ##
 ##
 ##
@@ -32,9 +30,13 @@ define Start(lPar)
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
    
-   blockSize <- 40     #20
-
-   stimnames <- Shuffle(["png/abstractfig1.png","png/abstractfig2.png",	"png/abstractfig3.png","png/abstractfig4.png"])
+   blockSize <- 20  #40
+   feedbackProb <- .6
+   gRT <- 0
+   stimnames <- Shuffle(["png/abstractfig1.png",
+                         "png/abstractfig2.png",	
+                         "png/abstractfig3.png",
+                         "png/abstractfig4.png"])
    stimuli <- []
    loop(i, stimnames)
    {
@@ -51,7 +53,7 @@ define Start(lPar)
 
    ## Give instructions; wait for them to hit a key, 
    SetText(gInstructions,"You are about to take part in an experiment that " +
-           "involves learning a rule.
+           "involves learning a rule. On each trial, you will see two abstract images containing shapes of different colors.  On each trial, we will have selected one of the stimuli according to some rule.  Your task is to choose which stimulus is correct.  After you choose, we will tell you if you are correct or incorrect by showing you either a green smiley face (correct) or a red frown face (incorrect).  However, the feedback you get will not always be correct.  To choose the stimulus on the left, press the 'Z' key; to choose the stimulus on the right, choose the '/' key.
 Press any key to begin.")
    Show(gInstructions)
    Draw()  
@@ -75,16 +77,6 @@ Press any key to begin.")
    ## Global data structures which save data for analysis and
    ## report at end of study. 
 
-   rtCorr <- []
-   rtInc <- []
-   ommissions  <- 0   # Ommission error (failure to respond to target)
-   commissions <- 0   # Commission error (false alarm to foil)
-   multiples   <- 0   # multiple responses on a trial
-   antic       <- 0   # too fast
-   corrTarg    <- 0   # Number of correct Targets
-   corrFoil    <- 0   # Number of correct Foils
-   totalTrials <- 0   # Total Number of trials
-
 
    FilePrint(datafile,"sub trial targ toofast responded corr mult time rt")
 
@@ -97,20 +89,47 @@ Press any key to begin.")
     Hide(stimB)
     Wait(2000)
     trialNum <- 0
-    while(trialNum < blocksize)
+    switch <- 0
+
+    while(trialNum < blocksize*2)
     {
 
-      trialNum <- trialNum + 1
 
+      trialNum <- trialNum + 1
+      if(trialNum == blocksize)
+      {
+         tmp <-   stimA
+         stimA <- stimB
+         stimB <- tmp
+         switch <- 1
+      }
 	  order <- (RandomBernoulli(.5)+1)+""
 	  corr <- PresentStim(stimA,stimB,order)
-
-      if(corr) 
+    
+	 if(Random()< feedbackProb)
       {
-        feedback <- gCorr
-      }else{
-        feedback <- gInc
+        valid <- 1
+      } else {
+        valid <- 0
       }
+
+
+    ### Smiley feedback :  correct && valid  
+	###                   incorrect && invalid
+ 	### frowney feedback:  correct && invalid
+	###                    incorrect && valid
+      if(corr + valid == 1) 
+      { 
+        corrfeedback <- 0  ##We tell them they are wrong   
+        feedback <- gInc
+      }else{
+           
+        corrfeedback <- 1 ##We tell them they are right
+        feedback <- gCorr
+      }
+
+	FilePrint(datafile,gSubNum + " " + trialnum +" " + switch + " " + order + " " + valid + " " + corrfeedback + " " + corr  + " " + gRT)
+
       Show(feedback)
       Draw()
       Wait(250)
@@ -133,18 +152,7 @@ Press any key to begin.")
    FilePrint(reportfile,"---------------------------------------------------")
    FilePrint(reportfile,"Statistic           Value ")
    FilePrint(reportfile,"---------------------------------------------------")
-   FilePrint(reportfile,"Total Trials       " + totalTrials)
-   FilePrint(reportfile,"Correct Targets    " + corrTarg)
-   FilePrint(reportfile,"Correct Foils      " + corrFoil)
-   FilePrint(reportfile,"Correct Trials     " + (corrTarg + corrFoil))
-   FilePrint(reportfile,"Commission Errors  " + commissions)
-   FilePrint(reportfile,"Ommission Errors   " + ommissions)
-   FilePrint(reportfile,"Correct RT Mean    " + rtCorr)
-   FilePrint(reportfile,"Error RT Mean      " + rtInc)
-   FilePrint(reportfile,"RT Mean            " + Round(Mean(Merge(rtCorr,rtInc))))
-   FilePrint(reportfile,"RT SD              " + Round(StdDev(Merge(rtCorr,rtInc))))
-   FilePrint(reportfile,"Anticipations      " + antic)
-   FilePrint(reportfile,"Multiple Responses " + multiples)
+
    FilePrint(reportfile,"---------------------------------------------------")
    
 
@@ -217,22 +225,27 @@ define Initialize()
 ##
 define  PresentStim(stimA,stimB,order)
 {
-   Print(order)
 	if(order=="1"){
        Move(stimA,200,300)
        Move(stimB,600,300)
+       correct <- "z"
 
     } else {
        Move(stimB,200,300)
        Move(stimA,600,300)
+       correct <- "/"
     }
   Show(stimA)
   Show(stimB)
   Draw()
+  time1 <- GetTime()
   
-  resp <- WaitForListKeyPress(["1","2"])
+  resp <- WaitForListKeyPress(["z","/"])
+  time2 <- GetTime()
+ 
+  gRT <- time2-time1
   Hide(stimA)
   Hide(stimB)
   Draw()
-  return (resp == order)
+  return (resp == correct)
 }

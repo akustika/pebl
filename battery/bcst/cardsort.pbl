@@ -13,8 +13,6 @@
 ##     flexibility in thinking. J. Gen. Psychol. 39: 15-22.
 ## 
 ## 
-## 
-## 
 ##   Program calculates and reports: 
 ##    * Number of categories achieved
 ##    * Number of trials
@@ -23,13 +21,10 @@
 ##    * Percentage perseverative errors
 ##
 ##
-##
-##
 ###########################################################
 
 define Start(lPar)
 {
-
 
 
   ## repeats is the number of times you go through the 64-item deck
@@ -44,10 +39,16 @@ define Start(lPar)
 
   ## results are stored in tmpresults.dat
   gFileOut <-FileOpenWrite("bcst-" + gSubNum +".txt")
+
+
+  persevs <- []
+  totCorr <- 0
+  totPers <- 0
  
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
-   
+
+
 
    gColors <-  ["Red", "Green","Yellow","Blue"]
    gShapes <-  ["Triangle","Star","Cross","Circle"]
@@ -128,8 +129,11 @@ WaitForAnyKeyPress()
 ##  Start the experimental trials.
 ## 
   rule <- RandomDiscrete(3)
+  lastrule <- rule
   run <- 0
+  persev <- 0
   trialnum <- 1
+  numCats <- 0
    loop(s,stim)
    {
       card <- Nth(s,4)
@@ -141,20 +145,26 @@ WaitForAnyKeyPress()
       time1 <- GetTime()
       rt <- time1 - time0
 
-      corr <- ScoreTrial(s,resp,rule)
+      corr <- ScoreTrial(s,resp,rule,lastrule)
       RemoveObject(card,gWin)
-      if(corr)
+      if(corr == 1)
       {
        run <- run + 1
+       totCorr <- totCorr + 1
        feedback <- gCorrect
-      }else{
-       feedback <- gIncorrect
-       run <- 0
+      } else{
+        feedback <- gIncorrect    
+        run <- 0
+        if(corr == 2) {
+            totPers <- totPers + 1
+            persev <- persev + 1
+          }
+	
       }
       
 
       
-	  FilePrint_(gFileOut, gSubNum + " " + trialnum + " ")
+	  FilePrint_(gFileOut, gSubNum + " " + trialnum + " " + numCats + " ")
       index <- 1
       ##Print out the trial data.
       loop(i,s)
@@ -171,19 +181,52 @@ WaitForAnyKeyPress()
       Draw()   
       Wait(400)
       Hide(feedback)
+      Hide(gHeader)
+      Hide(gPrompt)
       Draw()
 
       ##if you have a run of runlength correct, change rules.
       if(run >= runlength)
       {
+        lastrule <- rule
         rule <- SampleNewRule(rule)
         run <- 0
+        numCats <- numCats + 1
+        lastswitch <- trialnum
+        ##Keep track of the number of perseverations in this category.
+        persevs <- Append(persevs, persev)
+        persev <- 0
       }
+
       trialnum <- trialnum + 1
+      if(numCats >= 9 )
+      {
+        break
+      }
     }
+
    FileClose(gFileOut)
-
-
+   report <-FileOpenWrite("bcst-report-" + gSubNum +".txt")
+   FilePrint(report,"---------------------------------------------------")
+   FilePrint(report," Report for PEBL's _Berg's Card Sorting Task_,")
+   FilePrint(report," a version of the Wisconsin Card Sorting Task (tm)")
+   FilePrint(report," (c) 2006 Shane T. Mueller"
+   FilePrint(report," Version 0.1")
+   FilePrint(report," "+GetPEBLVersion())
+   FilePrint(report," "+TimeStamp())
+   FilePrint(report," Participant Code: " + gSubNum)
+   FilePrint(report," http://pebl.sf.net")
+   FilePrint(report,"---------------------------------------------------")
+   FilePrint(report,"Statistic                    Value")
+   FilePrint(report,"---------------------------------------------------")
+   FilePrint(report,"Number of Trials: " + trialnum)
+   FilePrint(report,"Number correct:   " + totCorr)
+   FilePrint(report,"Number incorrect: " + trialnum-totCorr)
+   FilePrint(report,"Number of perseverations" + totPers)
+   FilePrint(report,"Mean perseverations:    " +  Mean(persevs))
+   FilePrint(report,"Number of categories:   "+ numCats)
+   FilePrint(report,"---------------------------------------------------")	
+   FileClose(report)
    ##Now, show debriefing info.
 
    feedback <-  "You may now leave.  Please alert the experimenter that you are done. Press the X key to exit."
@@ -250,7 +293,10 @@ define Initialize()
 
 
 
-define ScoreTrial(triallist, resp, rule)
+## This returns 0 if incorrect, 1 if correct, 2 if 
+## correct according to the previous rule
+##
+define ScoreTrial(triallist, resp, rule,lastrule)
 {
   ##The piles are defined by:
   ## Rule 1: COLOR:  red green blue yellow
@@ -267,7 +313,21 @@ define ScoreTrial(triallist, resp, rule)
   ## the response is the same as the pile.
 
    corr <- (Nth(dimlist,ToNumber(resp)) == dimension)
-  return corr
+   lastcorr <- (Nth(dimlist,ToNumber(resp)) == dimension)
+
+   if(corr)
+   {
+     ret <- 1
+   } else{
+     if (lastcorr) 
+       { 
+         ret  <- 2
+       } else 
+       {
+         ret <- 0
+       }
+   }
+  return ret
 }
 
 ##Sample a new rule, but make sure it is different from the current rule
