@@ -28,8 +28,12 @@
 C   = gcc
 CXX = g++ 
 DEBUGFLAGS = -lefence -DPEBL_DEBUG
-CFLAGS =   -O3 -std=c99
-CXXFLAGS =   -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX 
+
+CFLAGS =   -O3 -std=c99 
+CXXFLAGS =   -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  
+
+#Only affects install location
+PREFIX = /usr/local/
 
 
 SDL_CONFIG = /usr/bin/sdl-config
@@ -373,19 +377,19 @@ clean:
 
 .PHONY: install
 install:
-	cp bin/pebl /usr/local/bin/pebl
-	rm -Rf /usr/local/share/pebl
-	mkdir /usr/local/share/pebl
-	cp -R media/ /usr/local/share/pebl
-	cp -R pebl-lib/ /usr/local/share/pebl
+	cp bin/pebl $(PREFIX)/bin/pebl
+	rm -Rf $(PREFIX)/share/pebl
+	mkdir $(PREFIX)/share/pebl
+	cp -R media/ $(PREFIX)/share/pebl
+	cp -R pebl-lib/ $(PREFIX)/share/pebl
 
-	rm -Rf /usr/local/share/pebl/media/CVS
-	rm -Rf /usr/local/share/pebl/media/images/CVS
-	rm -Rf /usr/local/share/pebl/media/sounds/CVS
-	rm -Rf /usr/local/share/pebl/media/fonts/CVS
-	rm -Rf /usr/local/share/pebl/media/text/CVS
-	rm -Rf /usr/local/share/pebl/pebl-lib/CVS
-	chmod -R uga+r /usr/local/share/pebl/
+	rm -Rf $(PREFIX)/share/pebl/media/CVS
+	rm -Rf $(PREFIX)/share/pebl/media/images/CVS
+	rm -Rf $(PREFIX)/share/pebl/media/sounds/CVS
+	rm -Rf $(PREFIX)/share/pebl/media/fonts/CVS
+	rm -Rf $(PREFIX)/share/pebl/media/text/CVS
+	rm -Rf $(PREFIX)/share/pebl/pebl-lib/CVS
+	chmod -R uga+r $(PREFIX)/share/pebl/
 
 ifeq (.depend,$(wildcard .depend))
 include .depend
