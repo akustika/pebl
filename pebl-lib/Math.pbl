@@ -1,8 +1,8 @@
-#/////////////////////////////////////////////////////////////////////////////////
+#//////////////////////////////////////////////////////////////////////////////
 #//    Name:       src/pebl-lib/Math.pbl
 #//    Purpose:    Contains PEBL functions used for math
 #//    Author:     Shane T. Mueller, Ph.D.
-#//    Copyright:  (c) 2005 Shane T. Mueller <smueller@obereed.net>
+#//    Copyright:  (c) 2005-2006 Shane T. Mueller <smueller@obereed.net>
 #//    License:    GPL 2
 #//
 #//
@@ -21,14 +21,14 @@
 #//
 #//    You should have received a copy of the GNU General Public License
 #//    along with PEBL; if not, write to the Free Software
-#//    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-#////////////////////////////////////////////////////////////////////////////////
+#//    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#//////////////////////////////////////////////////////////////////////////////
 
 
 #  The functions defined here are available for use in any PEBL program.
 #  They are written in PEBL itself, and so are interpreted, but the ease of
-#  writing them in PEBL far outweighed the possible speed-up that might be gained
-#  by writing them directly in C++.
+#  writing them in PEBL far outweighed the possible speed-up that might be
+#  gained by writing them directly in C++.
 
 define Sum(list)
 {

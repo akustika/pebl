@@ -21,14 +21,14 @@
 #//
 #//    You should have received a copy of the GNU General Public License
 #//    along with PEBL; if not, write to the Free Software
-#//    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-#////////////////////////////////////////////////////////////////////////////////
+#//   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#//////////////////////////////////////////////////////////////////////////////
 
 
 #  The functions defined here are available for use in any PEBL program.
 #  They are written in PEBL itself, and so are interpreted, but the ease of
-#  writing them in PEBL far outweighed the possible speed-up that might be gained
-#  by writing them directly in C++.
+#  writing them in PEBL far outweighed the possible speed-up that
+#  might be gained by writing them directly in C++.
 
 define DesignLatinSquare(list1, list2)
 {
@@ -219,14 +219,12 @@ define ExtractListItems(list, items)
     }
 
     return returnList
-
 }
 
 
-
-
 # Returns a list which contains <number> items from the list,
-# selected without replacement.  If <number> is larger than the size of the list,
+# selected without replacement.  If <number> is larger 
+# than the size of the list,
 # the entire list is returned. Consequently, fewer than N items will be
 # chosen. Items will be returned in the order they appear in the list.
 # See also:  SampleN, SampleNWithReplacement, SampleNWithoutReplacement
