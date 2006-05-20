@@ -36,17 +36,26 @@ define Start(lPar)
   ## Version can be hard-coded here, or entered with the -v command-line
   ## argument. 1 indicates traditional low-to-high; 2 indicates high-to-low;
   ## 3 indicates a staircase.
-  gVersion <- 1
+  gVersion <- 3
   
+  ## End Early determines whether the number of trials at each length
+  ## should continue only until the criterion, or if all the 
+  ## lengths should be tested.  I.e., if 2/3 correct are needed to 
+  ## pass up to the next level, we should always do 3.  Furthermore,
+  ## if endearly is 0, we will continue until we get 0/3 (or 3/3 if 
+  ## using gVersion <-2
+
+  endearly <- 0
+
 
   upperbound <- 10            ## The longest list length
   lowerbound <- 3             ## The shortest list length
   perlength  <- 3             ## The number of trials at each length
   criterion  <- 2             ## The number that must be correct to proceed
-  starcasestart  <- 4         ## starting point for staircasestart.
+  staircasestart  <- 4        ## starting point for staircasestart.
   staircasetrials <- 16       ## Number of staircase trials.
   gISI <- 1000                ## Inter-stimulus interval in ms
-
+  iti <- 1500                 ## inter-trial interval.
 
   if(gVersion == 1){ 
       startLength <- 3
@@ -110,21 +119,16 @@ three lists at a specific length completely correctly."
    continue <- 1
    currcorrect <- 0
    try <- 0
-   if(gVersion == 1 )
-      {
-       startlength <- lowerbound
-      } elseif(gVersion == 2) {
-       startlength <- upperbound
-      } else {
-       startlength <- staircasestart
-      }
-   length <- startlength 
-
+   length <- startLength 
+   lengths <- []
 
    while(continue)
     {
+
+      Wait(iti)
+	  FilePrint_(gFileOut, gSubNum + " " + gVersion + " " + endearly + " " + trialnum + " " + length + " " + try + " ")
       stimuli <- SampleN(stim,length)
-      corr <-  Trial(stimuli,0)
+      corr <-  Trial(stimuli)
 
 
 	  #############################
@@ -135,23 +139,41 @@ three lists at a specific length completely correctly."
       {
        try <- try + 1
        currcorrect <- currcorrect + corr
-       	   Print("here0")
-       if(currcorrect >=  criterion)
-        {
-   	   Print("here01")
+
+       if(endearly)
+       {
+         if(currcorrect >=  criterion)
+          {
+
            length <- length + 1
            currcorrect <- 0
-        } elseif(try >= perlength ) {
-   	   Print("here02")
+           try <- 0
+         } elseif(try >= perlength ) {
+
            ##We did not pass the threshold; we are done.
            continue <- 0
-        } 
-	   Print("here1")
-       if(length > upperbound)
-        {
-           Print("here2")
+         } 
+
+
+      } else {
+         if(try >= perlength)
+         {
+            if(currcorrect >= criterion)
+              {
+                  length <- length + 1
+                  currcorrect <- 0
+                  try <- 0
+              } else {
+                  continue <- 0
+              }
+         }
+           
+      }
+
+     if(length > upperbound)
+       {
            continue <- 0
-        }
+       }
 
       } elseif(gVersion == 2) {
 	  #############################
@@ -159,16 +181,34 @@ three lists at a specific length completely correctly."
 
       try <- try + 1
       currcorrect <- currcorrect + corr
-      if(currcorrect >=  criterion)
-       {
-         continue <- 0
 
-       } elseif(try >= perlength ) {
-         ##We we have used all the tries, go one length lower.
-         length <- length - 1
-	     currcorrect <- 0
-         try <- 0
-       }
+      if(endearly) {
+        ##In this situation, only do enough trials to pass criterion.
+        if(currcorrect >=  criterion)
+         {
+           continue <- 0
+
+         } elseif(try >= perlength ) {
+           ##We we have used all the tries, go one length lower.
+           length <- length - 1
+	       currcorrect <- 0
+           try <- 0
+         }
+      } else {
+        ##In this situation, do all the trials per length, until we get them all correct.
+         if(try >= perlength) {
+            if(currcorrect == perlength)
+            {
+               continue <- 0
+            } else {
+               length <- length -1
+               currcorrect <- 0
+               try <- 0
+            }
+         }
+
+      }
+
 	   if(length < lowerbound)
        {
  	     continue <- 0
@@ -190,10 +230,14 @@ three lists at a specific length completely correctly."
         }
       }
 
+      if(trialnum > 4) {
+          lengths <- Append(lengths, length)
+       }
 
       trialnum <- trialnum + 1
-      Wait(1500)
+
  
+
     }
    Hide(gHeader)
    Draw()
@@ -201,7 +245,19 @@ three lists at a specific length completely correctly."
 
 
    ##Now, show debriefing info.
-   feedback <-  "Thank you for participating in the experiment."
+   feedback <-  "Thank you for participating in the experiment. "
+
+   if(gVersion == 1) { 
+        feedback <- feedback + "Your memory span was " + (length-1) + ". "
+   } elseif(gVersion == 2) {
+        feedback <- feedback + "Your memory span was " + (length+1) + ". "
+
+   }else{
+        feedback <- feedback + "Your memory span was " + Mean(lengths) + ". "
+   }
+   feedback <- feedback + CR(2) + "Press any key to exit."
+   
+   
    SetText(gInstructions, feedback)
    Show(gInstructions)
    Draw()
@@ -210,7 +266,7 @@ three lists at a specific length completely correctly."
  }
 
 
-define Trial (stimpairs, logfile)
+define Trial(stimpairs)
 {
 
   stim <- First(Transpose(stimpairs))
@@ -230,13 +286,13 @@ define Trial (stimpairs, logfile)
   Show(gStimLabel)
 
   Wait(1000)
-  
+    
   loop(x,stimpairs)
   {
     digit <- First(x)
     sound <-Nth(x,2)
 
-
+    FilePrint_(gFileOut,digit)
     gStimLabel.text <- digit
     Draw()
     t1 <- GetTime()
@@ -244,7 +300,7 @@ define Trial (stimpairs, logfile)
     t2 <- GetTime()
     Wait(gISI - (t2-t1))
   }
- 
+  FilePrint_(gFileOut, " ")
   ##Play a response signal.
 
 
@@ -290,16 +346,21 @@ define Trial (stimpairs, logfile)
           responseList <- Append(responseList,resp)
           } 
      }
-
-    gStimLabel.text <- ListToString(Merge(responseList,Repeat("_",(length - position + 1))))
+    
+    resptext <- ListToString(Merge(responseList,Repeat("_",(length - position + 1))))
+    gStimLabel.text <- resptext
     Draw()
   }
 
+  FilePrint_(gFileOut,resptext)
+
   ##See if things are correct.
-  if( ListToString(stim) == ListToString(responseList))
+  if( ListToString(stim) == resptext)
    {
 	 corr <- 1
    }
+
+  FilePrint(gFileOut," " + corr)
 
   Wait(200)
 
