@@ -307,11 +307,12 @@ define YesNoTrial(text)
 
 
 
-define CR()
+define CR(n)
 {
   x <- "
 "
-return x
+ y <- Repeat(x,n)
+ return ListToString(y)
 }
 
 define Tab(n)
