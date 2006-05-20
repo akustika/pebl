@@ -1,4 +1,4 @@
-PEBL PSYCHOLOGICAL TEST BATTERY
+lPEBL PSYCHOLOGICAL TEST BATTERY
 
 About:
 The PEBL Psychological Test Battery (PPTB) is a set of psychological
@@ -12,38 +12,41 @@ has the option to use auditory presentation as well.
 Tasks:
 
 The following 10 tests are currently available:
+-----------------------------------------------------
+        Berg's Wisconsin Card Sorting Test 
 
-Berg's Wisconsin Card Sorting Test
- (in bcst directory)
-
-Choice Response Time
+(in bcst directory)
+-----------------------------------------------------
+               Choice Response Time
  (in crt directory)
+-----------------------------------------------------
+                     Digit Span 
+(in digitspan.pbl dspan directory)
+-----------------------------------------------------
+              Implicit Association Task
 
-Digit Span
- (in dspan directory)
-
-Implicit Association Task
  (in iat directory)
-
-Iowa Gambling Task
+-----------------------------------------------------
+                 Iowa Gambling Task
  (in iowa directory)
+-----------------------------------------------------
+             *Continuous Performance Task
 
-*Continuous Performance Task
  (in pcpt directory)
-
-Probabilistic Reversal Learning Test
+-----------------------------------------------------
+          Probabilistic Reversal Learning Test
  (in probrev directory)
-
-Simple Response Time
+-----------------------------------------------------
+                Simple Response Time
  (in srt directory)
+-----------------------------------------------------
+                  Symbol-Counter
+  (in symbolcounter directory)
+-----------------------------------------------------
+           Test of Attentional Vigilance (TOAV)
 
-Symbol-Counter 
- (in symbolcounter directory)
-
-Test of Attentional Vigilance (TOAV)
- (in toav directory)
-
-	 Our implementation of the T.O.V.A. (Test of variables of
-	 attention).
-
+(in toav directory)
+    Our implementation of the T.O.V.A. (Test of variables of
+	attention).
+-----------------------------------------------------
 
