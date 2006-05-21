@@ -1,5 +1,3 @@
-
-
 #!/usr/local/bin/pebl
 #################################################################
 ##  PEBL Continuous Performance Task (PCPT), a continuous
@@ -27,7 +25,8 @@
 ##  References:
 ##  C. Keith Conners,  Jeffery N. Epstein,  Adrian Angold,  
 ##      John Klaric (2003) Continuous performance test performance 
-##      in a normative epidemiological sample Journal of Abnormal Child Psychology,
+##      in a normative epidemiological sample Journal of Abnormal 
+##      Child Psychology,
 ##
 ##
 #################################################################
@@ -41,7 +40,7 @@ define Start(lPar)
   Print(TimeStamp())
 
    cycles   <-  6          ## Number of times the 3-ISI cycle is repeated
-   blockSize <- 2          ## Number of trials per block
+   blockSize <- 18         ## Number of trials per block
    presTime  <- 250        ## Presentation time in ms.
    isiVals   <- [1000, 2000, 4000]
    probX     <- 0.1

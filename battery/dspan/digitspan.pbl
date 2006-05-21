@@ -27,7 +27,7 @@ define Start(lPar)
  
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
-
+  ShowCursor(0)
   ## This determines whether audio accompanies the visual 
   ## presentation.
   gUseAudio <- 1
@@ -262,7 +262,7 @@ three lists at a specific length completely correctly."
    Show(gInstructions)
    Draw()
    WaitForKeyPress("X")
-  
+   ShowCursor(1)  
  }
 
 

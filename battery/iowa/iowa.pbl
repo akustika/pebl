@@ -41,9 +41,9 @@ define Start(lPar)
  
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
-   
+  ShowCursor(0) 
   ##Controls whether the decks are shuffled. Default is as in Bechera et al.
-  shuffleDecks <-  0
+  shuffleDecks <-  1
 
 
   ####################################################
@@ -346,7 +346,7 @@ Press any key to begin.")
    Show(gInstructions)
    Draw()
    WaitForKeyPress("X")
-  
+   ShowCursor(1)   
  }
 
 

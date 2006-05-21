@@ -47,7 +47,7 @@ define Start(lPar)
  
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
-
+  ShowCursor(0)  #hide the cursor
 
 
    gColors <-  ["Red", "Green","Yellow","Blue"]
@@ -210,7 +210,7 @@ WaitForAnyKeyPress()
    FilePrint(report,"---------------------------------------------------")
    FilePrint(report," Report for PEBL's _Berg's Card Sorting Task_,")
    FilePrint(report," a version of the Wisconsin Card Sorting Task (tm)")
-   FilePrint(report," (c) 2006 Shane T. Mueller"
+   FilePrint(report," (c) 2006 Shane T. Mueller")
    FilePrint(report," Version 0.1")
    FilePrint(report," "+GetPEBLVersion())
    FilePrint(report," "+TimeStamp())
@@ -235,7 +235,7 @@ WaitForAnyKeyPress()
    Show(gInstructions)
    Draw()
    WaitForKeyPress("X")
- 
+   ShowCursor(1) 
  }
 
 

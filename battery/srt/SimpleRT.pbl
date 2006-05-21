@@ -63,7 +63,7 @@ define Start(lPar)
   ##
 
   Initialize()
-
+  ShowCursor(0)
   ## The delays are pre-generated to make it easier to control things, 
   ## like sequential dependencies, distributions, fixed delays, etc.
   delayseq <- Shuffle(DesignBalancedSampling(delays, numtrials))
@@ -73,7 +73,8 @@ define Start(lPar)
 
  
   gInstructions.text <- "You are about to take part in a simple task.  In this task, you will see the symbol  '" +
-	                     stimulus + "'. Whenever you see this symbol, depress the 'X' key as quickly as possible.  Press any key to begin."
+	                     stimulus + "'. Whenever you see this symbol, depress the 'X' key as quickly as possible. " + CR(3) +
+  "The task will be broken into " +blocks+ " blocks with " + blocklength + " stimuli in each block.  Press any key to begin."
   gStim.text <- stimulus
 
   #####################################
@@ -91,6 +92,7 @@ define Start(lPar)
   ## Present stimuli
 
   trial <- 0
+  block <- 1
   loop(delay, delayseq)
   {
   trial <- trial + 1
@@ -105,6 +107,8 @@ define Start(lPar)
      WaitForAnyKeyPress()
      gInstructions.visible<- 0
      Draw()
+     trial <- 1
+     block <- block +1
   }
 
   time0 <- GetTime()
@@ -126,7 +130,7 @@ define Start(lPar)
   Hide(gStim)
   Draw()
 
-  FilePrint(datafile, gSubNum + " " + trial + " " +  time0 +" " + delay + " " + (time1-time0) + " " + (time3-time2) + " " + resp1 + " " + resp2) 
+  FilePrint(datafile, gSubNum + " " + block + " " + trial + " " +  time0 +" " + delay + " " + (time1-time0) + " " + (time3-time2) + " " + resp1 + " " + resp2) 
 
 
   ####################
@@ -203,7 +207,7 @@ define Start(lPar)
    Show(gInstructions)
    Draw()
    WaitForKeyPress("X")
- 
+   ShowCursor(1)
 
 }
 

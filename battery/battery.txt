@@ -1,4 +1,4 @@
-lPEBL PSYCHOLOGICAL TEST BATTERY
+PEBL PSYCHOLOGICAL TEST BATTERY
 
 About:
 The PEBL Psychological Test Battery (PPTB) is a set of psychological
@@ -9,44 +9,219 @@ run on Microsoft Windows, OSX, or Linux operating systems.  They are
 all intended to run using only visual stimuli, although the digit span
 has the option to use auditory presentation as well.
 
+For all experiments, specifying the subject number in the PEBL
+launcher (or using the -s IDENTIFIER command line) will select what
+the saved file should be called.  If nothing is given, the default of
+0 will be used.
+
 Tasks:
 
-The following 10 tests are currently available:
------------------------------------------------------
-        Berg's Wisconsin Card Sorting Test 
+The following tests are currently available:
 
-(in bcst directory)
------------------------------------------------------
-               Choice Response Time
- (in crt directory)
------------------------------------------------------
-                     Digit Span 
-(in digitspan.pbl dspan directory)
------------------------------------------------------
-              Implicit Association Task
+-------------------------------------------------------------------------------
+*                      Berg's Wisconsin Card Sorting Test 
+-------------------------------------------------------------------------------
 
- (in iat directory)
------------------------------------------------------
-                 Iowa Gambling Task
- (in iowa directory)
------------------------------------------------------
-             *Continuous Performance Task
+Location: bcst/cardsort.pbl
 
- (in pcpt directory)
------------------------------------------------------
-          Probabilistic Reversal Learning Test
- (in probrev directory)
------------------------------------------------------
-                Simple Response Time
- (in srt directory)
------------------------------------------------------
-                  Symbol-Counter
-  (in symbolcounter directory)
------------------------------------------------------
-           Test of Attentional Vigilance (TOAV)
+Description:
+		Our version of the Wisconsin Card Sorting Test (tm).
+		Participants sort presented cards according to an unknown and
+		changing rule.
 
-(in toav directory)
-    Our implementation of the T.O.V.A. (Test of variables of
-	attention).
------------------------------------------------------
+Options:
+		* repeats affects how many times through the deck
+		* runlength (default is 5) determines how many correct sorts are
+		  needed before the rule changes.
+		* useCanonical determines whether the 4 stimulus cards are the
+		  same as in Berg's original, or whether they are generated randomly.
+
+Results:
+	    Data are stored in bcst-<gsubnum>.txt.  Detailed report stored
+	    in bcst-report-<gsubnum>.txt.  Report calculates trials,
+	    accuracy, number incorrect, perseverations on prior rule, and
+	    number of achieved categories.
+
+
+
+
+
+-------------------------------------------------------------------------------
+*                                  Digit Span 
+-------------------------------------------------------------------------------
+Location: dspan/digitspan.pbl
+
+Description:
+This is a standard digit span task. It has visual/auditory
+presentation of number strings, keyboard input.  Can be used directly
+be the subject, or the keyboard entry can be done by a trained
+experimenter using vocal recall.
+
+Options: 
+* The script will run three different versions of the task:
+  starting low and go up until too many errors; starting high and
+  go lower until too many corrects; and an adaptive staircase
+  procedure.  These are selected by changing the gVersion variable in
+  the script.
+
+* The gUseAudio variable controls whether auditory stimuli and
+  feedback should be given.
+
+* The starting lengths, number per length, upper and lower bounds, and
+  accuracy criteria are controlled by variables at the beginning of the
+  file.
+* The endearly variable determines whether the complete
+  set of trials at each length are tested, or if the testing at each
+  length continues only until the criterion has been met. 
+
+Results:
+ Basic results are output to dspan-<subnum>.txt
+
+-------------------------------------------------------------------------------
+*                         Implicit Association Task
+-------------------------------------------------------------------------------
+Location: iat/IAT.pbl
+
+Description: Version of the Implicit Association Task/Implicit
+Attitude Test.  This version uses non-controversial stimuli of natural
+kinds versus artifacts, and nouns versus verbs.  
+
+Options:
+
+The task can be customized by changing the header text at the
+beginning of the experiment and changing the words and picture names
+in picnames-good.txt, picnames-bad.txt, words-good.txt and
+words-bad.txt.
+
+
+
+Results:
+Data saved to iat-<gsubnum>.txt.  A summary report is also produced,
+which is saved to iat-report-<gsubnum>.txt.  This gives mean response
+times and error rates for different block conditions.
+
+-------------------------------------------------------------------------------
+*                             Iowa Gambling Task
+-------------------------------------------------------------------------------
+Location: iowa/iowa.pbl
+
+Description: Implementation of the Iowa Gambling task.  4 decks are
+given, participant must draw cards from whatever deck they choose. Two
+decks are net positive, two are net negative.
+
+Options:  By default, the penalty cards are shuffled within 10-card
+blocks.  setting shuffleDecks <- 0 will use the original order for all
+participants.  Baseline rewards for each deck can be changed as well.
+
+ 
+Results:
+Data are written to igd-<gsubnum>.txt  Columns are:
+subject_id trial deck reward penalty net total absulute_time latency
+
+
+-------------------------------------------------------------------------------
+*                         Continuous Performance Task
+-------------------------------------------------------------------------------
+Location: pcpt/pcpt.pbl
+Description:  A continuous performance task akin to Conners' Continuous
+              Performance task.  A constant series of letter stimuli
+              appear on the screen; participant must respond to all
+              stimuli EXCEPT the X.
+Options:
+              The default parameters reflect the Connors task
+              faithfully.  
+              * One can control things like block size, number of
+                cycles through the ISIs, etc.
+              * ISI values should not be adjusted freely--they need to
+                be changed in several places to work properly.
+              * By default, the task provides feedback in the form of
+                a green + or a red -.  To eliminate feedback, set
+                giveFeedback to 0.
+Results:
+              Detailed data is stored in pcpt-<gsubnum>.txt.  Detailed
+              summary report is in pcpc-report-<gsubnum>.txt.  This
+              contains a number of summary statistics broken down
+              across ISI.
+
+
+
+-------------------------------------------------------------------------------
+*                       Probabilistic Reversal Learning Test
+-------------------------------------------------------------------------------
+Location: probrev/probrev.pbl
+
+Description: Task involves learning a 'rule' which determine which of
+two abstract stimuli are selected.  The rule changes in the middle of
+the block, and the goal is to see how quickly the participant can
+adapt to the rule change.  Feedback is probabilistic
+
+Options:
+One can control the blocksize, stage size, distribution of
+probabilistic errors, and substitute new images for the stimuli.
+
+Results:
+Data is saved to probrev-<gsubnum>.txt. Columns are: 
+subnum block stage overall_trial block_trial pres_order valid_feedback
+correct_count corr rt
+ Basic report is printed to probrev-report-<gsubnum>.txt
+
+
+
+-------------------------------------------------------------------------------
+*                               Simple Response Time
+-------------------------------------------------------------------------------
+Location: srt/SimpleRT.pbl
+
+Description: Simple reaction time task--an X stimulus appears at
+delays between 250 and 2500 ms, and the participant must depress the
+"X" key as quickly as possible.  
+
+Options: Defaults to 50 trials in 4 blocks, with 10 different delay
+durations. These can be changed freely.
+ 
+
+Results:
+Data is saved to file srt-<gsubnum>.txt.  Columns are:
+subject_id block trial_in_block absolute_time delay  measured_delay rt too_fast_resp resp
+
+A summary of the results, with means and standard deviations across
+delays, is output to srt-report-<gsubnum>.txt.
+
+-------------------------------------------------------------------------------
+                                  Symbol-Counter
+-------------------------------------------------------------------------------
+Location: symbolcounter/SymbolCounter.pbl
+Description:
+Options:
+Results:
+
+
+
+-------------------------------------------------------------------------------
+*                        Test of Attentional Vigilance (TOAV)
+-------------------------------------------------------------------------------
+Location: toav/toav.pbl
+
+Description:
+		Our implementation of the T.O.V.A. (Test of variables of
+		attention).  Similar in intent to the pcpt task.  A white square
+		appears briefly on the screen, with a black square within it.
+		Participant must respond only to targets--the black square on
+		top.  Useful index of ADHD-type conditions.
+
+Options: No easily controlled options are available.
+
+Results:
+		Data stored in toav-<gsubnum>.txt.  Detailed report in
+		toav-report-<gsubnum>.txt
+
+
+
+-------------------------------------------------------------------------------
+                              Choice Response Time
+-------------------------------------------------------------------------------
+Location:
+Description:
+Options:
+Results:
 
