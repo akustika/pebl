@@ -1,0 +1,392 @@
+#!/usr/local/bin/pebl
+###########################################################
+##  Partial Report of Iconic Memory, Version 0.1
+##  For use with PEBL 0.07 or later
+##  http://pebl.sf.net
+##  Part of  The PEBL Psychological Testing Battery
+##  2006-02 Released into Public Domain
+##  by Shane T. Mueller, Ph.D. (smueller at obereed dot net)
+##
+##
+##
+##
+##
+##
+##
+##
+##
+##
+## This task is thought to provide early indications for alzheimer's, 
+## among other things.
+##
+##
+##
+###########################################################
+
+define Start(lPar)
+{
+
+  ####################################
+  ##
+  ## Parameters/Variables controlling experiment
+  ##
+   
+  blocks <- 4              ## The number of trial blocks
+  blocklength <-  50       ## The number of trials per block
+  numtrials <- blocks * blocklength 
+
+	
+  ##Delays (in refresh cycles)
+  delays <- [10,20,30,40,50,60,80,100,120,150]
+
+  ####################################
+  ##
+  ## Begin Initialization Procedures.
+  ##
+  Initialize()
+
+
+  stimLetters <- FileReadList("Uppercase.txt")
+  stimPairs <- []
+  loop(i,stimLetters)
+  {
+     x <- MakeLabel(i,gStimFont)
+     stimPairs <- Append(stimPairs,[x,i])
+  }
+  
+  ## Lists storing the actual RT values, along with the presentation time.
+  rts     <- []
+  delayCond <- []
+
+
+  ##These dictate where the stimuli will appear.
+  gPosX <- [260, 300,340,380,380,340,300,260]
+  gPosY <- [220, 180,180,220,260,300,300,260]
+
+
+  Trial(ChooseN(stimPairs,8),20)
+
+
+  
+  ##First, test whether the machine can handle this.
+  gInstructions.text<- "We are about to test the computer hardware to determine whether it can " +
+  "handle the precise timings necessary for the task. Press any key to begin test."
+  Draw()
+  WaitForAnyKeyPress()
+
+  Hide(gInstructions)
+ 
+
+  
+#  Draw()
+#
+#  loop(delay,delays)
+#  {
+#   count <- 1
+#   while(count <= 10)
+#   { 
+#      Hide(gFixation)
+#      Draw()
+#      Draw()
+#      Draw()
+#      Show(gFixation)
+#	  rt1 <- GetTime()
+#      DrawForMe(delay)
+#      rt2 <- GetTime()
+#      Hide(gFixation)
+#      Draw()
+#      Print(delay + " " +(rt2-rt1))
+#	  rts    <- Append(rts,(rt2-rt1))
+#      delayCond <- Append(delayCond,delay)
+#	  Wait(20)
+# 
+#    count <- count + 1
+#   }
+#   
+#  }
+#  teststats <- AggregateRTs(rts,delayCond)
+#  Print(teststats)
+
+
+  ## The delays are pre-generated to make it easier to control things, 
+  ## like sequential dependencies, distributions, fixed delays, etc.
+
+  delayseq <- Shuffle(DesignBalancedSampling(delays, numtrials))
+
+  datafile   <- FileOpenWrite("partreport-"+ gSubNum + ".txt")
+
+
+ 
+  gInstructions.text <- "You are about to take part in a simple task.  "
+
+
+
+  #####################################
+  ## Begin Experiment with Instructions
+
+  Show(gInstructions)
+  Draw()	  
+  WaitForAnyKeyPress()
+  Hide(gInstructions)
+  Draw()
+  gInstructions.text <- "You may now take a short break.  Press Any Key to Continue."
+
+
+  #####################################
+  ## Present stimuli
+
+  trial <- 0
+  loop(delay, delayseq)
+  {
+  trial <- trial + 1
+
+  ## Give a break every blocklength trials.
+  if(Mod(trial, blocklength) ==1 and trial > 1)
+  {
+
+     gInstructions.visible<- 1
+     Draw()
+     Wait(1000)
+     WaitForAnyKeyPress()
+     gInstructions.visible<- 0
+     Draw()
+  }
+
+  time0 <- GetTime()
+  
+
+
+  Draw()
+  resp1 <- WaitForListKeyPressWithTimeout(["X"], delay,1)
+  time1 <- GetTime()
+
+  if(resp1 == 0 )
+  {  
+    Wait(delay - (time1-time0))
+  }
+
+  Show(gStim)
+  Draw()
+  time2 <- GetTime()
+  resp2 <- WaitForKeyPress("X")
+  time3 <- GetTime()
+  Hide(gStim)
+  Draw()
+
+  FilePrint(datafile, gSubNum + " " + trial + " " +  time0 +" " + delay + " " + (time1-time0) + " " + (time3-time2) + " " + resp1 + " " + resp2) 
+
+
+  ####################
+  ## Record trial data in local structures so stats can
+  ## later be computed.
+  ## Only update rts if there wasn't a too-fast error,
+  ## and if they were not too slow (greater than 3 seconds)
+  if(resp1 == 0 or (time3 - time2) < tooFastThresh)
+  {
+    toofast <- toofast + 1
+  } else {
+    if(( time3 - time2 ) > tooslowThresh)
+    {
+      tooslow <- tooslow + 1
+    } else {
+      rts <- Append(rts, (time3-time2))
+	  delaySucc  <- Append(delaySucc, delay)
+    }
+
+   }
+ }
+
+  ####################
+  ##Experiment is finished; print out summary stats
+
+  reportfile <- FileOpenWrite("srt-report-" + gSubNum + ".txt")
+   FilePrint(reportfile,"------------------------------------------------------")
+   FilePrint(reportfile," Report for PEBL Partial Report Procedure Version 0.1")
+   FilePrint(reportfile, " "+GetPEBLVersion())
+   FilePrint(reportfile, " "+TimeStamp())
+   FilePrint(reportfile," http://pebl.sf.net")
+   FilePrint(reportfile, " Participant Code: " + gSubNum)
+   FilePrint(reportfile,"------------------------------------------------------")
+   FilePrint(reportfile,"Statistic                 Value")
+   FilePrint(reportfile,"------------------------------------------------------")
+
+   FilePrint(reportfile,Format("Number of blocks",28) +blocks)
+   FilePrint(reportfile,Format("Trials per blocks",28) +blocklength)
+   FilePrint(reportfile,Format("Stimulus",28) +stimulus)
+
+   FilePrint(reportfile,Format("Total Trials",28) +trial)
+   FilePrint(reportfile,Format("Anticipations (<" + toofastThresh + ")",28)  + toofast)
+   FilePrint(reportfile,Format("Delayed Responses (>"+tooslowThresh+")",28)  + tooSlow)
+   FilePrint(reportfile,Format("Correct RT Mean",28) + Mean(rts))
+   FilePrint(reportfile,Format("Correct RT Median",28) + Median(rts))
+   FilePrint(reportfile,Format("Correct RT Min",28)    + Min(rts))
+   FilePrint(reportfile,Format("Correct RT Max",28)    + Max(rts))
+   FilePrint(reportfile,Format("Correct RT SD",28)     + StdDev(rts))
+
+   FilePrint(reportfile,"")
+   FilePrint(reportfile,"   Delay     N         Mean      Std. Dev")
+   FilePrint(reportfile,"   --------------------------------------")
+
+   sumstats <- AggregateRTs(rts,delaySucc)
+   loop(stat,sumstats)
+   {
+
+	   FilePrint_(reportfile,"   ")
+       loop(s,stat)
+       {
+
+         FilePrint_(reportfile,Format(s,10))
+       }
+       FilePrint(reportfile,"")  ##end-of-line
+  }
+   FilePrint(reportfile,"------------------------------------------------------")
+
+
+   FileClose(reportfile)
+   FileClose(datafile)
+
+  ##Now, show debriefing info.
+   SetText(gInstructions, "Thank you for participating in the experiment.  You may now leave.  (Press secret key 'X' to finish experiment)")
+   Show(gInstructions)
+   Draw()
+   WaitForKeyPress("X")
+ 
+
+}
+
+
+##  This is a standard initializer function that sets up typical
+##  objects used in experiments.
+define Initialize()
+{
+  ##Initialize Window, etc.
+  gWin <- MakeWindow("grey")   
+            
+  ##Initialize Font and colors
+   fg <- MakeColor("black")
+   bg <- MakeColor("grey")
+   bg2 <- MakeColor("white")
+   
+
+   gInstructionsFont <- MakeFont("Vera.ttf",0,18, fg,bg2,1)  
+   gStimFont         <- MakeFont("Vera.ttf", 0,24,fg,bg,1)       
+ 
+   ## Make and place the instruction box, then hide it  
+   gInstructions <- MakeTextBox("", gInstructionsFont, 600,300)
+   AddObject(gInstructions, gWin)
+   Move(gInstructions, gVideoWidth/2-300, gVideoHeight/2-150)
+   Hide(gInstructions)
+
+   ## Make and hide stimulus 
+   gStim <- MakeLabel("",gStimFont)
+   AddObject(gStim,gWin)
+   Move(gStim, gVideoWidth/2, gVideoHeight/2)
+   Hide(gStim)
+
+   ## Make and hide fixation cross 
+   gFixation <- MakeLabel("+",gStimFont)
+   AddObject(gFixation,gWin)
+   Move(gFixation, gVideoWidth/2, gVideoHeight/2)
+   Hide(gFixation)
+ }
+
+##This should be called with the selected 8 stimpairs.
+define Trial(stimpairs, delay)
+{
+   Draw()
+   WaitForAnyKeyPress()
+   
+    duration <- 100
+    seq <- Transpose([stimpairs,gPosX,gPosY])
+	loop(i, seq)
+    {
+      stimbase <- First(i)
+      x <- Nth(i,2)
+      y <- Nth(i,3)
+      label <- First(stimbase)
+      text <- Nth(stimbase,2)
+
+     AddObject(label,gWin)
+     Move(label,x,y)
+    
+    }
+
+    cueID <- RandomDiscrete(8)
+    cueX <- Nth(gPosX,cueID)
+    cueY <- Nth(gPosY,cueID)
+
+    screen <- Square(300,300,400,MakeColor("grey"),1)
+	AddObject(screen,gWin)
+    Hide(screen)
+    cue <- Square(cueX, cueY, 25,MakeColor("black"),0)
+    AddObject(cue, gWin)
+    Hide(cue)
+
+
+    Draw()
+    Wait(duration)
+    Show(screen)
+    Draw()
+	Wait(delay)
+    Show(cue)
+    Draw()
+
+    WaitForAnyKeyPress()
+ 
+ 	
+}
+
+
+## This finds mean and SD RT for 
+## each of the conditions specified in delays
+##
+define AggregateRTs(rts, delays)
+{
+
+  ## start by sorting both rts and delays by delays;
+  ## then move through them and analyze subparts.
+  rtX <- SortBy(rts,delays)
+  deX <- Sort(delays)
+  trials <- Transpose([deX,rtX])
+  
+  stats <- []
+
+  lastdelay <- First(deX)
+
+  tmpRT <- []  
+
+  loop(i, trials)
+  {
+
+     ## if the current delay differs from the previous delay,
+	 ## we should analyze what is in tmp right now.
+     if(First(i) != lastdelay)
+     {
+
+       stats <- Append(stats,
+                      [lastdelay, Length(tmpRT),
+	                  Mean(tmpRT), StdDev(tmpRT)])
+       tmpRT <- []
+     }
+
+    lastdelay <- First(i) 
+    tmpRT <- Append(tmpRT, Nth(i, 2))
+  }
+ 
+ stats <- Append(stats,
+                [lastdelay, Length(tmpRT),
+                 Mean(tmpRT), StdDev(tmpRT)])
+
+ return stats
+}
+
+
+define DrawForMe(delay)	
+{
+    i <- 0
+   while(i < delay)
+   {
+     Draw()
+     i <- i + 1
+   }
+}
