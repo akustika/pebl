@@ -1,7 +1,12 @@
-PEBL PSYCHOLOGICAL TEST BATTERY
+PEBL PSYCHOLOGICAL TEST BATTERY Version 0.1
+
+Released May 2006 
+Part of the PEBL Project
+http://pebl.sourceforge.net/battery.html
+
 
 About:
-The PEBL Psychological Test Battery (PPTB) is a set of psychological
+The PEBL Psychological Test Battery is a set of psychological
 tests available for the PEBL Experiment Building Language
 (http://pebl.sourceforge.net).  The consist of freely usable and
 modifiable versions of commonly-used psychological tests. They will
@@ -187,15 +192,6 @@ subject_id block trial_in_block absolute_time delay  measured_delay rt too_fast_
 A summary of the results, with means and standard deviations across
 delays, is output to srt-report-<gsubnum>.txt.
 
--------------------------------------------------------------------------------
-                                  Symbol-Counter
--------------------------------------------------------------------------------
-Location: symbolcounter/SymbolCounter.pbl
-Description:
-Options:
-Results:
-
-
 
 -------------------------------------------------------------------------------
 *                        Test of Attentional Vigilance (TOAV)
@@ -214,14 +210,4 @@ Options: No easily controlled options are available.
 Results:
 		Data stored in toav-<gsubnum>.txt.  Detailed report in
 		toav-report-<gsubnum>.txt
-
-
-
--------------------------------------------------------------------------------
-                              Choice Response Time
--------------------------------------------------------------------------------
-Location:
-Description:
-Options:
-Results:
 
