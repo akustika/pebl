@@ -1,5 +1,4 @@
 "..\bin\pebl.exe"
 "..\demo\"
 "hello.pbl"
-Subject Number|1
 Condition|fast

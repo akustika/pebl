@@ -1,16 +1,66 @@
 VERSION 5.00
-Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "RICHTX32.OCX"
-Object = "{0D452EE1-E08F-101A-852E-02608C4D0BB4}#2.0#0"; "FM20.DLL"
 Begin VB.Form Form1 
    Caption         =   "PEBL Launcher"
-   ClientHeight    =   9015
-   ClientLeft      =   17805
-   ClientTop       =   975
-   ClientWidth     =   11325
+   ClientHeight    =   8475
+   ClientLeft      =   18465
+   ClientTop       =   2250
+   ClientWidth     =   11895
    Icon            =   "Form1.frx":0000
    LinkTopic       =   "Form1"
-   ScaleHeight     =   0
-   ScaleWidth      =   0
+   ScaleHeight     =   8475
+   ScaleWidth      =   11895
+   Begin VB.TextBox Text3 
+      Height          =   375
+      Left            =   2040
+      TabIndex        =   15
+      Text            =   "0"
+      Top             =   1680
+      Width           =   2055
+   End
+   Begin VB.CommandButton Command4 
+      Caption         =   "Errors and Messages (stderr.txt)"
+      Height          =   375
+      Left            =   2880
+      TabIndex        =   14
+      Top             =   3720
+      Width           =   2775
+   End
+   Begin VB.CommandButton Command3 
+      Caption         =   "User Output (stdout.txt)"
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   -1  'True
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   375
+      Left            =   240
+      TabIndex        =   13
+      Top             =   3720
+      Width           =   2655
+   End
+   Begin VB.TextBox Text2 
+      BeginProperty Font 
+         Name            =   "Lucida Console"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   4335
+      Index           =   0
+      Left            =   240
+      MultiLine       =   -1  'True
+      ScrollBars      =   3  'Both
+      TabIndex        =   11
+      Top             =   4080
+      Width           =   11415
+   End
    Begin VB.ComboBox Combo2 
       Height          =   315
       ItemData        =   "Form1.frx":08CA
@@ -18,7 +68,7 @@ Begin VB.Form Form1
       List            =   "Form1.frx":08DA
       Style           =   2  'Dropdown List
       TabIndex        =   9
-      Top             =   1440
+      Top             =   1200
       Width           =   2175
    End
    Begin VB.ComboBox Combo1 
@@ -28,7 +78,7 @@ Begin VB.Form Form1
       List            =   "Form1.frx":0917
       Style           =   2  'Dropdown List
       TabIndex        =   8
-      Top             =   960
+      Top             =   840
       Width           =   2175
    End
    Begin VB.CheckBox Check1 
@@ -36,7 +86,7 @@ Begin VB.Form Form1
       Height          =   255
       Left            =   360
       TabIndex        =   7
-      Top             =   960
+      Top             =   840
       Value           =   1  'Checked
       Width           =   1215
    End
@@ -52,7 +102,7 @@ Begin VB.Form Form1
    End
    Begin VB.CommandButton Command2 
       Caption         =   "Quit"
-      Height          =   735
+      Height          =   615
       Left            =   1920
       TabIndex        =   4
       Top             =   120
@@ -60,14 +110,14 @@ Begin VB.Form Form1
    End
    Begin VB.DirListBox Dir1 
       Height          =   2790
-      Left            =   4200
+      Left            =   5040
       TabIndex        =   3
       Top             =   840
       Width           =   3255
    End
    Begin VB.DriveListBox Drive1 
       Height          =   315
-      Left            =   4200
+      Left            =   5040
       TabIndex        =   2
       Top             =   360
       Width           =   3255
@@ -75,7 +125,7 @@ Begin VB.Form Form1
    Begin VB.FileListBox File1 
       Archive         =   0   'False
       Height          =   3210
-      Left            =   7680
+      Left            =   8400
       MultiSelect     =   2  'Extended
       Pattern         =   "*.pbl"
       TabIndex        =   1
@@ -84,87 +134,46 @@ Begin VB.Form Form1
    End
    Begin VB.CommandButton Command1 
       Caption         =   "Run PEBL Script"
-      Height          =   735
+      Height          =   615
       Left            =   240
       TabIndex        =   0
       Top             =   120
       Width           =   1455
    End
-   Begin RichTextLib.RichTextBox RichTextBox1 
-      Height          =   4455
+   Begin VB.TextBox Text2 
+      BeginProperty Font 
+         Name            =   "Lucida Console"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   4335
       Index           =   1
-      Left            =   600
-      TabIndex        =   11
-      Top             =   4200
-      Visible         =   0   'False
-      Width           =   10215
-      _ExtentX        =   18018
-      _ExtentY        =   7858
-      _Version        =   393217
-      Enabled         =   -1  'True
-      ScrollBars      =   3
-      TextRTF         =   $"Form1.frx":095E
-      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "Lucida Console"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
+      Left            =   240
+      MultiLine       =   -1  'True
+      ScrollBars      =   3  'Both
+      TabIndex        =   12
+      Top             =   4080
+      Width           =   11415
    End
-   Begin RichTextLib.RichTextBox RichTextBox1 
-      Height          =   4455
-      Index           =   0
-      Left            =   600
-      TabIndex        =   10
-      Top             =   4200
-      Visible         =   0   'False
-      Width           =   10215
-      _ExtentX        =   18018
-      _ExtentY        =   7858
-      _Version        =   393217
-      ScrollBars      =   3
-      TextRTF         =   $"Form1.frx":09EA
-      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "Lucida Console"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
+   Begin VB.Label Label3 
+      Caption         =   "Participant Code:"
+      Height          =   375
+      Left            =   240
+      TabIndex        =   16
+      Top             =   1680
+      Width           =   1215
    End
    Begin VB.Label Label2 
-      Caption         =   "Launcher for PEBL 0.06"
+      Caption         =   "Launcher for PEBL 0.07"
       Height          =   255
-      Left            =   9120
-      TabIndex        =   13
+      Left            =   9600
+      TabIndex        =   10
       Top             =   0
       Width           =   2055
-   End
-   Begin MSForms.TabStrip TabStrip1 
-      Height          =   5175
-      Left            =   240
-      TabIndex        =   12
-      Top             =   3720
-      Width           =   10815
-      ListIndex       =   0
-      Size            =   "19076;9128"
-      Items           =   "Tab1;Tab2;"
-      TipStrings      =   ";;"
-      Names           =   "Tab1;Tab2;"
-      NewVersion      =   -1  'True
-      TabsAllocated   =   2
-      Tags            =   ";;"
-      TabData         =   2
-      Accelerator     =   ";;"
-      FontHeight      =   165
-      FontCharSet     =   0
-      FontPitchAndFamily=   2
-      TabState        =   "3;3"
    End
    Begin VB.Label Label1 
       Caption         =   "Label1"
@@ -172,7 +181,7 @@ Begin VB.Form Form1
       Index           =   0
       Left            =   240
       TabIndex        =   6
-      Top             =   2040
+      Top             =   2160
       Visible         =   0   'False
       Width           =   1695
    End
@@ -192,7 +201,14 @@ Private Sub Command1_Click()
 
  Execute = """" + PEBL_Executable + """"
  
- 'add any command-line arguments
+ 'add -S command-line argument
+   If Not (Text3.Text = "") Then
+      'We don't do anything here.
+   Else
+      Execute = Execute + " -s " + Text3
+   End If
+ 
+ 'add any other command-line arguments
   For i = 1 To NUMBER
     If Text1(i) <> "" Then
       Execute = Execute + " -v " + Text1(i)
@@ -268,21 +284,49 @@ Private Sub reload()
 
  Set fs = CreateObject("Scripting.FileSystemObject")
  
- If fs.fileexists(File1.Path & "\stdout.txt") Then
-   RichTextBox1(0).LoadFile File1.Path & "\stdout.txt"
+ sFilename = File1.Path & "\stdout.txt"
+ If fs.fileexists(sFilename) Then
+   hFile = FreeFile
+   Open sFilename For Input As #hFile
+   Text2(0).Text = Input$(LOF(hFile), hFile)
+   Close #hFile
   Else
-   RichTextBox1(0).Text = "Failed to load [" & File1.Path & "\stdout.txt]."
+   Text2(0).Text = "Failed to load [" & sFilename & "]."
  End If
  
- If fs.fileexists(File1.Path & "\stderr.txt") Then
-   RichTextBox1(1).LoadFile File1.Path & "\stderr.txt"
+ sFilename = File1.Path & "\stderr.txt"
+ If fs.fileexists(sFilename) Then
+   hFile = FreeFile
+   Open sFilename For Input As #hFile
+   Text2(1).Text = Input$(LOF(hFile), hFile)
+   Close #hFile
   Else
-   RichTextBox1(1).Text = "Failed to load " & File1.Path & "\stderr.txt]."
+   Text2(1).Text = "Failed to load [" & sFilename & "]."
  End If
+
 End Sub
 
 Private Sub Command2_Click()
  End
+End Sub
+
+Private Sub Command3_Click()
+ Text2(1).Visible = False
+ Text2(0).Visible = True
+ Text2(0).SetFocus
+ Command3.Font.Underline = True
+ Command4.Font.Underline = False
+
+ 
+End Sub
+
+Private Sub Command4_Click()
+ Text2(0).Visible = False
+ Text2(1).Visible = True
+ Text2(1).SetFocus
+ Command3.Font.Underline = False
+ Command4.Font.Underline = True
+
 End Sub
 
 Private Sub Dir1_Change()
@@ -342,7 +386,7 @@ For i = 0 To File1.ListCount
 Next i
 
 NUMBER = 0
-toplabel = 1800
+toplabel = 2100
 While Not EOF(1)
 
  NUMBER = NUMBER + 1
@@ -359,7 +403,7 @@ While Not EOF(1)
  Label1(NUMBER).Top = toplabel
  Text1(NUMBER).Top = toplabel
  
- toplabel = toplabel + 600
+ toplabel = toplabel + 500
  
   Label1(NUMBER).Visible = True
   Text1(NUMBER).Visible = True
@@ -373,17 +417,15 @@ While Not EOF(1)
  Debug.Print namevaluearray(1)
  
 Wend
-TabStrip1.Tabs.Clear
-TabStrip1.Tabs.Add "User Output", "User Output (stdout.txt)"
-TabStrip1.Tabs.Add "Warnings and Errors", "Warnings and Errors (stderr.txt)"
 
 
-RichTextBox1(0).Text = ""
-RichTextBox1(1).Text = ""
-RichTextBox1(0).Visible = True
-SelectedTab = 0
+Text2(0).Text = ""
+Text2(1).Text = ""
+Text2(0).Visible = True
 
 End Sub
+
+
 
 
 Private Sub TabStrip1_Change()
@@ -391,8 +433,8 @@ Private Sub TabStrip1_Change()
 clicked = TabStrip1.SelectedItem.Index
 If (clicked = SelectedTab) Then Exit Sub
 
-RichTextBox1(clicked).Visible = True
-RichTextBox1(1 - clicked).Visible = False
+Text2(clicked).Visible = True
+Text2(1 - clicked).Visible = False
 SelectedTab = clicked
 
 End Sub
