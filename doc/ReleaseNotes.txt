@@ -87,32 +87,37 @@ Syntax:
 
 
 New functions:
-Tab()          Adds a tab character to a text string
-CR()           Adds newline/carriage return
-ShowCursor()   Hides or shows cursor
-Format()       Prints a number/string with a specific number of
+*Tab(<n>)          Adds a tab character to a text string
+*CR(<n>)            Adds newline/carriage return
+*Format()       Prints a number/string with a specific number of
                characters, either by truncating or padding with spaces.
-ListToString() Concatenates everything in a list into a string.
-
-WaitForListKeyPressWithTimeout()
+*ListToString() Concatenates everything in a list into a string.
+*ShowCursor()   Hides or shows cursor
+*WaitForListKeyPressWithTimeout()
                Waits for either a keypress from a specified set or a timeout.
-Quantile()     Computes specific quantile of a list of data.
+*Quantile(<list>,<quantile>)     Computes specific quantile of a list of data.
           
-ShuffleRepeat()  Repeats a list, shuffling each time.
+*ShuffleRepeat()  Repeats a list, shuffling each time.
 
-ShuffleWithoutAdjacents() 
+*ShuffleWithoutAdjacents() 
                Shuffles a list, allowing one to specify 
                items that should not be adjacent in output list
                           
-LatinSquare()  Quick-and-dirty latin square
+*LatinSquare()  Quick-and-dirty latin square
+*ReplaceChar()  Substitutes  one character for another in a string.
+*Lookup(<key>,<keylist>,<database>)        Returns element matching a lookup key in another list.
 
-ConnectToIP(<ip>,<port>)   
-               Connects to a port on another computer, returning network object.
+*ConnectToIP(<ip>,<port>)   
+               Connects to a port on another computer, returning
+               network object.
 
-ConnectToHost(<hostname>,<port>) 
-               Connects to a port on another computer, returning network object.
 
-WaitForNetworkConnection(<port>)
+*ConnectToHost(<hostname>,<port>) 
+               Connects to a port on another computer, returning
+               network object.
+
+
+*WaitForNetworkConnection(<port>)
                Listens on a port until another computer connects,
                returning a network object
 
@@ -122,7 +127,7 @@ WaitForNetworkConnection(<port>)
                Sends a data string over connection.
 *GetData(<network>,<length>) 
                Return a string from network connection
-ConvertIPString(<ip-as-string>)  
+*ConvertIPString(<ip-as-string>)  
                Changes an ip-string into integer
 
 Misc & Bugfixes:

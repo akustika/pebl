@@ -310,6 +310,41 @@ Draw()
 
 
 \begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+ShowCursor()+
+
+\item[Description] Hides or shows the mouse cursor.  Currently, the
+  mouse is not used, but on some systems in some configurations, the
+  mouse cursor shows up.  Calling ShowCursor(0) will turn off the
+  cursor, and ShowCursor(1) will turn it back on.  Be sure to turn it
+  on at the end of the experiment, or you may actually lose the cursor
+  for good.
+
+\item[Usage]
+\begin{verbatim}
+ShowCursor(<value>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+window <- MakeWindow()
+ShowCursor(0)
+## Do experiment here
+##
+
+## Turn mouse back on.
+ShowCursor(1)
+
+\end{verbatim}
+
+\item[See Also] 
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+Shuffle()+
 
 \item[Description] 	Randomly shuffles a list.
@@ -327,6 +362,80 @@ Print(Shuffle([1,2,3,4,5]))
 
 \item[See Also]    	\verb+Sort()+, \verb+SortBy()+ \verb+ShuffleRepeat()+,
                     \verb+ShuffleWithoutAdjacents()+
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	\verb+ShuffleRepeat()+
+
+\item[Description] 	Randomly shuffles  <list>, repeating <n> times.  Shuffles
+  each iteration of the list separately, so you are guaranteed to go
+  through all elements of the list before you get another.
+
+\item[Usage]    
+\begin{verbatim}
+ShuffleRepeat(<list>, <n>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+Print(ShuffleRepeat([1,2,3,4,5]),3)
+# Results might be anything, like [5,3,2,1,4, 3,2,5,1,4, 1,4,5,3,2]
+\end{verbatim}
+
+\item[See Also]    	\verb+Sort()+, \verb+SortBy()+ \verb+ShuffleRepeat()+,
+                    \verb+ShuffleWithoutAdjacents()+
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	\verb+ShuffleWithoutAdjacents()+
+
+\item[Description] 	Randomly shuffles  <nested-list>, attempting to
+  create a list where the nested elements do not appear adjacently in
+  the new list. Returns a list that is flattened one level. It will
+  always return a shuffled list, but it is not guaranteed to return
+  one that has the non-adjecent structure specified, because this is
+  sometimes impossible or very difficult to do randomly.  Given small
+  enough non-adjacent constraints with enough fillers, it should be
+  able to find something satisfactory.
+
+\item[Usage]    
+\begin{verbatim}
+ShuffleWithoutAdjacents(<nested-list>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+Print(ShuffleWithoutAdjacents([[1,2,3], [4,5,6], [7,8,9]])
+## Example Output: 
+## [8, 5, 2, 7, 4, 1, 6, 9, 3]
+## [7, 4, 8, 1, 9, 2, 5, 3, 6]
+
+## Non-nested items are shuffled without constraint
+Print(ShuffleWithoutAdjacents([[1,2,3], 11,12,13,14,15,16]))
+## output: [13, 11, 2, 14, 3, 15, 1, 16, 12]
+##         [13, 12, 2, 16, 15, 11, 1, 14, 3]
+##         [11, 1, 15, 2, 12, 16, 14, 13, 3]
+
+## Sometimes the constraints cannot be satisfied.  9 will always
+## appear in position 2
+Print(ShuffleWithoutAdjacents([[1,2,3], 9])
+## output: [3, 9, 1, 2]
+##         [2, 9, 3, 1]
+##         [3, 9, 2, 1]
+
+   \end{verbatim}
+
+\item[See Also]    	\verb+Shuffle()+, \verb+Sort()+, \verb+SortBy()+
+        \verb+ShuffleRepeat()+, \verb+ShuffleWithoutAdjacents()+
 \end{desc}
 
 \rl
@@ -711,6 +820,29 @@ Sum(<list>)
 \section{T}
 \rl
 
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol] \verb+Tab()+
+
+\item[Description]  Produces a tab character which can be added to a
+  string. If displayed in a text box, it will use a 4-item tab stop.
+
+\item[Usage]        \verb!Tab(3)!
+
+
+\item[Example]     
+\begin{verbatim}
+         Print("Number: "  Tab(1) + number )
+         Print("Value: "  Tab(1) + value )
+         Print("Size: "  Tab(1) + size )
+\end{verbatim}
+\item[See Also]
+\verb+Format()+, \verb+CR()+
+\end{desc}
+
+\rl     
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+Tan()+	
 
@@ -961,12 +1093,14 @@ Wait(15)
 \item[Name/Symbol]  	\verb+WaitForAllKeysUp()+
 
 \item[Description]	
-
+               Wait until all keyboard keys are in the up
+               position. This includes numlock, capslock, etc.
 \item[Usage]		
 
 \item[Example]	
 
 \item[See Also]	
+
 \end{desc}
 
 \rl
@@ -976,12 +1110,18 @@ Wait(15)
 \item[Name/Symbol]  	\verb+WaitForAnyKeyDown()+
 
 \item[Description]	
+             Waits for any key to be detected in the down position.
+             This includes numlock, capslock, etc, which can be locked
+             in the down position even if they are not being held
+             down.  Will return immediately if a key is being held
+             down before the function is called. 
 
 \item[Usage]		
 
 \item[Example]	
 
 \item[See Also]	
+            WaitForAnyKeyPress()
 \end{desc}
 
 \rl
@@ -990,7 +1130,7 @@ Wait(15)
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+WaitForAnyKeyDownWithTimeout()+
 
-\item[Description] Waits until any key is pressed, but will return
+\item[Description] Waits until any key is detected in the down position, but will return
   after a specified number of milliseconds.
 
 \item[Usage]
@@ -1025,7 +1165,7 @@ WaitForAnyKeyDownWithTimeout(<time>)
 \item[Name/Symbol]  	\verb+WaitForKeyListDown()+
 
 \item[Description] Returns when any one of the keys specified in the
-  argument is pressed.
+  argument is down. If a key is down when called, it will return immediately.
 
 \item[Usage]
 \begin{verbatim}
@@ -1038,6 +1178,79 @@ WaitForKeyListDown(["a","z"])
 \end{verbatim}
 
 \item[See Also]	
+ \end{desc}
+
+\rl
+
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+WaitForListKeyPressWithTimeout()+
+
+\item[Description] Returns when any one of the keys specified in the
+  argument is pressed. Will only return on a new keyboard event, and
+  so a previously pressed key will not trip this function, unlike \verb+WaitForKeyListDown()+
+
+\item[Usage]
+\begin{verbatim}
+ WaitForListKeyPress(<list-of-keys>,<timeout>,<style>)
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+WaitForListKeyPress()+
+
+\item[Description] Returns when any one of the keys specified in the
+  argument is pressed, or when the timeout has elapsed; whichever
+  comes first. Will only return on a new keyboard/timeout events, and
+  so a previously pressed key will not trip this function, unlike
+  \verb+WaitForKeyListDown()+.  The <style> parameter is currently
+  unused, but may be deployed in the future for differences in how
+  or when things should be returned.  Returns the value of the pressed
+  key.  If the function terminates by exceeding the <timeout>,
+  it will return the string \verb+"<unknown>"+.
+\end{verbatim}
+
+\item[Example]     	
+\begin{verbatim}
+  x <- WaitForListKeyPress(["a","z"],2000,1)
+  if(x == "<unknown>") 
+  {
+     Print("Did Not Respond.")
+  }
+   
+\end{verbatim}
+
+\item[See Also]	
+   \verb+WaitForKeyListDown+,\verb+WaitForListKeyPress+
+ \end{desc}
+
+\rl
+
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+WaitForListKeyPress()+
+
+\item[Description] Returns when any one of the keys specified in the
+  argument is pressed. Will only return on a new keyboard event, and
+  so a previously pressed key will not trip this function, unlike
+  \verb+WaitForKeyListDown()+  Returns a string indicating the value
+  of the keypress.
+
+\item[Usage]
+\begin{verbatim}
+WaitForListKeyPress(<list-of-keys>)
+\end{verbatim}
+
+\item[Example]     	
+\begin{verbatim}
+WaitForListKeyPress(["a","z"])
+\end{verbatim}
+
+\item[See Also]	
+   \verb+WaitForKeyListDown+,\verb+WaitForListKeyPressWithTimeout+
  \end{desc}
 
 \rl
@@ -1074,6 +1287,34 @@ WaitForKeyPress(<key>)
 \item[Example]	
 
 \item[See Also]	
+\end{desc}
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+WaitForNetworkConnection()+
+
+\item[Description]	Listens on a port, waiting until another computer or process
+  connects. Return a network object that can be used for communication.
+
+\item[Usage]
+\begin{verbatim}
+   WaitForNetworkConnection(<port>)
+\end{verbatim}
+
+\item[Example]	
+
+  See nim.pbl for example of two-way network connection.
+\begin{verbatim}
+
+  net <- WaitForNetworkConnection(1234)
+  dat <- GetData(net,20)
+  Print(dat)
+  CloseNetworkConnection(net)
+\end{verbatim}
+
+\item[See Also]
+  \verb+ConnectToHost+, \verb+ConnectToIP+,\verb+GetData+,\verb+WaitForNetworkConnection+,
+   \verb+SendData+,\verb+ConvertIPString+,\verb+CloseNetworkConnection+
 \end{desc}
 
 \rl

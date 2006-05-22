@@ -103,14 +103,15 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+EndOfLine+ &\verb+<filestream>+&Returns true if at end of line \\ 
 \verb+EndOfFile+ &\verb+<filestream>+&Returns true if at the end of a file\\ 
 \verb+ConnectToIP+ &\verb+<ip>+ \verb+<port>+&Connects to a port on another computer, returning network object.   \\
-\verb+ConnectToHost+&\verb+<hostname>+ \verb+<port>+&Connects to a port on another computer, returning network object.   \\
+\verb+ConnectToHost+&\verb+<hostname>+ \verb+<port>+&Connects to a port on another computer, returning network object.\\
 \verb+WaitForNetworkConnection+& & \\ 
 & \verb+<port>+&Listens on a port until another computer connects, returning a network object\\
 \verb+CloseNetworkConnection+& &\\
 & \verb+<network>+& Closes network connection\\
 \verb+SendData+&\verb+<network>+ \verb+<datastring>+&  Sends a data string over connection.\\
 \verb+GetData+&\verb+<network>+ \verb+<length>+&return a string from network connection\\
-\verb+ConvertIPString+&\verb+<ip-as-string>+&   \\
+\verb+ConvertIPString+&\verb+<ip-as-string>+&Converts an
+ip-number-as-string to usable address \\
 
 \addlinespace[0.2cm] 
 \midrule 
@@ -139,6 +140,7 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+RemoveObject+ &\verb+<object>+ \verb+<parent>+ &Removes an object from a parent window\\ 
 \verb+Show+ &\verb+<object>+ &Shows an object\\ 
 \verb+Hide+ &\verb+<object>+ &Hides an object\\ 
+\verb+ShowCursor+ &\verb+<object>+ &Hides or show mouse cursor.\\
 \verb+Draw+ &\verb+<object>+ &Redraws a widget and its children\\ 
 \verb+DrawFor+ &\verb+<object>+ \verb+<cycles>+ &Draws for exactly \verb+<cycles>+ cycles, then returns\\ 
 \verb+Circle+ &\verb+<x>+ \verb+<y>+ \verb+<r>+  \verb+<color>+ \verb+<filled>+&Creates circle with 
@@ -206,7 +208,7 @@ either a key to be pressed or a time to pass.\\
 \verb+TranslateKeyCode+ &\verb+<>+ &Converts a keycode to a key name\\ 
 \verb+TimeStamp+ & &Returns a string containing the current date and time\\ 
 \verb+GetPEBLVersion+ &\verb+<>+ &Returns a string indicating which version of PEBL you are using\\ 
-\verb+GetNIMHDemographics+ & \hspace{0.7cm}\verb+<code>+, \verb+<window>+, \verb+<file>+ & Asks NIMH-related questions\\ 
+\verb+GetNIMHDemographics+ & \hspace{0.7cm}\verb+<code>+ \verb+<window>+ \verb+<file>+ & Asks NIMH-related questions\\ 
 
 \verb+IsNumber+ & \verb+<variant>+ & Tests whether \verb+<variant>+ is a number \\ 
 \verb+IsInteger+ & \verb+<variant>+ & Tests whether \verb+<variant>+ is an integer-type number\\ 
@@ -257,7 +259,7 @@ list, in the order they appear in the original list\\
 \verb+Last+ &\verb+<list>+ & Returns the last item in a list.\\ 
 \verb+Merge+ &\verb+<list1>+ \verb+<list2>+& Combines two lists.\\ 
 \verb+Append+ &\verb+<list>+ \verb+<item>+ & Adds \verb+<item>+ to \verb+<list>+ \\ 
-\verb+List+ &\verb+<item1>+, \verb+<item2>...+ &Makes a list out of items\\ 
+\verb+List+ &\verb+<item1>+ \verb+<item2>...+ &Makes a list out of items\\ 
 \verb+Sort+ &\verb+<list>+ &Sorts a list by its values. \\ 
 \verb+SortBy+ &\verb+<list>+ \verb+<key>+ & Sorts list by the values in \verb+<key>+ \\ 
 \verb+Nth+ &\verb+<list>+ \verb+<n>+ &Returns the nth item in a list.\\ 
@@ -265,6 +267,9 @@ list, in the order they appear in the original list\\
 \verb+ExtractListItems+ &\verb+<list>+ \verb+<list-of-indices>+ & \\ 
 \verb+IsMember+ &\verb+<item>+ \verb+<list>+ & Checks whether \verb+<item>+ is a member of \verb+<list>+ \\ 
 \verb+Replace+ &\verb+<template>+ \verb+<replacementList>+ & Replaces items in a data structure\\ 
+\verb+Lookup+& \verb+<key>+ \verb+<keylist>+ \verb+<database>+&returns
+element in \verb+<database>+ corresponding to element of
+\verb+<keylist>+ that matches \verb+<key>+.\\
 \verb+RemoveDuplicates+ & & NOT IMPLEMENTED\\ 
 \verb+MakeMap+ & & NOT IMPLEMENTED\\ 
 \verb+Transpose+ &\verb+<list-of-lists>+ &Transposes a list of equal-length lists.\\ 
@@ -276,14 +281,21 @@ list, in the order they appear in the original list\\
 \midrule 
 \multicolumn{3}{c}{\textbf{String Management Functions}}\\ 
 \cmidrule(l{.5cm}r{.5cm}){1-3} 
+\verb+CR+ &\verb+<num>+ & Returns string with  \verb+<num>+ linefeeds.\\
+\verb+Tab+ &\verb+<num>+ & Returns string with  \verb+<num>+ tabs.\\
+\verb+Format+ &\verb+<value>+ \verb+<num>+ & Makes string from value
+exactly \verb+<num>+ characters by truncating or padding.\\
 
 \verb+Uppercase+ &\verb+<string>+ & Returns uppercased string\\ 
 \verb+Lowercase+ &\verb+<string>+ & Returns lowercased string\\ 
-\verb+SplitString+ &\verb+<string>+ \verb+<split>+ & Splits \verb+<string>+ into a list of 
-\verb+<split>+-delimited substrings \\ 
+\verb+ReplaceChar+&\verb+<string>+ \verb+<char>+ \verb+<char2>+\\
+& & Substitutes  \verb+<char2>+ for \verb+<char>+ in \verb+<string>+.\\
+\verb+SplitString+ &\verb+<string>+ \verb+<split>+ & Splits \verb+<string>+ into a list of \verb+<split>+-delimited substrings \\ 
 \verb+StringLength+ &\verb+<string>+ & Returns the length of a string\\ 
 \verb+SubString+ &\verb+<string>+ \verb+<position>+ \verb+<length>+& Returns a substring\\ 
-\verb+FindInString+ &\verb+<string>+ \verb+<key>+ & Returns position of \verb+<key>+ in \verb+<string>+\\ 
+\verb+FindInString+ &\verb+<string>+ \verb+<key>+ & Returns position
+of \verb+<key>+ in \verb+<string>+\\ 
+
 
 
 \end{longtable} 

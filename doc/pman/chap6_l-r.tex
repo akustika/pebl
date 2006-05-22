@@ -25,6 +25,44 @@ Last([1,2,3,444])	# == 444
 
 
 
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+LatinSquare()+
+
+\item[Description]	Quick and dirty latin square, taking on just one
+  list argument.
+
+\item[Usage]
+\begin{verbatim}
+LatinSquare(<list>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+Print(LatinSquare([11,12,13,14,15,16]))
+# Output:
+#[[11, 12, 13, 14, 15, 16]
+#, [12, 13, 14, 15, 16, 11]
+#, [13, 14, 15, 16, 11, 12]
+#, [14, 15, 16, 11, 12, 13]
+#, [15, 16, 11, 12, 13, 14]
+#, [16, 11, 12, 13, 14, 15]
+#]
+
+\end{verbatim}
+
+\item[See Also] \verb+DesignFullCounterBalance()+,
+  \verb+DesignBalancedSampling()+, \verb+DesignGrecoLatinSquare()+,
+  \verb+DesignLatinSquare()+, \verb+Repeat()+, \verb+RepeatList()+,
+  \verb+Shuffle()+
+
+\end{desc}
+
+\rl
+
+
+
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Line()+
 
@@ -71,7 +109,28 @@ List(1,2,3,444)		# == [1,2,3,444]
 
 \rl
 
+ 
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+ListToString()+
 
+\item[Description]	Converts a list of things to a single string
+
+\item[Usage]
+\begin{verbatim}
+  ListToString(<list>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+ListToString([1,2,3,444])		# == "123444"
+ListToString(["a","b","c","d","e"])		# == "abcde"
+
+\end{verbatim}
+
+\item[See Also] \verb+SubString+, \verb+StringLength+
+\end{desc}
+
+\rl
 
 
 \begin{desc}{Name/Symbol}
@@ -210,6 +269,48 @@ Ln(<num>)
 \item[Example]	
 
 \item[See Also]	\verb+Log()+, \verb+Log2()+, \verb+LogN()+, \verb+Exp()+     
+\end{desc}
+
+\rl
+
+
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+Lookup()+
+
+\item[Description] Returns
+element in \verb+<database>+ corresponding to element of
+\verb+<keylist>+ that matches \verb+<key>+.
+
+\item[Usage]		
+\begin{verbatim}
+Lookup(<key>,<keylist>,<database>)
+\end{verbatim}
+
+\item[Example]	
+
+\begin{verbatim}
+ keys     <- [1,2,3,4,5]
+ database <- ["market","home","roast beef","none","wee wee wee"]
+ Print(Lookup(3,keys,database))) 
+
+## Or, do something like this:
+  
+data  <- [["punky","brewster"],
+          ["arnold","jackson"],
+          ["richie","cunningham"],
+          ["alex","keaton"]]
+
+d2 <- Transpose(data)
+key <- First(data)
+
+Print(Lookup("alex", key, data))
+##Returns ["alex","keaton"]
+\end{verbatim}
+\item[See Also]	
 \end{desc}
 
 \rl
@@ -883,8 +984,9 @@ Print("Another line")
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Quantile()+
 
-\item[Description]	NOT IMPLEMENTED. Returns the \verb+<num>+ quantile of
-		the numbers in \verb+<list>+.
+\item[Description]	Returns the \verb+<num>+ quantile of
+		the numbers in \verb+<list>+. \verb+<num>+ should be  between
+        0 and 100
 
 \item[Usage]		
 \begin{verbatim}
@@ -892,7 +994,10 @@ Quantile(<list>, <num>)
 \end{verbatim}
 
 \item[Example]	
-
+ \begin{verbatim}
+      ##Find 75th percentile to use as a threshold.
+      thresh <- Quantile(rts,75) 
+ \end{verbatim}
 \item[See Also]	\verb+StDev()+, \verb+Median()+, \verb+Mean()+, \verb+Max()+, \verb+Min()+
 \end{desc}
 
@@ -1345,6 +1450,7 @@ RepeatList([1,2],3) # == [1,2,1,2,1,2]
 \rl
 
 
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	Replace()
 
@@ -1372,6 +1478,35 @@ Print(Replace(x,rep))
 \end{verbatim}
 
 \item[See Also]	
+\verb+ReplaceChar()+
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	ReplaceChar()
+
+\item[Description]  	Substitutes  \verb+<char2>+ for \verb+<char>+
+  in \verb+<string>+. Useful for saving subject entry data in a file;
+  replacing spaces with some other character.
+
+\item[Usage]        	
+\begin{verbatim}
+ReplaceChar(<string>,<char>,<char2>)
+\end{verbatim}
+			  
+\item[Example]     	
+\begin{verbatim}
+
+x <- ["Sing a song of sixpence"]
+rep <- ReplaceChar(x," ", "_")
+Print(rep)
+# Result:  Sing_a_song_of_sixpence
+\end{verbatim}
+
+\item[See Also]	
+ for list items: \verb+Replace()+ 
 \end{desc}
 
 \rl

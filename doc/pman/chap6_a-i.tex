@@ -608,24 +608,32 @@ Ceiling(-33.02) 	# == -33
 
 \rl
 
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+ChooseN()+
 
-\item[Description] 	NOT IMPLEMENTED.  Chooses \verb+<number>+ items from a list, without replacement.
+\item[Description] Samples \verb+<number>+ items from list, returning
+  a list in the original order. Items are sampled without replacement, so
+  once an item is chosen it will not be chosen again. If
+  \verb+<number>+ is larger than the length of the list, the entire
+  list is returned in order.  It differs from \verb+SampleN+ in that
+  \verb+ChooseN+ returns items in the order they appeared in the
+  originial list, but \verb+SampleN+ is shuffled. 
 
-\item[Usage] 
+\item[Usage]       	
 \begin{verbatim}
-ChooseN(<list>, <number>)
+ChooseN(<list>, <n>)
 \end{verbatim}
 
-\item[Example]	
+\item[Example]   	
+\begin{verbatim}
+ChooseN([1,1,1,2,2], 5)     # Returns 5 numbers
+ChooseN([1,2,3,4,5,6,7], 3) # Returns 3 numbers from 1 and 7
+\end{verbatim}
 
-\item[See Also]	
+\item[See Also]    	\verb+SampleN()+, \verb+SampleNWithReplacement()+, \verb+Subset()+
 \end{desc}
 
 \rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Circle()+
@@ -689,9 +697,9 @@ Circle(<x>, <y>, <r>,<color>)
 \begin{verbatim}
   net <- WaitForNetworkConnection("localhost",1234)
   SendData(net,"Watson, come here. I need you.")
-  CloseNetwokrConnection(net)
+  CloseNetworkConnection(net)
 \end{verbatim}
-
+Also see nim.pbl for example of two-way network connection.
 \item[See Also]
   \verb+ConnectToIP+,\verb+ConnectToHost+,\verb+GetData+,\verb+WaitForNetworkConnection+,
    \verb+SendData+,\verb+ConvertIPString+
@@ -699,6 +707,99 @@ Circle(<x>, <y>, <r>,<color>)
 
 \rl
 
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+ConnectToHost()+
+
+\item[Description]	Connects to a host computer waiting for a
+  connection on <port>, returning a network object that can be used to
+  communicate.  Host is a text hostname, like \verb+"myname.indiana.edu"+, or
+  use \verb+"localhost"+ to specify your current computer.
+
+\item[Usage]
+\begin{verbatim}
+   ConnectToHost(<hostname>,<port>)
+\end{verbatim}
+
+\item[Example]	
+
+  See nim.pbl for example of two-way network connection.
+\begin{verbatim}
+  net <- ConnectToHost("localhost",1234)
+  dat <- GetData(net,20)
+  Print(dat)
+  CloseNetworkConnection(net)
+\end{verbatim}
+
+\item[See Also]
+  \verb+ConnectToIP+,\verb+GetData+,\verb+WaitForNetworkConnection+,
+   \verb+SendData+,\verb+ConvertIPString+,\verb+CloseNetworkConnection+
+\end{desc}
+
+\rl
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+ConnectToIP()+
+
+\item[Description]	Connects to a host computer waiting for a
+  connection on <port>, returning a network object that can be used to
+  communicate.  \verb+<ip>+ is a numeric ip address, which must be
+  created with the \verb+ConvertIPString(ip)+ function. 
+
+\item[Usage]
+\begin{verbatim}
+   ConnectToIP(<ip>,<port>)
+\end{verbatim}
+
+\item[Example]	
+
+  See nim.pbl for example of two-way network connection.
+\begin{verbatim}
+  ip <- ConvertIPString("192.168.0.1")
+  net <- ConnectToHost(ip,1234)
+  dat <- GetData(net,20)
+  Print(dat)
+  CloseNetworkConnection(net)
+\end{verbatim}
+
+\item[See Also]
+  \verb+ConnectToHost+,\verb+GetData+,\verb+WaitForNetworkConnection+,
+   \verb+SendData+,\verb+ConvertIPString+,\verb+CloseNetworkConnection+
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+ConvertIPString()+
+
+\item[Description]	Converts an IP address specified as a string into
+  an integer that can be used by ConnectToIP.
+
+\item[Usage]
+\begin{verbatim}
+   ConvertIPString(<ip-as-string>)
+\end{verbatim}
+
+\item[Example]	
+
+  See nim.pbl for example of two-way network connection.
+\begin{verbatim}
+  ip <- ConvertIPString("192.168.0.1")
+  net <- ConnectToHost(ip,1234)
+  dat <- GetData(net,20)
+  Print(dat)
+  CloseNetworkConnection(net)
+\end{verbatim}
+
+\item[See Also]
+  \verb+ConnectToHost+, \verb+ConnectToIP+,\verb+GetData+,\verb+WaitForNetworkConnection+,
+   \verb+SendData+,\verb+ConvertIPString+,\verb+CloseNetworkConnection+
+\end{desc}
+
+\rl
 
 
 \begin{desc}{Name/Symbol}
@@ -715,6 +816,29 @@ Circle(<x>, <y>, <r>,<color>)
 
 \item[See Also]     	\verb+Sin()+, \verb+Tan()+, \verb+ATan()+, \verb+ACos()+, \verb+ATan()+
 \end{desc}
+
+\rl     
+
+
+\begin{desc}{Name/Symbol}
+
+\item[Name/Symbol] \verb+CR()+
+
+\item[Description]  Produces a <number> linefeeds which can be added to a
+  string and printed or saved to a file.
+
+\item[Usage]        \verb!CR(<number>)!
+
+\item[Example]     
+\begin{verbatim}
+         Print("Number: "  Tab(1) + number  + CR(2))
+         Print("We needed space before this line.")
+\end{verbatim}
+\item[See Also]
+\verb+Format()+, \verb+Tab()+
+\end{desc}
+
+
 
 \rl
 
@@ -740,7 +864,7 @@ CrossFactorWithoutDuplicates([a,b,c])
 
 \item[See Also] \verb+DesignFullCounterBalance()+,
   \verb+DesignBalancedSampling()+, \verb+DesignGrecoLatinSquare()+,
-  \verb+DesignLatinSquare()+, \verb+Repeat()+, \verb+RepeatList()+,
+  \verb+DesignLatinSquare()+, \verb+Repeat()+, \verb+RepeatList()+,\verb+LatinSquare()+
   \verb+Shuffle()+
 \end{desc}
 
@@ -823,7 +947,7 @@ DesignBalancedSampling([1,2,3,4,5],12)
 
 \item[See Also]	\verb+CrossFactorWithoutDuplicates()+, \verb+DesignFullCounterBalance()+,
   		\verb+DesignGrecoLatinSquare()+, \verb+DesignLatinSquare()+, \verb+Repeat()+, 
-		\verb+RepeatList()+, \verb+Shuffle()+
+		\verb+RepeatList()+, \verb+Shuffle()+,\verb+LatinSquare()+
 
 \end{desc}
 
@@ -854,7 +978,7 @@ DesignFullCounterbalance(a,b)	# == [[1,9],[1,8],[1,7],
 				#     [3,9],[3,8],[3,7]]
 \end{verbatim}
 
-\item[See Also] \verb+CrossFactorWithoutDuplicates()+,
+\item[See Also] \verb+CrossFactorWithoutDuplicates()+,\verb+LatinSquare()+
   \verb+DesignBalancedSampling()+, \verb+DesignGrecoLatinSquare()+,
   \verb+DesignLatinSquare()+, \verb+Repeat()+, \verb+RepeatList()+,
   \verb+Shuffle()+
@@ -890,7 +1014,7 @@ Print(DesignGrecoLatinSquare(x,y,z))
 #               [[a, r, y], [b, p, z], [c, q, x]]]
 \end{verbatim}
 
-\item[See Also] \verb+CrossFactorWithoutDuplicates()+,
+\item[See Also] \verb+CrossFactorWithoutDuplicates()+,\verb+LatinSquare()+
   \verb+DesignFullCounterBalance()+, \verb+DesignBalancedSampling()+,
   \verb+DesignLatinSquare()+, \verb+Repeat()+, \verb+RepeatList()+,
   \verb+Shuffle()+
@@ -925,7 +1049,7 @@ design <- DesignLatinSquare(order,treatment)
 
 \item[See Also] \verb+CrossFactorWithoutDuplicates()+,
   \verb+DesignFullCounterBalance()+, \verb+DesignBalancedSampling()+,
-  \verb+DesignGrecoLatinSquare()+, \verb+Repeat()+,
+  \verb+DesignGrecoLatinSquare()+, \verb+Repeat()+, \verb+LatinSquare()+
   \verb+RepeatList()+, \verb+Shuffle()+, \verb+Rotate()+
 \end{desc}
 
@@ -1540,16 +1664,32 @@ FoldList([1,2,3,4,5,6,7,8],2)	# == [[1,2],[3,4],[5,6],[7,8]]
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Format()+            
 
-\item[Description]	UNIMPLEMENTED.
+\item[Description]	Formats the printing of values to ensure the
+  proper spacing. It will either truncate or pad <value> with spaces
+  so that it ends up exactly <length> characters long.  Character
+  padding is at the end
+ 
 
 \item[Usage]
 \begin{verbatim}
-Format(<value>)
+Format(<value>, <length>)
 \end{verbatim}
 
 \item[Example]	
+\begin{verbatim}
+
+  x <- 33.23425225
+  y <- 23.3
+  Print("["+Format(x,5)+"]")
+  Print("["+Format(y,5)+"]")
+  ## Output: 
+  ## [33.23 ]
+  ## [23.3  ]
+\end{verbatim}
+         
 
 \item[See Also]	
+\verb+CR()+ \verb+Tab()+
 \end{desc}
 
 \rl
