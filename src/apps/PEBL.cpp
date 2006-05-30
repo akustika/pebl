@@ -234,20 +234,22 @@ int PEBLInterpret( int argc, char *argv[] )
             else if(strcmp(argv[j],"--driver")==0)
                 {
                     if(j+1 < argc)
-                    {
-                    j++;
- 
-					//This now works on Windows; windib versus directx.
-	                // setenv("SDL_VIDEODRIVER", argv[j] ,1);
-					_putenv((std::string("SDL_VIDEODRIVER=") + std::string(argv[j])).c_str());
-                    }
+                        {
+                            j++;
+                            
+                            //This now works on Windows; windib versus directx.
+#if defined(PEBL_UNIX)
+                            setenv("SDL_VIDEODRIVER", argv[j] ,1);
+#else
+                            _putenv((std::string("SDL_VIDEODRIVER=") + std::string(argv[j])).c_str());
+#endif
+                        }
                 }
-
             else if(strcmp(argv[j],"--display")==0)
                 {
                     displaySize = argv[++j];
                 }
-
+            
             else if(strcmp(argv[j],"--depth")==0)
                 {
                     depth = argv[++j];
@@ -263,7 +265,7 @@ int PEBLInterpret( int argc, char *argv[] )
                     windowed = true;
                 }
         }
-    
+            
 
     //Now, set the display modes variables based on the command-line options.
     displayMode = PEBLUtility::GetVideoMode(displaySize);
@@ -385,9 +387,9 @@ int PEBLInterpret( int argc, char *argv[] )
             delete myLoader;
         }
 
-}
+        }
 
-void  CaptureSignal(int signal)
+    void  CaptureSignal(int signal)
 {
     cerr << "Exiting PEBL because of captured signal.\n";
 
