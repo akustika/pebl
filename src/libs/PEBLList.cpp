@@ -38,7 +38,7 @@
 #include <string>
 #include <vector>
 
-#include <iostream.h>
+#include <iostream>
 
 using std::ostream;
 using std::cerr;

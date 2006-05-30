@@ -26,7 +26,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "PComplexData.h"
 
-#include <iostream.h>
+#include <iostream>
 
 #include "../utility/PError.h"
 #include "../utility/rc_ptrs.h"

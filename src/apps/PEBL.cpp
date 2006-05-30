@@ -45,7 +45,6 @@
 #include "../devices/PEventLoop.h"
 #include "Globals.h"
 
-
 #include <iostream>
 #include <signal.h>
 #include <list>
@@ -61,6 +60,11 @@
 //For running at higher priority.
 #include <windows.h>
 #endif
+
+#ifdef WIN32
+#include <time.h>
+#endif
+
 
 using std::cerr;
 using std::endl;
@@ -121,7 +125,8 @@ int PEBLInterpret( int argc, char *argv[] )
     //-----------------------------------------------------------
     //        Process all files on the command-line
     //-----------------------------------------------------------
-    string inputfilename = Evaluator::gPath.FindFile(*i);
+	//std::cout << *i << endl;
+	string inputfilename = Evaluator::gPath.FindFile(*i);
     head = NULL;
     if(inputfilename != "")
         {
@@ -231,10 +236,10 @@ int PEBLInterpret( int argc, char *argv[] )
                     if(j+1 < argc)
                     {
                     j++;
-#ifdef PEBL_UNIX        
- //This doesn't work on Windows.
-                    setenv("SDL_VIDEODRIVER", argv[j] ,1);
-#endif 
+ 
+					//This now works on Windows; windib versus directx.
+	                // setenv("SDL_VIDEODRIVER", argv[j] ,1);
+					_putenv((std::string("SDL_VIDEODRIVER=") + std::string(argv[j])).c_str());
                     }
                 }
 

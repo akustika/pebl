@@ -27,9 +27,12 @@
 #ifndef __DEVICESTATE_H__
 #define __DEVICESTATE_H__
 
-#include <iostream.h>
+#include <iostream>
 #include "PDevice.h"
 #include "PEvent.h"
+
+using std::ostream;
+using std::cout;
 
 // This is a hypothetical 'state' of a device, which can be tested by a real device
 // to see if it is true about that device.

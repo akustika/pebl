@@ -1,14 +1,24 @@
 VERSION 5.00
 Begin VB.Form Form1 
    Caption         =   "PEBL Launcher"
-   ClientHeight    =   8475
-   ClientLeft      =   18465
-   ClientTop       =   2250
+   ClientHeight    =   9285
+   ClientLeft      =   17865
+   ClientTop       =   1920
    ClientWidth     =   11895
    Icon            =   "Form1.frx":0000
    LinkTopic       =   "Form1"
-   ScaleHeight     =   8475
+   ScaleHeight     =   9285
    ScaleWidth      =   11895
+   Begin VB.ComboBox Combo3 
+      Height          =   315
+      ItemData        =   "Form1.frx":08CA
+      Left            =   240
+      List            =   "Form1.frx":08D4
+      Style           =   2  'Dropdown List
+      TabIndex        =   17
+      Top             =   1200
+      Width           =   1575
+   End
    Begin VB.TextBox Text3 
       Height          =   375
       Left            =   2040
@@ -63,9 +73,9 @@ Begin VB.Form Form1
    End
    Begin VB.ComboBox Combo2 
       Height          =   315
-      ItemData        =   "Form1.frx":08CA
+      ItemData        =   "Form1.frx":08E9
       Left            =   1920
-      List            =   "Form1.frx":08DA
+      List            =   "Form1.frx":08F9
       Style           =   2  'Dropdown List
       TabIndex        =   9
       Top             =   1200
@@ -73,9 +83,9 @@ Begin VB.Form Form1
    End
    Begin VB.ComboBox Combo1 
       Height          =   315
-      ItemData        =   "Form1.frx":08FE
+      ItemData        =   "Form1.frx":091D
       Left            =   1920
-      List            =   "Form1.frx":0917
+      List            =   "Form1.frx":0936
       Style           =   2  'Dropdown List
       TabIndex        =   8
       Top             =   840
@@ -192,10 +202,14 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Dim myPathname
-Dim PEBL_Executable
+Dim PEBL_Executable As String
+Dim exePath As String
+
 Dim MyFilenames
 Dim NUMBER
 Private SelectedTab As Integer
+
+
 
 Private Sub Command1_Click()
 
@@ -225,6 +239,17 @@ For j = 0 To File1.ListCount - 1
 Next j
 Debug.Print Check1
 
+'add driver
+Select Case Combo3.ListIndex
+  Case 0:
+     Execute = Execute + " --driver windib"
+ 
+  Case 1:
+     Execute = Execute + " --driver directx"
+
+End Select
+
+
 'add fullscreen mode
 If Check1 Then
  Execute = Execute + " --fullscreen "
@@ -235,20 +260,20 @@ End If
 'add display size
 Execute = Execute + " --display "
 Select Case Combo1.ListIndex
-Case 1:
+Case 0:
  Execute = Execute + " 512x384 "
-Case 2:
+Case 1:
  Execute = Execute + " 640x480 "
-Case 3:
+Case 2:
  Execute = Execute + " 800x600 "
 
-Case 4:
+Case 3:
  Execute = Execute + " 960x720 "
-Case 5:
+Case 4:
  Execute = Execute + " 1024x786 "
-Case 6:
+Case 5:
  Execute = Execute + " 1152x864 "
-Case 7:
+Case 6:
  Execute = Execute + " 1280x1024 "
 
 Case Else:
@@ -258,22 +283,22 @@ End Select
 'add color depth
 Execute = Execute + " --depth "
 Select Case Combo2.ListIndex
-Case 1:
+Case 0:
  Execute = Execute + " 15 "
-Case 2:
+Case 1:
  Execute = Execute + " 16 "
-Case 3:
+Case 2:
  Execute = Execute + " 24 "
 
-Case 4:
+Case 3:
  Execute = Execute + " 32 "
 
 Case Else:
 Execute = Execute + " 16 "
 End Select
-
-
- 
+  'MsgBox Execute
+  'MsgBox CurDir()
+  
  'execute the command in a separate process, waiting for it to return.
  ExecCmd (Execute)
  
@@ -284,7 +309,7 @@ Private Sub reload()
 
  Set fs = CreateObject("Scripting.FileSystemObject")
  
- sFilename = File1.Path & "\stdout.txt"
+ sFilename = exePath & "stdout.txt"
  If fs.fileexists(sFilename) Then
    hFile = FreeFile
    Open sFilename For Input As #hFile
@@ -294,7 +319,7 @@ Private Sub reload()
    Text2(0).Text = "Failed to load [" & sFilename & "]."
  End If
  
- sFilename = File1.Path & "\stderr.txt"
+ sFilename = exePath & "stderr.txt"
  If fs.fileexists(sFilename) Then
    hFile = FreeFile
    Open sFilename For Input As #hFile
@@ -331,20 +356,26 @@ End Sub
 
 Private Sub Dir1_Change()
 File1.Path = Dir1.Path
+ChDir Dir1.Path
+
 End Sub
 
 Private Sub Drive1_Change()
 Dir1.Path = Drive1.Drive
+
 End Sub
 
 Private Sub Form_Load()
 
 Combo1.ListIndex = 2
 Combo2.ListIndex = 2
+Combo3.ListIndex = 1
+
 'Try to find the file pebl-init.txt.  If it doesn't exist,
 'no worries
 If Len(Dir$("pebl-init.txt")) = 0 Then
   MsgBox ("Unable to find file pebl-init.txt in current directory.")
+
   End
 Else
  Open "pebl-init.txt" For Input As #1
@@ -352,6 +383,15 @@ Else
  Input #1, PEBL_Executable
  'Debug.Print ("PEBL Executable: [" + PEBL_Executable + "]")
 
+ 'parse the filename to find out where stdout and stderr will be.
+   newpath = Split(PEBL_Executable, "\")
+   exePath = ""
+   l = UBound(newpath)
+    
+    For i = 0 To l - 1
+       exePath = exePath & newpath(i) & "\"
+    Next i
+   
  Input #1, myPathname
  'Debug.Print ("Pathname: [" + myPathname + "]")
 
@@ -371,6 +411,9 @@ MyFilenames = Split(myfilenamelist)
 
 'Set the directory & file selector
  Dir1.Path = myPathname
+ ChDir Dir1.Path
+ 'MsgBox CurDir()
+ 
  
 'Now, go through the file1 selector list, selecting
 'any entries listed.
@@ -438,4 +481,5 @@ Text2(1 - clicked).Visible = False
 SelectedTab = clicked
 
 End Sub
+
 

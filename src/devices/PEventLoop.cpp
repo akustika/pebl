@@ -36,6 +36,7 @@
 #include "../libs/PEBLEnvironment.h"
 #include <iostream>
 
+using std::flush;
 
 extern PlatformEventQueue * gEventQueue;
 

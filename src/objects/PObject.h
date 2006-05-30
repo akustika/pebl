@@ -34,14 +34,13 @@
 
 #include "../base/Variant.h"
 
-enum ObjectValidationError
-    {
-        OVE_SUCCESS = 0,
-        OVE_INVALID_PROPERTY_NAME,
-        OVE_INVALID_PROPERTY_TYPE,
-        OVE_INVALID_PROPERTY_VALUE
-    };
-
+enum ObjectValidationError {
+    OVE_SUCCESS = 0,
+    OVE_VALID = 0,
+    OVE_INVALID_PROPERTY_NAME,
+    OVE_INVALID_PROPERTY_TYPE,
+    OVE_INVALID_PROPERTY_VALUE
+};
 ///
 /// This class, a subtype of PComplexData, is the base Object class
 /// subtypes include sounds, visual objects, etc.

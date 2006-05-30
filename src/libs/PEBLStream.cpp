@@ -37,9 +37,10 @@
 
 
 #include <list>
-#include <iostream.h>
+#include <iostream>
 
-
+using std::cout;
+using std::flush;
 using std::cerr;
 using std::endl;
 

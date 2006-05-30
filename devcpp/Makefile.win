@@ -5,9 +5,9 @@ CPP  = g++.exe
 CC   = gcc.exe
 WINDRES = windres.exe
 RES  = pebl_private.res
-OBJ  = obj/Variant.o obj/PComplexData.o obj/PList.o obj/PlatformEnvironment.o obj/PlatformFont.o obj/PlatformImageBox.o obj/PlatformKeyboard.o obj/PlatformTimer.o obj/PlatformWidget.o obj/PlatformWindow.o obj/SDLUtility.o obj/PColor.o obj/PEnvironment.o obj/PFont.o obj/PImageBox.o obj/PWidget.o obj/PWindow.o obj/PEBLUtility.o obj/PDevice.o obj/PKeyboard.o obj/PTimer.o obj/DeviceState.o obj/PEventLoop.o obj/PEBL.o obj/Evaluator.o obj/FunctionMap.o obj/grammar.tab.o obj/lex.yy.o obj/Loader.o obj/PNode.o obj/VariableMap.o obj/PEBLEnvironment.o obj/PEBLList.o obj/PEBLMath.o obj/PEBLObjects.o obj/PEBLStream.o obj/PStream.o obj/PEBLPath.o obj/PError.o obj/PAudioOut.o obj/PlatformAudioOut.o obj/PlatformLabel.o obj/PLabel.o obj/PTextObject.o obj/PlatformTextBox.o obj/PTextBox.o obj/PEventQueue.o obj/PEvent.o obj/PlatformEventQueue.o obj/PEBLString.o obj/PEBLObject.o obj/PDrawObject.o obj/PlatformDrawObject.o $(RES)
-LINKOBJ  = obj/Variant.o obj/PComplexData.o obj/PList.o obj/PlatformEnvironment.o obj/PlatformFont.o obj/PlatformImageBox.o obj/PlatformKeyboard.o obj/PlatformTimer.o obj/PlatformWidget.o obj/PlatformWindow.o obj/SDLUtility.o obj/PColor.o obj/PEnvironment.o obj/PFont.o obj/PImageBox.o obj/PWidget.o obj/PWindow.o obj/PEBLUtility.o obj/PDevice.o obj/PKeyboard.o obj/PTimer.o obj/DeviceState.o obj/PEventLoop.o obj/PEBL.o obj/Evaluator.o obj/FunctionMap.o obj/grammar.tab.o obj/lex.yy.o obj/Loader.o obj/PNode.o obj/VariableMap.o obj/PEBLEnvironment.o obj/PEBLList.o obj/PEBLMath.o obj/PEBLObjects.o obj/PEBLStream.o obj/PStream.o obj/PEBLPath.o obj/PError.o obj/PAudioOut.o obj/PlatformAudioOut.o obj/PlatformLabel.o obj/PLabel.o obj/PTextObject.o obj/PlatformTextBox.o obj/PTextBox.o obj/PEventQueue.o obj/PEvent.o obj/PlatformEventQueue.o obj/PEBLString.o obj/PEBLObject.o obj/PDrawObject.o obj/PlatformDrawObject.o $(RES)
-LIBS =  -L"C:/MinGW/mingw32/lib" -L"C:/MinGW/lib" -L"C:/msys/1.0/local/lib" -lmingw32 -lSDLmain -lSDL -mwindows -lSDL_image -lSDL_ttf -lSDL_gfx 
+OBJ  = obj/Variant.o obj/PComplexData.o obj/PList.o obj/PlatformEnvironment.o obj/PlatformFont.o obj/PlatformImageBox.o obj/PlatformKeyboard.o obj/PlatformTimer.o obj/PlatformWidget.o obj/PlatformWindow.o obj/SDLUtility.o obj/PColor.o obj/PEnvironment.o obj/PFont.o obj/PImageBox.o obj/PWidget.o obj/PWindow.o obj/PEBLUtility.o obj/PDevice.o obj/PKeyboard.o obj/PTimer.o obj/DeviceState.o obj/PEventLoop.o obj/PEBL.o obj/Evaluator.o obj/FunctionMap.o obj/grammar.tab.o obj/lex.yy.o obj/Loader.o obj/PNode.o obj/VariableMap.o obj/PEBLEnvironment.o obj/PEBLList.o obj/PEBLMath.o obj/PEBLObjects.o obj/PEBLStream.o obj/PStream.o obj/PEBLPath.o obj/PError.o obj/PAudioOut.o obj/PlatformAudioOut.o obj/PlatformLabel.o obj/PLabel.o obj/PTextObject.o obj/PlatformTextBox.o obj/PTextBox.o obj/PEventQueue.o obj/PEvent.o obj/PlatformEventQueue.o obj/PEBLString.o obj/PEBLObject.o obj/PDrawObject.o obj/PlatformDrawObject.o obj/PNetwork.o obj/PlatformNetwork.o $(RES)
+LINKOBJ  = obj/Variant.o obj/PComplexData.o obj/PList.o obj/PlatformEnvironment.o obj/PlatformFont.o obj/PlatformImageBox.o obj/PlatformKeyboard.o obj/PlatformTimer.o obj/PlatformWidget.o obj/PlatformWindow.o obj/SDLUtility.o obj/PColor.o obj/PEnvironment.o obj/PFont.o obj/PImageBox.o obj/PWidget.o obj/PWindow.o obj/PEBLUtility.o obj/PDevice.o obj/PKeyboard.o obj/PTimer.o obj/DeviceState.o obj/PEventLoop.o obj/PEBL.o obj/Evaluator.o obj/FunctionMap.o obj/grammar.tab.o obj/lex.yy.o obj/Loader.o obj/PNode.o obj/VariableMap.o obj/PEBLEnvironment.o obj/PEBLList.o obj/PEBLMath.o obj/PEBLObjects.o obj/PEBLStream.o obj/PStream.o obj/PEBLPath.o obj/PError.o obj/PAudioOut.o obj/PlatformAudioOut.o obj/PlatformLabel.o obj/PLabel.o obj/PTextObject.o obj/PlatformTextBox.o obj/PTextBox.o obj/PEventQueue.o obj/PEvent.o obj/PlatformEventQueue.o obj/PEBLString.o obj/PEBLObject.o obj/PDrawObject.o obj/PlatformDrawObject.o obj/PNetwork.o obj/PlatformNetwork.o $(RES)
+LIBS =  -L"C:/MinGW/mingw32/lib" -L"C:/MinGW/lib" -L"C:/msys/1.0/local/lib" -lmingw32 -lSDLmain -lSDL -mwindows -lSDL_image -lSDL_ttf -lSDL_gfx -lSDL_net 
 INCS =  -I"C:/MinGW/include"  -I"C:/msys/1.0/local/include/SDL" 
 CXXINCS =  -I"C:/MinGW/include/c++/3.2.3"  -I"C:/msys/1.0/local/include"  -I"C:/msys/1.0/local/include/SDL" 
 BIN  = ../bin/pebl.exe
@@ -183,6 +183,12 @@ obj/PDrawObject.o: ../src/objects/PDrawObject.cpp
 
 obj/PlatformDrawObject.o: ../src/platforms/sdl/PlatformDrawObject.cpp
 	$(CPP) -c ../src/platforms/sdl/PlatformDrawObject.cpp -o obj/PlatformDrawObject.o $(CXXFLAGS)
+
+obj/PNetwork.o: ../src/devices/PNetwork.cpp
+	$(CPP) -c ../src/devices/PNetwork.cpp -o obj/PNetwork.o $(CXXFLAGS)
+
+obj/PlatformNetwork.o: ../src/platforms/sdl/PlatformNetwork.cpp
+	$(CPP) -c ../src/platforms/sdl/PlatformNetwork.cpp -o obj/PlatformNetwork.o $(CXXFLAGS)
 
 pebl_private.res: pebl_private.rc 
 	$(WINDRES) -i pebl_private.rc -I rc -o pebl_private.res -O coff 

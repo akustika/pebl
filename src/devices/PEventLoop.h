@@ -27,10 +27,11 @@
 #ifndef __PEVENTLOOP_H__
 #define __PEVENTLOOP_H__
 
-#include <iostream.h>
+#include <iostream>
 #include <vector>
 #include "DeviceState.h"
 #include "PEvent.h"
+
 
 class PDevice;
 class PList;

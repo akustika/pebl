@@ -68,7 +68,7 @@ FunctionMap::~FunctionMap()
 void FunctionMap::Destroy()
 {
 
-   //Delete mFunctionMap if necessary.
+    //Delete mFunctionMap if necessary.
     //go through each function and delete the opnode,  because
     //it is a pointer that is held nowhere else.
     std::map<std::string, PNode*>::iterator i = mFunctionMap.begin();

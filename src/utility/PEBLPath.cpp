@@ -45,7 +45,7 @@ PEBLPath::PEBLPath()
 
 void PEBLPath::Initialize(std::list<std::string> files)
 {
-
+	//std::cout << "Initializing path\n";
 #if defined PEBL_UNIX
     //On unix, add the following paths:
     //current working directory,
@@ -87,9 +87,10 @@ void PEBLPath::Initialize(std::list<std::string> files)
     //library functions
     AddToPathList(MergePathAndFile(basedir, "pebl-lib/"));
 
-#elif defined PEBL_WIN32
-    //On Windows add the following paths:
-    
+/*#elif defined(PEBL_WIN32) or defined(WIN32)*/
+#else
+	//On Windows add the following paths:
+	//std::cout << "I'm adding all kinds of paths\n";
     //current working directory
     AddToPathList(".\\");
     
@@ -222,10 +223,13 @@ bool PEBLPath::IsDirectory(const string & pathname)
 {
 #if defined PEBL_UNIX
     char separator = '/';
-#elif defined PEBL_WIN32
+#elif defined PEBL_WIN32 
     char separator = '\\';
+#elif defined WIN32
+	char separator = '\\';
 #endif
     
+
     //This may not be the best way to do it; we maybe
     //should check to see using OS library calls.
     if(pathname[pathname.size()-1] == separator)

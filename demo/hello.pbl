@@ -69,5 +69,6 @@ define Start (lParameter)
   Draw()
   
   Wait(1000)
+  WaitForAnyKeyPress()
 
 }

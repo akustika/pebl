@@ -115,7 +115,7 @@ void SDLUtility::DrawLine(SDL_Surface *surface, int x1, int y1, int x2, int y2, 
     
     //We need a rough estimate of the number of steps to take.  
     
-    int length = (int)(sqrt((x1-x2) * (x1 - x2) + (y1-y2)*(y1-y2)) * 2);
+    int length = (int)(sqrt((double)(x1-x2) * (x1 - x2) + (y1-y2)*(y1-y2)) * 2);
     
     //Draw twice for each intermediate pixel.
     float deltax = (float)(x2 - x1) / length;

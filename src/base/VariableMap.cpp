@@ -57,14 +57,13 @@ VariableMap::~VariableMap()
 
     //Delete mVariableMap if necessary.
     //Erase things by hand, for debugging's sake
-
     std::map<std::string, Variant>::iterator i = mVariableMap.begin();
-    while(i !=  mVariableMap.end())
-        {
 
-            mVariableMap.erase(i);
-            i++;
-        }
+   // while(i !=  mVariableMap.end())
+   //     {
+   //        i = mVariableMap.begin();
+   //        mVariableMap.erase(i);
+   //     }
     mVariableMap.clear();
 
 }

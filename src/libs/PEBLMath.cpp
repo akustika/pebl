@@ -38,6 +38,10 @@
 #include <string>
 #include <strstream>
 
+#ifdef WIN32
+#include <time.h>
+#endif
+
 using std::string;
 
 //Putatively precise to 50 digits:
@@ -878,7 +882,8 @@ Variant PEBLMath::RandomizeTimer(Variant v)
 {
    time_t now = time(0);
    srand(now);
-   return Variant(now);
+   long unsigned int tmp = (long unsigned int)now;
+   return Variant(tmp);
     
 }
 ///This explicitly seeds the Random Number Generator.

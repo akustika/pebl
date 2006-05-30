@@ -28,7 +28,7 @@
 #define __PTIMER_H__
 
 #include "PDevice.h"
-#include <iostream.h>
+#include <iostream>
 
 
 ///  This device is the generic interface for two types of platform functions:
