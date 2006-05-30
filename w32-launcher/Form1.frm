@@ -1,13 +1,13 @@
 VERSION 5.00
 Begin VB.Form Form1 
    Caption         =   "PEBL Launcher"
-   ClientHeight    =   9285
-   ClientLeft      =   17865
-   ClientTop       =   1920
+   ClientHeight    =   8550
+   ClientLeft      =   0
+   ClientTop       =   420
    ClientWidth     =   11895
    Icon            =   "Form1.frx":0000
    LinkTopic       =   "Form1"
-   ScaleHeight     =   9285
+   ScaleHeight     =   8550
    ScaleWidth      =   11895
    Begin VB.ComboBox Combo3 
       Height          =   315
