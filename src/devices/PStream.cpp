@@ -194,6 +194,7 @@ void PStream::WriteBuffer(const string & buffer, unsigned int length)
 ///This method just writes the char* string to the stream.
 void PStream::WriteString(const string & buffer)
 {
+
     if(mStreamDirection == sdWrite ||
        mStreamDirection == sdAppend)
         {

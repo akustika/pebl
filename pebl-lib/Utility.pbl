@@ -309,10 +309,12 @@ define YesNoTrial(text)
 
 define CR(n)
 {
+  
   x <- "
 "
  y <- Repeat(x,n)
  return ListToString(y)
+
 }
 
 define Tab(n)

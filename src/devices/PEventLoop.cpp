@@ -167,13 +167,12 @@ PEvent PEventLoop::Loop()
                                     if(gEventQueue->GetFirstEventType() == mStates[i]->GetDeviceType())
                                         {
                                             //Now, just test the device.
-                                            
                                             result = mStates[i]->TestDevice();
+                                            
                                             
                                             if(result)
                                                 {
                                                     returnval = gEventQueue->GetFirstEvent();
-                                                    
                                                     //The test was successful.  Add a global variable giving the time of the event.
                                                     
                                                     // myEval->gGlobalVariableMap.AddVariable("gLastEventTime", eventQueue->GetFirstEvent().GetTime());
