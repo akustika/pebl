@@ -71,10 +71,11 @@ extern PlatformEventQueue * gEventQueue = NULL;
 
 
 
-void PEBLObjects::MakeEnvironment(PEBLVideoMode mode, PEBLVideoDepth depth, bool windowed)
+void PEBLObjects::MakeEnvironment(PEBLVideoMode mode, PEBLVideoDepth depth,
+                                  bool windowed,bool unicode)
 {
 
-    myEnv = new PlatformEnvironment(mode, depth, windowed);
+    myEnv = new PlatformEnvironment(mode, depth, windowed,unicode);
     myEnv->Initialize();
 
     //Initialize the event queue.

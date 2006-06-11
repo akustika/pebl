@@ -213,6 +213,7 @@ int PEBLInterpret( int argc, char *argv[] )
     enum PEBLVideoMode displayMode;
     enum PEBLVideoDepth displayDepth;
     bool windowed = true;
+    bool unicode = false;
     Variant subnum = 0;
     //Extract the command-line variables to bind   
     for(int j = 1; j < argc; j++)
@@ -263,6 +264,10 @@ int PEBLInterpret( int argc, char *argv[] )
             else if(strcmp(argv[j],"--windowed")==0)
                 {
                     windowed = true;
+                }
+            else if(strcmp(argv[j],"--unicode")==0)
+                {
+                    unicode = true;
                 }
         }
             
@@ -326,7 +331,7 @@ int PEBLInterpret( int argc, char *argv[] )
 #endif
 
 
-    PEBLObjects::MakeEnvironment(displayMode, displayDepth, windowed);
+    PEBLObjects::MakeEnvironment(displayMode, displayDepth, windowed,unicode);
 
     //Seed the random number generator with time of day.
     //May not be cross-platform.
@@ -464,7 +469,8 @@ std::list<std::string> GetFiles(int argc,  char * argv[])
                     i++;
                 }
             else if (strcmp(argv[i],"--windowed")==0 ||
-                     strcmp(argv[i],"--fullscreen")==0 )
+                     strcmp(argv[i],"--fullscreen")==0 ||
+                     strcmp(argv[i],"--unicode")==0 )
                 {
                     //Don't bother incrementing 'i'
                 }
@@ -517,5 +523,6 @@ void PrintOptions()
     cout << "--windowed\n";
     cout << "--fullscreen\n";
     cout << "  Controls whether the script will run in a window or fullscreen.\n\n";
-
+    cout << "--unicode\n";
+    cout << "  Turns on unicode handling, with slight overhead\n";
 }

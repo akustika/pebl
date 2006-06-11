@@ -45,7 +45,7 @@ class PlatformEnvironment: virtual public PEnvironment, public PEBLObjectBase
 {
 public:
   
-    PlatformEnvironment(PEBLVideoMode mode, PEBLVideoDepth depth, bool windowed);
+    PlatformEnvironment(PEBLVideoMode mode, PEBLVideoDepth depth, bool windowed,bool unicode);
     virtual ~PlatformEnvironment();
   
 
@@ -71,10 +71,12 @@ protected:
     virtual std::ostream & SendToStream(std::ostream& out) const;    
 
 private:
-
+    
     PEBLVideoMode mVideoMode;
     PEBLVideoDepth mVideoDepth;
+
     bool mWindowed;
+    bool mUnicode;
     void __SetProps__();
 };
 
