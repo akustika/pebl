@@ -451,7 +451,7 @@ bool Variant::Less(const Variant & rhs) const
 
 	if (this->IsNumber() && rhs.IsNumber())
 		{
-			return (fabs(this->GetFloat()) <  fabs(rhs.GetFloat()));
+			return ((this->GetFloat()) < (rhs.GetFloat()));
 		}
 	else if (this->IsString() && rhs.IsString())
 	    { //If both are strings, compare them
