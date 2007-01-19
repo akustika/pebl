@@ -136,7 +136,9 @@ if(yylval.strValue[yyleng-2] != '"')     /*"*/
   return PEBL_STRING;
 };
 
+\r\n      { return PEBL_NEWLINE;}
 \n        { return PEBL_NEWLINE;}
+
 
 .              { char message[100];
                  snprintf(message,99,"Unknown characters in line %d: [%s]\n",yylineno,yytext);
