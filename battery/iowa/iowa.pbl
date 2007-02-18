@@ -1,49 +1,54 @@
-#!/usr/local/bin/pebl
-###########################################################
-##  Basic Iowa Gambling Task, Version 0.1
-##  For use with PEBL 0.06 or later
-##  http://pebl.sf.net
-##  Part of  The PEBL Psychological Testing Battery
-##  2006-02 Released into Public Domain
-##  by Shane T. Mueller, Ph.D. (smueller at obereed dot net)
-##
-##  as found in:
-##  Bechara A, Damasio AR, Damasio H, Anderson SW (1994). 
-##     Insensitivity to future consequences following damage 
-##     to human prefrontal cortex. Cognition.
-##
-##  In this procedure, subjects are given $2000 to begin.
-##  On each trial, they are given the choice of four decks,
-##  (by hitting 1-4 on the keyboard) and after each card, they are 
-##  given a reward of some amount; after some cards, they are given
-##  a reward and pay a penalty.
-##  The penalty/reward structure is identical to that in Bechara et al.
-##  with 40 cards per deck, and the identical reward structure.
-##  When 100 cards have been selected, the task is complete. 
-## 
-##  Notes:
-##
-##  * Unlike the real-world version, the deck is just rotated on each 
-##    draw, so that  the top card moves to the bottom of the 40-card deck,
-##    and so the sequence will repeat after 40 cards in the original order, 
-##    rather than becoming exhausted after 40 draws.
-##
-##  * The variable shuffleDecks will shuffle the penalty decks 
-##    before the experiment. Shuffling is performed in 10-card epochs,
-##    so that the penalty in 1-10 stay in 1-10, etc.
-###########################################################
-
 define Start(lPar)
 {
+ ## (c) 2006 Shane T. Mueller
+ ## stmuelle @ indiana.edu
+ ## PEBL Bechara's Gambling Task, Version 0.2
+ ##  (a version of the so-called Iowa Gambling Task (tm))
+ ##  
+ ##
+ ## Bechara A, Damasio AR, Damasio H, Anderson SW (1994). 
+ ## Insensitivity to future consequences following damage 
+ ## to human prefrontal cortex. Cognition.
+ ##
+ ## In this procedure, subjects are given $2000 to begin.
+ ## On each trial, they are given the choice of four decks,
+ ## (by hitting 1-4 on the keyboard) and after each card, they are 
+ ## given a reward of some amount; after some cards, they are given
+ ## a reward and pay a penalty.
 
+ ## The penalty/reward structure is identical to that in Bechara et al.
+ ## with 40 cards per deck, and the identical reward structure.
+ ## When 100 cards have been selected, the task is complete. 
+
+ ## Notes:
+ ##
+ ## Unlike the real-world version, the deck is just rotated on each 
+ ## draw, so that  the top card moves to the bottom of the 40-card deck,
+ ## and so the sequence will repeat after 40 cards in the original order, 
+ ## rather than becoming exhausted after 40 draws.
+ ##
+ ## * The variable shuffleDecks will shuffle the penalty decks 
+ ## before the experiment. Shuffling is performed in 10-card epochs,
+ ## so that the penalty in 1-10 stay in 1-10, etc.
+
+ ## For use with PEBL 0.06 or later
+ ## http://pebl.sf.net
+ ## Part of  The PEBL Psychological Testing Battery
+
+  if(Length(lPar)>0)
+   { 
+      gSubNum <- First(lPar)
+   } else {
+      gSubNum <- 0
+   }
   ## results are stored in tmpresults.dat
   gFileOut <-FileOpenAppend("igt-" + gSubNum +".txt")
  
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
-  ShowCursor(0) 
+   
   ##Controls whether the decks are shuffled. Default is as in Bechera et al.
-  shuffleDecks <-  1
+  shuffleDecks <-  0
 
 
   ####################################################
@@ -51,7 +56,7 @@ define Start(lPar)
   ####################################################
 
   deck1Pen <- [0,0,150,0,300,0,200,0,250,350,
-	           0,350,0,250,200,0,300,150,0,0,
+                   0,350,0,250,200,0,300,150,0,0,
                0,300,0,350,0,200,250,150,0,0,
                350,200,250,0,0,0,150,300,0,0]
                
@@ -61,9 +66,9 @@ define Start(lPar)
               0,1250,0,0,0,0,0,0,0,0]
 
   deck3Pen <-[0,0,50,0,50,0,50,0,50,50, 
-              0,25,75,0,0,0,25,75,50,
+              0,25,75,0,0,0,25,75,50,0,
               0,0,0,50,25,50,0,0,75,50,
-              0,0,0,25,25,75,0,50,75]
+              0,0,0,25,25,75,0,50,75,0]
 
   deck4Pen <-[0,0,0,0,0,0,0,0,0,250,
               0,0,0,0,0,0,0,0,0,250,
@@ -87,6 +92,10 @@ define Start(lPar)
   ####################################################
   ## Begin presenting and collecting data
   ####################################################
+
+
+   ## Good researchers collect demographic data anonymously.
+   ##  GetNIMHDemographics(gSubNum, gWin, "igt-demographics.txt")
 
    ## Give instructions; wait for them to hit a key, 
    SetText(gInstructions,"You are about to take part in an experiment that involves gambling with play money.  You will start with a $2000 loan.  On each trial, you will select a card from one of four decks.  After you select each card, you will be given a reward and possibly be required to pay a penalty.  Your goal is to maximize the profit on your loan, and you may choose from any deck at any time to do so.
@@ -180,20 +189,25 @@ Press any key to begin.")
  Net Gain: $"
    AddObject(gFooter,gWin)
    Move(gFooter, 50,300)
+
+   earnings <- MakeEarningsGraph(gTotal)
    Draw()
  
 ####################################################
 ####################################################
 ##  Start the experimental trials.
 ## 
+ 
+
   trialnum <- 1
    while(trialnum <= 100)
     {
+
       time0 <- GetTime()
       resp <- WaitForListKeyPress(["1","2","3","4"])
       time1 <- GetTime()
       rt <- time1 - time0
-
+       Draw()
       if(resp == "1")
       {
          reward <- deck1rew
@@ -202,12 +216,12 @@ Press any key to begin.")
 
          if(net < 0)
          {
-	       deckX <- deck1l
+               deckX <- deck1l
          }else{
            deckX <- deck1g
          }
 
- 	     ##Update the remainder of the deck.
+             ##Update the remainder of the deck.
          deck1pen <- Rotate(deck1pen,1)
  
 
@@ -222,12 +236,12 @@ Press any key to begin.")
 
          if(net < 0)
          {
-	       deckX <- deck2l
+               deckX <- deck2l
          }else{
            deckX <- deck2g
          }
 
- 	     ##Update the remainder of the deck.
+             ##Update the remainder of the deck.
          deck2pen <- Rotate(deck2pen,1)
 
 
@@ -241,12 +255,12 @@ Press any key to begin.")
 
          if(net < 0)
          {
-	       deckX <- deck3l
+               deckX <- deck3l
          }else{
            deckX <- deck3g
          }
 
- 	     ##Update the remainder of the deck.
+             ##Update the remainder of the deck.
          deck3pen <- Rotate(deck3pen,1)
 
 
@@ -258,12 +272,12 @@ Press any key to begin.")
 
          if(net < 0)
          {
-	       deckX <- deck4l
+               deckX <- deck4l
          }else{
            deckX <- deck4g
          }
 
- 	     ##Update the remainder of the deck.
+             ##Update the remainder of the deck.
          deck4pen <- Rotate(deck4pen,1)
 
 
@@ -289,14 +303,15 @@ Press any key to begin.")
       {
          SetFont(gFooter, gIncorrFont)
       } else {
-	  if(net > 0)
+          if(net > 0)
         {
         SetFont(gFooter,  gCorrFont)
         } else {
         SetFont(gFooter,  gStimFont)
         }
-        }
-
+      }
+      RemoveComplex(earnings)
+      earnings <- MakeEarningsGraph(gTotal)
   
       ## Print out data to the file
       FilePrint_(gFileOut, gSubNum + " " + trialnum + " " + resp + " " + reward + " " + penalty)
@@ -346,7 +361,7 @@ Press any key to begin.")
    Show(gInstructions)
    Draw()
    WaitForKeyPress("X")
-   ShowCursor(1)   
+  
  }
 
 
@@ -364,15 +379,17 @@ define Initialize()
    fg <- MakeColor("black")
    bg2 <- MakeColor("white")
    
-   colGreen <- MakeColor("darkgreen")
-   colRed   <- MakeColor("red")
+   gColGreen <- MakeColor("darkgreen")
+   gColRed   <- MakeColor("red")
  
    gStimFont         <- MakeFont("VeraMono.ttf", 0, 24,fg,bg1,1)       
-   gCorrFont         <- MakeFont("VeraMono.ttf", 0, 24,colGreen, bg1,1)
-   gIncorrFont       <- MakeFont("VeraMono.ttf", 0, 24,colRed,   bg1,1)
+   gCorrFont         <- MakeFont("VeraMono.ttf", 0, 24,gcolGreen, bg1,1)
+   gIncorrFont       <- MakeFont("VeraMono.ttf", 0, 24,gcolRed,   bg1,1)
 
    gInstructionsFont <- MakeFont("Vera.ttf",0,18, fg,bg2,1)  
    gHeaderFont       <- MakeFont("Vera.ttf", 0,36,fg,bg,1)       
+
+   gGraphFont <- MakeFont("Vera.ttf",0,15, fg,bg,1)  
  
    ## Make and place the instruction box, then hide it  
    gInstructions <- MakeTextBox("", gInstructionsFont, 600,300)
@@ -394,8 +411,66 @@ define Initialize()
 define EpochShuffle(list)
 {
      order <- Flatten([Shuffle(Sequence(1,10,1)),
-    	       Shuffle(Sequence(11,20,1)),
- 	  	       Shuffle(Sequence(21,30,1)),
- 	  	       Shuffle(Sequence(31,40,1))])
+               Shuffle(Sequence(11,20,1)),
+                       Shuffle(Sequence(21,30,1)),
+                       Shuffle(Sequence(31,40,1))])
   return SortBy(list,order)
+
+}
+
+
+
+define MakeEarningsGraph( earnings)
+{
+
+    ##Sets up some basic parameters for plotting the graph at the bottom of the screen
+    scale <- 10
+    height <- 20
+    width  <- earnings / scale
+    ycenter <- gVideoHeight/2+280
+    xcenter <- gVideoWidth/2 - 200
+
+   #Determine which color to make it.
+   if(earnings < 0) 
+    {
+       col <- gColRed
+    } else {
+       col <- gColGreen
+    }
+
+    x <- Rectangle(xcenter+width/2, ycenter, width, height, col, 1)
+  
+    #Headers
+     yn1000 <- MakeLabel("-1000", ggraphFont)
+     y0     <- MakeLabel("0",ggraphFont)
+     y1000  <- MakeLabel("1000",ggraphFont)
+     y2000  <- MakeLabel("2000",ggraphFont)
+     y3000  <- MakeLabel("3000",ggraphFont)
+     y4000  <- MakeLabel("4000",ggraphFont)
+     y5000  <- MakeLabel("5000",ggraphFont)
+   
+     comp <- [x,yn1000,y0,y1000,y2000,y3000,y4000,y5000]
+  
+     loop(i,comp)
+     {
+          AddObject(i,gWin)
+     }
+     Move(yn1000, xcenter-1000/scale, ycenter-30)
+     Move(y0, xcenter, ycenter-30)
+     Move(y1000, xcenter+1000/scale, ycenter-30)
+     Move(y2000, xcenter+2000/scale, ycenter-30)
+     Move(y3000, xcenter+3000/scale, ycenter-30)
+     Move(y4000, xcenter+4000/scale, ycenter-30)
+     Move(y5000, xcenter+5000/scale, ycenter-30)
+   
+
+    return comp
+}
+
+define RemoveComplex(x)
+{ 
+    loop(i,x)
+    {
+       RemoveObject(i,gWin)
+    }
 }
