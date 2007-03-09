@@ -114,10 +114,10 @@ Press any key to begin.")
 
 
 
-    gInstructions.text <- "The following two patterns will be used in the next test." + CR(3) + 
-                          "Press space bar te begin."
+    gInstructions.text <- "The following two patterns will be used in the next test." + CR(3) + "Press space bar te begin."
     gInstructions.height <- 100
     gInstructions.visible <- 1
+
     if(RandomBernoulli(.5))
     {
      Move(stimA,200,300)
@@ -126,7 +126,9 @@ Press any key to begin.")
      Move(stimB,200,300)
      Move(stimA,600,300)
     }
-
+    Show(stimA)
+    Show(stimB)
+    Draw()
     WaitForKeyPress(" ")
     Hide(gInstructions)    
   
@@ -237,6 +239,7 @@ Press any key to begin.")
    FilePrint(reportfile,"Mean Correct Trials/stage"+Tab(2) + totAcc / (numBlocks * numStages))
    FilePrint(reportfile,"Mean Total Trials/stage"+Tab(2) + totTrials / (numBlocks * numStages))
    FilePrint(reportfile,"Mean Errors per reversal"+Tab(2)+(totTrials-totAcc)/(numBlocks*numStages))
+
    FilePrint(reportfile,"---------------------------------------------------")
    
 
