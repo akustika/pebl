@@ -1,6 +1,6 @@
 #!/usr/local/bin/pebl
 ###########################################################
-##  Berg's Card Sorting Task, Version 0.1
+##  Berg's Card Sorting Task, Version 0.2
 ##  (better known as the Wisconsin Card Sorting Test (tm).
 ##  For use with PEBL 0.06 or later
 ##  http://pebl.sf.net
@@ -161,7 +161,13 @@ WaitForAnyKeyPress()
           }
 	
       }
-      
+
+
+     trialpersev <- 0
+     if(corr == 2 ) 
+      {
+       trialpersev <- 1
+      }
 
       
 	  FilePrint_(gFileOut, gSubNum + " " + trialnum + " " + numCats + " ")
@@ -176,9 +182,9 @@ WaitForAnyKeyPress()
        index <- index + 1
       }
 
-	  FilePrint(gFileOut,resp + " " + corr + " " + time0 + " " + rt )
+	  FilePrint(gFileOut,resp + " " + corr + " " + trialpersev + " " +  time0 + " " + rt )
       Show(feedback)
-      Draw()   
+      Draw()
       Wait(400)
       Hide(feedback)
       Hide(gHeader)
@@ -211,7 +217,7 @@ WaitForAnyKeyPress()
    FilePrint(report," Report for PEBL's _Berg's Card Sorting Task_,")
    FilePrint(report," a version of the Wisconsin Card Sorting Task (tm)")
    FilePrint(report," (c) 2006 Shane T. Mueller")
-   FilePrint(report," Version 0.1")
+   FilePrint(report," Version 0.2")
    FilePrint(report," "+GetPEBLVersion())
    FilePrint(report," "+TimeStamp())
    FilePrint(report," Participant Code: " + gSubNum)
@@ -307,13 +313,15 @@ define ScoreTrial(triallist, resp, rule,lastrule)
 
   dimensions <- [gColors, gShapes, gNumbers]
   dimension <- Nth(triallist, rule)
-  dimlist <- Nth(dimensions,rule)
 
+  dimlist <- Nth(dimensions,rule)
+  lastdim   <- Nth(triallist, lastrule)
+  lastdimlist <- Nth(dimensions,lastrule)
   ##So, the trial is correct if, along the chosen dimension,
   ## the response is the same as the pile.
 
-   corr <- (Nth(dimlist,ToNumber(resp)) == dimension)
-   lastcorr <- (Nth(dimlist,ToNumber(resp)) == dimension)
+   corr <-     (Nth(dimlist,ToNumber(resp)) == dimension)
+   lastcorr <- (Nth(lastdimlist,ToNumber(resp)) == lastdim)
 
    if(corr)
    {
