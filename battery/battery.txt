@@ -211,3 +211,28 @@ Results:
 		Data stored in toav-<gsubnum>.txt.  Detailed report in
 		toav-report-<gsubnum>.txt
 
+-------------------------------------------------------------------------------
+*                   Psychomotor Vigilance Task
+-------------------------------------------------------------------------------
+Location: ppvt/ppvt.pbl
+
+Description: Simple reaction time task--an circle stimulus appears at
+delays between 2 and 12 seconds, and the participant must depress the
+spacebar as quickly as possible. This is basically the simple RT task,
+but a version commonly used to measure sleepiness and arousal.
+
+Options:
+By editing script, one can specify aspects of the task: Number of
+trials, total test duration, isis
+
+ 
+
+Results:
+Data is saved to file ppvt-<gsubnum>.txt.  Columns are:
+
+SubjectNum, Block, Trial, ISI, absolute_Time, RT, trial_type
+for trial type, 1=too fast, 2= OK, 3 = lapse (> 500 ms) 4 = sleep (>30 s)
+
+
+A summary of the results, with means and standard deviations across
+delays, is output to ppvt-report-<gsubnum>.txt.
