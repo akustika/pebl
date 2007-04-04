@@ -40,7 +40,7 @@ define Start(lPar)
 
    
    fixationtime <- 400         ## How long the fixation cross remains
-   numBlocks <- 3              ## Number of repetitions of the interval set
+   numBlocks <- 9              ## Number of repetitions of the interval set
    totalTime <- 10*60*1000     ## total time of the test in milliseconds    
    presTime  <- 50             ## Presentation time in ms. (Not Currently used.)
 
