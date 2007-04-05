@@ -2,7 +2,7 @@ define Start(lPar)
 {
  ## (c) 2006 Shane T. Mueller
  ## stmuelle @ indiana.edu
- ## PEBL Bechara's Gambling Task, Version 0.2
+ ## PEBL Bechara's Gambling Task, Version 0.3
  ##  (a version of the so-called Iowa Gambling Task (tm))
  ##  
  ##
@@ -312,7 +312,7 @@ Press any key to begin.")
       }
       RemoveComplex(earnings)
       earnings <- MakeEarningsGraph(gTotal)
-  
+      Draw()
       ## Print out data to the file
       FilePrint_(gFileOut, gSubNum + " " + trialnum + " " + resp + " " + reward + " " + penalty)
       FilePrint(gFileOut, " " + net + " " + gTotal + " " + time1 + " " +  rt )
@@ -422,13 +422,12 @@ define EpochShuffle(list)
 
 define MakeEarningsGraph( earnings)
 {
-
     ##Sets up some basic parameters for plotting the graph at the bottom of the screen
-    scale <- 10
+    scale <- 11
     height <- 20
     width  <- earnings / scale
-    ycenter <- gVideoHeight/2+280
-    xcenter <- gVideoWidth/2 - 200
+    ycenter <- gVideoHeight/2 + 220
+    xcenter <- gVideoWidth/2 - 195
 
    #Determine which color to make it.
    if(earnings < 0) 
@@ -439,7 +438,7 @@ define MakeEarningsGraph( earnings)
     }
 
     x <- Rectangle(xcenter+width/2, ycenter, width, height, col, 1)
-  
+    outline <- Rectangle(gVideoWidth/2, gVideoHeight-30, gVideoWidth-10,50,col, 0)
     #Headers
      yn1000 <- MakeLabel("-1000", ggraphFont)
      y0     <- MakeLabel("0",ggraphFont)
@@ -449,20 +448,21 @@ define MakeEarningsGraph( earnings)
      y4000  <- MakeLabel("4000",ggraphFont)
      y5000  <- MakeLabel("5000",ggraphFont)
    
-     comp <- [x,yn1000,y0,y1000,y2000,y3000,y4000,y5000]
+     comp <- [outline,x,yn1000,y0,y1000,y2000,y3000,y4000,y5000]
   
      loop(i,comp)
      {
           AddObject(i,gWin)
+          Show(i)
      }
-     Move(yn1000, xcenter-1000/scale, ycenter-30)
-     Move(y0, xcenter, ycenter-30)
-     Move(y1000, xcenter+1000/scale, ycenter-30)
-     Move(y2000, xcenter+2000/scale, ycenter-30)
-     Move(y3000, xcenter+3000/scale, ycenter-30)
-     Move(y4000, xcenter+4000/scale, ycenter-30)
-     Move(y5000, xcenter+5000/scale, ycenter-30)
-   
+
+     Move(yn1000, xcenter-1000/scale, ycenter-20)
+     Move(y0, xcenter, ycenter-20)
+     Move(y1000, xcenter+1000/scale, ycenter-20)
+     Move(y2000, xcenter+2000/scale, ycenter-20)
+     Move(y3000, xcenter+3000/scale, ycenter-20)
+     Move(y4000, xcenter+4000/scale, ycenter-20)
+     Move(y5000, xcenter+5000/scale, ycenter-20)
 
     return comp
 }
