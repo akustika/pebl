@@ -68,7 +68,8 @@ class PEBLObjectBase
     PEBLObjectBase(ComplexDataType cdt);
     PEBLObjectBase(const PEBLObjectBase & pob);
     virtual ~PEBLObjectBase();
-       //Overload of the << operator
+
+    //Overload of the << operator
     friend std::ostream & operator <<(std::ostream & out, const PEBLObjectBase & object );
 
     //Initializes the valid property names:

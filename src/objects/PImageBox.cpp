@@ -33,7 +33,7 @@ using std::cout;
 PImageBox::PImageBox():
     PWidget()
 {
-
+    __SetProps__();
  
 }
 
@@ -47,9 +47,17 @@ void PImageBox::SetPosition(int x, int y)
     PWidget::SetPosition(x,y);
     mDrawX = x - GetWidth()/2;
     mDrawY = y - GetHeight()/2;
-
 }
 
+void PImageBox::SetSize(int width, int height)
+{
+    mWidth = width;
+    mHeight = height;
+    
+    PEBLObjectBase::SetProperty("WIDTH",width);
+    PEBLObjectBase::SetProperty("HEIGHT",height);
+    
+}
 
 
 
@@ -63,7 +71,9 @@ bool PImageBox::SetProperty(std::string name, Variant v)
 
     if(name == "X") SetPosition(v,mY);
     else if (name == "Y") SetPosition(mX,v);
-
+    else if (name == "HEIGHT") SetSize(mWidth,v);
+    else if (name == "WIDTH") SetSize(v,mHeight);
+    
     else if (name == "VISIBLE") 
         {
             if(v.GetInteger())
@@ -75,6 +85,7 @@ bool PImageBox::SetProperty(std::string name, Variant v)
 
     return true;
 }
+
 
 
 Variant PImageBox::GetProperty(std::string name)const

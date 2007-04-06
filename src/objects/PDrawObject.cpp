@@ -127,8 +127,8 @@ void PLine::SetSize(int dx, int dy)
 {
     mDX = dx;
     mDY = dy;
-    PEBLObjectBase::SetProperty("DX",dx);
-    PEBLObjectBase::SetProperty("DY",dy);
+    PEBLObjectBase::SetProperty("WIDTH",dx);
+    PEBLObjectBase::SetProperty("HEIGHT",dy);
 }
 
 
@@ -140,9 +140,9 @@ bool PLine::SetProperty(std::string name, Variant v)
             return true;
         } else {
             
-            if("DX" == name) 
+            if("WIDTH" == name) 
                 SetSize(v,mDY);
-            else if ("DY" == name)
+            else if ("HEIGHT" == name)
                 SetSize(mDX, v);
             else
                 return false;

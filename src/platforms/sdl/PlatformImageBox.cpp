@@ -121,9 +121,8 @@ bool PlatformImageBox::LoadImage(const std::string &  imagefilename)
             mHeight = mSurface->h;
             //These need to be set at the PWidget level because 
             //they are not mutable at the imagebox level.
-            PWidget::SetProperty("WIDTH", Variant(mWidth));
-            PWidget::SetProperty("HEIGHT", Variant(mHeight));
-
+            PImageBox::SetProperty("WIDTH", Variant(mWidth));
+            PImageBox::SetProperty("HEIGHT", Variant(mHeight));
             return true;
         }
     else

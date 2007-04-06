@@ -57,7 +57,7 @@ public:
     virtual bool LoadImage(const std::string  & imagefilename)=0;
 
     virtual void SetPosition(int x, int y);
-
+    virtual void SetSize(int width, int height);
     virtual std::string ObjectName() const{return "PImageBox";};
     
 protected:
