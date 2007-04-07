@@ -1,7 +1,7 @@
 #!/usr/local/bin/pebl
 #################################################################
-##  PEBL Probabilistic Reversal Learning Task, as
-##  described by Cools et al, 2002.
+##  PEBL Probabilistic Reversal Learning Task Version 0.2,
+##  as described by Cools et al, 2002.
 ##  For use with PEBL 0.07 or later
 ##  http://pebl.sf.net
 ##  Part of  The PEBL Psychological Test Battery
@@ -91,7 +91,6 @@ Press any key to begin.")
    FilePrint(datafile,"sub block stage trial targ")
 
 
-
    ##Go through each block of the task, starting here.
     trialNum <- 0
     tottrials <- 0
@@ -114,7 +113,11 @@ Press any key to begin.")
 
 
 
-    gInstructions.text <- "The following two patterns will be used in the next test." + CR(3) + "Press space bar te begin."
+
+    gInstructions.text <- "The following two patterns will be used in the next test." + CR(3) + 
+                          "Remember, use the 'Z' and '/' to respond.
+Press space bar to begin."
+
     gInstructions.height <- 100
     gInstructions.visible <- 1
 
@@ -126,12 +129,18 @@ Press any key to begin.")
      Move(stimB,200,300)
      Move(stimA,600,300)
     }
+
     Show(stimA)
     Show(stimB)
     Draw()
+
     WaitForKeyPress(" ")
     Hide(gInstructions)    
-  
+    Hide(stimA)
+    Hide(stimB)
+    Draw()
+    Wait(50)
+
   ## each block has numStages learning stages.
   ## each reversal occurs after 10-15 correct responses (including prob errors)
   ## 0-4 probabilistic errors per stage
@@ -226,7 +235,6 @@ Press any key to begin.")
    FilePrint(reportfile, " "+GetPEBLVersion())
    FilePrint(reportfile, " "+TimeStamp())
    FilePrint(reportfile, " Participant Code: " + gSubNum)
-   
    FilePrint(reportfile," http://pebl.sf.net")
    FilePrint(reportfile,"---------------------------------------------------")
    FilePrint(reportfile,"Statistic           Value ")
@@ -242,7 +250,6 @@ Press any key to begin.")
 
    FilePrint(reportfile,"---------------------------------------------------")
    
-
 
    ##Now, show debriefing info.
 
