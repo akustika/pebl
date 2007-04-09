@@ -63,7 +63,8 @@ define Start(lPar)
   
   csn <- DesignFullCounterbalance(DesignFullCounterbalance(gColors,gShapes),gNumbers)
   stimcat <- FoldList(Flatten(Repeat(csn,repeats)),3)
-
+#  Print(csn)
+#  Print(stimcat)
   images<-[]
  
   loop(i,stimcat)
@@ -225,7 +226,7 @@ WaitForAnyKeyPress()
    FilePrint(report,"---------------------------------------------------")
    FilePrint(report,"Statistic                    Value")
    FilePrint(report,"---------------------------------------------------")
-   FilePrint(report,"Number of Trials: " + trialnum)
+   FilePrint(report,"Number of Trials: " + ( trialnum-1))
    FilePrint(report,"Number correct:   " + totCorr)
    FilePrint(report,"Number incorrect: " + trialnum-totCorr)
    FilePrint(report,"Number of perseverations" + totPers)
