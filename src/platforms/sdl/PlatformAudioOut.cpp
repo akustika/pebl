@@ -36,6 +36,8 @@
 #include "SDL/SDL_audio.h"
 
 
+void PlayCallBack(void * dummy, Uint8 * stream, int len);
+
 using std::string;
 using std::cerr;
 

@@ -72,7 +72,7 @@ class PlatformAudioOut: virtual public PAudioOut, public PEBLObjectBase
 private:
   
 
-    friend void PlayCallBack(void * dummy, Uint8 * stream, int len);
+    //    void PlayCallBack(void * dummy, Uint8 * stream, int len);
     
     bool mLoaded;               //This will be true when a file 
                                 //has been loaded or a buffer has been
