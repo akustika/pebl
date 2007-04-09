@@ -26,7 +26,6 @@
 define Start(lPar)
 {
 
-
   ## repeats is the number of times you go through the 64-item deck
   repeats <- 2
 
@@ -53,6 +52,7 @@ define Start(lPar)
    gColors <-  ["Red", "Green","Yellow","Blue"]
    gShapes <-  ["Triangle","Star","Cross","Circle"]
    gNumbers <- ["1","2","3","4"]
+   rules <- ShuffleWithoutAdjacents([[1,1,1],[2,2,2],[3,3,3]])
 
   ##Mix up the order if we aren't using canonical stimulus cards.
   if(not useCanonical)
@@ -125,12 +125,15 @@ WaitForAnyKeyPress()
   ## Begin presenting and collecting data
   ####################################################
  
-
+  FilePrint(gFileOut, "Subnum trial run color shape number resp corr persev abstime rt")
 ####################################################
 ##  Start the experimental trials.
 ## 
-  rule <- RandomDiscrete(3)
+
+  rule <- First(rules)
+  rules <- Rotate(rules,1)
   lastrule <- rule
+
   run <- 0
   persev <- 0
   trialnum <- 1
@@ -196,7 +199,8 @@ WaitForAnyKeyPress()
       if(run >= runlength)
       {
         lastrule <- rule
-        rule <- SampleNewRule(rule)
+        rule <- First(rules)
+        rules <- Rotate(rules,1)
         run <- 0
         numCats <- numCats + 1
         lastswitch <- trialnum
@@ -226,12 +230,12 @@ WaitForAnyKeyPress()
    FilePrint(report,"---------------------------------------------------")
    FilePrint(report,"Statistic                    Value")
    FilePrint(report,"---------------------------------------------------")
-   FilePrint(report,"Number of Trials: " + ( trialnum-1))
-   FilePrint(report,"Number correct:   " + totCorr)
-   FilePrint(report,"Number incorrect: " + trialnum-totCorr)
-   FilePrint(report,"Number of perseverations" + totPers)
-   FilePrint(report,"Mean perseverations:    " +  Mean(persevs))
-   FilePrint(report,"Number of categories:   "+ numCats)
+   FilePrint(report,"Number of Trials:        " + (trialnum-1))
+   FilePrint(report,"Number correct:          " + totCorr)
+   FilePrint(report,"Number incorrect:        " + (trialnum-totCorr))
+   FilePrint(report,"Number of perseverations " + totPers)
+   FilePrint(report,"Mean perseverations:     " +  Mean(persevs))
+   FilePrint(report,"Number of categories:    "+ numCats)
    FilePrint(report,"---------------------------------------------------")	
    FileClose(report)
    ##Now, show debriefing info.
@@ -241,6 +245,7 @@ WaitForAnyKeyPress()
    SetText(gInstructions, feedback)
    Show(gInstructions)
    Draw()
+   Print("Finished with the Card Sort Task")
    WaitForKeyPress("X")
    ShowCursor(1) 
  }
@@ -337,15 +342,4 @@ define ScoreTrial(triallist, resp, rule,lastrule)
        }
    }
   return ret
-}
-
-##Sample a new rule, but make sure it is different from the current rule
-define SampleNewRule(oldrule)
-{
-  x <- oldrule
-  while(x == oldrule)
-  {
-	 x <- RandomDiscrete(3)
-  }
-  return x
 }
