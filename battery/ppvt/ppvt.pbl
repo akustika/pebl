@@ -8,21 +8,38 @@
 ##  2007 Released into Public Domain
 ##  by Shane T. Mueller, Ph.D. (smueller at obereed dot net)
 ##
+##  This is the "Psychomotor Vigilance Task", an "Unprepared Serial 
+##  Reaction Time (USRT) test as described by:
 ##
-##  As described in:
 ## Wilkinson, R. T., & Houghton, D. (1982). Field test of arousal:
 ##    A portable reaction timer with data storage. Human Factors, 24,
 ##    487-493.
 ##
-##  Dinges, D. F., & Powell, J. W. (1985). Microcomputer analyses of performance
-##     on a portable, simple visual RT task during sustained operations.
-##     Behavior Research Methods, Instruments, & Computers,
+##  Dinges, D. F., & Powell, J. W. (1985). Microcomputer analyses of 
+##  performance on a portable, simple visual RT task during sustained 
+##  operations.  Behavior Research Methods, Instruments, & Computers,
 ##     17, 652-655.
 ##  
-##  
+##  It follows the procedure described in the device fairly
+##  reasonably, with several exceptions.  
+##
+##  * As with the Wilkinson device,
+##    numeric feedback is given; however unlike that device a running counter
+##    is not displayed. The presence of feedback can be controlled with the
+##    variable giveFeedback
 ##  
 ##
-##
+##  * There are three different types of testing to determine whether
+##    the experiment is complete: time-based, trial-based, and block-based.
+##     * Time-based will run until a certain time has elapsed
+##     * Trial-base dwill run until a specific number of trials
+##     * Block-based allows one to use an isi-block, which gets sampled
+##       from without replacement, and then reshuffled
+##       until the number of blocks has
+## 
+##  * In addition, when useContinuous variable==1, it will choose a 
+##    continous stimulus  presentation time between the min and max 
+##    of timeInterval.  Otherwise, it will sample from that set.
 #################################################################
 
 define Start(lPar)
@@ -30,23 +47,40 @@ define Start(lPar)
    ####################################################
    ## Instrumentation variables.
 
-
    ## The color of the stimulus:
    gColor <- MakeColorRGB(255,33,100)
   
    ##Type: 1 indicates a total time limit   (time is in totalTime);
-   ##Type: 2 indicates a trial-number limit (Number is in numTrials);
-   testType <- 2
+   ##Type: 2 indicates a block-number limit (Number is in numBlocks);
+   ##Type: 3 indicates a trial-number limit (number is numTrials)
+   testType <- 3
 
+   ## Determines whether the time presentation should be continuous or interval
+   useContinuous <- 1
+
+   ## If we are using a continuous stimulus delay spec, we can't
+   ## use a block-type test.
+   if(useContinuous == 1 and testType == 2)
+    {
+        testType <- 1
+    }
    
-   fixationtime <- 400         ## How long the fixation cross remains
-   numBlocks <- 9              ## Number of repetitions of the interval set
-   totalTime <- 10*60*1000     ## total time of the test in milliseconds    
-   presTime  <- 50             ## Presentation time in ms. (Not Currently used.)
+   ## Designates whether to provide RT feedback after each trial.
+   giveFeedback <- 1
 
-   ##Set of presentation times.  Sampled in epochs without replacement for both test types.
-   timeIntervals <- [2000,3000,4000,5000,6000,7000,8000,9000,10000,11000,12000]
- 
+   fixationtime <- 400         ## How long the fixation cross remains
+   numBlocks <- 12             ## Number of  repetitions of the interval set
+   numTrials <- 120            ## Number of total trials. (120 =~ 10 minutes)
+   totalTime <- 10*60*1000     ## total time of the test in milliseconds    
+
+   ## Set of presentation times.  Sampled in epochs without 
+   ## replacement for both test types.
+   timeIntervals <- [1000,2000,3000,4000,5000,6000,7000,8000,9000,10000]
+   
+   minTime <- Min(timeIntervals)
+   maxTime <- Max(timeIntervals) 
+
+
    ##These instrument automated data coding 
    gTooFast <- 150
    gLapse   <- 500
@@ -87,7 +121,7 @@ define Start(lPar)
    isis  <- []
    
    ##The data file header:
-   FilePrint(datafile,"sub block trial ISI abstime rt type")
+   FilePrint(datafile,"sub block trial ISI ISIbin abstime rt type")
 
     Wait(1000)
     trialNum <- 0
@@ -104,11 +138,22 @@ define Start(lPar)
        block <- block + 1
      }
 
-     isi <- First(curblock)
-     curblock <- Rest(curblock)
+
+     ##isi is the time before the stimulus is displayed on this trial.
+     ##isibin is the 'binned' time, for calculating RT distributions.
+     if(useContinuous == 1)
+     {
+        isi <- minTime + RandomUniform(maxTime-minTime)
+        isibin <- Floor(isi/1000)*1000
+
+     } else { 
+        isi <- First(curblock)
+        curblock <- Rest(curblock)
+        isibin <- isi
+     }
+
   
      trialNum <- trialNum + 1
-
      timeStart <- GetTime()
 
       ########################
@@ -134,7 +179,7 @@ define Start(lPar)
            ##Compute the time since fixation cross of response; code it as negative though.
            rt <- time0-time1  #code it as negative
            type <- 1
-	   Wait(500)
+           gFeedback.text <- "TOO FAST! Wait for the stimulus."
           
         } else {
 
@@ -149,14 +194,27 @@ define Start(lPar)
           Hide(gStim)         # Hide the stimulus
 
           type <- CatTime(rt)
-             
-            Draw()
+          Draw()
+          gFeedback.text <- rt + " ms"
           }
+
+         if(giveFeedback)
+           {
+
+            Show(gFeedback)
+            Draw()
+            Wait(1500)
+            Hide(gFeedback)
+           } else {
+            Wait(500)
+           }
+
+ 
         rts   <- Append(rts,rt)
         types <- Append(types,type)    
-        isis  <- Append(isis, isi)
+        isis  <- Append(isis, isibin)
 
-        FilePrint(datafile, gSubNum + " " + block + " " + trialNum + " " + isi + " " + timeStart + " " + rt + " " + type)
+        FilePrint(datafile, gSubNum + " " + block + " " + trialNum + " " + isi + " " + isibin + " " + timeStart + " " + rt + " " + type)
     ##Determine whether we should continue.
       if(testType == 1)
       {
@@ -166,7 +224,7 @@ define Start(lPar)
               continue <- 0 
            }
  
-      } else {
+      } elseif(testType ==2 ) {
       ##Total trial limit
        
           if((block >= numBlocks) and Length(curblock) == 0)
@@ -174,6 +232,12 @@ define Start(lPar)
              continue <- 0 
           }
 
+      } else {
+           ##Testtype == 3: number of trials.
+          if(trialNum > numTrials)
+          {
+             continue <- 0
+          }
       }
        Wait(500)
    }
@@ -183,7 +247,7 @@ define Start(lPar)
 ##Print out report
    PrintMe(reportfile,"--------------------------------------------------------")
    PrintMe(reportfile," Report for PEBL Psychomotor Vigilance Task (PPVT)")
-   PrintMe(reportfile, " Version 0.1")
+   PrintMe(reportfile, " Version 0.1.  An Unprepared Serial Response Task (USRT).")
    PrintMe(reportfile, " http://pebl.sf.net")
    PrintMe(reportfile, " (c) 2007 Shane T. Mueller, Ph.D.")
    PrintMe(reportfile, " "+GetPEBLVersion())
@@ -234,11 +298,12 @@ define Initialize()
    white <- MakeColor("white")
 
 
-   gInstructionsFont <- MakeFont("Vera.ttf",0,16, black,white,1)  
-   gStimFont <- MakeFont("FreeMono.ttf",0,54, white, black,1)  
+   instructionsFont <- MakeFont("Vera.ttf",0,16, black,white,1)  
+   stimFont <- MakeFont("FreeMono.ttf",0,54, white, black,1)  
+   feedbackFont <- MakeFont("Vera.ttf",0,30, white, black,1)  
 
    ## Make and place the instruction box, then hide it  
-   gInstructions <- MakeTextBox("", gInstructionsFont, 600,300)
+   gInstructions <- MakeTextBox("", instructionsFont, 600,300)
    AddObject(gInstructions, gWin)
    Move(gInstructions, gVideoWidth/2-300, gVideoHeight/2-150)
    Hide(gInstructions)
@@ -247,19 +312,26 @@ define Initialize()
    AddObject(gStim, gWin) 
    Hide(gStim)
    
-   gFixation <- MakeLabel("+",gStimFont)
+   gFixation <- MakeLabel("+",stimFont)
    AddObject(gFixation, gWin) 
    Move(gFixation, gVideoWidth/2, gVideoHeight/2)
    Hide(gFixation)
+
+   gFeedback <- MakeLabel("",feedbackFont)
+   AddObject(gFeedback,gWin)
+   Move(gFeedback, gVideoWidth/2, gVideoHeight/2)
+   Hide(gFeedback)
+
    ShowCursor(0)
  }
 
-
+## This prints to both the file and the stdout.
 define PrintMe(file,text)
 {
   FilePrint(file,text)
   Print(text)
 }
+
 
 define Rest(list)
 {
@@ -272,11 +344,12 @@ define Rest(list)
  return  ret
 }
 
+## compute standard deviation, allowing for null lists.
 define SD(list)
 {
   if(Length(list)==0)
   {
-    ret <- "NA" 
+    ret <- "nan" 
   } else {
     ret <- Round(StdDev(list)*100)/100
   }
@@ -284,6 +357,9 @@ define SD(list)
   return ret
 }
 
+
+## categorize the response time.
+##
 define CatTime(rt)
 {
   if(rt < gTooFast)  
@@ -302,6 +378,7 @@ define CatTime(rt)
       } 
   return type
 }
+
 
 ## This finds mean and SD RT for 
 ## each of the conditions specified in delays
@@ -353,6 +430,7 @@ define AggregateRTs(rts, delays)
  return stats
 }
 
+## Count number of items on list that are equal to item.
 define CountIf(list, item)
 {
    count <- 0
@@ -366,6 +444,7 @@ define CountIf(list, item)
   return count
 }
 
+#Compute median
 define Med(list)
 {
    if(Length(list) == 0 )
@@ -376,8 +455,9 @@ define Med(list)
    }
   return ret
 }
+
 define Rnd(num,sig)
 {
    x <-    Round( num *(10 ^ sig))/(10^sig)
-  return x 
+   return x 
 }
