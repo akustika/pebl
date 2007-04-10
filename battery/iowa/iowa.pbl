@@ -142,37 +142,36 @@ Press any key to begin.")
    deck3text <- MakeLabel("3",gHeaderFont)
    deck4text <- MakeLabel("4",gHeaderFont)
 
-   AddObject(deck1,gWin)
-   AddObject(deck2,gWin)
-   AddObject(deck3,gWin)
-   AddObject(deck4,gWin)
-   AddObject(deck1g,gWin)
-   AddObject(deck2g,gWin)
-   AddObject(deck3g,gWin)
-   AddObject(deck4g,gWin)
-   AddObject(deck1l,gWin)
-   AddObject(deck2l,gWin)
-   AddObject(deck3l,gWin)
-   AddObject(deck4l,gWin)
-   Hide(deck1g)
-   Hide(deck2g)
-   Hide(deck3g)
-   Hide(deck4g)
-   Hide(deck1l)
-   Hide(deck2l)
-   Hide(deck3l)
-   Hide(deck4l)
-   AddObject(deck1text,gWin)
-   AddObject(deck2text,gWin)
-   AddObject(deck3text,gWin)
-   AddObject(deck4text,gWin)
 
-   Move(deck1text,100,200)
-   Move(deck2text,200,200)
-   Move(deck3text,300,200)
-   Move(deck4text,400,200)
-  
+
+   #Create lists of the elements for easier management
+   textUI <-[deck1text, deck2text, deck3text, deck4text ]
+   deckUI <- [deck1, deck2, deck3, deck4]
+   gui <- [deck1g, deck2g, deck3g, deck4g, 
+           deck1l, deck2l, deck3l, deck4l]
+           
+   loop(i,deckUI)
+    {
+       AddObject(i,gWin)
+    }
+
+   loop(i, gui)
+    {
+        AddObject(i,gWin)
+        Hide(i)
+    }
+
+   x <- 100
+   loop(i, textUI) 
+   {
+      AddObject(i,gWin)
+      Move(i,x,200)
+      x <- x + 100
+   }
+
+   gui <- Flatten([gui,textUI,deckUI, gHeader, gFooter,gTotalLabel])
    
+
    ##Turn the header on during the task.
    gHeader.text <- "Select deck by pressing key 1-4"
    Show(gHeader)
@@ -321,31 +320,13 @@ Press any key to begin.")
       trialnum <- trialnum + 1
     }
 
-   Hide(gHeader)
-   Hide(deck1)
-   Hide(deck2)
-   Hide(deck3)
-   Hide(deck4)
-   Hide(deck1g)
-   Hide(deck2g)
-   Hide(deck3g)
-   Hide(deck4g)
-
-   Hide(deck1l)
-   Hide(deck2l)
-   Hide(deck3l)
-   Hide(deck4l)
-
-   Hide(deck1text)
-   Hide(deck2text)
-   Hide(deck3text)
-   Hide(deck4text)
-
-   Hide(gFooter)
-   Hide(gTotalLabel)
+   #Remove all the graphical elements: 
+   loop(i, gui)
+   {
+     Hide(i)
+   }
 
    FileClose(gFileOut)
-
 
    ##Now, show debriefing info.
    feedback <-  "Thank you for participating in the experiment. You earned a total of $" + gTotal + ". "
