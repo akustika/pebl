@@ -169,7 +169,6 @@ Press any key to begin.")
       x <- x + 100
    }
 
-   gui <- Flatten([gui,textUI,deckUI, gHeader, gFooter,gTotalLabel])
    
 
    ##Turn the header on during the task.
@@ -189,6 +188,7 @@ Press any key to begin.")
    AddObject(gFooter,gWin)
    Move(gFooter, 50,300)
 
+   gui <- Flatten([gui,textUI,deckUI, gHeader, gFooter,gTotalLabel])
    earnings <- MakeEarningsGraph(gTotal)
    Draw()
  
