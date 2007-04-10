@@ -369,6 +369,10 @@ Press any key to begin.")
 ##  objects used in experiments.
 define Initialize()
 {
+
+  gVideoWidth <- 640
+  gVideoheight <- 480
+
   ##Initialize Window, etc.
   gWin <- MakeWindow("grey")   
             
@@ -440,9 +444,9 @@ define MakeEarningsGraph( earnings)
     ##Define the locations of the labels
     yvals <- [-1000,0,1000,2000,3000,4000,5000]
 
-
     x <- Rectangle(xcenter+width/2, ycenter, width, height, col, 1)
-    outline <- Rectangle(gVideoWidth/2, gVideoHeight-30, gVideoWidth-10,50,col, 0)
+    outline <- Rectangle(gVideoWidth/2, gVideoHeight-30,
+                         gVideoWidth-10,50,col, 0)
     AddObject(x,gWin)
     AddObject(outline,gWin)
 
@@ -453,22 +457,12 @@ define MakeEarningsGraph( earnings)
     ##static, which would be a little more efficient, but it is really 
     ##fast as is.
     composite <-[outline,x]
-
-    #Headers
-     yn1000 <- MakeLabel("-1000", ggraphFont)
-     y0     <- MakeLabel("0",ggraphFont)
-     y1000  <- MakeLabel("1000",ggraphFont)
-     y2000  <- MakeLabel("2000",ggraphFont)
-     y3000  <- MakeLabel("3000",ggraphFont)
-     y4000  <- MakeLabel("4000",ggraphFont)
-     y5000  <- MakeLabel("5000",ggraphFont)
    
-     composite <- [outline,x,yn1000,y0,y1000,y2000,y3000,y4000,y5000]
      loop(i,yvals)
       { 
         yy <- MakeLabel(i+"", ggraphFont)
         AddObject(yy,gWin)
-        Move(yy, xcenter-(i/scale), ycenter-20)
+        Move(yy, xcenter+(i/scale), ycenter-20)
         Show(yy)
         composite <- Append(composite,yy)
       }
