@@ -169,7 +169,7 @@ Press any key to begin.")
       FilePrint_(gFileOut, gSubNum + " " + trialnum + " " + resp + " " + reward + " " + penalty)
       FilePrint(gFileOut, " " + net + " " + gTotal + " " + time1 + " " +  rt )
 
-    
+      Wait(400)    
       WaitForAllKeysUp()
 	  Show(Nth(gDoors,door))
       HidePayoff(reward,penalty)   
