@@ -31,13 +31,14 @@ define Start(lPar)
 {
 
 
+
   ####################################
   ##
   ## Parameters/Variables controlling experiment
   ##
    
   blocks <- 9              ## The number of trial blocks
-  blocklength <-  10       ## The number of trials per block
+  blocklength <-  50       ## The number of trials per block
 
 
   numtrials <- blocks * blocklength 
@@ -50,9 +51,7 @@ define Start(lPar)
   ## Begin Initialization Procedures.
   ##
   Initialize()
-
-
-
+ 
   stimLetters <- ["D","F","J","K"]
 
   ## Lists storing the actual RT values, along with the presentation time.
@@ -374,15 +373,16 @@ define AggregateAcc(isis, accs)
      {
 
        stats <- Append(stats,
-                      [lastISI, Length(tmpAcc), Mean(tmpAcc)])
+                      [lastISI, Length(tmpAcc), Mean(tmpAcc),DP(Mean(tmpAcc))])
        tmpAcc <- []
      }
 
    tmpAcc <- Append(tmpAcc,Nth(i,2))
    lastISI <- First(i)
   }
-  Print([lastISI, Length(tmpAcc), Mean(tmpAcc), DP(tmpAcc)])
-  stats <- Append(stats, [lastISI, Length(tmpAcc), Mean(tmpAcc), DP(tmpAcc)])
+
+
+  stats <- Append(stats, [lastISI, Length(tmpAcc), Mean(tmpAcc), DP(Mean(tmpAcc))])
 
   return stats
 }
@@ -559,12 +559,13 @@ define GraphXYLine(x,y,iX,iY,scaleX, scaleY, col,parent, type)
 
 define DP(acc)
 {
-  return DPrime(acc,(1-acc)/4)
+
+   return DPrime(acc,(1-acc)/4)
 }
 
 define DPrime(hr,far)
 {
-   return XCumNormInv(far)-XCumNormInv(hr)
+   return XCumNormInv(hr) -XCumNormInv(far)
 }
 
 
