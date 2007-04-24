@@ -36,6 +36,15 @@ define Start(lPar)
   Initialize()
   ShowCursor(0) 
 
+   if(IsAnyKeyDown())
+   {
+      gInstructions.text <- "Please make sure no keys are pressed.
+   Make sure that the numlock and scroll lock keys are untoggled."
+      Show(gInstructions)
+      Draw()
+      WaitForAllKeysUp()
+   }
+
 
   ####################################################
   ##  Now, generate stimuli/conditions
@@ -169,7 +178,7 @@ Press any key to begin.")
       FilePrint_(gFileOut, gSubNum + " " + trialnum + " " + resp + " " + reward + " " + penalty)
       FilePrint(gFileOut, " " + net + " " + gTotal + " " + time1 + " " +  rt )
 
-      Wait(400)    
+      Wait(200)    
       WaitForAllKeysUp()
 	  Show(Nth(gDoors,door))
       HidePayoff(reward,penalty)   
@@ -398,7 +407,7 @@ define MakeEarningsGraph(earnings)
       { 
         yy <- MakeLabel(i+"", ggraphFont)
         AddObject(yy,gWin)
-        Move(yy, xcenter-(i/scale), ycenter-20)
+        Move(yy, xcenter+(i/scale), ycenter-20)
         Show(yy)
         composite <- Append(composite,yy)
       }
