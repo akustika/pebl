@@ -56,7 +56,7 @@ PColor SDLUtility::SDLColorToPColor(SDL_Color scolor)
 }  
 
 
-
+  
 
 ///  This sets a pixel to be a certain color.
 void SDLUtility::DrawPixel(SDL_Surface *surface, int x, int y, PColor pcolor)
@@ -69,12 +69,15 @@ void SDLUtility::DrawPixel(SDL_Surface *surface, int x, int y, PColor pcolor)
     
     //Only draw the pixel if it is actually in the surface.
     if(x < 0 
-       || x > surface->w
+       || x >= surface->w
        || y < 0 
-       || y > surface->h)
+       || y >= surface->h)
         {
+            //cout << "outside: "<< x<< " " << y << endl;
             return;
         }
+
+    //cout << "inside: "<< x << " " << y << " " << surface->w << " " << surface->h << endl;
 
     int bpp = surface->format->BytesPerPixel;
     /* Here p is the address to the pixel we want to set */

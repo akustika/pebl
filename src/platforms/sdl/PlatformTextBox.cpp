@@ -35,6 +35,7 @@
 
 #include "../../utility/rc_ptrs.h"
 #include "../../utility/PError.h"
+#include "../../utility/PEBLUtility.h"
 
 #include "SDL/SDL.h"
 #include "SDL/SDL_ttf.h"
@@ -260,18 +261,17 @@ void PlatformTextBox::FindBreaks()
 
     while(totalheight < (unsigned int) mHeight  && linestart < mText.size())
         {
-         
+
             linelength   = FindNextLineBreak(linestart);
             
             //Increment the placekeepers.
             totalheight += height;
-            linestart +=  linelength + 1;
+            linestart +=  linelength +1;
 
             mBreaks.push_back(linestart);
 
+            
         }
-
-   
 
 }
 
@@ -303,10 +303,11 @@ int PlatformTextBox::FindNextLineBreak(unsigned int curposition)
             
      
             if(mText[curposition + sublength] == ' '
-               || mText[curposition + sublength] == '-'
-               || curposition + sublength == mText.size())
+               || mText[curposition + sublength] == '-')
+                //               || curposition + sublength == mText.size())
                 {  
                     //either of these are word breaks; potential line breaks.  
+
 
                    
                     //Increment word separator holders
@@ -394,23 +395,37 @@ void PlatformTextBox::DrawCursor()
     int x = 0;
     int y = 0;
 
-    int height=mFont->GetTextHeight(mText);
+    int height = mFont->GetTextHeight(mText);
+    int width =  GetWidth();
     unsigned int i = 0;
     int linestart = 0;
-
-
-    while(i < mBreaks.size())
-        {
-            if(mBreaks[i] > mCursorPos)
-                {
-                    y = i * height;
-                    x = mFont->GetTextWidth(mText.substr(linestart, mCursorPos - linestart));
-                    break;
-                }
-            linestart = mBreaks[i];
-            i++;
-        }
     
+    x = width-1;
+    if(mCursorPos==0) 
+        {
+            x=0;
+        
+        } else {
+            while(i < mBreaks.size())
+                {
+                    
+                    //increment x,y while we go, so that if we get orphaned text, 
+                    //we still get a decent cursor position.
+                    y = i * height;
+                    
+                    
+                    if(mBreaks[i] > mCursorPos)
+                        {
+                            x =  mFont->GetTextWidth(mText.substr(linestart, mCursorPos - linestart));
+                            x = ( x >= width ) ? width-1: x;
+                            break;
+                        }
+                    
+                    linestart = mBreaks[i];
+                    i++;
+                }
+        }
+
     //x,y specifies the top of the cursor.
     SDLUtility::DrawLine(mSurface, x, y, x, y+height,(mFont->GetFontColor()));
 
