@@ -207,9 +207,9 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
         }
     else
         {
-            cerr << "\n\n----------------------------------------------------------------------------------------\n";        
+            cerr << "\n\n--------------------------------------------------------------------------------\n";        
             cerr << " Current Video Mode:" << endl;
-            cerr << "----------------------------------------------------------------------------------------\n";
+            cerr << "--------------------------------------------------------------------------------\n";
             const SDL_VideoInfo * info = SDL_GetVideoInfo();
             cerr << "hw_available   Is it possible to create hardware surfaces?:           [" << info->hw_available << "]\n";
             cerr << "wm_available   Is there a window manager available:                   [" << info->wm_available << "]\n";
@@ -225,7 +225,7 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
             cerr << "Display Mode:  Height (pixels)                                        [" << height << "]\n";
             cerr << "Display Mode:  Color Depth (bits)                                     [" << depth << "]\n";
 
-            cerr << "---------------------------------- PIXEL FORMAT----------------------------------------\n";
+            cerr << "---------------------------------- PIXEL FORMAT---------------------------------\n";
 
             const SDL_PixelFormat *pf = info->vfmt;
             
@@ -242,7 +242,7 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
             SDL_VideoDriverName(drivername, 20);
             cerr << "Using Video Driver: " << drivername << endl;
             
-            cerr << "---------------------------------------------------------------------------------------\n\n";
+            cerr << "--------------------------------------------------------------------------------\n\n";
 
             return true;
         }

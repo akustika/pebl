@@ -44,6 +44,14 @@ define Start(lPar)
   Initialize()
   ShowCursor(0)
  
+   if(IsAnyKeyDown())
+   {
+      gInstructions.text <- "Please make sure no keys are pressed.
+   Make sure that the numlock and scroll lock keys are untoggled."
+      Show(gInstructions)
+      Draw()
+      WaitForAllKeysUp()
+   }
   
   ####################################################
   ##  Now, generate stimuli/conditions
