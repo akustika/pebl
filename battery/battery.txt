@@ -24,7 +24,7 @@ Tasks:
 The following tests are currently available:
 
 -------------------------------------------------------------------------------
-*                      Berg's Wisconsin Card Sorting Test 
+*                      Berg's "Wisconsin Card Sort" Test 
 -------------------------------------------------------------------------------
 
 Location: bcst/cardsort.pbl
@@ -106,11 +106,12 @@ which is saved to iat-report-<gsubnum>.txt.  This gives mean response
 times and error rates for different block conditions.
 
 -------------------------------------------------------------------------------
-*                             Iowa Gambling Task
+*                         Bechara's "Iowa Gambling Task"
 -------------------------------------------------------------------------------
 Location: iowa/iowa.pbl
 
-Description: Implementation of the Iowa Gambling task.  4 decks are
+Description: Our implementation of the gambling task described by Bechara, commonly 
+referred to by the registered trademarked "Iowa Gambling Task."  4 decks are
 given, participant must draw cards from whatever deck they choose. Two
 decks are net positive, two are net negative.
 
@@ -121,7 +122,19 @@ participants.  Baseline rewards for each deck can be changed as well.
  
 Results:
 Data are written to igd-<gsubnum>.txt  Columns are:
-subject_id trial deck reward penalty net total absulute_time latency
+subject_id trial deck reward penalty net total absolute_time latency
+
+
+-------------------------------------------------------------------------------
+*                             The Hungry Donkey Task
+-------------------------------------------------------------------------------
+Location: donkey/donkey.pbl
+
+Description: A version of the "Iowa Gambling task", targeted to non-verbal children.
+You choose doors, which provide a donkey with gains or losses of apples. 4 doors are
+provided, and the participant must choose doors. Two
+doors are net positive, two are net negative.
+
 
 
 -------------------------------------------------------------------------------

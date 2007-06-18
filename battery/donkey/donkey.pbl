@@ -218,9 +218,15 @@ Press any key to begin.")
 ##  objects used in experiments.
 define Initialize()
 {
+
+  gVideoWidth <- 640
+  gVideoHeight <- 480
+
   ##Initialize Window, etc.
   gWin <- MakeWindow("grey")   
             
+   Print(gVideoWidth)
+   Print(gVideoHeight)
   ##Initialize Font and colors
 
 

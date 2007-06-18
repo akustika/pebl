@@ -99,6 +99,11 @@ PNode * head;
 int PEBLInterpret( int argc, char *argv[] )
 { 
     
+	for(int i = 0; i < argc; i++)
+	{
+      cout << argv[i] << endl;
+	}
+
     PNode * tmp = NULL;
     
     //Cycle through command-line parameters extracting the files.
@@ -218,7 +223,8 @@ int PEBLInterpret( int argc, char *argv[] )
     //Extract the command-line variables to bind   
     for(int j = 1; j < argc; j++)
         {
-            
+         
+			std::cout << argv[j] << endl;
             if(strcmp(argv[j], "-v")==0 ||
                strcmp(argv[j], "-V")==0)
                 {
@@ -230,7 +236,8 @@ int PEBLInterpret( int argc, char *argv[] )
                     strcmp(argv[j], "-S")==0)
                 {
                     subnum  = argv[++j];
-                }
+					cout << "collecting Subject Number "<< subnum << endl;
+  				}
             //set the driver directly from the command-line, if necessary.
             else if(strcmp(argv[j],"--driver")==0)
                 {
@@ -488,8 +495,8 @@ void PrintOptions()
 {
     cout << "-------------------------------------------------------------------------------\n";
     cout << "PEBL: The Psychology Experiment Building Language\n";
-    cout << "Version 0.07\n";
-    cout << "(c) 2003-2006 Shane T. Mueller, Ph.D.\n";
+    cout << "Version 0.08\n";
+    cout << "(c) 2003-2007 Shane T. Mueller, Ph.D.\n";
     cout << "smueller@obereed.net   http://pebl.sf.net\n";
     cout << "-------------------------------------------------------------------------------\n";
 
