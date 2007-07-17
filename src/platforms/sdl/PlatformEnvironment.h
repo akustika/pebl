@@ -67,6 +67,7 @@ public:
     
 
     virtual int ShowCursor(int val);
+    virtual bool GetUnicode(){return mUnicode;};
 protected:
     virtual std::ostream & SendToStream(std::ostream& out) const;    
 

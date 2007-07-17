@@ -173,11 +173,11 @@ SDL_Surface * PlatformFont::RenderText(const std::string & text)
 
     if(mAntiAliased)
         {
-            tmpSurface = TTF_RenderText_Shaded(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor, mSDL_BGColor);
+            tmpSurface = TTF_RenderUTF8_Shaded(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor, mSDL_BGColor);
         }
     else
         {
-            tmpSurface =  TTF_RenderText_Solid(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor);
+            tmpSurface =  TTF_RenderUTF8_Solid(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor);
         }
 
 
