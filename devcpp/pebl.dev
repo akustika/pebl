@@ -25,7 +25,9 @@ CommandLine=demo/hello.pbl
 IncludeVersionInfo=1
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=000000000100100010
+CompilerSettings=0000000001001000010000
+UseCustomMakefile=0
+CustomMakefile=
 
 [Unit2]
 FileName=..\src\base\Variant.cpp

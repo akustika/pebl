@@ -1,18 +1,19 @@
 # Project: PEBL
-# Makefile created by Dev-C++ 4.9.8.0
+# Makefile created by Dev-C++ 4.9.9.2
 
 CPP  = g++.exe
 CC   = gcc.exe
 WINDRES = windres.exe
-RES  = pebl_private.res
+RES  = obj/pebl_private.res
 OBJ  = obj/Variant.o obj/PComplexData.o obj/PList.o obj/PlatformEnvironment.o obj/PlatformFont.o obj/PlatformImageBox.o obj/PlatformKeyboard.o obj/PlatformTimer.o obj/PlatformWidget.o obj/PlatformWindow.o obj/SDLUtility.o obj/PColor.o obj/PEnvironment.o obj/PFont.o obj/PImageBox.o obj/PWidget.o obj/PWindow.o obj/PEBLUtility.o obj/PDevice.o obj/PKeyboard.o obj/PTimer.o obj/DeviceState.o obj/PEventLoop.o obj/PEBL.o obj/Evaluator.o obj/FunctionMap.o obj/grammar.tab.o obj/lex.yy.o obj/Loader.o obj/PNode.o obj/VariableMap.o obj/PEBLEnvironment.o obj/PEBLList.o obj/PEBLMath.o obj/PEBLObjects.o obj/PEBLStream.o obj/PStream.o obj/PEBLPath.o obj/PError.o obj/PAudioOut.o obj/PlatformAudioOut.o obj/PlatformLabel.o obj/PLabel.o obj/PTextObject.o obj/PlatformTextBox.o obj/PTextBox.o obj/PEventQueue.o obj/PEvent.o obj/PlatformEventQueue.o obj/PEBLString.o obj/PEBLObject.o obj/PDrawObject.o obj/PlatformDrawObject.o obj/PNetwork.o obj/PlatformNetwork.o $(RES)
 LINKOBJ  = obj/Variant.o obj/PComplexData.o obj/PList.o obj/PlatformEnvironment.o obj/PlatformFont.o obj/PlatformImageBox.o obj/PlatformKeyboard.o obj/PlatformTimer.o obj/PlatformWidget.o obj/PlatformWindow.o obj/SDLUtility.o obj/PColor.o obj/PEnvironment.o obj/PFont.o obj/PImageBox.o obj/PWidget.o obj/PWindow.o obj/PEBLUtility.o obj/PDevice.o obj/PKeyboard.o obj/PTimer.o obj/DeviceState.o obj/PEventLoop.o obj/PEBL.o obj/Evaluator.o obj/FunctionMap.o obj/grammar.tab.o obj/lex.yy.o obj/Loader.o obj/PNode.o obj/VariableMap.o obj/PEBLEnvironment.o obj/PEBLList.o obj/PEBLMath.o obj/PEBLObjects.o obj/PEBLStream.o obj/PStream.o obj/PEBLPath.o obj/PError.o obj/PAudioOut.o obj/PlatformAudioOut.o obj/PlatformLabel.o obj/PLabel.o obj/PTextObject.o obj/PlatformTextBox.o obj/PTextBox.o obj/PEventQueue.o obj/PEvent.o obj/PlatformEventQueue.o obj/PEBLString.o obj/PEBLObject.o obj/PDrawObject.o obj/PlatformDrawObject.o obj/PNetwork.o obj/PlatformNetwork.o $(RES)
-LIBS =  -L"C:/MinGW/mingw32/lib" -L"C:/MinGW/lib" -L"C:/msys/1.0/local/lib" -lmingw32 -lSDLmain -lSDL -mwindows -lSDL_image -lSDL_ttf -lSDL_gfx -lSDL_net 
-INCS =  -I"C:/MinGW/include"  -I"C:/msys/1.0/local/include/SDL" 
-CXXINCS =  -I"C:/MinGW/include/c++/3.2.3"  -I"C:/msys/1.0/local/include"  -I"C:/msys/1.0/local/include/SDL" 
+LIBS =  -L"C:/Dev-Cpp/lib" -lmingw32 -lSDLmain -lSDL -mwindows -lSDL_image -lSDL_ttf -lSDL_gfx -lSDL_net  -mwindows 
+INCS =  -I"C:/Dev-Cpp/include" 
+CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include" 
 BIN  = ../bin/pebl.exe
-CXXFLAGS = $(CXXINCS)-Wno-deprecated -DPEBL_WIN32 -Dmain=SDL_main   -fexpensive-optimizations -O3 -nostdlib
-CFLAGS = $(INCS)-Dmain=SDL_main -DHAVE_OPENGL   -fexpensive-optimizations -O3 -nostdlib
+CXXFLAGS = $(CXXINCS) -Wno-deprecated -DPEBL_WIN32 -Dmain=SDL_main   -fexpensive-optimizations -O3 -mwindows
+CFLAGS = $(INCS) -Dmain=SDL_main -DHAVE_OPENGL   -fexpensive-optimizations -O3 -mwindows
+RM = rm -f
 
 .PHONY: all all-before all-after clean clean-custom
 
@@ -20,9 +21,9 @@ all: all-before ../bin/pebl.exe all-after
 
 
 clean: clean-custom
-	rm -f $(OBJ) $(BIN)
+	${RM} $(OBJ) $(BIN)
 
-$(BIN): $(LINKOBJ)
+$(BIN): $(OBJ)
 	$(CPP) $(LINKOBJ) -o "..\bin\pebl.exe" $(LIBS)
 
 obj/Variant.o: ../src/base/Variant.cpp
@@ -190,5 +191,5 @@ obj/PNetwork.o: ../src/devices/PNetwork.cpp
 obj/PlatformNetwork.o: ../src/platforms/sdl/PlatformNetwork.cpp
 	$(CPP) -c ../src/platforms/sdl/PlatformNetwork.cpp -o obj/PlatformNetwork.o $(CXXFLAGS)
 
-pebl_private.res: pebl_private.rc 
-	$(WINDRES) -i pebl_private.rc -I rc -o pebl_private.res -O coff 
+obj/pebl_private.res: pebl_private.rc 
+	$(WINDRES) -i pebl_private.rc --input-format=rc -o obj/pebl_private.res -O coff 
