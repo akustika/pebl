@@ -1,6 +1,6 @@
-PEBL PSYCHOLOGICAL TEST BATTERY Version 0.1
+PEBL PSYCHOLOGICAL TEST BATTERY Version 0.2
 
-Released May 2006 
+Released July 2007 
 Part of the PEBL Project
 http://pebl.sourceforge.net/battery.html
 
@@ -24,7 +24,7 @@ Tasks:
 The following tests are currently available:
 
 -------------------------------------------------------------------------------
-*                      Berg's "Wisconsin Card Sort" Test 
+*                      Berg's "Wisconsin Card Sort" Test Version 0.2
 -------------------------------------------------------------------------------
 
 Location: bcst/cardsort.pbl
@@ -42,17 +42,19 @@ Options:
 		  same as in Berg's original, or whether they are generated randomly.
 
 Results:
-	    Data are stored in bcst-<gsubnum>.txt.  Detailed report stored
-	    in bcst-report-<gsubnum>.txt.  Report calculates trials,
-	    accuracy, number incorrect, perseverations on prior rule, and
-	    number of achieved categories.
+   	        Data are stored in bcst-<gsubnum>.txt.  Detailed report stored
+	        in bcst-report-<gsubnum>.txt.  Report calculates trials,
+	        accuracy, number incorrect, perseverations on prior rule, and
+	        number of achieved categories.
 
 
 
+Changelog:      
 
+Version 0.2 correctly computes perseverations and fixes some other bugs over version 0.1
 
 -------------------------------------------------------------------------------
-*                                  Digit Span 
+*                                  Digit Span Version 0.1
 -------------------------------------------------------------------------------
 Location: dspan/digitspan.pbl
 
@@ -83,7 +85,7 @@ Results:
  Basic results are output to dspan-<subnum>.txt
 
 -------------------------------------------------------------------------------
-*                         Implicit Association Task
+*                         Implicit Association Task  Version 0.2
 -------------------------------------------------------------------------------
 Location: iat/IAT.pbl
 
@@ -106,7 +108,7 @@ which is saved to iat-report-<gsubnum>.txt.  This gives mean response
 times and error rates for different block conditions.
 
 -------------------------------------------------------------------------------
-*                         Bechara's "Iowa Gambling Task"
+*                         Bechara's "Iowa Gambling Task", Version 0.3
 -------------------------------------------------------------------------------
 Location: iowa/iowa.pbl
 
@@ -124,10 +126,15 @@ Results:
 Data are written to igd-<gsubnum>.txt  Columns are:
 subject_id trial deck reward penalty net total absolute_time latency
 
+Changelog:
+  Version 0.3 contains a continuously-updated status bargraph, as well as some fixes to bugs
+  in the earlier versions.
 
 -------------------------------------------------------------------------------
-*                             The Hungry Donkey Task
+*                             The Hungry Donkey Task, Version 0.1
 -------------------------------------------------------------------------------
+New for Version 0.2
+
 Location: donkey/donkey.pbl
 
 Description: A version of the "Iowa Gambling task", targeted to non-verbal children.
@@ -135,10 +142,16 @@ You choose doors, which provide a donkey with gains or losses of apples. 4 doors
 provided, and the participant must choose doors. Two
 doors are net positive, two are net negative.
 
+Options: None
+
+Results:
+Data are stored in donkey-<gsubnum>.txt.  
+Columns are: subnum, trial, response, reward, penalty, net, total, time, rt
+
 
 
 -------------------------------------------------------------------------------
-*                         Continuous Performance Task
+*                         Continuous Performance Task, Version 0.1
 -------------------------------------------------------------------------------
 Location: pcpt/pcpt.pbl
 Description:  A continuous performance task akin to Conners' Continuous
@@ -164,7 +177,7 @@ Results:
 
 
 -------------------------------------------------------------------------------
-*                       Probabilistic Reversal Learning Test
+*                       Probabilistic Reversal Learning Test, Version 0.2
 -------------------------------------------------------------------------------
 Location: probrev/probrev.pbl
 
@@ -186,7 +199,7 @@ correct_count corr rt
 
 
 -------------------------------------------------------------------------------
-*                               Simple Response Time
+*                               Simple Response Time, Version 0.1
 -------------------------------------------------------------------------------
 Location: srt/SimpleRT.pbl
 
@@ -207,7 +220,7 @@ delays, is output to srt-report-<gsubnum>.txt.
 
 
 -------------------------------------------------------------------------------
-*                        Test of Attentional Vigilance (TOAV)
+*                        Test of Attentional Vigilance (TOAV), Version 0.1
 -------------------------------------------------------------------------------
 Location: toav/toav.pbl
 
@@ -225,8 +238,10 @@ Results:
 		toav-report-<gsubnum>.txt
 
 -------------------------------------------------------------------------------
-*                   Psychomotor Vigilance Task
+*                   Psychomotor Vigilance Task Version 0.1
 -------------------------------------------------------------------------------
+New in PEBL Battery 0.2
+
 Location: ppvt/ppvt.pbl
 
 Description: Simple reaction time task--an circle stimulus appears at
@@ -249,3 +264,54 @@ for trial type, 1=too fast, 2= OK, 3 = lapse (> 500 ms) 4 = sleep (>30 s)
 
 A summary of the results, with means and standard deviations across
 delays, is output to ppvt-report-<gsubnum>.txt.
+
+
+-------------------------------------------------------------------------------
+*                   Partial Report Procedure Version 0.1
+-------------------------------------------------------------------------------
+New in PEBL Battery Version 0.2
+
+Location: partial-report/PartialReport.pbl
+
+Description: Classic partial report procedure used to assess decay time of
+iconic memory. In recent years, has been suggested provide early warning sign 
+for alzheimer's disease.  At the end, it draws a graph depicting accuracy by delay time.
+
+Options:
+By default, runs 9 blocks of 50 trials.  These can be changed easily be editing the script.
+ 
+
+Results:
+Data is saved to file part-report-<gsubnum>.txt.  Columns are:
+
+SubjectNum, Block, Trial, delay, radial_position, cueLetter, response, correct, RT
+
+
+A summary of the results, with means and standard deviations across
+delays, is output to part-report-report-<gsubnum>.txt.
+
+
+
+-------------------------------------------------------------------------------
+*                   Symbol Counter Task, Version 0.1
+-------------------------------------------------------------------------------
+
+Location: symbolcounter/SymbolCounter.pbl
+
+Description: Two-symbol counter updating task, used by Gehring et al. & Garavan.
+
+
+-------------------------------------------------------------------------------
+*                   Tower of London, Version 0.1
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.2
+
+Location: tol/TOL.pbl
+
+Description:  Pick up disks and move them to the configuration shown.  Not a
+complete experiment at this time.  A simple version of the "Tower of Hanoi".
+
+Options:  Number of disks, number of trials. Disks should not exceed 6.
+
+
+

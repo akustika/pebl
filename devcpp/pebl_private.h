@@ -5,10 +5,10 @@
 #define PEBL_PRIVATE_H
 
 /* VERSION DEFINITIONS */
-#define VER_STRING	"0.0.7.1"
+#define VER_STRING	"0.0.8.1"
 #define VER_MAJOR	0
 #define VER_MINOR	0
-#define VER_RELEASE	7
+#define VER_RELEASE	8
 #define VER_BUILD	1
 #define COMPANY_NAME	""
 #define FILE_VERSION	""

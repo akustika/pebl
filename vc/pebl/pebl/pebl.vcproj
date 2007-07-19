@@ -661,11 +661,11 @@
 			>
 		</Filter>
 		<File
-			RelativePath=".\ReadMe.txt"
+			RelativePath="..\..\..\src\platforms\sdl\readme.txt"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\src\platforms\sdl\readme.txt"
+			RelativePath=".\ReadMe.txt"
 			>
 		</File>
 	</Files>

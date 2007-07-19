@@ -1,7 +1,7 @@
 #!/usr/local/bin/pebl
 ###########################################################
 ##  Partial Report of Iconic Memory, Version 0.1
-##  For use with PEBL 0.07 or later
+##  For use with PEBL 0.08 or later
 ##  http://pebl.sf.net
 ##  Part of  The PEBL Psychological Testing Battery
 ##  2006-02 Released into Public Domain
@@ -145,7 +145,7 @@ define Start(lPar)
   Print(aggdata)
   GraphStats(aggdata)
  
-   reportfile <- FileOpenWrite("srt-report-" + gSubNum + ".txt")
+   reportfile <- FileOpenWrite("partialreport-report-" + gSubNum + ".txt")
    FilePrint(reportfile,"------------------------------------------------------")
    FilePrint(reportfile," Report for PEBL Partial Report Procedure Version 0.1")
    FilePrint(reportfile, " "+GetPEBLVersion())

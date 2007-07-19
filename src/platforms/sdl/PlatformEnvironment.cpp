@@ -39,7 +39,7 @@
 
 #if defined PEBL_WIN32
 #include <windows.h>
-#include <ddraw.h>
+//#include <ddraw.h>  This may be needed for compiling with VC++ 
 #endif
 
 using std::cout;

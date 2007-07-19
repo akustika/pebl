@@ -92,7 +92,7 @@ BuildCmd=
 [VersionInfo]
 Major=0
 Minor=0
-Release=7
+Release=8
 Build=1
 LanguageID=1033
 CharsetID=1252
