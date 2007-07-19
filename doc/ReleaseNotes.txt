@@ -26,6 +26,39 @@ obsolete.
 
 
                  RELEASE NOTES
+
+
+--------------------------------------------------
+Version 0.08
+June 2007
+
+
+* Unicode support for foreign scripts.
+* Fixed bug which made abs and < not work properly
+* Fixing cr\lf parse errors on Unix
+* fixed .height and .width properties for images
+* Fix crasher when drawing cursor out-of-bounds in textboxes
+* Fixed cursor formatting error when reflowing text
+* Adding functions to compute normal distribution:
+   CumNormInv(p) (uses accurate numerical approximation)
+   NormalDensity(x)
+   SDTDPrime(hr,far)
+   SDTBeta(hr,far) 
+ 
+* Update the launcher so it doesn't give misleading feedback when no stdout.txt file is created
+* Fix launcher so it correctly uses subject number.
+* Return to compiling with gcc on windows (after previous use of MSVC++ Express)
+
+Test Battery:
+  * Fixes to IGT, add feedback graph
+  * fixes to  probabilistic reversal, 
+  * Added Hungry Donkey, a kid's version of IGT
+  * BCST (compute perseverations), compute trial number
+  * Add Psychomotor Vigilance Task (PVT)
+  * Add working Partial report (iconic memory) experiment.
+  * Added Tower of London demo experiment
+
+
 --------------------------------------------------
 Version 0.07
 June 2006
