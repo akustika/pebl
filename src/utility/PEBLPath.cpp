@@ -90,7 +90,7 @@ void PEBLPath::Initialize(std::list<std::string> files)
 /*#elif defined(PEBL_WIN32) or defined(WIN32)*/
 #else
 	//On Windows add the following paths:
-	//std::cout << "I'm adding all kinds of paths\n";
+
     //current working directory
     AddToPathList(".\\");
     

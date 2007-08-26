@@ -25,8 +25,8 @@
 #endif
 
 /* Include the SDL main definition header */
-#include "SDL.h"
-#include "SDL_main.h"
+#include "SDL\SDL.h"
+#include "SDL\SDL_main.h"
 
 #ifdef main
 # ifndef _WIN32_WCE_EMULATION
@@ -110,6 +110,7 @@ static void ShowError(const char *title, const char *message)
 #ifdef USE_MESSAGEBOX
 	MessageBox(NULL, message, title, MB_ICONEXCLAMATION|MB_OK);
 #else
+
 	fprintf(stderr, "%s: %s\n", title, message);
 #endif
 }
@@ -142,6 +143,8 @@ static void cleanup_output(void)
 
 #ifndef NO_STDIO_REDIRECT
 	/* See if the files have any output in them */
+
+/*
 	if ( stdoutPath[0] ) {
 		file = fopen(stdoutPath, TEXT("rb"));
 		if ( file ) {
@@ -162,6 +165,7 @@ static void cleanup_output(void)
 			}
 		}
 	}
+*/
 #endif
 }
 
@@ -261,11 +265,17 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int sw)
 	}
 
 #ifndef NO_STDIO_REDIRECT
-	pathlen = GetModuleFileName(NULL, path, SDL_arraysize(path));
+     /*Put the output files in the working directory*/
+     getcwd(path, MAX_PATH);
+
+        /* This gets the location of the executable.*/
+/*	pathlen = GetModuleFileName(NULL, path, SDL_arraysize(path));
 	while ( pathlen > 0 && path[pathlen] != '\\' ) {
 		--pathlen;
 	}
 	path[pathlen] = '\0';
+*/
+
 
 #ifdef _WIN32_WCE
 	wcsncpy( stdoutPath, path, SDL_arraysize(stdoutPath) );

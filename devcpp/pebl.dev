@@ -1,7 +1,7 @@
 [Project]
 FileName=pebl.dev
 Name=PEBL
-UnitCount=111
+UnitCount=112
 Type=1
 Ver=1
 ObjFiles=
@@ -1151,6 +1151,16 @@ BuildCmd=
 FileName=..\src\platforms\sdl\PlatformNetwork.h
 CompileCpp=1
 Folder=platforms/sdl
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit112]
+FileName=..\src\apps\SDL_win32_main.c
+CompileCpp=1
+Folder=apps
 Compile=1
 Link=1
 Priority=1000
