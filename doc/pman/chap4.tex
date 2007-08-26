@@ -250,10 +250,94 @@ Images have all the properties available for widgets, but the width
 and height can only be read, and not set.  Width and height are
 controlled by the dimensions of the image file.
 
-
 \section{Shapes}
 PEBL allows you to define a number of shape objects that can be added
-to another widget.
+to another widget.  A demonstration script exercising these shapes is found in demo/shapes.pbl.
+
+The following is a list of shape and their properties.
+
+\subsection{Circle}
+\emph{Description:} A standard circle.  Move commands move the center
+  of the circle to the specified location.\\
+
+\emph{Command:}  \verb+Circle(<x>,<y>,<r>,<color>,<filled>)+\\
+
+\emph{Properties:}
+.filled = {0,1} (whether it is filled)\\
+.color (color) \\
+.x  (x position of center) \\
+.y  (y position of center)\\
+.height (read-only height)\\
+.width (read-only width)\\
+.R  (radius)\\
+
+\subsection{Ellipse}
+
+\emph{Description:} An ellipse, with height and width differing.
+  Cannot be pointed in an arbitrary direction.  Move commands move the center
+  of the shape to the specified location.
+
+\emph{Command:}  \verb+Ellipse(<x>,<y>,<rx>,<ry>,<color>,<filled>)+\\
+
+\emph{Properties:}
+.filled = {0,1} (whether it is filled)\\
+.color (color) \\
+.x  (x position of center) \\
+.y  (y position of center)\\
+.height (read-only height)\\
+.width (read-only width)\\
+.rx  (x radius)\\
+.ry  (y radius
+
+
+\subsection{Square}
+
+\emph{Description:} A square. Move commands move the center
+  of the shape to the specified location.
+
+\emph{Command:}  \verb+Square(<x>,<y>,<size>,<color>,<filled>)+\\
+
+\emph{Properties:}\\
+.filled = 0,1 (whether it is filled)\\
+.color (color) \\
+.x  (x position of center) \\
+.y  (y position of center)\\
+.height (read-only height)\\
+.width (read-only width)\\
+.dx, .dy, .size  (Length of side)\\
+
+
+\subsection{Rectangle}
+\emph{Description:} A Rectangle. Move commands move the center
+  of the rectangle to the specified location.
+
+\emph{Command:}  \verb+Rectangle(<x>,<y>,<dx>,<dy>,<color>,<filled>)+\\
+
+\emph{Properties:}
+.filled = {0,1} (whether it is filled)\\
+.color (color) \\
+.x  (x position of center) \\
+.y  (y position of center)\\
+.height (read-only height)\\
+.width (read-only width)\\
+.dx, (width)
+.dy,  (height)\\
+
+
+
+\subsection{Line}
+\emph{Description:} A Line. Move commands move the center
+  of the line to the specified location.
+
+\emph{Command:}  \verb+Line( <x>, <y>,<dx>,<dy>,<color>)+\\
+
+\emph{Properties:}
+.color (color) \\
+.x  (x position of start) \\
+.y  (y position of start)\\
+.width, (x length)\\
+.height,  (y length)\\
+
 
 \section{Text Labels}
 

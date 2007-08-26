@@ -139,6 +139,9 @@ bool PLine::SetProperty(std::string name, Variant v)
         {
             return true;
         } else {
+
+        // Note, currently the properties dx and dy are not user-accessible.  Use height and width.
+        //
             
             if("WIDTH" == name) 
                 SetSize(v,mDY);
