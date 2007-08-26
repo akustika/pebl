@@ -61,6 +61,62 @@ SampleNWithReplacement(x, 10)
 
 
 \begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	\verb+SDTBeta()+
+
+\item[Description] \verb+SDTBeta+ computes beta, as defined by signal detection theory.  It is implemented as a PEBL function in
+  \verb+pebl-lib/Math.pbl+
+
+\item[Usage]        	
+\begin{verbatim}
+SDTBeta(<hr>, <far>)
+\end{verbatim}
+
+\item[Example] 	
+\begin{verbatim}
+
+  Print(SDTBeta(.1,.9))  #.67032
+  Print(SDTBeta(.1,.5))  #.88692
+  Print(SDTBeta(.5,.5))  #1
+  Print(SDTBeta(.8,.9))  #0.918612
+  Print(SDTBeta(.9,.95)) #0.954803
+\end{verbatim}
+
+\item[See Also]\verb+SDTBeta()+,
+\end{desc}
+
+\rl
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	\verb+SDTDPrime()+
+
+\item[Description] \verb+SDTDPrime+  Is implemented as a PEBL function in
+  \verb+pebl-lib/Math.pbl+
+
+\item[Usage]        	
+\begin{verbatim}
+SDTDPrime(<hr>, <far>)
+\end{verbatim}
+
+\item[Example] 	
+\begin{verbatim}
+
+  Print(SDTDPrime(.1,.9))  #2.56431
+  Print(SDTDPrime(.1,.5))  #1.28155
+  Print(SDTDPrime(.5,.5))  #0
+  Print(SDTDPrime(.8,.9))  #.43993
+  Print(SDTDPrime(.9,.95)) #.363302
+
+\end{verbatim}
+
+\item[See Also]\verb+SDTBeta()+,
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
 \item[Name/Symbol]   \verb+SeedRNG()+
 
 \item[Description] Seeds the random number generator with \verb+<num>+

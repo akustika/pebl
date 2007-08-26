@@ -868,6 +868,33 @@ CrossFactorWithoutDuplicates([a,b,c])
   \verb+Shuffle()+
 \end{desc}
 
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+CumNormInv()+
+
+\item[Description] 	This function takes a probability and returns the 
+  corresponding z-score for the cumulative standard normal distribution.
+  It uses an accurate numerical approximation from:
+  http://home.online.no/~pjacklam/notes/invnorm
+\item[Usage]
+\begin{verbatim}
+CumNormInv(<p>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+
+ Print(CumNormInv(0))    #= NA
+  Print(CumNormInv(.01)) #= -2.32634
+  Print(CumNormInv(.5))  #= 0
+  Print(CumNormInv(.9))  #= 1.28
+  Print(CumNormInv(1))   #= NA
+\end{verbatim}
+
+\item[See Also] \verb+NormalDensity()+, \verb+RandomNormal()+
+\end{desc}
+
+
 \rl
 \section{D}
 \rl

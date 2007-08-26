@@ -158,8 +158,8 @@ define Start(par)
   {
 
     rad <- i /360*2*3.14159
-    shape.dx <- r * Cos(rad)
-    shape.dy <- r * Sin(rad)
+    shape.width <- r * Cos(rad)
+    shape.height <- r * Sin(rad)
     lab.text <- "Rotating Line " + (i) + " degrees."
 
     Draw()
