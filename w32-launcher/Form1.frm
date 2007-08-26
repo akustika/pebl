@@ -178,7 +178,7 @@ Begin VB.Form Form1
       Width           =   1215
    End
    Begin VB.Label Label2 
-      Caption         =   "Launcher for PEBL 0.07"
+      Caption         =   "Launcher for PEBL 0.08"
       Height          =   255
       Left            =   9600
       TabIndex        =   10
@@ -216,7 +216,7 @@ Private Sub Command1_Click()
  Execute = """" + PEBL_Executable + """"
  
  'add -S command-line argument
-   If Not (Text3.Text = "") Then
+   If (Text3.Text = "") Then
       'We don't do anything here.
    Else
       Execute = Execute + " -s " + Text3
@@ -237,7 +237,7 @@ For j = 0 To File1.ListCount - 1
    End If
    
 Next j
-Debug.Print Check1
+'Debug.Print Check1
 
 'add driver
 Select Case Combo3.ListIndex
@@ -296,8 +296,8 @@ Case 3:
 Case Else:
 Execute = Execute + " 16 "
 End Select
-  'MsgBox Execute
-  'MsgBox CurDir()
+'  MsgBox Execute
+'  MsgBox CurDir()
   
  'execute the command in a separate process, waiting for it to return.
  ExecCmd (Execute)
@@ -309,24 +309,24 @@ Private Sub reload()
 
  Set fs = CreateObject("Scripting.FileSystemObject")
  
- sFilename = exePath & "stdout.txt"
+ sFilename = File1.Path & "stdout.txt"
  If fs.fileexists(sFilename) Then
    hFile = FreeFile
    Open sFilename For Input As #hFile
    Text2(0).Text = Input$(LOF(hFile), hFile)
    Close #hFile
   Else
-   Text2(0).Text = "Failed to load [" & sFilename & "]."
+   Text2(0).Text = "Experiment complete: No output produced."
  End If
  
- sFilename = exePath & "stderr.txt"
+ sFilename = File2.Path & "stderr.txt"
  If fs.fileexists(sFilename) Then
    hFile = FreeFile
    Open sFilename For Input As #hFile
    Text2(1).Text = Input$(LOF(hFile), hFile)
    Close #hFile
   Else
-   Text2(1).Text = "Failed to load [" & sFilename & "]."
+   Text2(1).Text = "Experiment complete.  Failed to load [" & sFilename & "]."
  End If
 
 End Sub
@@ -374,7 +374,8 @@ Combo3.ListIndex = 1
 'Try to find the file pebl-init.txt.  If it doesn't exist,
 'no worries
 If Len(Dir$("pebl-init.txt")) = 0 Then
-  MsgBox ("Unable to find file pebl-init.txt in current directory.")
+  MsgBox ("Unable to find file init file pebl-init.txt in " + CurDir())
+  
 
   End
 Else
