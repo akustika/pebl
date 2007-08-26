@@ -309,7 +309,7 @@ Private Sub reload()
 
  Set fs = CreateObject("Scripting.FileSystemObject")
  
- sFilename = File1.Path & "stdout.txt"
+ sFilename = File1.Path & "\stdout.txt"
  If fs.fileexists(sFilename) Then
    hFile = FreeFile
    Open sFilename For Input As #hFile
@@ -319,7 +319,7 @@ Private Sub reload()
    Text2(0).Text = "Experiment complete: No output produced."
  End If
  
- sFilename = File2.Path & "stderr.txt"
+ sFilename = File1.Path & "\stderr.txt"
  If fs.fileexists(sFilename) Then
    hFile = FreeFile
    Open sFilename For Input As #hFile
