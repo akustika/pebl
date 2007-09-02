@@ -30,7 +30,7 @@ obsolete.
 
 --------------------------------------------------
 Version 0.08
-June 2007
+September 2007
 
 
 * Unicode support for foreign scripts.
@@ -57,6 +57,15 @@ Test Battery:
   * Add Psychomotor Vigilance Task (PVT)
   * Add working Partial report (iconic memory) experiment.
   * Added Tower of London demo experiment
+
+* Updated launcher and output handling to avoid the 'cannot find file' bug people get scared off by.
+Now, stdout.txt and stderr.txt are stored in the file that the script is run from, and the launcher 
+looks there for the output.  Now, stdout.txt should alway be written, even if it just a blank file,
+and so no informative message should appear.
+
+* Standard script files (including all the demo and the battery scripts) are now found in pebl-exp0.08, 
+instead of just pebl-exp.  This is just so nobody gets their custom scripts overwritten.
+
 
 
 --------------------------------------------------
