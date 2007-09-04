@@ -733,8 +733,8 @@ Also see nim.pbl for example of two-way network connection.
 \end{verbatim}
 
 \item[See Also]
-  \verb+ConnectToIP+,\verb+GetData+,\verb+WaitForNetworkConnection+,
-   \verb+SendData+,\verb+ConvertIPString+,\verb+CloseNetworkConnection+
+  \verb+ConnectToIP+, \verb+GetData+, \verb+WaitForNetworkConnection+,
+   \verb+SendData+, \verb+ConvertIPString+, \verb+CloseNetworkConnection+
 \end{desc}
 
 \rl
@@ -764,8 +764,8 @@ Also see nim.pbl for example of two-way network connection.
 \end{verbatim}
 
 \item[See Also]
-  \verb+ConnectToHost+,\verb+GetData+,\verb+WaitForNetworkConnection+,
-   \verb+SendData+,\verb+ConvertIPString+,\verb+CloseNetworkConnection+
+  \verb+ConnectToHost+, \verb+GetData+, \verb+WaitForNetworkConnection+,
+   \verb+SendData+, \verb+ConvertIPString+, \verb+CloseNetworkConnection+
 \end{desc}
 
 \rl
@@ -773,7 +773,7 @@ Also see nim.pbl for example of two-way network connection.
 
 
 \begin{desc}{Name/Symbol}
-\item[Name/Symbol]	\verb+ConvertIPString()+
+\item[Name/Symbol] \verb+ConvertIPString()+
 
 \item[Description]	Converts an IP address specified as a string into
   an integer that can be used by ConnectToIP.
@@ -848,7 +848,7 @@ Also see nim.pbl for example of two-way network connection.
 
 \item[Description] 	This function takes a single list, and returns a list of all 
 			pairs, excluding the pairs that have two of the same item. 
-			To achieve the same effect but include the duplicates, use 
+			To achieve the same effect but include the duplicates, use: \\
 			\verb+DesignFullCounterBalance(x,x)+.
 
 \item[Usage]
@@ -864,18 +864,17 @@ CrossFactorWithoutDuplicates([a,b,c])
 
 \item[See Also] \verb+DesignFullCounterBalance()+,
   \verb+DesignBalancedSampling()+, \verb+DesignGrecoLatinSquare()+,
-  \verb+DesignLatinSquare()+, \verb+Repeat()+, \verb+RepeatList()+,\verb+LatinSquare()+
-  \verb+Shuffle()+
+  \verb+DesignLatinSquare()+, \verb+Repeat()+, \verb+RepeatList()+, 
+  \verb+LatinSquare()+ \verb+Shuffle()+
 \end{desc}
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+CumNormInv()+
 
 \item[Description] 	This function takes a probability and returns the 
   corresponding z-score for the cumulative standard normal distribution.
-  It uses an accurate numerical approximation from:
-  http://home.online.no/~pjacklam/notes/invnorm
+  It uses an accurate numerical approximation from:\\
+  \texttt{http://home.online.no/~pjacklam/notes/invnorm}
 \item[Usage]
 \begin{verbatim}
 CumNormInv(<p>)
@@ -974,7 +973,7 @@ DesignBalancedSampling([1,2,3,4,5],12)
 
 \item[See Also]	\verb+CrossFactorWithoutDuplicates()+, \verb+DesignFullCounterBalance()+,
   		\verb+DesignGrecoLatinSquare()+, \verb+DesignLatinSquare()+, \verb+Repeat()+, 
-		\verb+RepeatList()+, \verb+Shuffle()+,\verb+LatinSquare()+
+		\verb+RepeatList()+, \verb+Shuffle()+, \verb+LatinSquare()+
 
 \end{desc}
 
@@ -1005,8 +1004,8 @@ DesignFullCounterbalance(a,b)	# == [[1,9],[1,8],[1,7],
 				#     [3,9],[3,8],[3,7]]
 \end{verbatim}
 
-\item[See Also] \verb+CrossFactorWithoutDuplicates()+,\verb+LatinSquare()+
-  \verb+DesignBalancedSampling()+, \verb+DesignGrecoLatinSquare()+,
+\item[See Also] \verb+CrossFactorWithoutDuplicates()+, \verb+LatinSquare()+
+  \verb+DesignBalancedSampling()+, \verb+DesignGrecoLatinSquare()+, 
   \verb+DesignLatinSquare()+, \verb+Repeat()+, \verb+RepeatList()+,
   \verb+Shuffle()+
 \end{desc}
@@ -1041,7 +1040,7 @@ Print(DesignGrecoLatinSquare(x,y,z))
 #               [[a, r, y], [b, p, z], [c, q, x]]]
 \end{verbatim}
 
-\item[See Also] \verb+CrossFactorWithoutDuplicates()+,\verb+LatinSquare()+
+\item[See Also] \verb+CrossFactorWithoutDuplicates()+, \verb+LatinSquare()+
   \verb+DesignFullCounterBalance()+, \verb+DesignBalancedSampling()+,
   \verb+DesignLatinSquare()+, \verb+Repeat()+, \verb+RepeatList()+,
   \verb+Shuffle()+
@@ -1771,8 +1770,8 @@ On Client:
 ##should print out "Watson, come here. I need you."
 \end{verbatim}
 \item[See Also]
-  \verb+ConnectToIP+,\verb+ConnectToHost+,\verb+WaitForNetworkConnection+,
-   \verb+SendData+,\verb+ConvertIPString+, \verb+CloseNetworkConnection+
+  \verb+ConnectToIP+, \verb+ConnectToHost+, \verb+WaitForNetworkConnection+,
+   \verb+SendData+, \verb+ConvertIPString+, \verb+CloseNetworkConnection+
 \end{desc}
 
 \rl
@@ -2472,13 +2471,12 @@ if(IsTextBox(x))
 
 \item[See Also] \verb+IsAudioOut()+, \verb+IsColor()+,
   \verb+IsImage()+, \verb+IsInteger()+, \verb+IsFileStream()+,
-  \verb+IsFloat()+, \verb+IsFont()+,\verb+ IsLabel()+,
+  \verb+IsFloat()+, \verb+IsFont()+, \verb+ IsLabel()+,
   \verb+IsList()+, \verb+IsNumber()+, \verb+IsString()+,
   \verb+IsWidget()+
 \end{desc}
 
 \rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+IsWidget+

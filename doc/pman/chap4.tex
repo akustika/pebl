@@ -488,9 +488,10 @@ hostname or ip address.  Typically, ip numbers are specified by four
 three-digit numbers separated by dots, like 196.168.0.1. This actually
 represents a 4-byte integer, and this 4-byte integer is what
 \texttt{ConnectToIP()} expects.  To create that integer, use the
-function \texttt{ConvertIPString(ipnum)}, which accepts an IP address
-specified in a string.  So, you can use
-\texttt{net <- ConnectToIP( ConvertIPString( "127.0.0.1")), 1234} to create a
+function \\ \texttt{ConvertIPString(ipnum)}, which accepts an IP address
+specified in a string.  So, you can use:\\
+\texttt{net <- ConnectToIP(ConvertIPString( "127.0.0.1"), 1234)}\\
+to create a
 connection to another program listening on port 1234 on your own
 computer.  These functions all return a network object (e.g.,
 \texttt{net}) that must be
