@@ -55,6 +55,9 @@ public:
     virtual bool RemoveSubWidget(PlatformWidget * widget);
     virtual void SetParentSurface(SDL_Surface * surface);
 
+    ///This uses the SDL_gfx package to 'rotozoom'.
+    virtual bool RotoZoom(double angle, double zoomx, double zoomy, int smooth);
+
 protected:
 
     //These are inherited by the SDL-specific widgets:    

@@ -66,13 +66,14 @@ void PImageBox::SetSize(int width, int height)
 bool PImageBox::SetProperty(std::string name, Variant v)
 {
 
+
     //Width and height are not currently 'settable', in that
     //they are properties of the object.
 
     if(name == "X") SetPosition(v,mY);
     else if (name == "Y") SetPosition(mX,v);
-    else if (name == "HEIGHT") SetSize(mWidth,v);
-    else if (name == "WIDTH") SetSize(v,mHeight);
+    else if (name == "HEIGHT") SetSize(v,mWidth);
+    else if (name == "WIDTH") SetSize(mHeight, v);
     
     else if (name == "VISIBLE") 
         {
@@ -81,7 +82,7 @@ bool PImageBox::SetProperty(std::string name, Variant v)
             else 
                 Hide();
         }
-    else return false;
+    else return PWidget::SetProperty(name,v);
 
     return true;
 }
@@ -104,14 +105,8 @@ ObjectValidationError PImageBox::ValidateProperty(std::string name, Variant v)co
 
 ObjectValidationError PImageBox::ValidateProperty(std::string name)const
 {
-    if(name == "X" ||
-       name == "Y" ||
-       name == "VISIBLE" ||
-       name == "WIDTH" ||
-       name == "HEIGHT" )
-        return OVE_VALID;
-    else
-        return OVE_INVALID_PROPERTY_NAME;
+    //All valid properties are also valid Widget properties
+    return PWidget::ValidateProperty(name);
 }
 
 
@@ -125,5 +120,8 @@ void PImageBox::__SetProps__()
      SetProperty("VISIBLE",mIsVisible);
      SetProperty("WIDTH",mWidth);
      SetProperty("HEIGHT",mHeight);
+     SetProperty("ZOOMX",mZoomX);
+     SetProperty("ZOOMY",mZoomY);
+     SetProperty("ROTATION",mRotation);
 
 }

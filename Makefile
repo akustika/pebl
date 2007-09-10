@@ -30,7 +30,7 @@ CXX = g++
 DEBUGFLAGS = -lefence -DPEBL_DEBUG
 
 CFLAGS =   -O3 -std=c99 
-CXXFLAGS =   -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  
+CXXFLAGS = -g  -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  
 
 #Only affects install location
 PREFIX = /usr/local/
@@ -279,7 +279,7 @@ DIRS = \
 #
 
 main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/pebl -I/usr/local/include/SDL -D_REENTRANT \
+	$(CXX) $(CXXFLAGS)   -o $(BIN_DIR)/pebl -I/usr/local/include/SDL -D_REENTRANT \
 	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  -lSDL_net $(OSX_FLAGS) \
 	 $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(PEBLMAIN_OBJ))
 

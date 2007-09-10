@@ -144,12 +144,33 @@ class PlatformCircle: virtual public PlatformDrawObject, virtual public PCircle
  private:
  };
 
+ class PlatformPolygon: virtual public PlatformDrawObject, virtual public PPolygon
+ {
+ public:
+     PlatformPolygon(int x, int y, Variant xpoints,Variant ypoints,Variant fg, bool filled);
+     virtual ~PlatformPolygon();
+     virtual bool Draw();
+ protected:
+    virtual std::ostream & SendToStream(std::ostream& out) const;
+ private:
+ };
+
+ class PlatformBezier: virtual public PlatformDrawObject, virtual public PBezier
+ {
+ public:
+     PlatformBezier(int x, int y, Variant xpoints,Variant ypoints,int steps, Variant fg);
+     virtual ~PlatformBezier();
+     virtual bool Draw();
+ protected:
+    virtual std::ostream & SendToStream(std::ostream& out) const;
+ private:
+ };
+
 
 // class PlatformDrawGroup: public PlatformDrawObject
 // {
 // public:
-//     PlatformDrawGroup();
-//     ~PlatformDrawGroup();
+//     PlatformDrawGroup();//     ~PlatformDrawGroup();
 // protected:
 // private:
 // };

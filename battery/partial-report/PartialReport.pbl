@@ -266,6 +266,7 @@ define Trial(letters, delay)
      }
     Draw()
     Wait(duration)
+
     Show(gScreen)
 
 

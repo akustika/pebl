@@ -1,14 +1,14 @@
 %\documentclass[letter,10pt]{report}
-\documentclass[10pt,twoside,openright,titlepage,letter]{book}
+\documentclass[12pt,twoside,openright,titlepage,letter]{book}
 %\usepackage[hmargin={3.6cm}]{geometry}
-\usepackage[T1]{fontenc}
-\usepackage{lmodern} 
+%\usepackage[T1]{fontenc}
+%\usepackage{lmodern} 
 \usepackage{booktabs}
 \usepackage{longtable}
-\usepackage{xtab}
-\usepackage{multicol}
-\usepackage{fancyvrb}
-\usepackage{graphicx}
+%\usepackage{xtab}
+%\usepackage{multicol}
+%\usepackage{fancyvrb}
+%\usepackage{graphicx}
 \usepackage{caption}
 \usepackage{calc}
 \captionsetup[table]{aboveskip=5pt,belowskip=5pt,position=top,margin=10pt,font=small,labelfont=bf,format=hang}
@@ -26,8 +26,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\includeonly{chap6}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 
 
 \usepackage{hyperref}
@@ -58,12 +56,17 @@
 
 \normalsize
 \noindent\copyright 2003-2007 Shane T.~Mueller \href{mailto:smueller@obereed.net}{smueller@obereed.net}\\
+\\
+\\
+
+
 Current for PEBL Version 0.08 -- August 2007 \\
 \href{http://pebl.sourceforge.net}{http://pebl.sourceforge.net}
 \tableofcontents
 
 \clearpage
 \pagenumbering{arabic}
+\renewcommand{\chaptermark}[1]{\markboth{\textbf{Chapter \thechapter}.\ \emph{#1}}{}}
 \include{intro}
 \include{chap3}
 \include{chap4}
@@ -74,8 +77,6 @@ Current for PEBL Version 0.08 -- August 2007 \\
 
 
 
-
 \appendix
-
 
 \end{document}

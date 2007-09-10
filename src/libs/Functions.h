@@ -198,7 +198,10 @@ namespace PEBLObjects
 
             {"ELLIPSE",           Ellipse,      6, 6},
             {"CIRCLE",            Circle,       5, 5},
+            {"POLYGON",           Polygon,      6, 6},
+            {"BEZIER",           Bezier,      6, 6},
 
+            {"ROTOZOOM",          RotoZoom,     5,5},
 
             {0,            0,  0, 0}
         };
@@ -268,9 +271,13 @@ namespace PEBLList
             {"SEQUENCE",                  Sequence,  3, 3},
             {"DESIGNFULLCOUNTERBALANCE",   DesignFullCounterbalance, 2, 2},
             {"CROSSFACTORWITHOUTDUPLICATES", CrossFactorWithoutDuplicates, 1, 1},
-            {"ROTATE",                     Rotate,  2, 2},
+            {"ROTATE",                    Rotate,  2, 2},
             {"LENGTH",                    Length, 1, 1},
             {"FIRST",                     First, 1, 1},
+            {"SECOND",                    Second, 1, 1},
+            {"THIRD",                     Third, 1, 1},
+            {"FOURTH",                    Fourth, 1, 1},
+            {"FIFTH",                     Fifth, 1, 1},
             {"MERGE",                     Merge, 2, 2},
             {"LIST",                      List,  1, 1000},
             {"APPEND",                    Append, 2, 2},

@@ -52,8 +52,8 @@ public:
     virtual Variant GetProperty(std::string)const;
     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
     virtual ObjectValidationError ValidateProperty(std::string)const;
-  
 
+    virtual bool RotoZoom(double angle, double zoomx, double zoomy, int smooth);
     ///This unconditionally sets the parent widget.
     virtual void SetParent(PWidget * widget){mParent = widget;}
 
@@ -65,6 +65,10 @@ public:
     ///image on the parent widget.
     virtual void SetPosition(int x, int y);
     
+    virtual void SetZoomX(double x);
+    virtual void SetZoomY(double x);
+    virtual void SetRotation(double x);
+
     virtual int GetX()const {return mX;};
     virtual int GetY()const {return mY;};
 
@@ -113,6 +117,11 @@ protected:
 
     ///The height and width, in pixels, of the loaded widget
     int mWidth, mHeight;
+
+    //These are properties for rotation/zoom
+    double mZoomX;
+    double mZoomY;
+    double mRotation;
 
     /// The background color of the widget.  if alpha = 0, will not be painted.
     PColor mBackgroundColor;

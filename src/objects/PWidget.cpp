@@ -38,6 +38,9 @@ PWidget::PWidget():
     mDrawY(0),
     mWidth(0),
     mHeight(0),
+    mZoomX(1),
+    mZoomY(1),
+    mRotation(0),
     mIsVisible(true),
     mParent(NULL)
 {
@@ -47,6 +50,9 @@ PWidget::PWidget():
     InitializeProperty("WIDTH",Variant(mWidth));
     InitializeProperty("HEIGHT",Variant(mHeight));
     InitializeProperty("VISIBLE",Variant(mIsVisible));
+    InitializeProperty("ZOOMX",Variant(mZoomX));
+    InitializeProperty("ZOOMY",Variant(mZoomY));
+    InitializeProperty("ROTATION",Variant(mRotation));
     
 }
 
@@ -57,6 +63,9 @@ PWidget::PWidget(int x, int y, int width, int height, bool visible):
     mDrawY(y),
     mWidth(width),
     mHeight(height),
+    mZoomX(1.0),
+    mZoomY(1.0),
+    mRotation(0),
     mIsVisible(visible),
     mParent(NULL)
 {
@@ -66,6 +75,9 @@ PWidget::PWidget(int x, int y, int width, int height, bool visible):
     InitializeProperty("WIDTH",Variant(mWidth));
     InitializeProperty("HEIGHT",Variant(mHeight));
     InitializeProperty("VISIBLE",Variant(mIsVisible));
+    InitializeProperty("ZOOMX",Variant(mZoomX));
+    InitializeProperty("ZOOMY",Variant(mZoomY));
+    InitializeProperty("ROTATION",Variant(mRotation));
     
 }
 
@@ -73,14 +85,24 @@ PWidget::~PWidget()
 {
 }
 
+bool PWidget::RotoZoom(double angle, double zoomx, double zoomy, int smooth)
+{
+    
+    return false;
+}
 
 bool PWidget::SetProperty(std::string name, Variant v)
 {
+
 
     //Height and width are not universally settable.
 
     if (name == "X") SetPosition(v,mY);
     else if (name == "Y") SetPosition(mX,v);
+    else if (name == "ZOOMX") SetZoomX((long double)v);
+    else if (name == "ZOOMY") SetZoomY((long double)v);
+    else if (name == "ROTATION") SetRotation((long double)v);
+    
     else if (name == "VISIBLE")
         {
             if(v.GetInteger())
@@ -103,15 +125,28 @@ Variant  PWidget::GetProperty(std::string name)const
 
 
 
- ObjectValidationError PWidget::ValidateProperty(std::string, Variant v)const
+ ObjectValidationError PWidget::ValidateProperty(std::string name, Variant v)const
 {
     return OVE_VALID;
 }
 
 
- ObjectValidationError PWidget::ValidateProperty(std::string)const
+ ObjectValidationError PWidget::ValidateProperty(std::string name)const
 {
-    return OVE_VALID;
+
+    //This only returns valid for properties that are valid to widgets
+    //in general--subclasses need to check on their own.
+    if(name == "X" ||
+       name == "Y" ||
+       name == "VISIBLE" ||
+       name == "WIDTH" ||
+       name == "HEIGHT" ||
+       name == "ZOOMX" ||
+       name == "ZOOMY" ||
+       name == "ROTATION")
+        return OVE_VALID;
+    else
+        return OVE_INVALID_PROPERTY_NAME;
 }
 
 
@@ -127,7 +162,25 @@ void PWidget::SetPosition(int x, int y)
     PEBLObjectBase::SetProperty("Y",mY);
 }
 
+///This sets the widget's position on its parent widget.
+void PWidget::SetZoomX(double x)
+{
+    mZoomX = x;
+    PEBLObjectBase::SetProperty("ZOOMX",mX);
+}
+///This sets the widget's position on its parent widget.
+void PWidget::SetZoomY(double y)
+{
+    mZoomY = y;
+    PEBLObjectBase::SetProperty("ZOOMY",mY);
+}
 
+///This sets the widget's position on its parent widget.
+void PWidget::SetRotation(double x)
+{
+    mRotation = x;
+    PEBLObjectBase::SetProperty("ROTATION",x);
+}
 
 //Inherited from PComplexObject->PEBLObjectBase
 std::ostream & PWidget::SendToStream(std::ostream& out) const

@@ -26,6 +26,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "PlatformWidget.h"
 #include "SDL/SDL.h"
+#include "SDL/SDL_rotozoom.h"
 
 #include <iostream>
 
@@ -82,21 +83,69 @@ bool PlatformWidget::Draw()
             
             //Once the widget sub-items are drawn, draw the widget to its parent.
             if (mParentSurface)
-                {          
+                {        
+                    
+                    //Set a tmp surface to mSurface. If we are not rotozooming, it gets used 
+                    //directly; otherwise, tmp will be a morphed version of the original.
+                    SDL_Surface * tmp = mSurface;
+                    bool zoom = false;
+                    //Check to see if any roto-zooming is needed
+                    if(fabs(mZoomX-1.0)>.001 || fabs(mZoomY-1.0)>.001 || fabs(mRotation)>.001)
+                        {
+                            zoom = true;
+                        }
+
+                    if(zoom)
+                        {
+
+                            tmp = rotozoomSurfaceXY(mSurface, mRotation,mZoomX, mZoomY, 1); 
+                    
+                            //We need to reset the sizes.
+                            
+                            mWidth = tmp->w;
+                            mHeight = tmp->h;
+                            PWidget::SetProperty("WIDTH",mWidth);
+                            PWidget::SetProperty("HEIGHT", mHeight);
+                        }
+
                     SDL_Rect  fromRect = {0,0,mWidth,mHeight};
                     SDL_Rect  toRect   = {mDrawX,mDrawY,mWidth,mHeight};
                     //  unsigned long int start =SDL_GetTicks();
-                    SDL_BlitSurface(mSurface, &fromRect, mParentSurface, &toRect);
+                    SDL_BlitSurface(tmp, &fromRect, mParentSurface, &toRect);
                     //  unsigned long int end =SDL_GetTicks();
                     //     cout << "Time to BlitSurface:  " << end - start << endl;
+                    
+                    //If we zoomed, we need to free the tmp; otherwise, tmp is the same as mSurface.
+                    if(zoom) SDL_FreeSurface(tmp);
                 }
             else
                 {
-                    // IF there is no parent, this is probably a window, which handles 
+                    // IF there is no parent, this is probably a window, which 
                     // performs a SDL_Flip after this method is called.
                 }
         }
     return true;
+}
+
+
+bool PlatformWidget::RotoZoom(double angle, double zoomx, double zoomy, int smooth)
+
+{
+
+
+    SDL_Surface * tmp = rotozoomSurfaceXY(mSurface, angle,zoomx, zoomy, smooth); 
+    SDL_FreeSurface(mSurface);
+    mSurface = tmp;
+    
+    
+    //We need to reset the sizes.
+
+    mWidth = mSurface->w;
+    mHeight = mSurface->h;
+    PWidget::SetProperty("WIDTH", mSurface->w);
+    PWidget::SetProperty("HEIGHT", mSurface->h);
+    if(mSurface)return true;
+    else return false;
 }
 
 

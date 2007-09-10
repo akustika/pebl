@@ -31,8 +31,15 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_gfxPrimitives.h"
 
-#include <iostream>
+#include "../../base/PList.h"
+#include "../../base/Variant.h"
+#include "../../base/PComplexData.h"
 
+#include <iostream>
+#include <list>
+using std::list;
+using std::cout;
+using std::endl;
 // PlatformDrawObject::PlatformDrawObject(PlatformWidget * widget)
 // {
 //     mSurface = widget->GetSDL_Surface();
@@ -312,6 +319,140 @@ bool PlatformCircle::Draw()
             result = circleRGBA(mParentSurface,mX, mY, (int)mR,
                                 mColor.GetRed(), mColor.GetGreen(), mColor.GetBlue(), mColor.GetAlpha());
         }
+    //UnlockSurface();
+    return result;
+}
+
+
+
+
+PlatformPolygon::PlatformPolygon(int x1, int y1, Variant xpoints,  Variant ypoints, Variant fg, bool filled):
+    PPolygon(x1,y1,xpoints,ypoints,fg,filled)
+{
+    mCDT=CDT_DRAWOBJECT;
+    mSurface =NULL;
+    mParent = NULL;
+    mIsVisible=true;
+
+}
+
+PlatformPolygon::~PlatformPolygon()
+{
+
+}
+
+std::ostream & PlatformPolygon::SendToStream(std::ostream& out) const
+{
+    out << "<A Polygon :"<< mX << ", " << mY << ":" << std::endl;
+    return out;
+}
+
+bool PlatformPolygon::Draw()
+{
+    int result;
+
+    //We need to transform the double-list points into int vectors for 
+    //the x and y points, plus the length.
+
+    PList * pxlist = mXPoints.GetComplexData()->GetList();
+    PList * pylist = mYPoints.GetComplexData()->GetList();
+
+    int length = pxlist->Length();
+    Sint16 *x = new Sint16[length];
+    Sint16 *y = new Sint16[length];
+
+    list<Variant>::iterator p1 = pxlist->Begin();    
+    list<Variant>::iterator p2 = pylist->Begin();
+
+    int i = 0;
+    while(p1 != pxlist->End())
+        {
+            x[i]=  (Sint16)((int)(*p1)) + (Sint16)mX;
+            y[i]=  (Sint16)((int)(*p2)) + (Sint16)mY;
+            p1++;
+            p2++;
+            i++;
+        }
+
+
+    if(mFilled)
+        {
+            result = filledPolygonRGBA(mParentSurface,x,y,length,
+                                       mColor.GetRed(), mColor.GetGreen(), mColor.GetBlue(), mColor.GetAlpha());
+        }
+    else
+        {
+            result =polygonRGBA(mParentSurface,x,y,(int)length,
+                                       mColor.GetRed(), mColor.GetGreen(), mColor.GetBlue(), mColor.GetAlpha());
+        }
+
+        delete[] x;
+        delete[] y;
+
+    //UnlockSurface();
+    return result;
+}
+
+
+
+PlatformBezier::PlatformBezier(int x1, int y1, Variant xpoints,  Variant ypoints, int steps, Variant fg):
+    PBezier(x1,y1,xpoints,ypoints,steps, fg)
+{
+
+    mCDT=CDT_DRAWOBJECT;
+    mSurface =NULL;
+    mParent = NULL;
+    mIsVisible=true;
+
+}
+
+PlatformBezier::~PlatformBezier()
+{
+
+}
+
+std::ostream & PlatformBezier::SendToStream(std::ostream& out) const
+{
+    out << "<A Bezier :"<< mX << ", " << mY << ":" << std::endl;
+    return out;
+}
+
+bool PlatformBezier::Draw()
+{
+    int result;
+
+
+    //We need to transform the double-list points into int vectors for 
+    //the x and y points, plus the length.
+
+    PList * pxlist = mXPoints.GetComplexData()->GetList();
+    PList * pylist = mYPoints.GetComplexData()->GetList();
+
+    int length = pxlist->Length();
+    Sint16 *x = new Sint16[length];
+    Sint16 *y = new Sint16[length];
+
+    list<Variant>::iterator p1 = pxlist->Begin();    
+    list<Variant>::iterator p2 = pylist->Begin();
+
+    int i = 0;
+    while(p1 != pxlist->End())
+        {
+            x[i]=  (Sint16)((int)(*p1)) + (Sint16)mX;
+            y[i]=  (Sint16)((int)(*p2)) + (Sint16)mY;
+            p1++;
+            p2++;
+            i++;
+            
+        }
+
+    
+    result = bezierRGBA(mParentSurface,x,y,length,mSteps,
+                        mColor.GetRed(), mColor.GetGreen(), mColor.GetBlue(), mColor.GetAlpha());
+    
+    delete[] x;
+    delete[] y;
+
     //UnlockSurface();
     return result;
 }

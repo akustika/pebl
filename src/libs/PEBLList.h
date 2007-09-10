@@ -47,6 +47,10 @@ namespace PEBLList
     Variant Length(Variant v);
     Variant Nth (Variant v);  
     Variant First (Variant v);
+    Variant Second (Variant v);
+    Variant Third (Variant v);
+    Variant Fourth (Variant v);
+    Variant Fifth (Variant v);
     Variant Last (Variant v);
     Variant Merge (Variant v);
     Variant Append(Variant v);

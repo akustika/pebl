@@ -25,7 +25,9 @@ define Start(par)
   AddObject(shape,win)
   Draw()
   WaitForAnyKeyPress()
-  
+
+
+  WaitForAnyKeyPress()
 
   lab.TEXT <- "OPEN CIRCLE"
   shape.FILLED <- 0

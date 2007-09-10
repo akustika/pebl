@@ -87,7 +87,7 @@ bool PTextObject::SetProperty(std::string name, Variant v)
                     SetText(v);
                     return true;
                 }
-            return false;
+            return PWidget::SetProperty(name,v);
         }
 }
 
@@ -105,11 +105,14 @@ ObjectValidationError PTextObject::ValidateProperty(std::string name, Variant v)
 
 ObjectValidationError PTextObject::ValidateProperty(std::string name)const
 {
-    ObjectValidationError ove = PWidget::ValidateProperty(name);
+ 
+   ObjectValidationError ove = PWidget::ValidateProperty(name);
     
     if(ove == OVE_VALID)
         return ove;
+
     else if(name == "TEXT")
+
         return OVE_VALID;
     else
         return OVE_INVALID_PROPERTY_NAME;

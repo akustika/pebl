@@ -28,6 +28,11 @@
 #include "PDrawObject.h"
 #include "PWidget.h"
 #include "../base/PComplexData.h"
+#include <list>
+
+using std::list;
+using std::cout;
+using std::endl;
 
 PDrawObject::PDrawObject()
 {
@@ -37,7 +42,6 @@ PDrawObject::PDrawObject()
     InitializeProperty("OUTLINECOLOR",Variant(0));
 
 }
-
 
 
 PDrawObject::~PDrawObject()
@@ -241,7 +245,18 @@ ObjectValidationError PRectangle::ValidateProperty(std::string name, Variant v)c
 
 ObjectValidationError PRectangle::ValidateProperty(std::string name)const
 {
-    return PDrawObject::ValidateProperty(name);
+    if(OVE_VALID == PDrawObject::ValidateProperty(name))
+       {
+           return OVE_VALID;
+       }
+    else
+        {
+            if("DX" == name 
+               || "DY" == name )
+                return OVE_VALID;
+            else return OVE_INVALID_PROPERTY_NAME;
+        }
+    
 }
 
 std::ostream & PRectangle::SendToStream(std::ostream& out)
@@ -317,7 +332,20 @@ ObjectValidationError PSquare::ValidateProperty(std::string name, Variant v)cons
 
 ObjectValidationError PSquare::ValidateProperty(std::string name)const
 {
-    return PDrawObject::ValidateProperty(name);
+
+    if(OVE_VALID == PDrawObject::ValidateProperty(name))
+       {
+           return OVE_VALID;
+       }
+    else
+        {
+            if("DX" == name 
+               || "DY" == name 
+               || "SIZE" == name)
+                return OVE_VALID;
+            else return OVE_INVALID_PROPERTY_NAME;
+        }
+    
 }
 
 
@@ -379,7 +407,18 @@ ObjectValidationError PEllipse::ValidateProperty(std::string name, Variant v)con
 
 ObjectValidationError PEllipse::ValidateProperty(std::string name)const
 {
-    return PDrawObject::ValidateProperty(name);
+    
+    if(OVE_VALID == PDrawObject::ValidateProperty(name))
+       {
+           return OVE_VALID;
+       }
+    else
+        {
+            if("RX" == name 
+               || "RY" == name )
+                return OVE_VALID;
+            else return OVE_INVALID_PROPERTY_NAME;
+        }
 }
 
 
@@ -436,5 +475,200 @@ ObjectValidationError PCircle::ValidateProperty(std::string name, Variant v)cons
 
 ObjectValidationError PCircle::ValidateProperty(std::string name)const
 {
-    return PDrawObject::ValidateProperty(name);
+    
+    if(OVE_VALID == PDrawObject::ValidateProperty(name))
+       {
+           return OVE_VALID;
+       }
+    else
+        {
+            if("R" == name)
+                return OVE_VALID;
+            else return OVE_INVALID_PROPERTY_NAME;
+        }
+
+}
+
+
+
+PPolygon::PPolygon(int x, int y, Variant xpoints, Variant ypoints, Variant fg, bool filled)
+{
+    
+    SetPosition(x,y);
+    SetFilled(filled);
+    InitializeProperty("XPOINTS",xpoints);
+    InitializeProperty("YPOINTS",ypoints);
+    SetXPoints(xpoints);
+    SetYPoints(ypoints);
+    SetColor(fg);
+    SetOutlineColor(fg);
+}
+
+PPolygon::~PPolygon()
+{
+
+}
+
+
+std::ostream & PPolygon::SendToStream(std::ostream& out)
+{
+  out << "PPolygon";
+  return out;
+}
+
+bool PPolygon::SetProperty(std::string name, Variant v)
+{
+
+    if(!PDrawObject::SetProperty(name,v))
+        if("XPOINTS" == name) SetXPoints(v);
+        else if("YPOINTS" == name) SetYPoints(v);
+        else
+            return false;
+    return true;
+}
+
+
+bool PPolygon::SetXPoints(Variant v)
+{
+
+    mXPoints = v;
+    cout << "setting ypoints\n";
+    cout << mXPoints << endl;
+    return true;
+}
+
+bool PPolygon::SetYPoints(Variant v)
+{
+
+    cout << "setting ypoints\n";
+    mYPoints = v;
+
+    return true;
+}
+
+
+Variant PPolygon::GetProperty(std::string name)const
+{
+    return PEBLObjectBase::GetProperty(name);
+
+}
+
+
+ObjectValidationError PPolygon::ValidateProperty(std::string name, Variant v)const
+{
+    return ValidateProperty(name);
+}
+
+ObjectValidationError PPolygon::ValidateProperty(std::string name)const
+{
+    
+    if(OVE_VALID == PDrawObject::ValidateProperty(name))
+       {
+           return OVE_VALID;
+       }
+    else
+        {
+            if("XPOINTS" == name
+               || "YPOINTS" == name
+               )
+                return OVE_VALID;
+            else return OVE_INVALID_PROPERTY_NAME;
+        }
+
+}
+
+
+
+PBezier::PBezier(int x, int y, Variant xpoints, Variant ypoints, int steps, Variant fg)
+{
+    SetPosition(x,y);
+    InitializeProperty("XPOINTS",xpoints);
+    InitializeProperty("YPOINTS",ypoints);
+    InitializeProperty("STEPS",steps);
+
+    SetXPoints(xpoints);
+    SetYPoints(ypoints);
+    SetSteps(steps);
+
+    SetColor(fg);
+    SetOutlineColor(fg);
+}
+
+PBezier::~PBezier()
+{
+
+}
+
+
+std::ostream & PBezier::SendToStream(std::ostream& out)
+{
+  out << "PBezier";
+  return out;
+}
+
+bool PBezier::SetProperty(std::string name, Variant v)
+{
+
+    if(!PDrawObject::SetProperty(name,v))
+        if("XPOINTS" == name) SetXPoints(v);
+        else if("YPOINTS" == name) SetYPoints(v);
+        else if ("STEPS" == name) SetSteps(v);
+        else
+            return false;
+    return true;
+}
+
+
+bool PBezier::SetXPoints(Variant v)
+{
+
+    mXPoints = v;
+    return true;
+}
+
+bool PBezier::SetYPoints(Variant v)
+{
+
+    mYPoints = v;
+    return true;
+}
+
+bool PBezier::SetSteps(Variant v)
+{
+
+    mSteps = (int)v;
+    return true;
+
+}
+
+
+Variant PBezier::GetProperty(std::string name)const
+{
+    return PEBLObjectBase::GetProperty(name);
+
+}
+
+
+ObjectValidationError PBezier::ValidateProperty(std::string name, Variant v)const
+{
+    return ValidateProperty(name);
+}
+
+ObjectValidationError PBezier::ValidateProperty(std::string name)const
+{
+    
+    if(OVE_VALID == PDrawObject::ValidateProperty(name))
+       {
+           return OVE_VALID;
+       }
+    else
+        {
+            if("XPOINTS" == name
+               || "YPOINTS" == name
+               || "STEPS" == name
+               )
+                return OVE_VALID;
+            else return OVE_INVALID_PROPERTY_NAME;
+        }
+
 }

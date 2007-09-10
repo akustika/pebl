@@ -30,6 +30,7 @@
 #include "PWidget.h"
 #include "PColor.h"
 
+#include <vector>
 
 //A DrawObject is parallel to PWidget, but specific to drawing 
 //primitives.
@@ -98,16 +99,6 @@ private:
 // class PBezier: public PDrawObject
 // {
 // };
-
-// class PPolygon: public PDrawObject
-// {
-// public:
-//     PPolygon();
-//     ~PPolygon();
-// protected:
-// private:
-// };
-
 // class PTriangle: public PPolygon
 // {
 // public:
@@ -232,4 +223,72 @@ class PEllipse: public  PDrawObject
  };
 
 
+
+ class PPolygon: public PDrawObject
+ {
+ public:
+     PPolygon(int x, int y, Variant xpoints, Variant ypoints,  Variant fg, bool filled);
+     virtual ~PPolygon();
+
+     virtual int GetWidth() const{return mWidth;};
+     virtual int GetHeight() const{return mHeight;};
+
+     virtual bool SetXPoints(Variant v);
+     virtual bool SetYPoints(Variant v);
+
+     virtual std::ostream & SendToStream(std::ostream& out);
+
+
+    //overloaded generic PEBLObjectBase methods
+     virtual bool SetProperty(std::string, Variant v);
+     virtual Variant GetProperty(std::string)const;
+     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
+     virtual ObjectValidationError ValidateProperty(std::string)const;
+
+
+ protected:
+
+     Variant mXPoints;
+     Variant mYPoints;
+
+ private:
+ };
+
+
+ class PBezier: public PDrawObject
+ {
+ public:
+     PBezier(int x, int y, Variant xpoints, Variant ypoints,  int steps, Variant fg);
+     virtual ~PBezier();
+
+     virtual int GetWidth() const{return mWidth;};
+     virtual int GetHeight() const{return mHeight;};
+
+     virtual bool SetXPoints(Variant v);
+     virtual bool SetYPoints(Variant v);
+     virtual bool SetSteps(Variant v);
+
+     virtual std::ostream & SendToStream(std::ostream& out);
+
+
+    //overloaded generic PEBLObjectBase methods
+     virtual bool SetProperty(std::string, Variant v);
+     virtual Variant GetProperty(std::string)const;
+     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
+     virtual ObjectValidationError ValidateProperty(std::string)const;
+
+
+ protected:
+
+     Variant mXPoints;
+     Variant mYPoints;
+     int mSteps;
+ private:
+ };
+
 #endif
+
+
+
+
+

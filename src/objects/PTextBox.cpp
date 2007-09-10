@@ -121,17 +121,10 @@ ObjectValidationError PTextBox::ValidateProperty(std::string name, Variant v)con
 
 ObjectValidationError PTextBox::ValidateProperty(std::string name)const
 {
-    if(name == "X" ||
-       name == "Y" ||
-       name == "VISIBLE" ||
-       name == "WIDTH" ||
-       name == "HEIGHT" ||
-       name == "TEXT" ||
-       name == "CURSORPOS")
+    if(name == "CURSORPOS")
         return OVE_VALID;
     else
-        return OVE_INVALID_PROPERTY_NAME;
-
+        return PTextObject::ValidateProperty(name);
 }
 
 
@@ -140,7 +133,6 @@ ObjectValidationError PTextBox::ValidateProperty(std::string name)const
 //Inserts text at cursor
 void PTextBox::InsertText(std::string text)
 {
-    //cout << "[" << text << "]" << endl;
 
     if(mCursorPos>mText.length())
         mCursorPos=mText.length();

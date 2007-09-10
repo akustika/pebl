@@ -51,7 +51,7 @@
 #include "../platforms/sdl/PlatformEventQueue.h"
 #include "../platforms/sdl/PlatformTextBox.h" 
 
-
+#include "PEBLList.h"
 
 #include <string>
 using std::string;
@@ -888,4 +888,113 @@ Variant PEBLObjects::Circle(Variant v)
     PComplexData *  pcd = new PComplexData(myCircle);
 
     return Variant(pcd);
+}
+
+
+Variant PEBLObjects::Polygon(Variant v)
+{
+
+    // v[1] should be X, v[2] shoud be Y
+    // v[3] should be dx, v[4] should be dy
+    // v[5] should be the color.
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Polygon(<x>, <y>, <points>, <color>, <filled>)]: "); 
+    int x = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in second parameter of function  [Polygon(<x>, <y>,<points>, <color>, <filled>)]: "); 
+    int y = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_LIST, "Argument error in third parameter of function  [Polygon(<x>, <y>, <points>, <color>, <filled>)]: "); 
+    Variant xpoints = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_LIST, "Argument error in third parameter of function  [Polygon(<x>, <y>, <points>, <color>, <filled>)]: "); 
+    Variant ypoints = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_COLOR, "Argument error in fourth parameter of function  [Polygon(<x>, <y>, <points>, <color>, <filled>)]: "); 
+    Variant color = plist->First(); plist->PopFront();
+    
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in fifth parameter of function  [Polygon(<x>, <y>, <points>, <color>, <filled>)]: "); 
+    int filled = plist->First(); plist->PopFront();
+
+    counted_ptr<PEBLObjectBase> myPolygon = counted_ptr<PEBLObjectBase>(new PlatformPolygon(x,y,xpoints,ypoints,color,filled));
+    PComplexData *  pcd = new PComplexData(myPolygon);
+
+    return Variant(pcd);
+}
+
+
+
+
+Variant PEBLObjects::Bezier(Variant v)
+{
+
+    // v[1] should be X, v[2] shoud be Y
+    // v[3] should be dx, v[4] should be dy
+    // v[5] should be the color.
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Bezier(<x>, <y>, <xpoints>, <ypoints>, <steps>, <color>)]: "); 
+    int x = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in second parameter of function  [Bezier(<x>, <y>,<xpoints>, <ypoints>, <steps>, <color>)]: "); 
+    int y = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_LIST, "Argument error in third parameter of function  [Bezier(<x>, <y>, <xpoints>, <ypoints>, <steps>, <color>)]: "); 
+    Variant xpoints = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_LIST, "Argument error in third parameter of function  [Bezier(<x>, <y>, <xpoints>, <ypoints>, <steps>, <color>)]: "); 
+    Variant ypoints = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in fifth parameter of function  [Bezier(<x>, <y>, <xpoints>, <ypoints>, <steps>, <color>)]: "); 
+    int steps = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_COLOR, "Argument error in fourth parameter of function  [Bezier(<x>, <y>, <xpoints>, <ypoints>, <steps>, <color>)]: "); 
+    Variant color = plist->First(); plist->PopFront();
+    
+
+    counted_ptr<PEBLObjectBase> myBezier = counted_ptr<PEBLObjectBase>(new PlatformBezier(x,y,xpoints,ypoints,steps,color));
+    PComplexData *  pcd = new PComplexData(myBezier);
+
+    return Variant(pcd);
+}
+
+
+
+
+
+Variant PEBLObjects::RotoZoom(Variant v)
+{
+
+    // v[1] should be an object,
+    // v[2] shoud be rotation
+    // v[3] should be xzoom, v[4] should be yzoom
+    // v[5] should be whether to anti-alias.
+
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_WIDGET, "Argument error in first parameter of function [ROTOZOOM(<widget>,<rotation>,<xzoom>, <yzoom>, <smooth>)]: "); 
+    Variant v1 = plist->First(); plist->PopFront();
+    PlatformWidget * widget = dynamic_cast<PlatformWidget*>(v1.GetComplexData()->GetObject().get());
+
+
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in second parameter of function [ROTOZOOM(<widget>,<rotation>,<xzoom>, <yzoom>, <smooth>)]: "); 
+    Variant r = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in third parameter of function [ROTOZOOM(<widget>,<rotation>,<xzoom>, <yzoom>, <smooth>)]: "); 
+    Variant x = plist->First(); plist->PopFront();
+
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in fourth parameter of function [ROTOZOOM(<widget>,<rotation>,<xzoom>, <yzoom>, <smooth>)]: "); 
+    Variant y = plist->First(); plist->PopFront();
+    
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in fifth parameter of function [ROTOZOOM(<widget>,<rotation>,<xzoom>, <yzoom>, <smooth>)]: "); 
+    int smooth = plist->First(); plist->PopFront();
+
+    bool result = widget->RotoZoom((long double)r,(long double)x,(long double)y,smooth);
+
+    //if(!result)PError::SignalFatalError("Rotozoom failed.");
+    
+    return v1.GetComplexData();
 }

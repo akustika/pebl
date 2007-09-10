@@ -466,7 +466,7 @@ Variant PEBLList::Length (Variant v)
 
 /// This function returns the first variant in the PList
 /// passed in as an argument.
-Variant PEBLList::First (Variant v)
+Variant PEBLList::First(Variant v)
 {
    //v[1] should be a list
 
@@ -479,7 +479,72 @@ Variant PEBLList::First (Variant v)
 
     return Variant(myList->First());
 }
+Variant PEBLList::Second(Variant v)
+{
+   //v[1] should be a list
 
+    PList * plist = v.GetComplexData()->GetList();
+
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_LIST, "Argument error in function [Second(<list>)]:  ");    
+
+    PList * myList = (PList*)(v1.GetComplexData()->GetObject().get());
+    list<Variant>::iterator p = myList->Begin();
+    p++;
+       
+    return *p;
+}
+
+Variant PEBLList::Third(Variant v)
+{
+   //v[1] should be a list
+
+    PList * plist = v.GetComplexData()->GetList();
+
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_LIST, "Argument error in function [Second(<list>)]:  ");    
+
+    PList * myList = (PList*)(v1.GetComplexData()->GetObject().get());
+    list<Variant>::iterator p = myList->Begin();
+    p++;
+    p++;
+    return *p;
+}
+
+Variant PEBLList::Fourth(Variant v)
+{
+   //v[1] should be a list
+
+    PList * plist = v.GetComplexData()->GetList();
+
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_LIST, "Argument error in function [Fourth(<list>)]:  ");    
+
+    PList * myList = (PList*)(v1.GetComplexData()->GetObject().get());
+    list<Variant>::iterator p = myList->Begin();
+    p++;
+    p++;
+    p++;
+    return *p;
+}
+
+Variant PEBLList::Fifth(Variant v)
+{
+   //v[1] should be a list
+
+    PList * plist = v.GetComplexData()->GetList();
+
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_LIST, "Argument error in function [Fifth(<list>)]:  ");    
+
+    PList * myList = (PList*)(v1.GetComplexData()->GetObject().get());
+    list<Variant>::iterator p = myList->Begin();
+    p++;
+    p++;
+    p++;
+    p++;
+    return *p;
+}
 
 //This returns the nth element of the list, counting from 1.
 //if it is longer than the list, it returns the last item.

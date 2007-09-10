@@ -88,6 +88,10 @@ namespace PEBLObjects
     Variant Square(Variant v);
     Variant Ellipse(Variant v);
     Variant Circle(Variant v);
+    Variant Polygon(Variant v);
+    Variant Bezier(Variant v);
+
+    Variant RotoZoom(Variant v);
 
     
 }
