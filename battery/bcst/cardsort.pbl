@@ -1,6 +1,6 @@
 #!/usr/local/bin/pebl
 ###########################################################
-##  Berg's Card Sorting Task, Version 0.2
+##  Berg's Card Sorting Task, Version 0.3
 ##  (better known as the Wisconsin Card Sorting Test (tm).
 ##  For use with PEBL 0.06 or later
 ##  http://pebl.sf.net
@@ -22,7 +22,9 @@
 ##
 ##
 ###########################################################
-
+##  Raw data file outputs:
+##  subnum, trialnum, category count, color, shape, number, response, accuracy
+##  perseveration count, absolute time, response time.
 define Start(lPar)
 {
 
@@ -63,8 +65,8 @@ define Start(lPar)
   
   csn <- DesignFullCounterbalance(DesignFullCounterbalance(gColors,gShapes),gNumbers)
   stimcat <- FoldList(Flatten(Repeat(csn,repeats)),3)
-#  Print(csn)
-#  Print(stimcat)
+  Print(csn)
+  Print(stimcat)
   images<-[]
  
   loop(i,stimcat)
@@ -125,7 +127,7 @@ WaitForAnyKeyPress()
   ## Begin presenting and collecting data
   ####################################################
  
-  FilePrint(gFileOut, "Subnum trial run color shape number resp corr persev abstime rt")
+  FilePrint(gFileOut, "Subnum trial run rule lastrule color shape number resp corr persev abstime rt")
 ####################################################
 ##  Start the experimental trials.
 ## 
@@ -174,7 +176,7 @@ WaitForAnyKeyPress()
       }
 
       
-	  FilePrint_(gFileOut, gSubNum + " " + trialnum + " " + numCats + " ")
+	  FilePrint_(gFileOut, gSubNum + " " + trialnum + " " + numCats +  " " + rule + " " + lastrule + " ")
       index <- 1
       ##Print out the trial data.
       loop(i,s)
