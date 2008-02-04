@@ -1,7 +1,7 @@
 #!/usr/local/bin/pebl
 ###########################################################
 ##  Berg's Card Sorting Task, Version 0.3
-##  (better known as the Wisconsin Card Sorting Test (tm).
+##  (better known as the Wisconsin Card Sorting Test (tm)).
 ##  For use with PEBL 0.06 or later
 ##  http://pebl.sf.net
 ##  Part of  The PEBL Psychological Testing Battery
@@ -13,12 +13,6 @@
 ##     flexibility in thinking. J. Gen. Psychol. 39: 15-22.
 ## 
 ## 
-##   Program calculates and reports: 
-##    * Number of categories achieved
-##    * Number of trials
-##    * Number of errors
-##    * Number of perseverative errors
-##    * Percentage perseverative errors
 ##
 ##
 ###########################################################
@@ -33,8 +27,11 @@ define Start(lPar)
   repeats <- 2
 
   ## This is how long of a run is required before switching categories.
-  ## Note: some (many?) versions require runs of 6.
-  runlength <- 5
+  ## Note: Versions 0.1 -0.2 of BCST used runlength 5 by default.
+  ## This is now changed to be 10, which according to the Neuropsych
+  ## Assessment Handbook is the typical version.
+
+  runlength <- 10
 
   ## useCanonical determines whether the 'stimulus' cards are the same
   ## as in Berg, or whether they are chosen randomly.
@@ -43,8 +40,8 @@ define Start(lPar)
   ## Reduced uses a 24-card deck, removing cards sharing  2+ attributes with stimulus cards
   ## See Nelson HE: A modified card sorting test sensitive to 
   ##        frontal lobe defects. Cortex 1976;12:313-324.
+  ## Note: modified card sort also may use shorter runlength.
   useReduced <- 0
-
 
   ## results are stored in this file
   gFileOut <-FileOpenWrite("bcst-" + gSubNum +".txt")
@@ -54,6 +51,8 @@ define Start(lPar)
   totCorr <- 0
   totPers <- 0
   totPersErr <- 0
+  totUnique <- 0   ##Counts number of 'unique' errors; errors that are not correct by another rule.
+
   persrun <- []  ##computes length of 'perseverative runs'
   persrunflag <- 1
 
@@ -101,6 +100,7 @@ define Start(lPar)
 
         }
 
+       ##only add to the used deck if it matches on fewer than two features.
        if(maxmatch <2)
         {
             ccsn <- Append(ccsn,[[col,shape],num])
@@ -174,7 +174,7 @@ WaitForAnyKeyPress()
   ## Begin presenting and collecting data
   ####################################################
  
-  FilePrint(gFileOut, "Subnum trial run rule lastrule color shape number resp corr last_corr persev persev_err abstime rt")
+  FilePrint(gFileOut, "Subnum trial run rule lastrule color shape number resp corr last_corr corr_col corr_shape corr_num persev persev_err abstime rt")
 ####################################################
 ##  Start the experimental trials.
 ## 
@@ -209,8 +209,16 @@ WaitForAnyKeyPress()
       ##
       corrBoth <- ScoreTrial(s,resp,rule,lastrule)
 
+      
 	  corrLast <- First(corrBoth)
       corr <- Nth(corrBoth,2)
+
+
+     ##Also compute whether the choice was correct for each given rule
+      corrCol   <- Nth(gColors,ToNumber(resp)) == Nth(s,1)
+      corrShape <- Nth(gShapes,ToNumber(resp)) == Nth(s,2)
+      corrNum   <- Nth(gNumbers,ToNumber(resp))== Nth(s,3)
+      
 
       RemoveObject(card,gWin)
 
@@ -221,9 +229,13 @@ WaitForAnyKeyPress()
         totCorr <- totCorr + 1
         feedback <- gCorrect
       } else {
+        ##It is incorrect.
         feedback <- gIncorrect    
         run <- 0
+     
       }
+
+
  
      ##If it was correct according to the last rule, increment counters.
       if(corrLast == 1) {
@@ -266,6 +278,20 @@ WaitForAnyKeyPress()
 
            }
 
+
+      ##This determines if the response is a 'unique' response; i.e.,
+	  ## not correct according to any rule
+
+      
+      rulesum <- (corrCol + corrShape + corrNum)
+
+        ##It was incorrect, and not correct according to the previous rule, and not 
+        ##a match to another property of the card, increment the unique counter
+         if(corr==0 and corrLast == 0  and rulesum == 0)
+         {
+		   totUnique <- totUnique + 1
+         }
+
       
 	  FilePrint_(gFileOut, gSubNum + " " + trialnum + " " + numCatsExp +  " " + rule + " " + lastrule + " ")
       index <- 1
@@ -279,7 +305,8 @@ WaitForAnyKeyPress()
        index <- index + 1
       }
 
-	  FilePrint(gFileOut,resp + " " + corr + " " + corrLast + " " +   trialpersev + " " + trialperseverr + " " +  time0 + " " + rt )
+	  FilePrint_(gFileOut, resp + " " + corr + " " + corrLast + " " +  corrCol + " " + corrShape + " " + corrNum + " ")
+      FilePrint( gFileOut, trialpersev + " " + trialperseverr + " " +  time0 + " " + rt )
       Show(feedback)
       Draw()
       Wait(400)
@@ -330,7 +357,7 @@ WaitForAnyKeyPress()
    report <-FileOpenWrite("bcst-report-" + gSubNum +".txt")
    FilePrint(report,"---------------------------------------------------")
    FilePrint(report," Report for PEBL's _Berg's Card Sorting Task_,")
-   FilePrint(report," a version of the Wisconsin Card Sorting Task (tm by PAR, Inc.*)")
+   FilePrint(report," a free version of the Wisconsin Card Sorting Task (tm)*")
    FilePrint(report," (c) 2008 Shane T. Mueller")
    
    FilePrint(report," Version 0.3")
@@ -379,6 +406,9 @@ WaitForAnyKeyPress()
    FilePrint(report,"5. Perseverative Responses    " + totPers + Tab(1) + Roundoff(totPers/num,4)*100 + Tab(1) + Roundoff(totPers/(numCatsExp-1),3))
    FilePrint(report,"6. Perseverative Errors       " + totPersErr + Tab(1) + Roundoff(totPersErr/num,4)*100 + Tab(1) + Roundoff(totPersErr/(numCatsExp-1),3))
    FilePrint(report,"7. Non-Perseverative Errors   " + nonp + Tab(1) + Roundoff(nonp/num,4)*100 + Tab(1) + Roundoff(nonp/(numCatsExp),3))
+   FilePrint(report,"8. Unique Errors              " + totUnique + Tab(1) + Roundoff(totUnique/num,4)*100 + Tab(1) + Roundoff(totUnique/(numCatsExp),3))
+
+
    FilePrint(report,"                        ---------------------------")
 
 
@@ -404,7 +434,7 @@ WaitForAnyKeyPress()
    Perseverative runs, computes the number of error perseverations in
    a row at the beginning of each new category.")
 
-  FilePrint(report,"*PEBL, the PEBL test battery, and this test are unaffiliated with the Wells Printing Company or PAR Inc, the producers of the "Wisconsin Card Sorting Test (tm)")
+   FilePrint(report,"*PEBL, the PEBL test battery, and this test are unaffiliated with the Wells Printing Company or PAR Inc, the producers of the 'Wisconsin Card Sorting Test' (tm)")
    FileClose(report)
    ##Now, show debriefing info.
 
@@ -499,6 +529,7 @@ define ScoreTrial(triallist, resp, rule,lastrule)
 
    corr <-     (Nth(dimlist,ToNumber(resp)) == dimension)
    lastcorr <- (Nth(lastdimlist,ToNumber(resp)) == lastdim)
+
 
    if(corr)
    {
