@@ -6,6 +6,10 @@ define Start(p)
    blocklength <- 25
    Initialize()
 
+   ## Uncomment to eliminate busy-wait (mostly for older machines)
+   ## gSleepEasy <- 1
+
+
   ##############
   ## Create the basic stimuli
   #############
@@ -35,8 +39,7 @@ define Start(p)
 
 
 
-#  gFileOut <- FileOpenWrite("stroop-"+gSubNum+".txt")
-  gFileOut <- FileOpenAppend("stroop-"+gSubNum+".txt")
+  gFileOut <- FileOpenWrite("stroop-"+gSubNum+".txt")
 
   gTrial <- 0
   gBlock <- 0
@@ -93,6 +96,8 @@ define Start(p)
    well you can read words and the colors they appear in. We will
    start with a practice round.
    Press any key to begin." 
+
+
    
    Show(gInstructions)
    Draw()
@@ -528,8 +533,7 @@ define Block(stim, btype, colorresp)
 
     ##i is a pair of [wordname,colorname]
     gStimLabel.text <- wordname
-###     gStimLabel.font <-  ChooseFont(colorname) #This doesn't work in version 0.08
-    SetFont(gStimLabel, ChooseFont(colorname))
+    gStimLabel.font <-  ChooseFont(colorname)
 
 
     Wait(150)

@@ -235,6 +235,19 @@ PEvent PEventLoop::Loop()
             //Get rid of the top item in the event queue
             gEventQueue->PopEvent();
 
+            //This does a nano sleep function to avoid burning cpu, if the gSleepEasy variable is set.
+            //Probably is only available on unix.
+
+            if(myEval->gGlobalVariableMap.Exists("gSleepEasy") )
+                {
+                    if(myEval->gGlobalVariableMap.RetrieveValue("gSleepEasy"))
+                    {
+                        struct timespec a,b;
+                        a.tv_sec  = 0;   
+                        a.tv_nsec = 100000; //1 ms
+                        int retval = nanosleep(&a,&b);
+                    }
+                }
         }
 
     delete myEval;

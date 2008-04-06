@@ -200,7 +200,10 @@ bool PlatformTextBox::SetProperty(std::string name, Variant v)
     {
         // If we set it at higher level, don't worry.
     }
-    else if (name == "FONT") SetFont(v.GetComplexData()->GetObject());
+    else if (name == "FONT")
+        {
+            SetFont(v.GetComplexData()->GetObject());
+        }
     else return false;
     
     return true;
@@ -210,7 +213,6 @@ bool PlatformTextBox::SetProperty(std::string name, Variant v)
 
 void PlatformTextBox::SetFont(counted_ptr<PEBLObjectBase> font)
 {
-
 
     mFontObject = font;
     mFont = dynamic_cast<PlatformFont*>(mFontObject.get());

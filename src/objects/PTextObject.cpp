@@ -3,7 +3,7 @@
 //    Name:       src/objects/PTextObject.cpp
 //    Purpose:     Contains generic specs for all objects containing text
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2008 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -39,7 +39,6 @@ PTextObject::PTextObject():
     mText("")
 {
     InitializeProperty("TEXT","");
-    
 }
 
 

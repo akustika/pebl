@@ -1,7 +1,7 @@
 define Start(lPar)
 {
  ## (c) 2006 Shane T. Mueller
- ## stmuelle @ indiana.edu
+ ## smueller at obereed dot net
  ## PEBL Bechara's Gambling Task, Version 0.3
  ##  (a version of the so-called Iowa Gambling Task (tm))
  ##  

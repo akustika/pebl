@@ -29,6 +29,7 @@
 #include "PlatformFont.h"
 #include "../../utility/rc_ptrs.h"
 #include "../../utility/PError.h"
+#include "../../base/PComplexData.h"
 
 #include "SDL/SDL.h"
 #include "SDL/SDL_ttf.h"
@@ -53,7 +54,6 @@ PlatformLabel::PlatformLabel(const std::string & text, counted_ptr<PEBLObjectBas
 
     SetFont(font);
     SetText(text);
-    
 
     Draw();
 
@@ -115,6 +115,26 @@ bool  PlatformLabel::RenderText()
         return false;
 }
 
+
+bool PlatformLabel::SetProperty(std::string name, Variant v)
+{
+
+    if(name == "TEXT")
+        {
+            SetText(v);
+        }
+    else if(PLabel::SetProperty(name,v))
+    {
+        // If we set it at higher level, don't worry.
+    }
+    else if (name == "FONT")
+        {
+            SetFont(v.GetComplexData()->GetObject());
+        }
+    else return false;
+    
+    return true;
+}
 
 void PlatformLabel::SetFont(counted_ptr<PEBLObjectBase> font)
 {

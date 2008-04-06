@@ -35,11 +35,11 @@
 ##     * Trial-base dwill run until a specific number of trials
 ##     * Block-based allows one to use an isi-block, which gets sampled
 ##       from without replacement, and then reshuffled
-##       until the number of blocks has
+##       until the number of blocks has elapsed
 ## 
 ##  * In addition, when useContinuous variable==1, it will choose a 
 ##    continous stimulus  presentation time between the min and max 
-##    of timeInterval.  Otherwise, it will sample from that set.
+##    of timeInterval.  Otherwise, it will sample from the set in timeIntervals
 #################################################################
 
 define Start(lPar)
@@ -82,9 +82,9 @@ define Start(lPar)
 
 
    ##These instrument automated data coding 
-   gTooFast <- 150
-   gLapse   <- 500
-   gSleep   <- 30000
+   gTooFast <- 150             ## trial is marked too fast if rt < 150 ms
+   gLapse   <- 500             ## trial is marked lapse if it is > 500 ms
+   gSleep   <- 30000           ## trial is 'sleep attack' if > 30 s
 
   ## Initialize global objects for use later. Defined at end of file
   Initialize()

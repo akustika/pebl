@@ -26,10 +26,10 @@
 #//////////////////////////////////////////////////////////////////////////////
 
 #This only affects install location.  The binary should be 
-#locatable from 'anywhere'
+#locatable anywhere
 PREFIX = /usr/local/
-#On mac, use the following:
-PREFIX = /opt/local/
+#On mac, one might prefer the following:
+#PREFIX = /opt/local/
 
 
 

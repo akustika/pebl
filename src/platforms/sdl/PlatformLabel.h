@@ -54,6 +54,7 @@ public:
     virtual bool RenderText();
 
     //These need to be overridden because the text needs to be re-rendered when they are called.
+    virtual bool SetProperty(std::string, Variant v);
     virtual void SetFont(counted_ptr<PEBLObjectBase> font);
     virtual void SetText(const std::string & text);
 

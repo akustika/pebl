@@ -1,7 +1,7 @@
 datall <- read.table("stroop-0.txt")
-colnames(datall) <- c("sub","block","trial","type","cond","shade","word","resp","corr","respnum","start","rt")
+colnames(datall) <- c("sub","block","trial","type","cresp","cond","cond2","shade","word","resp","corr","respnum","start","rt")
 
-datall$resptype <- ceiling(datall$block/2)##forgot to record this.
+
 
 ##Just keep the correct trials and those after practice
 keep <- datall$corr==1 & datall$block > 0
@@ -9,11 +9,8 @@ keep <- datall$corr==1 & datall$block > 0
 dat <- datall[keep,]
 
 
-cond2 <- c(1,3,2,2)[dat$cond] #forgot to record this too.
 
-
-
-x <- exp(tapply(log(dat$rt),list(cond2,dat$type,dat$resptype),mean))
+x <- exp(tapply(log(dat$rt),list(dat$cond2,dat$type,dat$cresp),mean))
 
 xlab <- c("Consistent","One\ndimension","Inconsistent")
 par(mfrow=c(1,3))

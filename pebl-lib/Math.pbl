@@ -219,8 +219,6 @@ define Quantile(list,q)
    }else{
       ret <- Nth(sorted,1+Round(q/100*(Length(list)-1)))
    }
-
-
  
 
  return ret

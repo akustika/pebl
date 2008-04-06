@@ -44,6 +44,10 @@ PlatformTimer::~PlatformTimer()
 }
 
 
+
+
+// The following function is not used anymore.
+//
 void PlatformTimer::Wait(unsigned long int msecs)
     //This does a busy wait; could be augmented with interrupts or RTC calls if necessary.
     //Both version should be nearly identical--all the ifdefs makes it really difficult

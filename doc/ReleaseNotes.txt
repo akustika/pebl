@@ -26,10 +26,37 @@ obsolete.
 
 
                  RELEASE NOTES
+-------------------------------------------------
+Version 0.09
 
 
---------------------------------------------------
-Version 0.08
+Added RotoZooming code.  Now, all graphical objects (textboxes,
+labels, imageboxes, but not currently simple shapes) have properties
+xzoom, yzoom, and rotation.  These objects can be stretched and
+rotated using these properties; also a new function RotoZoom can be
+used to do this by hand (depracate this immediately)
+
+A new Polygon object and Bezier objects were added, which allow arbitrary polygons to be created.  A few helper functions build ready-made polygons:  
+  Plus(),
+  E()
+  Star(),
+  Octogon()?;
+  Pentagon()?;
+  
+* Made package relocatable on linux/mac (thanks to binreloc)
+
+* Added a script variable to control busy-waiting:
+    set gSleepEasy <- 1 to put mini sleeps in the busy wait loop.
+    This reduces the timing resolution by a little (tests show it
+    typically loses  1-2 ms in comparison to the busy-wait strategy.
+    This may make PEBL useable on some older systems. 
+    Furthermore, it can be changed during the script, so you don't peg
+    cpu time while instructions are being read.
+
+* Fixed labels so that you can assign a font with label.font <- font
+
+
+-------------------------------------------------- Version 0.08
 September 2007
 
 

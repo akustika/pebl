@@ -47,10 +47,11 @@ Results:
 	        accuracy, number incorrect, perseverations on prior rule, and
 	        number of achieved categories.
 
-
+Data in bcst-<gsubnum>.txt are in the following columns:
+Subnum trial run rule lastrule color shape number resp corr persev abstime rt
 
 Changelog:      
-
+Version 0.3 outputs the rule and lastrule used for computing perseverations.
 Version 0.2 correctly computes perseverations and fixes some other bugs over version 0.1
 
 -------------------------------------------------------------------------------
@@ -315,3 +316,83 @@ Options:  Number of disks, number of trials. Disks should not exceed 6.
 
 
 
+
+-------------------------------------------------------------------------------
+*                   Stroop Test, Version 0.1
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.9
+
+Location: stroop/stroop.pbl
+
+Description:  
+
+ Keyboard version of the classic reading-version-color vision
+  interference task.
+
+  This test includes three main Response conditions: 
+	 1. response labels with color and word
+     2. response labels with black words
+     3. response labels with color patches.
+
+
+  For each response conditions, there are two decision blocks:
+     1. Name reading
+     2. Color identification
+
+  Finally, within each block, there are three trial types:
+     1. consistent color and name
+     2. inconsistent color/name
+     3. single feature stimuli (black words or colored "xxxxx")
+     
+
+
+Typical results shown below.  Here, the so-called stroop effect
+is shown in each table because conflict has a different impact
+for naming versus color ID.  When response labels are colored, color
+ID is much easier in the conflict condition; when response labels are
+not colored, label reading is easier. 
+
+Colored Names:
+-----------------------------------
+     Condition   Name   Color  (N-C)
+-----------------------------------
+    Consistent  591     563    27
+      Conflict  1019     640    379
+Single Feature  656     563    92
+-----------------------------------
+Black Names:
+-----------------------------------
+     Condition   Name   Color  (N-C)
+-----------------------------------
+Condition   Name   Color  Difference (N-C)
+    Consistent  646     609    36
+      Conflict  751     849    -98
+Single Feature  721     694    26
+-----------------------------------
+Colored Patches:
+-----------------------------------
+     Condition   Name   Color  (N-C)
+-----------------------------------
+    Consistent  604     532    72
+      Conflict  1132     578    554
+Single Feature  684     555    129
+-----------------------------------
+
+ A simple measure of interference can be formed by finding the
+difference between values in the N-C column for conflict and
+consistent conditions.  For the data shown here, this would be:
+
+colored names: 379-27 =  352
+black names:   -98-36 = -134
+color patches: 554-72 =  482
+
+For these data, when there are color shades available on the response
+label line (the first and third condition), name reading is most
+harmed for conflicting stimuli in comparison to consistent stimuli.
+In contrast, when there are no shades on the response line (condition
+2), color identification is most harmed for conflicting stimuli.  This
+is the typical stroop effect.
+
+
+Options:  
+Number of trials per block.

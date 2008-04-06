@@ -98,6 +98,7 @@ bool PlatformWidget::Draw()
                     if(zoom)
                         {
 
+                    
                             tmp = rotozoomSurfaceXY(mSurface, mRotation,mZoomX, mZoomY, 1); 
                     
                             //We need to reset the sizes.
