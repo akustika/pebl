@@ -2,7 +2,7 @@
 #//////////////////////////////////////////////////////////////////////////////
 #//////////////////////////////////////////////////////////////////////////////
 #//
-#//	Copyright (c) 2003-2005
+#//	Copyright (c) 2003-2008
 #//	Shane T. Mueller
 #//
 #//     This file is part of the PEBL project.
@@ -25,15 +25,20 @@
 #//////////////////////////////////////////////////////////////////////////////
 #//////////////////////////////////////////////////////////////////////////////
 
+#This only affects install location.  The binary should be 
+#locatable from 'anywhere'
+PREFIX = /usr/local/
+#On mac, use the following:
+PREFIX = /opt/local/
+
+
+
 C   = gcc
 CXX = g++ 
 DEBUGFLAGS = -lefence -DPEBL_DEBUG
 
-CFLAGS =   -O3 -std=c99 
-CXXFLAGS = -g  -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  
-
-#Only affects install location
-PREFIX = /usr/local/
+CFLAGS =   -O3 -std=c99 -DPREFIX=$(PREFIX) 
+CXXFLAGS = -g  -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  -DENABLE_BINRELOC
 
 
 SDL_CONFIG = /usr/bin/sdl-config
@@ -81,6 +86,7 @@ vpath %.l   $(SRC_DIR)
 
 PUTILITIES_SRC = $(UTIL_DIR)/PEBLUtility.cpp \
 		$(UTIL_DIR)/PError.cpp \
+		$(UTIL_DIR)/BinReloc.cpp \
 		$(UTIL_DIR)/PEBLPath.cpp
 
 PUTILITIES_OBJ  = $(patsubst %.cpp, %.o, $(PUTILITIES_SRC))
@@ -279,8 +285,8 @@ DIRS = \
 #
 
 main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
-	$(CXX) $(CXXFLAGS)   -o $(BIN_DIR)/pebl -I/usr/local/include/SDL -D_REENTRANT \
-	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  -lSDL_net $(OSX_FLAGS) \
+	$(CXX) $(CXXFLAGS)   -o $(BIN_DIR)/pebl -I$(PREFIX)include/SDL -D_REENTRANT \
+	   -L$(PREFIX)/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  -lSDL_net $(OSX_FLAGS) \
 	 $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(PEBLMAIN_OBJ))
 
 parse:
@@ -295,20 +301,20 @@ parse-debug:
 tests:  $(BIN_DIR)/varianttest $(BIN_DIR)/variablemaptest $(BIN_DIR)/pnodetest $(BIN_DIR)/parsertest $(BIN_DIR)/functionmaptest
 
 $(BIN_DIR)/varianttest: $(TEST_VARIANT_OBJ) $(TEST_VARIANT_INC)  $(POBJECT_OBJ) $(PLATFORM_SDL_OBJ)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/varianttest 	-Wall -I/usr/local/include/SDL -D_REENTRANT  \
-	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf  $(BASE_DIR)/lex.yy.c $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_VARIANT_OBJ))
+	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/varianttest 	-Wall -I$(PREFIX)include/SDL -D_REENTRANT  \
+	   -L$(PREFIX)lib -lSDL -lpthread -lSDL_image -lSDL_ttf  $(BASE_DIR)/lex.yy.c $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_VARIANT_OBJ))
 
 $(BIN_DIR)/variablemaptest: $(TEST_VARIABLE_MAP_OBJ) $(TEST_VARIABLE_MAP_INC)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/variablemaptest -I/usr/local/include/SDL -D_REENTRANT \
-	-L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  $(OSX_FLAGS) \
+	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/variablemaptest -I$(PREFIX)include/SDL -D_REENTRANT \
+	-L$(PREFIX)lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  $(OSX_FLAGS) \
 	 $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_VARIABLE_MAP_OBJ))
 
 $(BIN_DIR)/pnodetest: $(TEST_PNODE_OBJ) $(TEST_PNODE_INC)
 	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/pnodetest $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_PNODE_OBJ))
 
 $(BIN_DIR)/parsertest: $(TEST_PARSER_OBJ) $(TEST_PARSER_INC)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/parsertest -g -O2 -Wall -I/usr/local/include/SDL -D_REENTRANT  \
-	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf \
+	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/parsertest -g -O2 -Wall -I$(PREFIX)include/SDL -D_REENTRANT  \
+	   -L$(PREFIX)lib -lSDL -lpthread -lSDL_image -lSDL_ttf \
 	 $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_PARSER_OBJ))
 
 $(BIN_DIR)/functionmaptest:  $(TEST_FMAP_OBJ) $(TEST_FMAP_INC)
@@ -324,26 +330,26 @@ $(BIN_DIR)/fonttest:  $(TEST_FONT_OBJ)
 	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/fonttest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_FONT_OBJ))
 
 $(BIN_DIR)/VCGMaker: $(APPS_DIR)/VCGMaker.cpp $(VCG_MAKER_OBJ) $(VCG_MAKER_INC) $(PUTILITIES_OBJ) $(PLATFORM_SDL_OBJ) $(PDEVICES_OBJ)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/VCGMaker -O2 -Wall -I/usr/local/include/SDL -D_REENTRANT  \
-	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  $(BASE_DIR)/$(PEBLBASE_SRC) \
+	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/VCGMaker -O2 -Wall -I$(PREFIX)include/SDL -D_REENTRANT  \
+	   -L$(PREFIX)lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  $(BASE_DIR)/$(PEBLBASE_SRC) \
         $(APPS_DIR)/VCGMaker.cpp $(patsubst %.o, $(OBJ_DIR)/%.o, $(VCG_MAKER_OBJ) $(PLATFORM_SDL_OBJ) $(PDEVICES_OBJ))
 
 $(BIN_DIR)/windowtest:  $(TEST_WINDOW_OBJ) $(TEST_WINDOW_INC)
-	$(CXX) $(CXXFLAGS) -O2 -Wall -I/usr/local/include/SDL -D_REENTRANT  \
-	   -L/usr/local/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -o $(BIN_DIR)/windowtest \
+	$(CXX) $(CXXFLAGS) -O2 -Wall -I$(PREFIX)include/SDL -D_REENTRANT  \
+	   -L$(PREFIX)lib -lSDL -lpthread -lSDL_image -lSDL_ttf -o $(BIN_DIR)/windowtest \
             $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_WINDOW_OBJ))
 
 $(BIN_DIR)/pstreamtest:  $(TEST_PSTREAM_OBJ) $(TEST_PSTREAM_INC)
-	$(CXX) $(CXXFLAGS)  -O2 -Wall -I/usr/local/include/SDL -D_REENTRANT  \
-	   -L/usr/local/lib  -o $(BIN_DIR)/pstreamtest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_PSTREAM_OBJ))
+	$(CXX) $(CXXFLAGS)  -O2 -Wall -I$(PREFIX)include/SDL -D_REENTRANT  \
+	   -L$(PREFIX)lib  -o $(BIN_DIR)/pstreamtest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_PSTREAM_OBJ))
 
 $(BIN_DIR)/audioouttest: $(TEST_AUDIOOUT_SRC) $(TEST_AUDIOOUT_OBJ) $(TEST_AUDIOOUT_INC)
-	$(CXX) $(CXXFLAGS) -O2 -Wall -I/usr/local/include/SDL -D_REENTRANT  \
-	   -L/usr/local/lib -lSDL -lpthread -o $(BIN_DIR)/audioouttest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_AUDIOOUT_OBJ))
+	$(CXX) $(CXXFLAGS) -O2 -Wall -I$(PREFIX)include/SDL -D_REENTRANT  \
+	   -L$(PREFIX)lib -lSDL -lpthread -o $(BIN_DIR)/audioouttest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_AUDIOOUT_OBJ))
 
 $(BIN_DIR)/pathtest: $(TEST_PATH_SRC) $(TEST_PATH_OBJ) $(TEST_PATH_INC)
 	$(CXX) $(CXXFLAGS) -O2 -Wall  -D_REENTRANT  \
-	   -L/usr/local/lib  -lpthread -o $(BIN_DIR)/pathtest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_PATH_OBJ))
+	   -L$(PREFIX)lib  -lpthread -o $(BIN_DIR)/pathtest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_PATH_OBJ))
 
 %.h:
 	echo Updating %.h
@@ -377,18 +383,20 @@ clean:
 
 .PHONY: install
 install:
-	cp bin/pebl $(PREFIX)/bin/pebl
-	rm -Rf $(PREFIX)/share/pebl
-	mkdir $(PREFIX)/share/pebl
-	cp -R media/ $(PREFIX)/share/pebl
-	cp -R pebl-lib/ $(PREFIX)/share/pebl
-
-	rm -Rf $(PREFIX)/share/pebl/media/CVS
-	rm -Rf $(PREFIX)/share/pebl/media/images/CVS
-	rm -Rf $(PREFIX)/share/pebl/media/sounds/CVS
-	rm -Rf $(PREFIX)/share/pebl/media/fonts/CVS
-	rm -Rf $(PREFIX)/share/pebl/media/text/CVS
-	rm -Rf $(PREFIX)/share/pebl/pebl-lib/CVS
+	install -d $(PREFIX)bin/	
+	cp bin/pebl $(PREFIX)bin/pebl
+#	rm -Rf $(PREFIX)share/pebl
+	install -d $(PREFIX)share/pebl
+	install -d $(PREFIX)share/pebl/media
+	install -d $(PREFIX)share/pebl/pebl-lib
+	cp -R media/* $(PREFIX)share/pebl/media/
+	cp  pebl-lib/*.pbl $(PREFIX)share/pebl/pebl-lib/
+	rm -Rf $(PREFIX)share/pebl/media/CVS
+	rm -Rf $(PREFIX)share/pebl/media/images/CVS
+	rm -Rf $(PREFIX)share/pebl/media/sounds/CVS
+	rm -Rf $(PREFIX)share/pebl/media/fonts/CVS
+	rm -Rf $(PREFIX)share/pebl/media/text/CVS
+	rm -Rf $(PREFIX)share/pebl/pebl-lib/CVS
 	chmod -R uga+r $(PREFIX)/share/pebl/
 
 ifeq (.depend,$(wildcard .depend))
