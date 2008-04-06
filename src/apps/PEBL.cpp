@@ -131,17 +131,18 @@ int PEBLInterpret( int argc, char *argv[] )
     //-----------------------------------------------------------
     //        Process all files on the command-line
     //-----------------------------------------------------------
-	//std::cout      << *i << endl;
+
+	std::cout << "filename:"      << *i << endl;
 	string inputfilename = Evaluator::gPath.FindFile(*i);
     head = NULL;
     if(inputfilename != "")
         {
-            cerr << "Processing PEBL Source File: " <<  inputfilename << endl;
+            cerr << "Processing PEBL Source File1: " <<  inputfilename << endl;
             head  = parse(inputfilename.c_str());
         }
     else
         {
-            PError::SignalFatalError("Unable to find file: " + inputfilename);
+            PError::SignalFatalError("Unable to find file: [" + inputfilename + "].");
         }
     
     //If there are any more arguments, process them by accomodating them
@@ -154,7 +155,7 @@ int PEBLInterpret( int argc, char *argv[] )
             inputfilename = Evaluator::gPath.FindFile(*i);
             if(inputfilename != "")
                 {
-                    cerr << "Processing PEBL Source File: " <<  inputfilename << endl;
+                    cerr << "Processing PEBL Source File2: " <<  inputfilename << endl;
                     
                     //A filename could be a directory (e.g., with media in it.)  
                     //If so, don't parse it.
@@ -169,7 +170,7 @@ int PEBLInterpret( int argc, char *argv[] )
                 }
             else
                 {
-                    PError::SignalFatalError("Unable to find file: " + inputfilename);
+                    PError::SignalFatalError("Unable to find file: [" + inputfilename + "]");
 
                 }
             i++;
@@ -496,7 +497,7 @@ void PrintOptions()
 {
     cout << "-------------------------------------------------------------------------------\n";
     cout << "PEBL: The Psychology Experiment Building Language\n";
-    cout << "Version 0.08\n";
+    cout << "Version 0.09\n";
     cout << "(c) 2003-2007 Shane T. Mueller, Ph.D.\n";
     cout << "smueller@obereed.net   http://pebl.sf.net\n";
     cout << "-------------------------------------------------------------------------------\n";
