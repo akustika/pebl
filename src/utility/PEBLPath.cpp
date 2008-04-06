@@ -28,6 +28,7 @@
 #include "PEBLPath.h"
 #include "../base/Variant.h"
 #include "PError.h"
+#include "BinReloc.h"
 
 #include <sys/stat.h>
 #include <list>
@@ -37,6 +38,7 @@
 using std::endl;
 using std::string;
 using std::ostream;
+using std::cout;
 
 PEBLPath::PEBLPath()
 {
@@ -68,8 +70,22 @@ void PEBLPath::Initialize(std::list<std::string> files)
             i++;
         }
 
-    //This is a hacked stand-in for using $prefix
-    string basedir = "/usr/local/share/pebl/";
+    string basedir = "";
+    //Initialize the binreloc library (courtesy of autopackage).
+    BrInitError error; 
+    if (br_init (&error) == 0 && error != BR_INIT_ERROR_DISABLED) 
+        { 
+            PError::SignalWarning("Warning: BinReloc failed to initialize.\n Will fallback to hardcoded default path.\n"); 
+            basedir = "/usr/local/share/pebl/";
+        } else {
+
+            std::cerr << "Executable file located at: [" << br_find_exe("") << "].\n";
+            string prefix = br_find_prefix("/usr/local/");
+            basedir = prefix + string("/share/pebl/");
+            
+        }
+
+        
     
     //media subdirectories of execution directory.
     //fonts
