@@ -6,8 +6,9 @@ define Start(p)
    blocklength <- 25
    Initialize()
 
-   ## Uncomment to eliminate busy-wait (mostly for older machines)
-   ## gSleepEasy <- 1
+   ## Uncomment to eliminate busy-wait (mostly for older machines or
+   ## laptops that might overheat.)
+   gSleepEasy <- 1
 
 
   ##############
