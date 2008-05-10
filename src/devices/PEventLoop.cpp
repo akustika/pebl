@@ -144,7 +144,7 @@ PEvent PEventLoop::Loop()
     //when this is set false.
     myEval->gGlobalVariableMap.AddVariable("gKeepLooping", 1);
 
-    //cout <<"*****" <<myEval->gGlobalVariableMap.RetrieveValue("gKeepLooping") << "--"<< mStates.size() << endl;
+    //    cout <<"*****" <<myEval->gGlobalVariableMap.RetrieveValue("gKeepLooping") << "--"<< mStates.size() << std::endl;
 
     //while loop stops when gKeepLooping turns false or there are no more states to check for.
     while(myEval->gGlobalVariableMap.RetrieveValue("gKeepLooping") 

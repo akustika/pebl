@@ -3,7 +3,7 @@
 //    Name:       src/devices/PEven.h
 //    Purpose:    Events processed by Event Loop.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2008 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -63,6 +63,14 @@ typedef struct
 		
 } PEBL_MouseMovementEvent;
 
+//Mouse click event
+typedef struct
+{
+    unsigned int x, y;
+    unsigned button; //123 is left middle right
+    unsigned state; //0 is up; 1 is down???
+
+} PEBL_MouseButtonEvent;
 
 typedef struct
 {
@@ -83,6 +91,7 @@ class PEvent
     
     void SetKeyboardEvent(const PEBL_KeyboardEvent & evt);
     void SetMouseMovementEvent(const PEBL_MouseMovementEvent & evt);
+    void SetMouseButtonEvent(const PEBL_MouseButtonEvent & evt);
     void SetDummyEvent(const PEBL_DummyEvent & evt);
     
     int GetState(int iface) const;
@@ -91,6 +100,7 @@ class PEvent
     
     PEBL_KeyboardEvent GetKeyboardEvent() const;
     PEBL_MouseMovementEvent GetMouseMovementEvent() const;
+    PEBL_MouseButtonEvent GetMouseButtonEvent() const;
     PEBL_DummyEvent GetDummyEvent() const;
 
  private:
@@ -101,6 +111,7 @@ class PEvent
 	{
 		PEBL_KeyboardEvent      keyboardEvent;
 		PEBL_MouseMovementEvent mouseMovementEvent;	
+        PEBL_MouseButtonEvent   mouseButtonEvent;
         PEBL_DummyEvent         dummyEvent;
 	} mEvent;
 

@@ -40,7 +40,9 @@ define Start(p)
 
 
 
+
   gFileOut <- FileOpenWrite("stroop-"+gSubNum+".txt")
+
 
   gTrial <- 0
   gBlock <- 0

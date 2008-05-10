@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformEventQueue.cpp
 //    Purpose:    Interface to platform-specific event queue.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2008 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -122,9 +122,33 @@ void PlatformEventQueue::Prime()
                     PError::SignalFatalError("Stopping execution because of quit signal.\n");
                     break;
 
-                case SDL_MOUSEMOTION:
                 case SDL_MOUSEBUTTONDOWN:
+                    {
+
+                        PEvent evt(PDT_MOUSE_BUTTON, time);
+                        PEBL_MouseButtonEvent pme;
+
+                        pme.x= test_event.button.x;
+                        pme.y= test_event.button.y;
+                        pme.button=test_event.button.button;
+                        pme.state =test_event.button.state;
+
+
+                        pme.state = PEBL_PRESSED;
+
+                        evt.SetMouseButtonEvent(pme);
+                        mEventQueue.push(evt);
+                        //cout << "mouse down ["<< pme.x << " " << pme.y << "]\n";
+                        
+
+                    }
+                    break;
                 case SDL_MOUSEBUTTONUP:
+                    {
+
+                    }
+                case SDL_MOUSEMOTION:
+
                 default:
                     ;
                 }

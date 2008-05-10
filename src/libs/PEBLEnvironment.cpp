@@ -636,8 +636,10 @@ Variant PEBLEnvironment::GetInput(Variant v)
     PlatformTextBox * textbox = dynamic_cast<PlatformTextBox*>(plist->First().GetComplexData()->GetObject().get());
     plist->PopFront();    
 
+
     //The next argument should be the 'escape' key.
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [GetInput(<textbox>,<key-string>)]: ");    
+
     string  myString = plist->First(); plist->PopFront();
 
 
@@ -663,10 +665,12 @@ Variant PEBLEnvironment::GetInput(Variant v)
     PEvent keypress =  Evaluator::mEventLoop.Loop();  
     PEBL_KeyboardEvent pke = keypress.GetKeyboardEvent();
 
-    while(pke.key != PEBLUtility::TranslateString(myString))
-        {
-            
 
+    //    while(pke.key != PEBLUtility::TranslateString(myString))
+    while(PEBLUtility::TranslateKeyCode(pke.key, pke.modkeys) != myString)
+        {
+
+            
             //Process the input and redraw the textbox.
             textbox->HandleKeyPress(pke.key, pke.modkeys);
 
@@ -685,6 +689,42 @@ Variant PEBLEnvironment::GetInput(Variant v)
     textbox->SetEditable(false);
     return Variant(textbox->GetText());
 }
+
+
+
+/// This function uses the event loop to schedule a single
+/// device-test, which checks for any type of mouse click.
+Variant PEBLEnvironment::WaitForMouseButton(Variant v)
+{
+ 
+    //Create a mouse test
+    //1 is the value (down), DT_EQUAL is the test, 1 is the interface (e.g., the 'A' key) 
+
+    ValueState  * state = new ValueState(PEBL_PRESSED, DT_TRUE, 1, gEventQueue, PDT_MOUSE_BUTTON);
+
+    //NULL,NULL will terminate the looping
+    string funcname = "";
+    PList* params = NULL;
+    Evaluator::mEventLoop.RegisterEvent(state,funcname, params);
+    PEvent returnval = Evaluator::mEventLoop.Loop();
+
+    //Now, clear the event loop tests
+    Evaluator::mEventLoop.Clear();
+
+    PList * newlist = new PList();
+
+    int x =returnval.GetMouseButtonEvent().x;
+    int y =returnval.GetMouseButtonEvent().y;
+    newlist->PushFront(Variant(x));
+    newlist->PushBack(Variant(y));
+    
+    counted_ptr<PEBLObjectBase> newlist2 = counted_ptr<PEBLObjectBase>(newlist);
+    PComplexData *   pcd = new PComplexData(newlist2); 
+
+    return Variant(pcd);
+}
+
+
 
 
 

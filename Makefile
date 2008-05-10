@@ -35,7 +35,7 @@ PREFIX = /usr/local/
 
 C   = gcc
 CXX = g++ 
-DEBUGFLAGS = -lefence -DPEBL_DEBUG
+DEBUGFLAGS = -lefence -DPEBL_DEBUG -g
 
 CFLAGS =   -O3 -std=c99 -DPREFIX=$(PREFIX) 
 CXXFLAGS = -g  -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  -DENABLE_BINRELOC
@@ -285,6 +285,7 @@ DIRS = \
 #
 
 main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
+
 	$(CXX) $(CXXFLAGS)   -o $(BIN_DIR)/pebl -I$(PREFIX)include/SDL -D_REENTRANT \
 	   -L$(PREFIX)/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  -lSDL_net $(OSX_FLAGS) \
 	 $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(PEBLMAIN_OBJ))

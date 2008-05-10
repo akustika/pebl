@@ -60,6 +60,11 @@ PEvent::PEvent(const PEvent & evt)
             break;
 
 		case PDT_MOUSE_BUTTON:
+            {
+                PEBL_MouseButtonEvent event = evt.GetMouseButtonEvent();
+                mEvent.mouseButtonEvent = event;
+            }
+            break;
 		case PDT_TIMER:
         case PDT_UNKNOWN:
 		default:
@@ -80,6 +85,13 @@ void PEvent::SetMouseMovementEvent(const PEBL_MouseMovementEvent & evt)
     mType = PDT_MOUSE_MOVEMENT;
     mEvent.mouseMovementEvent = evt;
 }
+
+void PEvent::SetMouseButtonEvent(const PEBL_MouseButtonEvent & evt)
+{
+    mType = PDT_MOUSE_BUTTON;
+    mEvent.mouseButtonEvent = evt;
+}
+
 void PEvent::SetDummyEvent(const PEBL_DummyEvent & evt)
 {
     mEvent.dummyEvent = evt;
@@ -120,6 +132,21 @@ PEBL_MouseMovementEvent PEvent::GetMouseMovementEvent() const
         }
 }
 
+
+PEBL_MouseButtonEvent PEvent::GetMouseButtonEvent() const
+{
+    if(PDT_MOUSE_BUTTON ==  mType )
+        return mEvent.mouseButtonEvent;
+    else
+        {
+            PEBL_MouseButtonEvent tmp;
+            tmp.x = 0;
+            tmp.y = 0;
+            tmp.button = 0;
+            tmp.state = 0;
+            return tmp;
+        }
+}
 
 PEBL_DummyEvent PEvent::GetDummyEvent() const
 {
