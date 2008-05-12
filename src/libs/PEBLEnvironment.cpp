@@ -408,7 +408,7 @@ Variant PEBLEnvironment::WaitForAnyKeyDownWithTimeout(Variant v)
     //Create a keyboard test correspending to keydown. 
     //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
 
-    PDevice * device = new PlatformKeyboard(myKeyboard);
+    //PDevice * device = new PlatformKeyboard(myKeyboard);
     ValueState  * state = new ValueState(PEBL_PRESSED, DT_EQUAL, key, gEventQueue, PDT_KEYBOARD);
 
     //NULL,NULL will terminate the looping
@@ -582,7 +582,8 @@ Variant PEBLEnvironment::WaitForKeyListDown(Variant v)
 }
 
 
-//This function will block until one of the keys listed in the argument is depressed, 
+//This function will block until one of the keys listed in
+// the argument is depressed, 
 //and then return the value of the key that was hit.
 Variant PEBLEnvironment::WaitForListKeyPress(Variant v)
 {
@@ -727,25 +728,30 @@ Variant PEBLEnvironment::WaitForMouseButton(Variant v)
 
 
 
-/// This function uses the event loop to schedule a single
-/// device-test, which checks for any type of mouse click.
-Variant PEBLEnvironment::GetMousePosition(Variant v)
+/// This gets the x,y coordinates of the mouse, and
+/// returns them in a list
+Variant PEBLEnvironment::GetCursorPosition(Variant v)
 {
- 
+    return myEnv->GetCursorPosition();
+}
 
-    //Now, clear the event loop tests
-    Evaluator::mEventLoop.Clear();
 
-    PList * newlist = new PList();
-    int x =returnval.GetMouseButtonEvent().x;
-    int y =returnval.GetMouseButtonEvent().y;
-    newlist->PushFront(Variant(x));
-    newlist->PushBack(Variant(y));
+/// This sets the mouse to a new position.
+Variant PEBLEnvironment::SetCursorPosition(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    //The first argument should be a textbox.
+    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in first argument of function [SetCursorPosition(<x>,<y>)]: "); 
+    int x = plist->First();
+    plist->PopFront();    
+
+    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in second argumeent of function [SetCursorPosition(<x>,<y>)]: "); 
+
+    int y = plist->First();
+    plist->PopFront();    
     
-    counted_ptr<PEBLObjectBase> newlist2 = counted_ptr<PEBLObjectBase>(newlist);
-    PComplexData *   pcd = new PComplexData(newlist2); 
-
-    return Variant(pcd);
+    myEnv->SetCursorPosition(x,y);
+     return Variant(1);
 }
 
 

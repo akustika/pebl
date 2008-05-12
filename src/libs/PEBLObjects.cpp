@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLObjects.cpp
 //    Purpose:    Function Library for managing PEBL Objects
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2006 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -355,7 +355,7 @@ Variant PEBLObjects::RemoveObject(Variant v)
 
 
 
-
+//This sets the  cursor location (in characters) within a textbox.
 Variant PEBLObjects::SetCursorPosition(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
@@ -373,7 +373,7 @@ Variant PEBLObjects::SetCursorPosition(Variant v)
     return Variant(1);
 }
 
-
+//This gets the cursor location (in characters) within a textbox.
 Variant PEBLObjects::GetCursorPosition(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();

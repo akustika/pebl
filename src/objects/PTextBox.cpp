@@ -110,7 +110,7 @@ bool PTextBox::SetProperty(std::string name, Variant v)
 
 Variant PTextBox::GetProperty(std::string name)const
 {
-    return PEBLObjectBase::GetProperty(name);
+    return PTextObject::GetProperty(name);
 }
 
 

@@ -532,15 +532,13 @@ bool PPolygon::SetXPoints(Variant v)
 {
 
     mXPoints = v;
-    cout << "setting ypoints\n";
-    cout << mXPoints << endl;
     return true;
 }
 
 bool PPolygon::SetYPoints(Variant v)
 {
 
-    cout << "setting ypoints\n";
+
     mYPoints = v;
 
     return true;

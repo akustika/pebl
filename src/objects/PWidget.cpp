@@ -134,6 +134,7 @@ Variant  PWidget::GetProperty(std::string name)const
  ObjectValidationError PWidget::ValidateProperty(std::string name)const
 {
 
+
     //This only returns valid for properties that are valid to widgets
     //in general--subclasses need to check on their own.
     if(name == "X" ||

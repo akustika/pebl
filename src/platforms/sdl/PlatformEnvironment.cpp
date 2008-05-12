@@ -28,6 +28,8 @@
 
 #include "../../objects/PEnvironment.h"
 #include "PlatformWindow.h"
+#include "../../base/PList.h"
+#include "../../base/PComplexData.h"
 
 #include "SDL/SDL.h"
 #include "SDL/SDL_ttf.h"
@@ -150,4 +152,26 @@ int PlatformEnvironment::ShowCursor(int val)
         {
             return SDL_ShowCursor(SDL_DISABLE);
         }
+}
+
+
+int PlatformEnvironment::SetCursorPosition(int x, int y)
+{
+    SDL_WarpMouse(x,y);
+    return 1;
+}
+
+
+Variant  PlatformEnvironment::GetCursorPosition()
+{
+    int x = 0;
+    int y = 0;
+    SDL_GetMouseState(&x,&y);
+
+    PList * newlist = new PList();
+    newlist->PushFront(Variant(x));
+    newlist->PushBack(Variant(y));
+    counted_ptr<PEBLObjectBase> newlist2 = counted_ptr<PEBLObjectBase>(newlist);
+    PComplexData *   pcd = new PComplexData(newlist2); 
+    return Variant(pcd);
 }

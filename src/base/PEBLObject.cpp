@@ -3,7 +3,7 @@
 //    Name:       src/base/PEBLObjectBase.cpp
 //    Purpose:    Contains a simple list class, part of the Variant Class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -88,6 +88,13 @@ bool PEBLObjectBase::InitializeProperty(std::string name, Variant v)
 Variant PEBLObjectBase::GetProperty(const std::string name)const
 {
 
+
+    PEBLObjectBase::PrintProperties(std::cout);
+    //    cout << mProperties.find("FONT")->first<<endl;
+    //    cout << mProperties.find("FONT")->second<<endl;
+    //    cout << PEBLObjectBase::ValidateProperty("FONT")<< endl;
+    //    cout << PEBLObjectBase::ValidateProperty("VISIBLE")<< endl;
+ 
     ObjectValidationError err = ValidateProperty(name);
     if(err == 0)
         return mProperties.find(name)->second;
@@ -107,6 +114,8 @@ ObjectValidationError PEBLObjectBase::ValidateProperty(std::string name, Variant
 
 ObjectValidationError PEBLObjectBase::ValidateProperty(std::string name)const
 {
+
+
     if(mProperties.find(name) == mProperties.end())
         return OVE_INVALID_PROPERTY_NAME;
     else
@@ -135,7 +144,7 @@ ostream & PEBLObjectBase::PrintProperties(ostream& out) const
     i = mProperties.begin();
     while(i != mProperties.end())
         {
-            out << i->first << " " <<  i->second << endl;
+            out << "[" << i->first << "]: " <<  i->second << endl;
             i++;
         }
     out << "----------\n";

@@ -509,7 +509,7 @@ Variant PEBLMath::DegToRad(Variant v)
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, ASin);
+            return Recurse(v, DegToRad);
 
         }
     else
@@ -537,7 +537,7 @@ Variant PEBLMath::RadToDeg(Variant v)
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, ASin);
+            return Recurse(v, RadToDeg);
 
         }
     else

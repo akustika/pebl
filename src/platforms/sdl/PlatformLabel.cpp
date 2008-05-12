@@ -55,6 +55,12 @@ PlatformLabel::PlatformLabel(const std::string & text, counted_ptr<PEBLObjectBas
     SetFont(font);
     SetText(text);
 
+    //Make the font property accessible
+    counted_ptr<PEBLObjectBase> myFont = counted_ptr<PEBLObjectBase>(mFontObject);
+    PComplexData *  pcd = new PComplexData(myFont);
+    InitializeProperty("FONT",Variant(pcd));
+
+
     Draw();
 
 }
@@ -68,6 +74,12 @@ PlatformLabel::PlatformLabel(PlatformLabel & label):
     mCDT=CDT_LABEL;
 
     SetFont(label.GetFont());
+
+
+    counted_ptr<PEBLObjectBase> myFont = counted_ptr<PEBLObjectBase>(mFontObject);
+    PComplexData *  pcd = new PComplexData(myFont);
+    InitializeProperty("FONT",Variant(pcd));
+
     Draw();
 }
 

@@ -71,7 +71,7 @@ bool PLabel::SetProperty(std::string name, Variant v)
 
 Variant PLabel::GetProperty(std::string name)const
 {
-    return PEBLObjectBase::GetProperty(name);
+    return PTextObject::GetProperty(name);
 }
 
 

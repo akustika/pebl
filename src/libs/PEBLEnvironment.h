@@ -45,6 +45,9 @@ namespace PEBLEnvironment
     Variant IsAnyKeyDown(Variant v);
     
     Variant ShowCursor(Variant v);
+    Variant GetCursorPosition(Variant v);
+    Variant SetCursorPosition(Variant v);
+
     
     //Simple eventloop construction
     Variant WaitForKeyDown(Variant v);
@@ -62,6 +65,7 @@ namespace PEBLEnvironment
     Variant WaitForListKeyPressWithTimeout(Variant v);
     Variant WaitForKeyListDown(Variant v);
     Variant WaitForMouseButton(Variant v);
+
 
     //Complex eventloop construction.
     Variant RegisterEvent( Variant v);

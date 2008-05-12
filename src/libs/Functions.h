@@ -217,6 +217,11 @@ namespace PEBLEnvironment
             {"WAIT",                            Wait,              1, 1},
 
             {"SHOWCURSOR",                      ShowCursor,        1, 1},
+            {"SETMOUSECURSORPOSITION",          SetCursorPosition,   2,2},
+            {"GETMOUSECURSORPOSITION",          GetCursorPosition,   0,0},
+
+
+
             {"ISKEYDOWN",                       IsKeyDown,         1, 1},
             {"ISKEYUP",                         IsKeyUp,           1, 1},
             {"ISANYKEYDOWN",                    IsAnyKeyDown,      0, 0},
@@ -235,6 +240,7 @@ namespace PEBLEnvironment
             {"WAITFORKEYLISTDOWN",              WaitForKeyListDown, 1, 1},
             {"WAITFORLISTKEYPRESSWITHTIMEOUT",  WaitForListKeyPressWithTimeout, 3,3},
             {"WAITFORMOUSEBUTTON",              WaitForMouseButton, 0,1},
+
 
             {"CLEAREVENTLOOP",                  ClearEventLoop,     0, 0},
             {"GETINPUT",                        GetInput,           2, 2},
