@@ -727,6 +727,30 @@ Variant PEBLEnvironment::WaitForMouseButton(Variant v)
 
 
 
+/// This function uses the event loop to schedule a single
+/// device-test, which checks for any type of mouse click.
+Variant PEBLEnvironment::GetMousePosition(Variant v)
+{
+ 
+
+    //Now, clear the event loop tests
+    Evaluator::mEventLoop.Clear();
+
+    PList * newlist = new PList();
+    int x =returnval.GetMouseButtonEvent().x;
+    int y =returnval.GetMouseButtonEvent().y;
+    newlist->PushFront(Variant(x));
+    newlist->PushBack(Variant(y));
+    
+    counted_ptr<PEBLObjectBase> newlist2 = counted_ptr<PEBLObjectBase>(newlist);
+    PComplexData *   pcd = new PComplexData(newlist2); 
+
+    return Variant(pcd);
+}
+
+
+
+
 
  //Complex eventloop construction.
 Variant  PEBLEnvironment::RegisterEvent( Variant v)
