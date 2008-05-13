@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLEnvironment.cpp
 //    Purpose:    General Environment Function Library for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2006 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -695,10 +695,10 @@ Variant PEBLEnvironment::GetInput(Variant v)
 
 /// This function uses the event loop to schedule a single
 /// device-test, which checks for any type of mouse click.
+/// It returns x,y, button, and type of button press.
 Variant PEBLEnvironment::WaitForMouseButton(Variant v)
 {
- 
-    //Create a mouse test
+     //Create a mouse test
     //1 is the value (down), DT_EQUAL is the test, 1 is the interface (e.g., the 'A' key) 
 
     ValueState  * state = new ValueState(PEBL_PRESSED, DT_TRUE, 1, gEventQueue, PDT_MOUSE_BUTTON);
@@ -718,7 +718,21 @@ Variant PEBLEnvironment::WaitForMouseButton(Variant v)
     int y =returnval.GetMouseButtonEvent().y;
     newlist->PushFront(Variant(x));
     newlist->PushBack(Variant(y));
+    int btn = returnval.GetMouseButtonEvent().button;
+    Variant button = Variant(btn);
+    newlist ->PushBack(button);
+
+    Variant buttonstate = "";
+    int upstate = returnval.GetMouseButtonEvent().state;
+    if(upstate == PEBL_PRESSED)
+        {
+            buttonstate = Variant("<pressed>");
+        } else {
+            buttonstate = Variant("<released>");
+        }
+    newlist->PushBack(buttonstate);
     
+ 
     counted_ptr<PEBLObjectBase> newlist2 = counted_ptr<PEBLObjectBase>(newlist);
     PComplexData *   pcd = new PComplexData(newlist2); 
 

@@ -124,7 +124,6 @@ void PlatformEventQueue::Prime()
 
                 case SDL_MOUSEBUTTONDOWN:
                     {
-
                         PEvent evt(PDT_MOUSE_BUTTON, time);
                         PEBL_MouseButtonEvent pme;
 
@@ -143,11 +142,40 @@ void PlatformEventQueue::Prime()
 
                     }
                     break;
+
                 case SDL_MOUSEBUTTONUP:
                     {
 
+                        PEvent evt(PDT_MOUSE_BUTTON, time);
+                        PEBL_MouseButtonEvent pme;
+
+                        pme.x= test_event.button.x;
+                        pme.y= test_event.button.y;
+                        pme.button=test_event.button.button;
+                        pme.state =test_event.button.state;
+
+                        pme.state = PEBL_RELEASED;
+
+                        evt.SetMouseButtonEvent(pme);
+                        mEventQueue.push(evt);
+
                     }
+
                 case SDL_MOUSEMOTION:
+                    {
+                        PEvent evt(PDT_MOUSE_MOVEMENT, time);
+                        PEBL_MouseMovementEvent pme;
+                        
+                        pme.x= test_event.motion.x;
+                        pme.y= test_event.motion.y;
+                        pme.relx =test_event.motion.xrel;
+                        pme.rely =test_event.motion.yrel;
+
+
+                        evt.SetMouseMovementEvent(pme);
+                        mEventQueue.push(evt);
+
+                    }
 
                 default:
                     ;
@@ -156,5 +184,4 @@ void PlatformEventQueue::Prime()
             time =  SDL_GetTicks();
             
         }
-            
 }

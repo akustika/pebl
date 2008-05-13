@@ -41,7 +41,8 @@ enum
 		PEBL_LEFT,
 		PEBL_RIGHT,
 		PEBL_PRESSED,
-		PEBL_RELEASED
+		PEBL_RELEASED,
+        PEBL_MOVEMENT
 	};
 
 
@@ -63,7 +64,7 @@ typedef struct
 		
 } PEBL_MouseMovementEvent;
 
-//Mouse click event
+//Mouse Button event
 typedef struct
 {
     unsigned int x, y;
