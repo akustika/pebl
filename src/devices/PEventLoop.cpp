@@ -3,7 +3,7 @@
 //    Name:       src/devices/PEventLoop.cpp
 //    Purpose:    Primary generic timer event device
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2004 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -237,7 +237,7 @@ PEvent PEventLoop::Loop()
 
             //This does a nano sleep function to avoid burning cpu, if the gSleepEasy variable is set.
             //Probably is only available on unix.
-
+#ifdef __PEBL_UNIX__
             if(myEval->gGlobalVariableMap.Exists("gSleepEasy") )
                 {
                     if(myEval->gGlobalVariableMap.RetrieveValue("gSleepEasy"))
@@ -248,6 +248,7 @@ PEvent PEventLoop::Loop()
                         int retval = nanosleep(&a,&b);
                     }
                 }
+#endif
         }
 
     delete myEval;
