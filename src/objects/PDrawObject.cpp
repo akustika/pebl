@@ -114,8 +114,8 @@ PLine::PLine(int x1, int y1, int dx, int dy, Variant col):
     mDX(dx),
     mDY(dy)
 {
-    InitializeProperty("DX",dx);
-    InitializeProperty("DY",dy);
+    InitializeProperty("WIDTH",dx);
+    InitializeProperty("HEIGHT",dy);
 
     SetPosition(x1,y1);
     PDrawObject::SetColor(col);
@@ -180,7 +180,7 @@ ObjectValidationError PLine::ValidateProperty(std::string name)const
        }
    else
        {
-           if("DX" == name || "DY" == name )
+           if("WIDTH" == name || "HEIGHT" == name )
                return OVE_VALID;
            else return OVE_INVALID_PROPERTY_NAME;
        }
@@ -196,8 +196,8 @@ std::ostream & PLine::SendToStream(std::ostream& out)
 
 PRectangle::PRectangle(int x1, int y1, int dx, int dy, Variant col, bool filled)
 {
-    InitializeProperty("DX",dx);
-    InitializeProperty("DY",dy);
+    InitializeProperty("WIDTH",dx);
+    InitializeProperty("HEIGHT",dy);
     SetSize(dx,dy);
     SetPosition(x1,y1);
     SetFilled(filled);
@@ -214,8 +214,8 @@ void PRectangle::SetSize(int dx, int dy)
 {
     mDX = dx;
     mDY = dy;
-    PEBLObjectBase::SetProperty("DX",dx);
-    PEBLObjectBase::SetProperty("DY",dy);
+    PEBLObjectBase::SetProperty("WIDTH",dx);
+    PEBLObjectBase::SetProperty("HEIGHT",dy);
     Draw();
 }
 
@@ -223,8 +223,8 @@ bool PRectangle::SetProperty(std::string name, Variant v)
 {
 
     if(!PDrawObject::SetProperty(name,v))
-        if("DX" == name) SetSize(v,mDY);
-        else if("DY" == name) SetSize(mDX,v);
+        if("WIDTH" == name) SetSize(v,mDY);
+        else if("HEIGHT" == name) SetSize(mDX,v);
         else return false;
 
     return true;
@@ -251,8 +251,8 @@ ObjectValidationError PRectangle::ValidateProperty(std::string name)const
        }
     else
         {
-            if("DX" == name 
-               || "DY" == name )
+            if("WIDTH" == name 
+               || "HEIGHT" == name )
                 return OVE_VALID;
             else return OVE_INVALID_PROPERTY_NAME;
         }
@@ -295,8 +295,8 @@ void PSquare::SetSize(int size)
 {
     mDX = size;
     mDY = size;
-    PEBLObjectBase::SetProperty("DX",size);
-    PEBLObjectBase::SetProperty("DY",size);
+    PEBLObjectBase::SetProperty("WIDTH",size);
+    PEBLObjectBase::SetProperty("HEIGHT",size);
     PEBLObjectBase::SetProperty("SIZE",size);
     
 }
@@ -306,8 +306,8 @@ bool PSquare::SetProperty(std::string name, Variant v)
     if(!PDrawObject::SetProperty(name,v))
         {
             
-            if("DX" == name || 
-               "DY" == name || 
+            if("WIDTH" == name || 
+               "HEIGHT" == name || 
                "SIZE" == name)
                 {
                     SetSize(v);
@@ -339,8 +339,8 @@ ObjectValidationError PSquare::ValidateProperty(std::string name)const
        }
     else
         {
-            if("DX" == name 
-               || "DY" == name 
+            if("WIDTH" == name 
+               || "HEIGHT" == name 
                || "SIZE" == name)
                 return OVE_VALID;
             else return OVE_INVALID_PROPERTY_NAME;
