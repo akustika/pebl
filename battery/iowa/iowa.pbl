@@ -1,6 +1,6 @@
 define Start(lPar)
 {
- ## (c) 2006 Shane T. Mueller
+ ## (c) 2006-2008 Shane T. Mueller
  ## smueller at obereed dot net
  ## PEBL Bechara's Gambling Task, Version 0.3
  ##  (a version of the so-called Iowa Gambling Task (tm))
@@ -34,19 +34,28 @@ define Start(lPar)
  ## For use with PEBL 0.06 or later
  ## http://pebl.sf.net
  ## Part of  The PEBL Psychological Testing Battery
-
-  if(Length(lPar)>0)
-   { 
-      gSubNum <- First(lPar)
-   } else {
-      gSubNum <- 0
-   }
-  ## results are stored in tmpresults.dat
-  gFileOut <-FileOpenAppend("igt-" + gSubNum +".txt")
  
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
-   
+  
+
+
+      gSubNum <- First(lPar)
+	  if(gSubNum==0)
+      {
+	        gHeader.Text <- "Enter Subject Identifier Code"    
+			Show(gHeader)
+  		  Draw()
+       gSubNum <- GetInput(gFooter,"<return>")
+	   Draw()
+        Hide(gFooter)
+        Hide(gHeader)
+       }
+  ## results are stored in tmpresults.dat
+  gFileOut <-FileOpenAppend("igt-" + gSubNum +".txt")
+
+
+ 
   ##Controls whether the decks are shuffled. Default is as in Bechera et al.
   shuffleDecks <-  0
 
@@ -180,13 +189,11 @@ Press any key to begin.")
    AddObject(gTotalLabel,gWin)
    Move(gTotalLabel,450,380)
 
-   gFooter <- MakeTextBox("",gStimFont,260,120)
+
    gFooter.text <- " Choice:   
  Reward:   $
  Penalty:  $
  Net Gain: $"
-   AddObject(gFooter,gWin)
-   Move(gFooter, 50,300)
 
    gui <- Flatten([gui,textUI,deckUI, gHeader, gFooter,gTotalLabel])
    earnings <- MakeEarningsGraph(gTotal)
@@ -385,9 +392,15 @@ define Initialize()
    ## Make and hide a header label
    gHeader <- MakeLabel("",gHeaderFont)
    AddObject(gHeader,gWin)
+
    Move(gHeader, gVideoWidth/2, 100)
    Hide(gHeader)
 
+
+   gFooter <- MakeTextBox("",gStimFont,260,120)
+   AddObject(gFooter,gWin)
+   Move(gFooter, 50,300)
+   
  }
 
 
