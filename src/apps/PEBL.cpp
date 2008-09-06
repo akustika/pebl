@@ -1,9 +1,9 @@
 //* -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*- */
-/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 //    Name:       src/apps/PEBL.cpp
 //    Purpose:    The primary PEBL run-time interpreter.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2006 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -498,7 +498,7 @@ void PrintOptions()
     cout << "-------------------------------------------------------------------------------\n";
     cout << "PEBL: The Psychology Experiment Building Language\n";
     cout << "Version 0.09\n";
-    cout << "(c) 2003-2007 Shane T. Mueller, Ph.D.\n";
+    cout << "(c) 2003-2008 Shane T. Mueller, Ph.D.\n";
     cout << "smueller@obereed.net   http://pebl.sf.net\n";
     cout << "-------------------------------------------------------------------------------\n";
 
