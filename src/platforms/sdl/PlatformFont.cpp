@@ -1,9 +1,9 @@
 //* -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*- */
 /////////////////////////////////////////////////////////////////////////////////
-//    Name:       src/platforms/sdl/PlatformWord.cpp
-//    Purpose:    Contains SDL-specific visual representation of a word
+//    Name:       src/platforms/sdl/PlatformFont.cpp
+//    Purpose:    Contains SDL-specific Font Classes
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -44,27 +44,6 @@ using std::endl;
 
 
 
-///Standard constructor of PFont
-
-// PlatformFont::PlatformFont():
-//     PFont("Vera.ttf", PFS_Normal, 16, PColor(0,0,0,255), PColor(0,0,0,0), false)
-// {
-//     //find the font.
-//     string fontname = Evaluator::gPath.FindFile(mFontFileName);
-//     if(fontname == "")
-//         PError::SignalFatalError(string("Unable to find font file [")  + mFontFileName + string("]."));
-
-//     //Open the font.  Should do error checking here.
-//     mTTF_Font = TTF_OpenFont(fontname.c_str(), mFontSize);
-//     TTF_SetFontStyle(mTTF_Font, mFontStyle);
-//
-//     //Translate PColor to SDLcolor for direct use in rendering.
-//     mSDL_FGColor = SDLUtility::PColorToSDLColor(mFontColor);
-//     mSDL_BGColor = SDLUtility::PColorToSDLColor(mBackgroundColor);
-
-// } 
-
-
 
 ///Convenience constructor of PlatformFont:
 PlatformFont::PlatformFont(const std::string & filename, int style, int size, PColor fgcolor, PColor bgcolor, bool aa):
@@ -72,7 +51,7 @@ PlatformFont::PlatformFont(const std::string & filename, int style, int size, PC
 
 {
 
-
+    //    cout << "Path:" << Evaluator::gPath << endl;
     string fontname = Evaluator::gPath.FindFile(mFontFileName);
     if(fontname == "")
         PError::SignalFatalError(string("Unable to find font file [")  + mFontFileName + string("]."));

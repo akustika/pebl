@@ -386,7 +386,7 @@ clean:
 install:
 	install -d $(PREFIX)bin/	
 	cp bin/pebl $(PREFIX)bin/pebl
-#	rm -Rf $(PREFIX)share/pebl
+	rm -Rf $(PREFIX)share/pebl
 	install -d $(PREFIX)share/pebl
 	install -d $(PREFIX)share/pebl/media
 	install -d $(PREFIX)share/pebl/pebl-lib
@@ -398,7 +398,8 @@ install:
 	rm -Rf $(PREFIX)share/pebl/media/fonts/CVS
 	rm -Rf $(PREFIX)share/pebl/media/text/CVS
 	rm -Rf $(PREFIX)share/pebl/pebl-lib/CVS
-	chmod -R uga+r $(PREFIX)/share/pebl/
+	chmod -R uga+r $(PREFIX)share/pebl/
+
 
 ifeq (.depend,$(wildcard .depend))
 include .depend
