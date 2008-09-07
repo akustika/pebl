@@ -121,6 +121,8 @@ int PEBLInterpret( int argc, char *argv[] )
     files.push_back("Design.pbl");
     files.push_back("Utility.pbl");
     files.push_back("Math.pbl");
+    files.push_back("Graphics.pbl");
+    //    files.push_back("Taguchi.pbl"); //not ready
 
     //Process the first command-line argument.
     std::list<std::string>::iterator i = files.begin();

@@ -1,4 +1,4 @@
-define Start(par)
+ define Start(par)
 {
 
    gRed <- [MakeColorRGB(255,0,0),

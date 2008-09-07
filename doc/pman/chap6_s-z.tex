@@ -393,6 +393,7 @@ ShowCursor(1)
 \end{verbatim}
 
 \item[See Also] 
+
 \end{desc}
 
 \rl
@@ -1344,6 +1345,39 @@ WaitForKeyPress(<key>)
 
 \item[See Also]	
 \end{desc}
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+WaitForMouseButton()+
+
+\item[Description] Waits for a mouse click event to occur.
+
+\item[Usage]
+\begin{verbatim}
+   WaitForNetworkConnection(<port>)
+\end{verbatim}
+
+\item[Example]	
+
+  See nim.pbl for example of two-way network connection.
+\begin{verbatim}
+
+  net <- WaitForNetworkConnection(1234)
+  dat <- GetData(net,20)
+  Print(dat)
+  CloseNetworkConnection(net)
+\end{verbatim}
+
+\item[See Also]
+  \verb+ConnectToHost+, \verb+ConnectToIP+,\verb+GetData+,\verb+WaitForNetworkConnection+,
+   \verb+SendData+,\verb+ConvertIPString+,\verb+CloseNetworkConnection+
+\end{desc}
+
+\rl
+
+
+
 
 
 \begin{desc}{Name/Symbol}

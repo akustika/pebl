@@ -34,15 +34,49 @@ Added RotoZooming code.  Now, all graphical objects (textboxes,
 labels, imageboxes, but not currently simple shapes) have properties
 xzoom, yzoom, and rotation.  These objects can be stretched and
 rotated using these properties; also a new function RotoZoom can be
-used to do this by hand (depracate this immediately)
+used to do this by hand.  
 
-A new Polygon object and Bezier objects were added, which allow arbitrary polygons to be created.  A few helper functions build ready-made polygons:  
-  Plus(),
-  E()
-  Star(),
-  Octogon()?;
-  Pentagon()?;
-  
+  Rotozoom(<widget>,<rotation>,<xzoom>, <yzoom>, <smooth>)
+
+  Calling Rotozoom on an object will create a new rotated/zoomed
+  version of that object.  Updating the original will not affect the
+  new one--it is essentially a translated image of the original.
+
+
+Also, two new generic drawing objects have been added: Polygon and Bezier:
+
+  Polygon(<x>,<y>,<xpoints>,<ypoints>,<color>,<filled>)
+  Bezier(<x>, <y>, <xpoints>, <ypoints>, <steps>, <color>)
+
+
+These allow arbitrary polygons to be created.  
+
+  Three new functions allow fairly flexible operations 
+  on sets of points, which can then be turned into polygons.
+  They take a list of x,y pairs, and perform the  appropriate operation
+
+  RotatePoints(points,theta)      Where theta is in radians
+  ReflectPoints(points)           Reflects left-right along vertical axis
+  ZoomPoints(points, xzoom,yzoom) Resizes x/y dimensions of set of points              
+
+
+  Two helper functions create sets of points that can be used
+  in the above, or fed into polygon.
+
+  MakeStarPoints(<outer radius>, <inner radius>, <number of peaks>)
+  MakeNGonPoints(<radius>,<number of edges>)
+
+
+A few helper functions build ready-made polygons that can be added
+directly to a window:
+    
+ BlockE(x,y,h,w,thicknes,direction,color)
+  Here, direction indicates where the E is pointing: 
+     1=right, 2=down, 3=left, 4=up.
+
+ Plus(x,y,size, width, color)
+
+
 * Made package relocatable on linux/mac (thanks to binreloc)
 
 * Added a script variable to control busy-waiting:
@@ -55,8 +89,48 @@ A new Polygon object and Bezier objects were added, which allow arbitrary polygo
 
 * Fixed labels so that you can assign a font with label.font <- font
 
+* Added limited mouse events.  The new functions include:
+  WaitForMouseButton(),
+  This takes no arguments, and returns a 4-tuple list, indicating:
+  [xpos, ypos, button_id [1-3], "<pressed>" or "<released>"]
+  SetMouseCursorPosition(x,y)
+  GetMouseCursorPosition()  (returns [x,y]
 
--------------------------------------------------- Version 0.08
+ A new version of the "iowa" gambling task demos clicking
+  interface instead of keyboard.  In addition, a new demo experiment
+  hunt.pbl uses some mouse-controlled event to search for a target.
+
+* Helper functions for easy creation of labels and textboxes:
+
+ EasyLabel(text,x,y,win,size)
+ EasyTextBox(text,x,y,win,fontsize,width,height)
+
+ No need to define fonts, colors, sizes, or even adding/moving.
+
+
+* Helper function to get subject number (if none was set in the
+  launcher
+
+ GetSubNum(win) 
+
+  It will get and return a subject identifier.  
+  After a window has been defined, a simple thing to do is
+
+  if(gSubNum == 0)
+  {
+   gSubNum <- GetSubNum(win)
+  }
+
+* Added a statistic summarizer function, which computes
+  means/sds/medians by conditions.
+  
+
+* Fixed some bugs in the windows launcher
+
+* Fixed a bunch of things in the test battery.
+
+-------------------------------------------------- 
+Version 0.08
 September 2007
 
 

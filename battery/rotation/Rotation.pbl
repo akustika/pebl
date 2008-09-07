@@ -1,3 +1,19 @@
+#!/usr/local/bin/pebl
+#################################################################
+##  PEBL Mental Rotation Task
+## 
+##  For use with PEBL 0.09 or later
+##  http://pebl.sf.net
+##  Part of  The PEBL Psychological Test Battery
+##  2008 Released into Public Domain
+##  by Shane T. Mueller, Ph.D. (smueller at obereed dot net)
+##
+##  This is the a demo of Shepard's mental rotation' task.
+##  It currently has no instructions, and little instrumentation.
+##  It is not yet meant for direct use in laboratories.
+##
+##
+#################################################################
 define Start(par)
 {
 

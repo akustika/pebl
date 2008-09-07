@@ -987,11 +987,18 @@ std::string Variant::GetString() const
                 PComplexData * pcd = GetComplexData();
                 counted_ptr<PEBLObjectBase> pob = pcd->GetObject();
 
-                std::string tmp = pob->ObjectName();
-                return tmp;
+                //                 cout << *pob << endl;
 
-//                 cout << *pob << endl;
-                
+
+                 //                 std::string tmp = pob->ObjectName();
+                 //                 return tmp;
+
+
+                 std::ostringstream o;
+                 o << *pob << std::flush;
+
+                 return o.str();
+
 //                 std::stringstream tmp;
 //                 tmp <<  *pob << std::flush;
 
