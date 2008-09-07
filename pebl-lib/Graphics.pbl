@@ -1,0 +1,195 @@
+
+
+## Rotozoom doesn't work right now for objects, but this rotates
+## a polygon's points.
+define RotatePoints(pts,theta)
+{
+   newX <- []
+   newY <- []
+
+
+  loop(i,Transpose(pts))
+    {
+      ix <- First(i)
+      iy <- Nth(i,2)
+
+	  nx <-  ix* Cos(theta) - iy * Sin(theta)
+      ny <- ix * Sin(theta) + iy * Cos(theta)
+
+      newX <- Append(newX, nx)
+	  newY <- Append(newY, ny)
+	  
+    }
+
+ return [newX,newY]
+}
+
+
+define ReflectPoints(pts)
+{
+   newX <- []
+   newY <- []
+
+
+  loop(i,Transpose(pts))
+    {
+      newX <- Append(newX, -First(i))
+	  newY <- Append(newY, Nth(i,2))
+    }
+
+ return [newX,newY]
+		
+}
+
+
+
+##
+define ZoomPoints(pts,xZoom,yZoom)
+{
+   newX <- []
+   newY <- []
+
+
+  loop(i,Transpose(pts))
+    {
+      ix <- First(i)
+      iy <- Nth(i,2)
+
+	  nx <-  ix* xZoom
+      ny <- iy * yZoom
+
+      newX <- Append(newX, nx)
+	  newY <- Append(newY, ny)
+	  
+    }
+
+ return [newX,newY]
+}
+
+
+
+
+
+
+
+define Plus(x,y,size, width, color)
+{
+   x1 <- x-size
+   x2 <- x-width/2
+   x3 <- x+width/2
+   x4 <- x+size
+
+   y1 <- y-size
+   y2 <- y-width/2
+   y3 <- y+width/2
+   y4 <- y+size
+
+   xs <- [x1,x1,x2,x2,x3,x3,x4,x4,x3,x3,x2,x2]
+   ys <- [y3,y2,y2,y1,y1,y2,y2,y3,y3,y4,y4,y3]
+   x <- Polygon(x,y,xs,ys,color,1)
+   return x
+}
+
+
+## Makes a block E object in a particular direction (1-4).
+## 1 is pointing right;
+## 2 is pointing down;
+## 3 is pointing left;
+## p is pointing up
+
+define BlockE(x,y,h,w,thick,dir,color)
+{
+
+  if(dir == 1 or dir==2)
+{
+  xo <- 1
+} else{
+  xo <- -1
+}
+ 
+  if(dir == 1 or dir == 3)
+  {
+     abase <- x
+     bbase <- y
+  } else {
+
+     abase <- y
+     bbase <- x
+  }
+
+
+	a1 <- abase + xo*(-1)*w/2
+    a2 <- abase+  xo*w/2
+	a3 <- a1+ xo*thick
+	a4 <- a2
+	
+
+	b1 <- bbase-h/2
+    b2 <- bbase+h/2
+    b3 <- b1+thick
+    b4 <- b2-thick
+    b5 <- bbase-thick/2
+    b6 <- bbase+thick/2
+ 
+   as <- [a1,a1,a2,a2,a3,a3,a4,a4,a3,a3,a2,a2]
+   bs <- [b1,b2,b2,b4,b4,b6,b6,b5,b5,b3,b3,b1]
+   if(dir ==1 or dir==3)
+     { 
+       p <- Polygon(x,y,as,bs,color,1)
+     }else{
+	   p <- Polygon(x,y,bs,as,color,1)
+     }
+   return p
+}
+
+
+
+
+
+define MakeStarPoints (radiusOuter, radiusInner, num)
+{
+   pointsX <- []              
+   pointsY <- []              
+   s <-   Sequence(1,num,1)
+   arc <- 2 * 3.14159 / num
+
+   loop(i,s)
+   {
+     pointsX <- Append(pointsX,Cos(i*arc)*radiusOuter)
+     pointsY <- Append(pointsY,Sin(i*arc)*radiusOuter)
+              
+     pointsX <- Append(pointsX,Cos((i+.5)*arc )*radiusInner)
+     pointsY <- Append(pointsY,Sin((i+.5)*arc )*radiusInner)
+
+   }
+
+
+    pointsX <- Append(pointsX,Cos(arc)*radiusOuter)
+    pointsY <- Append(pointsY,Sin(arc)*radiusOuter)
+
+   return  Transpose([pointsX,pointsY])
+}
+
+
+
+
+define MakeNGonPoints (radius, num)
+{
+   pointsX <- []              
+   pointsY <- []              
+   s <-   Sequence(1,num,1)
+   arc <- 2 * 3.14159 / num
+
+   loop(i,s)
+   {
+     pointsX <- Append(pointsX,Cos(i*arc)*radius)
+     pointsY <- Append(pointsY,Sin(i*arc)*radius)
+
+   }
+
+
+    pointsX <- Append(pointsX,Cos(arc)*radius)
+    pointsY <- Append(pointsY,Sin(arc)*radius)
+
+   return  Transpose([pointsX,pointsY])
+}
