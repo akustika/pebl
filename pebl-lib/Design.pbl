@@ -529,3 +529,45 @@ define ShuffleWithoutAdjacents(list)
  
    return SortBy(flatList, key)
 }
+define Sample(list)
+{
+ return  First(SampleN(list,1))
+}
+
+
+## Segments a set of numbers into lists by 
+## the values in a second condition.
+define ListBy(vals,cond)
+{
+  newlist <- []
+  condlist <- []
+  valsort <- SortBy(vals,cond)
+  csort   <- Sort(cond)
+
+  last <- First(csort)
+  dat <- Transpose([csort,valsort])
+
+  tmp <- []     
+  loop(i, dat)
+   { 
+     if(First(i) != last)
+     {
+       newlist <- Append(newlist,tmp)
+       condlist <- Append(condlist,last)
+       tmp <- [Nth(i,2)]
+     } else {
+
+       ##Add the value to the current inner list
+       tmp <- Append(tmp,Nth(i,2))
+
+     }
+       last <- First(i)
+   }
+   newlist <- Append(newlist,tmp)
+   condlist <- Append(condlist,last)
+
+
+ return ([condlist, newlist])
+}
+
+

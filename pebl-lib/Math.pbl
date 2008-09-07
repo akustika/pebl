@@ -193,7 +193,7 @@ define Rank(list)
 }
 
 
-##Median
+## Quantile
 ## Returns the qth quantile, where q is expressed as a number
 ## between 0 and 100.
 define Quantile(list,q)
@@ -333,4 +333,31 @@ define SDTBeta(hr,far)
 	}
 
   return NormalDensity(hr)/NormalDensity(far)
+}
+
+
+## This finds mean and SD RT for 
+## each of the conditions specified in delays
+##
+
+define SummaryStats(data, cond)
+{
+   
+  agglom <- ListBy(data,cond)
+
+
+  ## start by sorting data by condition;
+   stats <- []
+
+   loop(i, Transpose(agglom))
+   {
+      icond <- Nth(i,1)
+      ival <- Nth(i,2)
+
+     stats <- Append(stats,
+                [icond, Length(ival),
+                 Median(ival), Mean(ival), StdDev(ival)])
+   }
+
+ return stats
 }

@@ -420,3 +420,46 @@ define Lookup(key, keylist, database)
 
    return found
 }
+
+
+
+
+## makes a label with a standard font, black on grey, in specified location.
+##
+define EasyLabel(text,x,y,win,size)
+{
+  font <-  MakeFont("Vera.ttf",0,size,MakeColor("black"),MakeColor("grey"),1)
+  lab <- MakeLabel(text,font)
+  AddObject(lab,win)
+  Move(lab,x,y)
+
+  return lab
+}
+
+
+## makes a label with a standard font, black on grey, in specified location.
+##
+define EasyTextBox(text,x,y,win,fontsize,width,height)
+{
+  font <-  MakeFont("Vera.ttf",0,fontsize,MakeColor("black"),MakeColor("white"),1)
+  tb <- MakeTextBox(text,font,width,height)
+  AddObject(tb,win)
+  Move(tb,x,y)
+
+  return tb
+}
+
+
+
+##Make an easy-to-use getsubnum function here.
+define GetSubNum(win)
+{
+   query <- EasyLabel("Enter Participant Identifier",gVideoWidth/2,20,win,20)
+   box <- EasyTextBox("",gVideoWidth/2-30,50, win,20,80,25)
+   Draw()
+   subnum <- GetInput(box,"<return>")
+   
+   RemoveObject(query,gWin)
+   RemoveObject(box,gWin)
+   return subnum
+}
