@@ -33,14 +33,9 @@ Version 0.09
 Added RotoZooming code.  Now, all graphical objects (textboxes,
 labels, imageboxes, but not currently simple shapes) have properties
 xzoom, yzoom, and rotation.  These objects can be stretched and
-rotated using these properties; also a new function RotoZoom can be
-used to do this by hand.  
+rotated using these properties;
 
-  Rotozoom(<widget>,<rotation>,<xzoom>, <yzoom>, <smooth>)
 
-  Calling Rotozoom on an object will create a new rotated/zoomed
-  version of that object.  Updating the original will not affect the
-  new one--it is essentially a translated image of the original.
 
 
 Also, two new generic drawing objects have been added: Polygon and Bezier:
@@ -70,7 +65,7 @@ These allow arbitrary polygons to be created.
 A few helper functions build ready-made polygons that can be added
 directly to a window:
     
- BlockE(x,y,h,w,thicknes,direction,color)
+ BlockE(x,y,h,w,thickness,direction,color)
   Here, direction indicates where the E is pointing: 
      1=right, 2=down, 3=left, 4=up.
 
@@ -105,8 +100,8 @@ directly to a window:
  EasyLabel(text,x,y,win,size)
  EasyTextBox(text,x,y,win,fontsize,width,height)
 
- No need to define fonts, colors, sizes, or even adding/moving.
-
+ No need to define fonts, colors, sizes, or even adding/moving to the
+ location you want--It does it all as a one-liner.
 
 * Helper function to get subject number (if none was set in the
   launcher
@@ -121,13 +116,41 @@ directly to a window:
    gSubNum <- GetSubNum(win)
   }
 
-* Added a statistic summarizer function, which computes
-  means/sds/medians by conditions.
+* Added SummaryStats(<data>,<cond>), a statistic summarizer function,
+  which computes means/sds/medians of <data> by conditions.  
   
+* Added PrintList(<list>) and FilePrintList(<file>,<list>), which
+  print out a list without the , and [] formatting.
 
 * Fixed some bugs in the windows launcher
 
 * Fixed a bunch of things in the test battery.
+   -Much improved version of Berg's Cardsort. Fixed bugs, added proper
+   computation of perseverations, etc.
+   -Added a version of the Stroop task.
+   -Added a mental rotation task
+   -Added a mouse-driven version of Bechera's Gambling Task, and some
+   other fixes.
+
+GetSubNum *
+PrintList
+FilePrintList
+SummaryStats
+EasyLabel
+EasyTextBox
+WaitForMouseButton
+GetMouseCursorPosition
+SetMouseCursorPosition
+BlockE
+Plus
+MakeStarPoints
+MakeNGonPoints
+ZoomPoints
+ReflectPoints
+RotatePoints
+Polygon
+Bezier
+Rotozoom *not documented
 
 -------------------------------------------------- 
 Version 0.08

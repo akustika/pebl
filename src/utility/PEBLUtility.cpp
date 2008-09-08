@@ -212,15 +212,15 @@ long int PEBLUtility::Truncate(long double val)
 
 ///This does as best as it can to translate the letter string
 ///into a keyboard key.
-PEBLKey PEBLUtility::TranslateString(const std::string & letters)
+PEBLKey PEBLUtility::TranslateString(const std::string & let)
 {
-
+    //This should all be loaded into a hash table or map on startup.
 
     //Use as a default the first letter.
     
-    PEBLKey code = PEBLKey(int(letters[0]));
+    PEBLKey code = PEBLKey(int(let[0]));
     //First, see if we are only a single character.  If so, rock-n-roll.
-    if(letters.length() == 1)
+    if(let.length() == 1)
         {
             //recode uppercase letters into lowercase.
             if(code > 64 && code < 91)
@@ -228,6 +228,9 @@ PEBLKey PEBLUtility::TranslateString(const std::string & letters)
             return code;
         }  
     
+
+    std::string letters = PEBLUtility::ToLower(let);
+
     if(letters == "<RETURN>" || letters == "<return>") 
         return PEBLKEY_RETURN;
     if(letters == "<esc>" || letters == "<ESC>")
@@ -237,12 +240,82 @@ PEBLKey PEBLUtility::TranslateString(const std::string & letters)
        )
         return PEBLKEY_BACKSPACE;
 
+    if(letters="<delete>") return PBELKEY_DELETE;
+
     if(letters == "<left>")  return PEBLKEY_LEFT;
     if(letters == "<right>") return PEBLKEY_RIGHT;
     if(letters == "<down>")  return PEBLKEY_DOWN;
     if(letters == "<up>")    return PEBLKEY_UP;
 
-    //More extravagent things can be done to get other keys.
+
+
+    if(letters == "<F1>")  return PEBLKEY_F1;
+    if(letters == "<F2>")  return PEBLKEY_F2;
+    if(letters == "<F3>")  return PEBLKEY_F3;
+    if(letters == "<F4>")  return PEBLKEY_F4;
+    if(letters == "<F5>")  return PEBLKEY_F5;
+    if(letters == "<F6>")  return PEBLKEY_F6;
+    if(letters == "<F7>")  return PEBLKEY_F7;
+    if(letters == "<F8>")  return PEBLKEY_F8;
+    if(letters == "<F9>")  return PEBLKEY_F9;
+    if(letters == "<F10>")  return PEBLKEY_F10;
+    if(letters == "<F11>")  return PEBLKEY_F11;
+    if(letters == "<F12>")  return PEBLKEY_F12;
+    if(letters == "<F13>")  return PEBLKEY_F13;
+    if(letters == "<F14>")  return PEBLKEY_F14;
+    if(letters == "<F15>")  return PEBLKEY_F15;
+
+    
+/* Key state modifier keys */
+
+    if(letters == "<numlock>")  return PEBLKEY_NUMLOCK;
+    if(letters == "<capslock>")  return PEBLKEY_CAPSLOCK;
+    if(letters == "<scrollock>")  return PEBLKEY_SCROLLOCK;
+    if(letters == "<lshift>")    return PEBLKEY_LSHIFT;
+    if(letters == "<rshift>")    return PEBLKEY_RSHIFT;
+
+    if(letters == "<rctrl>")    return PEBLKEY_RCTRL;
+    if(letters == "<lctrl>")    return PEBLKEY_LCTRL;
+    if(letters == "<ralt>")     return PEBLKEY_RALT;
+    if(letters == "<lalt>")     return PEBLKEY_LALT;
+    if(letters == "<rmeta>")    return PEBLKEY_RMETA;
+    if(letters == "<lmeta>")    return PEBLKEY_LMETA;
+    if(letters == "<lsuper>")   return PEBLKEY_LSUPER;
+    if(letters == "<rsuper>")   return PEBLKEY_RSUPER;
+    if(letters == "<mode>")     return PEBLKEY_MODE;
+    if(letters == "<compose>")  return PEBLKEY_COMPOSE;
+
+
+
+
+
+
+    if(letters == "<kp_0>") return  PEBLKEY_KP0;
+    if(letters == "<kp_1>") return  PEBLKEY_KP1;
+    if(letters == "<kp_2>") return  PEBLKEY_KP2;
+    if(letters == "<kp_3>") return  PEBLKEY_KP3;
+    if(letters == "<kp_4>") return  PEBLKEY_KP4;
+    if(letters == "<kp_5>") return  PEBLKEY_KP5;
+    if(letters == "<kp_6>") return  PEBLKEY_KP6;
+    if(letters == "<kp_7>") return  PEBLKEY_KP7;
+    if(letters == "<kp_8>") return  PEBLKEY_KP8;
+    if(letters == "<kp_9>") return  PEBLKEY_KP9;
+
+    if(letters == "<kp_period>"  ) return  PEBLKEY_KP_PERIOD;
+    if(letters == "<kp_divide>"  ) return  PEBLKEY_KP_DIVIDE;
+    if(letters == "<kp_multiply>") return  PEBLKEY_KP_MULTIPLY;
+    if(letters == "<kp_minus>"   ) return  PEBLKEY_KP_MINUS;
+    if(letters == "<kp_plus>"    ) return  PEBLKEY_KP_PLUS;
+    if(letters == "<kp_equals>"  ) return  PEBLKEY_KP_EQUALS;
+    if(letters == "<kp_enter>"  )  return  PEBLKEY_KP_ENTER;
+
+    if(letters == "<insert>"  ) return  PEBLKEY_INSERT;
+    if(letters == "<home>"    ) return  PEBLKEY_HOME;
+    if(letters == "<end>"     ) return  PEBLKEY_END;
+    if(letters == "<pageup>"  ) return  PEBLKEY_PAGEUP;
+    if(letters == "<pagedown>") return  PEBLKEY_PAGEDOWN;
+
+
 
     return PEBLKEY_UNKNOWN;
 }

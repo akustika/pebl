@@ -2,7 +2,7 @@
 #//    Name:       src/pebl-lib/Utility.pbl
 #//    Purpose:    Contains PEBL functions used for various purposes
 #//    Author:     Shane T. Mueller, Ph.D.
-#//    Copyright:  (c) 2004-2005 Shane T. Mueller <smueller@obereed.net>
+#//    Copyright:  (c) 2004-2008 Shane T. Mueller <smueller@obereed.net>
 #//    License:    GPL 2
 #//
 #//
@@ -450,9 +450,9 @@ define Lookup(key, keylist, database)
 
 ## makes a label with a standard font, black on grey, in specified location.
 ##
-define EasyLabel(text,x,y,win,size)
+define EasyLabel(text,x,y,win,fontsize)
 {
-  font <-  MakeFont("Vera.ttf",0,size,MakeColor("black"),MakeColor("grey"),1)
+  font <-  MakeFont("Vera.ttf",0,fontsize,MakeColor("black"),MakeColor("grey"),1)
   lab <- MakeLabel(text,font)
   AddObject(lab,win)
   Move(lab,x,y)

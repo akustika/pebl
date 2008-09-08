@@ -1,7 +1,7 @@
 
 
 ## Rotozoom doesn't work right now for objects, but this rotates
-## a polygon's points.
+## a polygon's points.  pts should be a list of [[x1,x2,x3],[y1,y2,y3]]
 define RotatePoints(pts,theta)
 {
    newX <- []
@@ -167,7 +167,7 @@ define MakeStarPoints (radiusOuter, radiusInner, num)
     pointsX <- Append(pointsX,Cos(arc)*radiusOuter)
     pointsY <- Append(pointsY,Sin(arc)*radiusOuter)
 
-   return  Transpose([pointsX,pointsY])
+   return  [pointsX,pointsY]
 }
 
 
@@ -191,5 +191,5 @@ define MakeNGonPoints (radius, num)
     pointsX <- Append(pointsX,Cos(arc)*radius)
     pointsY <- Append(pointsY,Sin(arc)*radius)
 
-   return  Transpose([pointsX,pointsY])
+   return  [pointsX,pointsY]
 }

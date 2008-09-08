@@ -609,7 +609,10 @@ Variant PEBLEnvironment::WaitForListKeyPress(Variant v)
         {
             //Create a keyboard tests correspending to each item in v1. 
             //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
+
+
             key = PEBLUtility::TranslateString(*p);
+            std::cout<< "Key:" << *p << "|"<<key<< std::endl;
             state = new ValueState(PEBL_PRESSED, DT_EQUAL, key, gEventQueue, PDT_KEYBOARD);
             //NULL,NULL will terminate the looping
             Evaluator::mEventLoop.RegisterEvent(state,funcname, params);

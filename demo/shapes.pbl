@@ -1,4 +1,4 @@
-define Start(par)
+ define Start(par)
 {
 
   ##Test another new feature: change video dimensions within script.
@@ -165,8 +165,122 @@ define Start(par)
     lab.text <- "Rotating Line " + (i) + " degrees."
 
     Draw()
+    i <- i + 10
+  }
+
+
+  WaitForAnyKeyPress()
+  RemoveObject(shape,win)
+  RemoveObject(circ,win)
+ 
+######
+### Do the E
+
+  e1 <- BlockE(200,200,80,40,10,1, red )
+  e2 <- BlockE(250,200,80,40,10,2, red )
+  e3 <- BlockE(300,200,80,40,10,3, red )
+  e4 <- BlockE(350,200,80,40,10,4, red )
+
+  AddObject(e1,win)
+  AddObject(e2,win)
+  AddObject(e3,win)
+  AddObject(e4,win)
+
+  lab.text <- "Four Es"
+  Draw()	
+  
+  WaitForAnyKeyPress()
+
+  RemoveObject(e1,win)
+  RemoveObject(e2,win)
+  RemoveObject(e3,win)
+  RemoveObject(e4,win)
+
+######
+### Do the plus
+
+  plus  <- Plus(200,200,90,5, red )
+  AddObject(plus,win)
+  lab.text <- "A Plus"
+  Draw()	
+  
+  WaitForAnyKeyPress()
+  RemoveObject(plus,win)
+
+##Star and NGon
+
+   sp1 <- MakeStarPoints(50,20,8)
+   sp2 <- ZoomPoints(sp1,.3,1.5)
+   sp3 <- RotatePoints(sp1,.2)
+
+   s1 <- Polygon(200,400,First(sp1),Nth(sp1,2),red,1)
+   s2 <- Polygon(300,400,First(sp2),Nth(sp2,2),red,1)
+   s3 <- Polygon(400,400,First(sp3),Nth(sp3,2),red,1)
+
+
+   AddObject(s1,win)
+   AddObject(s2,win)
+   AddObject(s3,win)
+  
+
+   lab.text <- "Some stars, stretched and rotated." 
+   Draw()
+   WaitForAnyKeyPress()
+
+   RemoveObject(s1,win)
+   RemoveObject(s2,win)
+   RemoveObject(s3,win)
+
+
+   s1 <- Bezier(200,400,First(sp1),Nth(sp1,2),100,red)
+   s2 <- Bezier(300,400,First(sp2),Nth(sp2,2),100,red)
+   s3 <- Bezier(400,400,First(sp3),Nth(sp3,2),100,red)
+
+
+   AddObject(s1,win)
+   AddObject(s2,win)
+   AddObject(s3,win)
+  
+  lab.text <- "Some curvy stars (this may not work)"
+  Draw()	
+  
+  WaitForAnyKeyPress()
+
+   RemoveObject(s1,win)
+   RemoveObject(s2,win)
+   RemoveObject(s3,win)
+   
+
+   s <- MakeImage("pebl.bmp")
+   ##RotoZoom is an undocumented function.  use .rotation and
+   ##.xzoom/.yzoom instead.
+   RotoZoom(s,20,1,1,1)
+   AddObject(s,win)
+   Move(s,200,400)
+
+   s2 <- MakeImage("pebl.bmp")
+   s2.rotation <- 20
+   AddObject(s2,win)
+   Move(s2,400,400)
+
+
+  Draw()	
+  lab.text <- "Rotated & stretched pebbles"  
+  WaitForAnyKeyPress()
+
+ 
+   i <- 0
+  while(i <= 360)
+  {
+
+    s2.rotation <- i
+    lab.text <- "Rotating Pebble " + (i) + " degrees."
+
+    Draw()
     i <- i + 2
   }
+
+
 
   WaitForAnyKeyPress()
 

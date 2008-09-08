@@ -223,10 +223,12 @@ behavior.
   widget.WIDTH
   widget.HEIGHT
   widget.VISIBLE
+  widget.ROTATION
+  widget.XZOOM
+  widget.YZOOM
 \end{verbatim}
 
   
-
 
 \section{Images}
 
@@ -339,6 +341,29 @@ The following is a list of shape and their properties.
 .height,  (y length)\\
 
 
+
+
+\subsection{Polygon}
+\emph{Description:} An arbitrary polygon. 
+
+\emph{Command:}  \verb+Polygon( <x>, <y>,<xpoints>,<ypoints>,<color>,<filled>)+\\
+
+\emph{Properties:}
+.color (color) \\
+.x  (x position of start) \\
+.y  (y position of start)\\
+
+\subsection{Bezier}
+\emph{Description:} An arbitrary bezier curve.
+
+\emph{Command:}  \verb+Bezier( <x>, <y>,<xpoints>,<ypoints>,<steps>,<color>)+\\
+
+\emph{Properties:}
+.color (color) \\
+.x  (x position of start) \\
+.y  (y position of start)\\
+
+
 \section{Text Labels}
 
 You can create a text label object with the \texttt{MakeLabel()} function, 
@@ -388,10 +413,12 @@ that should be checked for exit. Typical escape-key options include:
   "<return>"
   "<esc>"
   "<backspace>"
+  "<kp_enter>"
   " "
   "A"
 \end{verbatim}
  
+See the Keyboard Entry section below for a more complete list.
 
 Translation from string to keyboard input is still crude, 
 and is handled in \texttt{src/utility/PEBLUtility.cpp:TranslateString} 
@@ -417,7 +444,23 @@ their letter name; others have special names:
 "<down>"
 "<right>"
 "<enter>"
+"<return>"
 "<esc>"
+"<backspace>" or "<back>"
+"<kp_0>" through "<kp_9>", as well as "<kp_period>", "<kp_divide>",
+ "<kp_mltiply>", "<kp_minus>", "<kp_plus>", "<kp_equals>",
+"<kp_enter>" for  keypad keys.
+
+ "<insert>","<delete>", "<home>", "<end>","<pageup>","<pagedown>" for other
+special keys.
+
+Function keys <F1> through <F15>.
+
+Also, the traditional "modifier" keys can serve as normal keys:
+<lshift>, <rshift> <numlock>, <capslock>, <scrollock>, 
+<rctrl>, <lctrl>, <ralt>,<lalt>,<rmeta>,<lmeta>,<lsuper>,
+<rsuper>,<mode>,<compose>
+
 \end{verbatim}
 
 
