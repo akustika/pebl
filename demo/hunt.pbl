@@ -7,7 +7,7 @@ define Start(par)
 
 
     gSleepEasy <- 1
-    ShowCursor(0)
+
 	gWin <- MakeWindow()
 
 
@@ -27,8 +27,8 @@ define Start(par)
     Draw()
     WaitForMouseButton()
     Hide(tb)
-    
-	FilePrint(fileout,"subnum   trial gradient startx starty x y time moves")
+    ShowCursor(0)
+	FilePrint(fileout,"subnum trial startx starty gradient x y time moves")
 
 
     types <- Shuffle(Merge(Repeat("E",condsize),
@@ -42,7 +42,7 @@ define Start(par)
   	   results <-  Trial(type)   
        dat <- Merge([gSubNum,trial, gVideoWidth/2,gVideoHeight/2],results)
 
-       FilePrint(fileout,Flatten(dat))
+       FilePrintList(fileout,Flatten(dat))
        
        alldat <- Append(alldat,dat)
        trial <- trial + 1
@@ -51,25 +51,31 @@ define Start(par)
 
 	tAllDat <- Transpose(alldat)
 
+    Print(tAllDat)
 
-    time <- SummaryStats(Nth(tAllDat,5), Nth(tAllDat,3))
-    steps <- SummaryStats(Nth(tAllDat,6), Nth(tAllDat,3))
+    time <- SummaryStats(Nth(tAllDat,7), Nth(tAllDat,5))
+    steps <- SummaryStats(Nth(tAllDat,8), Nth(tAllDat,5))
 
 
     FilePrint(reportfile,"-----------------------")
     FilePrint(reportfile, "Statistic: Time")
     FilePrint(reportfile,"cond num median mean sd")
     FilePrint(reportfile,"-----------------------")
-    FilePrint(reportfile,time)
-    FilePrint(reportfile,"")
+	loop(i,time)
+     {
+       FilePrintList(reportfile,i)
+     }
 
     FilePrint(reportfile,"-----------------------")
     FilePrint(reportfile,"Statistic: Steps")
     FilePrint(reportfile,"cond num median mean sd")
     FilePrint(reportfile,"-----------------------")
+	loop(i,steps)
+     {
+       FilePrintList(reportfile,i)
+     }
 
-    FilePrint(reportfile,steps)
-
+    FileClose(reportfile)
 }
 
 
@@ -190,4 +196,14 @@ define DistanceManhattan(a,b)
 define MakeHeat(dist,max)
 {
 	return(MakeColorRGB(256-Ceiling(256*dist/max),Ceiling(256*dist/max),1))
+}
+
+
+define FilePrintList(file,list)
+{
+  loop(i,list)
+  {
+    FilePrint_(file,i+" ")
+  }
+  FilePrint(file,"")
 }
