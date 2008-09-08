@@ -362,6 +362,30 @@ define Format(val, size)
   return string
 }
 
+
+## PrintList and FilePrintList 
+## prints a list on a single line, without formatting (, or [])
+
+define PrintList(list)
+{
+  loop(i,list)
+  {
+    Print_(i+" ")
+  }
+  Print("")
+}
+
+
+define FilePrintList(file,list)
+{
+  loop(i,list)
+  {
+    FilePrint_(file,i+" ")
+  }
+  FilePrint(file,"")
+}
+
+
 define ConvertIPString(ip)
 {
 	nums <- SplitString(ip,".")

@@ -197,13 +197,3 @@ define MakeHeat(dist,max)
 {
 	return(MakeColorRGB(256-Ceiling(256*dist/max),Ceiling(256*dist/max),1))
 }
-
-
-define FilePrintList(file,list)
-{
-  loop(i,list)
-  {
-    FilePrint_(file,i+" ")
-  }
-  FilePrint(file,"")
-}
