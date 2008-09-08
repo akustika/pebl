@@ -1,5 +1,5 @@
 //* -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*- */
-/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 //    Name:       src/base/PEBLObjectBase.cpp
 //    Purpose:    Contains a simple list class, part of the Variant Class
 //    Author:     Shane T. Mueller, Ph.D.
@@ -88,14 +88,9 @@ bool PEBLObjectBase::InitializeProperty(std::string name, Variant v)
 Variant PEBLObjectBase::GetProperty(const std::string name)const
 {
 
-    //    PEBLObjectBase::PrintProperties(std::cout);
-    //    cout << mProperties.find("FONT")->first<<endl;
-    //    cout << mProperties.find("FONT")->second<<endl;
-    //    cout << PEBLObjectBase::ValidateProperty("FONT")<< endl;
-    //    cout << PEBLObjectBase::ValidateProperty("VISIBLE")<< endl;
- 
-    ObjectValidationError err = ValidateProperty(name);
-    if(err == 0)
+    ObjectValidationError err = PEBLObjectBase::ValidateProperty(name);
+
+    if(err == OVE_SUCCESS)
         return mProperties.find(name)->second;
     else
         {
@@ -113,8 +108,6 @@ ObjectValidationError PEBLObjectBase::ValidateProperty(std::string name, Variant
 
 ObjectValidationError PEBLObjectBase::ValidateProperty(std::string name)const
 {
-
-
     if(mProperties.find(name) == mProperties.end())
         return OVE_INVALID_PROPERTY_NAME;
     else
