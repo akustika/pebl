@@ -416,7 +416,7 @@ define Initialize()
    Hide(gInstructions)
 
    ## Make and hide a header label
-   gHeader <- MakeTextBox("",gHeaderFont, 500,200)
+   gHeader <- MakeTextBox("",gHeaderFont, 600,200)
    AddObject(gHeader,gWin)
    Move(gHeader, gVideoWidth/2-250, 50)
    Hide(gHeader)

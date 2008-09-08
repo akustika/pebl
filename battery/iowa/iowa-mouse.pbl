@@ -349,7 +349,6 @@ Press any key to begin.")
 
    feedback <-  feedback + " You may now leave.  Please alert the experimenter that you are done. Press the X key to exit."
 
-   Print(feedback)
    SetText(gInstructions, feedback)
    Show(gInstructions)
    Draw()

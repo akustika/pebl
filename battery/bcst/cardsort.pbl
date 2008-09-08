@@ -1,6 +1,6 @@
 #!/usr/local/bin/pebl
 ###########################################################
-##  Berg's Card Sorting Task, Version 0.3
+##  Berg's Card Sorting Task, Version 0.4
 ##  (better known as the Wisconsin Card Sorting Test (tm)).
 ##  For use with PEBL 0.06 or later
 ##  http://pebl.sf.net
@@ -311,8 +311,8 @@ WaitForAnyKeyPress()
       Draw()
       Wait(400)
       Hide(feedback)
-      Hide(gHeader)
-      Hide(gPrompt)
+#      Hide(gHeader)
+#      Hide(gPrompt)
       Draw()
 
       ##if you have a run of runlength correct, change rules.
@@ -360,7 +360,7 @@ WaitForAnyKeyPress()
    FilePrint(report," a free version of the Wisconsin Card Sorting Task (tm)*")
    FilePrint(report," (c) 2008 Shane T. Mueller")
    
-   FilePrint(report," Version 0.3")
+   FilePrint(report," Version 0.4")
    FilePrint(report," "+GetPEBLVersion())
    FilePrint(report," "+TimeStamp())
    FilePrint(report," Participant Code: " + gSubNum)
@@ -457,7 +457,7 @@ define Initialize()
   gWin <- MakeWindow("grey60")   
             
   ##Initialize Font and colors
-
+  gSleepEasy <- 1
    bg <- MakeColor("grey60")
    fg <- MakeColor("black")
    bg2 <- MakeColor("white")

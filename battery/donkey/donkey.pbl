@@ -73,10 +73,7 @@ define Start(lPar)
 
 You are about to play a game in which you help a donkey get apples. Choose a door by pressing the C V B or N key.  Behind each door are some apples that the donkey will receive, but also each door will cost the donkey some apples.
 
-This task is for demonstration purposes only. It has not been tested
-in laboratory settings, it does not perform
-proper response counterbalancing, and likely needs to be modified to
-investigate specific questions.
+This task is for demonstration purposes only. It has not been tested in laboratory settings, it does not perform proper response counterbalancing, and likely needs to be modified to investigate specific questions.
 
 
 Press any key to begin.")

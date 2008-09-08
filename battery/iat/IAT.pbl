@@ -16,6 +16,7 @@
 ##  Version 0.1 Initial release, using dummy good and bad words/pictures
 ##  Version 0.2 April 2006.  Use natural kinds/artifacts; and
 ##             verbs/adjectives as stimuli.
+##  Version 0.3 Sept 2008.  Minor fixes for display
 ##
 ##
 ##
@@ -51,7 +52,7 @@ define Start(lPar)
 ##############################################
   goodWordTitle <- "Verbs"
   badWordTitle  <- "Adjectives"
-  goodPicTitle  <- "Living Things"
+  goodPicTitle  <- "Living Things "
   badPicTitle   <- "Man-made Things"
 
   goodWordText <- Lowercase(goodWordTitle)

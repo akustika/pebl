@@ -237,7 +237,7 @@ PEvent PEventLoop::Loop()
 
             //This does a nano sleep function to avoid burning cpu, if the gSleepEasy variable is set.
             //Probably is only available on unix.
-#ifdef __PEBL_UNIX__
+#if defined(PEBL_UNIX)
             if(myEval->gGlobalVariableMap.Exists("gSleepEasy") )
                 {
                     if(myEval->gGlobalVariableMap.RetrieveValue("gSleepEasy"))
@@ -248,6 +248,16 @@ PEvent PEventLoop::Loop()
                         int retval = nanosleep(&a,&b);
                     }
                 }
+#endif
+#if defined(PEBL_WINDOWS)
+           if(myEval->gGlobalVariableMap.Exists("gSleepEasy") )
+                {
+                    if(myEval->gGlobalVariableMap.RetrieveValue("gSleepEasy"))
+                    {
+                       Sleep(1);  //sleep about 1 ms(might be as much as 10)
+                    }
+                }
+
 #endif
         }
 

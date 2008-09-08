@@ -88,8 +88,7 @@ bool PEBLObjectBase::InitializeProperty(std::string name, Variant v)
 Variant PEBLObjectBase::GetProperty(const std::string name)const
 {
 
-
-    //PEBLObjectBase::PrintProperties(std::cout);
+    //    PEBLObjectBase::PrintProperties(std::cout);
     //    cout << mProperties.find("FONT")->first<<endl;
     //    cout << mProperties.find("FONT")->second<<endl;
     //    cout << PEBLObjectBase::ValidateProperty("FONT")<< endl;

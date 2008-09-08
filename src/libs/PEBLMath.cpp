@@ -73,15 +73,15 @@ Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
             //Not sure why I add and then subtract the item from the list.
 
             arglist->PushFront(*p);                              
-            std::cout << "E\n";
-            std::cout<<"<"<<*arglist <<">\n";
+//            std::cout << "E\n";
+//           std::cout<<"<"<<*arglist <<">\n";
 
             resultslist->PushBack(funcname(Variant(arglist)));
-            std::cout << "F\n";
+//            std::cout << "F\n";
             arglist->PopFront();
             p++;
         }
-    std::cout << "G\n";
+//    std::cout << "G\n";
     //Now, resultslist is a PList.  Put it into a PCD.
     counted_ptr<PEBLObjectBase> tmp = counted_ptr<PEBLObjectBase>(resultslist);
     PComplexData * pcd = new PComplexData(tmp);
@@ -134,11 +134,11 @@ Variant PEBLMath::Recurse2(Variant v, Variant (*funcname)(Variant), Variant argu
 Variant PEBLMath::Log10(Variant v)
 {
 
-    std::cout << "log10a\n";
-    std::cout << "(" << v << ")" << std::endl;
+//    std::cout << "log10a\n";
+//    std::cout << "(" << v << ")" << std::endl;
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First();
-    std::cout << "v1: " << v1 << std::endl;
+//    std::cout << "v1: " << v1 << std::endl;
     if(v1.IsNumber())
         {
             return Variant(log10l(v1.GetFloat()));

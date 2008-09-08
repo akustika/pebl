@@ -134,7 +134,7 @@ int PEBLInterpret( int argc, char *argv[] )
     //        Process all files on the command-line
     //-----------------------------------------------------------
 
-	std::cout << "filename:"      << *i << endl;
+	std::cout << "Loading filename:"      << *i << endl;
 	string inputfilename = Evaluator::gPath.FindFile(*i);
     head = NULL;
     if(inputfilename != "")
@@ -154,6 +154,7 @@ int PEBLInterpret( int argc, char *argv[] )
     i++;
     while(i != files.end())
         {
+        	std::cerr << "Loading file name:"      << *i << endl;
             inputfilename = Evaluator::gPath.FindFile(*i);
             if(inputfilename != "")
                 {
@@ -222,7 +223,7 @@ int PEBLInterpret( int argc, char *argv[] )
     enum PEBLVideoMode displayMode;
     enum PEBLVideoDepth displayDepth;
     bool windowed = true;
-    bool unicode = false;
+    bool unicode = true;
     Variant subnum = 0;
     //Extract the command-line variables to bind   
     for(int j = 1; j < argc; j++)
@@ -393,6 +394,7 @@ int PEBLInterpret( int argc, char *argv[] )
             delete myLoader; 
             
             Evaluator::mFunctionMap.Destroy();
+        	std::cout << "Program Terminated Successfully"  << endl;
             
             return 0;
         }
