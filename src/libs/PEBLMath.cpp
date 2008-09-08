@@ -644,8 +644,7 @@ Variant PEBLMath::AbsFloor(Variant v)
 //Modular Arithmetic:  This will even work for non-integers.
 Variant PEBLMath::Mod(Variant v)
 {
- 
-    
+     
     PList * plist = v.GetComplexData()->GetList();
 
     
@@ -661,9 +660,8 @@ Variant PEBLMath::Mod(Variant v)
     if( remainder < 0 ) remainder += 1.0;
     if(remainder >= 1.0) remainder = 0;
     
-    return Variant(remainder *  v2);
+    return Variant((long int)(remainder *  v2 + .00001));
 }
-
 
 
 //Modular Arithmetic
