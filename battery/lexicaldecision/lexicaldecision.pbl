@@ -1,7 +1,19 @@
 define Start(lPar)
 {
+ #######################################################
+ ## (c) 2008 Shane T. Mueller
+ ## smueller at obereed dot net
+ ## PEBL Lexical Decision Task, Version 0.1
+ ##  
+ ##
+ ## For use with PEBL 0.09 or later
+ ## http://pebl.sf.net
+ ## Part of  The PEBL Psychological Testing Battery
+ ##
+ ##
+ ## Placed in the public domain 9-2008
 
-  #open a file for writing to.
+ #open a file for writing to.
   gFileOut <- FileOpenWrite("ld-"+ gSubnum +".txt")
 
   #Read in the words/nonwords.  
