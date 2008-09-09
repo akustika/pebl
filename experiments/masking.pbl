@@ -25,7 +25,10 @@ define Start(lPar)
     RandomizeTimer()
   ##Initialize Window, etc.
   gWindow <- MakeWindow("black")   
-	    
+
+   ##Get rid of cursor.	    
+   ShowCursor(0)
+
   ##Initialize Font and colors
 
    bg <- MakeColor("black")
@@ -38,11 +41,11 @@ define Start(lPar)
    gFixation  <- MakeLabel("+",gInstructionsFont)				 
 
    masks      <- [[1,")()(", ")()("],
-   		           [2,")[)[", "[)[)"],
-			   		  [3,")])]", "])])"],
-						  [4,"([([", "[([("],
-						  [5,"(](]", "](]("],
- 		              [6,"][][", "[][]"]]
+   		          [2,")[)[", "[)[)"],
+				  [3,")])]", "])])"],
+				  [4,"([([", "[([("],
+				  [5,"(](]", "](]("],
+ 		          [6,"][][", "[][]"]]
 
    stimuli <- [")","(","]","["]
    stimPairs <-CrossFactorWithoutDuplicates(stimuli)
@@ -59,7 +62,7 @@ Nth(stimMask2,2),longshort]))
     
    numtrials<-Length(stimMask)
 
-   gInstructions <- MakeLabel("Use 'z' for left and '/' for right. Press any key to begin",gInstructionsFont)
+   gInstructions <- MakeLabel("Use left and right shift buttons to indicate stimulus. Press any key to begin",gInstructionsFont)
    AddObject(gInstructions, gWindow)
    Move(gInstructions, 320, 200)
    Show(gInstructions)
@@ -214,14 +217,16 @@ define Trial(stimulus)
 
 
   #Wait for response,
-  response <-WaitForListKeyPress(["Z","/"])
+  response <-WaitForListKeyPress(["<lshift>","<rshift>"])
   
+
   #Get the response time.
   end <- GetTime()
 
+
   if(choiceOrder == 1) 
    {
-      if(Uppercase(response) == "Z")
+      if(Uppercase(response) == "<lshift>")
       { 
          correct <- 1
       } else {
@@ -229,7 +234,7 @@ define Trial(stimulus)
       }
 
    } else {
-      if(Uppercase(response) == "Z")
+      if(Uppercase(response) == "<lshift>")
       { 
          correct <- 0
       } else {
