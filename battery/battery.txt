@@ -1,6 +1,6 @@
-PEBL PSYCHOLOGICAL TEST BATTERY Version 0.2
+PEBL PSYCHOLOGICAL TEST BATTERY Version 0.3
 
-Released July 2007 
+Released Sept 2008
 Part of the PEBL Project
 http://pebl.sourceforge.net/battery.html
 
@@ -52,7 +52,8 @@ Subnum trial run rule lastrule color shape number resp corr persev abstime rt
 
 Changelog:      
 Version 0.3 outputs the rule and lastrule used for computing perseverations.
-Version 0.2 correctly computes perseverations and fixes some other bugs over version 0.1
+Version 0.2 correctly computes perseverations and fixes some other
+bugs over version 0.1
 
 -------------------------------------------------------------------------------
 *                                  Digit Span Version 0.1
@@ -112,8 +113,10 @@ times and error rates for different block conditions.
 *                         Bechara's "Iowa Gambling Task", Version 0.3
 -------------------------------------------------------------------------------
 Location: iowa/iowa.pbl
+          iowa/iowa-mouse.pbl
 
-Description: Our implementation of the gambling task described by Bechara, commonly 
+Description: Our implementation of the gambling task described by
+Bechara, commonly 
 referred to by the registered trademarked "Iowa Gambling Task."  4 decks are
 given, participant must draw cards from whatever deck they choose. Two
 decks are net positive, two are net negative.
@@ -122,14 +125,17 @@ Options:  By default, the penalty cards are shuffled within 10-card
 blocks.  setting shuffleDecks <- 0 will use the original order for all
 participants.  Baseline rewards for each deck can be changed as well.
 
+the file iowa-mouse.pbl is an identical experiment, but controlled by
+the mouse rather than the keyboard.
+
  
 Results:
 Data are written to igd-<gsubnum>.txt  Columns are:
 subject_id trial deck reward penalty net total absolute_time latency
 
 Changelog:
-  Version 0.3 contains a continuously-updated status bargraph, as well as some fixes to bugs
-  in the earlier versions.
+  Version 0.3 contains a continuously-updated status bargraph, as well
+  as some fixes to bugs in the earlier versions.
 
 -------------------------------------------------------------------------------
 *                             The Hungry Donkey Task, Version 0.1
@@ -138,9 +144,10 @@ New for Version 0.2
 
 Location: donkey/donkey.pbl
 
-Description: A version of the "Iowa Gambling task", targeted to non-verbal children.
-You choose doors, which provide a donkey with gains or losses of apples. 4 doors are
-provided, and the participant must choose doors. Two
+Description: A version of the "Iowa Gambling task", targeted to
+non-verbal children.
+You choose doors, which provide a donkey with gains or losses of
+apples. 4 doors are provided, and the participant must choose doors. Two
 doors are net positive, two are net negative.
 
 Options: None
@@ -276,16 +283,22 @@ Location: partial-report/PartialReport.pbl
 
 Description: Classic partial report procedure used to assess decay time of
 iconic memory. In recent years, has been suggested provide early warning sign 
-for alzheimer's disease.  At the end, it draws a graph depicting accuracy by delay time.
+for alzheimer's disease.  At the end, it draws a graph depicting
+accuracy by delay time.
+
 
 Options:
-By default, runs 9 blocks of 50 trials.  These can be changed easily be editing the script.
+By default, runs 9 blocks of 50 trials.  These can be changed easily
+be editing the script.
+
  
 
 Results:
 Data is saved to file part-report-<gsubnum>.txt.  Columns are:
 
-SubjectNum, Block, Trial, delay, radial_position, cueLetter, response, correct, RT
+SubjectNum, Block, Trial, delay, radial_position, cueLetter, response,
+correct, RT
+
 
 
 A summary of the results, with means and standard deviations across
@@ -320,7 +333,7 @@ Options:  Number of disks, number of trials. Disks should not exceed 6.
 -------------------------------------------------------------------------------
 *                   Stroop Test, Version 0.1
 -------------------------------------------------------------------------------
-New for PEBL Battery 0.9
+New for PEBL Battery 0.3
 
 Location: stroop/stroop.pbl
 
@@ -396,3 +409,19 @@ is the typical stroop effect.
 
 Options:  
 Number of trials per block.
+
+
+
+
+-------------------------------------------------------------------------------
+*                   Lexical Decision Task, Version 0.1
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.3
+
+Location: lexicaldecision/lexicaldecision.pbl
+
+Description:  
+
+Subject classifies stimuli as words or nonwords.  Stimuli should be
+placed, one-per-line, in words.txt and nonwords.txt.
+

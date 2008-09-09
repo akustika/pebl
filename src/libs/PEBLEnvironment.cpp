@@ -461,7 +461,7 @@ Variant PEBLEnvironment::WaitForAnyKeyPressWithTimeout(Variant v)
     Evaluator::mEventLoop.RegisterState(timestate, funcname, params);
     PEvent returnval = Evaluator::mEventLoop.Loop();
 
-    std::cout << "Returnval: "<<returnval.GetType() << std::endl;
+    //    std::cout << "Returnval: "<<returnval.GetType() << std::endl;
     //Now, clear the event loop tests
     Evaluator::mEventLoop.Clear();
     //    return Variant(returnval.GetDummyEvent().value);
@@ -612,7 +612,7 @@ Variant PEBLEnvironment::WaitForListKeyPress(Variant v)
 
 
             key = PEBLUtility::TranslateString(*p);
-            std::cout<< "Key:" << *p << "|"<<key<< std::endl;
+            //            std::cout<< "Key:" << *p << "|"<<key<< std::endl;
             state = new ValueState(PEBL_PRESSED, DT_EQUAL, key, gEventQueue, PDT_KEYBOARD);
             //NULL,NULL will terminate the looping
             Evaluator::mEventLoop.RegisterEvent(state,funcname, params);
