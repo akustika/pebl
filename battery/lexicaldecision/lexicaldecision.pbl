@@ -5,10 +5,13 @@ define Start(lPar)
   gFileOut <- FileOpenWrite("ld-"+ gSubnum +".txt")
 
   #Read in the words/nonwords.  
-  words <- FileReadList("ld.txt")
+  words <- FileReadList("words.txt")
+  nonwords <- FileReadList("nonwords.txt")
+
+
   #create stimuli
-  type <- Merge(Repeat("W",14),Repeat("L",14))
-  stim<-Shuffle(Transpose([words,type]))
+  type <- Merge(Repeat("W",Length(words)),Repeat("L",Length(nonwords)))
+  stim<-Shuffle(Transpose([Merge(words,nonwords),type]))
 
 
   #Initialize basic display objects.
