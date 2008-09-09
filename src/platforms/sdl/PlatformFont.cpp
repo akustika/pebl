@@ -73,8 +73,6 @@ PlatformFont::PlatformFont(const std::string & filename, int style, int size, PC
 PlatformFont::PlatformFont(const PlatformFont & font)
 
 {
-
-
     mFontFileName    = font.GetFontFileName();
     mFontStyle       = font.GetFontStyle();
     mFontSize        = font.GetFontSize();

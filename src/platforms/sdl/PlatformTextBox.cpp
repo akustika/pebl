@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformTextBox.cpp
 //    Purpose:    Contains SDL-specific interface for the text boxes.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2006 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -162,17 +162,20 @@ bool  PlatformTextBox::RenderText()
     while(i != mBreaks.end() && totalheight < (unsigned int) mHeight)
         {
 
+            //mBreaks holds the 'starting' positions of each line.
             linelength = *i - linestart;
-
-            tmpSurface = mFont->RenderText(mText.substr(linestart, linelength).c_str());
-            
-            SDL_Rect to = {0,totalheight,tmpSurface->w, tmpSurface->h};
-            SDL_BlitSurface(tmpSurface, NULL, mSurface,&to);
-            SDL_FreeSurface(tmpSurface);
+            if(linelength>0)
+                {
+                    tmpSurface = mFont->RenderText(mText.substr(linestart, linelength).c_str());
+                    
+                    SDL_Rect to = {0,totalheight,tmpSurface->w, tmpSurface->h};
+                    SDL_BlitSurface(tmpSurface, NULL, mSurface,&to);
+                    SDL_FreeSurface(tmpSurface);
+                }
             totalheight += height;
             linestart = *i;
             i++;
-  
+            
         }
 
 
@@ -247,7 +250,8 @@ void PlatformTextBox::FindBreaks()
     int height = mFont->GetTextHeight(mText);
 
     //Now, go through the text letter by letter and word by word until it won't fit on a line any longer.
-    unsigned int linestart = 0;
+    unsigned int linestart = 0;     //The start of the current line
+    unsigned int newlinestart = 0;  //The start of the NEXT line
     unsigned int linelength = 0;
     unsigned int totalheight = 0;
 
@@ -260,21 +264,20 @@ void PlatformTextBox::FindBreaks()
     int width = mFont->GetTextWidth(mText);
     mBreaks.reserve(width / mWidth * 2);
 
-
-    while(totalheight < (unsigned int) mHeight  && linestart < mText.size())
+    
+    while( (totalheight < (unsigned int) mHeight  && newlinestart < mText.size()))
         {
 
             linelength   = FindNextLineBreak(linestart);
-            
+
             //Increment the placekeepers.
+            newlinestart = linestart+ linelength; //This is where the next line will start.
             totalheight += height;
-            linestart +=  linelength +1;
 
-            mBreaks.push_back(linestart);
-
+            mBreaks.push_back(newlinestart);
+            linestart=newlinestart;
             
         }
-
 }
 
 
@@ -288,19 +291,22 @@ int PlatformTextBox::FindNextLineBreak(unsigned int curposition)
     unsigned int lastsep  = 0;
     unsigned int sep      = 0;
     std::string tmpstring;
+
+    //loop through the entire text from curposition on.
     while (curposition + sublength < mText.size()+1)
         {
 
             //Test to see if curposition is a '10'.  If so, this is a line break.
-            //we need to test whether the line is too long now.if so, return the
-
             if(mText[curposition + sublength] == 10 )
                 {
+
                     tmpstring = mText.substr(curposition,sublength);
+
+                    //If the width of the current line is too big, break at the last separator.
                     if(mFont->GetTextWidth(tmpstring) > (unsigned int)mWidth)
-                        return sep;
+                        return sep+1;
                     else
-                        return sublength;
+                        return sublength+1;
                 }
             
      
@@ -327,11 +333,11 @@ int PlatformTextBox::FindNextLineBreak(unsigned int curposition)
 
                             if(lastsep != 0)
                                 {
-                                    return lastsep;
+                                    return lastsep+1;
                                 }
                             else
                                 {
-                                    return sep;
+                                    return sep+1;
                                 }
                         }
                 }
@@ -340,7 +346,7 @@ int PlatformTextBox::FindNextLineBreak(unsigned int curposition)
         }
     //The rest of the text must fit in the space allotted; return that number.    
 
-    return sublength;
+    return sublength-1;
 }
 
 
@@ -402,22 +408,25 @@ void PlatformTextBox::DrawCursor()
     unsigned int i = 0;
     int linestart = 0;
     
-    x = width-1;
+
+    x = width-1;    //Initialize x with the biggest value it can have.
     if(mCursorPos==0) 
         {
             x=0;
-        
+            
         } else {
+        //The cursor is not at the beginning.
+        //mBreaks has found the line breaks already.
             while(i < mBreaks.size())
                 {
-                    
                     //increment x,y while we go, so that if we get orphaned text, 
                     //we still get a decent cursor position.
                     y = i * height;
-                    
-                    
-                    if(mBreaks[i] > mCursorPos)
+
+                    //mBreaks is the position of the first character on each line
+                    if(mBreaks[i] >= mCursorPos)
                         {
+
                             x =  mFont->GetTextWidth(mText.substr(linestart, mCursorPos - linestart));
                             x = ( x >= width ) ? width-1: x;
                             break;
@@ -426,7 +435,21 @@ void PlatformTextBox::DrawCursor()
                     linestart = mBreaks[i];
                     i++;
                 }
+            //x should be accurate, unless the cursor is at the last character,
+            //and that last character is a carriage return.
+
+            
         }
+
+    //The current position should be OK, UNLESS the character at mCursorPos is a CR.
+    //Then, we actually want to render CR on the next line.
+
+    if(mText[mCursorPos-1]== 10)
+        {
+            y+=height;
+            x=1;
+        }
+
 
     //x,y specifies the top of the cursor.
     SDLUtility::DrawLine(mSurface, x, y, x, y+height,(mFont->GetFontColor()));

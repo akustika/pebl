@@ -670,10 +670,11 @@ Variant PEBLEnvironment::GetInput(Variant v)
     PEBL_KeyboardEvent pke = keypress.GetKeyboardEvent();
 
 
-    //    while(pke.key != PEBLUtility::TranslateString(myString))
-    while(PEBLUtility::TranslateKeyCode(pke.key, pke.modkeys) != myString)
-        {
 
+    //match on lowercase matches to trigger character.  
+    //    while(pke.key != PEBLUtility::TranslateString(myString))
+    while(PEBLUtility::TranslateKeyCode(pke.key, pke.modkeys) != PEBLUtility::ToLower(myString))
+        {
             
             //Process the input and redraw the textbox.
             textbox->HandleKeyPress(pke.key, pke.modkeys);

@@ -240,7 +240,7 @@ PEBLKey PEBLUtility::TranslateString(const std::string & let)
        )
         return PEBLKEY_BACKSPACE;
 
-    if(letters="<delete>") return PBELKEY_DELETE;
+    if(letters=="<delete>") return PEBLKEY_DELETE;
 
     if(letters == "<left>")  return PEBLKEY_LEFT;
     if(letters == "<right>") return PEBLKEY_RIGHT;
@@ -249,21 +249,21 @@ PEBLKey PEBLUtility::TranslateString(const std::string & let)
 
 
 
-    if(letters == "<F1>")  return PEBLKEY_F1;
-    if(letters == "<F2>")  return PEBLKEY_F2;
-    if(letters == "<F3>")  return PEBLKEY_F3;
-    if(letters == "<F4>")  return PEBLKEY_F4;
-    if(letters == "<F5>")  return PEBLKEY_F5;
-    if(letters == "<F6>")  return PEBLKEY_F6;
-    if(letters == "<F7>")  return PEBLKEY_F7;
-    if(letters == "<F8>")  return PEBLKEY_F8;
-    if(letters == "<F9>")  return PEBLKEY_F9;
-    if(letters == "<F10>")  return PEBLKEY_F10;
-    if(letters == "<F11>")  return PEBLKEY_F11;
-    if(letters == "<F12>")  return PEBLKEY_F12;
-    if(letters == "<F13>")  return PEBLKEY_F13;
-    if(letters == "<F14>")  return PEBLKEY_F14;
-    if(letters == "<F15>")  return PEBLKEY_F15;
+    if(letters == "<f1>")  return PEBLKEY_F1;
+    if(letters == "<f2>")  return PEBLKEY_F2;
+    if(letters == "<f3>")  return PEBLKEY_F3;
+    if(letters == "<f4>")  return PEBLKEY_F4;
+    if(letters == "<f5>")  return PEBLKEY_F5;
+    if(letters == "<f6>")  return PEBLKEY_F6;
+    if(letters == "<f7>")  return PEBLKEY_F7;
+    if(letters == "<f8>")  return PEBLKEY_F8;
+    if(letters == "<f9>")  return PEBLKEY_F9;
+    if(letters == "<f10>")  return PEBLKEY_F10;
+    if(letters == "<f11>")  return PEBLKEY_F11;
+    if(letters == "<f12>")  return PEBLKEY_F12;
+    if(letters == "<f13>")  return PEBLKEY_F13;
+    if(letters == "<f14>")  return PEBLKEY_F14;
+    if(letters == "<f15>")  return PEBLKEY_F15;
 
     
 /* Key state modifier keys */
@@ -540,21 +540,21 @@ std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
         case PEBLKEY_PAGEDOWN:   return "<pagedown>";
 
         /* Function keys */
-        case PEBLKEY_F1:         return "<F1>";
-        case PEBLKEY_F2:         return "<F2>";
-        case PEBLKEY_F3:         return "<F3>";
-        case PEBLKEY_F4:         return "<F4>";
-        case PEBLKEY_F5:         return "<F5>";
-        case PEBLKEY_F6:         return "<F6>";
-        case PEBLKEY_F7:         return "<F7>";
-        case PEBLKEY_F8:         return "<F8>";
-        case PEBLKEY_F9:         return "<F9>";
-        case PEBLKEY_F10:         return "<F10>";
-        case PEBLKEY_F11:         return "<F11>";
-        case PEBLKEY_F12:         return "<F12>";
-        case PEBLKEY_F13:         return "<F13>";
-        case PEBLKEY_F14:         return "<F14>";
-        case PEBLKEY_F15:         return "<F15>";
+        case PEBLKEY_F1:         return "<f1>";
+        case PEBLKEY_F2:         return "<f2>";
+        case PEBLKEY_F3:         return "<f3>";
+        case PEBLKEY_F4:         return "<f4>";
+        case PEBLKEY_F5:         return "<f5>";
+        case PEBLKEY_F6:         return "<f6>";
+        case PEBLKEY_F7:         return "<f7>";
+        case PEBLKEY_F8:         return "<f8>";
+        case PEBLKEY_F9:         return "<f9>";
+        case PEBLKEY_F10:         return "<f10>";
+        case PEBLKEY_F11:         return "<f11>";
+        case PEBLKEY_F12:         return "<f12>";
+        case PEBLKEY_F13:         return "<f13>";
+        case PEBLKEY_F14:         return "<f14>";
+        case PEBLKEY_F15:         return "<f15>";
 
         /* Key state modifier keys */
         case PEBLKEY_NUMLOCK:      return "<numlock>";
