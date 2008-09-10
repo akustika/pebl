@@ -1,0 +1,49 @@
+define Start(p)
+{
+
+
+  ## The time of each trial
+  time <- 20000
+
+  win <- MakeWindow()
+  tb <- EasyTextBox("In this task, you are asked to tap the keyboard
+  as quickly as possible for trials of " + time/1000 + " seconds.  Use
+  the 'A' key.  Begin tapping when you see a 'GO'.  Press 'A' to
+  begin.",20,20,win,16,600,300)
+
+  Draw()
+
+  WaitForKeyPress("A")
+  Hide(tb)
+  Draw()
+
+  labtext <- "GO: [" + Round(time/1000) + "]"
+  lab <- EasyLabel(labtext,gVideoWidth/2,gVideoHeight/2,win,24)
+  Hide(lab)
+  Wait(2000)
+
+  finaltime <- GetTime() + time
+  Show(lab)
+  Draw()
+  hits <- 0  
+  while(GetTime() < finaltime)
+   {
+     
+     WaitForKeyPress("A")
+     hits <- hits + 1
+
+     time <- GetTime()
+     remaining <- Floor((finaltime - time)/100)/10
+	 lab.text <- "GO: [" + remaining + "]"
+     Draw()   
+     hits <- hits + 1
+   }
+  
+  
+  Hide(lab)
+  Show(tb)
+  tb.text <- "You had " + (hits-1) + " keypresses. Press X to quit"
+  Draw()
+
+  WaitForKeyPress("X")
+}
