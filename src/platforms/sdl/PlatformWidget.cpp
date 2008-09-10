@@ -108,6 +108,12 @@ bool PlatformWidget::Draw()
                             PWidget::SetProperty("WIDTH",mWidth);
                             PWidget::SetProperty("HEIGHT", mHeight);
                         }
+                    else
+                        {
+                            
+                            PWidget::SetProperty("WIDTH", mWidth);
+                            PWidget::SetProperty("HEIGHT", mHeight);
+                        }
 
                     SDL_Rect  fromRect = {0,0,mWidth,mHeight};
                     SDL_Rect  toRect   = {mDrawX,mDrawY,mWidth,mHeight};
@@ -118,6 +124,7 @@ bool PlatformWidget::Draw()
                     
                     //If we zoomed, we need to free the tmp; otherwise, tmp is the same as mSurface.
                     if(zoom) SDL_FreeSurface(tmp);
+
                 }
             else
                 {

@@ -483,7 +483,19 @@ Variant PEBLObjects::SetFont(Variant v)
     return Variant(1);
 }
 
+Variant PEBLObjects::PrintProperties(Variant v)
+{
+    //v[1] should have the  widget
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_WIDGET, "Argument error in function [Show(<widget>)]: "); 
 
+    PlatformWidget * widget = dynamic_cast<PlatformWidget*>(v1.GetComplexData()->GetObject().get());
+    
+    widget->PrintProperties(std::cout);
+
+    return Variant(true);
+}
 Variant PEBLObjects::Show(Variant v)
 {
 

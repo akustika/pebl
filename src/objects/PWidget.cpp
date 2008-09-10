@@ -102,7 +102,8 @@ bool PWidget::SetProperty(std::string name, Variant v)
     else if (name == "ZOOMX") SetZoomX((long double)v);
     else if (name == "ZOOMY") SetZoomY((long double)v);
     else if (name == "ROTATION") SetRotation((long double)v);
-    
+    else if (name == "WIDTH") SetWidth((int)v);
+    else if (name == "HEIGHT") SetHeight((int)v);
     else if (name == "VISIBLE")
         {
             if(v.GetInteger())
@@ -174,6 +175,22 @@ void PWidget::SetZoomY(double y)
 {
     mZoomY = y;
     PEBLObjectBase::SetProperty("ZOOMY",mY);
+}
+
+
+
+void PWidget::SetHeight(int h)
+{
+    mHeight = h;
+    PEBLObjectBase::SetProperty("HEIGHT",mHeight);
+
+}
+
+void PWidget::SetWidth(int w)
+{
+    mWidth = w;
+    PEBLObjectBase::SetProperty("WIDTH",mWidth);
+
 }
 
 ///This sets the widget's position on its parent widget.

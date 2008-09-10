@@ -179,6 +179,7 @@ namespace PEBLObjects
             {"GETTEXT",           GetText,      1,1},
             {"SETFONT",           SetFont,      2,2},
             {"SHOW",              Show,       1, 1},
+            {"PRINTPROPERTIES",   PrintProperties,  1, 1},
             {"HIDE",              Hide,       1, 1},
             {"DRAW",              Draw,       0, 1},
             {"DRAWFOR",           DrawFor,    2, 2},

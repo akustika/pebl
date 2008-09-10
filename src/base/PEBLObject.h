@@ -94,10 +94,9 @@ class PEBLObjectBase
     ComplexDataType GetType(){return mCDT;};
 
     virtual std::string ObjectName() const;
+    virtual std::ostream & PrintProperties(std::ostream& out);
+
  protected:
-
-
-    virtual std::ostream & PrintProperties(std::ostream& out) const;
     virtual std::ostream & SendToStream(std::ostream& out) const;
     ComplexDataType mCDT;  
     

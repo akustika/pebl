@@ -129,7 +129,7 @@ std::string PEBLObjectBase::ObjectName() const
     return "<Unknown PEBLObjectBase>";
 }
 
-ostream & PEBLObjectBase::PrintProperties(ostream& out) const
+ostream & PEBLObjectBase::PrintProperties(ostream& out) 
 {
     out << "----------\n";
     std::map<std::string, Variant>::const_iterator i;

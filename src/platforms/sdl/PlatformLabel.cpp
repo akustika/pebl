@@ -185,6 +185,9 @@ bool PlatformLabel::Draw()
             //Reposition.  This just recalculates so things are centered
             //correctly; labels are positioned based on their center.
             SetPosition(mX, mY);
+            SetProperty("HEIGHT",mHeight);
+            SetProperty("WIDTH",mWidth);
+                
             mTextChanged = false;
         }
     return  PlatformWidget::Draw();

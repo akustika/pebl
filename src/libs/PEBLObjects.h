@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLObjects.h
 //    Purpose:    Function Library for managing PEBL Objects
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2006 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -59,7 +59,7 @@ namespace PEBLObjects
 
     Variant SetFont(Variant v);
 
-
+    Variant PrintProperties(Variant v);
     Variant Show(Variant v);
     Variant Hide(Variant v);
 

@@ -69,6 +69,10 @@ public:
     virtual void SetZoomY(double x);
     virtual void SetRotation(double x);
 
+    virtual void SetWidth(int w);
+    virtual void SetHeight(int h);
+
+
     virtual int GetX()const {return mX;};
     virtual int GetY()const {return mY;};
 

@@ -222,7 +222,8 @@ int PTextBox::DecrementCursor()
     return mCursorPos;
 }
 
-
+//These shadow higher accessors in widget, because
+//they need to set the textchanged flag
 void PTextBox::SetHeight(int h)
 {
     mHeight = h;
