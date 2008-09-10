@@ -1,7 +1,8 @@
 #!/usr/local/bin/pebl
-#################################################################
+################################################################
 ##  PEBL Psychomotor Vigilance Task
-## 
+##  Version 0.2 
+##
 ##  For use with PEBL 0.07 or later
 ##  http://pebl.sf.net
 ##  Part of  The PEBL Psychological Test Battery
@@ -50,6 +51,10 @@ define Start(lPar)
    ## The color of the stimulus:
    gColor <- MakeColorRGB(255,33,100)
   
+   gVideoWidth <- 1152
+   gVideoHeight <- 864
+
+
    ##Type: 1 indicates a total time limit   (time is in totalTime);
    ##Type: 2 indicates a block-number limit (Number is in numBlocks);
    ##Type: 3 indicates a trial-number limit (number is numTrials)
@@ -462,3 +467,4 @@ define Rnd(num,sig)
    x <-    Round( num *(10 ^ sig))/(10^sig)
    return x 
 }
+
