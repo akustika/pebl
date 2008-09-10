@@ -425,3 +425,19 @@ Description:
 Subject classifies stimuli as words or nonwords.  Stimuli should be
 placed, one-per-line, in words.txt and nonwords.txt.
 
+
+
+-------------------------------------------------------------------------------
+*                   Spatial Cueing Task, Version 0.1
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.3
+
+Location: spatialcueing/spatialcueing.pbl
+
+Description:  
+
+Subject gets a directional cue that tells them where a stimulus is
+likely to appear.  It is usually valid, but not always. Valid cues
+tend to produce faster RTs than invalid cues.. First
+described by Posner (1980). 
+ 

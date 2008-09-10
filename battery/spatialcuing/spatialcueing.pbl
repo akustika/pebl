@@ -17,10 +17,14 @@ define Start(par)
 ## when the stimulus appears.  The cue is either left, right, or both, 
 ## and the left/right cues can be valid or invalid.
 ##
+## 
+##  Posner, M. I. (1980). Orienting of attention. Quarterly Journal 
+##     of Experimental Psychology, 32, 3-25.
+##  Posner, M. I., Snyder, C. R. R., & Davidson, B. J. (1980).
+##     Attention and the detection of signals. Journal of Experimental 
+##     Psychology: General, 109, 160-174.
 ##
 #####################################################################
-
-
 
     gFileOut <-FileOpenAppend("spatialcueing-" +gSubNum+ ".txt")
 
