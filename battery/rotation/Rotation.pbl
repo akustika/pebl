@@ -26,15 +26,24 @@ define Start(par)
   gVideoWidth <- 800
   gVideoHeight <- 600
 
-
+ 
   gSleepEasy <- 1
 
   win <- MakeWindow("grey")
+
+   inst <- "In this task you will need to decide whether or not the two objects you see are identical.  They will be rotated with respect to one another, but some will be the same, and others will be mirror images. Press any key to begin."
+   tb <-  EasyTextBox(inst,20,20,win,16, 500,200)
+  
+  Draw()
+  WaitForAnyKeyPress()
+  Hide(tb)
+  head <- EasyLabel("Press 'S' for same and 'D' for different",gVideoWidth/2,gVideoHeight/2+200,win,22)
+  Draw()
+  
   red <- MakeColor("red4")
   col <- MakeColor("grey") 
   col2 <- MakeColor("darkgreen")
   black <- MakeColor("black")
-  
 
   fileout <- FileOpenWrite("rotate-"+gSubNum+".txt")
   data <- []

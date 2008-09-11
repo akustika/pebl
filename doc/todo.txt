@@ -2,4 +2,4 @@ todo:
 
 * Fix waitforlistkeypress to enable specifying arbitrary keycodes.
 
-
+* Hide() (and presumably show) Crashes when parameter is text (not a widget).
