@@ -30,7 +30,7 @@ obsolete.
 Version 0.09
 
 
-Added RotoZooming code.  Now, all graphical objects (textboxes,
+* Added RotoZooming code.  Now, all graphical objects (textboxes,
 labels, imageboxes, but not currently simple shapes) have properties
 xzoom, yzoom, and rotation.  These objects can be stretched and
 rotated using these properties;
@@ -116,15 +116,16 @@ directly to a window:
    gSubNum <- GetSubNum(win)
   }
 
-* Added SummaryStats(<data>,<cond>), a statistic summarizer function,
-  which computes means/sds/medians of <data> by conditions.  
+* Added SummaryStats(<data>, <conditions>) , a statistic summarizer function, which computes
+  means/sds/medians of <data> by <conditions>.  Currently, <data> must be a single list
   
 * Added PrintList(<list>) and FilePrintList(<file>,<list>), which
   print out a list without the , and [] formatting.
 
 * Fixed some bugs in the windows launcher
 
-* Fixed a bunch of things in the test battery.
+* Fixed a bunch of things in the test battery.  This release officially contains Battery Version 0.3.
+
    -Much improved version of Berg's Cardsort. Fixed bugs, added proper
    computation of perseverations, etc.
    -Added a version of the Stroop task.
@@ -151,6 +152,7 @@ RotatePoints
 Polygon
 Bezier
 Rotozoom *not documented
+>>>>>>> 1.17
 
 -------------------------------------------------- 
 Version 0.08
