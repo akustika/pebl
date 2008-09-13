@@ -1,14 +1,14 @@
 VERSION 5.00
 Begin VB.Form Form1 
    Caption         =   "PEBL Launcher"
-   ClientHeight    =   8550
-   ClientLeft      =   0
-   ClientTop       =   420
-   ClientWidth     =   11895
+   ClientHeight    =   10065
+   ClientLeft      =   345
+   ClientTop       =   735
+   ClientWidth     =   12255
    Icon            =   "Form1.frx":0000
    LinkTopic       =   "Form1"
-   ScaleHeight     =   8550
-   ScaleWidth      =   11895
+   ScaleHeight     =   10065
+   ScaleWidth      =   12255
    Begin VB.ComboBox Combo3 
       Height          =   315
       ItemData        =   "Form1.frx":08CA
@@ -62,14 +62,14 @@ Begin VB.Form Form1
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   4335
+      Height          =   5775
       Index           =   0
       Left            =   240
       MultiLine       =   -1  'True
       ScrollBars      =   3  'Both
       TabIndex        =   11
       Top             =   4080
-      Width           =   11415
+      Width           =   11895
    End
    Begin VB.ComboBox Combo2 
       Height          =   315
@@ -116,18 +116,18 @@ Begin VB.Form Form1
       Left            =   1920
       TabIndex        =   4
       Top             =   120
-      Width           =   1695
+      Width           =   1335
    End
    Begin VB.DirListBox Dir1 
       Height          =   2790
-      Left            =   5040
+      Left            =   5520
       TabIndex        =   3
       Top             =   840
       Width           =   3255
    End
    Begin VB.DriveListBox Drive1 
       Height          =   315
-      Left            =   5040
+      Left            =   5520
       TabIndex        =   2
       Top             =   360
       Width           =   3255
@@ -135,7 +135,7 @@ Begin VB.Form Form1
    Begin VB.FileListBox File1 
       Archive         =   0   'False
       Height          =   3210
-      Left            =   8400
+      Left            =   8880
       MultiSelect     =   2  'Extended
       Pattern         =   "*.pbl"
       TabIndex        =   1
@@ -178,9 +178,9 @@ Begin VB.Form Form1
       Width           =   1215
    End
    Begin VB.Label Label2 
-      Caption         =   "Launcher for PEBL 0.08"
+      Caption         =   "Launcher for PEBL 0.09"
       Height          =   255
-      Left            =   9600
+      Left            =   10080
       TabIndex        =   10
       Top             =   0
       Width           =   2055
@@ -353,6 +353,8 @@ Private Sub Command4_Click()
  Command4.Font.Underline = True
 
 End Sub
+
+
 
 Private Sub Dir1_Change()
 File1.Path = Dir1.Path
