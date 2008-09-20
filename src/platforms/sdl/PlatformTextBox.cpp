@@ -249,7 +249,9 @@ void PlatformTextBox::FindBreaks()
     //First, find the height and width of the text when rendered with the font.
     int height = mFont->GetTextHeight(mText);
 
-    //Now, go through the text letter by letter and word by word until it won't fit on a line any longer.
+    //Now, go through the text letter by letter and word by word until
+    //it won't fit on a line any longer.
+
     unsigned int linestart = 0;     //The start of the current line
     unsigned int newlinestart = 0;  //The start of the NEXT line
     unsigned int linelength = 0;
@@ -265,13 +267,16 @@ void PlatformTextBox::FindBreaks()
     mBreaks.reserve(width / mWidth * 2);
 
     
-    while( (totalheight < (unsigned int) mHeight  && newlinestart < mText.size()))
+    while( (totalheight < (unsigned int) mHeight  &&
+             newlinestart < mText.size()))
         {
 
             linelength   = FindNextLineBreak(linestart);
 
-            //Increment the placekeepers.
-            newlinestart = linestart+ linelength; //This is where the next line will start.
+            //Increment the placekeepers:
+          //This is where the next line will start.
+
+            newlinestart = linestart+ linelength; 
             totalheight += height;
 
             mBreaks.push_back(newlinestart);
@@ -296,8 +301,9 @@ int PlatformTextBox::FindNextLineBreak(unsigned int curposition)
     while (curposition + sublength < mText.size()+1)
         {
 
-            //Test to see if curposition is a '10'.  If so, this is a line break.
-            if(mText[curposition + sublength] == 10 )
+            //Test to see if curposition is a '10' or a '0'.  If so, this is a line break.
+            if(mText[curposition + sublength] == 10  
+               || mText[curposition+sublength]==0)
                 {
 
                     tmpstring = mText.substr(curposition,sublength);
@@ -316,8 +322,6 @@ int PlatformTextBox::FindNextLineBreak(unsigned int curposition)
                 {  
                     //either of these are word breaks; potential line breaks.  
 
-
-                   
                     //Increment word separator holders
                     lastsep = sep;
                     sep = sublength ;
