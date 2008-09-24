@@ -441,3 +441,17 @@ likely to appear.  It is usually valid, but not always. Valid cues
 tend to produce faster RTs than invalid cues.. First
 described by Posner (1980). 
  
+
+
+-------------------------------------------------------------------------------
+*                   PEBL Dexterity task, Version 0.1
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.3
+
+Location: dexterity/dexterity.pbl
+
+Description:  
+Subject must move cursor to a visual target, under differing levels of
+noise.
+
+ 
