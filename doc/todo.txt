@@ -1,5 +1,5 @@
 todo:
 
-* Fix waitforlistkeypress to enable specifying arbitrary keycodes.
-
 * Hide() (and presumably show) Crashes when parameter is text (not a widget).
+
+* width and height parameters no longer working on lines (see shapes.pbl)

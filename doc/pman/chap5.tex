@@ -70,6 +70,7 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+Sum+ &\verb+<list>+ &Returns the sum of the numbers in \verb+<list>+\\ 
 \verb+Median+ &\verb+<list>+ &Returns the median of a set of values \\ 
 \verb+Quantile+ &\verb+<list> <num>+ &Returns the \verb+<num>+ quantile of the numbers in \verb+<list>+\\ 
+\verb+SummaryStats+ &\verb+<data>+,\verb+<cond>+ &Returns statistics (cond,N,median,mean,sd) computed on data for each distinct value of \verb+<cond>+\\ 
 \verb+SeedRNG+ &\verb+<num>+ &Seeds the random number generator with \verb+<num>+ to reproduce a random sequence\\ 
 \verb+RandomizeTimer+ & - & Seeds the RNG with the current time\\ 
 \verb+Random+ & - & Returns a random number between 0 and 1\\ 
@@ -82,7 +83,10 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+RandomBinomial+ &\verb+<p> <n>+&Returns a random number according to the Binomial distribution with probability \verb+<p>+ and repetitions \verb+<n>+\\ 
 \verb+RandomBernoulli+ &\verb+<p>+ &Returns 0 with probability \verb+(1-<p>)+ and 1 with probability \verb+<p>+\\ 
 
-
+\verb+ZoomPoints+
+&\verb+<[xs,yy]>+, \verb+<xzoom>+, \verb+<yzoom>+&Zooms a set of points in 2 directions\\
+\verb+ReflectPoints+&\verb+<[xs,yy]>+&Reflects points on vertical axis\\
+\verb+RotatePoints+ &\verb+<[xs,yy]>+,\verb+<angle>+&Rotates point <angle> degrees\\
 \addlinespace[0.2cm] 
 \midrule 
 \multicolumn{3}{c}{\textbf{File/NetworkStream Functions}}\\ 
@@ -90,6 +94,7 @@ contribute to the PEBL project by implementing the function yourself.
 
 \verb+Print+ &\verb+<value>+ &Prints \verb+<value>+ to \texttt{stdout}, appending a new line afterwards. \texttt{stdout} is the console (in Linux) or the file \texttt{stdout.txt} (in Windows)\\ 
 \verb+Print_+ &\verb+<value>+ &Prints \verb+<value>+ to stdout, without appending a newline afterwards\\ 
+\verb+PrintList+&\verb+<value>+ &Prints \verb+<list>+, getting rid of '[', ']' and ',' characters.\\ 
 \verb+Format+ &\verb+<object>+ \verb+<size>+ &Prints a number in size spaces by truncating or padding \\ 
 \verb+FileOpenRead+ &\verb+<filename>+ &Opens a filename, returning a stream to be used for reading information\\ 
 \verb+FileOpenWrite+ &\verb+<filename>+ &Opens a filename, returning a stream that can be used for writing information. Overwrites if file already exists\\ 
@@ -97,6 +102,7 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+FileClose+ &\verb+<filestream>+&Closes a filestream variable. Pass the variable name, not the filename\\ 
 \verb+FilePrint+ &\verb+<filestream>+ \verb+<value>+ &Like \verb+Print+, but to a file.\\ 
 \verb+FilePrint_+ &\verb+<filestream>+ \verb+<value>+ &Like \verb+Print_+, but to a file.\\ 
+\verb+FilePrintList+&\verb+<file>+\verb+<list>+ &Prints \verb+<list>+ to \verb+<file>+, getting rid of '[', ']' and ',' characters.\\ 
 \verb+FileReadCharacter+ &\verb+<filestream>+ &Reads and returns a single character from a filestream\\ 
 \verb+FileReadWord+ &\verb+<filestream>+&Reads and returns a `word' from a file; the next connected stream of characters not including a \texttt{' '} or a newline. Will not read newline characters\\ 
 \verb+FileReadLine+ &\verb+<filestream>+&Reads and returns a line from a file; all characters up until the next newline or the end of the file\\ 
@@ -126,11 +132,15 @@ ip-number-as-string to usable address \\
 \verb+MakeLabel+ &\verb+<text> <font>+&Creates a single line of text filled with \verb+<text>+ written in font \verb+<font>+\\ 
 \verb+MakeTextBox+ &\verb+<text> <font>+ &Creates a sized box filled \\ 
 &\verb+<width> <height>+& with \verb+<text>+ written in font \verb+<font>+ \\ 
+\verb+EasyLabel+ &\verb+<text>+ \verb+<x>+\verb+<y>+ \verb+<win>+\verb+<fontsize>+&Creates a single line of text and adds it to win at \verb+<x>+\verb+<y>+\\ 
+\verb+EasyTextBox+ &\verb+<text>+ \verb+<x>+ \verb+<y>+ \verb+<win>+ \verb+<fontsize>+ \verb+<width>+ \verb+<height>+&Creates a textbox and adds it to \verb+<win>+ at \verb+<x>+\verb+<y>+\\ 
 \verb+MakeColor+ &\verb+<colorname>+ & Creates a color based on a color name\\ 
 \verb+MakeColorRGB+ &\verb+<red>+ \verb+<green>+ \verb+<blue>+ & Creates a color based on red, green, and blue values\\ 
 \verb+MakeFont+ &\verb+<ttf_filename>+ \verb+<style>+ \verb+<size>+ \verb+<fgcolor>+ \verb+<bgcolor>+ \verb+<anti-aliased>+&Creates a font which can be used to make labels \\ 
-\verb+SetCursorPosition+ &\verb+<textbox>+ \verb+<position>+ & \verb+Move+ the editing cursor in a textbox\\ 
-\verb+GetCursorPosition+ &\verb+<textbox>+ &Gets the position of the editing cursor\\ 
+\verb+SetCursorPosition+\\
+   &\verb+<textbox>+ \verb+<position>+ & \verb+Move+ the editing cursor in a textbox\\ 
+\verb+GetCursorPosition+\\
+   &\verb+<textbox>+ &Gets the position of the editing cursor\\ 
 \verb+SetEditable+ &\verb+ <textbox>+ \verb+<status>+& Turns on or off the editing cursor\\ 
 \verb+GetText+ &\verb+<textobject>+ &Returns the text in a textbox or label\\ 
 \verb+GetInput+ &\verb+<textbox>+ \verb+<escape-key>+& Allows a textbox to be edited by user, returning its text when \verb+<escape-key>+ is pressed.\\ 
@@ -144,20 +154,25 @@ ip-number-as-string to usable address \\
 \verb+Show+ &\verb+<object>+ &Shows an object\\ 
 \verb+Hide+ &\verb+<object>+ &Hides an object\\ 
 \verb+ShowCursor+ &\verb+<object>+ &Hides or show mouse cursor.\\
+\verb+GetMouseCursorPosition+ & &Gets [x,y] position of mouse\\
+\verb+SetMouseCursorPosition+ &\verb+<x>+,\verb+<y>+ &Sets x,y position of mouse\\
+\verb+ShowCursor+ &\verb+<object>+ &Hides or show mouse cursor.\\
+
 \verb+Draw+ &\verb+<object>+ &Redraws a widget and its children\\ 
 \verb+DrawFor+ &\verb+<object>+ \verb+<cycles>+ &Draws for exactly \verb+<cycles>+ cycles, then returns\\ 
-\verb+Circle+ &\verb+<x>+ \verb+<y>+ \verb+<r>+  \verb+<color>+ \verb+<filled>+&Creates circle with 
-radius r centered at position x,y\\ 
-\verb+Ellipse+ &\verb+<x>+ \verb+<y>+ \verb+<rx>+ \verb+<ry>+
-\verb+<color>+ \verb+<filled>+&Creates 
-ellipse with radii rx and ry centered at position x,y\\ 
-\verb+Square+ &\verb+<x>+ \verb+<y>+ \verb+<size>+ \verb+<color>+ \verb+<filled>+&Creates square with 
-width size centered at position x,y\\ 
-\verb+Rectangle+ &\verb+<x>+ \verb+<y>+ \verb+<dx>+ \verb+<dy>+
-\verb+<color>+ \verb+<filled>+ &Creates 
-rectangle with size (dx, dy) centered at position x,y\\ 
-\verb+Line+ &\verb+<x>+ \verb+<y>+ \verb+<dx>+ \verb+<dy>+  \verb+<color>+ &Creates 
-line starting at x,y and ending at x+dx, y+dy\\ 
+\verb+Circle+ &\verb+<x>+ \verb+<y>+ \verb+<r>+  \verb+<color>+ \verb+<filled>+&Creates circle with radius r centered at position x,y\\ 
+\verb+Ellipse+ &\verb+<x>+ \verb+<y>+ \verb+<rx>+ \verb+<ry>+\verb+<color>+ \verb+<filled>+&Creates ellipse with radii rx and ry centered at position x,y\\ 
+\verb+Square+ &\verb+<x>+ \verb+<y>+ \verb+<size>+ \verb+<color>+ \verb+<filled>+&Creates square with width size centered at position x,y\\ 
+\verb+Rectangle+ &\verb+<x>+ \verb+<y>+ \verb+<dx>+ \verb+<dy>+\verb+<color>+ \verb+<filled>+ &Creates rectangle with size (dx, dy) centered at position x,y\\ 
+\verb+Line+ &\verb+<x>+ \verb+<y>+ \verb+<dx>+ \verb+<dy>+  \verb+<color>+ &Creates line starting at x,y and ending at x+dx, y+dy\\ 
+\verb+PrintProperties+ &\verb+<object>+ &Prints a list of all available properties of an object (for debugging)\\
+\verb+Polygon+ &\verb+<x>+ \verb+<y>+ \verb+<xpoints>+ \verb+<ypounts>+  \verb+<color>+\verb+<filled>+ &Creates polygon centered at x,y with relative points \verb+<xpoints>+,\verb+<ypoints>+\\ 
+\verb+Bezier+ &\verb+<x>+ \verb+<y>+ \verb+<xpoints>+ \verb+<ypounts>+ \verb+<steps>+ \verb+<color>+ &Creates bezier curve centered at x,y with relative points \verb+<xpoints>+,\verb+<ypoints>+\\ 
+\verb+BlockE+         &\verb+<x> <y> <h> <w>+ \verb+<thickness>+ \verb+<orientation>+ \verb+<color>+ &Creates a block E as a useable polygon which can be added to a window directly.\\ 
+\verb+Plus+           &\verb+<x> <y>+ \verb+<size> <w>+ \verb+<color>+ &Creates a block E as a useable polygon which can be added to a window directly.\\ 
+\verb+MakeStarPoints+ &\verb+<r_outer>+ \verb+<r_inner>+ \verb+<npeaks>+ &Creates points for a star, which can then be fed to Polygon\\ 
+\verb+MakeNGonPoints+ &\verb+<radius>+ \verb+<npeaks>+ &Creates points for a polygon, which can then be fed to Polygon\\ 
+
 
 
 \addlinespace[0.2cm] 
@@ -201,9 +216,8 @@ line starting at x,y and ending at x+dx, y+dy\\
 \verb+WaitForKeyRelease+ &\hspace{0.5cm} \verb+<key>+ & Waits until \verb+<key>+ is released\\ 
 \verb+WaitForListKeyPress+ &\hspace{0.5cm}\verb+<list-of-keys>+ &Waits until one of \verb+<list-of-keys>+ is pressed \\ 
 \verb+WaitForListKeyPressWithTimeout+&\\
-&\verb+<list-of-keyvals>+ \verb+<timeout>+ \verb+<type>+ & Waits for
-either a key to be pressed or a time to pass.\\
-
+&\verb+<list-of-keyvals>+ \verb+<timeout>+ \verb+<type>+ & Waits for either a key to be pressed or a time to pass.\\
+\verb+WaitForMouseButton+ & &Waits until any of the mouse buttons is pressed or released, and returns message indicating what happened \\ 
 \verb+RegisterEvent+ &\verb+<>+ & NOT IMPLEMENTED\\ 
 \verb+StartEventLoop+ &\verb+<>+ & NOT IMPLEMENTED\\ 
 \verb+ClearEventLoop+ &\verb+<>+ & NOT IMPLEMENTED\\ 
@@ -235,7 +249,8 @@ either a key to be pressed or a time to pass.\\
 \verb+Shuffle+ & \verb+<list>+ & Returns a new list with the items in list shuffled randomly. \\ 
 
 \verb+ShuffleRepeat+&\verb+<list>+ \verb+<times>+&Generates a list of {{{n}}} shuffled versions of \verb+<list>+\\
-\verb+ShuffleWithoutAdjacents+&\verb+<nested-list>+&Shuffle specifying items that should not appear adjacently\\
+\verb+ShuffleWithoutAdjacents+\\
+&\verb+<nested-list>+&Shuffle specifying items that should not appear adjacently\\
 \verb+Repeat+ & \verb+<item> <n>+& Repeats an item \verb+n+ times in a list\\ 
 \verb+RepeatList+ & \verb+<list> <n>+ & Makes a new list containing 
 the elements of \verb+<list>+ repeated \verb+<n>+ times\\ 
@@ -246,7 +261,8 @@ from \verb+<start>+ to \verb+<end>+, with \verb+<step>+-sized increments\\
 list, in the order they appear in the original list\\ 
 \verb+SampleN+ & \verb+<list>+ \verb+<n>+ & Returns a randomly-ordered sublist of \verb+<n>+ items from a list\\ 
 \verb+SampleNWithReplacement+ &\hspace{1.5cm} \verb+<list>+ \verb+<n>+& Returns a sublist of \verb+<n>+ items from a list \\ 
-\verb+DesignLatinSquare+ &\verb+<list1>+ \verb+<list2>+ & \\ 
+\verb+DesignLatinSquare+\\
+  &\verb+<list1>+ \verb+<list2>+ & \\ 
 \verb+LatinSquare+ &\verb+<list>+& A simple latin square constructor\\ 
 \verb+DesignGrecoLatinSquare+ &\hspace{1.5cm}\verb+<list1>+ &\verb+<list2>+ \verb+<list3>+ \\ 
 \verb+DesignBalancedSampling+ &\hspace{1.5cm}\verb+<list>+ & \verb+<number>+ \\ 

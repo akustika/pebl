@@ -77,8 +77,9 @@ directly to a window:
 * Added a script variable to control busy-waiting:
     set gSleepEasy <- 1 to put mini sleeps in the busy wait loop.
     This reduces the timing resolution by a little (tests show it
-    typically loses  1-2 ms in comparison to the busy-wait strategy.
-    This may make PEBL useable on some older systems. 
+    can lose  1-2 ms in comparison to the busy-wait strategy.
+    This may make PEBL useable on some older systems, and may make
+    worst-case timing better with a small sacrifice of typical-case.
     Furthermore, it can be changed during the script, so you don't peg
     cpu time while instructions are being read.
 
@@ -97,7 +98,7 @@ directly to a window:
 
 * Helper functions for easy creation of labels and textboxes:
 
- EasyLabel(text,x,y,win,size)
+ EasyLabel(text,x,y,win,fontsize)
  EasyTextBox(text,x,y,win,fontsize,width,height)
 
  No need to define fonts, colors, sizes, or even adding/moving to the
@@ -124,7 +125,11 @@ directly to a window:
 
 * Fixed some bugs in the windows launcher
 
+* Added a PrintProperties() function, mainly for debugging.  Use it to 
+display the properties an object has defined.
+
 * Fixed a bunch of things in the test battery.  This release officially contains Battery Version 0.3.
+
 
    -Much improved version of Berg's Cardsort. Fixed bugs, added proper
    computation of perseverations, etc.
@@ -132,27 +137,30 @@ directly to a window:
    -Added a mental rotation task
    -Added a mouse-driven version of Bechera's Gambling Task, and some
    other fixes.
+   -Added a 2-column addition task
+   -Added a manual dexterity task
 
-GetSubNum *
-PrintList
-FilePrintList
-SummaryStats
+Summary list of new functions:
+GetSubNum 
+PrintList 
+FilePrintList 
+SummaryStats 
 EasyLabel
 EasyTextBox
 WaitForMouseButton
-GetMouseCursorPosition
-SetMouseCursorPosition
-BlockE
-Plus
-MakeStarPoints
-MakeNGonPoints
+GetMouseCursorPosition 
+SetMouseCursorPosition 
+BlockE 
+Plus 
+MakeStarPoints 
+MakeNGonPoints 
 ZoomPoints
 ReflectPoints
 RotatePoints
 Polygon
 Bezier
-Rotozoom *not documented
->>>>>>> 1.17
+PrintProperties 
+
 
 -------------------------------------------------- 
 Version 0.08
