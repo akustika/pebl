@@ -1,24 +1,38 @@
-## The four-choice response time task, as described by Wilkinson &
-##   Houghton (1975)& the UTC test battery.
+#####################################################
+## PEBL  four-choice response time task, Version 0.1
+## as described by  Wilkinson & Houghton (1975),
+## and  test 7 of the  UTC test battery.
 ##
+## Version 0.1 (c) 2008 Shane T. Mueller
+## smueller@obereed.net
+##
+#####################################################
 
 define Start(p)
 {
 
   gSleepEasy <- 1
-  gUseSound <- 0
+  gUseSound <- 1
   gNumTrials <- 50
   isi <- 200
   gFileOut <- FileOpenWrite("fourchoice-"+gSubNum+".txt")
   gWin <- MakeWindow()
   gBeep <- LoadSound("tone.wav")
 
+  gRtype <- "2"
+  askKeyBoard <- 0
+
 
 ##Identify how we should do the responses.
  gKBInst <- " Keyboard"+CR(1)+"    F     J" + CR(1) + "     N V"
  gKPInst <- "  Keypad"+CR(1)+"     4  5" + CR(1) + "     1  2"
- gRtype <-  GetResponseKeys()
- 
+
+
+ if(askKeyBoard)
+  {
+    gRtype <-  GetResponseKeys()
+  }
+
  if(gRtype == "1")
   {
     gKeys <- ["F","J","N","V"]
@@ -32,19 +46,16 @@ define Start(p)
   Draw()
 
 
-  instructions <-  "In this test, A 'plus sign' (+) will be presented in one of the four quadrants of the computer screen. The object of the four-choice serial reaction time task is to press the key on the keyboard that corresponds to the quadrant with the plus sign. The plus sign remains in a given quadrant until one of the four keys is pressed, and then randomly appears in any one of the four quadrants, at which time you again press the corresponding key on the keyboard. This process continues for " +gNumtrials + " trials. Respond as quickly and accurately as possible. If none of the four keys is pressed within 2.5 seconds of the onset of the plus sign, a beep sounds every .1 seconds until a response is made.  Reaction times of all responses, correct and incorrect, are recorded.    
-
-Press any key to begin."
+  instructions <-  "In this test, A 'plus sign' (+) will be presented in one of the four quadrants of the computer screen. The object of the four-choice serial reaction time task is to press the key on the keyboard that corresponds to the quadrant with the plus sign. The plus sign remains in a given quadrant until one of the four keys is pressed, and then randomly appears in any one of the four quadrants, at which time you again press the corresponding key on the keyboard. This process continues for " +gNumtrials + " trials. Respond as quickly and accurately as possible. If none of the four keys is pressed within 2.5 seconds of the onset of the plus sign, a beep sounds every .1 seconds until a response is made.  Reaction times of all responses, correct and incorrect, are recorded."+CR(2)+"Use these keys to respond:" + CR(1) + gInst + CR(2) + "Press any key to begin."
 
   inst <- EasyTextBox(instructions, 50,50,gWin, 16,550,400)
   Draw()
   WaitForAnyKeyPress()
   RemoveObject(inst,gWin)
-  Draw()
-
-  Wait(1000)
   bg <-  DrawBG()
 
+  Draw()
+  Wait(1000)
   dat <- []
   gSleepEasy <- 0
   trial <- 1
