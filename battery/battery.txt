@@ -454,4 +454,67 @@ Description:
 Subject must move cursor to a visual target, under differing levels of
 noise.
 
- 
+
+-------------------------------------------------------------------------------
+*                        Two-column addition, Version 0.1
+-------------------------------------------------------------------------------
+Location: twocoladd/twocol.pbl
+
+Description:  Two-column addition task: add three two-digit numbers.  
+
+
+Options:
+Instrumentation variables at the top available to control:
+ The number of practice trials (10) 
+ total trials (45)
+ isi (5 ms)
+ time limit per trial (15 sec)
+
+Results:
+Data is saved to file twocol-<gsubnum>.txt.  Columns are:
+sub cond trial num1 num2 num3 sum resp corr toolong clicks starttime firstclick 
+completetime
+
+
+-------------------------------------------------------------------------------
+*            Four-choice reaction time task Version 0.1
+-------------------------------------------------------------------------------
+Location: fourchoice/fourchoice.pbl
+
+Description: Simple 4-choice reaction task--respond using keyboard to
+which quadrant a plus sign appears in.  Common task, as described by
+Wilkinson & Houghton (1975).
+
+
+Options:
+Instrumentation variables at the top available to control:
+ whether to use sound  (gUseSound)
+ total trials (50)
+ isi (200 ms)
+ time limit per trial (2500 ms)
+
+Warning tone can be changed by replacing tone.wav with another .wav file.
+ In addition, after the script is started, one selects whether to use
+ the keypad or specific keys on the keyboard.  This can be hardcoded
+
+Results:
+Data is saved to file fourchoice-<gsubnum>.txt.  Columns are:
+
+subnum      set by launcher
+resptype    which keys are used
+isi         time between trials
+trial       trial number
+sound       whether sound beeps kicked in after 2500 ms
+resp        key response
+quad        quadrant of target
+leftright   target was left/right side
+updown      target was up/down 
+respquad    response quadrant
+corr        whether it was correct
+lapse       if sound is used, whether time was > 2500 ms
+rt          response time
+
+
+In addition, a summary of the performance is displayed at the end of
+the task and saved in fourchoice-<gsubnum>-report.txt
+
