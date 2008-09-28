@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLMATH.cpp
 //    Purpose:    Built-in math functions for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2006 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -1017,7 +1017,7 @@ Variant  PEBLMath::RandomExponential(Variant v)
 /// value which is a sample from the vanilla logistic distribution f(x) = exp(x)/(1+exp(x))
 Variant  PEBLMath::RandomLogistic(Variant v)
 {
-   //v should have no parameters
+    //v should have no parameters
     
     double p = PEBLUtility::RandomUniform();
     

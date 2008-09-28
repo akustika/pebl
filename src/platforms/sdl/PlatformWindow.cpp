@@ -46,9 +46,9 @@ PlatformWindow::PlatformWindow()
 
 {
     mCDT=CDT_WINDOW;
+    //    InitializeProperty("COLOR",Variant("grey"));//dummy property setting
     PWidget::SetBackgroundColor(PColor(200,200,200,255));
 }
-
 
 ///Standard Destructor
 PlatformWindow::~PlatformWindow()

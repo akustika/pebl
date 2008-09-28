@@ -25,6 +25,7 @@
 //    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ////////////////////////////////////////////////////////////////////////////////
 #include "PWidget.h"
+#include "../base/PComplexData.h"
 #include <list>
 #include <iostream>
 
@@ -104,6 +105,10 @@ bool PWidget::SetProperty(std::string name, Variant v)
     else if (name == "ROTATION") SetRotation((long double)v);
     else if (name == "WIDTH") SetWidth((int)v);
     else if (name == "HEIGHT") SetHeight((int)v);
+    else if (name == "BGCOLOR") 
+        {
+            SetBackgroundColor(*((PColor*)(v.GetComplexData())));
+        }
     else if (name == "VISIBLE")
         {
             if(v.GetInteger())
@@ -145,6 +150,7 @@ Variant  PWidget::GetProperty(std::string name)const
        name == "HEIGHT" ||
        name == "ZOOMX" ||
        name == "ZOOMY" ||
+       name == "BGCOLOR" ||
        name == "ROTATION")
         return OVE_VALID;
     else
@@ -210,7 +216,11 @@ std::ostream & PWidget::SendToStream(std::ostream& out) const
 
 void PWidget::SetBackgroundColor(PColor color)
 {
-    mBackgroundColor = color;
+    mBackgroundColor = color;  
+    counted_ptr<PEBLObjectBase> pob = counted_ptr<PEBLObjectBase>(&mBackgroundColor);
+    PComplexData * pcd = new PComplexData(pob);
+    Variant col = Variant(pcd);
+    InitializeProperty("BGCOLOR", col);
 }
 
 

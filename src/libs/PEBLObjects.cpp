@@ -488,7 +488,7 @@ Variant PEBLObjects::PrintProperties(Variant v)
     //v[1] should have the  widget
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); plist->PopFront();
-    PError::AssertType(v1, PEAT_WIDGET, "Argument error in function [Show(<widget>)]: "); 
+    PError::AssertType(v1, PEAT_WIDGET, "Argument error in function [PrintProperties(<widget>)]: "); 
 
     PlatformWidget * widget = dynamic_cast<PlatformWidget*>(v1.GetComplexData()->GetObject().get());
     

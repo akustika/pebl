@@ -3,7 +3,7 @@
 //    Name:       src/objects/PWindow.cpp
 //    Purpose:    Contains generic specification for a main window class.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -25,4 +25,50 @@
 //    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ////////////////////////////////////////////////////////////////////////////////
 #include "PWindow.h"
+#include "PWidget.h"
+
+#include <string>
+#include <iostream>
+using std::cout;
+using std::endl;
+
+
+bool PWindow::SetProperty(std::string name, Variant v)
+{
+
+
+    if(PWidget::SetProperty(name,v))
+        {
+            return true;
+        }
+    else 
+        {
+            return PWidget::SetProperty(name,v);
+        }
+}
+
+
+Variant PWindow::GetProperty(std::string name)const
+{
+    return PEBLObjectBase::GetProperty(name);
+}
+
+
+ObjectValidationError PWindow::ValidateProperty(std::string name, Variant v)const
+{
+    return ValidateProperty(name);
+}
+
+ObjectValidationError PWindow::ValidateProperty(std::string name)const
+{
+ 
+   ObjectValidationError ove = PWidget::ValidateProperty(name);
+    
+    if(ove == OVE_VALID)
+        return ove;
+
+    else
+        return OVE_INVALID_PROPERTY_NAME;
+
+}
 

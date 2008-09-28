@@ -48,6 +48,12 @@ public:
     virtual bool Draw(){return true;}
     virtual long int DrawFor(unsigned int cycles){return true;}
     virtual std::string ObjectName() const{return "PWindow";};
+
+
+    virtual bool SetProperty(std::string, Variant v);
+    virtual Variant GetProperty(std::string)const;
+    virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
+    virtual ObjectValidationError ValidateProperty(std::string)const;
     
 protected:  
 
