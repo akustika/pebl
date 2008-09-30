@@ -342,6 +342,24 @@ define SDTBeta(hr,far)
 
 define SummaryStats(data, cond)
 {
+	##Ensure that all arguments are actually lists
+	if(not IsList(data))
+	{
+	SignalFatalError("First argument of function [SummaryStats(<data>,<cond>)] is not a list")
+	}
+
+  	##Ensure that all arguments are actually lists
+	if(not IsList(cond))
+	{
+	SignalFatalError("Second argument of function [SummaryStats(<data>,<cond>)] is not a list")
+	}
+  	##Ensure that both lists are the same length
+	if(not Length(data) == Length(cond))
+	{
+    	SignalFatalError("In function [SummaryStats(<data>,<cond>)], <data> and <cond> must be of the same length.")
+	}
+  
+
    
   agglom <- ListBy(data,cond)
 

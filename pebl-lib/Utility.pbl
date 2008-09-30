@@ -328,7 +328,7 @@ define ListToString(list)
 {
   if(not IsList(list))
    {
-     SignalFatalError("Object" + list + "is not a list in ListToString")
+     SignalFatalError("Object [" + list + "] is not a list in ListToString")
    }
    x <- ""
    loop(i,list)
@@ -368,21 +368,36 @@ define Format(val, size)
 
 define PrintList(list)
 {
+  if(not IsList(list))
+   {
+     SignalFatalError("Object" + list + "is not a list in PrintList")
+   }
+  tmp <- ""
   loop(i,list)
   {
-    Print_(i+" ")
+    tmp <- tmp + Print_(i+" ")
   }
-  Print("")
+    tmp <- tmp + Print("")
+  return tmp
 }
 
 
 define FilePrintList(file,list)
 {
+
+  if(not IsList(list))
+   {
+     SignalFatalError("Object" + list + "is not a list in FilePrintList")
+   }
+
+  tmp <- ""
   loop(i,list)
   {
-    FilePrint_(file,i+" ")
+    tmp <- tmp + FilePrint_(file,i+" ")
   }
-  FilePrint(file,"")
+   tmp <- tmp + FilePrint(file,"")
+
+   return tmp
 }
 
 
@@ -405,7 +420,7 @@ define ConvertIPString(ip)
 }
 
 
-## This replaces all instances of a character in a string with another character.
+## This replaces all instances of a character in a string with another character
 ## Useful for saving participant input that might have spaces.
 
 define ReplaceChar(word,char, char2)
@@ -455,7 +470,20 @@ define EasyLabel(text,x,y,win,fontsize)
 
   ## I should  get the background color from the window, but this is
   ##  not available yet.
-  font <-  MakeFont("Vera.ttf",0,fontsize,MakeColor("black"),MakeColor("grey"),1)
+  bgcol <- win.BGCOLOR
+
+  ##HSV val is the max of RGB
+  val <- Max([bgcol.RED, bgcol.GREEN, bgcol.BLUE])
+
+  ##Make it white if the background is too dark.
+  if(val <=	100)
+    { 
+      fgcol <- MakeColor("white")
+    } else {
+      fgcol <- MakeColor("black")
+    }
+ 
+  font <-  MakeFont("Vera.ttf",0,fontsize,fgcol,bgcol,1)
   lab <- MakeLabel(text,font)
   AddObject(lab,win)
   Move(lab,x,y)
@@ -490,3 +518,5 @@ define GetSubNum(win)
    RemoveObject(box,gWin)
    return subnum
 }
+
+
