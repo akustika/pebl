@@ -129,6 +129,7 @@ PLine::~PLine()
 
 void PLine::SetSize(int dx, int dy)
 {
+
     mDX = dx;
     mDY = dy;
     PEBLObjectBase::SetProperty("WIDTH",dx);

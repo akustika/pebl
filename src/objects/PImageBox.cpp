@@ -106,7 +106,17 @@ ObjectValidationError PImageBox::ValidateProperty(std::string name, Variant v)co
 ObjectValidationError PImageBox::ValidateProperty(std::string name)const
 {
     //All valid properties are also valid Widget properties
-    return PWidget::ValidateProperty(name);
+    ObjectValidationError ove = PWidget::ValidateProperty(name);
+    if(ove == OVE_VALID)
+        {
+            return ove;
+        }
+    else if(name =="WIDTH" ||
+            name == "HEIGHT")
+        return OVE_VALID;
+    else
+        
+        return OVE_INVALID_PROPERTY_NAME;
 }
 
 

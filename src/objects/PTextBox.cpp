@@ -93,7 +93,7 @@ bool PTextBox::SetProperty(std::string name, Variant v)
     {
         // If we set it at higher level, don't worry.
     }
-    else if (name == "WIDTH") SetWidth(v);
+    else if (name =="WIDTH") SetWidth(v);
     else if(name == "HEIGHT") SetHeight(v);
     else if(name == "TEXT"){
         SetText(v.GetString());

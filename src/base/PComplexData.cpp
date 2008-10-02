@@ -1,9 +1,9 @@
 //* -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*- */
-/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 //    Name:       src/base/PComplexData.h
-//    Purpose:    Contains base class for complex data, held by the Variant Class
+//    Purpose:   Contains base class for complex data, held by the Variant Class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003--2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -150,6 +150,7 @@ std::string PComplexData::GetTypeName() const
 
 void PComplexData::SetProperty( std::string prop, Variant v )
 {
+
     mPEBLObject->SetProperty(prop,v);
 }
 

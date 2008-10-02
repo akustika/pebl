@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformDrawObject.cpp
 //    Purpose:    Platform-specific classes drawing things.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2005-2006 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2005-2008 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -141,7 +141,7 @@ PlatformLine::~PlatformLine()
 
 std::ostream & PlatformLine::SendToStream(std::ostream& out) const
 {
-    out << "<A line:"<< mX << ", " << mY << ":" << mDX+mX << ", " << mDY+mY << std::endl;
+    out << "<A line:"<< mX << ", " << mY << "| w: " << mDX+mX << ", h:" << mDY+mY << std::endl;
     return out;
 }
 

@@ -26,6 +26,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "PWidget.h"
 #include "../base/PComplexData.h"
+#include "../utility/PError.h"
 #include <list>
 #include <iostream>
 
@@ -73,8 +74,8 @@ PWidget::PWidget(int x, int y, int width, int height, bool visible):
     
     InitializeProperty("X",Variant(mX));
     InitializeProperty("Y",Variant(mY));
-    InitializeProperty("WIDTH",Variant(mWidth));
-    InitializeProperty("HEIGHT",Variant(mHeight));
+    //    InitializeProperty("WIDTH",Variant(mWidth));
+    //    InitializeProperty("HEIGHT",Variant(mHeight));
     InitializeProperty("VISIBLE",Variant(mIsVisible));
     InitializeProperty("ZOOMX",Variant(mZoomX));
     InitializeProperty("ZOOMY",Variant(mZoomY));
@@ -96,32 +97,38 @@ bool PWidget::SetProperty(std::string name, Variant v)
 {
 
 
-    //Height and width are not universally settable.
-
-    if (name == "X") SetPosition(v,mY);
-    else if (name == "Y") SetPosition(mX,v);
-    else if (name == "ZOOMX") SetZoomX((long double)v);
-    else if (name == "ZOOMY") SetZoomY((long double)v);
-    else if (name == "ROTATION") SetRotation((long double)v);
-    else if (name == "WIDTH") SetWidth((int)v);
-    else if (name == "HEIGHT") SetHeight((int)v);
-    else if (name == "BGCOLOR") 
+    ObjectValidationError err = ValidateProperty(name,v);
+    if(err == OVE_SUCCESS)
         {
-            SetBackgroundColor(*((PColor*)(v.GetComplexData())));
-        }
-    else if (name == "VISIBLE")
+            
+            if (name == "X") SetPosition(v,mY);
+            else if (name == "Y") SetPosition(mX,v);
+            else if (name == "ZOOMX") SetZoomX((long double)v);
+            else if (name == "ZOOMY") SetZoomY((long double)v);
+            else if (name == "ROTATION") SetRotation((long double)v);
+            //Height and width are not universally settable: 
+            //    else if (name == "WIDTH") SetWidth((int)v);
+            //    else if (name == "HEIGHT") SetHeight((int)v);
+            else if (name == "BGCOLOR") 
+                {
+                    SetBackgroundColor(*((PColor*)(v.GetComplexData())));
+                }
+            else if (name == "VISIBLE")
+                {
+                    if(v.GetInteger())
+                        Show();
+                    else 
+                        Hide();
+                }
+        
+            else return false;
+        } 
+    else
         {
-            if(v.GetInteger())
-                Show();
-            else 
-                Hide();
+            PError::SignalFatalError("Failing to set invalid property: ["+ name +"]" );
+            return false;
         }
-    
-    else return false;
-    
-    return true;
 }
-
 
 
 Variant  PWidget::GetProperty(std::string name)const
@@ -133,7 +140,7 @@ Variant  PWidget::GetProperty(std::string name)const
 
  ObjectValidationError PWidget::ValidateProperty(std::string name, Variant v)const
 {
-    return OVE_VALID;
+    return ValidateProperty(name);
 }
 
 
@@ -146,8 +153,8 @@ Variant  PWidget::GetProperty(std::string name)const
     if(name == "X" ||
        name == "Y" ||
        name == "VISIBLE" ||
-       name == "WIDTH" ||
-       name == "HEIGHT" ||
+       //       name == "WIDTH" ||
+       //       name == "HEIGHT" ||
        name == "ZOOMX" ||
        name == "ZOOMY" ||
        name == "BGCOLOR" ||

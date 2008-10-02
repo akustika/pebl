@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformLabel.cpp
 //    Purpose:    Contains SDL-specific visual representation of a word
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2008 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -59,6 +59,8 @@ PlatformLabel::PlatformLabel(const std::string & text, counted_ptr<PEBLObjectBas
     counted_ptr<PEBLObjectBase> myFont = counted_ptr<PEBLObjectBase>(mFontObject);
     PComplexData *  pcd = new PComplexData(myFont);
     InitializeProperty("FONT",Variant(pcd));
+    InitializeProperty("WIDTH",Variant(0));
+    InitializeProperty("HEIGHT",Variant(0));
 
 
     Draw();
@@ -79,7 +81,9 @@ PlatformLabel::PlatformLabel(PlatformLabel & label):
     counted_ptr<PEBLObjectBase> myFont = counted_ptr<PEBLObjectBase>(mFontObject);
     PComplexData *  pcd = new PComplexData(myFont);
     InitializeProperty("FONT",Variant(pcd));
-
+    InitializeProperty("WIDTH",Variant(label.GetHeight()));
+    InitializeProperty("HEIGHT",Variant(label.GetWidth()));
+    
     Draw();
 }
 
@@ -118,6 +122,9 @@ bool  PlatformLabel::RenderText()
         {
             mWidth  = mSurface->w; 
             mHeight = mSurface->h;
+
+            InitializeProperty("HEIGHT",mHeight);
+            InitializeProperty("WIDTH",mWidth);
 
             return true;
         }
@@ -185,10 +192,9 @@ bool PlatformLabel::Draw()
             //Reposition.  This just recalculates so things are centered
             //correctly; labels are positioned based on their center.
             SetPosition(mX, mY);
-            SetProperty("HEIGHT",mHeight);
-            SetProperty("WIDTH",mWidth);
-                
-            mTextChanged = false;
+            InitializeProperty("HEIGHT",mHeight);
+            InitializeProperty("WIDTH",mWidth);
+            //   mTextChanged = false;
         }
     return  PlatformWidget::Draw();
 

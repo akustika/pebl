@@ -218,7 +218,7 @@ int PEBLInterpret( int argc, char *argv[] )
 
     PList *  pList =  new PList();
     PList *  arglist = new PList();
-    std::string displaySize="640x480";
+    std::string displaySize="800x600";
     std::string depth = "16";
     enum PEBLVideoMode displayMode;
     enum PEBLVideoDepth displayDepth;

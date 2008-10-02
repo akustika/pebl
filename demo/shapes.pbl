@@ -5,6 +5,8 @@
   gVideoWidth <- 800
   gVideoHeight <- 600
 
+  gSleepEasy <- 1
+
   win <- MakeWindow("grey")
   red <- MakeColor("red4")
   col <- MakeColor("grey") 
@@ -77,30 +79,53 @@
   ##################################
 
   shape <- Square(200,200, 50, col2,1)
-  Print(shape)
+
   AddObject(shape,win)
   lab.text <- "FILLED SQUARE"
   Draw()
+  Print(shape)
+  PrintProperties(shape)
   WaitForAnyKeyPress()
 
   lab.text <- "OPEN SQUARE"
   shape.filled <- 0
   Draw() 
+  Print(shape)
+  PrintProperties(shape)
   WaitForAnyKeyPress()
 
-  lab.TEXT <- "Growing square"
-  shape.DX <- 55
-  Print(shape)
+  lab.TEXT <- "Setting height"
+  shape.height <- 55
   Draw()
+  Wait(100)
+
+
+  shape.width <- 56
+  Draw()
+  Wait(100)
+
+
+  shape.size <- 58
+  Draw()
+  Wait(100)
+
+  Print(shape)
+  PrintProperties(shape)
   WaitForAnyKeyPress()	 
 
-  shape.dy <- 60
-  Print(shape)
+
+  ##dy doesn't work for a square
+  lab.TEXT <- "Setting width"
+  shape.width <- 60
   Draw()
+  Print(shape)
+  PrintProperties(shape)
   WaitForAnyKeyPress()	 
  
+  lab.TEXT <- "Setting Size"
   shape.size <- 65
-  Print(shape)
+  Print(shape) 
+  PrintProperties(shape)
   Draw()
   WaitForAnyKeyPress()	 
   RemoveObject(shape,win)
@@ -113,21 +138,26 @@
   Print(shape)
   AddObject(shape,win)
   lab.text <- "FILLED RECTANGLE"
+
+
   Draw()
   WaitForAnyKeyPress()
 
   lab.text <- "OPEN RECTANGLE"
-  shape.filled <- 0
+  shape.filled <- 0 
+  Print(shape)
   Draw() 
   WaitForAnyKeyPress()
 
   lab.text <- "Taller RECTANGLE"
-  shape.dy <- 100
-  Draw() 
+  shape.height <- 100
+  Print(shape) 
+ Draw() 
   WaitForAnyKeyPress()
 
   lab.text <- "square RECTANGLE"
-  shape.dx <- 100
+  shape.width <- 100
+  Print(shape)
   Draw() 
   WaitForAnyKeyPress()
 
@@ -152,21 +182,24 @@
   circ <- Circle(200, 200, 50, red,0)
   AddObject(circ,win)
 
-  lab.txt <- "Rotating Line"
+  lab.text <- "Rotating Line"
   
   r <- 50
   i <- 0
 
-  while(i <= 360)x
+  while(i <= 360)
   {
 
     rad <- i /360*2*3.14159
     shape.width <- r * Cos(rad)
     shape.height <- r * Sin(rad)
     lab.text <- "Rotating Line " + (i) + " degrees."
+    Print(shape)
+    PrintProperties(shape)    
+    Wait(10)
     Draw()
 
-    PrintProperties(shape)
+
     i <- i + 10
   }
 

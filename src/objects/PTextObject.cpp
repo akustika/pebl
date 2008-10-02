@@ -110,7 +110,9 @@ ObjectValidationError PTextObject::ValidateProperty(std::string name)const
     if(ove == OVE_VALID)
         return ove;
 
-    else if(name == "TEXT")
+    else if(name == "TEXT" || 
+            name == "WIDTH" ||
+            name == "HEIGHT" )
 
         return OVE_VALID;
     else

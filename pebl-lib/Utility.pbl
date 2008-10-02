@@ -468,7 +468,6 @@ define Lookup(key, keylist, database)
 define EasyLabel(text,x,y,parent,fontsize)
 {
 
-
   if(not IsWindow(parent))
   { 
     SignalFatalError("EasyLabel[text,x,y,parent,fonsize] must be added to a window, not [" + parent+"]")
@@ -478,7 +477,7 @@ define EasyLabel(text,x,y,parent,fontsize)
 
   ##HSV val is the max of RGB
   val <- Max([bgcol.RED, bgcol.GREEN, bgcol.BLUE])
-  Print(val)
+
   ##Make it white if the background is too dark.
   if(val <=	100)
     { 

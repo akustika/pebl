@@ -204,7 +204,10 @@ bool Evaluator::Evaluate(const OpNode * node)
                                 Variant v3 = mLocalVariableMap.RetrieveValue(v1.GetVariableBaseName());
                                 
                                 PComplexData * pcd = v3.GetComplexData();
-                                if(pcd != NULL)  pcd->SetProperty(property, v2);
+                                if(pcd != NULL)  
+                                    {
+                                        pcd->SetProperty(property, v2);
+                                    }
                             }
 
 
@@ -222,7 +225,10 @@ bool Evaluator::Evaluate(const OpNode * node)
                                 //and set its property.
                                 Variant v3 = gGlobalVariableMap.RetrieveValue(v1.GetVariableBaseName());
                                 PComplexData * pcd = v3.GetComplexData();
-                                if(pcd  != NULL) pcd->SetProperty(property, v2);
+                                if(pcd  != NULL)
+                                    {
+                                        pcd->SetProperty(property, v2);
+                                    }
                             }
 
                     }
