@@ -81,7 +81,7 @@ define Start(p)
   }
 
   x <- PrintList(data)
-  tb.text <- "Resulting keypresses on each trial:" + CR(3)+ x+ CR(2)". Press X to exit"
+  tb.text <- "Resulting keypresses on each trial:" + CR(3)+ x+ CR(2)+". Press X to exit"
   Show(tb)
   Draw()
   WaitForKeyPress("X")

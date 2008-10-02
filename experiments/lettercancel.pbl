@@ -90,8 +90,10 @@ inst <- "In this demo, your goal is to 'cancel out' all of the "+ tl  +"'s on th
           {
              if(Inside(pos,i))
              {
+
   			   # Hide(Nth(i,2))
                  targ <- Nth(i,2)
+
                  targ.font <- gFoundfont
                  hits  <- hits + 1
                  #The target position needs to be removed now.
