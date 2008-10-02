@@ -79,6 +79,7 @@ Loader::~Loader()
 void Loader::FindFunctions(const PNode * node)
 {
 
+
     //First, determine if this is a data node; if it is,
     //see if it is a function name.
     if(node->GetType() == PEBL_DATA_NODE) 
@@ -93,9 +94,11 @@ void Loader::FindFunctions(const PNode * node)
                     //This cast should be done in a smarter way:
                     Variant v = ((DataNode*)(node))->GetValue();
 
+
                     //Now, convert the function name in v to upper case
                     //It is really just a string.
                     std::string ucasename = PEBLUtility::ToUpper(v);
+
 
                     Variant v2 = Variant(ucasename.c_str(), P_DATA_FUNCTION);
 
@@ -114,14 +117,20 @@ void Loader::FindFunctions(const PNode * node)
             //Otherwise, it is an OpNode.  Recurse on the left and right nodes.
    
             PNode * node1 = ((OpNode*)node)->GetLeft();
-            if(node1)  FindFunctions(node1);
-            
+
+
+            if(node1) 
+                {
+                    FindFunctions(node1);
+                }
+
             node1 = ((OpNode*)node)->GetRight();
-            if(node1)  FindFunctions(node1);
-            
+            if(node1)
+                {
+                    FindFunctions(node1);
+                }
         }
 }
-
 
 
 /// This marches through the topmost nodes of the PNode tree and 
@@ -144,6 +153,7 @@ void Loader::LoadUserFunctions(OpNode * node)
     node1 = (OpNode*)(node->GetLeft());
     if(node1->GetOp() == PEBL_FUNCTION)
         {
+
             Evaluator::mFunctionMap.AddFunction( ((DataNode*)(((OpNode*)node1)->GetLeft()))->GetValue(),
                                                  (OpNode*)node1->GetRight());      
         }

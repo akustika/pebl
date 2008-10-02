@@ -102,7 +102,7 @@ public:
 
         while(i != mNodes.end())
             {
-                out << indent << "Called from line ["<<(*i)->GetLineNumber() << "] of file [" << (*i)->GetFilename() << "]\n";
+                out << indent << "Called from function ["<< (*i)->GetFunctionName()<< "] on line ["<<(*i)->GetLineNumber() << "] of file [" << (*i)->GetFilename() << "]\n";
                 indent = indent + "   ";
                 i++;
             }

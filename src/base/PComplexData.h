@@ -3,7 +3,7 @@
 //    Name:       src/base/PComplexData.h
 //    Purpose:    Contains definition for the complex data type, held by the Variant Class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -152,7 +152,6 @@ public:
     bool IsFileStream() const;
     bool IsAudioOut() const;
     bool IsNetworkConnection() const;
-
     bool IsDrawObject() const;
 
 

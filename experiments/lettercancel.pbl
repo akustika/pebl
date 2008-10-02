@@ -12,15 +12,10 @@
 
 
 
-
-
-
-
-
-
-
 define Start(p)
 {
+
+  gSleepEasy <- 1
 
   gWin <- MakeWindow()
   gstimFont <- MakeFont("VeraMono.ttf",1,24,MakeColor("black"),MakeColor("grey90"),1)

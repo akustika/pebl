@@ -465,16 +465,20 @@ define Lookup(key, keylist, database)
 
 ## makes a label with a standard font, black on grey, in specified location.
 ##
-define EasyLabel(text,x,y,win,fontsize)
+define EasyLabel(text,x,y,parent,fontsize)
 {
 
-  ## I should  get the background color from the window, but this is
-  ##  not available yet.
-  bgcol <- win.BGCOLOR
+
+  if(not IsWindow(parent))
+  { 
+    SignalFatalError("EasyLabel[text,x,y,parent,fonsize] must be added to a window, not [" + parent+"]")
+  }
+
+  bgcol <- parent.BGCOLOR
 
   ##HSV val is the max of RGB
   val <- Max([bgcol.RED, bgcol.GREEN, bgcol.BLUE])
-
+  Print(val)
   ##Make it white if the background is too dark.
   if(val <=	100)
     { 
@@ -485,7 +489,7 @@ define EasyLabel(text,x,y,win,fontsize)
  
   font <-  MakeFont("Vera.ttf",0,fontsize,fgcol,bgcol,1)
   lab <- MakeLabel(text,font)
-  AddObject(lab,win)
+  AddObject(lab,parent)
   Move(lab,x,y)
 
   return lab

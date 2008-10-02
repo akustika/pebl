@@ -3,7 +3,7 @@
 //    Name:       src/base/PNode.cpp
 //    Purpose:    Primary data structure for code
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -86,6 +86,10 @@ void PNode::SetFileInfo(const string & filename, int linenumber)
 {
     mSourceFile = filename; 
     mLineNumber = linenumber;
+}
+void PNode::SetFunctionName(const std::string & funcname)
+{
+    //    mFunctionName = funcname;
 }
 
 void PNode::DestroyChildren()

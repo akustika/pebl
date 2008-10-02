@@ -455,9 +455,13 @@ Subject must move cursor to a visual target, under differing levels of
 noise.
 
 
+
+
 -------------------------------------------------------------------------------
 *                        Two-column addition, Version 0.1
 -------------------------------------------------------------------------------
+New for PEBL Battery 0.3
+
 Location: twocoladd/twocol.pbl
 
 Description:  Two-column addition task: add three two-digit numbers.  
@@ -479,6 +483,7 @@ completetime
 -------------------------------------------------------------------------------
 *            Four-choice reaction time task Version 0.1
 -------------------------------------------------------------------------------
+New for PEBL Battery 0.3
 Location: fourchoice/fourchoice.pbl
 
 Description: Simple 4-choice reaction task--respond using keyboard to
@@ -517,4 +522,34 @@ rt          response time
 
 In addition, a summary of the performance is displayed at the end of
 the task and saved in fourchoice-<gsubnum>-report.txt
+
+
+-------------------------------------------------------------------------------
+*           PTracker, a compensatory tracker Version 0.1
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.3
+Location: ptracker/ptracker.pbl
+
+Description: 
+ A work-alike for 'CompTrack' by Makeig & Jolley (1995),
+ a compensatory tracking task.
+
+
+See http://sccn.ucsd.edu/~scott
+    http://sccn.ucsd.edu/~scott/pdf/COMPTRACK.pdf
+   http://oai.dtic.mil/oai/oai?&verb=getRecord&metadataPrefix=html&identifier=ADA311977
+
+The goal of the task is to use a mouse/trackball to keep a
+randomly-drifting ball 'on target' for some time period.
+Originally used to investigate vigilance, as the cursor must be
+continuously adjusted to keep it 'in the bullseye'.
+Originally used with a trackball.  A mouse works fine, but the
+little 'pencil eraser' device on most laptops is great for it too.
+
+Works basically like the task described in the above documents, although
+some of the constants have been changed for better performance (or
+because they were described incorrectly in the pdf.
+
+The current position of the ball, as well as the input force vector,
+is written to a file on each cycle: ptracker-<gsubnum>.dat
 

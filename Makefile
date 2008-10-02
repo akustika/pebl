@@ -37,8 +37,8 @@ C   = gcc
 CXX = g++ 
 DEBUGFLAGS = -lefence -DPEBL_DEBUG -g
 
-CFLAGS =   -O3 -std=c99 -DPREFIX=$(PREFIX) 
-CXXFLAGS = -g  -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  -DENABLE_BINRELOC
+CFLAGS =   -O3 -std=c99 -DPREFIX=$(PREFIX)
+CXXFLAGS =  -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  -DENABLE_BINRELOC
 
 
 SDL_CONFIG = /usr/bin/sdl-config

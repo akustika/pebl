@@ -52,8 +52,8 @@ These allow arbitrary polygons to be created.
 
   RotatePoints(points,theta)      Where theta is in radians
   ReflectPoints(points)           Reflects left-right along vertical axis
-  ZoomPoints(points, xzoom,yzoom) Resizes x/y dimensions of set of points              
-
+  ZoomPoints(points, xzoom,yzoom) Resizes x/y dimensions of set of points
+             
 
   Two helper functions create sets of points that can be used
   in the above, or fed into polygon.
@@ -85,6 +85,8 @@ directly to a window:
 
 * Fixed labels so that you can assign a font with label.font <- font
 
+* The color of the window can be accessed with window.BGCOL
+
 * Added limited mouse events.  The new functions include:
   WaitForMouseButton(),
   This takes no arguments, and returns a 4-tuple list, indicating:
@@ -95,6 +97,8 @@ directly to a window:
  A new version of the "iowa" gambling task demos clicking
   interface instead of keyboard.  In addition, a new demo experiment
   hunt.pbl uses some mouse-controlled event to search for a target.
+
+* Added IsWindow() and IsShape()
 
 * Helper functions for easy creation of labels and textboxes:
 
@@ -117,8 +121,9 @@ directly to a window:
    gSubNum <- GetSubNum(win)
   }
 
-* Added SummaryStats(<data>, <conditions>) , a statistic summarizer function, which computes
-  means/sds/medians of <data> by <conditions>.  Currently, <data> must be a single list
+* Added SummaryStats(<data>, <conditions>) , a statistic summarizer
+  function, which computes  means/sds/medians of <data> by
+  <conditions>.  Currently, <data> must be a single list
   
 * Added PrintList(<list>) and FilePrintList(<file>,<list>), which
   print out a list without the , and [] formatting.
@@ -128,38 +133,46 @@ directly to a window:
 * Added a PrintProperties() function, mainly for debugging.  Use it to 
 display the properties an object has defined.
 
-* Fixed a bunch of things in the test battery.  This release officially contains Battery Version 0.3.
+* Fixed a bunch of things in the test battery.  This release
+  officially contains Battery Version 0.3.
 
-
+   Eight new tests: 
+   	   * The Stroop test, 
+	   * 2-column addition
+ 	   * 4-choice RT, 
+	   * Lexical Decision task, 
+	   * (Posner's) Spatial Cueing task,
+	   * PEBL Manual Dexterity task
+       * PEBL compensatory tracking task (ptracker)
+       * A Mental rotation task 
+ 	   * Matrix rotation task
    -Much improved version of Berg's Cardsort. Fixed bugs, added proper
    computation of perseverations, etc.
-   -Added a version of the Stroop task.
-   -Added a mental rotation task
    -Added a mouse-driven version of Bechera's Gambling Task, and some
    other fixes.
-   -Added a 2-column addition task
-   -Added a manual dexterity task
 
 Summary list of new functions:
-GetSubNum 
-PrintList 
-FilePrintList 
-SummaryStats 
-EasyLabel
-EasyTextBox
-WaitForMouseButton
-GetMouseCursorPosition 
-SetMouseCursorPosition 
-BlockE 
-Plus 
-MakeStarPoints 
-MakeNGonPoints 
-ZoomPoints
-ReflectPoints
-RotatePoints
-Polygon
-Bezier
-PrintProperties 
+ IsShape *
+ IsWindow *
+ GetSubNum 
+ PrintList 
+ FilePrintList 
+ SummaryStats 
+ EasyLabel
+ EasyTextBox
+ WaitForMouseButton 
+ GetMouseCursorPosition 
+ SetMouseCursorPosition 
+ BlockE 
+ Plus 
+ MakeStarPoints 
+ MakeNGonPoints 
+ ZoomPoints
+ ReflectPoints
+ RotatePoints
+ Polygon
+ Bezier
+ PrintProperties 
 
 
 -------------------------------------------------- 
@@ -179,7 +192,8 @@ September 2007
    SDTDPrime(hr,far)
    SDTBeta(hr,far) 
  
-* Update the launcher so it doesn't give misleading feedback when no stdout.txt file is created
+* Update the launcher so it doesn't give misleading feedback when no
+  stdout.txt file is created
 * Fix launcher so it correctly uses subject number.
 * Return to compiling with gcc on windows (after previous use of MSVC++ Express)
 
@@ -192,13 +206,18 @@ Test Battery:
   * Add working Partial report (iconic memory) experiment.
   * Added Tower of London demo experiment
 
-* Updated launcher and output handling to avoid the 'cannot find file' bug people get scared off by.
-Now, stdout.txt and stderr.txt are stored in the file that the script is run from, and the launcher 
-looks there for the output.  Now, stdout.txt should alway be written, even if it just a blank file,
-and so no informative message should appear.
+* Updated launcher and output handling to avoid the 'cannot find file'
+  bug people get scared off by.
 
-* Standard script files (including all the demo and the battery scripts) are now found in pebl-exp0.08, 
-instead of just pebl-exp.  This is just so nobody gets their custom scripts overwritten.
+Now, stdout.txt and stderr.txt are stored in the file that the script
+is run from, and the launcher looks there for the output.  Now,
+stdout.txt should alway be written, even if it just a blank file, and
+so no informative message should appear.
+
+
+* Standard script files (including all the demo and the battery
+  scripts) are now found in pebl-exp0.08, instead of just pebl-exp.
+  This is just so nobody gets their custom scripts overwritten.
 
 
 

@@ -40,6 +40,9 @@ define Start (lParameter)
       Move(lText,x, 25 * Sin(x / 25) + 300 - x/3)
       Move(gPic, x, y)
       
+
+      PrintProperties(gPic)
+
       if(Mod(i,50) == 0) 
         {
           Hide(gFrowney)

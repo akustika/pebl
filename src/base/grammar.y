@@ -24,7 +24,7 @@
 %}
 
 /*These are the types that are used during the parsing.
- *The numbers get transformed into pVariants during exectution*/
+ *The numbers get transformed into pVariants during execution*/
 
 
 %union {

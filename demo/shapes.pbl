@@ -156,15 +156,17 @@
   
   r <- 50
   i <- 0
-  while(i <= 360)
+
+  while(i <= 360)x
   {
 
     rad <- i /360*2*3.14159
     shape.width <- r * Cos(rad)
     shape.height <- r * Sin(rad)
     lab.text <- "Rotating Line " + (i) + " degrees."
-
     Draw()
+
+    PrintProperties(shape)
     i <- i + 10
   }
 

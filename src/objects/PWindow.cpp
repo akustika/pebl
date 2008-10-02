@@ -36,6 +36,8 @@ using std::endl;
 bool PWindow::SetProperty(std::string name, Variant v)
 {
 
+    cout <<"Setting property:" << name << "+" << v<<endl;
+
 
     if(PWidget::SetProperty(name,v))
         {

@@ -262,6 +262,8 @@ namespace PEBLEnvironment
             {"ISCOLOR",                         IsColor,            1,1},
             {"ISFILESTREAM",                    IsFileStream,       1,1},
             {"ISWIDGET",                        IsWidget,           1,1},
+            {"ISWINDOW",                        IsWindow,           1,1},
+            {"ISSHAPE",                         IsShape,            1,1},
     
             {0,            0,  0, 0}
         };

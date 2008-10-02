@@ -94,6 +94,8 @@ namespace PEBLEnvironment
     Variant IsColor(Variant v);
     Variant IsFileStream(Variant v);
     Variant IsWidget(Variant v);
+    Variant IsWindow(Variant v);
+    Variant IsShape(Variant v);
 }
 
 

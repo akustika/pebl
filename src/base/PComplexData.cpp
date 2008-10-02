@@ -185,7 +185,7 @@ bool PComplexData::IsWidget() const
 
 bool PComplexData::IsWindow() const
 {
-  return GetType() == CDT_WINDOW;
+    return GetType() == CDT_WINDOW;
 }
 
 

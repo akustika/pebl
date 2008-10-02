@@ -1032,3 +1032,34 @@ Variant PEBLEnvironment::IsWidget(Variant v)
         }
     return Variant(false);
 }
+
+Variant PEBLEnvironment::IsWindow(Variant v)
+{
+
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 =  plist->First();
+    if (v1.IsComplexData())
+        {
+            if((v1.GetComplexData())->IsWindow())
+                {
+                    return Variant(true);
+                }
+        }
+    return Variant(false);
+}
+
+
+Variant PEBLEnvironment::IsShape(Variant v)
+{
+
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 =  plist->First();
+    if (v1.IsComplexData())
+        {
+            if((v1.GetComplexData())->IsDrawObject())
+                {
+                    return Variant(true);
+                }
+        }
+    return Variant(false);
+}
