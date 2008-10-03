@@ -2,16 +2,13 @@
 define Start(par)
  {
 
-    condsize <- 3
-    gTolerance <- 30
-
-
-    gSleepEasy <- 1
-
-	gWin <- MakeWindow()
+    condsize <- 3              #How many of each condition (metric) 
+    gTolerance <- 30           #How close you have to get
 
 
 
+    gSleepEasy <- 1 
+    gWin <- MakeWindow()
 
    if(gSubNum == 0)
     {
@@ -27,6 +24,11 @@ define Start(par)
     Draw()
     WaitForMouseButton()
     Hide(tb)
+
+    gLab <-  EasyLabel("Search for the target. Cursor gets redder as you get closer.",gVideoWidth/2,20,gWin,20)
+
+   
+
     ShowCursor(0)
 	FilePrint(fileout,"subnum trial startx starty gradient x y time moves")
 
@@ -39,7 +41,10 @@ define Start(par)
 
 	loop(type,types)
     {
-  	   results <-  Trial(type)   
+  	
+       gLab.text <- "Search for the target. Cursor gets redder as you get closer."
+       Draw()
+       results <-  Trial(type)   
        dat <- Merge([gSubNum,trial, gVideoWidth/2,gVideoHeight/2],results)
 
        FilePrintList(fileout,Flatten(dat))
@@ -86,7 +91,7 @@ define Trial(type)
 {
     Draw()
     target <- [Floor(10+Random()*(gVideoWidth-20) ),
-	           Floor(10+Random()*(gVideoHeight-20))]
+	           Floor(30+Random()*(gVideoHeight-40))]
 
     max <- Distance([0,0],[gVideoWidth,gVideoHeight],type)
 
@@ -153,8 +158,7 @@ define ShowTarget(x,y,win)
   AddObject(c4,win)
   AddObject(c5,win)
 
-  lab <-  EasyLabel("You Found It!  Press any mouse button to continue.",gVideoWidth/2,20,win,20)
-
+  gLab.text <-  "You Found It!  Press any mouse button to continue."
   Draw()
   WaitForMouseButton()
 
@@ -163,7 +167,6 @@ define ShowTarget(x,y,win)
   RemoveObject(c3,win)  
   RemoveObject(c4,win)  
   RemoveObject(c5,win)  
-  RemoveObject(lab,win)
   Draw()
 
 }
