@@ -65,6 +65,20 @@ Press any key to begin."
   }
 
 
+  instruct.text <- "Practice round complete. Now you will be tested on " +
+   numTrials+" additional trials.  You will not be told whether you are correct or incorrect after  you respond.  
+
+Press any key to begin."
+
+  Show(instruct)
+  Draw()
+  Wait(1000)
+  WaitForAnyKeyPress()
+  Hide(instruct)
+  Draw()
+  Wait(1000)
+
+
   ####################################
   ##Do regular trials
 
