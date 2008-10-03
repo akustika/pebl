@@ -448,15 +448,19 @@ their letter name; others have special names:
 "<esc>"
 "<backspace>" or "<back>"
 "<kp_0>" through "<kp_9>", as well as "<kp_period>", "<kp_divide>",
- "<kp_mltiply>", "<kp_minus>", "<kp_plus>", "<kp_equals>",
+ "<kp_multiply>", "<kp_minus>", "<kp_plus>", "<kp_equals>",
 "<kp_enter>" for  keypad keys.
 
  "<insert>","<delete>", "<home>", "<end>","<pageup>","<pagedown>" for other
 special keys.
+\end{verbatim}
 
 Function keys <F1> through <F15>.
 
 Also, the traditional "modifier" keys can serve as normal keys:
+
+
+\begin{verbatim}
 <lshift>, <rshift> <numlock>, <capslock>, <scrollock>, 
 <rctrl>, <lctrl>, <ralt>,<lalt>,<rmeta>,<lmeta>,<lsuper>,
 <rsuper>,<mode>,<compose>
@@ -725,6 +729,9 @@ and can later be accessed by an experiment. These are described in table~\ref{ta
 \verb+gKeepLooping+ & Controls continued execution in event loop. \\
  &           (Not currently useful).\\
 \addlinespace[.2cm]
+\verb+gSleepEasy+      &Sets 'busy-waiting' to be either on or off.\\
+                       &Busy-waiting can improve timing, but is often\\
+                       &not needed and pegs CPU.   \\
 \verb+gVideoWidth+  &	The width in pixels of the display (set by\\
              &  default or command-line option). Changing \\
              &  this before calling \verb+MakeWindow+ will change \\

@@ -26,9 +26,10 @@ contribute to the PEBL project by implementing the function yourself.
 
 \bottomrule 
 \endlastfoot 
-
+\cmidrule(l{.5cm}r{.5cm}){1-3} 
 \multicolumn{3}{c}{\textbf{Math Functions}}\\ 
 \cmidrule(l{.5cm}r{.5cm}){1-3} 
+\midrule
 \verb+Log10+ &\verb+<num>+ &Log base 10 of \verb+<num>+\\ 
 \verb+Log2+ &\verb+<num>+ &Log base 2 of \verb+<num>+ \\ 
 \verb+Ln+ &\verb+<num>+ &Natural log of \verb+<num>+\\ 
@@ -86,9 +87,10 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+ZoomPoints+
 &\verb+<[xs,yy]>+, \verb+<xzoom>+, \verb+<yzoom>+&Zooms a set of points in 2 directions\\
 \verb+ReflectPoints+&\verb+<[xs,yy]>+&Reflects points on vertical axis\\
-\verb+RotatePoints+ &\verb+<[xs,yy]>+,\verb+<angle>+&Rotates point <angle> degrees\\
+\verb+RotatePoints+ &\verb+<[xs,yy]>+,\verb+<angle>+&Rotates point \verb+<angle>+ degrees\\
 \addlinespace[0.2cm] 
-\midrule 
+
+\cmidrule(l{.5cm}r{.5cm}){1-3} 
 \multicolumn{3}{c}{\textbf{File/NetworkStream Functions}}\\ 
 \cmidrule(l{.5cm}r{.5cm}){1-3} 
 
@@ -123,7 +125,8 @@ contribute to the PEBL project by implementing the function yourself.
 ip-number-as-string to usable address \\
 
 \addlinespace[0.2cm] 
-\midrule 
+
+\cmidrule(l{.5cm}r{.5cm}){1-3} 
 \multicolumn{3}{c}{\textbf{Graphical Objects Functions}}\\ 
 \cmidrule(l{.5cm}r{.5cm}){1-3} 
 
@@ -169,30 +172,31 @@ ip-number-as-string to usable address \\
 \verb+Polygon+ &\verb+<x>+ \verb+<y>+ \verb+<xpoints>+ \verb+<ypounts>+  \verb+<color>+\verb+<filled>+ &Creates polygon centered at x,y with relative points \verb+<xpoints>+,\verb+<ypoints>+\\ 
 \verb+Bezier+ &\verb+<x>+ \verb+<y>+ \verb+<xpoints>+ \verb+<ypounts>+ \verb+<steps>+ \verb+<color>+ &Creates bezier curve centered at x,y with relative points \verb+<xpoints>+,\verb+<ypoints>+\\ 
 \verb+BlockE+         &\verb+<x> <y> <h> <w>+ \verb+<thickness>+ \verb+<orientation>+ \verb+<color>+ &Creates a block E as a useable polygon which can be added to a window directly.\\ 
-\verb+Plus+           &\verb+<x> <y>+ \verb+<size> <w>+ \verb+<color>+ &Creates a block E as a useable polygon which can be added to a window directly.\\ 
+\verb+Plus+           &\verb+<x> <y>+ \verb+<size> <w>+ \verb+<color>+
+&Creates a plus sign as a useable polygon which can be added to a window directly.\\ 
 \verb+MakeStarPoints+ &\verb+<r_outer>+ \verb+<r_inner>+ \verb+<npeaks>+ &Creates points for a star, which can then be fed to Polygon\\ 
 \verb+MakeNGonPoints+ &\verb+<radius>+ \verb+<npeaks>+ &Creates points for a polygon, which can then be fed to Polygon\\ 
 
 
 
 \addlinespace[0.2cm] 
-\midrule 
+\cmidrule(l{.5cm}r{.5cm}){1-3} 
 \multicolumn{3}{c}{\textbf{Sound Objects Functions}}\\ 
 \cmidrule(l{.5cm}r{.5cm}){1-3} 
-
 
 \verb+LoadSound+ &\verb+<filename>+ &Loads a soundfile from the filename, returning a variable that can be played\\ 
 \verb+PlayForeground+ &\verb+<sound>+ &Plays the sound `in the foreground', not returning until the sound is complete\\ 
 \verb+PlayBackground+ &\verb+<sound>+ &Plays the sound 'in the background', returning immediately\\ 
 \verb+Stop+ &\verb+<sound>+ &Stops a sound playing in the background from playing\\ 
-\verb+MakeSineWave+ & & NOT IMPLEMENTED\\ 
-\verb+MakeSquareWave+ & & NOT IMPLEMENTED\\ 
-\verb+MakeSawtoothWave+ & & NOT IMPLEMENTED\\ 
-\verb+MakeChirp+ & & NOT IMPLEMENTED\\ 
+%\verb+MakeSineWave+ & & NOT IMPLEMENTED\\ 
+%\verb+MakeSquareWave+ & & NOT IMPLEMENTED\\ 
+%\verb+MakeSawtoothWave+ & & NOT IMPLEMENTED\\ 
+%\verb+MakeChirp+ & & NOT IMPLEMENTED\\ 
 
 
 \addlinespace[0.2cm] 
-\midrule 
+
+\cmidrule(l{.5cm}r{.5cm}){1-3} 
 \multicolumn{3}{c}{\textbf{Misc Event Functions}}\\ 
 \cmidrule(l{.5cm}r{.5cm}){1-3} 
 
@@ -239,10 +243,15 @@ ip-number-as-string to usable address \\
 \verb+IsFont+ & \verb+<variant>+ & Tests whether \verb+<variant>+ is a Font\\ 
 \verb+IsColor+ & \verb+<variant>+ & Tests whether \verb+<variant>+ is a Color\\ 
 \verb+IsFileStream+ & \verb+<variant>+ & Tests whether \verb+<variant>+ is a FileStream\\ 
-\verb+IsWidget+ & \verb+<variant>+ & Tests whether \verb+<variant>+ is any Widget\\ 
+\verb+IsWidget+ & \verb+<variant>+ & Tests whether \verb+<variant>+ is
+any Widget\\ 
+\verb+IsWindow+ & \verb+<variant>+ & Tests whether \verb+<variant>+ is
+any Window\\ 
+\verb+IsShape+ & \verb+<variant>+ & Tests whether \verb+<variant>+ is any drawing shape, such as a circle, square or polygon\\ 
 
 \addlinespace[0.2cm] 
-\midrule 
+
+\cmidrule(l{.5cm}r{.5cm}){1-3} 
 \multicolumn{3}{c}{\textbf{List Manipulation Functions}}\\ 
 \cmidrule(l{.5cm}r{.5cm}){1-3} 
 
@@ -297,9 +306,10 @@ element in \verb+<database>+ corresponding to element of
 \verb+ListToString+ &\verb+<list>+ & Concatenates all elements of a list into a single string\\
 
 \addlinespace[0.2cm] 
-\midrule 
+\cmidrule(l{.5cm}r{.5cm}){1-3} 
 \multicolumn{3}{c}{\textbf{String Management Functions}}\\ 
 \cmidrule(l{.5cm}r{.5cm}){1-3} 
+
 \verb+CR+ &\verb+<num>+ & Returns string with  \verb+<num>+ linefeeds.\\
 \verb+Tab+ &\verb+<num>+ & Returns string with  \verb+<num>+ tabs.\\
 \verb+Format+ &\verb+<value>+ \verb+<num>+ & Makes string from value
