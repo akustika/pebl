@@ -36,8 +36,6 @@ xzoom, yzoom, and rotation.  These objects can be stretched and
 rotated using these properties;
 
 
-
-
 Also, two new generic drawing objects have been added: Polygon and Bezier:
 
   Polygon(<x>,<y>,<xpoints>,<ypoints>,<color>,<filled>)
@@ -136,7 +134,7 @@ display the properties an object has defined.
 * Fixed a bunch of things in the test battery.  This release
   officially contains Battery Version 0.3.
 
-   Eight new tests: 
+   Ten new tests: 
    	   * The Stroop test, 
 	   * 2-column addition
  	   * 4-choice RT, 
@@ -146,6 +144,7 @@ display the properties an object has defined.
        * PEBL compensatory tracking task (ptracker)
        * A Mental rotation task 
  	   * Matrix rotation task
+       * Time wall, a visual time production/estimation task.
    -Much improved version of Berg's Cardsort. Fixed bugs, added proper
    computation of perseverations, etc.
    -Added a mouse-driven version of Bechera's Gambling Task, and some
