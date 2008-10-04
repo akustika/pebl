@@ -1,0 +1,104 @@
+define Start(p)
+{
+
+  numTrials <- 10
+  gSleepEasy <- 1
+
+  gWin <- MakeWindow("lightblue")
+  gFileOut <- FileOpenWrite("timewall-"+gSubNum+".dat")
+
+  bgcol <- gWin.bgcolor
+  wallcol <- MakeColor("darkred")
+  targcol <- MakeColor("darkgreen")
+
+  gWallheight <- gVideoHeight*.333
+  gWallpos    <- gVideoHeight-gWallheight
+
+  gTarg <- Square(gVideoWidth/2,4,8,targcol,1)
+  wall <- Rectangle(gVideoWidth/2,gVideoHeight-gWallheight/2,gVideoWidth,gWallheight,wallcol,1)
+  notch <-Square(gVideoWidth/2,gVideoHeight-4,8,bgcol,1)
+
+  gFeedback <- EasyLabel("",gVideoWidth/2,50,gWin,44)
+  Hide(gFeedback)
+
+  AddObject(gTarg,gWin)
+  AddObject(wall,gWin)
+  AddObject(notch,gWin)
+
+  Draw()
+  WaitForAnyKeyPress()
+
+  FilePrint(gFileOut, "Subnum targtime resptime acc shortlong")
+  trial <- 1
+  while(trial < numtrials)
+   {
+
+
+    res <-   Trial()
+    targ <- First(res)
+    resp <- Nth(res,2)
+
+
+  ##Give positive feedback if within 5%
+  acc <- Abs(targ - resp)/targ
+  if(acc < .05)
+   {
+      msg <- "Great!"
+
+   } elseif( First(res) < Nth(res,2))
+   {
+       msg <- "Too Long"    
+   } else{
+      msg <- "Too short"
+  }
+
+
+  gFeedback.text <- msg + "  " + RoundTime(targ) + " : " + RoundTime(resp)
+  shortlong <-  Sign(targ-resp)
+
+
+  Show(gFeedback)
+  Draw()
+
+  FilePrint(gFileOut,gSubNum + " " + targ + " " + resp + " " + acc + " " + shortlong)
+  WaitForAnyKeyPress()
+  Hide(gFeedback)
+  trial <- trial + 1
+  }  
+
+  FileClose(gFileOut)
+}
+
+
+define RoundTime(num)
+{
+ return   Round( num / 100)/10
+}
+
+define Trial()
+{
+   Show(gTarg)  
+   traveltime <- (Random()*8+2)*1000
+   start <- GetTime()
+   endtime <- start + traveltime
+   disappeartime <- start + traveltime * .66667   
+
+   time <- start
+   
+   while(time < disappeartime)
+   {
+
+     time <- GetTime()
+     ypos <- (time - start)*gVideoHeight/traveltime
+     gTarg.y <- ypos
+     Draw()
+     Wait(10)
+
+   }
+   Hide(gtarg)
+   Draw()
+   x <-  WaitForAnyKeyPress()
+   est <- GetTime()
+   return [traveltime, (est-start)]
+
+}
