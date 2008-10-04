@@ -553,3 +553,25 @@ because they were described incorrectly in the pdf.
 The current position of the ball, as well as the input force vector,
 is written to a file on each cycle: ptracker-<gsubnum>.dat
 
+
+-------------------------------------------------------------------------------
+*            Matrix Rotation Version 0.1
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.3
+Location: matrixrotation/matrixrotation.pbl
+
+Description: View a 5x5 matrix with filled-in cells.  When ready, view
+another one and determine whether it is the same as the previous (but
+rotated 90 degrees) or different.  Featured in the UTC test battery.
+
+
+
+-------------------------------------------------------------------------------
+*            Time Wall Version 0.1
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.3
+Location: timewall/timewall.pbl
+
+Description: A square moves down the screen, and disappears behind a
+wall.  Subject must estimate when it will appear in a notch at the
+bottom of the wall. 
