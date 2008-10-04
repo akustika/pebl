@@ -19,15 +19,15 @@ define Start(lPar)
     tmp <- MakeLabel(i,font)           #Create label
     sequence <- Append(sequence, tmp)  #Add it to the 'sequence'
     AddObject(tmp,window)              #Add it to the window
-    Move(tmp,300,200)                  #Move it to the center
+    Move(tmp,gVideoWidth/2,gVideoHeight/2)     #Move it to the center
     Hide(tmp)                          #Hide it
    }
   
   #Make a blank label to add to the end to workaround a bug in display
-  blank <- MakeLabel(" ",font)
-  AddObject(blank,window)
-  Move(blank,300,200)
-  Hide(blank)
+#  blank <- MakeLabel(" ",font)
+#  AddObject(blank,window)
+#  Move(blank,gVideoWidth/2,gVideoHeight/2)
+#  Hide(blank)
 
   #Initial Draw
   Draw()
@@ -40,8 +40,8 @@ define Start(lPar)
 
     #Sample 10 items randomly, and append the blank label at the end to ensure
     #the final item gets overwritten.  
-    seq2 <- Append(SampleN(sequence,10), blank)
-
+#    seq2 <- Append(SampleN(sequence,10), blank)
+	 seq2 <- SampleN(sequence,10)
     #Change the font (color) of the 5th item
     tmp <- Nth(seq2,5)
     SetFont(tmp,font2)
