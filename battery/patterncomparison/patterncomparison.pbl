@@ -25,7 +25,7 @@
 
   gSize <- 4  #Number of rows/columns in the matrix
   giveFeedback <- 1  
-  condsize <- 30
+  condsize <- 4
 
   gSleepEasy <- 1
   ShowCursor(0)
@@ -120,10 +120,10 @@ Press any key to begin"
    }
 
 
-  inst.text <- "Thank you for participating.  Please alert the tester"
+  inst.text <- "Thank you for participating.  Please alert the experimenter that you are complete"
   Show(inst)
   Draw()
-  Wait(4000)
+  Wait(1000)
   WaitForAnyKeyPress()
 
 }
