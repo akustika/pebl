@@ -119,6 +119,13 @@ Press any key to begin"
     trial <- trial +1
    }
 
+
+  inst.text <- "Thank you for participating.  Please alert the tester"
+  Show(inst)
+  Draw()
+  Wait(4000)
+  WaitForAnyKeyPress()
+
 }
 
 
