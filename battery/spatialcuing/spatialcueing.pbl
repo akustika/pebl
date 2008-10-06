@@ -1,5 +1,3 @@
-define Start(par)
-{
 #####################################################################
 ## (c) 2005-2008
 ## Shane T. Mueller (smueller at obereed dot net)
@@ -25,6 +23,8 @@ define Start(par)
 ##     Psychology: General, 109, 160-174.
 ##
 #####################################################################
+define Start(par)
+{
 
     gFileOut <-FileOpenAppend("spatialcueing-" +gSubNum+ ".txt")
 
@@ -73,9 +73,11 @@ define Start(par)
     gStimLabel <-MakeLabel("X",font)
     gWin <- MakeWindow("grey")
     ShowCursor(0)
+    gHomeX <- gVideoWidth/2
+    gHomeY <- gVideoHeight/2
 
     AddObject(gLabel, gWin)
-    Move(gLabel,300,200)
+    Move(gLabel,gHomeX,gHomeY)
     AddObject(gStimLabel, gWin) 
     Hide(gStimLabel)
 
@@ -90,7 +92,7 @@ MakeColor("grey"), 1)
 
     inst <-  "The following task will involve " + ( leftC + leftI + rightC + rightI + leftN + rightN ) + " trials.  At the beginning of each trial, a fixation cross will appear, accompanied by a left arrow ([<+]), a right arrow ([ +>]), or both ([<+>]).  The stimulus 'X' will appear a short time later either to the left or to the right of the fixation area.  The arrow will usually tell you where the stimulus will appear (" + Round(100*((rightC +leftC )/(leftC+leftI + rightC + rightI))) + "% of the time the stimulus 'X' will appear in the direction of the arrow.  If the arrows point both ways, there is an equal chance the stimulus will appear to the left or right.  Your goal is to fixate on the +, without moving your eyes from it, and respond by pressing the 'A' key as soon as you see the stimulus X.  Press any key to begin."
 
-    tb <- MakeTextBox( inst, font2, 500, 350)
+    tb <- MakeTextBox( inst, font2, 700, 350)
     AddObject(tb, gwin)
     Move(tb,70,75)
     Draw()
@@ -201,8 +203,8 @@ define Trial(stim, cue)
         
      ##Figure out the xposition of the stimulus; whether to the left or 
      ## right of the fixation.
-    xpos <- 300 + 100*stim
-    Move(gStimLabel,xpos,200)
+    xpos <- gHomeX + 100*stim
+    Move(gStimLabel,xpos,gHomeY)
         Draw()
 
         ##Draw the fixation/cue
@@ -218,7 +220,7 @@ define Trial(stim, cue)
         start <- GetTime()
 
     ##Get the response
-        response <- WaitForAnyKeyPress(               )
+        response <- WaitForAnyKeyPress( )
         end <- GetTime()
         SetText(gLabel,"")
         Hide(gStimLabel)

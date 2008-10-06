@@ -19,7 +19,7 @@ define Start(lPar)
   #Read in the words/nonwords.  
   words <- FileReadList("words.txt")
   nonwords <- FileReadList("nonwords.txt")
-
+  
 
   #create stimuli
   type <- Merge(Repeat("W",Length(words)),Repeat("L",Length(nonwords)))
@@ -31,6 +31,8 @@ define Start(lPar)
   lFG <- MakeColor("RED")
   gFont <- MakeFont("Vera.ttf",0,22,lFG,lBG,1)
   gWin <- MakeWindow("GREY")
+  gHomeX <- gVideoWidth/2
+  gHomeY <- gVideoHeight/2
 
   #handle the instructions.
   instructions <- "Use 'Y' for words and 'N' for nonwords. Press any key to begin the lexical decision task."
@@ -68,8 +70,8 @@ define Trial(stim)
   AddObject(text,gWin)
 
   ##Move them to the same place
-  Move(fixation, 300,240)
-  Move(text, 300,240)
+  Move(fixation, gHomeX,gHomeY)
+  Move(text, gHomeX,gHomeY)
 
   ##Show the fixation
   Show(fixation)
