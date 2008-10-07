@@ -22,6 +22,8 @@
  define Start(p)
 {
 
+  gSimilarFoil <- 1
+  gfoildiff    <- 3  #Number of changes between target and foil
 
   gSize <- 4  #Number of rows/columns in the matrix
   giveFeedback <- 1  
@@ -71,12 +73,23 @@ Press any key to begin"
 
    startTime <- GetTime()
    ##Create test matrix 
-   matrix <- MakeMatrix()
+
+   if(gSimilarFoil)
+     {
+        mats <- MakeMatrices(gFoilDiff)
+        matrix <- First(mats) 
+        foil <- Nth(mats,2)
+     } else {
+        matrix <- MakeMatrix()
+        foil <- MakeFoil(matrtix)
+     }
+  
+
    if(cond == "same")
    { 
       alt <- matrix
    } else {
-      alt <- MakeFoil(matrix)
+      alt <- foil
    }
 
 
@@ -221,6 +234,27 @@ define MakeMatrix()
 }
 
 
+##This creates a matrix and a foil
+define MakeMatrices(diff)
+{
+
+  #How many dots should be perturbed?
+
+  ##fill half the cells.
+
+  numDots <- Floor(gsize * gsize /2)
+  numempty <- gsize * gsize - numDots  
+  standard <- Merge(Repeat(1,numDots), Repeat(0,numEmpty))
+  foil <- Rotate(standard,diff)
+  tmp <- Transpose(Shuffle(Transpose([standard,foil])))
+
+  targ <- FoldList(First(tmp),gSize)
+  foil <- FoldList(Nth(tmp,2),gSize)
+
+  return [targ,foil]
+}
+
+
 define RemoveComplex(comp,win)
 {
   loop(i,comp)
@@ -287,6 +321,7 @@ define MakeFoil(mat)
  
  return newmat
 }
+
 
 define MatrixEqual(m1,m2)
 {
