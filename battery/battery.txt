@@ -575,3 +575,26 @@ Location: timewall/timewall.pbl
 Description: A square moves down the screen, and disappears behind a
 wall.  Subject must estimate when it will appear in a notch at the
 bottom of the wall. 
+
+
+-------------------------------------------------------------------------------
+            Letter Digit Substitution Task Version 0.1
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.4
+Location: letterdigit/letterdigit.pbl
+
+Description: Given a set of 9 mappings between letters and digits,
+choose the correct digit for a series of presented stimuli letters.
+Sometimes called the "Code Substitution" or "Letter digit
+code substition" task.  
+As found in the UTC Test batteryand in paper-and-pencil form in the
+Wechsler IQ test.
+
+Output:
+Output file is letterdigit-<subnum>.txt, and contains:
+subnum trial 
+
+Detailed summary report is in letterdigit-summary-<subnum>.txt,
+including stimuli letters, mapping, trials, and accuracy/RT
+statistics.
+
