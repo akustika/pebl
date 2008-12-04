@@ -1,7 +1,7 @@
 #!/usr/local/bin/pebl
 ################################################################
 ##  PEBL Psychomotor Vigilance Task
-##  Version 0.2 
+##  Version 0.3
 ##
 ##  For use with PEBL 0.07 or later
 ##  http://pebl.sf.net
@@ -251,9 +251,9 @@ Your task is simple to press the spacebar whenever you see the red circle.  Do n
 ##Print out report
    PrintMe(reportfile,"--------------------------------------------------------")
    PrintMe(reportfile," Report for PEBL Psychomotor Vigilance Task (PPVT)")
-   PrintMe(reportfile, " Version 0.1.  An Unprepared Serial Response Task (USRT).")
+   PrintMe(reportfile, " Version 0.3.  An Unprepared Serial Response Task (USRT).")
    PrintMe(reportfile, " http://pebl.sf.net")
-   PrintMe(reportfile, " (c) 2007 Shane T. Mueller, Ph.D.")
+   PrintMe(reportfile, " (c) 2008 Shane T. Mueller, Ph.D.")
    PrintMe(reportfile, " "+GetPEBLVersion())
    PrintMe(reportfile, " "+TimeStamp())
    PrintMe(reportfile, " Participant Code: " + gSubNum)
