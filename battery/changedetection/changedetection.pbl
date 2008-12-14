@@ -1,0 +1,426 @@
+define Start(par)
+ {
+
+    gTolerance <- 30           #How close you have to get to count as correct
+
+
+    gCircles <- 30  #Number of circles in field
+                    ## 20 is pretty easy; 50 is a bigger challenge
+
+    gRadMin <- 10   ## Minimum circle radius
+    gRadMax <- 30   ## Maximum circle radius
+ 
+    gXMin <- 100    ##left bound of field
+    gXMax <- 700    ##right bound of field
+    gYMin <- 100    ##top bound of field
+    gYMax <- 500    ##Bottom bound of field
+
+    gShowTime <- 400     ##How long to show field
+    gScreenTime <- 100   ##how long to screen
+
+    condsize <- 5        ##Number of trials per condition
+
+
+    gFileOut <- FileOpenWrite("change-"+gSubNum+".txt")
+    gSleepEasy <- 1
+    gWin <- MakeWindow("Black")
+    gFooter <- EasyLabel("",gVideoWidth/2,gVideoHeight-20,gWin,22)
+    inst <- "In this experiment, you will see a series of scenes made up of colored circles.  The display will flash blank briefly, and then reappear. This will repeat several times.  Between blanks, one circle on the screen will change.  Your task is to find the change.
+      Below is an example screen. Notice how the red circle moves from one location to another.  
+
+Press any key to see the two screens cycle."
+
+    tb  <- EasyTextBox(inst,20,20,gWin,20,gVideoWidth-40,200)
+
+    screen1 <- MakeImage("screen1.png")
+    screen2 <- MakeImage("screen2.png")
+    AddObject(screen1,gWin)
+    AddObject(screen2,gWin)
+    Move(screen1,gVideoWidth/2,400)
+    Move(screen2,gVideoWidth/2,400)
+    Draw()
+    WaitForAnyKeyPress()
+    ##Show the two screens repeatedly for practice
+
+    Hide(screen1)
+    par <- 1
+    while(par < 10)
+    {
+       if(Mod(par,2)==1)
+        {
+         Hide(screen2)
+         Draw()
+         Wait(100)
+         Show(screen1)
+         Draw()
+         Wait(500)
+
+        }else{
+         Hide(screen1)
+         Draw()
+         Wait(100)
+         Show(screen2)
+         Draw()
+         Wait(500)
+        }
+
+      par <- par + 1
+    }
+
+    Draw()
+  
+    tb.text <- "In the real tests, there are different ways the screens can change: a circle might disappear, change color, change size, or change position.  There will be more circles, and so the change will be much harder to find, but there will one circle that changes on each display.  
+Once you have located the change, press the space bar, and then click on the screen at the location of the change.  Then, a new trial will begin.
+
+Press any key to begin."
+    Draw()
+    WaitForAnyKeyPress()
+    
+    Hide(screen1)
+    Hide(screen2)
+    Hide(tb)
+    Draw()
+    Wait(1000)
+    FilePrint(gFileOut,"subnum trial cond x1 y1 r1 col1 x2 y2 r2 col2 blanks shows blanktime showtime corr rt clickx clicky")
+
+    i <- 1
+    trials <- Shuffle(RepeatList([1,2,3,4],condsize))
+    loop(trial,trials)
+     {
+      FilePrint_(gFileOut,gSubNum + " "+ i  + " "+ trial + " ")
+      Trial(trial)
+      i  <- i + 1
+    }
+  
+}
+
+
+define Trial(cond)
+{
+     gFooter.text <- "Press space bar when you see the change"
+
+     bg <- MakeBackground(gCircles)
+
+     targ <- MakeTarget()
+     AddObject(targ,gWin)
+
+     x1 <- targ.x
+     y1 <- targ.y
+
+     ##Keep track and record presentation times
+     screensum <- 0
+     screenN   <- 0
+     showsum   <- 0
+     showN     <- 0
+    
+     ##cond1 is a move trial
+     if(cond==1)
+     {
+       diff <- 0
+      while(diff < 20)
+      {
+       x2  <- Round(gxMin + Random() * (gxMax-gxMin*2))
+       y2  <- Round(gyMin + Random() * (gyMax-gyMin*2))
+
+       diff <- Distance([x1,y1],[x2,y2])
+      }
+
+     }else{
+ 
+         x2 <- x1
+         y2 <- y1
+         diff <- 0
+     }
+ 
+    ## cond 3 is a color trial
+	##
+    if(cond==3) 
+    {
+
+     #Pick a new color that isn't too close.
+     diff <- 0
+     while(diff <50)
+      {
+        col1 <- RandomColor()
+        col2 <- RandomColor()
+        diff <- ColorDistance(col1,col2)
+      }
+
+    }else{
+
+        col1 <- targ.color
+        col2 <- targ.color
+    }
+
+
+    ## cond 4 is a size trial
+	##
+    if(cond==4) 
+    {
+
+     #Pick a new color that isn't too close.
+     diff <- 0
+     while(diff <10)
+      {
+        size1 <- Round(gRadMin + Random() *(gRadMax-gRadMin))
+        size2 <- Round(gRadMin + Random() *(gRadMax-gRadMin))
+        diff <- Abs(size2-size1)
+      }
+
+    }else{
+
+        size1 <- targ.r
+        size2 <- targ.r
+        diff <- 0
+    }
+
+     screen <- Rectangle(gVideoWidth/2,gVideoHeight/2-30,gVideoWidth,gVideoHeight-60,MakeColor("black"),1)
+     AddObject(screen,gWin)     
+
+     ShowCursor(0)
+     Draw()
+     starttime <- GetTime()
+     resp <- "<unknown>"
+     while(resp == "<unknown>")
+     {
+
+       #Target Present
+       Draw();Draw();
+       Show(screen)  
+       Draw()
+       t1 <- GetTime()
+       resp <- WaitForListKeyPressWithTimeout([" "],gScreentime,1)
+       Draw()
+       t2  <- GetTime()
+       Print("screen time: " + (t2-t1))
+    
+       if(resp == "<unknown>")
+        {
+         screensum <- screensum + (t2-t1)
+         screenN <- screenN + 1
+    
+         Draw();Draw()
+         Hide(screen)
+         
+         targ.x <- x1
+         targ.y <- y1
+         targ.r <- size1
+         targ.color <- col1
+         if(cond==2)
+         {
+           Show(targ)
+         }
+         try <- 0
+
+         Draw()
+         t1 <- GetTime()
+         resp <- WaitForListKeyPressWithTimeout([" "],gShowTime,1)
+         Draw()
+         t2 <- GetTime()
+         Print("show time: " + (t2-t1))
+
+         ##Disappear the target and show the screen
+         #Target absent
+         if(resp == "<unknown>")
+         {
+           showSum <- showSum + (t2-t1)
+           showN <- showN + 1
+
+           Draw();Draw()
+           targ.x <- x2
+           targ.y <- y2
+           targ.r <- size2
+           targ.color <- col2
+           if(cond==2)
+           {
+             Hide(targ)
+           }
+           try <- 1
+
+           Show(screen)
+           Draw()
+           t1 <- GetTime()
+           resp <- WaitForListKeyPressWithTimeout([" "],gScreentime,1)
+		   Draw()
+           t2 <- GetTime()
+           Print("screen time: " + (t2-t1))
+    
+           if(resp == "<unknown>") 
+           {
+           screenSum <- screenSum + (t2-t1)
+           screenN <- screenN + 1
+           Wait(gScreenTime)
+           Draw();Draw()  
+           Hide(screen)
+           Draw()   
+           t1 <- GetTime()
+           resp <- WaitForListKeyPressWithTimeout([" "],gShowTime,1)
+           Draw()
+           t2 <- GetTime()
+           Print("show time: " + (t2-t1))
+           if(resp=="<unknown>")
+            {
+             showSum <- showSum + (t2-t1)
+             showN <- showN + 1
+            }
+
+           }
+        } 
+       }
+      }
+
+     endtime <- GetTime()
+     Draw();Draw();
+     Show(screen)
+     Draw()
+     Wait(gScreenTime)
+     Draw();Draw()
+     Hide(screen)
+
+     ##On condition 2, set the try bit appropriately.
+     if(cond==2)
+      {
+       Show(targ)
+       try <- 0
+      }
+     gFooter.text <- "Click on location with change"
+     ShowCursor(1)
+     Draw()
+
+    pos <- WaitForDownClick()
+
+    corr <- (Distance(pos,[x1,y1]) <gTolerance) or (Distance(pos,[x2,y2]) <gTolerance) 
+
+    if(corr)
+    {
+        tmp <- "Correct!"
+
+    } else {
+        tmp <- "Incorrect."
+
+    }
+
+    FilePrint(gFileOut, x1 + " " +y1 + " " + size1 + " " +ColPrint(col1) + " " +
+	          x2 + " " + y2+ " " + size2 + " " + ColPrint(col2) + " "+
+              screenN + " " + showN + " " + screenSum/screenN + " "+ showSum/showN + " "+
+	          corr + " " + (endtime - starttime) + " " +
+              First(pos) + " " + Nth(pos,2))
+
+    gFooter.text <- tmp+ " Hit enter to see change.  Hit space bar to finish."
+    resp <- "<return>"    
+    Draw()
+
+    while( resp == "<return>")
+     { 
+       resp <- WaitForListKeyPress([" ","<return>"])
+       if (resp == "<return>")
+        {
+           if(try == 1)
+           {
+            targ.x <- x1
+            targ.y <- y1
+            targ.r <- size1
+            targ.color <- col1
+            if(cond==2)
+            {
+             Show(targ)
+            }
+
+            try <- 0
+
+           }else{
+
+            targ.x <- x2
+            targ.y <- y2
+            targ.r <- size2
+            targ.color <- col2
+            if(cond==2)
+            {
+             Hide(targ)
+            }
+
+            try <- 1
+           }
+        }
+        Draw()
+     }
+
+
+   RemoveObjects(bg,gWin)
+   RemoveObject(targ,gwin)
+   RemoveObject(screen,gwin)
+   Draw()
+ }
+
+
+
+define WaitForDownClick()
+{
+   continue <- 1
+   while(continue) 
+    {
+		x <- WaitForMouseButton()
+        if(Nth(x,4) == "<pressed>")
+        { 
+         continue <- 0
+        }
+    }
+     return x
+}
+
+define MakeBackground(targs)
+{
+  tmp <- []
+   i <- 1
+   while(i<=targs)
+   { 
+    x <- MakeTarget()
+    AddObject(x,gWin)
+    tmp <- Append(tmp,x)
+    i <- i + 1
+   }
+  return tmp
+}
+
+define MakeTarget()
+{
+   radius <- Floor(gRadMin + Random()*(gRadMax-gRadMin))
+   x <- gxMin + Random() * (gxMax-gxMin*2)
+   y <- gyMin + Random() * (gyMax-gyMin*2)
+   circ <- Circle(x,y,radius,RandomColor(),1)
+   return circ
+}
+
+
+define Distance(a,b)
+{
+	return ( Sqrt((First(a) - First(b))^2 + (Nth(a,2) - Nth(b,2))^2))
+}
+
+define ColorDistance(a,b)
+{
+   return  Abs(a.red -b.red)  + Abs(a.green - b.green) + Abs(a.blue - b.blue)
+}
+
+
+
+define RandomColor()
+{
+	return MakeColorRGB(25+Floor(Random()*231),25+Floor(Random()*231),25+Floor(Random()*231))
+}
+
+
+
+
+define RemoveObjects(list,win)
+{
+    loop(i,Flatten(list))
+    { 
+      RemoveObject(i,win) 
+    }
+}
+
+define ColPrint(color)
+{
+  return color.red + "|" + color.green + "|" + color.blue
+}

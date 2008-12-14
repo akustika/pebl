@@ -31,10 +31,12 @@ define Start(lPar)
 
   ## results are stored in tmpresults.dat
   gFileOut <-FileOpenAppend("donkey-" + gSubNum +".txt")
- 
+
+  gSleepEasy <- 1 
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
   ShowCursor(0) 
+
 
    if(IsAnyKeyDown())
    {

@@ -28,7 +28,7 @@
   gSize <- 4  #Number of rows/columns in the matrix
   giveFeedback <- 1  
   condsize <- 50
-
+  gDeadline <- 1500
 
   gSleepEasy <- 1
   ShowCursor(0)
@@ -148,7 +148,7 @@ define RunBlock(block,conds,lab)
     x <- DisplayMatrices(matrix,alt)
     Draw()  
     t1 <- GetTime()
-    resp <- WaitForListKeyPressWithTimeout([" "],1000,1)
+    resp <- WaitForListKeyPressWithTimeout([" "],gDeadline,1)
     t2 <- GetTime()
 
         

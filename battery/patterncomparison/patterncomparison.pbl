@@ -103,9 +103,11 @@ Press any key to begin"
     Draw()  
     t1 <- GetTime()
     resp <- WaitForListKeyPress(["<lshift>","<rshift>"])
+#    resp <- WaitForListKeyPress(["<kp_1>","<kp_2>"])
     t2 <- GetTime()
-    
+
     corr <- (resp == Lookup(cond,["same","diff"],["<lshift>","<rshift>"]))
+#    corr <- (resp ==  Lookup(cond,["same","diff"],["1","2"]))
     FilePrint(gFileOut, starttime + " " + (t2-t1) + " " + resp + " " + corr)
 
     if(giveFeedback)
@@ -118,7 +120,8 @@ Press any key to begin"
         } else {
           gFeedback.font <- gFontInc
           gFeedback.text <- "Incorrect"
-          delay <- 2500
+#          delay <- 800
+          delay <- 300
         }
 
      Show(gFeedback)
