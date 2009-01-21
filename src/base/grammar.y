@@ -4,7 +4,7 @@
 
 
 #include <stdio.h>
-#include <iostream.h>
+#include <iostream>
 #include <cctype>
 #include <cstring>
 #include <vector>
@@ -455,8 +455,8 @@ newlines:	PEBL_NEWLINE          {/**/;}
 void yyerror (char *error)
 {
 
-    std::cerr << "line " << yylineno << " of "<< sourcefilename<<": " << error << endl;
-    exit(1);
+  std::cerr << "line " << yylineno << " of "<< sourcefilename<<": " << error << std::endl;
+  exit(1);
 }
 
 extern int yy_flex_debug;

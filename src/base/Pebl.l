@@ -2,7 +2,7 @@
 //    Name:       src/base/Pebl.l
 //    Purpose:    Defines lexer for use with Flex
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -41,6 +41,7 @@ It identifies lexemes in a PEBL program.
 void yyerror(char *);
 
 %}
+bom        \xef\xbb\xbf     
 whitespace [ \t]+
 comment     #.*$  
 integer    [0-9]+
@@ -63,6 +64,7 @@ functionname  [A-Z][A-Za-z0-9\_]*
 datum      [integer float string variable]
 localprop {localvar}"."{property}
 %%
+{bom}        ;       /* ignore byte-order-marks*/
 {whitespace} ;       /* ignore whitespace*/
 {comment}    ;       /* ignore comments  */
 {integer}      { yylval.iValue = strtol(yytext,0,10);
