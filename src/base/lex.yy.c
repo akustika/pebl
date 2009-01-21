@@ -1173,8 +1173,8 @@ case 46:
 YY_RULE_SETUP
 #line 146 "src/base/Pebl.l"
 {
-            char message[120];
-            snprintf(message,115,"File appears to be in UTF-16 Unicode format.  PEBL can only read UTF-8 format. Resave file as UTF-8 and try again.");
+            char message[151];
+            snprintf(message,150,"\n  File appears to be in UTF-16 Unicode format.\n  PEBL can only read UTF-8 or ASCII formats. Resave file as UTF-8 or ASCII and try again.");
             yyerror(message);
            }
 	YY_BREAK
@@ -1182,7 +1182,7 @@ case 47:
 YY_RULE_SETUP
 #line 152 "src/base/Pebl.l"
 { char message[100];
-                 snprintf(message,99,"Unknown characters in line %d: [%s]\n",yylineno,yytext);
+                 snprintf(message,99,"\nUnknown characters in line %d: [%s]\n",yylineno,yytext);
                  yyerror(message);
                }
 	YY_BREAK
