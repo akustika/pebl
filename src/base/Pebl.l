@@ -41,7 +41,7 @@ It identifies lexemes in a PEBL program.
 void yyerror(char *);
 
 %}
-bom        \xef\xbb\xbf     
+bom        \xef\xbb\xbf
 whitespace [ \t]+
 comment     #.*$  
 integer    [0-9]+
@@ -63,6 +63,9 @@ string     \"[^\"]*[\"\n]
 functionname  [A-Z][A-Za-z0-9\_]*
 datum      [integer float string variable]
 localprop {localvar}"."{property}
+bomF      \xff\xfe     
+
+
 %%
 {bom}        ;       /* ignore byte-order-marks*/
 {whitespace} ;       /* ignore whitespace*/
@@ -140,7 +143,11 @@ if(yylval.strValue[yyleng-2] != '"')     /*"*/
 
 \r\n      { return PEBL_NEWLINE;}
 \n        { return PEBL_NEWLINE;}
-
+{bomF}     {
+            char message[120];
+            snprintf(message,115,"File appears to be in UTF-16 Unicode format.  PEBL can only read UTF-8 format. Resave file as UTF-8 and try again.");
+            yyerror(message);
+           }
 
 .              { char message[100];
                  snprintf(message,99,"Unknown characters in line %d: [%s]\n",yylineno,yytext);
