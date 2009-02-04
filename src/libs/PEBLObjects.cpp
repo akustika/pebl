@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLObjects.cpp
 //    Purpose:    Function Library for managing PEBL Objects
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -63,10 +63,10 @@ using std::string;
 /// the program itself.
 namespace PEBLObjects
 {
-
 }
+
 //Initiate static data
-extern PlatformEnvironment * myEnv = NULL;
+extern PlatformEnvironment * myEnv;
 extern PlatformEventQueue * gEventQueue = NULL;
 
 

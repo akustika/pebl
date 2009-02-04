@@ -27,8 +27,10 @@
 
 #include "SDLUtility.h"
 #include "../../objects/PColor.h"
+#include "../../utility/PError.h"
+#include "PlatformWindow.h"
 #include "SDL/SDL.h"
-
+#include <png.h>
 #include <math.h>
 #include <iostream>
 using std::cout;
@@ -148,31 +150,163 @@ void SDLUtility::DrawSmoothLine(SDL_Surface *surface, int x1, int y1, int x2, in
 
 
 /// This extracts the color of a pixel.
-PColor SDLUtility::GetPixel(SDL_Surface *surface, int x, int y)
+Uint32 SDLUtility::GetPixel(SDL_Surface *surface, int x, int y)
 {
-    /*int bpp = surface->format->BytesPerPixel;
-    // Here p is the address to the pixel we want to retrieve
-        Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
+  int bpp = surface->format->BytesPerPixel;
+  /* Here p is the address to the pixel we want to retrieve */
+  Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
+  
+  switch (bpp) {
+  case 1:
+      return *p;
+      
+  case 2:
+      return *(Uint16 *)p;
+      
+  case 3:
+      if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
+          return p[0] << 16 | p[1] << 8 | p[2];
+      else
+          return p[0] | p[1] << 8 | p[2] << 16;
+      
+  case 4:
+      return *(Uint32 *)p;
+      
+  default:
+      return 0;       /* shouldn't happen, but avoids warnings */
+  } // switch
+}
 
-    switch(bpp) {
-    case 1:
-        return *p;
 
-    case 2:
-        return *(Uint16 *)p;
+int SDLUtility::WritePNG(const Variant fname, PlatformWindow* win)
+{
+    
+    SDL_Surface * surf = win->GetSDL_Surface();
 
-    case 3:
-        if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
-            return p[0] << 16 | p[1] << 8 | p[2];
-        else
-            return p[0] | p[1] << 8 | p[2] << 16;
 
-    case 4:
-        return *(Uint32 *)p;
+     //Make and save a png out of a surface
+    png_structp png_ptr;
+    png_infop info_ptr;
+    png_text text_ptr[4];
+    unsigned char **png_rows;
+    Uint8 r, g, b;
+    int x, y, count;
+    //     Uint32(*getpixel) (SDL_Surface *, int, int) = getpixels[surf->format->BytesPerPixel];
 
-    default:
-        return 0;       // shouldn't happen, but avoids warnings 
+
+    FILE* fi = fopen(fname.GetString().c_str(),"wb");
+
+
+
+     png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+     //png_create_write_struct could fail, for whatever reason.
+     if (png_ptr == NULL)
+         {
+             fclose(fi);
+             png_destroy_write_struct(&png_ptr, (png_infopp) NULL);
+             return 0;
+
+         }
+     else
+         {
+             //same deal for png_create_info_struct
+             info_ptr = png_create_info_struct(png_ptr);
+             if (info_ptr == NULL)
+                 {
+                     fclose(fi);
+                     png_destroy_write_struct(&png_ptr, (png_infopp) NULL);
+                     return 0;
+                 }
+            else
+                {
+                    //Nothing failed so far.  
+                    if (setjmp(png_jmpbuf(png_ptr)))
+                        {
+                            fclose(fi);
+                            png_destroy_write_struct(&png_ptr, (png_infopp) NULL);
+                            return 0;
+                        }
+                    else
+                        {
+
+                            //Everything has succedded so far.
+                            //Initialize
+                            png_init_io(png_ptr, fi);
+
+                            info_ptr->width = surf->w;
+                            info_ptr->height = surf->h;
+                            info_ptr->bit_depth = 8;
+                            info_ptr->color_type = PNG_COLOR_TYPE_RGB;
+                            info_ptr->interlace_type = 1;
+                            info_ptr->valid = 0;	// will be updated by various png_set_FOO() functions
+                            
+                            png_set_sRGB_gAMA_and_cHRM(png_ptr, info_ptr,
+                                                       PNG_sRGB_INTENT_PERCEPTUAL);
+                            
+                            /* Set headers */
+                            
+                            count = 0;
+                            
+                            /*
+                              if (title != NULL && strlen(title) > 0)
+                              {
+                              text_ptr[count].key = "Title";
+                              text_ptr[count].text = title;
+                              text_ptr[count].compression = PNG_TEXT_COMPRESSION_NONE;
+                              count++;
+                              }
+                            */
+
+                            text_ptr[count].key = (png_charp) "Software";
+                            text_ptr[count].text =  (png_charp) "PEBL ";
+                            text_ptr[count].compression = PNG_TEXT_COMPRESSION_NONE;
+                            count++;
+                            
+                            
+                            png_set_text(png_ptr, info_ptr, text_ptr, count);
+                            
+                            png_write_info(png_ptr, info_ptr);
+                            
+                            
+                            
+                            /* Save the picture: */
+                            
+                            png_rows = (unsigned char**)malloc(sizeof(char *)* surf->h);
+                            
+                            for (y = 0; y < surf->h; y++)
+                                {
+                                    png_rows[y] = (unsigned char*)malloc(sizeof(char) * 3 * surf->w);
+                                    
+                                    for (x = 0; x < surf->w; x++)
+                                        {
+                                            
+                                            
+                                            SDL_GetRGB(GetPixel(surf, x, y), surf->format, &r, &g, &b);
+
+                                            png_rows[y][x * 3 + 0] = r;
+                                            png_rows[y][x * 3 + 1] = g;
+                                            png_rows[y][x * 3 + 2] = b;
+                                        }
+                                }
+
+                            png_write_image(png_ptr, png_rows);
+                            
+                            for (y = 0; y < surf->h; y++)
+                                free(png_rows[y]);
+                            
+                            free(png_rows);
+
+                            
+                            png_write_end(png_ptr, NULL);
+                            
+                            png_destroy_write_struct(&png_ptr, &info_ptr);
+                            fclose(fi);
+                            
+                            return 1;
+                        }
+                }
         }
-*/
-    return PColor(0,0,0,0);
+
+    return 0;
+
 }

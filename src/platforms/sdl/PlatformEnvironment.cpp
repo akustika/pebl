@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformEnvironment.cpp
 //    Purpose:    Contains SDL-specific interface for the main environment.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2006 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -104,6 +104,9 @@ void PlatformEnvironment::Initialize()
 
         }
 
+    //This shouldn't be neded, if platformenvironment gets cleaned up alright,
+    //but let's do it anyway.
+    //atexit(SDL_Quit);
 }
 
     

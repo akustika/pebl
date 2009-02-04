@@ -531,3 +531,30 @@ Variant PEBLStream::GetData(Variant v)
     return ret;
 
 }
+
+
+
+Variant PEBLStream::WritePNG(Variant v)
+{
+    //v[1] should have an object/window name.
+    //v[2] should have a filename
+
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_WIDGET, "Argument error in first parameter of function [WritePNG(<window>,<filename>)]: ");   
+
+    counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
+    PlatformWindow * mywin = dynamic_cast<PlatformWindow*>(tmp2.get());
+
+    Variant v2 = plist->First();
+    PError::AssertType(v2, PEAT_STRING, "Argument error in second parameter of function [WritePNG(<window>,<filename>)]: ");   
+
+    int result = SDLUtility::WritePNG(v2,mywin);
+
+    if(result==0)
+        {
+            PError::SignalFatalError("Failed to write png file " + v2);
+        }
+
+    return Variant(1);
+}

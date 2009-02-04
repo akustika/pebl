@@ -149,6 +149,7 @@ namespace PEBLStream
                 
             {"SENDDATA", SendData,                     2,2},
             {"GETDATA", GetData,                       2,2},
+            {"WRITEPNG", WritePNG,                     2,2},
 
             {0,            0,  0, 0}
         };

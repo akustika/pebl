@@ -94,5 +94,9 @@ namespace PEBLStream
     Variant GetData(Variant v);
 
 
+    //This writes a 'screenshot' to a png file.
+    Variant WritePNG(Variant v);
+
+
 }
 #endif

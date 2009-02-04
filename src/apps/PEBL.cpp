@@ -3,7 +3,7 @@
 //    Name:       src/apps/PEBL.cpp
 //    Purpose:    The primary PEBL run-time interpreter.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -64,6 +64,9 @@
 #ifdef WIN32
 #include <time.h>
 #endif
+
+#include "../platforms/sdl/PlatformEnvironment.h"
+extern PlatformEnvironment * myEnv=NULL;
 
 
 using std::cerr;
@@ -378,7 +381,9 @@ int PEBLInterpret( int argc, char *argv[] )
 
     //Add the subject identifier.
     Evaluator::gGlobalVariableMap.AddVariable("gSubNum",subnum);
-
+    
+    //Add a special 'quote' character.
+    Evaluator::gGlobalVariableMap.AddVariable("gQuote",Variant("\""));
 
 
     //Now, everything should be F-I-N-E fine.
@@ -392,7 +397,7 @@ int PEBLInterpret( int argc, char *argv[] )
             myEval.Evaluate(head);
 
             delete myLoader; 
-            
+            if(myEnv) delete myEnv;
             Evaluator::mFunctionMap.Destroy();
         	std::cout << "Program Terminated Successfully"  << endl;
             
@@ -405,15 +410,17 @@ int PEBLInterpret( int argc, char *argv[] )
             delete myLoader;
         }
 
-        }
+}
 
-    void  CaptureSignal(int signal)
+void  CaptureSignal(int signal)
 {
     cerr << "Exiting PEBL because of captured signal.\n";
 
     delete myLoader;
-    raise(signal);
 
+    if(myEnv) delete myEnv;
+
+    raise(signal);
     exit(0);
 }
 

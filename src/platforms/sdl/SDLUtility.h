@@ -30,6 +30,7 @@
 
 #include "../../objects/PColor.h"
 #include "SDL/SDL.h"
+#include "PlatformWindow.h"
 
 
 /// These are SDL-specific utilities that don't fit into a single class very well.
@@ -50,9 +51,9 @@ namespace SDLUtility
     void DrawLine(SDL_Surface *surface, int x1, int y1, int x2, int y2, PColor color);
     void DrawSmoothLine(SDL_Surface *surface, int x1, int y1, int x2, int y2, PColor color);
      
-    PColor GetPixel(SDL_Surface *surface, int x, int y);
+    Uint32 GetPixel(SDL_Surface *surface, int x, int y);
     
-
+    int WritePNG(const Variant fname, PlatformWindow * win);
 
 
 

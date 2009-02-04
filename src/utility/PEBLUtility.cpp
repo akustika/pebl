@@ -3,7 +3,7 @@
 //    Name:       utility/PEBLUtility.cpp
 //    Purpose:    Miscellaneous Utility Functions used in PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -39,6 +39,7 @@
 #include <iostream>
 #include <strstream>
 #include <algorithm>
+#include <png.h>
 
 //Some math libraries contain this, but let's not take any chances.
 #define PI 3.141592653589793238462643383279502884197169399375
@@ -861,9 +862,9 @@ PEBLVideoMode PEBLUtility::GetVideoMode(std::string modeline)
 
 	PEBLVideoMode mode;
 
-	if(modeline == "512x384") mode =PVM_512_384;
-	else if (modeline =="640x480") mode =	PVM_640_480;
-	else if (modeline =="800x600")	mode =	PVM_800_600;
+	if(modeline ==        "512x384") mode =PVM_512_384;
+	else if (modeline ==  "640x480") mode =	PVM_640_480;
+	else if (modeline ==  "800x600")	mode =	PVM_800_600;
 	else if (modeline ==	"960x720")	mode =	PVM_960_720;
 	else if (modeline ==	"1024x768")	mode =	PVM_1024_768;
 	else if (modeline ==	"1152x864")	mode =	PVM_1152_864;
@@ -897,3 +898,5 @@ std::string PEBLUtility::ShiftSwitch(int modkeys, std::string lower, std::string
     else
         return lower;
 }
+
+
