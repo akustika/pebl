@@ -53,8 +53,7 @@ namespace SDLUtility
      
     Uint32 GetPixel(SDL_Surface *surface, int x, int y);
     
-    int WritePNG(const Variant fname, PlatformWindow * win);
-
+    int WritePNG(const Variant fname, PlatformWidget * wid);
 
 
 }

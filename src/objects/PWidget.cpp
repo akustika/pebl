@@ -3,7 +3,7 @@
 //    Name:       src/objects/PWidget.cpp
 //    Purpose:    Contains methods for primary GUI element
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -74,8 +74,8 @@ PWidget::PWidget(int x, int y, int width, int height, bool visible):
     
     InitializeProperty("X",Variant(mX));
     InitializeProperty("Y",Variant(mY));
-    //    InitializeProperty("WIDTH",Variant(mWidth));
-    //    InitializeProperty("HEIGHT",Variant(mHeight));
+    InitializeProperty("WIDTH",Variant(mWidth));
+    InitializeProperty("HEIGHT",Variant(mHeight));
     InitializeProperty("VISIBLE",Variant(mIsVisible));
     InitializeProperty("ZOOMX",Variant(mZoomX));
     InitializeProperty("ZOOMY",Variant(mZoomY));
@@ -106,9 +106,8 @@ bool PWidget::SetProperty(std::string name, Variant v)
             else if (name == "ZOOMX") SetZoomX((long double)v);
             else if (name == "ZOOMY") SetZoomY((long double)v);
             else if (name == "ROTATION") SetRotation((long double)v);
-            //Height and width are not universally settable: 
-            //    else if (name == "WIDTH") SetWidth((int)v);
-            //    else if (name == "HEIGHT") SetHeight((int)v);
+            else if (name == "WIDTH") SetWidth((int)v);
+            else if (name == "HEIGHT") SetHeight((int)v);
             else if (name == "BGCOLOR") 
                 {
                     SetBackgroundColor(*((PColor*)(v.GetComplexData())));
@@ -128,6 +127,7 @@ bool PWidget::SetProperty(std::string name, Variant v)
             PError::SignalFatalError("Failing to set invalid property: ["+ name +"]" );
             return false;
         }
+    return false;
 }
 
 
@@ -153,8 +153,8 @@ Variant  PWidget::GetProperty(std::string name)const
     if(name == "X" ||
        name == "Y" ||
        name == "VISIBLE" ||
-       //       name == "WIDTH" ||
-       //       name == "HEIGHT" ||
+       name == "WIDTH" ||
+       name == "HEIGHT" ||
        name == "ZOOMX" ||
        name == "ZOOMY" ||
        name == "BGCOLOR" ||
@@ -181,13 +181,13 @@ void PWidget::SetPosition(int x, int y)
 void PWidget::SetZoomX(double x)
 {
     mZoomX = x;
-    PEBLObjectBase::SetProperty("ZOOMX",mX);
+    PEBLObjectBase::SetProperty("ZOOMX",mZoomX);
 }
 ///This sets the widget's position on its parent widget.
 void PWidget::SetZoomY(double y)
 {
     mZoomY = y;
-    PEBLObjectBase::SetProperty("ZOOMY",mY);
+    PEBLObjectBase::SetProperty("ZOOMY",mZoomY);
 }
 
 

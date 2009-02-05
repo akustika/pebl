@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformWidget.cpp
 //    Purpose:    Contains SDL-specific interface GUI objects
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -101,18 +101,33 @@ bool PlatformWidget::Draw()
                     
                             tmp = rotozoomSurfaceXY(mSurface, mRotation,mZoomX, mZoomY, 1); 
                     
+
                             //We need to reset the sizes.
-                            
                             mWidth = tmp->w;
                             mHeight = tmp->h;
+
                             PWidget::SetProperty("WIDTH",mWidth);
-                            PWidget::SetProperty("HEIGHT", mHeight);
+                            PWidget::SetProperty("HEIGHT",mHeight);
+                            PWidget::SetProperty("ZOOMX",mZoomX);
+                            PWidget::SetProperty("ZOOMY",mZoomY);
+                            
+
+                            SetPosition(mX,mY); //Reset position so
+                            //images get centered properly
                         }
                     else
                         {
-                            
+
+                            //width and height need resetting back 
+                            //to original, assuming they had been
+                            mWidth = mSurface->w;
+                            mHeight = mSurface->h;
+                           
                             PWidget::SetProperty("WIDTH", mWidth);
                             PWidget::SetProperty("HEIGHT", mHeight);
+                            PWidget::SetProperty("ZOOMX",1);
+                            PWidget::SetProperty("ZOOMY",1);
+                            SetPosition(mX,mY);
                         }
 
                     SDL_Rect  fromRect = {0,0,mWidth,mHeight};

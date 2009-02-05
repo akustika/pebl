@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/SDLUtility.h
 //    Purpose:    Contains miscellaneous utility functions.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -178,10 +178,10 @@ Uint32 SDLUtility::GetPixel(SDL_Surface *surface, int x, int y)
 }
 
 
-int SDLUtility::WritePNG(const Variant fname, PlatformWindow* win)
+int SDLUtility::WritePNG(const Variant fname, PlatformWidget* wid)
 {
     
-    SDL_Surface * surf = win->GetSDL_Surface();
+    SDL_Surface * surf = wid->GetSDL_Surface();
 
 
      //Make and save a png out of a surface
