@@ -79,6 +79,8 @@ namespace PEBLEnvironment
     Variant TranslateKeyCode(Variant v);
     Variant TimeStamp(Variant v);
     Variant GetPEBLVersion(Variant v);
+    Variant GetSystemType(Variant v);
+    Variant SystemCall(Variant v);
 
 
     Variant IsNumber(Variant v);

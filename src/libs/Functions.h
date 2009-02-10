@@ -3,7 +3,7 @@
 //    Name:       src/libs/Functions.h
 //    Purpose:    Defines function tables
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -250,6 +250,9 @@ namespace PEBLEnvironment
             {"TRANSLATEKEYCODE",                TranslateKeyCode,  1, 1},
             {"TIMESTAMP",                       TimeStamp,         0, 0},
             {"GETPEBLVERSION",                  GetPEBLVersion,    0, 0},
+            {"GETSYSTEMTYPE",                   GetSystemType,     0, 0},
+            {"SYSTEMCALL",                      SystemCall,        1,1,},
+
             {"ISNUMBER",                        IsNumber,          1,1},
             {"ISINTEGER",                       IsInteger,          1,1},
             {"ISFLOAT",                         IsFloat,            1,1},

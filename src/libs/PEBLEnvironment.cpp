@@ -852,11 +852,33 @@ Variant PEBLEnvironment::TimeStamp(Variant v)
 Variant  PEBLEnvironment::GetPEBLVersion(Variant v)
 {
     
-    return Variant("PEBL Version 0.09");
+    return Variant("PEBL Version 0.10");
 }
 
 
+Variant PEBLEnvironment::GetSystemType(Variant v)
+{
+#if defined(PEBL_OSX)
+    Variant type = "OSX";
+#elif defined (PEBL_UNIX)
+    Variant type = "LINUX";
+#else
+    Variant type = "WINDOWS";
+#endif
 
+    return type;
+}
+
+
+Variant PEBLEnvironment::SystemCall(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    std::string call  = plist->First().GetString();
+    
+    const char* call2 = call.c_str();
+    int x = system(call2);  //do a system call with the argument string.
+    return Variant(x);
+}
 
 
 
