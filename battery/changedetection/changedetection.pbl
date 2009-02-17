@@ -1,10 +1,33 @@
+############################################################################
+## 
+## PEBL Change detection task
+## A version of common 'change detection' and 'change blindness'
+## tasks.  This does not use naturalistic stimuli, but rather 
+## fields of circles.  
+## 
+##  Inspired by Oli Harris's PEBL change blindness experiments
+##  (cbexp; see http://code.google.com/p/cbexp/  cbexp contains approx
+##     50 photographic change detection scenes, and is highly recommended.)
+##
+##  Present experiment allows four different types of chnages:
+##    size of a target    
+##    location of a target     
+##    position of a target
+##    color of a target
+##
+##  Part of the PEBL Test Battery.
+##  Version 0.1 Released Dec 2008, Shane T. Mueller (smueller@obereed.net)
+##
+##
+##
+############################################################################
+
 define Start(par)
  {
 
     gTolerance <- 30           #How close you have to get to count as correct
-
-
-    gCircles <- 30  #Number of circles in field
+    gUseBackground  <- 1  ##Whether to use a faked background with many circles
+    gCircles <- 50  #Number of circles in field
                     ## 20 is pretty easy; 50 is a bigger challenge
 
     gRadMin <- 10   ## Minimum circle radius
@@ -24,6 +47,19 @@ define Start(par)
     gFileOut <- FileOpenWrite("change-"+gSubNum+".txt")
     gSleepEasy <- 1
     gWin <- MakeWindow("Black")
+
+    if(guseBackground)
+    {
+      gbg1 <- MakeImage("bg1.png")
+      gbg2 <- MakeImage("bg2.png")
+      AddObject(gbg1,gWin)
+      AddObject(gbg2,gWin)
+      Move(gbg1,gVideoWidth/2,gVideoHeight/2)
+      Move(gbg2,gVideoWidth/2,gVideoHeight/2)
+      Hide(gbg1)
+      Hide(gbg2)
+    }
+
     gFooter <- EasyLabel("",gVideoWidth/2,gVideoHeight-20,gWin,22)
     inst <- "In this experiment, you will see a series of scenes made up of colored circles.  The display will flash blank briefly, and then reappear. This will repeat several times.  Between blanks, one circle on the screen will change.  Your task is to find the change.
       Below is an example screen. Notice how the red circle moves from one location to another.  
@@ -113,6 +149,16 @@ define Trial(cond)
      showsum   <- 0
      showN     <- 0
     
+     if(gUseBackground)
+      { 
+        if(Random() < .5)
+        {
+         backdrop <- gBg1
+        }else{
+         backdrop <- gBg2
+        }
+       Show(backdrop)
+      }
      ##cond1 is a move trial
      if(cond==1)
      {
@@ -345,7 +391,7 @@ define Trial(cond)
         Draw()
      }
 
-
+   Hide(backdrop)
    RemoveObjects(bg,gWin)
    RemoveObject(targ,gwin)
    RemoveObject(screen,gwin)
@@ -400,16 +446,13 @@ define Distance(a,b)
 define ColorDistance(a,b)
 {
    return  Abs(a.red -b.red)  + Abs(a.green - b.green) + Abs(a.blue - b.blue)
+
 }
-
-
 
 define RandomColor()
 {
 	return MakeColorRGB(25+Floor(Random()*231),25+Floor(Random()*231),25+Floor(Random()*231))
 }
-
-
 
 
 define RemoveObjects(list,win)
@@ -419,6 +462,7 @@ define RemoveObjects(list,win)
       RemoveObject(i,win) 
     }
 }
+
 
 define ColPrint(color)
 {

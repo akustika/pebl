@@ -1,5 +1,8 @@
 todo:
 
 * Hide() (and presumably show) Crashes when parameter is text (not a widget).
-
 * width and height parameters no longer working on lines (see shapes.pbl)
+* .zoomx and .zoomy are not printed out in the printproperties
+* .zoomx and .zoomy mess up the location of the image--it should keep
+   at the same center, but it does not.
+* Do something about quotes.

@@ -590,6 +590,8 @@ code substition" task.
 As found in the UTC Test batteryand in paper-and-pencil form in the
 Wechsler IQ test.
 
+Options:
+
 Output:
 Output file is letterdigit-<subnum>.txt, and contains:
 subnum trial 
@@ -598,3 +600,52 @@ Detailed summary report is in letterdigit-summary-<subnum>.txt,
 including stimuli letters, mapping, trials, and accuracy/RT
 statistics.
 
+
+
+-------------------------------------------------------------------------------
+            Pattern Comparison Task (3 versions) Version 0.1
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.4
+Location: patterncomparison/patterncomparison.pbl
+		  patterncomparison/pattern-sequential.pbl
+		  patterncomparison/pattern-samediff.pbl
+
+Description: 
+Compare two 4x4 grids of circles to determine whether they are the
+same or different.  Two of the versions map onto two tasks in the UTC
+Test battery (Pattern comparison--sequential and simultaneous).  A
+third requires single responses--either for same or different (with no
+response indicating the opposite)
+
+Options: 
+
+Output:
+Output files are:
+      patcomp-<subnum>.txt,
+      patcompsd-<subnum>.txt
+      patcompseq-<subnum>.txt
+
+Dat columns are:
+subnum trial samediff mat1 mat2 abstime rt resp corr
+
+where mat1 and mat2 are binary-coded flattened matrices.
+
+
+
+
+
+-------------------------------------------------------------------------------
+            Change Detection Task Version 0.1
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.4
+Location: changedetection/changedetection.pbl
+
+
+Description: 
+
+
+Options: 
+
+Output:
+
+Dat columns are:

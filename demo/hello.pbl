@@ -26,6 +26,11 @@ define Start (lParameter)
   AddObject(lText,gWindow)
   ##Nothing appears until you draw!!!
   Draw()
+
+   WritePNG(gWindow,"window.png")
+   WritePNG(gSmiley,"smiles.png")
+   WritePNG(lText, "text.png")
+
   
   ##Set the positions of things
   x <- 0

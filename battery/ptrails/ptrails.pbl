@@ -368,7 +368,7 @@ define GetMinDist(pts)
      index2 <- index1 + 1
  
 
-     if(index2 < len)
+     if(index2 <= len)
       {
       rest <- SubList(pts,index2, Length(pts))
       loop(j, rest)
@@ -493,3 +493,4 @@ define WaitForDownClick()
     }
      return x
 }
+ 

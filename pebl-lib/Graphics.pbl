@@ -193,3 +193,36 @@ define MakeNGonPoints (radius, num)
 
    return  [pointsX,pointsY]
 }
+
+
+
+
+define RGBtoHSV(a)
+{
+   min <- Min([a.red,a.green,a.blue])
+   max <- Max([a.red,a.green,a.blue])
+
+   if(min==max)
+   {
+      h <- 0
+      s <- 0
+   }elseif(max==a.red)
+   {
+      h <- Mod(60 * (a.green-a.blue)/(max-min),360)
+   }elseif(max == a.green)
+   {
+      h <-  60 * (a.blue-a.red)/(max-min) + 120
+   } else {
+      h <- 60 * (a.red-a.green)/(max-min)+240
+   }
+
+   if(max==0)
+    {
+       s <- 0
+    }else{
+       s <- (max-min)/max
+    }
+
+   v<-max
+  return [h,s,v]
+}

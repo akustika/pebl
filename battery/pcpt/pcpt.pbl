@@ -8,7 +8,7 @@
 ##  2006-02 Released into Public Domain
 ##  by Shane T. Mueller, Ph.D. (smueller at obereed dot net)
 ##
-##  Version 0.2, Sept 2008.  
+##  Version 0.3 
 ##
 ##
 ##  Continuous performance task modeled after Conners Continuous 
@@ -17,10 +17,11 @@
 ##  presented one at a time.  Participant must respond by pressing 
 ##  the space bar to all stimuli except the X.  
 ##
-##  The PCPT will give a short (50ms) feedback cue indicating whether
-##  the response was correct or not--a green + for correct, and a red -
-##  for incorrect.  This feedback was not present in Conners task, and can
-##  be turned off by setting the giveFeedback parameter to 0
+##  If the giveFeedback parameter is set to 1, The PCPT will give a short (50ms)
+##  feedback cue indicating whether  the response was correct or not--a green + 
+##  for correct, and a red - for incorrect.  This feedback was not present in Conners
+##  task.  As of Version 0.3, the default is for this feedback to be OFF, unlike earlier
+##  released prior to 2009.
 ## 
 ##  References:
 ##  C. Keith Conners,  Jeffery N. Epstein,  Adrian Angold,  
@@ -48,7 +49,7 @@ define Start(lPar)
 	               "J","L","M","O","P","Q","R","S","U"]
    numBlocks <- cycles * Length(isiVals)
  
-   giveFeedback <- 1
+   giveFeedback <- 0
    
 
    ################################################
@@ -323,7 +324,7 @@ define Start(lPar)
 ##Print out report
    PrintMe(reportfile,"--------------------------------------------------------")
    PrintMe(reportfile," Report for PEBL Continuous Performance Task (PCPT)")
-   PrintMe(reportfile, " Version 0.1")
+   PrintMe(reportfile, " Version 0.3")
    PrintMe(reportfile, " http://pebl.sf.net")
    PrintMe(reportfile, " (c) 2006 Shane T. Mueller, Ph.D.")
    PrintMe(reportfile, " "+GetPEBLVersion())

@@ -294,7 +294,7 @@ define LikertTrial(text)
 define YesNoTrial(text)
 {
   SetText(gTextBox,text)
-  SetText(gHeader,"Do you agree or disagree with the following statement::")
+  SetText(gHeader,"Do you agree or disagree with the following statement:")
   SetText(gFooter," 'Z'                   '/'")
   SetText(gFooter2,"YES                      NO")
 
@@ -523,3 +523,32 @@ define GetSubNum(win)
 }
 
 
+##  This takes a number, and pads
+##  it with zeros size places to the left
+##  of the decimal point,
+##  returning a string
+
+define ZeroPad(num, size)
+{
+  if(not IsNumber(num))
+  { 
+    SignalFatalError("First argument of ZeroPad(num,size) must be a	number")
+  }
+
+  if((not IsInteger(size)) or (size > 10) or (size < 1))
+  { 
+    SignalFatalError("Second argument of ZeroPad(num,size) must be a positive integer less than 10")
+  }
+ 
+  base <- Round(10^(size))
+  if(num>base)
+   {
+     ret <- num+""
+   }else{
+      
+     x <- (base + num)+""
+     ret <- SubString(x,2,size)
+     
+   }
+  return ret
+}
