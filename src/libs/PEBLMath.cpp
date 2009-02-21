@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLMATH.cpp
 //    Purpose:    Built-in math functions for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -494,6 +494,7 @@ Variant PEBLMath::ACos(Variant v)
 }
 
 
+
 //Converts radians to degrees.  Does not truncate at 180.
 Variant PEBLMath::DegToRad(Variant v)
 {
@@ -505,7 +506,7 @@ Variant PEBLMath::DegToRad(Variant v)
 
     if(v1.IsNumber())
         {
-            return Variant(v1.GetFloat() * 360 / (2*PI));
+            return Variant(v1.GetFloat() * PI / 180);
         }
     else if(v1.GetComplexData()->IsList())
         {
@@ -524,7 +525,6 @@ Variant PEBLMath::DegToRad(Variant v)
 
 Variant PEBLMath::RadToDeg(Variant v)
 {
-
     
     PList * plist = v.GetComplexData()->GetList();
     
@@ -533,7 +533,7 @@ Variant PEBLMath::RadToDeg(Variant v)
 
     if(v1.IsNumber())
         {
-            return Variant(v1.GetFloat() / 360 * (2 * PI));
+            return Variant(v1.GetFloat() * 180/ PI);
         }
     else if(v1.GetComplexData()->IsList())
         {

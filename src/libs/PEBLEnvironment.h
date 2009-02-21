@@ -82,7 +82,7 @@ namespace PEBLEnvironment
     Variant GetSystemType(Variant v);
     Variant SystemCall(Variant v);
 
-
+    Variant VariableExists(Variant v);
     Variant IsNumber(Variant v);
     Variant IsInteger(Variant v);
     Variant IsFloat(Variant v);

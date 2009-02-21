@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLEnvironment.cpp
 //    Purpose:    General Environment Function Library for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -878,6 +878,14 @@ Variant PEBLEnvironment::SystemCall(Variant v)
     const char* call2 = call.c_str();
     int x = system(call2);  //do a system call with the argument string.
     return Variant(x);
+}
+
+
+Variant PEBLEnvironment::VariableExists(Variant v)
+{
+   PList * plist = v.GetComplexData()->GetList();
+   Variant x  = plist->First();
+   return Variant(1);
 }
 
 

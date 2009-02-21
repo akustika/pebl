@@ -99,8 +99,8 @@ void PlatformEnvironment::Initialize()
         {
             SDL_EnableUNICODE(mUnicode);
             cerr << "Successfully initialized SDL Graphics" << endl;
-            //char name[32];
-            //cerr  << "Using audio driver: " <<  SDL_AudioDriverName(name, 32) << endl;
+            char name[32];
+            cerr  << "Using audio driver: " <<  SDL_AudioDriverName(name, 32) << endl;
 
         }
 

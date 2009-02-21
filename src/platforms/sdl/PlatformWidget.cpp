@@ -120,9 +120,18 @@ bool PlatformWidget::Draw()
 
                             //width and height need resetting back 
                             //to original, assuming they had been
-                            mWidth = mSurface->w;
-                            mHeight = mSurface->h;
-                           
+
+                            //This can cause crashing, when a label is empty.  
+                            if(mSurface)
+                                {
+                                    mWidth = mSurface->w;
+                                    mHeight = mSurface->h;
+                                }
+                            else
+                                {
+                                    mWidth = 0;
+                                    mHeight = 0;
+                                }
                             PWidget::SetProperty("WIDTH", mWidth);
                             PWidget::SetProperty("HEIGHT", mHeight);
                             PWidget::SetProperty("ZOOMX",1);

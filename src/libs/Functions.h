@@ -251,7 +251,8 @@ namespace PEBLEnvironment
             {"TIMESTAMP",                       TimeStamp,         0, 0},
             {"GETPEBLVERSION",                  GetPEBLVersion,    0, 0},
             {"GETSYSTEMTYPE",                   GetSystemType,     0, 0},
-            {"SYSTEMCALL",                      SystemCall,        1,1,},
+            {"SYSTEMCALL",                      SystemCall,        1,1},
+            {"VARIABLEEXISTS",                  VariableExists,    1,1},
 
             {"ISNUMBER",                        IsNumber,          1,1},
             {"ISINTEGER",                       IsInteger,          1,1},
