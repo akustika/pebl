@@ -39,7 +39,7 @@ define Start(lPar)
   Initialize()
   
 
-
+      numtrials <- 100
       gSubNum <- First(lPar)
 	  if(gSubNum==0)
       {
@@ -206,7 +206,7 @@ Press any key to begin.")
  
 
   trialnum <- 1
-   while(trialnum <= 100)
+   while(trialnum <= numtrials)
     {
 
       time0 <- GetTime()

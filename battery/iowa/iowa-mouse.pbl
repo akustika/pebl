@@ -51,6 +51,9 @@ define Start(lPar)
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
    
+  ##How many trials
+  numtrials <- 100
+
   ##Controls whether the decks are shuffled. Default is as in Bechera et al.
   shuffleDecks <-  0
 
@@ -203,7 +206,7 @@ Press any key to begin.")
  
 
   trialnum <- 1
-   while(trialnum <= 100)
+   while(trialnum <= numtrials)
     {
 
       time0 <- GetTime()
