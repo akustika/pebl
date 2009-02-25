@@ -48,6 +48,7 @@ PColor::PColor():
 
 {
 
+    InitializeProperty("NAME", Variant("<COLOR>"));
      InitializeProperty("RED",Variant(GetRed()));
      InitializeProperty("GREEN",Variant(GetGreen()));
      InitializeProperty("BLUE",Variant(GetBlue()));
@@ -65,6 +66,7 @@ PColor::PColor(int red, int green, int blue, int alpha):
     mAlpha(To8BitColor(alpha))
 
 {
+    InitializeProperty("NAME", Variant("<COLOR>"));
      InitializeProperty("RED",Variant(GetRed()));
      InitializeProperty("GREEN",Variant(GetGreen()));
      InitializeProperty("BLUE",Variant(GetBlue()));
@@ -76,6 +78,7 @@ PColor::PColor(int red, int green, int blue, int alpha):
 PColor::PColor(const string & colorname):
     PEBLObjectBase(CDT_COLOR)
 {
+    InitializeProperty("NAME", Variant("<COLOR>"));
      InitializeProperty("RED",Variant(0));
      InitializeProperty("GREEN",Variant(0));
      InitializeProperty("BLUE",Variant(0));
@@ -94,7 +97,8 @@ PColor::PColor(const PColor & pcolor):
     mGreen = pcolor.GetGreen();
     mBlue  = pcolor.GetBlue();
     mAlpha = pcolor.GetAlpha();
-    
+
+     InitializeProperty("NAME", Variant("<COLOR>"));
      InitializeProperty("RED",Variant(GetRed()));
      InitializeProperty("GREEN",Variant(GetGreen()));
      InitializeProperty("BLUE",Variant(GetBlue()));

@@ -3,7 +3,7 @@
 //    Name:       src/objects/PLabel.cpp
 //    Purpose:    Contains methods primary visual 'word' structure
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -36,6 +36,7 @@ using std::endl;
 PLabel::PLabel():
     PTextObject("")
 {
+    InitializeProperty("NAME",Variant("<LABEL>"));
     mCDT=CDT_LABEL;
 }
 
@@ -44,6 +45,7 @@ PLabel::PLabel():
 PLabel::PLabel(const std::string & text):
     PTextObject(text)
 {
+    InitializeProperty("NAME",Variant("<LABEL>"));
     mCDT=CDT_LABEL;
 }
 
@@ -52,6 +54,7 @@ PLabel::PLabel(const std::string & text):
 PLabel::PLabel(const  PLabel & label):
     PTextObject(label.GetText())
 {
+    InitializeProperty("NAME",Variant("<LABEL>"));
     mCDT=CDT_LABEL;
 }
 

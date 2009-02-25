@@ -3,7 +3,7 @@
 //    Name:       src/objects/PFont.cpp
 //    Purpose:    Contains generic specification for a font
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -52,7 +52,8 @@ PFont::PFont():
     InitializeProperty("UNDERLINE",Variant(IsUnderlineFont()));
     InitializeProperty("ITALIC",  Variant(IsItalicFont()));
     InitializeProperty("SIZE", mFontSize);
-    
+    InitializeProperty("NAME", Variant("<FONT>"));
+
     
     counted_ptr<PEBLObjectBase> pob = counted_ptr<PEBLObjectBase>(&mFontColor);
     PComplexData * pcd = new PComplexData(pob);
@@ -82,13 +83,13 @@ PFont::PFont(const std::string & filename, int style, int size, PColor fgcolor, 
 
     mFontColor       = fgcolor;
     mBackgroundColor = bgcolor;
-
-
-     InitializeProperty("FILENAME", mFontFileName);
-     InitializeProperty("BOLD", Variant(IsBoldFont()));
-     InitializeProperty("UNDERLINE",Variant(IsUnderlineFont()));
-     InitializeProperty("ITALIC",  Variant(IsItalicFont()));
-     InitializeProperty("SIZE", mFontSize);
+    
+    InitializeProperty("NAME", Variant("<FONT>"));
+    InitializeProperty("FILENAME", mFontFileName);
+    InitializeProperty("BOLD", Variant(IsBoldFont()));
+    InitializeProperty("UNDERLINE",Variant(IsUnderlineFont()));
+    InitializeProperty("ITALIC",  Variant(IsItalicFont()));
+    InitializeProperty("SIZE", mFontSize);
 
 
      counted_ptr<PEBLObjectBase> pob = counted_ptr<PEBLObjectBase>(&mFontColor);
@@ -126,7 +127,7 @@ PFont::PFont(const PFont & font)
     InitializeProperty("UNDERLINE",Variant(IsUnderlineFont()));
     InitializeProperty("ITALIC",  Variant(IsItalicFont()));
     InitializeProperty("SIZE", mFontSize);
-
+    InitializeProperty("NAME", Variant("<FONT>"));
 
     
     counted_ptr<PEBLObjectBase> pob = counted_ptr<PEBLObjectBase>(&mFontColor);

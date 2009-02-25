@@ -153,6 +153,9 @@ public:
     bool IsAudioOut() const;
     bool IsNetworkConnection() const;
     bool IsDrawObject() const;
+    bool IsDrawCircle() const;
+    bool IsDrawSquare() const;
+    bool IsDrawRectangle() const;
 
 
     void SetProperty(std::string, Variant v);

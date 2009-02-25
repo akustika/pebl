@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLEnvironment.h
 //    Purpose:    General Environment Function Library for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -98,6 +98,10 @@ namespace PEBLEnvironment
     Variant IsWidget(Variant v);
     Variant IsWindow(Variant v);
     Variant IsShape(Variant v);
+    Variant IsCircle(Variant v);
+    Variant IsSquare(Variant v);
+    Variant IsRectangle(Variant v);
+
 }
 
 

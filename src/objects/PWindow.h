@@ -3,7 +3,7 @@
 //    Name:       src/objects/PWindow.h
 //    Purpose:    Contains generic specs for a Main Window class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -43,8 +43,8 @@ class PWindow: virtual public PWidget
 {
 public:
   
-    PWindow(){}
-    virtual ~PWindow(){}
+    PWindow();
+    virtual ~PWindow();
     virtual bool Draw(){return true;}
     virtual long int DrawFor(unsigned int cycles){return true;}
     virtual std::string ObjectName() const{return "PWindow";};

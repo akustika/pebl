@@ -3,7 +3,7 @@
 //    Name:       src/objects/PImageBox.cpp
 //    Purpose:    Contains generic specification for a imagebox  class.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -33,6 +33,7 @@ using std::cout;
 PImageBox::PImageBox():
     PWidget()
 {
+    InitializeProperty("NAME",Variant("<IMAGEBOX>"));
     __SetProps__();
  
 }

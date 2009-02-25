@@ -46,7 +46,7 @@ PWidget::PWidget():
     mIsVisible(true),
     mParent(NULL)
 {
-    
+    //    InitializeProperty("NAME",Variant(""));
     InitializeProperty("X",Variant(mX));
     InitializeProperty("Y",Variant(mY));
     InitializeProperty("WIDTH",Variant(mWidth));
@@ -71,7 +71,7 @@ PWidget::PWidget(int x, int y, int width, int height, bool visible):
     mIsVisible(visible),
     mParent(NULL)
 {
-    
+    //    InitializeProperty("NAME",Variant(""));
     InitializeProperty("X",Variant(mX));
     InitializeProperty("Y",Variant(mY));
     InitializeProperty("WIDTH",Variant(mWidth));
@@ -100,7 +100,6 @@ bool PWidget::SetProperty(std::string name, Variant v)
     ObjectValidationError err = ValidateProperty(name,v);
     if(err == OVE_SUCCESS)
         {
-            
             if (name == "X") SetPosition(v,mY);
             else if (name == "Y") SetPosition(mX,v);
             else if (name == "ZOOMX") SetZoomX((long double)v);
@@ -158,7 +157,8 @@ Variant  PWidget::GetProperty(std::string name)const
        name == "ZOOMX" ||
        name == "ZOOMY" ||
        name == "BGCOLOR" ||
-       name == "ROTATION")
+       name == "ROTATION" ||
+       name == "NAME")
         return OVE_VALID;
     else
         return OVE_INVALID_PROPERTY_NAME;

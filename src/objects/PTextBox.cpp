@@ -3,7 +3,7 @@
 //    Name:       src/objects/PTextBox.cpp
 //    Purpose:    Contains generic specification for a read-only text box.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -49,7 +49,7 @@ PTextBox::PTextBox():
     InitializeProperty("HEIGHT",Variant(0));
     InitializeProperty("EDITABLE",Variant(false));
     InitializeProperty("CURSORPOS",Variant(0));
-
+    InitializeProperty("NAME",Variant("<TEXTBOX>"));
 }
 
 
@@ -65,6 +65,7 @@ PTextBox::PTextBox(std::string text, int width, int height):
     InitializeProperty("HEIGHT",Variant(height));
     InitializeProperty("EDITABLE",Variant(false));
     InitializeProperty("CURSORPOS",Variant(0));
+    InitializeProperty("NAME",Variant("<TEXTBOX>"));
 }
 
 
@@ -75,6 +76,7 @@ PTextBox::PTextBox( PTextBox & text)
     mText = text.GetText();
     mEditable = false;
     mCursorPos = 0;
+    InitializeProperty("NAME",Variant("<TEXTBOX>"));
 }
 
 PTextBox::~PTextBox()

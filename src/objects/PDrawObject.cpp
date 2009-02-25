@@ -3,7 +3,7 @@
 //    Name:       src/objects/PDrawObject.cpp
 //    Purpose:    Platform-generic classes drawing things.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2005-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -114,6 +114,7 @@ PLine::PLine(int x1, int y1, int dx, int dy, Variant col):
     mDX(dx),
     mDY(dy)
 {
+    InitializeProperty("NAME",Variant("<LINE>"));
     InitializeProperty("WIDTH",dx);
     InitializeProperty("HEIGHT",dy);
 
@@ -197,6 +198,7 @@ std::ostream & PLine::SendToStream(std::ostream& out)
 
 PRectangle::PRectangle(int x1, int y1, int dx, int dy, Variant col, bool filled)
 {
+    InitializeProperty("NAME",Variant("<RECTANGLE>")); 
     InitializeProperty("WIDTH",dx);
     InitializeProperty("HEIGHT",dy);
     SetSize(dx,dy);
@@ -272,6 +274,7 @@ std::ostream & PRectangle::SendToStream(std::ostream& out)
 PSquare::PSquare(int x, int y, int size, Variant col, bool filled):
     PRectangle(x,y,size,size,col,filled)
 {
+    InitializeProperty("NAME",Variant("<SQUARE>")); 
     InitializeProperty("SIZE",size);
     SetSize(size);
 }
@@ -358,6 +361,7 @@ PEllipse:: PEllipse(int x1, int y1, int rx, int ry, Variant col, bool filled)
 {
     SetPosition(x1,y1);
     SetFilled(filled);
+    InitializeProperty("NAME",Variant("<ELLIPSE>")); 
     InitializeProperty("RX",rx);
     InitializeProperty("RY",ry);
     SetSize(rx,ry);
@@ -429,6 +433,8 @@ PCircle::PCircle(int x1, int y1, int r, Variant fg, bool filled)
     SetPosition(x1,y1);
     SetFilled(filled);
     InitializeProperty("R",r);
+    InitializeProperty("NAME",Variant("<CIRCLE>"));
+    
     SetSize(r);
     SetColor(fg);
     SetOutlineColor(fg);
@@ -499,6 +505,7 @@ PPolygon::PPolygon(int x, int y, Variant xpoints, Variant ypoints, Variant fg, b
     SetFilled(filled);
     InitializeProperty("XPOINTS",xpoints);
     InitializeProperty("YPOINTS",ypoints);
+    InitializeProperty("NAME",Variant("<POLYGON>"));
     SetXPoints(xpoints);
     SetYPoints(ypoints);
     SetColor(fg);
@@ -584,7 +591,7 @@ PBezier::PBezier(int x, int y, Variant xpoints, Variant ypoints, int steps, Vari
     InitializeProperty("XPOINTS",xpoints);
     InitializeProperty("YPOINTS",ypoints);
     InitializeProperty("STEPS",steps);
-
+    InitializeProperty("NAME",Variant("<BEZIER>"));
     SetXPoints(xpoints);
     SetYPoints(ypoints);
     SetSteps(steps);
