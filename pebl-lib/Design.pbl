@@ -162,11 +162,11 @@ define Subset(list, items)
    #Check the arguments to insure they are the proper type
     if(not IsList(list))
 	{
-	    SignalFatalError("First argument of function [ExtractListItems(<list>,<list>)] is not a list")
+	    SignalFatalError("First argument of function [Subset(<list>,<items>)] is not a list")
 	}
     if(not IsList(items))
 	{
-	    SignalFatalError("First argument of function [ExtractListItems(<list>,<list>)] is not a list")
+	    SignalFatalError("First argument of function [Subset(<list>,<items>)] is not a list")
 	}
 
 
@@ -197,7 +197,7 @@ define ExtractListItems(list, items)
 	}
     if(not IsList(items))
 	{
-	    SignalFatalError("First argument of function [ExtractListItems(<list>,<list>)] is not a list.")
+	    SignalFatalError("Second argument of function [ExtractListItems(<list>,<list>)] is not a list.")
 	}
 
     returnList <- []      #Make an initial blank list to return

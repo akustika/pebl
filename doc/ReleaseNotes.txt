@@ -76,6 +76,10 @@ Version 0.10
 
 * Added some public domain images for feedback
 
+* Fixed DegToRad and RadToDeg--they worked opposite to expected.
+
+* Added the .name property to most objects.  This lets you do some
+  minimal introspection and decide what kind of thing an object is.
 
 
 

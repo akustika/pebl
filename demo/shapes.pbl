@@ -24,6 +24,7 @@
 
   shape <- Circle(200, 200, 30, red,1)
   Print(shape)
+  PrintProperties(shape)
   AddObject(shape,win)
   Draw()
   WaitForAnyKeyPress()
@@ -51,6 +52,7 @@
 
   shape <- Ellipse(200,200, 30,50, col2,1)
   Print(shape)
+  PrintProperties(shape)
   AddObject(shape,win)
   lab.text <- "FILLED ELLIPSE"
   Draw()

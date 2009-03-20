@@ -526,6 +526,7 @@ void PrintOptions()
     cout << "--driver <drivername>\n";
     cout << "  Sets the video driver, when there is a choice.  For linux SDL, options xf86,\n";
     cout << "  dga, svgalib (from console).  Also controlled via environment variables.\n\n";
+    cout << "  On Windows, use either windib or directx\n";
     cout << "--display  <widthxheight>\n";
     cout << "  Controls the screen width and height (in pixels). Defaults to 640x480.\n";
     cout << "  Currently, only the following screens are supported:\n";

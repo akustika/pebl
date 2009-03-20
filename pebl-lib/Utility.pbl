@@ -2,7 +2,7 @@
 #//    Name:       src/pebl-lib/Utility.pbl
 #//    Purpose:    Contains PEBL functions used for various purposes
 #//    Author:     Shane T. Mueller, Ph.D.
-#//    Copyright:  (c) 2004-2008 Shane T. Mueller <smueller@obereed.net>
+#//    Copyright:  (c) 2004-2009 Shane T. Mueller <smueller@obereed.net>
 #//    License:    GPL 2
 #//
 #//
@@ -512,13 +512,18 @@ define EasyTextBox(text,x,y,win,fontsize,width,height)
 ##Make an easy-to-use getsubnum function here.
 define GetSubNum(win)
 {
-   query <- EasyLabel("Enter Participant Identifier",gVideoWidth/2,20,win,20)
-   box <- EasyTextBox("",gVideoWidth/2-30,50, win,20,80,25)
+   bg    <- Rectangle(gVideoWidth/2,90,450,100,MakeColor("grey"),1)
+   AddObject(bg,win)
+   query <- EasyLabel("Enter Participant Identifier",gVideoWidth/2,80,win,20)
+
+
+   box <- EasyTextBox("",gVideoWidth/2-30,100, win,20,80,25)
    Draw()
    subnum <- GetInput(box,"<return>")
    
-   RemoveObject(query,gWin)
-   RemoveObject(box,gWin)
+   RemoveObject(query,win)
+   RemoveObject(box,win)
+   RemoveObject(bg,win)
    return subnum
 }
 
