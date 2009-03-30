@@ -441,7 +441,12 @@ define Reverse(list)
 define ShuffleRepeat(list, n)
 {
 
+   ##Shuffle the first copy:
    tmp <- [Shuffle(list)]
+
+   ##Add additional sets to the end
+   if(n>1)
+   {
    loop(i, Sequence(1,n-1,1))
     {
       try <- Shuffle(list)
@@ -451,6 +456,7 @@ define ShuffleRepeat(list, n)
           }
        tmp <- Append(tmp,try)
     }
+   }
   return tmp
 }
 
