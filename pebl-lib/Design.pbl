@@ -2,7 +2,7 @@
 #//    Name:       src/pebl-lib/Design.pbl
 #//    Purpose:    Contains PEBL functions used for experiment design
 #//    Author:     Shane T. Mueller, Ph.D.
-#//    Copyright:  (c) 2004-2008 Shane T. Mueller <smueller@obereed.net>
+#//    Copyright:  (c) 2004-2009 Shane T. Mueller <smueller@obereed.net>
 #//    License:    GPL 2
 #//
 #//
@@ -441,10 +441,15 @@ define Reverse(list)
 define ShuffleRepeat(list, n)
 {
 
-   tmp <- []
-   loop(i, Sequence(1,n,1))
+   tmp <- [Shuffle(list)]
+   loop(i, Sequence(1,n-1,1))
     {
-       tmp <- Append(tmp, Shuffle(list))
+      try <- Shuffle(list)
+      while(First(try) ==  Nth(tmp,Length(tmp)))
+          { 
+           try <- Shuffle(list)
+          }
+       tmp <- Append(tmp,try)
     }
   return tmp
 }

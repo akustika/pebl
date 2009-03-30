@@ -557,3 +557,209 @@ define ZeroPad(num, size)
    }
   return ret
 }
+
+
+
+## This should handle 'Inside' calls for almost anything
+##
+define Inside(click,object)
+{
+
+	x <- First(click)
+    y <- Second(click)
+ 
+
+   if(IsImage(object) or IsLabel(object) or 
+      object.name == "<RECTANGLE>" or object.name == "<SQUARE>")
+   {
+	##First, determine object limits
+	xlow <- object.x - object.width/2
+	xhigh <- object.x + object.width/2
+
+	ylow <- object.y - object.height/2
+	yhigh <- object.y + object.height/2
+	
+    inside <- (x >= xlow) and (x  <= xhigh) and (y >= ylow) and (y <= yhigh)
+
+   } elseif (IsTextBox(object))
+   {
+     xlow <- object.x
+     xhigh <- object.x+object.width
+     ylow <- object.y
+     yhigh <- object.y+object.height
+     inside <- (x >= xlow) and (x  <= xhigh) and (y >= ylow) and (y <= yhigh)
+
+   } elseif(object.name == "<CIRCLE>")
+       {
+          d <- Dist([x,y],[object.x,object.y])
+          inside  <- (d <= object.r)
+
+   } else {
+     inside <- 0
+   }
+
+	return inside
+}
+
+
+define Dist(a,b)
+{
+  return   Sqrt((First(a)-First(b))^2 + (Second(a) -Second(b))^2)
+}
+
+
+## This will read a CSV file into a nested list.  The CSV file should
+## allow quoted text, and not break on commas within quotes.
+
+define ReadCSV(filename)
+{
+
+  #open the file
+  file <- FileOpenRead(filename)
+  
+  char <- FileReadCharacter(file)
+
+  ##Process each line until the end of the file.
+  table <- [] 
+  while(not EndOfFile(file))
+   { 
+    line <- []
+    inquote <- 0
+    token <- ""
+   
+    ##Process each character in the line.
+    while(not EndOfLine(file))
+    {
+
+
+      ##Determine what to do with it:
+      if(char == gQuote and (not inquote))
+       {
+         inquote <- 1
+         token <- token + char
+
+       }elseif(char ==gQuote and inquote)
+       {
+         inquote <- 0
+         token <- token + char
+
+       }elseif(char == "," and (not inquote))
+	   {
+
+       token <- StripSpace(token)
+       line <- Append(line,StripQuotes(token))
+       token <- ""
+         
+       }else{
+         token <- token + char
+       }
+       
+     char <- FileReadCharacter(file)
+    }
+
+    ##Add the last character onto the token
+      ##Determine what to do with it:
+      if(char == gQuote and (not inquote))
+       {
+         inquote <- 1
+         token <- token + char
+
+
+       }elseif(char ==gQuote and inquote)
+       {
+         inquote <- 0
+         token <- token + char
+
+       }elseif(char == "," and (not inquote))
+	   {
+    
+
+       token <- StripSpace(token)
+
+          line <- Append(line,StripQuotes(token))
+          token <- ""
+         
+       }else{
+
+         token <- token + char
+       }
+
+
+    ##Add the token onto the line
+
+    token <- StripSpace(token)
+
+    line <- Append(line,StripQuotes(token))
+
+
+    ##Add the line onto the table 
+    if(not EndOfFile(file))
+     {
+	     table <- Append(table,line)
+     }
+
+    #eat and discard the newline character
+    FileReadCharacter(file)
+    char <- FileReadCharacter(file)
+
+	}
+
+  return table
+}
+
+define Enquote(text)
+{
+ return gQuote + text + gQuote
+}
+
+
+define StripSpace(text)
+{
+   start <- 1
+   end <- StringLength(text)
+  
+   if(end > 0)
+   {
+   while(Substring(text,start,1) == " " and start <= end)
+     {
+       start <- start + 1
+     }
+   while(Substring(text,end,1) == " " and end > start)
+     {
+       end <- end - 1
+     }
+
+   ret <- SubString(text,start,end)
+
+   } else {
+    ret <- text
+   }
+   return ret
+}
+
+##remove quotes from outside of text (but not the inside)
+define StripQuotes(text)
+{
+   start <- 1
+   end <- StringLength(text)
+  
+   if(end > 0)
+   {
+
+   if(SubString(text,end,1)==gQuote)
+    {
+      end <- end - 1
+    }
+   if(SubString(text,1,1)== gQuote)
+    {
+      start <- 2
+      end <- end -1
+    }
+
+   ret <- SubString(text,start,end)
+
+   } else {
+    ret <- text
+   }
+   return ret
+}
