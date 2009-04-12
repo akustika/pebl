@@ -1,6 +1,6 @@
 #!/usr/local/bin/pebl
 ###########################################################
-##  Simple Reaction Time Task, Version 0.1
+##  Simple Reaction Time Task, Version 0.2
 ##  For use with PEBL 0.07 or later
 ##  http://pebl.sf.net
 ##  Part of  The PEBL Psychological Testing Battery
@@ -63,12 +63,12 @@ define Start(lPar)
   ##
 
   Initialize()
+  gSubNum <- GetSubNum(gWin)
   ShowCursor(0)
   ## The delays are pre-generated to make it easier to control things, 
   ## like sequential dependencies, distributions, fixed delays, etc.
   delayseq <- Shuffle(DesignBalancedSampling(delays, numtrials))
-
-  datafile   <- FileOpenWrite("srt-"+ gSubNum + ".txt")
+  datafile   <- FileOpenAppend("srt-"+ gSubNum + ".txt")
 
 
  
@@ -117,7 +117,7 @@ define Start(lPar)
   resp1 <- WaitForListKeyPressWithTimeout(["X"], delay,1)
   time1 <- GetTime()
 
-  if(resp1 == 0 )
+  if(resp1 == "x" )
   {  
     Wait(delay - (time1-time0))
   }
@@ -156,9 +156,9 @@ define Start(lPar)
   ####################
   ##Experiment is finished; print out summary stats
 
-  reportfile <- FileOpenWrite("srt-report-" + gSubNum + ".txt")
+  reportfile <- FileOpenAppend("srt-report-" + gSubNum + ".txt")
    FilePrint(reportfile,"------------------------------------------------------")
-   FilePrint(reportfile," Report for PEBL Simple Response Time Task Version 0.1")
+   FilePrint(reportfile," Report for PEBL Simple Response Time Task Version 0.2")
    FilePrint(reportfile, " "+GetPEBLVersion())
    FilePrint(reportfile, " "+TimeStamp())
    FilePrint(reportfile," http://pebl.sf.net")

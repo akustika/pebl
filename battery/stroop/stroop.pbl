@@ -693,7 +693,6 @@ define Initialize()
 define Aggregate(vals, cond)
 {
 
-
   ## start by sorting values by condition,
   ## then move through them and analyze subparts.
 

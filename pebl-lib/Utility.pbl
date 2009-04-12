@@ -517,7 +517,7 @@ define GetSubNum(win)
    query <- EasyLabel("Enter Participant Identifier",gVideoWidth/2,80,win,20)
 
 
-   box <- EasyTextBox("",gVideoWidth/2-30,100, win,20,160,25)
+   box <- EasyTextBox("",gVideoWidth/2-50,100, win,20,160,25)
    Draw()
    subnum <- GetInput(box,"<return>")
    

@@ -540,6 +540,7 @@ define ShuffleWithoutAdjacents(list)
  
    return SortBy(flatList, key)
 }
+
 define Sample(list)
 {
  return  First(SampleN(list,1))
