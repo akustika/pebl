@@ -1,8 +1,8 @@
 #!/usr/local/bin/pebl
 #################################################################
-##  Test of Attentional Vigilance, (TOAV),  PEBL's version of the
-##  Test of Variables of Attention (TOVA)(tm), 
-##  For use with PEBL 0.07 or later
+##  Test of Attentional Vigilance, (TOAV), Version 0.2
+##  PEBL's version of the  Test of Variables of Attention (TOVA)(tm), 
+##  For use with PEBL 0.09 or later
 ##  http://pebl.sf.net
 ##  Part of  The PEBL Psychological Test Battery
 ##  2006-02 Released into Public Domain
@@ -186,14 +186,17 @@ define Start(lPar)
       time1 <- GetTime()
 
       HideAll()
-      if(r1 == 1)
+      if(r1 == "<unknown>")
       {
 
         r2 <- WaitForListKeyPressWithTimeout([" "],1850,1)
         time2 <- GetTime()
 
+
+
         remains <- 1850-(time2-time1)
         rMult <- WaitForListKeyPressWithTimeout([" "],remains,1)
+
         time3 <- GetTime()
         Wait(1850 - (time3 - time1))
 
@@ -201,6 +204,7 @@ define Start(lPar)
 
         rMult <- WaitForListKeyPressWithTimeout([" "],1850,1)
         time2 <- GetTime()
+
         r2 <- 0
         Wait(1850 - (time2- time1))
         time3 <- GetTime()
@@ -217,21 +221,24 @@ define Start(lPar)
       time1 <- GetTime()
 
       HideAll()
-      if(r1 == 1) 
+      if(r1 == "<unknown>")
       {
 
         r2 <- WaitForListKeyPressWithTimeout([" "],1850,1)
         time2 <- GetTime()
+
         remains <- 1850-(time2-time1)
 
         rMult <- WaitForListKeyPressWithTimeout([" "],remains,1)
         time3 <- GetTime()
+
         Wait(1850 - (time3-time1))
 
       } else {
         ## A response was made in phase 1.
         rMult <- WaitForListKeyPressWithTimeout([" "],1850,1)
         time2 <- GetTime()
+
         r2 <- 0
         Wait(1850 - (time2-time1))
         time3 <- GetTime()
@@ -241,14 +248,14 @@ define Start(lPar)
       }
 
      rt <- -1
-     responded <- (1-r1) or (1-r2)
-     mult <- 1-rMult 
+     responded <- r1 != "<unknown>" or r2 != "<unknown>"
+     mult <- rMult != "<unknown>"
 
      ##if r1 == 0, the key was struck during stimulus presentation.
-     if (r1 == 0)
+     if (r1 != "<unknown>")
      {
-      toofast <- 1
-      rt <- (time1 - timeStart)
+       toofast <- 1
+       rt <- (time1 - timeStart)
 
      } else {
       if(responded)
