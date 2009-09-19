@@ -521,10 +521,8 @@ Variant PEBLObjects::Hide(Variant v)
  
     //v[1] should have the  widget
     PList * plist = v.GetComplexData()->GetList();
-
-
     Variant v1 = plist->First(); plist->PopFront();
-
+    PError::AssertType(v1, PEAT_WIDGET, "Argument error in function [Hide(<widget>)]: "); 
     PlatformWidget * widget = dynamic_cast<PlatformWidget*>(v1.GetComplexData()->GetObject().get());
     
     widget->Hide();
