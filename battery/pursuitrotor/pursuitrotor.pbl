@@ -152,10 +152,9 @@ define Trial(timeinsecs,head)
 
     totaltime <- totaltime + tDiff*inside  #increment the elapsed time
  
-    FilePrint(gFileOut,head+ " " + steps + " " + tNow + " " + tElapsed
-    + " " +  gTarg.x + " " + gTarg.y + " " + First(mouse) +  " " +
+    FilePrint(gFileOut,head+ " " + steps + " " + tNow + " " + tElapsed  + " " +  gTarg.x + " " + gTarg.y + " " + First(mouse) +  " " +
     Second(mouse) + " " +inside + " " + tdiff + " " + totaltime + " " + diff + " " + totaldev)
-    Wait(10)
+#    Wait(10)
     steps <- steps + 1
   }
 
