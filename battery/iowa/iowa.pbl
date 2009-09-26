@@ -1,6 +1,6 @@
 define Start(lPar)
 {
- ## (c) 2006-2008 Shane T. Mueller
+ ## (c) 2006-2009 Shane T. Mueller
  ## smueller at obereed dot net
  ## PEBL Bechara's Gambling Task, Version 0.3
  ##  (a version of the so-called Iowa Gambling Task (tm))
@@ -39,21 +39,25 @@ define Start(lPar)
   Initialize()
   
 
-      numtrials <- 100
+
+  if(Length(lPar)>0)
+   { 
       gSubNum <- First(lPar)
-	  if(gSubNum==0)
+   } else {
+      gSubNum <- 0
+   }
+
+
+    if(gSubNum==0)
       {
-	        gHeader.Text <- "Enter Subject Identifier Code"    
-			Show(gHeader)
-  		  Draw()
-       gSubNum <- GetInput(gFooter,"<return>")
-	   Draw()
-        Hide(gFooter)
-        Hide(gHeader)
-       }
+        gSubNum <- GetSubNum(gWin)
+      }
+
   ## results are stored in tmpresults.dat
   gFileOut <-FileOpenAppend("igt-" + gSubNum +".txt")
 
+
+   numtrials <- 100
 
  
   ##Controls whether the decks are shuffled. Default is as in Bechera et al.
@@ -113,6 +117,7 @@ Do you have any questions?
 
 
 Press any key to begin.")
+   Hide(gFooter)
    Show(gInstructions)
    Draw()  
    WaitForAnyKeyPress()
@@ -357,9 +362,10 @@ Press any key to begin.")
 ##  objects used in experiments.
 define Initialize()
 {
-
-  gVideoWidth <- 640
-  gVideoheight <- 480
+#  gVideoWidth <- 640
+#  gVideoheight <- 480
+  gVideoWidth <- 800
+  gVideoheight <- 600
 
   ##Initialize Window, etc.
   gWin <- MakeWindow("grey")   

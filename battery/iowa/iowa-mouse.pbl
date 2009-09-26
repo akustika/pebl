@@ -1,6 +1,6 @@
 define Start(lPar)
 {
- ## (c) 2006 Shane T. Mueller
+ ## (c) 2006-2009 Shane T. Mueller
  ## smueller at obereed dot net
  ## PEBL Bechara's Gambling Task, Version 0.3
  ##  (a version of the so-called Iowa Gambling Task (tm))
@@ -34,6 +34,10 @@ define Start(lPar)
  ## For use with PEBL 0.06 or later
  ## http://pebl.sf.net
  ## Part of  The PEBL Psychological Testing Battery
+
+
+  ## Initialize global objects for use later. Defined at end of file
+  Initialize()
  
   if(Length(lPar)>0)
    { 
@@ -41,15 +45,18 @@ define Start(lPar)
    } else {
       gSubNum <- 0
    }
-  ## results are stored in tmpresults.dat
+   if(gSubNum==0)
+     {
+        gSubNum <- GetSubNum(gWin)
+     }
+
+
   gFileOut <-FileOpenAppend("igt-" + gSubNum +".txt")
 
   ## Don't busy-wait. 
   gSleepEasy <- 1
 
 
-  ## Initialize global objects for use later. Defined at end of file
-  Initialize()
    
   ##How many trials
   numtrials <- 100
@@ -214,8 +221,9 @@ Press any key to begin.")
       resp <- "0"
       while (resp == "0")
       {
-         click <- WaitForMouseButton()
-         resp <- DetermineClickResponse(click,[deck1,deck2,deck3,deck4])
+#         click <- WaitForMouseButton()
+##       resp <- DetermineClickResponse(click,[deck1,deck2,deck3,deck4])
+         resp <- WaitForClickOnTarget([deck1,deck2,deck3,deck4],["1","2","3","4"])
       }
 
      # resp <- WaitForListKeyPress(["1","2","3","4"])
@@ -350,6 +358,10 @@ Press any key to begin.")
      feedback <- feedback + "Congratulations! "
    }
 
+   Print(gSubNum + " "+ TimeStamp() + " " + gTotal)
+   file <- FileOpenAppend("igt-log.txt")
+   FilePrint(file, gSubNum + ", " + TimeStamp() + ", " + gTotal)
+ 
    feedback <-  feedback + " You may now leave.  Please alert the experimenter that you are done. Press the X key to exit."
 
    SetText(gInstructions, feedback)
@@ -471,44 +483,4 @@ define RemoveComplex(x)
     {
        RemoveObject(i,gWin)
     }
-}
-
-define Second(list)
-{
- return Nth(list,2)
-}
-
-define IsClickInside(click,object)
-{
-	##First, determine object limits
-	xlow <- object.x - object.width/2
-	xhigh <- object.x + object.width/2
-
-	ylow <- object.y - object.height/2
-	yhigh <- object.y + object.height/2
-	
-
-	x <- First(click)
-    y <- Second(click)
-	
-    inside <- (x >= xlow) and (x  <= xhigh) and (y >= ylow) and (y <= yhigh)
-	return inside
-}
-
-
-define DetermineClickResponse(click, decks)
-{
-    
-    deck <- 1
-    chosen <- 0
-	loop(i,decks)
-    {
-      if(IsClickInside(click,i))
-      { 
-         chosen <- deck
-      } 
-      deck <- deck + 1
-    }
-
-  return (chosen + "")
 }
