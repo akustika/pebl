@@ -40,9 +40,9 @@ define Start(p)
 {
 
 
-   trialtime <- 30
+   trialtime <- 15
    trials <- 4
-   gSpeed   <- .2   #Rotations/second
+   gSpeed   <- 1/7.5   #Rotations/second
 
    Init()
    Draw()
@@ -114,7 +114,9 @@ define Start(p)
 
 define Trial(timeinsecs,head)
 {
-  gTarg <- Circle(gHomeX+gRadius,gHomeY,gTargSize,MakeColor("red"),1)
+  col1 <- MakeColor("red")
+  col2 <- MakeColor("darkred")
+  gTarg <- Circle(gHomeX+gRadius,gHomeY,gTargSize,col2,1)
   AddObject( gTarg,gWin)
   SetMouseCursorPosition(Round(gHomeX+gRadius),gHomeY)
   cont <- 1
@@ -131,7 +133,7 @@ define Trial(timeinsecs,head)
   t0 <- GetTime()
   while(cont)
   {
-    Draw()
+
     tLast <- tNow
     tNow <- GetTime()
     tDiff <- tNow -tLast
@@ -140,12 +142,19 @@ define Trial(timeinsecs,head)
     gTarg.y <- gHomeY+gRadius * Sin(tElapsed/1000*2*gPi*gSpeed)
 
 
-    cont <- tElapsed < timeinsecs*1000
+    cont <- (tElapsed < timeinsecs*1000)
     ##Just a check:
     ## SetMouseCursorPosition(Round(gTarg.x), Round(gTarg.y))
     mouse <- GetMouseCursorPosition()
     inside <- Inside(mouse,gTarg)
+    if(inside) 
+     {
+        gTarg.color <- col1
+     }else{
+       gTarg.color <- col2
+     }
 
+    Draw()
     ##compute deviation on trial.
     diff <- Dist(mouse,[gTarg.x,gTarg.y])
     totaldev <- totaldev + diff
@@ -154,7 +163,7 @@ define Trial(timeinsecs,head)
  
     FilePrint(gFileOut,head+ " " + steps + " " + tNow + " " + tElapsed  + " " +  gTarg.x + " " + gTarg.y + " " + First(mouse) +  " " +
     Second(mouse) + " " +inside + " " + tdiff + " " + totaltime + " " + diff + " " + totaldev)
-#    Wait(10)
+    Wait(10)  ##Needed to allow mouse to sync.
     steps <- steps + 1
   }
 
@@ -173,7 +182,8 @@ define Init()
   gHomeY <- 300
 
   gWin <- MakeWindow()
-  
+
+  gSleepEasy <- 1  
   
   ##if (a3)^2+(a4)^2 = 17^2, then 
   ##    9a^2 + 16a^2 = 17^2
