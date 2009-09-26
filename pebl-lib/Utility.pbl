@@ -499,6 +499,12 @@ define EasyLabel(text,x,y,parent,fontsize)
 ##
 define EasyTextBox(text,x,y,win,fontsize,width,height)
 {
+
+  if(not IsWindow(win))
+  { 
+    SignalFatalError("EasyTextbox[text,x,y,window,fontsize] must be added to a window, not [" + parent+"]")
+  }
+
   font <-  MakeFont("Vera.ttf",0,fontsize,MakeColor("black"),MakeColor("white"),1)
   tb <- MakeTextBox(text,font,width,height)
   AddObject(tb,win)
@@ -512,6 +518,12 @@ define EasyTextBox(text,x,y,win,fontsize,width,height)
 ##Make an easy-to-use getsubnum function here.
 define GetSubNum(win)
 {
+
+  if(not IsWindow(win))
+  { 
+    SignalFatalError("GetSubNum(win) needs a window to be specified, not [" + win + "]")
+  }
+
    bg    <- Rectangle(gVideoWidth/2,90,450,100,MakeColor("grey"),1)
    AddObject(bg,win)
    query <- EasyLabel("Enter Participant Identifier",gVideoWidth/2,80,win,20)
@@ -519,7 +531,7 @@ define GetSubNum(win)
 
    box <- EasyTextBox("",gVideoWidth/2-50,100, win,20,160,25)
    Draw()
-   subnum <- GetInput(box,"<return>")
+   subnum <- GetInput(box,"<return>")o
    
    RemoveObject(query,win)
    RemoveObject(box,win)
@@ -564,10 +576,17 @@ define ZeroPad(num, size)
 ##
 define Inside(click,object)
 {
-
+    if(not IsList(click))
+    {
+      SignalFatalError("First argument of Inside(<click>, <object>) must be a list specifying [x,y] position.")
+    }
 	x <- First(click)
     y <- Second(click)
- 
+    if((not IsNumber(x)) or (not IsNumber(y)))
+     {
+       SignalFatalError("First argument of Inside(<click>, <object>) is not a list of numbers.  It must specify [x,y] position.")
+     }
+    
 
    if(IsImage(object) or IsLabel(object) or 
       object.name == "<RECTANGLE>" or object.name == "<SQUARE>")
@@ -595,7 +614,7 @@ define Inside(click,object)
           inside  <- (d <= object.r)
 
    } else {
-     inside <- 0
+       SignalFatalError("Second argument of Inside(<click>,<object>) must either be an image, label, textbox, rectangle, square, or circle.")
    }
 
 	return inside
@@ -604,6 +623,10 @@ define Inside(click,object)
 
 define Dist(a,b)
 {
+  if((not IsList(a)) or (not IsList(b)))
+   {
+     SignalFatalError("Arguments of Dist(a,b) must both be [x,y] lists.")
+   }
   return   Sqrt((First(a)-First(b))^2 + (Second(a) -Second(b))^2)
 }
 
@@ -613,10 +636,13 @@ define Dist(a,b)
 
 define ReadCSV(filename)
 {
-
+  if(not IsText(filename))
+   {
+     SignalFatalError("ReadCSV(filename) must be given a text-based file name")
+   }
   #open the file
+
   file <- FileOpenRead(filename)
-  
   char <- FileReadCharacter(file)
 
   ##Process each line until the end of the file.
@@ -740,6 +766,10 @@ define StripSpace(text)
 ##remove quotes from outside of text (but not the inside)
 define StripQuotes(text)
 {
+  if(not IsText(text))
+   {
+      SignalFatalError("Argument of StripQuotes(text) must be text.")
+   }
    start <- 1
    end <- StringLength(text)
   
@@ -763,3 +793,79 @@ define StripQuotes(text)
    }
    return ret
 }
+
+
+##targetlist is a set of graphical objects,
+##keylist is a set of keys whose corresponding 
+##value should be returned when a graphical object is clicked upon.
+
+define WaitForClickOnTarget(targetlist,keylist)
+{
+  
+  if(not IsList(targetlist))
+  { 
+    SignalFatalError("First argument of WaitForClickOnTarget(targetlist,keylist) must be a list of graphical objects")
+  }
+
+  if(not IsList(keylist))
+  { 
+    SignalFatalError("Second argument of WaitForClickOnTarget(targetlist,keylist) must be a list")
+  }
+  
+  if(Length(targetlist) <> Length(keylist))
+  {
+    SignalFatalError("Arguments of WaitForClickOnTarget(targetlist,keylist) must be the same length")
+  }
+
+  ret <- ""
+  testlist <- Transpose([targetlist,keylist])
+   
+   wait1 <- 1
+   while(wait1)
+     {
+      wait2 <- 1
+      while(wait2)
+       {
+         pos <- WaitForMouseButton()
+         if(Nth(pos,4)=="<pressed>")
+          {
+            wait2 <- 0
+            gClick <- pos
+          }
+       }
+
+      newtargs <- []
+	  
+      loop(i,testlist)
+          {
+
+             if(Inside(pos,First(i)))
+             {
+			    wait1 <- 0
+                ret <- Nth(i,2)
+                break
+             }
+
+          }
+     }
+  return ret
+}
+
+
+##  This just waits for a 'down' click.
+##
+define WaitForDownClick()
+{
+   continue <- 1
+   while(continue) 
+    {
+		x <- WaitForMouseButton()
+        if(Nth(x,4) == "<pressed>")
+        { 
+         continue <- 0
+        }
+    }
+     return x
+}
+
+
