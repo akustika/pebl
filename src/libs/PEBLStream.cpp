@@ -3,7 +3,7 @@
 //    Name:       libs/PEBLStream.cpp
 //    Purpose:    Built-in stream functions for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -542,15 +542,16 @@ Variant PEBLStream::WritePNG(Variant v)
 
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); plist->PopFront();
-    PError::AssertType(v1, PEAT_WIDGET, "Argument error in first parameter of function [WritePNG(<object>,<filename>)]: ");   
+    PError::AssertType(v1, PEAT_STRING, "Argument error in first parameter of function [WritePNG(<filename>,<object>)]: ");   
 
-    counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
-    PlatformWidget * myobj = dynamic_cast<PlatformWidget*>(tmp2.get());
 
     Variant v2 = plist->First();
-    PError::AssertType(v2, PEAT_STRING, "Argument error in second parameter of function [WritePNG(<object>,<filename>)]: ");   
+    PError::AssertType(v2, PEAT_WIDGET, "Argument error in second parameter of function [WritePNG(<filename>,<object>)]: ");   
+    counted_ptr<PEBLObjectBase> tmp2 = (v2.GetComplexData())->GetObject();
+    PlatformWidget * myobj = dynamic_cast<PlatformWidget*>(tmp2.get());
 
-    int result = SDLUtility::WritePNG(v2,myobj);
+
+    int result = SDLUtility::WritePNG(v1,myobj);
 
     if(result==0)
         {

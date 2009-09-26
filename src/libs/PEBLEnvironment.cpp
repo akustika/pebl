@@ -641,9 +641,11 @@ Variant PEBLEnvironment::GetInput(Variant v)
     plist->PopFront();    
 
 
-    //The next argument should be the 'escape' key.
-    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [GetInput(<textbox>,<key-string>)]: ");    
+    //The next argument should be the 'escape' key, or a list of 'escape' keys.
+    // l.GetType() << std::endl;
+    //type = plist->First()->GetType();
 
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [GetInput(<textbox>,<key-string>)]: ");    
     string  myString = plist->First(); plist->PopFront();
 
 
