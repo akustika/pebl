@@ -531,7 +531,7 @@ define GetSubNum(win)
 
    box <- EasyTextBox("",gVideoWidth/2-50,100, win,20,160,25)
    Draw()
-   subnum <- GetInput(box,"<return>")o
+   subnum <- GetInput(box,"<return>")
    
    RemoveObject(query,win)
    RemoveObject(box,win)
