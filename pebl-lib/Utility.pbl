@@ -636,10 +636,10 @@ define Dist(a,b)
 
 define ReadCSV(filename)
 {
-  if(not IsText(filename))
-   {
-     SignalFatalError("ReadCSV(filename) must be given a text-based file name")
-   }
+#   if(not IsText(filename))
+#    {
+#      SignalFatalError("ReadCSV(filename) must be given a text-based file name")
+#    }
   #open the file
 
   file <- FileOpenRead(filename)
@@ -766,10 +766,10 @@ define StripSpace(text)
 ##remove quotes from outside of text (but not the inside)
 define StripQuotes(text)
 {
-  if(not IsText(text))
-   {
-      SignalFatalError("Argument of StripQuotes(text) must be text.")
-   }
+#   if(not IsText(text))
+#    {
+#       SignalFatalError("Argument of StripQuotes(text) must be text.")
+#    }
    start <- 1
    end <- StringLength(text)
   
