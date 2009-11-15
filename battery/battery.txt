@@ -130,7 +130,7 @@ the mouse rather than the keyboard.
 
  
 Results:
-Data are written to igd-<gsubnum>.txt  Columns are:
+Data are written to igt-<gsubnum>.txt  Columns are:
 subject_id trial deck reward penalty net total absolute_time latency
 
 Changelog:
@@ -649,3 +649,17 @@ Options:
 Output:
 
 Dat columns are:
+
+
+
+-------------------------------------------------------------------------------
+            Survey Generator Version 0.1
+-------------------------------------------------------------------------------
+New for PEBL Battery XXX
+Location: survey/survey.pbl
+
+Description: Use PEBL to generate your own survey. Includes several
+different question types (instructions, short-answer, long-answer,
+multiple choice, multiple-selection, n-level likert agreement).
+Questions are controlled by a .csv file, and data are output to a
+unique file for each subject.

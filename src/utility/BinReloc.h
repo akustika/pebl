@@ -33,6 +33,7 @@ typedef enum {
 } BrInitError;
 
 
+#if 0
 #ifndef BINRELOC_RUNNING_DOXYGEN
 /* Mangle symbol names to avoid symbol collisions with other ELF objects. */
 	#define br_init             tnlg21885695786939_br_init
@@ -50,9 +51,9 @@ typedef enum {
 	#define br_strcat           tnlg21885695786939_br_strcat
 	#define br_build_path       tnlg21885695786939_br_build_path
 	#define br_dirname          tnlg21885695786939_br_dirname
-
-
 #endif
+#endif
+
 int   br_init             (BrInitError *error);
 int   br_init_lib         (BrInitError *error);
 

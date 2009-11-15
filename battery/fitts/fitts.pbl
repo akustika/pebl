@@ -18,7 +18,8 @@ define Start(p)
   gShowPreview <- 0
   gSleepEasy <- 1
   gMessage <- EasyLabel("",gHomeX,gHomeY-100,gWin,22)
-  
+  gCounter <- EasyLabel("",gHomeX,gHomeY-150,gWin,22)
+
   l1 <-   Line(gstartx-10,gHomeY,20,0,MakeColor("black"))
   l2 <-   Line(gstartx,gHomeY-10,0,20,MakeColor("black"))
   AddObject(l1,gWin)
@@ -29,9 +30,11 @@ define Start(p)
 
   cond <- DesignFullCounterbalance(targdist,targsize)
   trials <- Shuffle(RepeatList(cond,reps))
+  l <- Length(trials)
   i <- 1
   loop(trial,trials)
   {
+    gCounter.text <- ("Trial [" + i + "] of "+l)
     FilePrint_(gFileOut,gSubNum + " " + i + " ")
     Trial(i, First(trial),Nth(trial,2),3)
     i <- i + 1

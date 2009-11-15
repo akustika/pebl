@@ -1,6 +1,6 @@
 #!/usr/local/bin/pebl
 ###########################################################
-##  Symbol Counting Task,  Version 0.1
+##  Symbol Counting Task,  Version 0.2
 ##  For use with PEBL 0.07 or later
 ##  http://pebl.sf.net
 ##  Part of  The PEBL Psychological Testing Battery
@@ -20,23 +20,19 @@
 ##      memory. Memory & Cognition, 26, 263-276.
 ##
 ##
-##
 ###########################################################
 
 define Start(lPar)
 {
-
-  ####################################
   ##
-  ## Parameters/Variables controlling experiment
-  ##
-   
-  blocks <- 4              ## The number of trial blocks
-  blocklength <-  10       ## The number of trials per block
-  numtrials <- blocks * blocklength 
+   numblocks <- 3          ## blocks after practice round.
+   numtrials <- 20         ## Trials per block
+   runthresh <- 10         ## Number of correct trial run needed to get
+   			 			   ## through practice.
 
-
-  ##
+  gGiveFeedback <-  1      ##Whether you should give feedback in
+                           ##  non-practice blocks
+  ##Symbols for A and B
   symA <- ["#","@"]
   symB <- ["&","%"]
 
@@ -67,8 +63,10 @@ define Start(lPar)
     "In this task, you will see a series of symbols and you will need to keep track of " +
 	"how many you see.  You will keep two counts, the first for the symbols " +
 	"'@' and '#', and a second for the symbols '&' and '%'. We will start with a practice task." +
-	" In the practice task, you will see the symbols and press either the 'z' or '/' key.  Press the "+
-    " 'Z' key whenever you see '#' or '@'; press the '/' key whenever you see '&' or '%'.  Press any key to begin the practice."
+	" In the practice task, you will see the symbols and press either
+    the left or right shift keys.  Press the "+
+    " left shift key whenever you see '#' or '@'; press the right
+    shift key whenever you see '&' or '%'.  Press any key to begin the practice."
 
   #####################################
   ## Begin Experiment with Instructions
@@ -84,15 +82,17 @@ define Start(lPar)
   #####################################
   ## Practice task 1: stimuli with label
 
-   foottext <- "Z: # or @                    /: & or %"
+   foottext <- "Left shift: # or @                    Right shift: & or %"
 
    Show(gFooter)
  
-    mapping <- [["#","z"],["@","z"],["&","/"],["%","/"]]
+    mapping <- [["#","<lshift>"],["@","<lshift>"],["&","<rshift>"],["%","<rshift>"]]
     stimuli <- Merge(RepeatList(symA,4), RepeatList(symB,4))
     thresh <- 0
     corrun <- 0
-
+    block <- "P"
+    trial <- 1
+  ##Repeat until we get a run of 20 trials correct.
    while(thresh == 0)
    {
      stim <- First(SampleN(stimuli,1))
@@ -103,7 +103,7 @@ define Start(lPar)
      Show(gStim)
      Draw()
      time0 <- GetTime()
-     resp <- WaitForListKeyPress(["Z","/"])
+     resp <- WaitForListKeyPress(["<lshift>","<rshift>"])
      time1 <- GetTime()
 
      corr <- ScoreResponse(stim,resp,mapping)
@@ -119,13 +119,15 @@ define Start(lPar)
 
         Show(gFooter)
         Draw()
-        resp <- WaitForListKeyPress(["Z","/"])
+        resp <- WaitForListKeyPress(["<lshift>","<rshift>"])
 	    corr <- ScoreResponse(stim,resp,mapping)
         corrun <- 0
      }
+
+      rt <- time1-time0
  
       ##If they go too slow, start the counter over.
-      if(time1-time0 > 1000) 
+      if(rt > tooslowThresh or rt < toofastThresh)
       {
          corrun <- 0
       }
@@ -136,17 +138,77 @@ define Start(lPar)
  
       Wait(200)
    
-     Print(corrun)
-     if(corrun >= 20) 
+     FilePrint(datafile,gSubNum + " " + block + " " + trial + " " + stim + " " +
+          resp + " " + corr +  " " +  corrun + " "+  time1 + " " + rt)
+
+     if(corrun >= runthresh) 
      {
         thresh <- 1
      }
+    trial <- trial + 1
    }
 
+  ######################################
+  ##Now, do the blocks.
 
-     
+  loop(block, Sequence(1,numblocks,1))
+  {
+  Show(gInstructions)
+  Draw()
+  WaitForAnyKeyPress() 
+  Hide(gInstructions)
+  Draw()
+
+  ##Repeat until we get a run of 20 trials correct.
+   trial <- 1
+   while(trial <= numtrials)
+   {
+     stim <- First(SampleN(stimuli,1))
+	 gStim.text <- stim
+     SetFont(gFooter,gSmallFont)
+     gFooter.text <- foottext
+     Show(gFooter)
+     Show(gStim)
+     Draw()
+     time0 <- GetTime()
+     resp <- WaitForListKeyPress(["<lshift>","<rshift>"])
+     time1 <- GetTime()
+
+     corr <- ScoreResponse(stim,resp,mapping)
+     corrun <- corrun + corr
+
+     if(not corr)
+     {
+	 if(gGiveFeedback)
+	      {
+	 	     Hide(gFooter)
+        	 Draw()
+ 
+			 gFooter.text <- "Incorrect."
+			 SetFont(gFooter,gIncFont)
+             Show(gFooter)
+             Draw()
+         	 Wait(500) 
+         
+          }
+     }
+      rt <- (time1-time0) 
+      ##If they go too slow, start the counter over.
+
+      Hide(gFooter)
+      Hide(gStim)
+      Draw()   
+ 
+      Wait(200)
    
 
+     FilePrint(datafile,gSubNum + " " + block + " " + trial + " "  + stim + " " +
+          resp + " " + corr +  " " +  corrun + " "+  time1 + " " + rt)
+
+    trial <- trial + 1
+    }
+     
+  } 
 
 
   ####################
@@ -154,22 +216,14 @@ define Start(lPar)
 
 
    FilePrint(reportfile,"------------------------------------------------------")
-   FilePrint(reportfile," Report for PEBL Simple Response Time Task Version 0.1")
+   FilePrint(reportfile," Report for PEBL Symbol-counter task Task Version 0.1")
    FilePrint(reportfile, " "+GetPEBLVersion())
    FilePrint(reportfile, " "+TimeStamp())
    FilePrint(reportfile," http://pebl.sf.net")
    FilePrint(reportfile, " Participant Code: " + gSubNum)
    FilePrint(reportfile,"------------------------------------------------------")
-   FilePrint(reportfile,"Statistic                 Value")
    FilePrint(reportfile,"------------------------------------------------------")
-
-   FilePrint(reportfile,Format("Number of blocks",28) +blocks)
-   FilePrint(reportfile,Format("Trials per blocks",28) +blocklength)
-   FilePrint(reportfile,"")
-   FilePrint(reportfile,"   Delay     N         Mean      Std. Dev")
-   FilePrint(reportfile,"   --------------------------------------")
-
-
+   FilePrint(reportfile,"No data computed at this time.")
    FilePrint(reportfile,"------------------------------------------------------")
 
 
@@ -192,7 +246,8 @@ define Initialize()
 {
   ##Initialize Window, etc.
   gWin <- MakeWindow("grey")   
-            
+   ShowCursor(0)
+          
   ##Initialize Font and colors
    fg <- MakeColor("black")
    bg <- MakeColor("grey")
@@ -224,49 +279,6 @@ define Initialize()
  }
 
 
-
-## This finds mean and SD RT for 
-## each of the conditions specified in delays
-##
-define AggregateRTs(rts, delays)
-{
-
-  ## start by sorting both rts and delays by delays;
-  ## then move through them and analyze subparts.
-  rtX <- SortBy(rts,delays)
-  deX <- Sort(delays)
-  trials <- Transpose([deX,rtX])
-  
-  stats <- []
-
-  lastdelay <- First(deX)
-
-  tmpRT <- []  
-
-  loop(i, trials)
-  {
-
-     ## if the current delay differs from the previous delay,
-	 ## we should analyze what is in tmp right now.
-     if(First(i) != lastdelay)
-     {
-
-       stats <- Append(stats,
-                      [lastdelay, Length(tmpRT),
-	                  Mean(tmpRT), StdDev(tmpRT)])
-       tmpRT <- []
-     }
-
-    lastdelay <- First(i) 
-    tmpRT <- Append(tmpRT, Nth(i, 2))
-  }
- 
- stats <- Append(stats,
-                [lastdelay, Length(tmpRT),
-                 Mean(tmpRT), StdDev(tmpRT)])
-
- return stats
-}
 
 
 define ScoreResponse(stim, resp, mapping)

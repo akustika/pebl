@@ -291,6 +291,9 @@ main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
        $(OSX_FLAGS) $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, \
        $(PEBLMAIN_OBJ))
 
+deb:    main
+	epm -f deb pebl
+
 parse:
 	bison -d $(BASE_DIR)/grammar.y -o $(BASE_DIR)/grammar.tab.cpp
 	flex -o$(BASE_DIR)/lex.yy.c  $(BASE_DIR)/Pebl.l

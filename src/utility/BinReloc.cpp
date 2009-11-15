@@ -737,10 +737,13 @@ br_strndup (const char *str, size_t size)
  * @param path  A path.
  * @returns     A directory name. This string should be freed when no longer needed.
  */
+
+
 char *
-br_dirname (const char *path)
+br_dirname (const char *path) 
 {
-	char *end, *result;
+  const  char *end;
+  char * result;
 
 	if (path == (const char *) NULL)
 		return (char *) NULL;

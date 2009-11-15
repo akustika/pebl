@@ -24,3 +24,15 @@ axis(1,1:3,xlab[ord])
 matplot(x[ord,,3],type="b",ylim=c(400,1600),main="Colored Patch Responses",pch=c(16,18),cex=2,xaxt="n",ylab="Mean Response Time")
 axis(1,1:3,xlab[ord])
 legend(1,1400,c("ID Word","ID Color"),lty=c(1,2),col=c("black","red"),pch=c(16,18),cex=2,bty="n")
+
+
+
+
+ord <- c(1,3,2)
+xlab <- c("Congruent","Incongruent","One\ndimension")
+par(mfrow=c(1,2))
+matplot(x[ord,1,],type="b",ylim=c(400,1600),main="Color Reading",pch=c(16,18),cex=2,xaxt="n",ylab="Mean Response Time")
+axis(1,1:3,xlab[ord])
+matplot(x[ord,2,],type="b",ylim=c(400,1600),main="Color ID",pch=c(16,18),cex=2,xaxt="n",ylab="Mean Response Time")
+axis(1,1:3,xlab[ord])
+legend(1,1400,c("ID Word","ID Color"),lty=c(1,2),col=c("black","red"),pch=c(16,18),cex=2,bty="n")

@@ -2,7 +2,7 @@ define Start(lPar)
 {
  ## (c) 2006-2009 Shane T. Mueller
  ## smueller at obereed dot net
- ## PEBL Bechara's Gambling Task, Version 0.3
+ ## PEBL Bechara's Gambling Task, Version 0.4
  ##  (a version of the so-called Iowa Gambling Task (tm))
  ##  
  ##
@@ -31,9 +31,22 @@ define Start(lPar)
  ## before the experiment. Shuffling is performed in 10-card epochs,
  ## so that the penalty in 1-10 stay in 1-10, etc.
 
- ## For use with PEBL 0.06 or later
+ ## For use with PEBL 0.10 or later
  ## http://pebl.sf.net
  ## Part of  The PEBL Psychological Testing Battery
+
+  
+  ##How many trials?
+  numtrials <- 100
+
+ 
+  ##Controls whether the decks are shuffled. Default is as in Bechera et al.
+  shuffleDecks <-  0
+
+
+  ##Should we use the mouse or the keyboard?
+
+  gUseMouse <- 1
  
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
@@ -57,11 +70,6 @@ define Start(lPar)
   gFileOut <-FileOpenAppend("igt-" + gSubNum +".txt")
 
 
-   numtrials <- 100
-
- 
-  ##Controls whether the decks are shuffled. Default is as in Bechera et al.
-  shuffleDecks <-  0
 
 
   ####################################################
@@ -69,7 +77,7 @@ define Start(lPar)
   ####################################################
 
   deck1Pen <- [0,0,150,0,300,0,200,0,250,350,
-                   0,350,0,250,200,0,300,150,0,0,
+               0,350,0,250,200,0,300,150,0,0,
                0,300,0,350,0,200,250,150,0,0,
                350,200,250,0,0,0,150,300,0,0]
                
@@ -111,16 +119,27 @@ define Start(lPar)
    ##  GetNIMHDemographics(gSubNum, gWin, "igt-demographics.txt")
 
    ## Give instructions; wait for them to hit a key, 
-   SetText(gInstructions,"You are about to take part in an experiment that involves gambling with play money.  You will start with a $2000 loan.  On each trial, you will select a card from one of four decks.  After you select each card, you will be given a reward and possibly be required to pay a penalty.  Your goal is to maximize the profit on your loan, and you may choose from any deck at any time to do so.
-This is where you learn how to do the task.  
+   inst <- "You are about to take part in an experiment that involves gambling with play money.  You will start with a $2000 loan.  On each trial, you will select a card from one of four decks.  After you select each card, you will be given a reward and possibly be required to pay a penalty.  Your goal is to maximize the profit on your loan, and you may choose from any deck at any time to do so.
+
 Do you have any questions?
 
+" 
+   if(gUseMouse)
+    {
+      inst <- inst + "Click the mouse button to begin."
+    } else {
+      inst <- inst + "Press any key to begin."
+    }
 
-Press any key to begin.")
+
+   SetText(gInstructions,inst)
+
    Hide(gFooter)
    Show(gInstructions)
    Draw()  
-   WaitForAnyKeyPress()
+
+   WaitForIt()
+
    Hide(gInstructions)
    Draw()
 
@@ -215,7 +234,15 @@ Press any key to begin.")
     {
 
       time0 <- GetTime()
-      resp <- WaitForListKeyPress(["1","2","3","4"])
+
+     if(gUseMouse)
+      { 
+        resp <- WaitForClickOnTarget([deck1,deck2,deck3,deck4],["1","2","3","4"])
+      } else {
+
+        resp <- WaitForListKeyPress(["1","2","3","4"])
+      }
+
       time1 <- GetTime()
       rt <- time1 - time0
        Draw()
@@ -353,7 +380,8 @@ Press any key to begin.")
    SetText(gInstructions, feedback)
    Show(gInstructions)
    Draw()
-   WaitForKeyPress("X")
+   WaitForIt()
+
   
  }
 
@@ -476,4 +504,15 @@ define RemoveComplex(x)
     {
        RemoveObject(i,gWin)
     }
+}
+
+
+define WaitForIt()
+{
+  if(gUseMouse)
+  {
+     WaitForMouseClick()
+  } else {
+     WaitForAnyKeyPress()
+  }
 }

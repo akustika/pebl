@@ -2,6 +2,41 @@ define Start(p)
 {
 
 
+
+
+#"sub","block","trial","type","colorresp","cond","cond2","shade","word","resp","corr","respnum","start","rt"
+
+# sub is the subject code entered at startup
+# block is the block number (different response types)
+# trial is the trial number 
+# type is block type (1= response by name, 2= response by shade)
+##
+#colorresp is whether the response targets are labeled in color:
+#		    0 is black text, 
+#           1 is in-color text
+#           3 is just shade (no text)
+#
+#cond is the stimulus condition 1-4:
+#     1. color name and color match.
+#     2. color name does not match color.
+#     3. color name normal; color is black
+#     4. color name is 'xxxxx'; color is normal
+#
+# cond2 is a 3-level translation of cond.  No block contains
+#    both conditions 3 and 4, so these are mapped into the same 
+#    single-feature condition called 3.  (1->1, 2->2, 3->3, 4->3)
+#
+#shade is the name of the stimulus's color 
+#wordname is the stimulus word 
+#resp is the actual response (1-4) made
+#corr is whether it is correct 
+#respnum is a counter regarding how many times they responded to the stimulus (they may
+# have taken multiple errors before getting it right). 
+# start is the absolute time (in ms) of the start of trial rt is the time (in ms) of the response
+#Note that every trial must be finished "correctly", which means if you make an error, the data line can get logged every time until you get it right.
+
+
+
    ##The number of trials per block (and condition)
    blocklength <- 25
    Initialize()
@@ -22,15 +57,15 @@ define Start(p)
    gGreen  <- MakeColor("darkgreen")
    gBlue   <- MakeColor("navy")
    gYellow <- MakeColor("yellow1")
-   bg     <- MakeColor("grey")
+
    colors <- [gRed, gGreen, gBlue, gYellow]
 
 
-  gFontBlack        <- MakeFont("VeraMono.ttf", 0, 24, gBlack,bg,1)       
-  gFontRed          <- MakeFont("VeraMono.ttf", 0, 24, gRed,bg,1)       
-  gFontGreen        <- MakeFont("VeraMono.ttf", 0, 24, gGreen,bg,1)       
-  gFontBlue         <- MakeFont("VeraMono.ttf", 0, 24, gBlue,bg,1)       
-  gFontYellow       <- MakeFont("VeraMono.ttf", 0, 24, gYellow,bg,1)
+  gFontBlack        <- MakeFont("VeraMono.ttf", 0, 30, gBlack,gBg,1)       
+  gFontRed          <- MakeFont("VeraMono.ttf", 0, 30, gRed,gbg,1)       
+  gFontGreen        <- MakeFont("VeraMono.ttf", 0, 30, gGreen,gbg,1)       
+  gFontBlue         <- MakeFont("VeraMono.ttf", 0, 30, gBlue,gbg,1)       
+  gFontYellow       <- MakeFont("VeraMono.ttf", 0, 30, gYellow,gbg,1)
 
 
 
@@ -56,8 +91,7 @@ define Start(p)
   ########################################
   ## Some trials whose color-names match 
 
-  stim1 <-  Transpose(Append(Repeat(SampleNWithReplacement(gColors,blocklength),2),
-                      Repeat(1,blocklength)))
+  stim1 <-  Transpose(Append(Repeat(SampleNWithReplacement(gColors,blocklength),2), Repeat(1,blocklength)))
 
   #########################################
   ## some trials whose color-names do not match 
@@ -113,7 +147,7 @@ define Start(p)
    gErr  <- []; gRT   <- []; gCond <- []
 
    ########################################################
-   ##First, do a a practice round
+   ##First, do a a practice round (block 0)
    Block(Shuffle(stim1),1,1)
 
 
@@ -140,7 +174,7 @@ define Start(p)
    gErr  <- []; gRT   <- []; gCond <- []
 
    ########################################################
-   ##Now, do the word naming round
+   ##Now, do the word naming round (block 1)
    Block(Shuffle(Merge(Merge(stim1,stim2),stim3)),1,1)
 
    ername1 <- Aggregate(gErr,gCond)
@@ -169,7 +203,7 @@ define Start(p)
 
 
    ########################################################
-   ##Now, do the color round
+   ##Now, do the color round (block 2)
    Block(Shuffle(Merge(Merge(stim1,stim2),stim4)),2,1)
 
    ercol1 <- Aggregate(gErr,gCond)
@@ -200,6 +234,7 @@ define Start(p)
 
    ######################################################## 
    ##Now, do the word naming round, but without colored targets
+   ##block 3
    Block(Shuffle(Merge(Merge(stim1,stim2),stim3)),1,0)
 
    ername2 <- Aggregate(gErr,gCond)
@@ -220,6 +255,7 @@ define Start(p)
 
    ########################################################
    ##do the color round
+   ## block 4
    Block(Shuffle(Merge(Merge(stim1,stim2),stim4)),2,0)
 
    ercol2 <- Aggregate(gErr,gCond)
@@ -247,6 +283,7 @@ define Start(p)
 
    ######################################################## 
    ##Now, do the word naming round, but without colored targets
+   ##block 5
    Block(Shuffle(Merge(Merge(stim1,stim2),stim3)),1,3)
 
    ername3 <- Aggregate(gErr,gCond)
@@ -266,7 +303,7 @@ define Start(p)
    Draw()
 
    ########################################################
-   ##do the color round
+   ##do the color round (block 6)
    Block(Shuffle(Merge(Merge(stim1,stim2),stim4)),2,3)
 
    ercol3 <- Aggregate(gErr,gCond)
@@ -278,19 +315,59 @@ define Start(p)
    reportfile <- FileOpenWrite("stroop-report-"+gSubNum+".txt")
    ##Print out report
    PrintMe(reportfile,"--------------------------------------------------------")
-   PrintMe(reportfile," Report for PEBL Stroop Test, Version 0.1")
+   PrintMe(reportfile," Report for PEBL Stroop Test, Version 0.2")
    PrintMe(reportfile, " http://pebl.sf.net")
-   PrintMe(reportfile, " (c) 2008 Shane T. Mueller, Ph.D.")
+   PrintMe(reportfile, " (c) 2009 Shane T. Mueller, Ph.D.")
    PrintMe(reportfile, " "+GetPEBLVersion())
    PrintMe(reportfile, " "+TimeStamp())
    PrintMe(reportfile, " Participant Code: " + gSubNum)
    PrintMe(reportfile,"--------------------------------------------------------")
 
-   PrintMe(reportfile,"Description of conditions: 
-     1. color name and color match.
-     2. color name does not match color.
-     3. color name normal; color is black
-     4. color name is 'xxxxx'; color is normal")
+
+   PrintMe(reportfile," This experiment tested interference effects
+   between different types of information: color and word.  
+
+   Stimuli were colored words.  Stimulus color could be in red, green,
+   blue, yellow, or black (non-target color).  Stimulus words could be
+   'red', 'green', 'blue', 'yellow', or 'xxxx'.  Response labels could
+   be 'red', 'green', 'blue', 'yellow' in consistent colors or in
+   black, or could be color patches with no text.
+
+
+   In these  blocks, 'mixed' stimuli refer to blocks where the stimuli varied in
+   both color and identity, but these mapping were not consistent with
+   one another.  The blocks included, in order:
+
+   Blocks 0-2 each had stimuli labels that were consistent (color and
+   label name coincided)
+
+   0. A color-word consistent block, with color-word consistent
+   response labels. This was practice.
+
+   1. A word-naming block, with color-inconsistent stimuli and
+   color-consistent response labels.
+   2. A color- ID block, with inconsistent stimuli and consistent
+   response labels.
+
+   Blocks 3-4 had response labels that were all in black.
+   3. A word-naming block, with inconsistent stimuli and response
+   labels in black.
+   4. A color identification task of inconsistentt stimul, response
+   labels in black.
+   
+   Block 5-6 had response labels that were just colored rectangles
+
+   5. A word-naming block with inconsisntent stimuli and response
+   labels as color patches.
+   6. A color - ID block with inconsisntent stimuli and response
+   labels as color patches.")
+
+
+   PrintMe(reportfile,"Description of stimulus conditions: 
+     1. color name and color match. (consistent)
+     2. color name does not match color. (conflict)
+     3. color name normal; color is black (single-feature)
+     4. color name is 'xxxxx'; color is normal (single-feature)")
 
    rowNames <- ["    Consistent ", 
                 "      Conflict ",
@@ -299,54 +376,84 @@ define Start(p)
 ## 1 is the colored name responses
     n1 <-	 Nth(Transpose(rtname1),4)
     c1 <-    Nth(Transpose(rtcol1),4)
-	 PrintMe(reportfile,"Colored Names")
+
+     PrintMe(reportfile,"Responses: Colored Names (Block 1-2)")
      PrintMe(reportfile,"-----------------------------------")
      PrintMe(reportfile,"     Condition   Name   Color  (N-C)")
      PrintMe(reportfile,"-----------------------------------")
-     loop(i,Transpose([rowNames,n1,c1]))
+
+     matrix <- Transpose([rowNames,n1,c1])
+     tmp <- []
+     loop(i,matrix)
      {
        h <- First(i)
        n <- Exp(Nth(i,2))
        c <- Exp(Nth(i,3))
+       tmp <- Append(tmp, [n,c, n-c])
        PrintMe(reportfile ,h + " " + Round(n) + "     " + Round(c) + "    " + Round(n-c))
      }
-     PrintMe(reportfile,"-----------------------------------")
+
+    fac <- ListDiff(Third(tmp),First(tmp))
+    cost <- ListDiff(Third(tmp),Second(tmp))
+    PrintMe(reportfile ,"  Facilitation  "  + Round(First(fac))  + "    " +   Round(Second(fac)) + "     " + Round(Third(fac)))
+    PrintMe(reportfile ,"          Cost  "  + Round(First(cost)) + "    " +   Round(Second(cost))+ "     " + Round(Third(cost)))
+    PrintMe(reportfile,"-----------------------------------")
 
 
-## 2 is the black name responses
+## Block 3:is the black name responses
     n2 <-	 Nth(Transpose(rtname2),4)
     c2 <-    Nth(Transpose(rtcol2),4)
-	 PrintMe(reportfile,"Black Names")
+
+	 PrintMe(reportfile,CR(2)+"Responses: Black Names (Block 3-4)")
      PrintMe(reportfile,"-----------------------------------")
      PrintMe(reportfile,"     Condition   Name   Color  (N-C)")
      PrintMe(reportfile,"-----------------------------------")
-     PrintMe(reportfile,"Condition   Name   Color  Difference (N-C)")
-     loop(i,Transpose([rowNames,n2,c2]))
+
+     matrix <- Transpose([rowNames,n2,c2])
+     tmp <- []
+     loop(i,matrix)
      {
        h <- First(i)
        n <- Exp(Nth(i,2))
        c <- Exp(Nth(i,3))
-       PrintMe(reportfile ,h + " " +Round(n) + "     " + Round(c) + "    " + Round(n-c))
+       tmp <- Append(tmp, [n,c, n-c])
+       PrintMe(reportfile ,h + " " + Round(n) + "     " + Round(c) + "    " + Round(n-c))
      }
+
+    fac <- ListDiff(Third(tmp),First(tmp))
+    cost <- ListDiff(Third(tmp),Second(tmp))
+    PrintMe(reportfile ,"  Facilitation  "  + Round(First(fac))  + "    " +   Round(Second(fac)) + "     " + Round(Third(fac)))
+    PrintMe(reportfile ,"          Cost  "  + Round(First(cost)) + "    " +   Round(Second(cost))+ "     " + Round(Third(cost)))
      PrintMe(reportfile,"-----------------------------------")
 
+ 
 
-## 3 is the colored patch name responses
+## Block 5: is the colored patch name responses
     n3 <-	 Nth(Transpose(rtname3),4)
     c3 <-    Nth(Transpose(rtcol3),4)
-	 PrintMe(reportfile,"Colored Patches")
+
+	 PrintMe(reportfile,CR(2)+"Responses: Colored Patches (Block 5-6)")
      PrintMe(reportfile,"-----------------------------------")
      PrintMe(reportfile,"     Condition   Name   Color  (N-C)")
      PrintMe(reportfile,"-----------------------------------")
-     loop(i,Transpose([rowNames,n3,c3]))
+    matrix <- Transpose([rowNames,n3,c3])
+     tmp <- []
+     loop(i,matrix)
      {
        h <- First(i)
        n <- Exp(Nth(i,2))
        c <- Exp(Nth(i,3))
-       PrintMe(reportfile ,h + " " +Round(n) + "     " + Round(c) + "    " + Round(n-c))
+       tmp <- Append(tmp, [n,c, n-c])
+       PrintMe(reportfile ,h + " " + Round(n) + "     " + Round(c) + "    " + Round(n-c))
      }
-     PrintMe(reportfile,"-----------------------------------")
 
+    fac <- ListDiff(Third(tmp),First(tmp))
+    cost <- ListDiff(Third(tmp),Second(tmp))
+    PrintMe(reportfile ,"  Facilitation  "  + Round(First(fac))  + "    " +   Round(Second(fac)) + "     " + Round(Third(fac)))
+    PrintMe(reportfile ,"          Cost  "  + Round(First(cost)) + "    " +   Round(Second(cost))+ "     " + Round(Third(cost)))
+    PrintMe(reportfile,"-----------------------------------")
+
+ 
 
 
 ##For each target type, compute the effect sizes
@@ -358,7 +465,7 @@ define Start(p)
    PrintMe(reportfile,"========================================================")
 
    PrintMe(reportfile,"---------------------------------")
-   PrintMe(reportfile,"    Names, color-word  targets")
+   PrintMe(reportfile,"  Block 1: Word naming, color-word responses ")
    PrintMe(reportfile,"---------------------------------")
    PrintMe(reportfile,"Error Rate:")
    PrintMe(reportfile,"Cond   num    med    mean    sd")
@@ -369,7 +476,7 @@ define Start(p)
 
 
    PrintMe(reportfile,"---------------------------------")
-   PrintMe(reportfile,"    Colors, color-word targets")
+   PrintMe(reportfile,"  Block 2: Color naming, color-word responses")
    PrintMe(reportfile,"---------------------------------")
    PrintMe(reportfile,"Error Rate:")
    PrintMe(reportfile,"Cond   num    med    mean    sd")
@@ -381,7 +488,7 @@ define Start(p)
 
 
    PrintMe(reportfile,"---------------------------------")
-   PrintMe(reportfile,"    Names, Black  targets")
+   PrintMe(reportfile,"  Block 3: Word naming, black word targets")
    PrintMe(reportfile,"---------------------------------")
    PrintMe(reportfile,"Error Rate:")
    PrintMe(reportfile,"Cond   num    med    mean    sd")
@@ -393,7 +500,7 @@ define Start(p)
 
 
    PrintMe(reportfile,"---------------------------------")
-   PrintMe(reportfile,"    Colors, Black targets")
+   PrintMe(reportfile,"  Block 4: Color naming, black word targets")
    PrintMe(reportfile,"---------------------------------")
    PrintMe(reportfile,"Error Rate:")
    PrintMe(reportfile,"Cond   num    med    mean    sd")
@@ -404,7 +511,7 @@ define Start(p)
 
 
    PrintMe(reportfile,"---------------------------------")
-   PrintMe(reportfile,"    Names, colored patch  targets")
+   PrintMe(reportfile,"   Block 5: Word naming, colored patch targets")
    PrintMe(reportfile,"---------------------------------")
    PrintMe(reportfile,"Error Rate:")
    PrintMe(reportfile,"Cond   num    med    mean    sd")
@@ -415,7 +522,7 @@ define Start(p)
 
 
    PrintMe(reportfile,"---------------------------------")
-   PrintMe(reportfile,"    Colors, colored patch targets")
+   PrintMe(reportfile,"   Block 6: Color naming, colored patch   targets")
    PrintMe(reportfile,"---------------------------------")
    PrintMe(reportfile,"Error Rate:")
    PrintMe(reportfile,"Cond   num    med    mean    sd")
@@ -645,19 +752,18 @@ define Initialize()
   gVideoHeight <- 600
 
   ##Initialize Window, etc.
-  gWin <- MakeWindow("grey")   
-            
+  gWin <- MakeWindow("grey40")   
+  ShowCursor(0)
   ##Initialize Font and colors
 
-   bg <- MakeColor("grey")
-   bg1 <- MakeColor("lightgrey")
+   gBG <- MakeColor("grey40")
    fg  <- MakeColor("black")
-   bg2 <- MakeColor("white")
+
    
 
 
-   gInstructionsFont <- MakeFont("Vera.ttf",0,18, fg,bg2,1)  
-   gHeaderFont       <- MakeFont("Vera.ttf", 0,36,fg,bg,1)       
+   gInstructionsFont <- MakeFont("Vera.ttf",0,18, fg,MakeColor("white"),1)  
+   gHeaderFont       <- MakeFont("Vera.ttf", 0,36,fg,gBG,1)       
  
    ## Make and place the instruction box, then hide it  
    gInstructions <- MakeTextBox("", gInstructionsFont, 600,300)
@@ -738,3 +844,15 @@ define RoundOff(val,sig)
   return   Round( val *s)/s
  
  } 
+
+##Finds difference between two lists.
+define ListDiff(l1,l2)
+{
+  tmp <- Transpose([l1,l2])
+  new <- []
+  loop(i,tmp)
+   {
+      new <- Append(new,First(i)-Second(i))
+   }
+ return new
+}

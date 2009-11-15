@@ -44,6 +44,8 @@ define Start(p)
    trials <- 4
    gSpeed   <- 1/7.5   #Rotations/second
 
+   gTargSize <- 25     #Radius of target
+
    Init()
    Draw()
    gFileOut <- FileOpenAppend("pursuitrotor-"+gSubNum+".txt")   
@@ -202,7 +204,7 @@ define Init()
   back2 <- Circle(gHomeX,gHomeY,gRadius-10,MakeColor("grey"),1)
   AddObject(back2,gWin)  
   # gTargSize <- .75 * gScale/2
-  gTargSize <- 25
+
   ##How many revolutions per second
 
 }

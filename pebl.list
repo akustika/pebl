@@ -1,0 +1,27 @@
+%product PEBL Version 0.10
+%copyright 2009 by Shane T. Mueller, Ph.D.
+%vendor The PEBL Project pebl.sourceforge.net
+%description  Software for designing and running psychology experiments
+%version 0.10
+%readme doc/ReleaseNotes.txt
+%license COPYING
+%requires libsdl1.2debian 
+%requires libsdl-image1.2 
+%requires libsdl-ttf2.0-0 
+%requires libsdl-gfx1.2-4 
+%requires libsdl-net1.2
+
+f 755 root sys /usr/bin/pebl bin/pebl
+d 755 root sys /usr/share/pebl
+d 644 root sys /usr/share/pebl/media
+d 644 root sys /usr/share/pebl/pebl-lib
+d 644 root sys /usr/share/pebl/media/fonts
+d 644 root sys /usr/share/pebl/media/images
+d 644 root sys /usr/share/pebl/media/sounds
+d 644 root sys /usr/share/pebl/media/text
+f 644 root sys /usr/share/pebl/media/fonts media/fonts/*
+f 644 root sys /usr/share/pebl/media/text media/text/*
+f 644 root sys /usr/share/pebl/media/sounds media/sounds/*
+f 644 root sys /usr/share/pebl/media/images media/images/*
+f 644 root sys /usr/share/pebl/pebl-lib pebl-lib/*
+

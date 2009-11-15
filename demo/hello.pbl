@@ -27,9 +27,9 @@ define Start (lParameter)
   ##Nothing appears until you draw!!!
   Draw()
 
-   WritePNG(gWindow,"window.png")
-   WritePNG(gSmiley,"smiles.png")
-   WritePNG(lText, "text.png")
+   WritePNG("window.png",gwindow)
+   WritePNG("smiles.png",gSmiley)
+   WritePNG("text.png",lText)
 
   
   ##Set the positions of things

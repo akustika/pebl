@@ -31,12 +31,14 @@ obsolete.
 
 Version 0.10
 
+
 * PEBL should read more UTF-8 formats (including ones with BOF
   markers, as produced by notepad), and should give useful 
   errors when reading UTF-16 files, which PEBL cannot use.
 
-* PEBL should return to the original screen resolution under more
-  conditions than before.
+* After using PEBL in fullscreen mode, your computer should return to
+  the original screen resolution under more conditions than before.
+
 
 * Added a new special variable gQuote, which is equal to a quotation
   mark (").  Now, if you need that special character in a text string, 
@@ -44,7 +46,7 @@ Version 0.10
     text <- "Stop when you see the word " +gQuote + "STOP" + gQuote + "."
 
 
- * Added a WritePNG() function, to allow for easy creation of 
+ * Added a WritePNG(filename, widget) function, to allow for easy creation of 
    screenshots and such.
 
 *  Added GetSystemType() function.  It will return either "OSX",
@@ -53,7 +55,7 @@ Version 0.10
 *  Added SystemCall() function.  Allows you to run command-line
    functions, passed in as a text string.  Note that the output of a
    command-line argument is generally not passed back into PEBL; just
-   the function's return code, which is usually 0 on sucess or some
+   the function's return code, which is usually 0 on success or some
    other number on failure (depending upon the type of failure).  Some
    uses might include:
       if(GetSystemType() == "WINDOWS")
@@ -74,8 +76,24 @@ Version 0.10
    - ZeroPad(number, base) pads the number with up to base 
      zeroes to the left of the decimal place.
 
-* Added some public domain images for feedback
+New Functions:
+  ReadCSV *
+  Inside() *
+  Enquote()
+  StripSpace() *
+  StripQuotes() *
+  Dist()   *
+  ZeroPad() *
+  RGBtoHSV() *
+  WritePNG() *+
+  SystemCall() *
+  GetSystemType() *
+  WaitForClickOnTarget() *
+  WaitForDownClick() *
+  GetAngle()  *+
+  ThickLine() *+
 
+* Added some public domain images for giving feedback  *
 * Fixed DegToRad and RadToDeg--they worked opposite to expected.
 
 * Added the .name property to most objects.  This lets you do some

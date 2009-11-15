@@ -199,6 +199,7 @@ Press any key to begin.")
  Reward:   $
  Penalty:  $
  Net Gain: $"
+
    AddObject(gFooter,gWin)
    Move(gFooter, 50,300)
 

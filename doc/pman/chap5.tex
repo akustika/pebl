@@ -84,10 +84,10 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+RandomBinomial+ &\verb+<p> <n>+&Returns a random number according to the Binomial distribution with probability \verb+<p>+ and repetitions \verb+<n>+\\ 
 \verb+RandomBernoulli+ &\verb+<p>+ &Returns 0 with probability \verb+(1-<p>)+ and 1 with probability \verb+<p>+\\ 
 
-\verb+ZoomPoints+
-&\verb+<[xs,yy]>+, \verb+<xzoom>+, \verb+<yzoom>+&Zooms a set of points in 2 directions\\
+\verb+ZoomPoints+&\verb+<[xs,yy]>+, \verb+<xzoom>+, \verb+<yzoom>+&Zooms a set of points in 2 directions\\
 \verb+ReflectPoints+&\verb+<[xs,yy]>+&Reflects points on vertical axis\\
 \verb+RotatePoints+ &\verb+<[xs,yy]>+,\verb+<angle>+&Rotates point \verb+<angle>+ degrees\\
+\verb+GetAngle+&\verb+<x>+,\verb+<y>+&Returns the angle in degrees of a vector.\\
 \addlinespace[0.2cm] 
 
 \cmidrule(l{.5cm}r{.5cm}){1-3} 
@@ -123,6 +123,7 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+GetData+&\verb+<network>+ \verb+<length>+&return a string from network connection\\
 \verb+ConvertIPString+&\verb+<ip-as-string>+&Converts an
 ip-number-as-string to usable address \\
+\verb+WritePNG+&\verb+<filename>+, \verb+<object>+ &Makes a .png from a window or object\\
 
 \addlinespace[0.2cm] 
 
@@ -176,6 +177,7 @@ ip-number-as-string to usable address \\
 &Creates a plus sign as a useable polygon which can be added to a window directly.\\ 
 \verb+MakeStarPoints+ &\verb+<r_outer>+ \verb+<r_inner>+ \verb+<npeaks>+ &Creates points for a star, which can then be fed to Polygon\\ 
 \verb+MakeNGonPoints+ &\verb+<radius>+ \verb+<npeaks>+ &Creates points for a polygon, which can then be fed to Polygon\\ 
+\verb+ThickLine+ &\verb+<x1>+ \verb+<y1>+ \verb+<x2>+ \verb+<y2>+ \verb+<thickness>+ \verb+<color>+ &Creates a thick line between two points\\ 
 
 
 
