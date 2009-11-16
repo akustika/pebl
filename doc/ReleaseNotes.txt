@@ -77,21 +77,22 @@ Version 0.10
      zeroes to the left of the decimal place.
 
 New Functions:
-  ReadCSV *+
-  Inside() *+
-  Enquote() *+
-  StripSpace()+*
-  StripQuotes()+*
-  Dist()+*
-  ZeroPad()+*
-  RGBtoHSV()+ *
-  WritePNG() *+
-  SystemCall()+ *
-  GetSystemType() +*
-  WaitForClickOnTarget() +*
-  WaitForDownClick()+ *
-  GetAngle()  *+
-  ThickLine() *+
+  ReadCSV()
+  Inside()
+  Enquote()
+  StripSpace()
+  StripQuotes()
+  Dist()
+  ZeroPad()
+  RGBtoHSV()
+  WritePNG()
+  SystemCall()
+  GetSystemType()
+  WaitForClickOnTarget()
+  WaitForDownClick()
+  GetAngle()  
+  ThickLine() 
+
 
 * Added some public domain images for giving feedback  *
 * Fixed DegToRad and RadToDeg--they worked opposite to expected.
