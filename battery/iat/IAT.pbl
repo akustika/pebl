@@ -461,7 +461,15 @@ define MatchTrial(stim, text, type, lgoodness)
    # For this condition, since they match, the goodness 
    # determines the response.
 
-   corrResp <- 3-ToNumber(lgoodness)
+   #corrResp <- 3-ToNumber(lgoodness)
+   if(ToNumber(lgoodness)==1)
+    {
+      corrResp <- 2
+    } else {
+      corrResp <- 1
+    }
+  
+
    if(ToNumber(response) == corrResp)
    {
       corr <- 1

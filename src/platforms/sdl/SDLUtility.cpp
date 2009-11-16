@@ -280,7 +280,6 @@ int SDLUtility::WritePNG(const Variant fname, PlatformWidget* wid)
                                     for (x = 0; x < surf->w; x++)
                                         {
                                             
-                                            
                                             SDL_GetRGB(GetPixel(surf, x, y), surf->format, &r, &g, &b);
 
                                             png_rows[y][x * 3 + 0] = r;
