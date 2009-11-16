@@ -219,6 +219,7 @@ finished using them.
 All widgets have several properties available for controlling their
 behavior.
 \begin{verbatim}
+  widget.name
   widget.X
   widget.Y
   widget.WIDTH
@@ -266,6 +267,7 @@ The following is a list of shape and their properties.
 \emph{Command:}  \verb+Circle(<x>,<y>,<r>,<color>,<filled>)+\\
 
 \emph{Properties:}
+.name\\
 .filled = {0,1} (whether it is filled)\\
 .color (color) \\
 .x  (x position of center) \\
@@ -283,6 +285,7 @@ The following is a list of shape and their properties.
 \emph{Command:}  \verb+Ellipse(<x>,<y>,<rx>,<ry>,<color>,<filled>)+\\
 
 \emph{Properties:}
+.name\\
 .filled = {0,1} (whether it is filled)\\
 .color (color) \\
 .x  (x position of center) \\
@@ -301,6 +304,7 @@ The following is a list of shape and their properties.
 \emph{Command:}  \verb+Square(<x>,<y>,<size>,<color>,<filled>)+\\
 
 \emph{Properties:}\\
+.name\\
 .filled = 0,1 (whether it is filled)\\
 .color (color) \\
 .x  (x position of center) \\
@@ -317,6 +321,7 @@ The following is a list of shape and their properties.
 \emph{Command:}  \verb+Rectangle(<x>,<y>,<dx>,<dy>,<color>,<filled>)+\\
 
 \emph{Properties:}
+.name\\
 .filled = {0,1} (whether it is filled)\\
 .color (color) \\
 .x  (x position of center) \\
@@ -350,6 +355,7 @@ The following is a list of shape and their properties.
 \emph{Command:}  \verb+Polygon( <x>, <y>,<xpoints>,<ypoints>,<color>,<filled>)+\\
 
 \emph{Properties:}
+.name\\
 .color (color) \\
 .x  (x position of start) \\
 .y  (y position of start)\\
@@ -360,6 +366,7 @@ The following is a list of shape and their properties.
 \emph{Command:}  \verb+Bezier( <x>, <y>,<xpoints>,<ypoints>,<steps>,<color>)+\\
 
 \emph{Properties:}
+.name\\
 .color (color) \\
 .x  (x position of start) \\
 .y  (y position of start)\\
