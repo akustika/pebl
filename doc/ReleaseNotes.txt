@@ -77,19 +77,19 @@ Version 0.10
      zeroes to the left of the decimal place.
 
 New Functions:
-  ReadCSV *
-  Inside() *
-  Enquote()
-  StripSpace() *
-  StripQuotes() *
-  Dist()   *
-  ZeroPad() *
-  RGBtoHSV() *
+  ReadCSV *+
+  Inside() *+
+  Enquote() *+
+  StripSpace()+*
+  StripQuotes()+*
+  Dist()+*
+  ZeroPad()+*
+  RGBtoHSV()+ *
   WritePNG() *+
-  SystemCall() *
-  GetSystemType() *
-  WaitForClickOnTarget() *
-  WaitForDownClick() *
+  SystemCall()+ *
+  GetSystemType() +*
+  WaitForClickOnTarget() +*
+  WaitForDownClick()+ *
   GetAngle()  *+
   ThickLine() *+
 
@@ -99,8 +99,12 @@ New Functions:
 * Added the .name property to most objects.  This lets you do some
   minimal introspection and decide what kind of thing an object is.
 
+PEBL Test Battery
+
+  We've added a number of new experiments to the test battery.  
 
 
+-------------------------------------------------- 
 Version 0.09
 
 

@@ -1156,10 +1156,11 @@ Dist(<xylist1>, <xylist2>)
 \end{verbatim}
 
 \item[Example]	
+\begin{verbatim}
   p1 <- [0,0]
   p2 <- [3,4]
-  d <- Dist(p1,p2)  #d is 25
-  
+  d <- Dist(p1,p2)  #d is 5
+\end{verbatim}
 \item[See Also]	
 \end{desc}
 
@@ -1354,6 +1355,36 @@ EndOfLine(<filestream>)
 \end{desc}
 
 \rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+Enquote()+
+
+\item[Description]	Surrounds the argument with quotes.  
+
+\item[Usage]
+\begin{verbatim}
+Enquote("one two three")
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+ ##use to add quoted text to instructions.
+ instructions <- "Respond whenever you see an "+ Enquote("X")
+
+  ##Use it for saving data that may have spaces: 
+  resp <-  GetInput(tb, "<enter>")
+  FilePrint(fileout, Enquote(resp))
+
+\end{verbatim}
+
+\item[See Also]	
+ gQuote 
+\end{desc}
+
+\rl
+
+
 
 
 

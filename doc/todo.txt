@@ -1,10 +1,2 @@
 todo:
 
-
-* width and height parameters no longer working on lines (see shapes.pbl)
-* .zoomx and .zoomy are not printed out in the printproperties #Fixed 
-* .zoomx and .zoomy mess up the location of the image--it should keep
-   at the same center, but it does not.  #fixed??
-* Do something about quotes.        #gQuote solves this?
-* writepng has arguments backward?  #reversed.
-* writepng doesn't work well on objects (other than windows)

@@ -88,6 +88,8 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+ReflectPoints+&\verb+<[xs,yy]>+&Reflects points on vertical axis\\
 \verb+RotatePoints+ &\verb+<[xs,yy]>+,\verb+<angle>+&Rotates point \verb+<angle>+ degrees\\
 \verb+GetAngle+&\verb+<x>+,\verb+<y>+&Returns the angle in degrees of a vector.\\
+\verb+Dist+&\verb+<x1,y1>+,\verb+<[x2,y2]>+&Returns distance between two points.\\
+
 \addlinespace[0.2cm] 
 
 \cmidrule(l{.5cm}r{.5cm}){1-3} 
@@ -98,6 +100,7 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+Print_+ &\verb+<value>+ &Prints \verb+<value>+ to stdout, without appending a newline afterwards\\ 
 \verb+PrintList+&\verb+<value>+ &Prints \verb+<list>+, getting rid of '[', ']' and ',' characters.\\ 
 \verb+Format+ &\verb+<object>+ \verb+<size>+ &Prints a number in size spaces by truncating or padding \\ 
+\verb+ZeroPad+ &\verb+<number>+ \verb+<size>+ &Pads the beginning of a number with 0s so the number is size long\\
 \verb+FileOpenRead+ &\verb+<filename>+ &Opens a filename, returning a stream to be used for reading information\\ 
 \verb+FileOpenWrite+ &\verb+<filename>+ &Opens a filename, returning a stream that can be used for writing information. Overwrites if file already exists\\ 
 \verb+FileOpenAppend+ &\verb+<filename>+ &Opens a filename, returning a stream that can be used for writing info. Appends if the file already exists, opens if file does not\\ 
@@ -110,6 +113,7 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+FileReadLine+ &\verb+<filestream>+&Reads and returns a line from a file; all characters up until the next newline or the end of the file\\ 
 \verb+FileReadList+ &\verb+<filename>+ &Given a filename, will open it, read in all the items into a list (one item per line), and close the file afterwards\\ 
 \verb+FileReadTable+ &\verb+<filename>+ \verb+<opt-sep>+ &Like \verb+FileReadList+, but reads in tables. Optionally, specify a token separator\\ 
+\verb+ReadCSV+ &\verb+<filename>+&Opens a csv file< returning a table with its elements\\ 
 \verb+FileReadText+ &\verb+<filename>+ &Reads all of the text in the file into a variable\\ 
 \verb+EndOfLine+ &\verb+<filestream>+&Returns true if at end of line \\ 
 \verb+EndOfFile+ &\verb+<filestream>+&Returns true if at the end of a file\\ 
@@ -140,6 +144,7 @@ ip-number-as-string to usable address \\
 \verb+EasyTextBox+ &\verb+<text>+ \verb+<x>+ \verb+<y>+ \verb+<win>+ \verb+<fontsize>+ \verb+<width>+ \verb+<height>+&Creates a textbox and adds it to \verb+<win>+ at \verb+<x>+\verb+<y>+\\ 
 \verb+MakeColor+ &\verb+<colorname>+ & Creates a color based on a color name\\ 
 \verb+MakeColorRGB+ &\verb+<red>+ \verb+<green>+ \verb+<blue>+ & Creates a color based on red, green, and blue values\\ 
+\verb+RGBToHSV+ &\verb+<color>+ & Converts a color to HSV triple\\ 
 \verb+MakeFont+ &\verb+<ttf_filename>+ \verb+<style>+ \verb+<size>+ \verb+<fgcolor>+ \verb+<bgcolor>+ \verb+<anti-aliased>+&Creates a font which can be used to make labels \\ 
 \verb+SetCursorPosition+\\
    &\verb+<textbox>+ \verb+<position>+ & \verb+Move+ the editing cursor in a textbox\\ 
@@ -178,6 +183,7 @@ ip-number-as-string to usable address \\
 \verb+MakeStarPoints+ &\verb+<r_outer>+ \verb+<r_inner>+ \verb+<npeaks>+ &Creates points for a star, which can then be fed to Polygon\\ 
 \verb+MakeNGonPoints+ &\verb+<radius>+ \verb+<npeaks>+ &Creates points for a polygon, which can then be fed to Polygon\\ 
 \verb+ThickLine+ &\verb+<x1>+ \verb+<y1>+ \verb+<x2>+ \verb+<y2>+ \verb+<thickness>+ \verb+<color>+ &Creates a thick line between two points\\ 
+\verb+Inside+  & \verb+<[x,y]>+ \verb+<object>+ & Determines whether a point is inside a graphical object\\ 
 
 
 
@@ -224,6 +230,9 @@ ip-number-as-string to usable address \\
 \verb+WaitForListKeyPressWithTimeout+&\\
 &\verb+<list-of-keyvals>+ \verb+<timeout>+ \verb+<type>+ & Waits for either a key to be pressed or a time to pass.\\
 \verb+WaitForMouseButton+ & &Waits until any of the mouse buttons is pressed or released, and returns message indicating what happened \\ 
+\verb+WaitForClickOnTarget+ & &Waits until any of a set of target objects are clicked .\\ 
+\verb+WaitForDownClick+ & &Waits for mouse button to be clicked \\ 
+
 \verb+RegisterEvent+ &\verb+<>+ & NOT IMPLEMENTED\\ 
 \verb+StartEventLoop+ &\verb+<>+ & NOT IMPLEMENTED\\ 
 \verb+ClearEventLoop+ &\verb+<>+ & NOT IMPLEMENTED\\ 
@@ -231,6 +240,8 @@ ip-number-as-string to usable address \\
 \verb+TranslateKeyCode+ &\verb+<>+ &Converts a keycode to a key name\\ 
 \verb+TimeStamp+ & &Returns a string containing the current date and time\\ 
 \verb+GetPEBLVersion+ &\verb+<>+ &Returns a string indicating which version of PEBL you are using\\ 
+\verb+GetSystemType+ &\verb+<>+ &Identifies the type of operating system being used.\\ 
+\verb+SystemCall+ &\verb+<text>+ &Executes command in operating system\\ 
 \verb+GetNIMHDemographics+ & \hspace{0.7cm}\verb+<code>+ \verb+<window>+ \verb+<file>+ & Asks NIMH-related questions\\ 
 \verb+GetSubNum+ & \verb+<window>+ & Asks user to enter subject number\\
 \verb+IsNumber+ & \verb+<variant>+ & Tests whether \verb+<variant>+ is a number \\ 
@@ -316,7 +327,7 @@ element in \verb+<database>+ corresponding to element of
 \verb+Tab+ &\verb+<num>+ & Returns string with  \verb+<num>+ tabs.\\
 \verb+Format+ &\verb+<value>+ \verb+<num>+ & Makes string from value
 exactly \verb+<num>+ characters by truncating or padding.\\
-
+\verb+Enquote+ &\verb+<text>+ & Returns string surrounded by quote marks.\\
 \verb+Uppercase+ &\verb+<string>+ & Returns uppercased string\\ 
 \verb+Lowercase+ &\verb+<string>+ & Returns lowercased string\\ 
 \verb+ReplaceChar+&\verb+<string>+ \verb+<char>+ \verb+<char2>+\\
@@ -326,7 +337,8 @@ exactly \verb+<num>+ characters by truncating or padding.\\
 \verb+SubString+ &\verb+<string>+ \verb+<position>+ \verb+<length>+& Returns a substring\\ 
 \verb+FindInString+ &\verb+<string>+ \verb+<key>+ & Returns position
 of \verb+<key>+ in \verb+<string>+\\ 
-
+\verb+StripSpace+ &\verb+<string>+  & Strips whitespace from the start and end of \verb+<string>+.\\ 
+\verb+StripQuotes+ &\verb+<string>+  & Strips quotation marks from the start and end of \verb+<string>+.\\ 
 
 
 \end{longtable} 
