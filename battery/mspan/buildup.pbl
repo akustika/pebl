@@ -162,7 +162,9 @@ define Trial(stimid,rooms)
   keys <- Sequence(1,10,1)
   ShowCursor(1)
   responses <- []
+  times <- []
   resp <- 0
+  starttime <- GetTime()
   while(resp <> 10)
    {
      resp  <- WaitForResponse(targs,keys)
@@ -170,6 +172,7 @@ define Trial(stimid,rooms)
      if(resp<10)
        {
          responses <- Append(responses,resp)
+         times <- Append(times, (GetTime() - starttime))
 
      #Hide the clicked target
      Hide(Nth(targs,resp))
@@ -218,6 +221,22 @@ define Trial(stimid,rooms)
    Draw()
    Wait(500)
    RemoveObject(warn,gWin)
+   FilePrint_(gFileOut, corr + " " )
+
+   ##print out RTs
+   i <- 1
+   loop(t,times)
+    {
+      FilePrint_(gFileOut,t+ " " )
+      i <- i + 1
+    }
+   #Pad the end with Xs
+   while(i <= 9)
+   {
+    FilePrint_(gFileOut,"X ")
+     i <- i + 1
+   }
+    FilePrint(gFileOut,"")
 
   return corr
 }
