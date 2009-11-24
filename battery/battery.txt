@@ -1,6 +1,6 @@
-PEBL PSYCHOLOGICAL TEST BATTERY Version 0.3
+PEBL PSYCHOLOGICAL TEST BATTERY Version 0.4
 
-Released Sept 2008
+Released Nov 2009
 Part of the PEBL Project
 http://pebl.sourceforge.net/battery.html
 
@@ -655,7 +655,7 @@ Dat columns are:
 -------------------------------------------------------------------------------
             Survey Generator Version 0.1
 -------------------------------------------------------------------------------
-New for PEBL Battery XXX
+New for PEBL Battery 0.4
 Location: survey/survey.pbl
 
 Description: Use PEBL to generate your own survey. Includes several
@@ -663,3 +663,57 @@ different question types (instructions, short-answer, long-answer,
 multiple choice, multiple-selection, n-level likert agreement).
 Questions are controlled by a .csv file, and data are output to a
 unique file for each subject.
+
+
+
+-------------------------------------------------------------------------------
+            Time tapping test
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.4
+Location: timetap/timetap.pbl
+
+
+Description: 
+
+
+Options: 
+
+Output:
+
+Dat columns are:
+
+
+
+-------------------------------------------------------------------------------
+            Time tapping test
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.4
+Location: timetap/timetap.pbl
+
+
+Description: 
+
+
+Options: 
+
+Output:
+
+Dat columns are:
+
+
+
+-------------------------------------------------------------------------------
+            Situation Awareness test
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.4
+Location: satest/satest.pbl
+
+
+Description: 
+
+
+Options: 
+
+Output:
+
+Dat columns are:
