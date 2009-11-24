@@ -8,7 +8,7 @@ define Start(p)
 
   gWin <- MakeWindow()
 
-  gSleepEasy <- 1
+  gSleepEasy <- 0
   ShowCursor(0)
   gLogFile <- FileOpenWrite("probmonitor-"+gSubNum+".txt")
 
@@ -169,7 +169,8 @@ define Trial(numdials)
 
       resp <- WaitForListKeyPressWithTimeOut(keylist,gDelay,1)
 
-      if(resp == "<unknown>")
+
+      if(resp == "<unknown>" or resp == "<ANYKEY>")
       {
          #we timed out
          3
