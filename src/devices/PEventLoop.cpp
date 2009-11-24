@@ -3,7 +3,7 @@
 //    Name:       src/devices/PEventLoop.cpp
 //    Purpose:    Primary generic timer event device
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -173,9 +173,10 @@ PEvent PEventLoop::Loop()
                                             if(result)
                                                 {
                                                     returnval = gEventQueue->GetFirstEvent();
+
                                                     //The test was successful.  Add a global variable giving the time of the event.
-                                                    
                                                     // myEval->gGlobalVariableMap.AddVariable("gLastEventTime", eventQueue->GetFirstEvent().GetTime());
+
                                                     if(mNodes[i])  //Execute mNodes
                                                         {
                                                             //Add the parameters, as a list, to the stack.
@@ -198,7 +199,7 @@ PEvent PEventLoop::Loop()
                         }
                     else
                         {
-                            //The test exmanines the device's state directly.
+                            //The test examines the device's state directly.
                             
                             result = mStates[i]->TestDevice();
                             if(result)
@@ -207,8 +208,11 @@ PEvent PEventLoop::Loop()
                                     PEBL_DummyEvent pde;
                                     pde.value = mStates[i]->GetInterface();
 
+
+                                    //If this was a time-check event, make a PDT_time
                                     //time needs to go in  the 0 below.
-                                    returnval = PEvent(PDT_DUMMY,0);
+                                    //returnval = PEvent(PDT_DUMMY,0);
+                                    returnval = PEvent((PEBL_DEVICE_TYPE)pde.value,0);
                                     returnval.SetDummyEvent(pde);
 
                                     //If mNodes[i] is null, terminate

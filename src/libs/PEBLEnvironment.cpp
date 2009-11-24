@@ -745,6 +745,94 @@ Variant PEBLEnvironment::WaitForMouseButton(Variant v)
     return Variant(pcd);
 }
 
+/// This function uses the event loop to schedule a single
+/// device-test, which checks for any type of mouse click.
+/// It returns x,y, button, and type of button press.
+Variant PEBLEnvironment::WaitForMouseButtonWithTimeout(Variant v)
+{
+
+
+
+   //v[1] should have the parameter: a time to wait.
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in function [WaitForMouseButtonWithTimeout(<number>)]:  ");    
+
+    //set the timeout
+    int delay = plist->First(); plist->PopFront();
+    delay += myTimer.GetTime();
+    
+                                                                                                                   
+    //Create a timer test 
+    //1 is the value (down), DT_GREATERTHAN is the test, key is
+    // the interface (e.g., the 'A' key)
+    PDevice * timer = new PlatformTimer(myTimer);
+    ValueState  * timestate = new ValueState(delay, DT_GREATER_THAN_OR_EQUAL, PDT_TIMER, timer, PDT_TIMER);
+
+
+
+
+    ///////////////////////////////////////
+     //Create a mouse test
+    //1 is the value (down), DT_EQUAL is the test, 1 is the interface (e.g., the 'A' key) 
+
+    ValueState  * state = new ValueState(PEBL_PRESSED, DT_TRUE, 1, gEventQueue, PDT_MOUSE_BUTTON);
+
+    //NULL,NULL will terminate the looping
+    string funcname = "";
+    PList* params = NULL;
+    Evaluator::mEventLoop.RegisterEvent(state,funcname, params);
+    Evaluator::mEventLoop.RegisterState(timestate, funcname, params);
+
+    PEvent returnval = Evaluator::mEventLoop.Loop();
+
+
+
+
+    //Now, clear the event loop tests
+    Evaluator::mEventLoop.Clear();
+
+    PList *newlist = new PList();
+
+    if(returnval.GetType()== PDT_MOUSE_BUTTON)
+        {
+
+           
+            int x =returnval.GetMouseButtonEvent().x;
+            int y =returnval.GetMouseButtonEvent().y;
+            newlist->PushFront(Variant(x));
+            newlist->PushBack(Variant(y));
+            int btn = returnval.GetMouseButtonEvent().button;
+            Variant button = Variant(btn);
+            newlist ->PushBack(button);
+            
+            Variant buttonstate = "";
+            int upstate = returnval.GetMouseButtonEvent().state;
+            if(upstate == PEBL_PRESSED)
+                {
+                    buttonstate = Variant("<pressed>");
+                } else {
+                buttonstate = Variant("<released>");
+            }
+            newlist->PushBack(buttonstate);
+            
+        }    else  //PCD_TIMER
+        {
+
+            
+            newlist->PushBack(Variant("<timeout>"));
+
+
+            
+        }
+
+    counted_ptr<PEBLObjectBase>newlist2 = counted_ptr<PEBLObjectBase>(newlist);
+ 
+
+    PComplexData *   pcd = new PComplexData(newlist2); 
+    return Variant(pcd);
+}
+
 
 
 

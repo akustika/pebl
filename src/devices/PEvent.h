@@ -42,7 +42,8 @@ enum
 		PEBL_RIGHT,
 		PEBL_PRESSED,
 		PEBL_RELEASED,
-        PEBL_MOVEMENT
+        PEBL_MOVEMENT,
+        PEBL_TIMEOUT
 	};
 
 

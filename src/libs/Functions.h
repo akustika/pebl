@@ -242,6 +242,7 @@ namespace PEBLEnvironment
             {"WAITFORKEYLISTDOWN",              WaitForKeyListDown, 1, 1},
             {"WAITFORLISTKEYPRESSWITHTIMEOUT",  WaitForListKeyPressWithTimeout, 3,3},
             {"WAITFORMOUSEBUTTON",              WaitForMouseButton, 0,1},
+            {"WAITFORMOUSEBUTTONWITHTIMEOUT",   WaitForMouseButtonWithTimeout, 1,2},
 
 
             {"CLEAREVENTLOOP",                  ClearEventLoop,     0, 0},

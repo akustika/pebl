@@ -73,7 +73,11 @@ ostream & DeviceState::SendToStream(ostream & out) const
     return out;
 }
 
-ValueState::ValueState(int value, DeviceTest test, int intface, PDevice * device, PEBL_DEVICE_TYPE pdt):
+ValueState::ValueState(int value, 
+                       DeviceTest test, 
+                       int intface, 
+                       PDevice * device, 
+                       PEBL_DEVICE_TYPE pdt):
     DeviceState(test, intface,device, pdt),
     mValue(value)
 {
