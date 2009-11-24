@@ -644,12 +644,55 @@ Location: changedetection/changedetection.pbl
 Description: 
 
 
+
 Options: 
 
 Output:
 
 Dat columns are:
 
+
+-------------------------------------------------------------------------------
+            Visual Memory Span, Version 0.1
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.4
+Location: mspan/staircase.pbl
+          mspan/buildup.pbl
+
+
+Description: 
+Two parallel versions of a generic memory span task.  It uses words
+with associated pictures, and requires responding by clicking on a 9x9
+grid of responses (rather than verbal respnonses).
+
+ The staircase task starts out at a length 4, then continues, going up
+ or down by one list length depending on whether the subject got the
+ trial correct or incorrect.
+  
+ The buildup task works like 'simon' adding a new word to the current
+ list until an error is made (or the list is nine long).
+
+Options: 
+
+  upperbound <- 9             ## The longest list length
+  lowerbound <- 3             ## The shortest list length
+  staircasestart  <- 4        ## starting point for staircasestart.
+
+  gISI <- 1000                ## Inter-stimulus interval in ms
+  gITI <- 1000                ## inter-trial interval.
+  gWait <- 500                ## How long to spend at each word
+  gDoWait <- 0                ## Whether there should be a 'blow-up' of the scre
+en
+
+
+Output:
+data/buildup-X.txt
+data/staircase-X.txt
+
+
+
+Dat columns are:
+subnum trial inputcode responsecode correct rt1 rt2 rt3 rt4 rt5 rt6 rt7 rt8 rt9
 
 
 -------------------------------------------------------------------------------
@@ -685,7 +728,7 @@ Dat columns are:
 
 
 -------------------------------------------------------------------------------
-            Time tapping test
+            Time tapping test, Version 0.1
 -------------------------------------------------------------------------------
 New for PEBL Battery 0.4
 Location: timetap/timetap.pbl
@@ -701,9 +744,67 @@ Output:
 Dat columns are:
 
 
+-------------------------------------------------------------------------------
+            Probability Monitor, Version 0.1
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.4
+Location: probmonitor/probmonitor.pbl
+
+Description: 
+  Workalike of UTC battery test.  Subject monitors one or more noisy
+  dials, and must respond when one has a signal: the dial starts
+  having a bias toward one side or another.
+
+
+Options: 
+
+  gDelay <- 50                   ## ms for each update
+  gSignals <- 10                 ## number of updates per trial
+  gTriallength <- 300 * 1000     ## max length of trial (longer than in UTC)
+
+
+Output:
+probmonitor-X.txt
+
+Dat columns are:
+
+subnum dials signum abstime signal resp corr type time rt
+
+
 
 -------------------------------------------------------------------------------
-            Situation Awareness test
+            Match to sample, Version 0.1
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.4
+Location: matchtosample/matchtosample.pbl
+
+Description: 
+  Workalike of UTC battery test.  Subjects see a colored matrix and
+  study it for however long they choose.  THen they are shown a pair
+  of matrices; one identical, and one different.  They are to choose
+  which one is the one they studied.
+
+
+Options: 
+
+  gSize <- 4  #Number of rows/columns in the matrix
+  giveFeedback <- 1  
+  numtrials <- 30
+  delay <- 3500        ## Time between study and test
+
+
+
+Output:
+matchtosample-X.txt
+
+Dat columns are:
+
+subnum trial targ foil studytime rt order resp corr
+0 1 0001001010110111 0001011010110101 1689 1600 1 <lshift> 1
+
+
+-------------------------------------------------------------------------------
+            Situation Awareness test, Version 0.1
 -------------------------------------------------------------------------------
 New for PEBL Battery 0.4
 Location: satest/satest.pbl
@@ -717,3 +818,128 @@ Options:
 Output:
 
 Dat columns are:
+
+
+-------------------------------------------------------------------------------
+            Test of Fitts's Law, Version 0.1
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.4
+Location: fitts/fitts.pbl
+
+
+Description: 
+
+
+Options: 
+
+Output:
+
+Dat columns are:
+
+
+
+-------------------------------------------------------------------------------
+            Mental rotation task
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.4
+Location: rotation/Rotation.pbl
+
+
+Description: 
+
+ Basic version of Shepard's classic 'mental rotation' experiment.
+ This uses just two polygons, but these can be specified by hand.    
+
+ This test is not well instrumented for laboratory study.  It may be
+ sufficient for simple classroom demonstrations.
+
+
+Options: 
+
+Output:
+
+Dat columns are:
+
+
+
+-------------------------------------------------------------------------------
+            Pursuit Rotor Task
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.4
+Location: pursuitrotor/pursuitrotor.pbl
+
+
+Description: 
+
+Computer implementation of a simple pursuit rotor task.  Subjects must
+follow a target with their mouse.  They get credit for the proporition
+of time the mouse cursor is on the target, and how far the deviate
+from it by.
+
+
+Options: 
+
+The following variables are set near the top of the file
+
+Duration in seconds of each trial:
+ trialtime <- 15  
+
+Number of trials:
+ trials <- 4
+
+Rotations per second.  With computer mouse, 1 rotation/7.5 seconds
+seems a reasonable speed:
+gSpeed <- 1/7.5    
+
+
+
+Output:
+pursuitrotor-X.txt
+pursuitrotor-report-X.txt
+
+
+Dat columns are:
+
+
+
+-------------------------------------------------------------------------------
+            PEBL Trails Task
+-------------------------------------------------------------------------------
+New for PEBL Battery 0.4
+Location: ptrails/ptrials.pbl
+
+
+Description: 
+
+A new implementation of the classic connect-the-dots paradigm.  It can
+either be used with the classic Reitan points, or randomly generated
+new points.  For the classic points, the paths are set up so that they
+do not cross.  For randomly-generated points, the paths are likely to
+cross.
+
+Options: 
+
+The following variables are set near the top of the file
+
+#change from 0 to 1 in order to use the classic Reitan points
+useReitan <- 0  
+
+Number of trials. If useReitan == 1, then random trials will be
+ appended after the reitan trials. 
+ trials <- 3
+
+
+  gTargSize <- 20 ##Size in pixels of targets
+  gTargclickSize <- 20 ##Size of click zone; may be smaller or larger
+                      ##than target
+  gNumTargs <- 25    #Number of targets
+  gDrawLines <- 1    #Whether to draw lines
+
+
+Output:
+ptrails-X.txt
+
+
+Dat columns are:
+
+subnum block clicknum true_target abstime x y correct clickedobject rt rt
