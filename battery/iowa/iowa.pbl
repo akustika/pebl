@@ -511,7 +511,7 @@ define WaitForIt()
 {
   if(gUseMouse)
   {
-     WaitForMouseClick()
+     WaitForDownClick()
   } else {
      WaitForAnyKeyPress()
   }
