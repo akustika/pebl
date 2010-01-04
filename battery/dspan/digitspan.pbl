@@ -93,7 +93,7 @@ define Start(lPar)
 
 
    ## Give instructions; wait for them to hit a key, 
-   inst <- "You are about to take part in a memory test.  You will be presented with a sequence of digits, one at a time on the screen.Each digit will occur only once during a list.  You will then be asked to type the list of digits exactly in order.  If you do not know  what digit comes next, you can skip over it by typing the 'X' key.  Once entered, you cannot go back to edit your responses. "
+   inst <- "You are about to take part in a memory test.  You will be presented with a sequence of digits, one at a time on the screen.Each digit will occur only once during a list.  You will then be asked to type the list of digits exactly in order.  If you do not know  what digit comes next, you can skip over it by typing the '-' key.  Once entered, you cannot go back to edit your responses. "
 
    lthInst <- inst + " You will start with a list of three items, and will get three different lists at each length.  If you are able to recall two out of three lists completely correctly, you will move on to the next longest list length."
    htlInst <- inst + " You will start with a list of ten digits, and will get three chances to recall at each length.  After three trials, you will move down to the next lower list length.  You will continue until you are able to recall all 
@@ -329,7 +329,7 @@ define Trial(stimpairs)
 	    if(Length(responseList) == 1) 
         {  
            responseList <- []
-		   position <- 1
+	   position <- 1
         } else {
            responseList <- SubList(responselist, 1, Length(responseList)-1)
            position <- position - 1
