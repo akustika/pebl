@@ -1,4 +1,3 @@
-"..\bin\pebl.exe"
-"..\demo\"
-"hello.pbl"
-Condition|fast
+C:\Program Files\PEBL\bin\pebl.exe
+C:\Documents and Settings\Shane.NOHUCK\My Documents\pebl-exp.0.09
+Condition|0

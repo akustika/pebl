@@ -69,7 +69,7 @@ Begin VB.Form Form1
       ScrollBars      =   3  'Both
       TabIndex        =   11
       Top             =   4080
-      Width           =   11895
+      Width           =   11415
    End
    Begin VB.ComboBox Combo2 
       Height          =   315
@@ -97,7 +97,6 @@ Begin VB.Form Form1
       Left            =   360
       TabIndex        =   7
       Top             =   840
-      Value           =   1  'Checked
       Width           =   1215
    End
    Begin VB.TextBox Text1 
@@ -160,7 +159,7 @@ Begin VB.Form Form1
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   4335
+      Height          =   5775
       Index           =   1
       Left            =   240
       MultiLine       =   -1  'True
@@ -178,7 +177,7 @@ Begin VB.Form Form1
       Width           =   1215
    End
    Begin VB.Label Label2 
-      Caption         =   "Launcher for PEBL 0.09"
+      Caption         =   "Launcher for PEBL 0.10"
       Height          =   255
       Left            =   10080
       TabIndex        =   10
@@ -309,25 +308,37 @@ Private Sub reload()
 
  Set fs = CreateObject("Scripting.FileSystemObject")
  
+ 'Read in the stdout file, line by line
  sFilename = File1.Path & "\stdout.txt"
  If fs.fileexists(sFilename) Then
-   hFile = FreeFile
-   Open sFilename For Input As #hFile
-   Text2(0).Text = Input$(LOF(hFile), hFile)
-   Close #hFile
+   hfile = FreeFile
+   Open sFilename For Input As #hfile
+  alltext = ""
+  Do While Not EOF(hfile)
+    Line Input #hfile, mytext
+    alltext = alltext & mytext & vbCrLf
+  Loop
+  Text2(0).Text = alltext
+   Close #hfile
   Else
    Text2(0).Text = "Experiment complete: No output produced."
  End If
  
+ 'Do the same for the stderr file.
  sFilename = File1.Path & "\stderr.txt"
  If fs.fileexists(sFilename) Then
-   hFile = FreeFile
-   Open sFilename For Input As #hFile
-   Text2(1).Text = Input$(LOF(hFile), hFile)
-   Close #hFile
+  hfile = FreeFile
+  Open sFilename For Input As #hfile
+  alltext = ""
+  Do While Not EOF(hfile)
+    Line Input #hfile, mytext
+    alltext = alltext & mytext & vbCrLf
+  Loop
+  Text2(1).Text = alltext
+  Close #hfile
   Else
-   Text2(1).Text = "Experiment complete.  Failed to load [" & sFilename & "]."
- End If
+    Text2(1).Text = "Experiment complete.  Failed to load [" & sFilename & "]."
+  End If
 
 End Sub
 
@@ -383,7 +394,7 @@ If Len(Dir$("pebl-init.txt")) = 0 Then
 Else
  Open "pebl-init.txt" For Input As #1
  'The first line is the executable location
- Input #1, PEBL_Executable
+ Line Input #1, PEBL_Executable
  'Debug.Print ("PEBL Executable: [" + PEBL_Executable + "]")
 
  'parse the filename to find out where stdout and stderr will be.
@@ -395,9 +406,10 @@ Else
        exePath = exePath & newpath(i) & "\"
     Next i
    
- Input #1, myPathname
+ Line Input #1, myPathname
  'Debug.Print ("Pathname: [" + myPathname + "]")
 
+ 
  Line Input #1, myfilenamelist
  'Debug.Print ("filename: [" + myfilenamelist + "]")
 End If
@@ -443,7 +455,7 @@ While Not EOF(1)
  
  
  'Get the label and initial value
- Input #1, namevalue
+ Line Input #1, namevalue
  namevaluearray = Split(namevalue, "|")
  
  Label1(NUMBER).Top = toplabel
@@ -468,6 +480,7 @@ Wend
 Text2(0).Text = ""
 Text2(1).Text = ""
 Text2(0).Visible = True
+Close #1
 
 End Sub
 
@@ -484,5 +497,4 @@ Text2(1 - clicked).Visible = False
 SelectedTab = clicked
 
 End Sub
-
 
