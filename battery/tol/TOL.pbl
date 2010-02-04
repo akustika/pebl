@@ -18,7 +18,7 @@ define Start(p)
 
   gNumDisks <- [2,3,4,5,6]  #Can be up to 6
   trialpercond <- 2
-  gShowHand     <- 0  #Show the hand graphic?
+  gShowHand     <- 1  #Show the hand graphic?
 
 
 
@@ -170,7 +170,7 @@ define Init()
     {
      hand   <- MakeImage("png/hand.png")
      AddObject(hand,gWin)
-     Move(hand,330,200)
+     Move(hand,330,250)
     }
    rect <- Rectangle(330,80,380,140,MakeColor("grey20"),1)
    AddObject(rect,gWin)
@@ -216,7 +216,7 @@ define PlotDisks(config,inhand,ybase,disks)
   }
  if(inhand >0)
   {
-     Move(Nth(disks,inhand),320,200)
+     Move(Nth(disks,inhand),320,250)
      AddObject(Nth(disks,inhand),gWin)
   }
  return  complex
@@ -274,7 +274,7 @@ define PlotDisksAnimate(config,inhand,ybase,disks,steps)
   }
    if(inhand > 0 )
      {
-       endXY <- Append(endXY, [320,200])
+       endXY <- Append(endXY, [320,250])
        disk <- Nth(disks,inhand)
        AddObject(disk,gWin)
        Show(disk)
@@ -311,7 +311,6 @@ define PlotDisksAnimate(config,inhand,ybase,disks,steps)
 
  return  complex
 }
-
 
 
 define MoveDisk(config)
