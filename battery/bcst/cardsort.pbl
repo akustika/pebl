@@ -23,7 +23,8 @@ define Start(lPar)
 {
 
 
-  ## repeats is the number of times you go through the deck (deck size depends on whether useReduced is 0 or 1).
+  ## repeats is the number of times you go through the deck (deck size 
+  ## depends on whether useReduced is 0 or 1).
   repeats <- 2
 
   ## This is how long of a run is required before switching categories.
@@ -37,16 +38,26 @@ define Start(lPar)
   ## as in Berg, or whether they are chosen randomly.
   useCanonical <- 1
 
-  ## Reduced uses a 24-card deck, removing cards sharing  2+ attributes with stimulus cards
+  ## Reduced uses a 24-card deck, removing cards sharing  2+
+  ## attributes with stimulus cards
   ## See Nelson HE: A modified card sorting test sensitive to 
   ##        frontal lobe defects. Cortex 1976;12:313-324.
   ## Note: modified card sort also may use shorter runlength.
   useReduced <- 0
 
+  ## The labels/instructions live in the file labels-en.txt.  Change
+  ## that file to translate to a new language.
+  textlist <- FileReadList("labels-en.txt")
+  gPromptText <- Nth(textlist,5)
+  gCorrectText <-Nth(textlist,6)
+  gIncorrectText <- Nth(textlist,7)
   ## results are stored in this file
+
+
   gFileOut <-FileOpenWrite("bcst-" + gSubNum +".txt")
 
 
+  gSleepEasy <- 1
   persevs <- []
   totCorr <- 0
   totPers <- 0
@@ -127,8 +138,7 @@ define Start(lPar)
   stim <-	Shuffle(Transpose(Append( Transpose(stimcat),images)))
 
    ## Give instructions; wait for them to hit a key, 
-   SetText(gInstructions,"You are about to take part in an experiment in which you need to categorize cards based on the pictures appearing on them.  To begin, you will see four piles (press any key to see the four piles.)
-")
+   SetText(gInstructions,Nth(textlist,1))
    Show(gInstructions)
    Draw()  
    WaitForAnyKeyPress()
@@ -156,11 +166,11 @@ define Start(lPar)
    Move(gHeader,320,220)
    Show(gHeader)
 
-	gInstructions.text <- "Each pile has a different number, color, and shape.  You will see a series of cards and need to determine which pile each belongs to. Press the 1-4 keys along the top of the keyboard to determine the pile each new card belongs in.  The correct answer depends upon a rule, but you will not know what the rule is.  But, we will tell you on each trial whether or not you were correct. Press any key to continue."
+	gInstructions.text <- Nth(textlist,2)
    Draw()
 WaitForAnyKeyPress()
 
-   gInstructions.text <- "Finally, the rule may change during the task, so when it does, you should figure out what the rule is as quickly as possible and change with it. Press any key to begin."
+   gInstructions.text <- Nth(textlist,3)
  Draw()
  WaitForAnyKeyPress()
 
@@ -360,7 +370,7 @@ WaitForAnyKeyPress()
    FilePrint(report," a free version of the Wisconsin Card Sorting Task (tm)*")
    FilePrint(report," (c) 2008 Shane T. Mueller")
    
-   FilePrint(report," Version 0.4")
+   FilePrint(report," Version 0.5")
    FilePrint(report," "+GetPEBLVersion())
    FilePrint(report," "+TimeStamp())
    FilePrint(report," Participant Code: " + gSubNum)
@@ -438,7 +448,7 @@ WaitForAnyKeyPress()
    FileClose(report)
    ##Now, show debriefing info.
 
-   feedback <-  "You may now leave.  Please alert the experimenter that you are done. Press the X key to exit."
+   feedback <-  Nth(textlist,4)
 
    SetText(gInstructions, feedback)
    Hide(gPrompt)
@@ -486,16 +496,16 @@ define Initialize()
    Move(gHeader, gVideoWidth/2, 100)
    Hide(gHeader)
 
-   gPrompt <- MakeLabel("Press 1-4 to sort card",gStimFont)
+   gPrompt <- MakeLabel(gPromptText,gStimFont)
    AddObject(gPrompt,gWin)
    Move(gPrompt,200,350)
    Hide(gPrompt)
-   gCorrect <- MakeLabel("Correct!",gCorrFont)
+   gCorrect <- MakeLabel(gCorrectText,gCorrFont)
    AddObject(gCorrect,gWin)
    Move(gCorrect,500,350)
    Hide(gCorrect)
   
-   gIncorrect <- MakeLabel("Incorrect",gIncorrFont)
+   gIncorrect <- MakeLabel(gIncorrectText,gIncorrFont)
    AddObject(gIncorrect,gWin)
    Move(gIncorrect,500,350)
    Hide(gIncorrect)
