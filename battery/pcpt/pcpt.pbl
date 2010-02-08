@@ -346,6 +346,9 @@ define Start(lPar)
    PrintMe(reportfile,"Correct RT SD    " +Tab(1)+ SD(rtCorr1000) + Tab(1) +SD(rtCorr2000) + Tab(1) + SD(rtCorr4000))
    PrintMe(reportfile,"Error RT Mean    " +Tab(1)+ MeanX(rtInc1000) + Tab(1) + MeanX(rtInc2000) + Tab(1) + MeanX(rtInc4000))
    PrintMe(reportfile,"Error RT SD      " +Tab(1)+ SD(rtInc1000) + Tab(1) + SD(rtInc2000) + Tab(1) + SD(rtInc4000))
+##  Add d' and beta here?
+##
+##
    PrintMe(reportfile,"--------------------------------------------------------")   
 
 

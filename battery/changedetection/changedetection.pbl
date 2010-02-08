@@ -39,7 +39,7 @@ define Start(par)
     gYMax <- 500    ##Bottom bound of field
 
     gShowTime <- 400     ##How long to show field
-    gScreenTime <- 100   ##how long to screen
+    gScreenTime <- 100   ##how long to show screen
 
     condsize <- 5        ##Number of trials per condition
 
@@ -227,7 +227,7 @@ define Trial(cond)
      Draw()
      starttime <- GetTime()
      resp <- "<unknown>"
-     while(resp == "<unknown>")
+     while(resp == "<unknown>" or resp == "<ANYKEY>")
      {
 
        #Target Present
@@ -239,8 +239,9 @@ define Trial(cond)
        Draw()
        t2  <- GetTime()
        Print("screen time: " + (t2-t1))
-    
-       if(resp == "<unknown>")
+       Print(resp)
+
+       if(resp == "<unknown>" or resp == "<ANYKEY>")
         {
          screensum <- screensum + (t2-t1)
          screenN <- screenN + 1
@@ -267,7 +268,7 @@ define Trial(cond)
 
          ##Disappear the target and show the screen
          #Target absent
-         if(resp == "<unknown>")
+         if(resp == "<unknown>" or resp == "<ANYKEY>")
          {
            showSum <- showSum + (t2-t1)
            showN <- showN + 1
@@ -291,7 +292,7 @@ define Trial(cond)
            t2 <- GetTime()
            Print("screen time: " + (t2-t1))
     
-           if(resp == "<unknown>") 
+           if(resp == "<unknown>" or resp == "<ANYKEY>") 
            {
            screenSum <- screenSum + (t2-t1)
            screenN <- screenN + 1
@@ -304,7 +305,7 @@ define Trial(cond)
            Draw()
            t2 <- GetTime()
            Print("show time: " + (t2-t1))
-           if(resp=="<unknown>")
+           if(resp=="<unknown>" or resp == "<ANYKEY>")
             {
              showSum <- showSum + (t2-t1)
              showN <- showN + 1

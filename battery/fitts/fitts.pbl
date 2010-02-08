@@ -4,7 +4,7 @@ define Start(p)
 
   targdist <- [50,75,100,200,350,500,700]
   targsize <- [10,20,40]
-  reps     <- 5        ##Number of times through list
+  reps     <- 10       ##Number of times through list
 
   gFileOut <- FileOpenWrite("fitts-"+gSubNum+".txt")
   gPointFile <- FileOpenWrite("fittspoints-"+gSubNum+".txt")
@@ -15,7 +15,7 @@ define Start(p)
   gHomeX <- Round(gVideoWidth/2)
   gHomeY <- Round(gVideoHeight/2)
   gTargHeight <- 50
-  gShowPreview <- 0
+  gShowPreview <- 0         ##Can you see the target before you move?
   gSleepEasy <- 1
   gMessage <- EasyLabel("",gHomeX,gHomeY-100,gWin,22)
   gCounter <- EasyLabel("",gHomeX,gHomeY-150,gWin,22)
@@ -64,8 +64,7 @@ define Trial(trial, pos, size,type)
 {
 
    ##Type == 1:
-   ##Type == 3; 
-   ## doesn't require clicking; only dwelling.
+   ##Type == 3;  doesn't require clicking; only dwelling.
 
 
    targ <- Rectangle(gStartx+pos,gHomeY,size,gTargHeight,gTargCol,1)
@@ -120,7 +119,7 @@ define Trial(trial, pos, size,type)
         mousepos <- GetMouseCursorPosition()
         MoveCursor(mousepos)
 
-		FilePrintList(gPointfile,Merge([trial,size,pos, time],mousepos))
+        FilePrintList(gPointfile,Merge([trial,size,pos, time],mousepos))
         #If you stop moving, check to see if you are inside the target
         if(ListEqual(mousepos,lastpos) )
           {

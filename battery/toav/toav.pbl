@@ -42,6 +42,7 @@ define Start(lPar)
  
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
+  gSleepEasy <- 1
   ShowCursor(0)
  
    if(IsAnyKeyDown())
@@ -184,6 +185,7 @@ define Start(lPar)
 	  DrawTarg()
       r1 <- WaitForListKeyPressWithTimeout([" "],100,1)
       time1 <- GetTime()
+      Print(r1)
 
       HideAll()
       if(r1 == "<unknown>")
@@ -219,6 +221,7 @@ define Start(lPar)
 	  DrawFoil()
       r1 <- WaitForListKeyPressWithTimeout([" "],100,1)
       time1 <- GetTime()
+      Print(r1)
 
       HideAll()
       if(r1 == "<unknown>")

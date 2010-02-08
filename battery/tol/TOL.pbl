@@ -16,8 +16,8 @@ define Start(p)
   ##Should the problems get more difficult, or should they be random?
   progressiveDifficulty <- 0
 
-  gNumDisks <- [2,3,4,5,6]  #Can be up to 6
-  trialpercond <- 2
+  gNumDisks <- [2,3,4,5]  #Can be up to 6
+  trialpercond <- 5
   gShowHand     <- 1  #Show the hand graphic?
 
 

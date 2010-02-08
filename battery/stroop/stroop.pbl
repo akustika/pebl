@@ -2,8 +2,6 @@ define Start(p)
 {
 
 
-
-
 #"sub","block","trial","type","colorresp","cond","cond2","shade","word","resp","corr","respnum","start","rt"
 
 # sub is the subject code entered at startup
@@ -38,7 +36,7 @@ define Start(p)
 
 
    ##The number of trials per block (and condition)
-   blocklength <- 25
+   blocklength <- 50
    Initialize()
 
    ## Uncomment to eliminate busy-wait (mostly for older machines or
