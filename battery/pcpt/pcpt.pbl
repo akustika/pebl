@@ -19,9 +19,10 @@
 ##
 ##  If the giveFeedback parameter is set to 1, The PCPT will give a short (50ms)
 ##  feedback cue indicating whether  the response was correct or not--a green + 
-##  for correct, and a red - for incorrect.  This feedback was not present in Conners
-##  task.  As of Version 0.3, the default is for this feedback to be OFF, unlike earlier
-##  released prior to 2009.
+##  for correct, and a red - for incorrect.  This feedback was not
+##  present in Conners
+##  task.  As of Version 0.3, the default is for this feedback to be
+##  OFF, unlike earlier released prior to 2009.
 ## 
 ##  References:
 ##  C. Keith Conners,  Jeffery N. Epstein,  Adrian Angold,  

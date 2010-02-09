@@ -24,8 +24,12 @@ define Start(p)
   gWin <- MakeWindow("black")
   gBeep <- LoadSound("tone.wav")
 
+  ##response type defaults to keypad
   gRtype <- "2"
-  askKeyBoard <- 0
+
+  askKeyBoard <- 1  #ask to set response type?
+
+
   ShowCursor(0)
 
 ##Identify how we should do the responses.
