@@ -21,12 +21,12 @@ define Start(p)
   gNumTrials <- 50
   isi <- 200
   gFileOut <- FileOpenWrite("fourchoice-"+gSubNum+".txt")
-  gWin <- MakeWindow()
+  gWin <- MakeWindow("black")
   gBeep <- LoadSound("tone.wav")
 
   gRtype <- "2"
   askKeyBoard <- 0
-
+  ShowCursor(0)
 
 ##Identify how we should do the responses.
  gKBInst <- " Keyboard"+CR(1)+"    F     J" + CR(1) + "     N V"
@@ -116,7 +116,7 @@ define Start(p)
 
 define DrawBG()
 {
-  col <- MakeColor("black")
+  col <- MakeColor("white")
   l1 <- Line(gVideoWidth/2,0,0,gVideoHeight,col)
   l2 <- Line(0,gVideoHeight/2,gVideoWidth,0,col)
   tb <- EasyTextBox(gInst,gVideoWidth/2-60,gVideoHeight/2-40,gWin,22,120,80)
