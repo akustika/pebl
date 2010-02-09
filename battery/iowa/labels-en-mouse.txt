@@ -1,0 +1,14 @@
+You are about to take part in an experiment that involves gambling with play money.  You will start with a $2000 loan.  On each trial, you will select a card from one of four decks.  After you select each card, you will be given a reward and possibly be required to pay a penalty.  Your goal is to maximize the profit on your loan, and you may choose from any deck at any time to do so. This is where you learn how to do the task.  Do you have any questions? Press mouse button to continue.
+1
+2
+3
+4
+Select deck by clicking with mouse
+Total: $
+ Choice:   
+ Reward:   $
+ Penalty:  $
+ Net Gain: $
+Thank you for participating in the experiment. You earned a total of $
+Congratulations!
+You may now leave.  Please alert the experimenter that you are done. Press mouse button.

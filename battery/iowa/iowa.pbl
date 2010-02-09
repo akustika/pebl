@@ -2,9 +2,11 @@ define Start(lPar)
 {
  ## (c) 2006-2009 Shane T. Mueller
  ## smueller at obereed dot net
- ## PEBL Bechara's Gambling Task, Version 0.4
+ ## PEBL Bechara's Gambling Task, Version 0.6
  ##  (a version of the so-called Iowa Gambling Task (tm))
- ##  
+ ##  This task is not officially endorsed by A. Bechara, A. Damasio, 
+ ##  or any other researchers or organizations affiliated with the 
+ ##  "Iowa" gambling task.
  ##
  ## Bechara A, Damasio AR, Damasio H, Anderson SW (1994). 
  ## Insensitivity to future consequences following damage 
@@ -15,11 +17,9 @@ define Start(lPar)
  ## (by hitting 1-4 on the keyboard) and after each card, they are 
  ## given a reward of some amount; after some cards, they are given
  ## a reward and pay a penalty.
-
  ## The penalty/reward structure is identical to that in Bechara et al.
  ## with 40 cards per deck, and the identical reward structure.
  ## When 100 cards have been selected, the task is complete. 
-
  ## Notes:
  ##
  ## Unlike the real-world version, the deck is just rotated on each 
@@ -30,41 +30,50 @@ define Start(lPar)
  ## * The variable shuffleDecks will shuffle the penalty decks 
  ## before the experiment. Shuffling is performed in 10-card epochs,
  ## so that the penalty in 1-10 stay in 1-10, etc.
-
  ## For use with PEBL 0.10 or later
  ## http://pebl.sf.net
  ## Part of  The PEBL Psychological Testing Battery
+ ##
+ ##
 
+
+   
   
   ##How many trials?
   numtrials <- 100
 
- 
-  ##Controls whether the decks are shuffled. Default is as in Bechera et al.
-  shuffleDecks <-  0
 
 
   ##Should we use the mouse or the keyboard?
 
-  gUseMouse <- 1
- 
-  ## Initialize global objects for use later. Defined at end of file
-  Initialize()
+  gUseMouse <- 0
+  if(gUseMouse)
+   {
+    tag <-"-mouse"
+   }else{
+    tag <-"-keyboard"
+   }
+   textlist <- FileReadList("labels-en"+tag+".txt")
+
+   gFontNameMono <- "VeraMono.ttf"
+   gFontNameBase <- "Vera.ttf"
+
+   gSleepEasy <- 1
+   Initialize()
+
   
 
-
-  if(Length(lPar)>0)
-   { 
-      gSubNum <- First(lPar)
-   } else {
-      gSubNum <- 0
-   }
-
-
-    if(gSubNum==0)
+   gSubNum <- First(lPar)
+   if(gSubNum==0)
       {
-        gSubNum <- GetSubNum(gWin)
-      }
+       gSubNum <- GetSubNum(gWin)	
+       }
+  ## results are stored in tmpresults.dat
+ 
+ 
+  ##Controls whether the decks are shuffled. Default is as in Bechera et al.
+  shuffleDecks <-  0
+
 
   ## results are stored in tmpresults.dat
   gFileOut <-FileOpenAppend("igt-" + gSubNum +".txt")
@@ -119,17 +128,7 @@ define Start(lPar)
    ##  GetNIMHDemographics(gSubNum, gWin, "igt-demographics.txt")
 
    ## Give instructions; wait for them to hit a key, 
-   inst <- "You are about to take part in an experiment that involves gambling with play money.  You will start with a $2000 loan.  On each trial, you will select a card from one of four decks.  After you select each card, you will be given a reward and possibly be required to pay a penalty.  Your goal is to maximize the profit on your loan, and you may choose from any deck at any time to do so.
-
-Do you have any questions?
-
-" 
-   if(gUseMouse)
-    {
-      inst <- inst + "Click the mouse button to begin."
-    } else {
-      inst <- inst + "Press any key to begin."
-    }
+   inst <- Nth(textlist, 1)
 
 
    SetText(gInstructions,inst)
@@ -151,29 +150,30 @@ Do you have any questions?
   ##
    
    colCard <- MakeColor("blue")
-   colGain <- MakeColor("darkgreen")
-   colLoss <- MakeColor("red")
+   colGain <- gColGreen
+   colLoss <- gColRed
 
-   deck1 <- Rectangle(100,200,80,120,colCard,0)
-   deck2 <- Rectangle(200,200,80,120,colCard,0)
-   deck3 <- Rectangle(300,200,80,120,colCard,0)
-   deck4 <- Rectangle(400,200,80,120,colCard,0)
+   deck1 <- Rectangle(100,200,100,150,colCard,0)
+   deck2 <- Rectangle(250,200,100,150,colCard,0)
+   deck3 <- Rectangle(400,200,100,150,colCard,0)
+   deck4 <- Rectangle(550,200,100,150,colCard,0)
 
-   deck1g<- Rectangle(100,200,80,120,colGain,1)
-   deck2g<- Rectangle(200,200,80,120,colGain,1)
-   deck3g<- Rectangle(300,200,80,120,colGain,1)
-   deck4g<- Rectangle(400,200,80,120,colGain,1)
+   deck1g<- Rectangle(100,200,100,150,colGain,1)
+   deck2g<- Rectangle(250,200,100,150,colGain,1)
+   deck3g<- Rectangle(400,200,100,150,colGain,1)
+   deck4g<- Rectangle(550,200,100,150,colGain,1)
 
-   deck1l<- Rectangle(100,200,80,120,colLoss,1)
-   deck2l<- Rectangle(200,200,80,120,colLoss,1)
-   deck3l<- Rectangle(300,200,80,120,colLoss,1)
-   deck4l<- Rectangle(400,200,80,120,colLoss,1)
+   deck1l<- Rectangle(100,200,100,150,colLoss,1)
+   deck2l<- Rectangle(250,200,100,150,colLoss,1)
+   deck3l<- Rectangle(400,200,100,150,colLoss,1)
+   deck4l<- Rectangle(550,200,100,150,colLoss,1)
 
 
-   deck1text <- MakeLabel("1",gHeaderFont)
-   deck2text <- MakeLabel("2",gHeaderFont)
-   deck3text <- MakeLabel("3",gHeaderFont)
-   deck4text <- MakeLabel("4",gHeaderFont)
+
+   deck1text <- MakeLabel(Nth(textlist,2),gHeaderFont)
+   deck2text <- MakeLabel(Nth(textlist,3),gHeaderFont)
+   deck3text <- MakeLabel(Nth(textlist,4),gHeaderFont)
+   deck4text <- MakeLabel(Nth(textlist,5),gHeaderFont)
 
 
 
@@ -199,25 +199,30 @@ Do you have any questions?
    {
       AddObject(i,gWin)
       Move(i,x,200)
-      x <- x + 100
+      x <- x + 150
    }
 
    
 
    ##Turn the header on during the task.
-   gHeader.text <- "Select deck by pressing key 1-4"
+   gHeader.text <- Nth(textlist,6)
    Show(gHeader)
 
    gTotal <- 2000
-   gTotalLabel <- MakeLabel("Total: $"+gTotal,gHeaderFont)
+   totstring <-Nth(textlist,7)
+   gTotalLabel <- MakeLabel(totstring+gTotal,gHeaderFont)
    AddObject(gTotalLabel,gWin)
    Move(gTotalLabel,450,380)
 
+   textchoice <-  Nth(textlist,8)
+   textreward <-  Nth(textlist,9)
+   textpenalty <-  Nth(textlist,10)
+   textnetgain <-  Nth(textlist,11)
 
-   gFooter.text <- " Choice:   
- Reward:   $
- Penalty:  $
- Net Gain: $"
+   gFooter.text <- textchoice+ CR(1) + textreward  + CR(1) + 
+                   textpenalty+  CR(1) + textnetgain
+
+
 
    gui <- Flatten([gui,textUI,deckUI, gHeader, gFooter,gTotalLabel])
    earnings <- MakeEarningsGraph(gTotal)
@@ -237,8 +242,11 @@ Do you have any questions?
 
      if(gUseMouse)
       { 
+
         resp <- WaitForClickOnTarget([deck1,deck2,deck3,deck4],["1","2","3","4"])
+
       } else {
+        Draw()
 
         resp <- WaitForListKeyPress(["1","2","3","4"])
       }
@@ -331,11 +339,12 @@ Do you have any questions?
       ##Figure out the +/- sign
 
       gTotal <- gTotal + net
-      gTotalLabel.text <- "Total: $"+gTotal
-      gFooter.text <- " Choice:     " + resp + "
- Reward:    $" + reward + " 
- Penalty:   $-" + penalty + "
- Net Gain:  $"+ (reward - penalty)
+      gTotalLabel.text <- totstring  +gTotal
+      gFooter.text <- textchoice + resp + CR(1) +
+     textreward +  reward + CR(1) +
+     textpenalty + "-" + penalty + CR(1) +
+     textnetgain +  (reward - penalty)
+
       Show(gFooter)
       if(net < 0)
       {
@@ -368,20 +377,25 @@ Do you have any questions?
    FileClose(gFileOut)
 
    ##Now, show debriefing info.
-   feedback <-  "Thank you for participating in the experiment. You earned a total of $" + gTotal + ". "
+
+
+   feed1 <- Nth(textlist, 12)
+   feed2 <- Nth(textlist,13)
+   feed3 <- Nth(textlist,14)
+   feedback <-  feed1 + gTotal+".  "
+
    if(gTotal > 3000) 
    {
-     feedback <- feedback + "Congratulations! "
+     feedback <- feedback + " "+ feed2
    }
 
-   feedback <-  feedback + " You may now leave.  Please alert the experimenter that you are done. Press the X key to exit."
+   feedback <-  feedback + " " +feed3
 
-   Print(feedback)
+
    SetText(gInstructions, feedback)
    Show(gInstructions)
    Draw()
-   WaitForIt()
-
+   WaitForKeyPress("X")
   
  }
 
@@ -396,26 +410,26 @@ define Initialize()
   gVideoheight <- 600
 
   ##Initialize Window, etc.
-  gWin <- MakeWindow("grey")   
+  gWin <- MakeWindow("white")   
             
   ##Initialize Font and colors
 
-   bg <- MakeColor("grey")
-   bg1 <- MakeColor("lightgrey")
-   fg <- MakeColor("black")
-   bg2 <- MakeColor("white")
+   bg <- MakeColor("white")
+   bg1 <- MakeColor("white")
+   gFG <- MakeColor("black")
+   
    
    gColGreen <- MakeColor("darkgreen")
    gColRed   <- MakeColor("red")
  
-   gStimFont         <- MakeFont("VeraMono.ttf", 0, 24,fg,bg1,1)       
+   gStimFont         <- MakeFont("VeraMono.ttf", 0, 24,gfg,bg1,1)       
    gCorrFont         <- MakeFont("VeraMono.ttf", 0, 24,gcolGreen, bg1,1)
    gIncorrFont       <- MakeFont("VeraMono.ttf", 0, 24,gcolRed,   bg1,1)
 
-   gInstructionsFont <- MakeFont("Vera.ttf",0,18, fg,bg2,1)  
-   gHeaderFont       <- MakeFont("Vera.ttf", 0,36,fg,bg,1)       
+   gInstructionsFont <- MakeFont("Vera.ttf",0,18, gfg,bg,1)  
+   gHeaderFont       <- MakeFont("Vera.ttf", 0,36,gfg,bg,1)       
 
-   gGraphFont <- MakeFont("Vera.ttf",0,15, fg,bg,1)  
+   gGraphFont <- MakeFont("Vera.ttf",0,15, gfg,bg,1)  
  
    ## Make and place the instruction box, then hide it  
    gInstructions <- MakeTextBox("", gInstructionsFont, 600,300)
@@ -427,7 +441,7 @@ define Initialize()
    gHeader <- MakeLabel("",gHeaderFont)
    AddObject(gHeader,gWin)
 
-   Move(gHeader, gVideoWidth/2, 100)
+   Move(gHeader, gVideoWidth/2, 80)
    Hide(gHeader)
 
 
@@ -473,8 +487,8 @@ define MakeEarningsGraph( earnings)
     yvals <- [-1000,0,1000,2000,3000,4000,5000]
 
     x <- Rectangle(xcenter+width/2, ycenter, width, height, col, 1)
-    outline <- Rectangle(gVideoWidth/2, gVideoHeight-30,
-                         gVideoWidth-10,50,col, 0)
+    outline <- Rectangle(gVideoWidth/2, ycenter-4,
+                         gVideoWidth-10,55,MakeColor("grey90"), 0)
     AddObject(x,gWin)
     AddObject(outline,gWin)
 
@@ -511,7 +525,9 @@ define WaitForIt()
 {
   if(gUseMouse)
   {
+     Draw()
      WaitForDownClick()
+
   } else {
      WaitForAnyKeyPress()
   }
