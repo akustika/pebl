@@ -223,6 +223,11 @@ define MoveCursor(pos)
 
 {
   gCursor.x <- First(pos)
-  gCursor.y <- Nth(pos,2)
+
+##Use this to lock the y position
+ ## gCursor.y <- gHomeY
+
+## Use this to allow any y position.
+   gCursor.y <- Nth(pos,2)
   Draw()
 }

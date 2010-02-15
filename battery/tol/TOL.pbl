@@ -7,59 +7,119 @@
 ##   Released Feb 2010
 ##
 ##
-
+##
 ## see
 ## Shallice T. (1982), Philosophical Transactions of the Royal Society of
 ## London, B, 298, 199-209.
 ##
 ##
 ##  Problem sets available from:
-##  Fimbel, E., Lauzon, S., & Rainville, C. (2009). Performance of Humans vs. Exploration Algorithms on the Tower of London Test.  (J. Bongard, Ed.)PLoS ONE, 4(9), e7263. doi:10.1371/journal.pone.0007263
-##  Phillips, L. H., Wynn, V., Gilhooly, K. J., Della Sala, S., & Logie, R. H. (1999). The role of memory in the Tower of London task. Memory, 7(2), 209-231.
-##
+##  Fimbel, E., Lauzon, S., & Rainville, C. (2009). Performance of
+## Humans vs. Exploration Algorithms on the Tower of London Test.
+## (J. Bongard, Ed.)PLoS ONE, 4(9),
+## e7263. doi:10.1371/journal.pone.0007263
+
+##  Phillips, L. H., Wynn, V., Gilhooly, K. J., Della Sala, S., &
+##    Logie, R. H. (1999). The role of memory in the Tower of London
+##    task. Memory, 7(2), 209-231.
+#
+#
 ##
 
 define Start(p)
 {
 
+  gShowHand     <- 1  #Show the hand graphic?
+  Init()
 
-  ##  The trials can be controlled by a number of 'helper' functions.
-  ##  Pick one of them.
+
+   ##  Comment out the following lines and replace with something like 
+   ##  type <- "3"
+   ##  to go directly to a test configuration.
+   ## From here VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+  select <- "Type number of test to use:"+ CR(2) +
+     "[1] Unconstrained pile heights, {3,4,5} disks, progressive difficulty, 30 trials"+CR(2)+
+     "[2] Unconstrained pile heights, {3,4,5} disks, Random presentation, 30 trials"+CR(2)+
+     "[3] Shallice pile heights [1,2,3], 3 disks, random difficulty, 30 trials."+CR(2)+
+     "[4] Phillips (1999) trials A (unconstrained piles, 5 disks, progressive difficulty, 8 trials)"+CR(2)+
+     "[5] Phillips (1999) trials B (unconstrained piles, 5 disks, progressive difficulty, 8 trials)"+CR(2)+
+     "[6] Phillips (1999) trials C (unconstrained piles, 5 disks, progressive difficulty, 8 trials)"+CR(2)+
+     "[7] Fimbel et al (2009) old: [1,2,3] pile heights, 3 disks, progressive difficulty, 15 trials)"+CR(2)+
+     "[8] Fimbel et al (2009) young: [1,2,3] pile heights, 3 disks, progressive difficulty, 35 trials)"+CR(3)+
+     "Edit TOL.pbl directly to specify a test configuration automatically."
+
+  gInstructions <- MakeTextBox(select,gFont,760,560)
+
+  AddObject(gInstructions,gWin)
+  Move(gInstructions,20,20)
+  Draw()
+  type <- WaitForListKeyPress(["1","2","3","4","5","6","7","8"])
+
+   ## to here ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  
+
+
+   ##Choose which set of trials to generate based on 'type'.
      
-  stim <- ProgressiveDisks([3,4,5],6)  ## unconstrained pole height,
+  if(type == "1")
+   {
+     stim <- ProgressiveDisks([3,4,5],8)  ## unconstrained pole height,
                                          ## with number of disks in
 										 ## order specified by first argument
-
-  #  stim <- RandomDisks([3,4,5],5)       ## unconstrained pole height,
+   }elseif(type=="2")
+   {
+    stim <- RandomDisks([3,4,5],8)       ## unconstrained pole height,
                                          ## like above but in random order
 
+   }elseif(type=="3")
+   {
 
-  #  stim <- ShalliceRandom(25)           ##Basic Shallice problem with
+    stim <- ShalliceRandom(30)           ##Basic Shallice problem with
 		 								 ##	3 disks on 
 		 								 ## different-sized poles, and
 										 ##random problems
+   }elseif(type=="4")
+   { 
+    stim <- Phillips1999("A")
+   }elseif(type=="5")
+   {
 
-#    stim <- Phillips1999("A")
-#    stim <- Phillips1999("B")
-#    stim <- Phillips1999("C")            ##5-disk problems,
+    stim <- Phillips1999("B")
+
+   }elseif(type=="6")
+   {
+
+    stim <- Phillips1999("C")            ##5-disk problems,
 		 								 ## unconstrained pole heights
                                          ## Argument specifies sets "A", "B", or "C"
 										 ## which consist of different problems
+   }elseif(type=="7")
+   {
+    stim <- FimbelOld()                  ##15 Shallice-like problems
+   }elseif(type=="8")
+   {
 
-  #  stim <- FimbelOld()                  ##15 Shallice-like
-  #  stim <- FimbelYoung()                ##35 Shallice-like problems
-    
+    stim <- FimbelYoung()                ##35 Shallice-like problems
+      
+  }
 
-  gShowHand     <- 1  #Show the hand graphic?
-  gSleepEasy <- 1
-  Init()
+
+  
+  gInstructions.text <-"You are about to perform a task called the 'Tower of London'.  Your goal is to move a pile of disks from their original configuration to the configuration shown on the top of the screen.  You can only move one disk at a time.  To move a disk, click on the pile you want to move a disk off of, and it will move up into the hand.  Then, click on another pile, and the disk will move down to that pile.  Click the mouse to begin."
+  gInstructions.font <- gFont2
+  Draw()
+
+  WaitForDownClick()
+  Hide(gInstructions)
+  Draw()
+ 
+  InitPoles()   
+   
 
   FilePrint(gFileOut,"sub trial size current end step abstime trialtime clicktime done")
   FilePrint(gFileOutSum,"sub trial size start end steps time")
 
   gInstructions.width <- 220
   gInstructions.height <- 500
-
   Move(gInstructions,555,50)
   gInstructions.text <- "Trial Complete. "+CR(2)+ "Click mouse to continue to the next trial."
 
@@ -145,25 +205,21 @@ define HideAll()
 
 define Init()
 {
+  gSleepEasy <- 1
+
   gVideoWidth <- 800
   gVideoHeight <- 600
 #  ShowCursor(0)
   gWin <- MakeWindow("black")
  
   gSubNum <- GetSubNum(gWin)
-  gFont <- MakeFont("Vera.ttf",0,22,MakeColor("white"),MakeColor("black"),1)
- 
-  gInstructions <- MakeTextBox("You are about to perform a task called the 'Tower of London'.  Your goal is to move a pile of disks from their original configuration to the configuration shown on the top of the screen.  You can only move one disk at a time.  To move a disk, click on the pile you want to move a disk off of, and it will move up into the hand.  Then, click on another pile, and the disk will move down to that pile.  Click the mouse to begin.",gFont,760,560)
+  gFont <- MakeFont("Vera.ttf",0,16,MakeColor("white"),MakeColor("black"),1)
+  gFont2 <- MakeFont("Vera.ttf",0,26,MakeColor("white"),MakeColor("black"),1)
+}
 
-  AddObject(gInstructions,gWin)
-  Move(gInstructions,20,20)
-  Draw()
-  WaitForDownClick()
-  Hide(gInstructions)
-  Draw()
-
+define InitPoles()
+{
 ##Make hot zones for each stack.
-
 
    height <- First(gPoleHeights)*30+15
    y <- 470-height/2
@@ -313,18 +369,18 @@ define PlotDisksAnimate(config,inhand,ybase,disks,steps)
                                (Second(end)-Second(start))/steps])
    }
 
-  diskstep <- Transpose([disks2,startxy,stepxy])
+  diskstep <- Transpose([disks2,endxy,stepxy])
   step <- 1
   while(step <= steps)
   {
     loop(i, diskstep)
      {
         disk <- First(i)
-        start <- Second(i)
+        end <- Second(i)
         diff <- Third(i)
 
-        disk.x <- First(start) + First(diff) * step
-        disk.y <- Second(start) + Second(diff) * step
+        disk.x <- First(end) - First(diff)   * (steps-step)
+        disk.y <- Second(end) - Second(diff) * (steps-step)
     }
 
    Draw()          
