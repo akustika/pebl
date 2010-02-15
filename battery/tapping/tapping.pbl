@@ -14,7 +14,7 @@ define Start(p)
   #############################################################
 
   ## The time of each trial
-  trialtime <- 5*1000   #number of seconds * 1000 = ms
+  trialtime <- 10*1000   #number of seconds * 1000 = ms
   maxTrials <- 10
  
   ShowCursor(0)
