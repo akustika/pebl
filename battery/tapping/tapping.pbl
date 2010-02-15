@@ -16,7 +16,24 @@ define Start(p)
   ## The time of each trial
   trialtime <- 10*1000   #number of seconds * 1000 = ms
   maxTrials <- 10
- 
+
+
+  #Change useKeyPad from 0 to 1 to use the keyboard number pad.
+  useKeypad <- 0
+  if(useKeyPad == 1)
+   {
+    usekey <- "<KP_0>"
+    keylabel <- "Keypad 0"
+    contkey <- "<return>"
+    contkeylabel <- "Enter"
+
+   } else {
+    usekey <- "A"
+    keylabel <- "A"
+    contkey <- "<return>"
+    contkeylabel <- "Enter"
+   }
+
   ShowCursor(0)
   gSleepEasy <- 1
   gVideoWidth <- 800
@@ -29,7 +46,7 @@ define Start(p)
   font <-  MakeFont("VeraMono.ttf",0,28,MakeColor("white"),MakeColor("black"),1)
   
   inst <- "In this task, you are asked to tap the keyboard as quickly as possible for a maximum of "+ maxtrials +" trials of " +
-  trialtime/1000 + " seconds.  Use  the 'A' key.  Begin tapping when you see 'GO'."
+  trialtime/1000 + " seconds.  Use  the "+keylabel+" key.  Begin tapping when you see 'GO'."
 
 
    startinst <- "Choose testing options:
@@ -100,9 +117,9 @@ define Start(p)
   trial <- 0
 
   tb.text <-inst + CR(2) + "On this round, you will use your " +
-  hand + " hand.  "+ CR(2) + "Press the 'A' Key to begin"
+  hand + " hand.  "+ CR(2) + "Press the '"+keylabel+"' Key to begin"
   Draw()
-  WaitForKeyPress("A")
+  WaitForKeyPress(usekey)
 
 
    FilePrint(reportfile,"--------------------------------------------------------")
@@ -115,20 +132,20 @@ define Start(p)
      trial <- trial + 1
      sumx  <- 0.0
      sumxx <- 0.0
-     ##On the trial, gate the beginning with the "A" press
-     lab.text <- "Press 'A' to begin"
+     ##On the trial, gate the beginning with the "+keylabel+" press
+     lab.text <- "Press '"+keylabel+"' to begin"
      Show(lab)
      DrawProgress(progressbar,0)
      Show(progressoutline)
      Show(progressbar)
      Hide(tb)   
      Draw()      
-     WaitForKeyPress("A")
+     WaitForKeyPress(usekey)
      Hide(lab)
      Draw()
      Wait(1000)    #Give 1 seconds before trial begins
 
-     lab.text <- "GO:"
+     lab.text <- "GO:[ ]"
      Show(lab)
      Draw()
 
@@ -143,24 +160,25 @@ define Start(p)
      while(GetTime() < finaltime)
      {
        time0 <- GetTime()
-       x <- 0
-       while((not x=="a") and GetTime() < finaltime )
-       {
-     	   x <-  WaitForListKeyPressWithTimeout(["A"],50,1)
+       x <- []
 
+       
+       while((IsList(x)) and GetTime() < finaltime )
+       {
+
+     	   x <-  WaitForListKeyPressWithTimeout([usekey],50,1)
            time <- GetTime()
            remaining <- Ceiling((finaltime - time)/1000)
      	   lab.text <- "GO: [" + remaining + "]"
     	   DrawProgress(progressbar,  1.0-(finaltime-time)/trialtime)
            Draw()   
+
        }
 
        rt <- time-time0
 
 	   ##keep track of running sum and sum^2, for comptuing stats.
-
-
-       if(x=="a")
+       if(not IsList(x))
          {
            hits <- hits + 1
            sumX <- sumX + rt
@@ -187,7 +205,7 @@ define Start(p)
                "Hits:     " + n + " keypresses" + CR(1) +
                "Mean RT:  "+ Round(mean) + " ms/tap" + CR(1) +
                "SD RT:    "+ Round(sd) + " ms" + CR(1) +
-               "Total Time: " + (time-timestart) + CR(2) +" Press X to continue."
+               "Total Time: " + (time-timestart) + CR(2) +" Press "+contkeylabel+" to continue."
    Draw()
 
 
@@ -207,7 +225,7 @@ define Start(p)
    }
 
 
-   WaitForKeyPress("X")
+   WaitForKeyPress(contkey)
   }
 
 
@@ -231,10 +249,10 @@ define Start(p)
    FilePrint(reportfile, tb.text)
 
 
-  tb.text <- tb.text + CR(2) + "Round complete. Press X to continue."
+  tb.text <- tb.text + CR(2) + "Round complete. Press "+contkeylabel+" to continue."
   Show(tb)
   Draw()
-  WaitForKeyPress("X")
+  WaitForKeyPress(contkey)
 
 
    if(complete)
@@ -254,10 +272,10 @@ define Start(p)
    }
 
 
-   tb.text <-  "Study complete. Press X to exit."
+  tb.text <-  "Study complete. Press "+contkeylabel+" to exit."
   Show(tb)
   Draw()
-  WaitForKeyPress("X")
+  WaitForKeyPress(contkey)
 
 }
 
