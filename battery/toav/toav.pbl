@@ -1,12 +1,14 @@
 #!/usr/local/bin/pebl
 #################################################################
-##  Test of Attentional Vigilance, (TOAV), Version 0.2
+##  Test of Attentional Vigilance, (TOAV), Version 0.3
 ##  PEBL's version of the  Test of Variables of Attention (TOVA)(tm), 
-##  For use with PEBL 0.09 or later
+##  For use with PEBL 0.10 or later
 ##  http://pebl.sf.net
 ##  Part of  The PEBL Psychological Test Battery
 ##  2006-02 Released into Public Domain
 ##  by Shane T. Mueller, Ph.D. (smueller at obereed dot net)
+##
+##   
 ##
 ##
 ##  Implementation based on description in:
@@ -33,6 +35,9 @@
 ##  Greenberg, L. M. , & Waldman, I D. (1993). Developmental normative data 
 ##      on the Test of Variable of Attention (T.O.V.A. tm). Journal of Child 
 ##      Psychology and Psychiatry, 34, 1019-1030.
+##
+##  Notes:  Version 0.3 fixed problem in which responses were not
+##          detected. in 0.10
 ##
 #################################################################
 
@@ -188,7 +193,7 @@ define Start(lPar)
       Print(r1)
 
       HideAll()
-      if(r1 == "<unknown>")
+      if(r1 == ["<timeout>"])
       {
 
         r2 <- WaitForListKeyPressWithTimeout([" "],1850,1)
@@ -221,12 +226,15 @@ define Start(lPar)
 	  DrawFoil()
       r1 <- WaitForListKeyPressWithTimeout([" "],100,1)
       time1 <- GetTime()
-      Print(r1)
+
+
 
       HideAll()
-      if(r1 == "<unknown>")
+      #If r1 is a list, it was the 'timeout' signal, which means no response.
+      if(IsList(r1))
       {
 
+        Print("timeouted")
         r2 <- WaitForListKeyPressWithTimeout([" "],1850,1)
         time2 <- GetTime()
 
@@ -251,11 +259,11 @@ define Start(lPar)
       }
 
      rt <- -1
-     responded <- r1 != "<unknown>" or r2 != "<unknown>"
-     mult <- rMult != "<unknown>"
+     responded <- (not IsList(r1)) or  not(IsList(r2))
+     mult <- not IsList(rMult)
 
      ##if r1 == 0, the key was struck during stimulus presentation.
-     if (r1 != "<unknown>")
+     if (not IsList(r1))
      {
        toofast <- 1
        rt <- (time1 - timeStart)
