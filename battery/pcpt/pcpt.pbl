@@ -75,7 +75,7 @@ define Start(lPar)
    Hide(gInstructions)
    Draw()
     
-   gInstructions.text <- "You may now take a short break.  Press the spacebar to continue on to the next block."
+   gInstructions.text <- "You may now take a short break.  Press the spacebar to continue on to the next block.  Remember, use the spacebar to respond to all stimuli EXCEPT the X"
 
   ##############################################
   ##############################################
