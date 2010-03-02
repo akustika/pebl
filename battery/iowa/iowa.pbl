@@ -35,18 +35,14 @@ define Start(lPar)
  ## Part of  The PEBL Psychological Testing Battery
  ##
  ##
-
-
    
   
   ##How many trials?
   numtrials <- 100
 
-
-
   ##Should we use the mouse or the keyboard?
 
-  gUseMouse <- 0
+  gUseMouse <- 1
   if(gUseMouse)
    {
     tag <-"-mouse"
