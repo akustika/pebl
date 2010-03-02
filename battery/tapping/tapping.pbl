@@ -201,11 +201,11 @@ define Start(p)
    Hide(progressoutline)
    Hide(lab)
    Show(tb)
-   tb.text <- "Trial "+trial+" ("+hand+") results: "+CR(2)+
-               "Hits:     " + n + " keypresses" + CR(1) +
-               "Mean RT:  "+ Round(mean) + " ms/tap" + CR(1) +
-               "SD RT:    "+ Round(sd) + " ms" + CR(1) +
-               "Total Time: " + (time-timestart) + CR(2) +" Press "+contkeylabel+" to continue."
+   tb.text <-  "Trial "+trial+" ("+hand+") results: "+CR(2)+
+               "Hits:       " + n + " keypresses" + CR(1) +
+               "Mean RT:    "+ Round(mean) + " ms/tap" + CR(1) +
+               "SD RT:      "+ Round(sd) + " ms" + CR(1) +
+               "Total Time: " + (time-timestart) + CR(2) +"Press "+contkeylabel+" to continue."
    Draw()
 
 
@@ -218,7 +218,7 @@ define Start(p)
 	 range <- Max(last5)-Min(last5)
 
      ##if the range is small, we can quit
-     if(range < 5)
+     if(range <= 5)
      {
       complete <- 1     ##we completed 5 good trials
      }
