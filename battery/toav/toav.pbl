@@ -188,12 +188,13 @@ define Start(lPar)
       ###
 
 	  DrawTarg()
+      ##Initial presentation phase.
       r1 <- WaitForListKeyPressWithTimeout([" "],100,1)
       time1 <- GetTime()
-      Print(r1)
+
 
       HideAll()
-      if(r1 == ["<timeout>"])
+      if(not (r1 == " "))
       {
 
         r2 <- WaitForListKeyPressWithTimeout([" "],1850,1)
@@ -227,14 +228,11 @@ define Start(lPar)
       r1 <- WaitForListKeyPressWithTimeout([" "],100,1)
       time1 <- GetTime()
 
-
-
       HideAll()
-      #If r1 is a list, it was the 'timeout' signal, which means no response.
-      if(IsList(r1))
+      #If r1 is a not ' ', it was the 'timeout' signal, which means no response.
+      if(not (r1 == " "))
       {
 
-        Print("timeouted")
         r2 <- WaitForListKeyPressWithTimeout([" "],1850,1)
         time2 <- GetTime()
 
@@ -258,12 +256,16 @@ define Start(lPar)
 
       }
 
+     ##by default, start out rt as -1
      rt <- -1
-     responded <- (not IsList(r1)) or  not(IsList(r2))
-     mult <- not IsList(rMult)
+
+
+     responded <- (r1 ==  " ") or  (r2 == " ")
+
+     mult <- (rmult == " ") 
 
      ##if r1 == 0, the key was struck during stimulus presentation.
-     if (not IsList(r1))
+     if (r1 == " " )
      {
        toofast <- 1
        rt <- (time1 - timeStart)
