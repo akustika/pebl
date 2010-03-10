@@ -50,6 +50,7 @@
 #include "../platforms/sdl/PlatformFont.h" 
 #include "../platforms/sdl/PlatformEventQueue.h"
 #include "../platforms/sdl/PlatformTextBox.h" 
+#include "../platforms/sdl/PlatformCanvas.h"
 
 #include "PEBLList.h"
 
@@ -220,6 +221,34 @@ Variant PEBLObjects::MakeTextBox(Variant v)
 }
 
 
+Variant PEBLObjects::MakeCanvas(Variant v)
+{
+
+    //
+    // v[1] should be X, v[2] shoud be Y
+    // v[3] should be dx, v[4] should be dy
+    // v[5] should be the color, v[6] should be whether it is filled.
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [MakeCanvas(<width>, <height>, <color>)]: "); 
+    int width = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in second parameter of function  [MakeCanvas(<width>, <height>, <color>)]: "); 
+    int height = plist->First(); plist->PopFront();
+
+
+    PError::AssertType(plist->First(), PEAT_COLOR, "Argument error in fifth parameter of function  [MakeCanvas(<x>, <y>, <dx>, <dy>, <color>)]: "); 
+    Variant color = plist->First(); plist->PopFront();
+
+
+    counted_ptr<PEBLObjectBase> myCanvas = counted_ptr<PEBLObjectBase>(new PlatformCanvas(width,height,color));
+    PComplexData *  pcd = new PComplexData(myCanvas);
+    return Variant(pcd);
+
+}
+
+
+
 Variant PEBLObjects::MakeColor(Variant v)
 {
     //v[1] should be a color name
@@ -276,8 +305,6 @@ Variant PEBLObjects::MakeFont(Variant v)
 
     //The next parameter should be a PColor--foreground color
     Variant vfg = plist->First(); plist->PopFront();
-
-
     PError::AssertType(vfg, PEAT_COLOR, "Argument error in fourth parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: "); 
     PColor fgcolor = *((PColor*)(vfg.GetComplexData()->GetObject().get()));
 
@@ -349,6 +376,36 @@ Variant PEBLObjects::RemoveObject(Variant v)
     //Removing subwidgets does not destroy the Variant, so we don't need to
     // worry about a memory leak here, even though we are using raw pointers.
     parent->RemoveSubWidget(child);
+
+    return Variant(true);
+}
+
+ 
+Variant PEBLObjects::SetPoint(Variant v)
+{
+
+
+    PList * plist = v.GetComplexData()->GetList();
+
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_WIDGET, "Argument error in first parameter of function [SetPixel(<widget>,<x>, <y>, <color>)]: "); 
+    PlatformWidget * widget = dynamic_cast<PlatformWidget*>(v1.GetComplexData()->GetObject().get());
+
+
+    int x = plist->First(); plist->PopFront();
+    PError::AssertType(x, PEAT_NUMBER, "Argument error in second parameter of function [SetPixel(<widget>,<x>, <y>, <color>)]: "); 
+
+    int y = plist->First(); plist->PopFront();
+    PError::AssertType(y, PEAT_NUMBER, "Argument error in third parameter of function [SetPixel(<widget>,<x>, <y>, <color>)]: "); 
+
+    Variant color = plist->First(); plist->PopFront();
+    PError::AssertType(color, PEAT_COLOR, "Argument error in fourth parameter of function  [SetPixel(<widget>,<x>, <y>, <color>)]: "); 
+
+
+
+    PColor pcolor = *((PColor*)(color.GetComplexData()->GetObject().get()));
+
+    widget->SetPoint(x,y,pcolor);
 
     return Variant(true);
 }
@@ -1005,6 +1062,7 @@ Variant PEBLObjects::RotoZoom(Variant v)
 
     bool result = widget->RotoZoom((long double)r,(long double)x,(long double)y,smooth);
 
+    
     //if(!result)PError::SignalFatalError("Rotozoom failed.");
     
     return v1.GetComplexData();

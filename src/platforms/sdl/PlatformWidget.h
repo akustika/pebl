@@ -58,6 +58,10 @@ public:
     ///This uses the SDL_gfx package to 'rotozoom'.
     virtual bool RotoZoom(double angle, double zoomx, double zoomy, int smooth);
 
+
+    //Draws a pixel on the widget.
+    bool SetPoint(int x, int y, PColor col);
+
 protected:
 
     //These are inherited by the SDL-specific widgets:    

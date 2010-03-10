@@ -461,7 +461,7 @@ void PlatformTextBox::DrawCursor()
 }
 
 
-//This overrides the parent Draw() method so that
+//This overrides th2e parent Draw() method so that
 //things can be re-rendered if necessary.
 bool PlatformTextBox::Draw()
 {

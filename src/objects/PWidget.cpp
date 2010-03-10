@@ -93,6 +93,15 @@ bool PWidget::RotoZoom(double angle, double zoomx, double zoomy, int smooth)
     return false;
 }
 
+
+bool PWidget::SetPoint(int x, int y, PColor col)
+{
+    //This should go straight to PlatforwWidget::SetPoint
+
+    return false;
+}
+
+
 bool PWidget::SetProperty(std::string name, Variant v)
 {
 
@@ -109,6 +118,7 @@ bool PWidget::SetProperty(std::string name, Variant v)
             else if (name == "HEIGHT") SetHeight((int)v);
             else if (name == "BGCOLOR") 
                 {
+
                     SetBackgroundColor(*((PColor*)(v.GetComplexData())));
                 }
             else if (name == "VISIBLE")

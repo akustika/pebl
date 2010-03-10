@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformDrawObject.cpp
 //    Purpose:    Platform-specific classes drawing things.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2005-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2005-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   

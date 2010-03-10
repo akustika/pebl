@@ -54,6 +54,7 @@ public:
     virtual ObjectValidationError ValidateProperty(std::string)const;
 
     virtual bool RotoZoom(double angle, double zoomx, double zoomy, int smooth);
+    virtual bool SetPoint(int x, int y, PColor col);
     ///This unconditionally sets the parent widget.
     virtual void SetParent(PWidget * widget){mParent = widget;}
 

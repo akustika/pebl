@@ -56,7 +56,8 @@ enum ComplexDataType {
     CDT_WINDOW,
     CDT_LABEL,
     CDT_DRAWOBJECT,
-    CDT_NETWORKCONNECTION
+    CDT_NETWORKCONNECTION,
+    CDT_CANVAS
 };
 
 class PComplexData;

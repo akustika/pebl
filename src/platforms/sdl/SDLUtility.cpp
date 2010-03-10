@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/SDLUtility.h
 //    Purpose:    Contains miscellaneous utility functions.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //

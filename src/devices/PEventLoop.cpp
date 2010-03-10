@@ -200,21 +200,34 @@ PEvent PEventLoop::Loop()
                     else
                         {
                             //The test examines the device's state directly.
-                            
                             result = mStates[i]->TestDevice();
                             if(result)
+
                                 {
                                     //We need to create a 'dummy' event to use here.
                                     PEBL_DummyEvent pde;
                                     pde.value = mStates[i]->GetInterface();
+                                    
 
 
-                                    //If this was a time-check event, make a PDT_time
-                                    //time needs to go in  the 0 below.
-                                    //returnval = PEvent(PDT_DUMMY,0);
-                                    returnval = PEvent((PEBL_DEVICE_TYPE)pde.value,0);
-                                    returnval.SetDummyEvent(pde);
 
+                                    if(mStates[i]->GetDevice()->GetDeviceType() == PDT_TIMER)
+                                        {
+                                    
+                                            returnval = PEvent(PDT_TIMER,0);
+                                            returnval.SetDummyEvent(pde);
+
+                                        } 
+                                    else
+                                        {
+
+                                            //If this was a time-check event, make a PDT_timer
+                                            //time needs to go in  the 0 below.
+                                            //returnval = PEvent(PDT_DUMMY,0);
+                                            
+                                            returnval = PEvent((PEBL_DEVICE_TYPE)pde.value,0);
+                                            returnval.SetDummyEvent(pde);
+                                        }
                                     //If mNodes[i] is null, terminate
                                     if(mNodes[i])
                                         {

@@ -41,6 +41,7 @@
 #include "../platforms/sdl/PlatformTextBox.h"
 #include "../platforms/sdl/PlatformKeyboard.h"
 #include "../platforms/sdl/PlatformDrawObject.h"
+#include "../platforms/sdl/PlatformCanvas.h"
 #include "../devices/PStream.h"
 #include "../platforms/sdl/PlatformAudioOut.h"
 #include "../platforms/sdl/PlatformNetwork.h"
@@ -156,6 +157,7 @@ public:
     bool IsDrawCircle() const;
     bool IsDrawSquare() const;
     bool IsDrawRectangle() const;
+    bool IsCanvas() const;
 
 
     void SetProperty(std::string, Variant v);

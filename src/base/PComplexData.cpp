@@ -177,7 +177,7 @@ bool PComplexData::IsEnvironment() const
 bool PComplexData::IsWidget() const
 {
   if ( ( GetType() == CDT_WINDOW ) || ( GetType() == CDT_LABEL ) || ( GetType() == CDT_IMAGEBOX )
-       || ( GetType() == CDT_TEXTBOX ) || ( GetType() == CDT_DRAWOBJECT ) )
+       || ( GetType() == CDT_TEXTBOX ) || ( GetType() == CDT_DRAWOBJECT ) || ( GetType() == CDT_CANVAS ) )
          return true;
   else
     return false;
@@ -245,8 +245,10 @@ bool PComplexData::IsDrawObject() const
   return GetType() == CDT_DRAWOBJECT;
 }
 
-
-
+bool PComplexData::IsCanvas() const
+{
+  return GetType() == CDT_CANVAS;
+}
 
 
 

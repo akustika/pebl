@@ -534,7 +534,26 @@ Variant PEBLEnvironment::WaitForListKeyPressWithTimeout(Variant v)
     //Now, clear the event loop tests
     Evaluator::mEventLoop.Clear();
 
-    return Variant(PEBLUtility::TranslateKeyCode(returnval.GetKeyboardEvent().key,0));
+    //    return Variant(PEBLUtility::TranslateKeyCode(returnval.GetKeyboardEvent().key,0));
+    Variant ret;
+    //    std::cout<<"Type:" << returnval.GetType() <<std::endl;
+
+    if(returnval.GetType() == PDT_KEYBOARD)
+        {
+            ret = Variant(PEBLUtility::TranslateKeyCode(returnval.GetKeyboardEvent().key,0));
+        }
+    else
+        {
+            
+            PList *newlist = new PList();
+            newlist->PushBack(Variant("<timeout>"));
+            counted_ptr<PEBLObjectBase>newlist2 = counted_ptr<PEBLObjectBase>(newlist);
+            PComplexData *   pcd = new PComplexData(newlist2); 
+
+            ret = Variant(pcd);
+        }
+    
+    return ret;
 
 }
 
@@ -577,8 +596,27 @@ Variant PEBLEnvironment::WaitForKeyListDown(Variant v)
     //Start the event loop.
     PEvent returnval = Evaluator::mEventLoop.Loop();
 
+
     Evaluator::mEventLoop.Clear();
-    return Variant(returnval.GetDummyEvent().value);
+    Variant ret;
+    if(returnval.GetType() == PDT_KEYBOARD)
+        {
+
+             ret = Variant(returnval.GetDummyEvent().value);
+        }
+    else
+        {
+            //            cout <<"======="<< returnval.GetDummyEvent().value << std::endl;
+            
+            PList *newlist = new PList();
+            newlist->PushBack(Variant("<timeout>"));
+            counted_ptr<PEBLObjectBase>newlist2 = counted_ptr<PEBLObjectBase>(newlist);
+            PComplexData *   pcd = new PComplexData(newlist2); 
+
+            ret = Variant(pcd);
+        }
+    
+    return ret;
 }
 
 
@@ -623,6 +661,7 @@ Variant PEBLEnvironment::WaitForListKeyPress(Variant v)
     //Start the event loop.
     PEvent returnval = Evaluator::mEventLoop.Loop();
     Evaluator::mEventLoop.Clear();
+
     return Variant(PEBLUtility::TranslateKeyCode(returnval.GetKeyboardEvent().key,0));
 }
 
@@ -771,7 +810,6 @@ Variant PEBLEnvironment::WaitForMouseButtonWithTimeout(Variant v)
 
 
 
-
     ///////////////////////////////////////
      //Create a mouse test
     //1 is the value (down), DT_EQUAL is the test, 1 is the interface (e.g., the 'A' key) 
@@ -819,7 +857,7 @@ Variant PEBLEnvironment::WaitForMouseButtonWithTimeout(Variant v)
         }    else  //PCD_TIMER
         {
 
-            
+
             newlist->PushBack(Variant("<timeout>"));
 
 
@@ -827,8 +865,6 @@ Variant PEBLEnvironment::WaitForMouseButtonWithTimeout(Variant v)
         }
 
     counted_ptr<PEBLObjectBase>newlist2 = counted_ptr<PEBLObjectBase>(newlist);
- 
-
     PComplexData *   pcd = new PComplexData(newlist2); 
     return Variant(pcd);
 }

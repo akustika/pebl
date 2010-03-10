@@ -45,6 +45,7 @@ namespace PEBLObjects
     Variant MakeColorRGB(Variant v);
     Variant MakeFont(Variant v);
     Variant MakeTextBox(Variant v);
+    Variant MakeCanvas(Variant v);
 
     Variant AddObject(Variant v);
     Variant RemoveObject(Variant v);
@@ -56,6 +57,8 @@ namespace PEBLObjects
     Variant SetEditable(Variant v);
     Variant SetText(Variant v);
     Variant GetText(Variant v);
+
+    Variant SetPoint(Variant v);
 
     Variant SetFont(Variant v);
 

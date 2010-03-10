@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformWidget.cpp
 //    Purpose:    Contains SDL-specific interface GUI objects
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -27,6 +27,7 @@
 #include "PlatformWidget.h"
 #include "SDL/SDL.h"
 #include "SDL/SDL_rotozoom.h"
+#include "SDLUtility.h"
 
 #include <iostream>
 
@@ -159,6 +160,16 @@ bool PlatformWidget::Draw()
     return true;
 }
 
+
+//Sets a pixel to be a certain color.
+//This won't work on a window, only objects added to the window.
+bool PlatformWidget::SetPoint(int x, int y, PColor col)
+{
+    //    std::cout << "Setting point " << x << " " << y << std::endl;
+
+    SDLUtility::DrawPixel(mSurface,x,y,col);
+    return true;
+}
 
 bool PlatformWidget::RotoZoom(double angle, double zoomx, double zoomy, int smooth)
 
