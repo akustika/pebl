@@ -1,1 +1,6 @@
 todo:
+
+
+Document PCanvas
+Document SetPixel function
+Fix GetInput so you can enter shifted characters like ()

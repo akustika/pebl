@@ -164,7 +164,7 @@ Variant::Variant(int i):
 }
 
 
-Variant::Variant(PComplexData * pcd):
+Variant::Variant(const PComplexData * pcd):
     mDataType(P_DATA_COMPLEXDATA)
 {
     mComplexData = new PComplexData(*pcd);
@@ -1186,45 +1186,46 @@ void Variant::SetComplexData(PComplexData * data)
 void Variant::free_mData()
 {
 
+
     if(mComplexData)
      {
-         
+
          delete mComplexData;
          mComplexData =NULL;
          //mDataType=P_DATA_UNDEFINED;
      } else
          {
 
-    if(mDataType == P_DATA_STRING )
-        {
-            if(mData.String)
-                {
-                    free(mData.String);
-                    mData.String = NULL;
-                }
-        }
-    else if(IsVariable())
-        {
-            if(mData.Variable)
-                {
-                    free(mData.Variable);
-                    mData.Variable = NULL;
-                }
-        }
-    else if(mDataType == P_DATA_FUNCTION)
-        {
-            if(mData.Function)
-                {
-                    free(mData.Function);
-                    mData.Function = NULL;
-                }
-        }
-
-    else if(mDataType == P_DATA_COMPLEXDATA)
-        {
-        }
-    
+             if(mDataType == P_DATA_STRING )
+                 {
+                     if(mData.String)
+                         {
+                             free(mData.String);
+                             mData.String = NULL;
+                         }
+                 }
+             else if(IsVariable())
+                 {
+                     if(mData.Variable)
+                         {
+                             free(mData.Variable);
+                             mData.Variable = NULL;
+                         }
+                 }
+             else if(mDataType == P_DATA_FUNCTION)
+                 {
+                     if(mData.Function)
+                         {
+                             free(mData.Function);
+                             mData.Function = NULL;
+                         }
+                 }
+             
+             else if(mDataType == P_DATA_COMPLEXDATA)
+                 {
+                 }
+             
          }
-
+    
     //    mDataType = P_DATA_UNDEFINED;
 }

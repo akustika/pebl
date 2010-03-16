@@ -45,6 +45,7 @@ using std::ostream;
 ///Standard Constructor
 PList::PList(): PEBLObjectBase(CDT_LIST)
 {
+
     //    mCDT = CDT_LIST;
 }
 
@@ -52,6 +53,7 @@ PList::PList(): PEBLObjectBase(CDT_LIST)
 ///Copy constructor.  Should make a deep copy.
 PList::PList(PList & tmpList): PEBLObjectBase(CDT_LIST)
 {
+
 
     //mCDT=CDT_LIST;
     std::list<Variant> * tmp = tmpList.GetList();
@@ -223,6 +225,7 @@ counted_ptr<PEBLObjectBase> PList::SortBy(const PList & key)
 
 std::list<Variant> * PList::GetList()
 {
+
     return &mList;
 }
 

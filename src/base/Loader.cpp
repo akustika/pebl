@@ -3,7 +3,7 @@
 //    Name:       src/base/Loader.cpp
 //    Purpose:    Defines an class that loads a parsed PNode tree into PEBL Environment
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2006 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -69,6 +69,7 @@ Loader::~Loader()
 {
 
 } 
+
 
 
 

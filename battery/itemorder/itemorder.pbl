@@ -15,7 +15,10 @@ define Start(p)
     Trial(cond)
     trial <- trial + 1
    }
-
+  Hide(gTarget)
+  Show(gInst)
+  gInst.text <- "Thank you for participating.  Press any key to exit."
+   
   WaitForAnyKeyPress()
 
 }
@@ -73,7 +76,7 @@ define Trial(type)
       letters <- SampleN(gLetters,8)
       base  <- SubList(letters,2,8)
       pos <- RandomDiscrete(7)-1  ##rotate between 0 and 6 items
-      target <- Rotate(base,pos)
+      target <- Rotate(base,-pos)
       addA <- First(letters)
       addB <- Second(letters)
 

@@ -29,6 +29,17 @@ obsolete.
 -------------------------------------------------
 
 
+
+Version 0.11
+
+Changed WaitForClickOnTarget to go from end to front, rather than
+front to end.  This should make it easier to click on the topmost of
+overlapping targets.
+
+todo:
+  document WaitforMouseClickWithTimout
+
+
 Version 0.10
 
 

@@ -75,7 +75,7 @@ public:
     Variant(const char* mystring, VariantDataType type);
     Variant(const StackSignalType);
     Variant(pFunc);  //This one takes a function-pointer as an argument.
-    Variant(PComplexData * pcd);
+    Variant(const PComplexData * pcd);
     Variant(int i);
     Variant(double f);
     Variant(float f);

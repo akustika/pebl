@@ -2,7 +2,7 @@
 #//////////////////////////////////////////////////////////////////////////////
 #//////////////////////////////////////////////////////////////////////////////
 #//
-#//	Copyright (c) 2003-2009
+#//	Copyright (c) 2003-2010
 #//	Shane T. Mueller, Ph.D.  smueller at obereed dot net
 #//
 #//     This file is part of the PEBL project.
@@ -38,7 +38,7 @@ CXX = g++
 DEBUGFLAGS = -lefence -DPEBL_DEBUG -g
 
 CFLAGS =   -O3 -std=c99 -DPREFIX=$(PREFIX)
-CXXFLAGS =  -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  -DENABLE_BINRELOC -DPREFIX=$(PREFIX) -DPEBL_DEBUG -g
+CXXFLAGS =  -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  -DENABLE_BINRELOC -DPREFIX=$(PREFIX)  -g
 
 
 SDL_CONFIG = /usr/bin/sdl-config
@@ -116,6 +116,7 @@ POBJECT_SRC  =  $(OBJECTS_DIR)/PEnvironment.cpp \
 		$(OBJECTS_DIR)/PWidget.cpp \
 		$(OBJECTS_DIR)/PWindow.cpp  \
 		$(OBJECTS_DIR)/PImageBox.cpp \
+		$(OBJECTS_DIR)/PCanvas.cpp  \
 		$(OBJECTS_DIR)/PColor.cpp  \
 		$(OBJECTS_DIR)/PDrawObject.cpp \
 		$(OBJECTS_DIR)/PFont.cpp \
@@ -155,6 +156,7 @@ PLATFORM_SDL_SRC  =	$(SDL_DIR)/PlatformEnvironment.cpp \
 			$(SDL_DIR)/PlatformTextBox.cpp \
 			$(SDL_DIR)/PlatformTimer.cpp	\
 			$(SDL_DIR)/PlatformDrawObject.cpp \
+			$(SDL_DIR)/PlatformCanvas.cpp \
 			$(SDL_DIR)/SDLUtility.cpp \
 		   	$(SDL_DIR)/PlatformEventQueue.cpp \
 			$(SDL_DIR)/PlatformAudioOut.cpp \
@@ -287,7 +289,7 @@ DIRS = \
 main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
 
 	$(CXX) $(CXXFLAGS)   -o $(BIN_DIR)/pebl -I$(PREFIX)include/SDL -D_REENTRANT \
-	   -L$(PREFIX)/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  -lSDL_net \
+	   -L$(PREFIX)/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  -lSDL_net  \
        $(OSX_FLAGS) $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, \
        $(PEBLMAIN_OBJ))
 

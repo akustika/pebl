@@ -119,7 +119,7 @@ public:
     //The following are convenience accessors; do not
     //destroy or mangle the returned object.
 
-    PList *                GetList() const;
+    PList *    GetList() const;
 //     counted_ptr<PlatformEnvironment>   GetEnvironment() const;
 //     counted_ptr<PlatformWindow>        GetWindow() const;
 //     counted_ptr<PColor>                GetColor() const;
@@ -135,7 +135,7 @@ public:
     counted_ptr<PEBLObjectBase> GetObject() const;
 
     //This is no longer under control of the counted pointer system.
-    PlatformWidget *    GetWidget() const;             //Returns pointer to a widget, whatever it is.
+    PlatformWidget * GetWidget() const;   //Returns pointer to a widget, whatever it is.
 
 
     //'IsX' methods

@@ -45,15 +45,13 @@ using std::string;
 
 VariableMap::VariableMap()
 {
-
+    //cout << "Creating variable map\n";
     //Initiate anything necessary here.
 }
 
 
 VariableMap::~VariableMap()
 {
-
-
 
     //Delete mVariableMap if necessary.
     //Erase things by hand, for debugging's sake

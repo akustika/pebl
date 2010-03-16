@@ -56,6 +56,7 @@ PComplexData::PComplexData( counted_ptr <PEBLObjectBase > object )
 
 PComplexData::~PComplexData()
 {
+ 
 
 }
 
@@ -261,6 +262,7 @@ bool PComplexData::IsNetworkConnection() const
 
 PList * PComplexData::GetList()const
 {
+
     if(IsList()) return dynamic_cast<PList*>(mPEBLObject.get());
     else return NULL;
 }

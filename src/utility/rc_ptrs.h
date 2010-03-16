@@ -78,6 +78,7 @@ public:
         count=new size_type(1);
     }
 
+
     counted_ptr (const counted_ptr<X> &r)
     {
         ptr=r.ptr;
@@ -112,7 +113,7 @@ public:
 
     void PrintCounts()
     {
-        std::cout << "Object has "<< *count << "copies" <<std::endl;
+        std::cout << "Object has "<< *count << " copies" <<std::endl;
     }
 
 protected:
@@ -129,12 +130,12 @@ protected:
 
     void release()
     {
-
         if (count)
             {
                 (*count)--;
                 if((*count)==0)
-                    {                    
+                    {              
+
                         delete ptr;
                         delete count;
                         ptr = NULL;

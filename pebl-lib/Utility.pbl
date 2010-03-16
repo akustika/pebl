@@ -818,7 +818,7 @@ define WaitForClickOnTarget(targetlist,keylist)
   }
 
   ret <- ""
-  testlist <- Transpose([targetlist,keylist])
+  testlist <- Reverse(Transpose([targetlist,keylist]))
    
    wait1 <- 1
    while(wait1)

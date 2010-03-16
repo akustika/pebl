@@ -57,6 +57,7 @@ PEBLObjectBase::PEBLObjectBase(const PEBLObjectBase & pob)
 ///Standard Destructor
 PEBLObjectBase::~PEBLObjectBase()
 {
+
     mProperties.clear();
 }
 

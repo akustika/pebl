@@ -85,9 +85,9 @@ Variant PEBLList::Shuffle (Variant v)
 Variant PEBLList::Repeat (Variant v)
 {
    //v is a list; v[1] is the object to repeat (can be anything)
-     PList * plist = v.GetComplexData()->GetList();
+    PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); plist->PopFront();
-
+    
 
     //v[2] is the number of repeats: should be an integer.
     PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in second parameter of function [Repeat(<object>,<integer>)]:  ");    

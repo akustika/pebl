@@ -187,6 +187,7 @@ namespace PEBLObjects
             {"DRAW",              Draw,       0, 1},
             {"DRAWFOR",           DrawFor,    2, 2},
 
+            {"SETPIXEL",          SetPoint, 4,4},
             {"LOADSOUND",         LoadSound,        1, 1},
             {"PLAYBACKGROUND",    PlayBackground,   1, 1},
             {"PLAYFOREGROUND",    PlayForeground,   1, 1},

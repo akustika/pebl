@@ -55,6 +55,11 @@ Evaluator::Evaluator():
     mStackMax(10000),
     mScope("Base Scope")
 {
+#ifdef PEBL_DEBUG_PRINT 
+    cout << "Creating Evaluator: " << mScope << endl;
+#endif
+
+
     gCallStack.Push(gEvalNode);
 
 }
@@ -65,7 +70,10 @@ Evaluator::Evaluator(Variant & stacktop, string scope):
     mStackMax(10000),
     mScope(scope)
 {
-    
+#ifdef PEBL_DEBUG_PRINT 
+    cout << "Creating Evaluator: " << mScope << endl;
+#endif
+
     //add everything in callstack onto mCallStack
     //mCallStack = callstack;
 
@@ -166,7 +174,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //that should be assigned to the datanode.
                 
 
-                PNode * node2 = node->GetRight();
+                const PNode * node2 = node->GetRight();
                 Evaluate(node2);
 
                 //The evaluated expression is now at the top of the stack.
@@ -174,7 +182,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //it to v2.
                 Variant v2 = mStack.top();
 
-                PNode * node1 =node->GetLeft();
+                const PNode * node1 =node->GetLeft();
                 
                 //Extract the variable name from the node.
                 
@@ -240,9 +248,9 @@ bool Evaluator::Evaluate(const OpNode * node)
         case PEBL_ADD:
             {
                 //Execute left and right nodes, which puts results on stack
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
                 Evaluate( node1 );
-                PNode * node2 = node->GetRight();
+                const PNode * node2 = node->GetRight();
                 Evaluate(node2);
 	
                 //Get the top two items from the stack.  The rightmost will
@@ -261,9 +269,9 @@ bool Evaluator::Evaluate(const OpNode * node)
         case PEBL_DIVIDE:
             {
                 //Execute left and right nodes, which puts results on stack
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
                 Evaluate( node1 );
-                PNode * node2 = node->GetRight();
+                const PNode * node2 = node->GetRight();
                 Evaluate( node2);
 	
 
@@ -280,9 +288,9 @@ bool Evaluator::Evaluate(const OpNode * node)
         case PEBL_MULTIPLY:
             {
                 //Execute left and right nodes, which puts results on stack
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
                 Evaluate( node1 );
-                PNode * node2 = node->GetRight();
+                const PNode * node2 = node->GetRight();
                 Evaluate( node2 );
                 
                 
@@ -298,9 +306,9 @@ bool Evaluator::Evaluate(const OpNode * node)
         case PEBL_POWER:
             {
                 //Execute left and right nodes, which puts results on stack
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
                 Evaluate( node1 );
-                PNode * node2 = node->GetRight();
+                const PNode * node2 = node->GetRight();
                 Evaluate( node2);
 	
 
@@ -317,9 +325,9 @@ bool Evaluator::Evaluate(const OpNode * node)
         case PEBL_SUBTRACT:
             {
                 //Execute left and right nodes, which puts results on stack
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
                 Evaluate( node1 );
-                PNode * node2 = node->GetRight();
+                const PNode * node2 = node->GetRight();
                 Evaluate( node2 );
                 
                 
@@ -337,9 +345,9 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //Evaluate left and right nodes, and do an AND of them.
       
                 //Execute left and right nodes, which puts results on stack
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
                 Evaluate( node1 );
-                PNode * node2 = node->GetRight();
+                const PNode * node2 = node->GetRight();
                 Evaluate( node2 );
                 
                 //Get the top two items from the stack.  The right will be on top
@@ -356,9 +364,9 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //Evaluate left and right nodes, and do an or on them.
       
                 //Execute left and right nodes, which puts results on stack
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
                 Evaluate( node1 );
-                PNode * node2 = node->GetRight();
+                const PNode * node2 = node->GetRight();
                 Evaluate( node2 );
                 
                 //Get the top two items from the stack.  The right will be on top
@@ -376,7 +384,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //Evaluate left nodes, and negate it.
       
                 //Execute left and right nodes, which puts results on stack
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
                 Evaluate( node1 );
                 
                 //Get the top two items from the stack.  The right will be on top
@@ -393,7 +401,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //Left node is the expression test;
                 //Right node is the code block to execute if true.
                 
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
                 Evaluate( node1 );
                 Variant v1 = Pop();
                 if(v1)
@@ -417,10 +425,10 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //Right node is the THEN code block to execute.
                 
                 //Execute left node, which puts results on stack
-                PNode * node1=node->GetLeft();
+                const PNode * node1=node->GetLeft();
                 Evaluate( node1 );
                 
-                PNode * node2 = node->GetRight();
+                const PNode * node2 = node->GetRight();
                 Evaluate(node2);
             }
             break;
@@ -432,7 +440,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                 
                 Variant v1 = Pop();
                 
-                PNode * node1;
+                const PNode * node1;
                 if(v1)
                     {
                         node1 = node->GetLeft();
@@ -458,8 +466,8 @@ bool Evaluator::Evaluate(const OpNode * node)
                 // variables one-by-one, then execute the code block.
                 
                 //Get the variable list.
-                PNode * node1 = node->GetLeft();
-   
+                const PNode * node1 = node->GetLeft();
+                
                 //Get the argument list.
                 Variant v1 = Pop();
 
@@ -467,14 +475,20 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //If v1 is a stacksignal list_head, there are no arguments
                 //provided.
 
+
+
                 counted_ptr<PEBLObjectBase> tmpList;
+
                 if( v1.IsStackSignal() && v1.GetSignal() == STACK_LIST_HEAD)
                     {
+
                         tmpList = counted_ptr<PEBLObjectBase>(new PList());
                     }
 
+
                 if( v1.IsComplexData())
                     {
+
                         tmpList = v1.GetComplexData()->GetObject(); 
                     }
 
@@ -525,21 +539,23 @@ bool Evaluator::Evaluate(const OpNode * node)
                     }
                     
                 //Now, get the code block and execute it.
-                PNode * node2 = node->GetRight();
+                const PNode * node2 = node->GetRight();
                 Evaluate(node2);
             }
             break;
             
         case PEBL_LIBRARYFUNCTION:
             {
-                // This type of function is built in and precompiled.  The loader examines the parse tree and
+
+                // This type of function is built in and precompiled.  The loader examines
+                // the parse tree and
                 // identifies each function that is used.
                 
                 //The left child of a PEBL_LIBRARYFUNCTION contains an PEBL_AND node containing two datanodes 
                 //each containing integers describing the min and max  number of arguments, respectively.
 
-                
-                OpNode * node0 =(OpNode*)(node->GetLeft());
+
+                const OpNode * node0 =(OpNode*)(node->GetLeft());
                 
 
                 int min = ((DataNode*)(node0->GetLeft()))->GetValue();
@@ -549,7 +565,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //The right child of a PEBL_LIBRARYFUNCTION contains a datanode which
                 //has a function pointer in it.
 
-                PNode * node1 = node->GetRight();
+                const PNode * node1 = node->GetRight();
                 Variant v1 = ((DataNode*)node1)->GetValue();
 
                 //All built-in functions take a single parameter: a Variant list.  
@@ -619,7 +635,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                 while(1)
                     {
                         //Execute left node, which puts results on stack
-                        PNode * node1=node->GetLeft();
+                        const PNode * node1=node->GetLeft();
                         Evaluate( node1 );
                         
                         //Get the result of the evaluation
@@ -634,7 +650,7 @@ bool Evaluator::Evaluate(const OpNode * node)
 
 
                         //Evaluate the right node.
-                        PNode * node2 = node->GetRight();
+                        const PNode * node2 = node->GetRight();
                         Evaluate(node2);
 
                         //Now, the results of the while block are on top of the stack.
@@ -663,7 +679,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                                 // each iteration.
                 
                 //Get the variabledatum pair:
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
 	  
                 Evaluate(node1);
                 
@@ -674,7 +690,7 @@ bool Evaluator::Evaluate(const OpNode * node)
 
                 PError::AssertType(v2, PEAT_VARIABLE,"Error: iterator of loop not a variable");
   
-                PNode * node2 = node->GetRight();
+                const PNode * node2 = node->GetRight();
 
                 //Now, iterate through the elements of v1.  If v1 is not a list,
                 //just set the variable equal to v1 and execute once.
@@ -683,9 +699,9 @@ bool Evaluator::Evaluate(const OpNode * node)
                 
                 //Retrieve an iterator to the items in the list.
                 //PComplexData * tmpPCD = v1.GetComplexData();
-                PList * tmp = (PList*)(v1.GetComplexData()->GetObject().get());
-                list<Variant>::iterator p = tmp->Begin();
-                list<Variant>::iterator end = tmp->End();
+                const PList * tmp = (PList*)(v1.GetComplexData()->GetObject().get());
+                list<Variant>::const_iterator p = tmp->Begin();
+                list<Variant>::const_iterator end = tmp->End();
                 Variant results=0;
                 
                 while(p != end)
@@ -734,13 +750,13 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //setting the variable to each element of the data.
                 
                 //Get the variable:
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
 
                 //Push the variable name directly on the stack (without evaluating it.)
                 Push(((DataNode*)node1)->GetValue());
                 
                 //Get the datum:
-                PNode * node2 = node->GetRight();
+                const PNode * node2 = node->GetRight();
                 
                 //Evaluate the datum--it gets put on the stack.
                 Evaluate(node2);
@@ -760,7 +776,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                 Push(v1);
                 
                 //Get the top node of the list 
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
 
                 if(node1)
                     { 
@@ -789,7 +805,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                 Push(v1);
             
                 //Get the top node of the list and Evaluate it.
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
                 if(node1)
                     {
                         Evaluate(node1);
@@ -802,8 +818,9 @@ bool Evaluator::Evaluate(const OpNode * node)
 
                         //Make an empty list and push it onto the stack.
                         counted_ptr<PEBLObjectBase> tmpList = counted_ptr<PEBLObjectBase>(new PList());
-                        PComplexData * pcd = new PComplexData(tmpList);
-                        Variant v2 = Variant(pcd);
+
+                        PComplexData  pcd = PComplexData(tmpList);
+                        Variant v2 = Variant(&pcd);
                         Push(v2);
                     }
             }
@@ -823,11 +840,12 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //The data: Get it out of the tree and evaluate it, so it gets
                 //push onto the stack.
 
-                PNode * node1 = node->GetLeft();
+
+                const PNode * node1 = node->GetLeft();
                 Evaluate(node1);
 
                 //The rest of the list;
-                PNode * node2 = node->GetRight();
+                const PNode * node2 = node->GetRight();
 
                 // If the right node not null, then we need to evaluate it until we get to the end
                 // of the list. If it is null, we are at the end of the list; create
@@ -869,8 +887,11 @@ bool Evaluator::Evaluate(const OpNode * node)
                         //Now, tmpList should be the entire list.
                         //Make a Variant out of it, and put it on the stack. 
                         counted_ptr<PEBLObjectBase> pl = counted_ptr<PEBLObjectBase>(tmpList);
-                        PComplexData * pcd = new PComplexData(pl);
-                        Variant v2 = Variant(pcd);
+
+                        PComplexData  pcd =  PComplexData(pl);
+
+
+                        Variant v2 = Variant(&pcd);
                         Push(v2);
                     }
             }
@@ -879,9 +900,9 @@ bool Evaluator::Evaluate(const OpNode * node)
         case PEBL_LT:
             {
                 //Execute left and right nodes, which puts results on stack
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
                 Evaluate( node1 );
-                PNode * node2 = node->GetRight();
+                const PNode * node2 = node->GetRight();
                 Evaluate( node2);
                 
 	
@@ -899,9 +920,9 @@ bool Evaluator::Evaluate(const OpNode * node)
             {
 
                 //Execute left and right nodes, which puts results on stack
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
                 Evaluate( node1 );
-                PNode * node2 = node->GetRight();
+                const PNode * node2 = node->GetRight();
                 Evaluate( node2);
 	
                 //Get the top two items from the stack.  The right will be on top
@@ -914,9 +935,9 @@ bool Evaluator::Evaluate(const OpNode * node)
         case PEBL_GE:
             {
                 //Execute left and right nodes, which puts results on stack
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
                 Evaluate( node1 );
-                PNode * node2 = node->GetRight();
+                const PNode * node2 = node->GetRight();
                 Evaluate( node2);
                 
                 //Get the top two items from the stack.  The right will be on top
@@ -931,9 +952,9 @@ bool Evaluator::Evaluate(const OpNode * node)
             {
 		
                 //Execute left and right nodes, which puts results on stack
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
                 Evaluate( node1 );
-                PNode * node2 = node->GetRight();
+                const PNode * node2 = node->GetRight();
                 Evaluate( node2);
 	
 	
@@ -948,9 +969,9 @@ bool Evaluator::Evaluate(const OpNode * node)
         case PEBL_EQ:
             {
                 //Execute left and right nodes, which puts results on stack
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
                 Evaluate( node1 );
-                PNode * node2 = node->GetRight();
+                const PNode * node2 = node->GetRight();
                 Evaluate( node2);
                 
                 //Get the top two items from the stack.  The right will be on top
@@ -963,9 +984,9 @@ bool Evaluator::Evaluate(const OpNode * node)
         case PEBL_NE:
             {		
                 //Execute left and right nodes, which puts results on stack
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
                 Evaluate( node1 );
-                PNode * node2 = node->GetRight();
+                const PNode * node2 = node->GetRight();
                 Evaluate( node2);
 	
                 //Get the top two items from the stack.  The right will be on top
@@ -1059,7 +1080,7 @@ bool Evaluator::Evaluate(const OpNode * node)
 
                 Push(Variant(STACK_RETURN_DUMMY));
             
-                PNode * node1 = node->GetLeft();
+                const PNode * node1 = node->GetLeft();
                 Evaluate(node1);
             }
             break;
@@ -1173,7 +1194,7 @@ void Evaluator::CallFunction(const OpNode * node)
     // First get the right node (the argument list) and evaluate it.
     // This will end up with a list Variant on top of the stack. 
 
-    PNode *node1 = node->GetRight();
+    const PNode *node1 = node->GetRight();
     Evaluate(node1);
 
     // The parameters for a function are in a list on the top of the stack.
@@ -1183,7 +1204,7 @@ void Evaluator::CallFunction(const OpNode * node)
     //Get the name of the function.  
     Variant funcname =dynamic_cast<DataNode*>(node->GetLeft())->GetValue();
 
-    PNode * node2 = mFunctionMap.GetFunction(funcname);
+    const PNode * node2 = mFunctionMap.GetFunction(funcname);
 
  
 #ifdef PEBL_DEBUG_PRINT

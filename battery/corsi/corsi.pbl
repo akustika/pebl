@@ -3,7 +3,7 @@ define Start(p)
 
 
   
-  gUseCorsiPoints <- 0        ## Use standard locations or regenerate
+  gUseCorsiPoints <- 1        ## Use standard locations or regenerate
                               ## on each trial?
 
 
@@ -12,7 +12,7 @@ define Start(p)
   ##continue to the next length whenever at least one was recalled
   ##correctly.
  
-  gUseKessel      <- 0        ## Use Kessel trials? (Should be used
+  gUseKessel      <- 1        ## Use Kessel trials? (Should be used
                               ## with corsi points)
 
 

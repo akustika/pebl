@@ -186,7 +186,7 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
 
     if(!windowed)
         {
-            vflags |=  SDL_FULLSCREEN;       // Enable fullscreen
+            vflags |=  SDL_FULLSCREEN ;       // Enable fullscreen
         }
 
     

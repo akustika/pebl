@@ -93,8 +93,8 @@ public:
 
 
 
-    /// This is used for error detection.  Every time mEvalNode is 
-    /// updated, this is set to mEvalNode.  But, it is done for 
+    /// This is used for error detection.  Every time gEvalNode is 
+    /// updated, this is set to gEvalNode.  But, it is done for 
     /// all evaluators.  Thus, it always points to the last node
     /// processed, and error reporting routines can look for it and
     /// find out where it came from.

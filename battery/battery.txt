@@ -1,6 +1,6 @@
-PEBL PSYCHOLOGICAL TEST BATTERY Version 0.4
+PEBL PSYCHOLOGICAL TEST BATTERY Version 0.5
 
-Released Nov 2009
+Released Feb 2010
 Part of the PEBL Project
 http://pebl.sourceforge.net/battery.html
 
@@ -710,13 +710,13 @@ unique file for each subject.
 
 
 -------------------------------------------------------------------------------
-            Time tapping test
+            Time tapping test, Version 0.1
 -------------------------------------------------------------------------------
 New for PEBL Battery 0.4
 Location: timetap/timetap.pbl
 
 
-Description: 
+Description:  Tap a button at a predetermined rate for 1 minute
 
 
 Options: 
@@ -726,7 +726,6 @@ Output:
 Dat columns are:
 
 
-
 -------------------------------------------------------------------------------
             Time tapping test, Version 0.1
 -------------------------------------------------------------------------------
@@ -734,8 +733,8 @@ New for PEBL Battery 0.4
 Location: timetap/timetap.pbl
 
 
-Description: 
-
+Description: Tap keyboard button as fast as you can for ten seconds.
+A standard neuropsych test battery test.
 
 Options: 
 
