@@ -555,11 +555,10 @@ define GetEasyInput(win,text)
    query <- MakeLabel(text,font)
    AddObject(query, win)
    Move(query, gVideoWidth/2,80)
-   box <- EasyTextBox("",gVideoWidth/2-150,100, win,20,300,200)
+   box <- EasyTextBox("",gVideoWidth/2-150,100, win,30,300,200)
    Draw()
    input <- GetInput(box,"<return>")
     
-
    RemoveObject(query,win)
    RemoveObject(box,win)
    RemoveObject(bg,win)
@@ -599,7 +598,7 @@ define MessageBox(win,text)
    back <- Rectangle(gVideoWidth/2,gVideoHeight-50,80,40,fgcol,0)
    AddObject(back,win)
    Draw()
-
+   ShowCursor(1)
    WaitForClickOnTarget([back],[1])
 
    RemoveObject(back,win)
