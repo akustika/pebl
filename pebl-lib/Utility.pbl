@@ -468,10 +468,10 @@ define Lookup(key, keylist, database)
 define EasyLabel(text,x,y,parent,fontsize)
 {
 
-  if(not IsWindow(parent))
-  { 
-    SignalFatalError("EasyLabel[text,x,y,parent,fonsize] must be added to a window, not [" + parent+"]")
-  }
+ # if(not IsWindow(parent))
+ # { 
+ #   SignalFatalError("EasyLabel[text,x,y,parent,fonsize] must be added to a window, not [" + parent+"]")
+ # }
 
   bgcol <- parent.BGCOLOR
 
@@ -500,10 +500,10 @@ define EasyLabel(text,x,y,parent,fontsize)
 define EasyTextBox(text,x,y,win,fontsize,width,height)
 {
 
-  if(not IsWindow(win))
-  { 
-    SignalFatalError("EasyTextbox[text,x,y,window,fontsize] must be added to a window, not [" + parent+"]")
-  }
+#  if(not IsWindow(win))
+#  { 
+#    SignalFatalError("EasyTextbox[text,x,y,window,fontsize] must be added to a window, not [" + parent+"]")
+#  }
 
   font <-  MakeFont("Vera.ttf",0,fontsize,MakeColor("black"),MakeColor("white"),1)
   tb <- MakeTextBox(text,font,width,height)
@@ -538,6 +538,79 @@ define GetSubNum(win)
    RemoveObject(bg,win)
    return subnum
 }
+
+
+##Make an easy-to-use getsubnum function here.
+define GetEasyInput(win,text)
+{
+
+  if(not IsWindow(win))
+  { 
+    SignalFatalError("GetEasyInput(win) needs a window to be specified, not [" + win + "]")
+  }
+
+   bg    <- Rectangle(gVideoWidth/2,gVideoHeight/2,gVideoWidth,gVideoHeight,MakeColor("grey"),1)
+   AddObject(bg,win)
+   font <- MakeFont("Caliban.ttf",0,22,MakeColor("black"),MakeColor("grey"),1)
+   query <- MakeLabel(text,font)
+   AddObject(query, win)
+   Move(query, gVideoWidth/2,80)
+   box <- EasyTextBox("",gVideoWidth/2-150,100, win,20,300,200)
+   Draw()
+   input <- GetInput(box,"<return>")
+    
+
+   RemoveObject(query,win)
+   RemoveObject(box,win)
+   RemoveObject(bg,win)
+
+   return input
+}
+
+
+##Make an easy-to-use messagbox function.
+define MessageBox(win,text)
+{
+  if(not IsWindow(win))
+  { 
+    SignalFatalError("MessageBox(win) needs a window to be specified, not [" + win + "]")
+  }
+   bgcol <- win.BGCOLOR
+
+   bg  <- MakeCanvas(gVideoWidth,gVideoHeight,bgcol)
+   Move(bg,gVideoWidth/2,gVideoHeight/2)
+   AddObject(bg,win)
+
+   box <- EasyTextBox(text,100,100, win,20,gVideoWidth-200,gVideoHeight-200)
+   ok <- EasyLabel("OK",gVideoWidth/2,gVideoHeight-50,win,44)
+
+   ##Get foreground color
+   ##HSV val is the max of RGB
+    val <- Max([bgcol.RED, bgcol.GREEN, bgcol.BLUE])
+
+    ##Make it white if the background is too dark.
+    if(val <=	100)
+    { 
+      fgcol <- MakeColor("white")
+    } else {
+      fgcol <- MakeColor("black")
+    }
+
+   back <- Rectangle(gVideoWidth/2,gVideoHeight-50,80,40,fgcol,0)
+   AddObject(back,win)
+   Draw()
+
+   WaitForClickOnTarget([back],[1])
+
+   RemoveObject(back,win)
+   RemoveObject(ok,win)
+   RemoveObject(box,win)
+   RemoveObject(back,win)
+
+   Draw()
+
+}
+
 
 
 ##  This takes a number, and pads
