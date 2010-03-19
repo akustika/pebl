@@ -541,7 +541,7 @@ define GetSubNum(win)
 
 
 ##Make an easy-to-use getsubnum function here.
-define GetEasyInput(win,text)
+define GetEasyInput(text,win)
 {
 
   if(not IsWindow(win))
@@ -568,7 +568,7 @@ define GetEasyInput(win,text)
 
 
 ##Make an easy-to-use messagbox function.
-define MessageBox(win,text)
+define MessageBox(text,win)
 {
   if(not IsWindow(win))
   { 
