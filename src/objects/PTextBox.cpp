@@ -3,7 +3,7 @@
 //    Name:       src/objects/PTextBox.cpp
 //    Purpose:    Contains generic specification for a read-only text box.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //

@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLEnvironment.cpp
 //    Purpose:    General Environment Function Library for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -716,7 +716,7 @@ Variant PEBLEnvironment::GetInput(Variant v)
     //    while(pke.key != PEBLUtility::TranslateString(myString))
     while(PEBLUtility::TranslateKeyCode(pke.key, pke.modkeys) != PEBLUtility::ToLower(myString))
         {
-            
+            //std::cout << pke.key << "|" << pke.modkeys << std::endl;
             //Process the input and redraw the textbox.
             textbox->HandleKeyPress(pke.key, pke.modkeys);
 

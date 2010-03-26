@@ -327,7 +327,7 @@ PEBLKey PEBLUtility::TranslateString(const std::string & let)
 std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
 {
 
-    
+    //These are tailored to US keyboard.    
     switch(key)
         {
             /* The keyboard syms have been cleverly chosen to map to ASCII */
@@ -347,38 +347,38 @@ std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
         case PEBLKEY_HASH:           return "#";
         case PEBLKEY_DOLLAR:         return "$";
         case PEBLKEY_AMPERSAND:      return "&";
-        case PEBLKEY_QUOTE:          return "'";
+        case PEBLKEY_QUOTE:         return ShiftSwitch(modkeys,"'" ,"\"");
         case PEBLKEY_LEFTPAREN:      return "(";
         case PEBLKEY_RIGHTPAREN:     return ")";
         case PEBLKEY_ASTERISK:       return "*";
         case PEBLKEY_PLUS:           return "+";
-        case PEBLKEY_COMMA:          return ",";
-        case PEBLKEY_MINUS:          return "-";
-        case PEBLKEY_PERIOD:         return ".";
-        case PEBLKEY_SLASH:          return "/";
-        case PEBLKEY_0:         return "0";
-        case PEBLKEY_1:         return "1";
-        case PEBLKEY_2:         return "2";
-        case PEBLKEY_3:         return "3";
-        case PEBLKEY_4:         return "4";
-        case PEBLKEY_5:         return "5";
-        case PEBLKEY_6:         return "6";
-        case PEBLKEY_7:         return "7";
-        case PEBLKEY_8:         return "8";
-        case PEBLKEY_9:         return "9";
-        case PEBLKEY_COLON:         return ":";
-        case PEBLKEY_SEMICOLON:     return ";";
+        case PEBLKEY_COMMA:   return ShiftSwitch(modkeys,"," ,"<");
+        case PEBLKEY_MINUS:   return ShiftSwitch(modkeys,"-" ,"_");
+        case PEBLKEY_PERIOD:  return ShiftSwitch(modkeys,"." ,">");
+        case PEBLKEY_SLASH:   return ShiftSwitch(modkeys,"/",  "?");
+        case PEBLKEY_0:       return ShiftSwitch(modkeys,"0",  ")");
+        case PEBLKEY_1:       return ShiftSwitch(modkeys,"1",  "!");
+        case PEBLKEY_2:       return ShiftSwitch(modkeys,"2",  "@");
+        case PEBLKEY_3:       return ShiftSwitch(modkeys,"3",  "#");
+        case PEBLKEY_4:       return ShiftSwitch(modkeys,"4",  "$");
+        case PEBLKEY_5:       return ShiftSwitch(modkeys,"5",  "%");
+        case PEBLKEY_6:       return ShiftSwitch(modkeys,"6",  "^");
+        case PEBLKEY_7:       return ShiftSwitch(modkeys,"7",  "&");
+        case PEBLKEY_8:       return ShiftSwitch(modkeys,"8",  "*");
+        case PEBLKEY_9:       return ShiftSwitch(modkeys,"9",  "(");
+        case PEBLKEY_COLON:     return ":";
+        case PEBLKEY_SEMICOLON:     return ShiftSwitch(modkeys,";", ":");
         case PEBLKEY_LESS:          return "<";
-        case PEBLKEY_EQUALS:        return "=";
+        case PEBLKEY_EQUALS:        return  ShiftSwitch(modkeys,"=",  "+");
         case PEBLKEY_GREATER:       return ">";
         case PEBLKEY_QUESTION:      return "?";
         case PEBLKEY_AT:            return "@";
         /*
            Skip uppercase letters
         */
-        case PEBLKEY_LEFTBRACKET:         return "[";
-        case PEBLKEY_BACKSLASH:           return "\\";
-        case PEBLKEY_RIGHTBRACKET:        return "]";
+        case PEBLKEY_LEFTBRACKET:     return  ShiftSwitch(modkeys,"[",  "{");
+        case PEBLKEY_BACKSLASH:       return  ShiftSwitch(modkeys,"\\",  "|");
+        case PEBLKEY_RIGHTBRACKET:    return  ShiftSwitch(modkeys,"]",  "}");
         case PEBLKEY_CARET:               return "^";
         case PEBLKEY_UNDERSCORE:          return "_";
         case PEBLKEY_BACKQUOTE:           return "`";
