@@ -206,7 +206,7 @@ define StripQuotes(text)
 
 define ReadCSV(filename)
 {
-  gQuote <- First(FileReadList("quote.txt"))
+
 
   #open the file
   file <- FileOpenRead(filename)
