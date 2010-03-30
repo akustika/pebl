@@ -3,7 +3,7 @@
 //    Name:       src/base/PList.cpp
 //    Purpose:    Contains a simple list class, part of the Variant Class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //

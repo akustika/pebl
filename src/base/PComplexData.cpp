@@ -3,7 +3,7 @@
 //    Name:       src/base/PComplexData.h
 //    Purpose:   Contains base class for complex data, held by the Variant Class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -51,7 +51,6 @@ PComplexData::PComplexData()
 PComplexData::PComplexData( counted_ptr <PEBLObjectBase > object )
 {
     mPEBLObject = object;
-
 }
 
 PComplexData::~PComplexData()

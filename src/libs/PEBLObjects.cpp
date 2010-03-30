@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLObjects.cpp
 //    Purpose:    Function Library for managing PEBL Objects
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -120,8 +120,14 @@ Variant PEBLObjects::MakeWindow(Variant v)
     myEnv->AddWindow(myWindow);
 
     counted_ptr<PEBLObjectBase> tmp2   =  counted_ptr<PEBLObjectBase> (myWindow);
+
     PComplexData *  pcd = new PComplexData(tmp2);
-    return Variant(pcd);
+
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    //cout << "Deleting PCD Window in PEBLOBjects::MakeWindow\n";
+    return tmp;
 }
 
 
@@ -137,9 +143,10 @@ Variant PEBLObjects::MakeImage(Variant v)
     
     counted_ptr<PEBLObjectBase>tmp2 = counted_ptr<PEBLObjectBase>(myImageBox);
     PComplexData *  pcd = new PComplexData(tmp2);
-
-
-    return Variant(pcd);
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
 }
 
 
@@ -173,7 +180,11 @@ Variant PEBLObjects::MakeLabel(Variant v)
     //Return a variant containing the label.
     PComplexData *  pcd =     new PComplexData(myLabel);
 
-    return Variant(pcd);
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
+
 }
 
 
@@ -216,7 +227,11 @@ Variant PEBLObjects::MakeTextBox(Variant v)
     //Return a variant containing the label.
     PComplexData *   pcd = new PComplexData(myTextBox);
 
-    return Variant(pcd);
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
+
 
 }
 
@@ -243,7 +258,13 @@ Variant PEBLObjects::MakeCanvas(Variant v)
 
     counted_ptr<PEBLObjectBase> myCanvas = counted_ptr<PEBLObjectBase>(new PlatformCanvas(width,height,color));
     PComplexData *  pcd = new PComplexData(myCanvas);
-    return Variant(pcd);
+
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
+
+
 
 }
 
@@ -261,7 +282,11 @@ Variant PEBLObjects::MakeColor(Variant v)
 
     counted_ptr<PEBLObjectBase> myColor = counted_ptr<PEBLObjectBase>(new PColor(name));    
     PComplexData *  pcd = new PComplexData(myColor);
-    return Variant(pcd);
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
+
 }
 
 Variant PEBLObjects::MakeColorRGB(Variant v)
@@ -281,7 +306,13 @@ Variant PEBLObjects::MakeColorRGB(Variant v)
     PColor * tmpColor = new PColor(red,green,blue, 255);
     counted_ptr<PEBLObjectBase> myColor = counted_ptr<PEBLObjectBase>(tmpColor);
     PComplexData *  pcd = new PComplexData(myColor);
-    return     Variant(pcd);
+
+
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
+
 }
 
 
@@ -323,7 +354,13 @@ Variant PEBLObjects::MakeFont(Variant v)
     counted_ptr<PEBLObjectBase> myFont = counted_ptr<PEBLObjectBase>(tmpFont);
     PComplexData *  pcd = new PComplexData(myFont);
     
-    return Variant(pcd);
+
+
+    Variant tmp = Variant(pcd);
+    //delete pcd;  without deleting here, fonts will leak memory
+    //pcd=NULL;
+    return tmp;
+
 }
 
 

@@ -3,7 +3,7 @@
 //    Name:       src/apps/PEBL.cpp
 //    Purpose:    The primary PEBL run-time interpreter.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -375,7 +375,7 @@ int PEBLInterpret( int argc, char *argv[] )
     
 
     std::list<PNode> tmpcallstack;
-    Evaluator myEval = Evaluator(v,"Start");
+    Evaluator * myEval = new Evaluator(v,"Start");
 
 
 
@@ -389,17 +389,25 @@ int PEBLInterpret( int argc, char *argv[] )
     //Now, everything should be F-I-N-E fine.
     head = myLoader->GetMainPEBLFunction();
 
-    if(head) 
+    if(head)
         {
             cerr << "---------Evaluating Program-----" << endl;
             //Execute everything
 
-            myEval.Evaluate(head);
+            myEval->Evaluate(head);
+
+
+            Evaluator::gGlobalVariableMap.Destroy();
 
             delete myLoader; 
             if(myEnv) delete myEnv;
             Evaluator::mFunctionMap.Destroy();
-        	std::cout << "Program Terminated Successfully"  << endl;
+
+
+            delete myEval;
+            myEval = NULL;
+            //Evaluator::gGlobalVariableMap.DumpValues();
+
             
             return 0;
         }

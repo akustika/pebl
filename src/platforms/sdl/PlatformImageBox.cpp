@@ -61,6 +61,7 @@ PlatformImageBox::PlatformImageBox():
 ///Standard Destructor
 PlatformImageBox::~PlatformImageBox()
 {
+
 }
 
 

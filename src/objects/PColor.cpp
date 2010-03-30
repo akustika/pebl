@@ -3,7 +3,7 @@
 //    Name:       src/objects/PColor.cpp
 //    Purpose:    Contains lightweight specification for a color
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -26,10 +26,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "PColor.h"
+#include "../base/Variant.h"
 #include "../base/PEBLObject.h"
 #include "RGBColorNames.h"
 #include "../utility/PEBLUtility.h"
 #include "../utility/PError.h"
+
 
 #include <string>
 #include <cstring>

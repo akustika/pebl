@@ -3,7 +3,7 @@
 //    Name:       src/base/VariableMap.cpp
 //    Purpose:    Structure that holds global or local variables
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -53,9 +53,11 @@ VariableMap::VariableMap()
 VariableMap::~VariableMap()
 {
 
+    //    cout << "Deleting variablemap\n";
+    //    DumpValues();
     //Delete mVariableMap if necessary.
     //Erase things by hand, for debugging's sake
-    std::map<std::string, Variant>::iterator i = mVariableMap.begin();
+    //    std::map<std::string, Variant>::iterator i = mVariableMap.begin();
 
    // while(i !=  mVariableMap.end())
    //     {
@@ -65,6 +67,14 @@ VariableMap::~VariableMap()
     mVariableMap.clear();
 
 }
+
+
+void VariableMap::Destroy()
+{
+    mVariableMap.clear();
+}
+
+
 
 ///
 /// This method will add a new variable with 

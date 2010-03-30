@@ -3,7 +3,7 @@
 //    Name:       src/devices/PEventLoop.cpp
 //    Purpose:    Primary generic timer event device
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -183,7 +183,10 @@ PEvent PEventLoop::Loop()
                                                             counted_ptr<PEBLObjectBase> tmpList = counted_ptr<PEBLObjectBase>(mParameters[i]);
                                                             
                                                             PComplexData * pcd = new PComplexData(tmpList);
-                                                            myEval->Push(Variant(pcd));
+                                                            Variant tmp = Variant(pcd);
+                                                            delete pcd;
+                                                            pcd= NULL;
+                                                            myEval->Push(tmp);
                                                             myEval->Evaluate(mNodes[i]);
                                                             
                                                         }
@@ -234,7 +237,10 @@ PEvent PEventLoop::Loop()
                                             //Add the parameters, as a list, to the stack.
                                             counted_ptr<PEBLObjectBase> tmpList = counted_ptr<PEBLObjectBase>(mParameters[i]);
                                             PComplexData * pcd = new PComplexData(tmpList);
-                                            myEval->Push(Variant(pcd));
+                                            Variant tmp = Variant(pcd);
+                                            delete pcd;
+                                            pcd= NULL;
+                                            myEval->Push(tmp);
                                             myEval->Evaluate(mNodes[i]);
                                         }
                                     else

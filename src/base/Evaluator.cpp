@@ -99,6 +99,8 @@ Evaluator::~Evaluator()
     //Delete all local variables now.
     if( gCallStack.Size())
         gCallStack.Pop();
+
+
 }
  
 

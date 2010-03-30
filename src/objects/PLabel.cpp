@@ -3,7 +3,7 @@
 //    Name:       src/objects/PLabel.cpp
 //    Purpose:    Contains methods primary visual 'word' structure
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //

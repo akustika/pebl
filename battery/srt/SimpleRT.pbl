@@ -35,6 +35,7 @@ define Start(lPar)
   ## Parameters/Variables controlling experiment
   ##
    
+
   blocks <- 4              ## The number of trial blocks
   blocklength <-  50       ## The number of trials per block
   numtrials <- blocks * blocklength 
@@ -87,6 +88,7 @@ define Start(lPar)
   Draw()
   gInstructions.text <- "You may now take a short break.  Press Any Key to Continue."
 
+  startstamp <- TimeStamp()
 
   #####################################
   ## Present stimuli
@@ -160,7 +162,8 @@ define Start(lPar)
    FilePrint(reportfile,"------------------------------------------------------")
    FilePrint(reportfile," Report for PEBL Simple Response Time Task Version 0.2")
    FilePrint(reportfile, " "+GetPEBLVersion())
-   FilePrint(reportfile, " "+TimeStamp())
+   FilePrint(reportfile,"Started at:  " + startstamp)
+   FilePrint(reportfile,"Finished at: " +TimeStamp())
    FilePrint(reportfile," http://pebl.sf.net")
    FilePrint(reportfile, " Participant Code: " + gSubNum)
    FilePrint(reportfile,"------------------------------------------------------")

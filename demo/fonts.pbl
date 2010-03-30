@@ -20,9 +20,9 @@ define Start(par)
      bg2 <- MakeColor("white")
 	 baseFont <- MakeFont("Vera.ttf",0,40,fg,bg,1)
      testFont <- MakeFont("Vera.ttf",0,18,fg,bg2,1)
-#     label <- MakeLabel("Test Font:", baseFont)
-#     AddObject(label,window)
-#     Move(label, 320,20)
+     label <- MakeLabel("Test Font:", baseFont)
+     AddObject(label,window)
+     Move(label, 320,20)
     
      box <- MakeTextBox("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
 a b c d e f g h i j k l m n o p q r s t u v w x y z
@@ -36,11 +36,11 @@ a b c d e f g h i j k l m n o p q r s t u v w x y z
 
      loop(f, fontnames)
      {
- #         label.text <- f
+          label.text <- f
           testFont <- MakeFont(f,0,22,fg,bg2,1)
 	      SetFont(box, testFont)
-          x <- box.text
-          SetText(box,x)
+#          x <- box.text
+#          SetText(box,x)
 	      Draw()
 	      WaitForAnyKeyPress()    	
      }

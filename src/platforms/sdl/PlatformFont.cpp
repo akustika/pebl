@@ -98,7 +98,7 @@ PlatformFont::PlatformFont(const PlatformFont & font)
 PlatformFont::~PlatformFont()
 {
 
-
+    
     TTF_CloseFont(mTTF_Font);
     mTTF_Font = NULL;
 

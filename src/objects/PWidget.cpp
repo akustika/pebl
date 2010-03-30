@@ -3,7 +3,7 @@
 //    Name:       src/objects/PWidget.cpp
 //    Purpose:    Contains methods for primary GUI element
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -85,6 +85,7 @@ PWidget::PWidget(int x, int y, int width, int height, bool visible):
 
 PWidget::~PWidget()
 {
+
 }
 
 bool PWidget::RotoZoom(double angle, double zoomx, double zoomy, int smooth)
@@ -100,6 +101,7 @@ bool PWidget::SetPoint(int x, int y, PColor col)
 
     return false;
 }
+
 
 
 bool PWidget::SetProperty(std::string name, Variant v)
@@ -250,16 +252,39 @@ bool PWidget::AddSubWidget(PWidget * widget)
     return true;
 }
 
+bool PWidget::RemoveSubWidgets()
+
+{                       
+    if(mSubWidgets.size()>0)
+        {
+
+            std::list<PWidget*>::iterator i = mSubWidgets.begin();
+            while(i != mSubWidgets.end())
+                {
+                    
+                    (*i)->SetParent(NULL);
+                    mSubWidgets.pop_front();
+                    i=mSubWidgets.begin();  //readjust so it points to the start of the list.
+                }
+
+            mSubWidgets.clear();
+        }
+    return true;
+}
+
 
 bool PWidget::RemoveSubWidget(PWidget * widget)
 {
-    mSubWidgets.remove(widget);
+
     widget->SetParent(NULL);
+    mSubWidgets.remove(widget);
+
     return true;
 }
 
 bool PWidget::RemoveLastSubWidget()
 {
+
     mSubWidgets.pop_front();
     return true;
 }

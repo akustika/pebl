@@ -75,6 +75,11 @@ define Start(p)
     }
  }
   FileClose(fileout)
+
+  RemoveObject(gLogo,gWin)
+  RemoveObject(gLab,gWin)
+  RemoveObject(gLine,gWin)
+
 }
 
 
@@ -226,9 +231,9 @@ define Init()
   AddObject(glab,gWin)
   Move(glab,gVideoWidth-10-glab.width/2,gTop/2)
 
-  logo <- MakeImage(gLogoFileName)
-  AddObject(logo,gWin)
-  Move(logo,200,gTop/2)
+  gLogo <- MakeImage(gLogoFileName)
+  AddObject(gLogo,gWin)
+  Move(gLogo,200,gTop/2)
 
   gLine <- Line(0,gTop,gVideoWidth,0,MakeColor("black"))
   AddObject(gLine,gWin)

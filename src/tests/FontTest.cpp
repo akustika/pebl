@@ -26,7 +26,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "../objects/PFont.h"
 #include "../objects/PColor.h"
-#include "../objects/PObject.h"
+#include "../base/Variant.h"
+
+//#include "../objects/PObject.h"
 
 #include <iostream>
 

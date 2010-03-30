@@ -29,6 +29,9 @@
 
 define Start(lPar)
 {
+  #Print(TimeStamp())
+ # x <- [[0, 56, 1, 4.1], [116, 58, 0.603448, 1.54876], [137, 58, 0.568966, 1.41228], [179, 58, 0.758621,
+# 2.25376], [326, 60, 0.583333, 1.46859], [621, 57, 0.649123, 1.73789], [1210, 53, 0.566038, 1.40089]]
 
 
 
@@ -51,7 +54,6 @@ define Start(lPar)
   ## Begin Initialization Procedures.
   ##
   Initialize()
- 
   stimLetters <- ["D","F","J","K"]
 
   ## Lists storing the actual RT values, along with the presentation time.
@@ -118,6 +120,7 @@ define Start(lPar)
          accs <- Append(accs,corr)
      } 
 
+   Print(Mod(trialnum,blocklength))
     if(Mod(trialnum,blocklength) == 0)
      {
        blocknum <- blocknum + 1
@@ -166,6 +169,7 @@ define Start(lPar)
    SetText(gInstructions, "Thank you for participating in the experiment.  You may now leave.  (Press secret key 'X' to finish experiment)")
    Show(gInstructions)
    Draw()
+   Print(TimeStamp())
    WaitForKeyPress("X")
  
 
@@ -372,12 +376,21 @@ define AggregateAcc(isis, accs)
 	 ## we should analyze what is in tmp right now.
      if(First(i) != lastISI)
      {
-
+       ##Add an error trial to make dprime computable:
+       if(Mean(tmpAcc)==1)
+        {
+          tmpAcc <- Append(tmpAcc,0)
+        }
        stats <- Append(stats,
                       [lastISI, Length(tmpAcc), Mean(tmpAcc),DP(Mean(tmpAcc))])
        tmpAcc <- []
      }
 
+    if(Mean(tmpAcc)==1)
+        {
+          tmpAcc <- Append(tmpAcc,0)
+        }
+ 
    tmpAcc <- Append(tmpAcc,Nth(i,2))
    lastISI <- First(i)
   }
@@ -441,7 +454,7 @@ define GraphStats(stats)
 
   data <- Transpose(stats)
   datX <- First(data)
-  datY <- Nth(data,4)
+  datY <- Nth(data,4)  #Plot d'
 
   r1 <-  Rectangle(gVideoWidth/2,gVideoHeight/2,gVideoWidth-100, gVideoHeight-100, MakeColor("white"),1)
   AddObject(r1,gWin)
@@ -478,6 +491,10 @@ define GraphStats(stats)
       comp <- Append(comp, ll)
    }
 
+  xlabel <- Makelabel("Delay of probe (ms)",font)
+  AddObject(xlabel,gWin)
+  Move(xlabel, gVideoWidth/2-60,540)
+
   ##Add the y labels
   ylabs <- [0,.5,1,1.5,2,2.5,3,3.5,4,4.5]
   loop(i,ylabs)
@@ -488,14 +505,41 @@ define GraphStats(stats)
       comp <- Append(comp, ll)
    }
 
-  Draw()
+  ylabel <- Makelabel("Response sensitivity (d')",font)
+  AddObject(ylabel,gWin)
+  ylabel.rotation <- 90
+  Move(ylabel, ix-40, gVideoHeight/2-60)
 
+  
+  fontblue <- MakeFont("FreeSans.ttf", 0,14,MakeColor("blue"),MakeColor("white"),1)
+  fontorange <- MakeFont("FreeSans.ttf", 0,14,MakeColor("orange"),MakeColor("white"),1)
+  fontred <- MakeFont("FreeSans.ttf", 0,14,MakeColor("red"),MakeColor("white"),1)
+
+  legend1 <- Makelabel("Young subjects",fontblue)
+  legend2 <- Makelabel("Old control subjects",fontorange)
+  legend3 <- MakeLabel("Old subjects with cognitive impairment",fontred)
+
+  AddObject(legend1,gWin)
+  AddObject(legend2,gWin)
+  AddObject(legend3,gWin)
+  MoveCorner(legend1,gVideoWidth/2+200,395)
+  MoveCorner(legend2,gVideoWidth/2+200,415)
+  MoveCorner(legend3,gVideoWidth/2+200,435)
+
+  Draw()
+  WritePNG("partial-"+gSubNum+".png",gWin)
   WaitForAnyKeyPress()
   RemoveObject(r1,gWin) 
   RemoveObject(ax,gWin)
   RemoveObject(ay,gWin)
+  RemoveObject(ylabel,gWin)
+  RemoveObject(xlabel,gWin)
+  RemoveObject(legend1,gWin)
+  RemoveObject(legend2,gWin)
+  RemoveObject(legend3,gWin)
 
   RemoveComplex(comp)
+
   Draw()
 }
 

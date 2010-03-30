@@ -3,7 +3,7 @@
 //    Name:       src/objects/PWidget.h
 //    Purpose:    Contains the Definition of the basic gui widget
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -93,6 +93,9 @@ public:
     ///This method iterates through the subwidgets and sees if any
     ///are equal to the argument.  If so, it removes it.  It does not delete it.
     virtual bool RemoveSubWidget(PWidget * widget);
+
+    virtual bool RemoveSubWidgets();
+
 
     ///This is probably pretty useless.
     virtual bool RemoveLastSubWidget();

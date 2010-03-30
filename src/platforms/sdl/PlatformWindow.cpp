@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformWindow.cpp
 //    Purpose:    Contains SDL-specific interface for the main window class.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -241,7 +241,7 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
             char drivername[20];
             SDL_VideoDriverName(drivername, 20);
             cerr << "Using Video Driver: " << drivername << endl;
-            
+            cerr << "Surface refcount: " << mSurface->refcount << endl;            
             cerr << "--------------------------------------------------------------------------------\n\n";
 
             return true;
@@ -290,7 +290,7 @@ long int PlatformWindow::DrawFor(unsigned int cycles)
                                              mBackgroundColor.GetGreen(),
                                              mBackgroundColor.GetBlue(),
                                              mBackgroundColor.GetAlpha()));
--
+
     
     
     //Now, draw the subwidgets.

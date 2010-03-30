@@ -11,4 +11,4 @@ Total: $
  Net Gain: $
 Thank you for participating in the experiment. You earned a total of $
 Congratulations!
-You may now leave.  Please alert the experimenter that you are done. Press mouse button.
+You may now leave.  Please alert the experimenter that you are done. Press 'x' key to exit.

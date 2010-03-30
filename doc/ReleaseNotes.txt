@@ -32,12 +32,42 @@ obsolete.
 
 Version 0.11
 
-Changed WaitForClickOnTarget to go from end to front, rather than
+-Changed WaitForClickOnTarget to go from end to front, rather than
 front to end.  This should make it easier to click on the topmost of
-overlapping targets.
+overlapping targets. See poetry demo for example.
 
-todo:
-  document WaitforMouseClickWithTimout
+- Fixed the GetInput function so it accepts the uppercase characters
+  on numbers and other special characters.  This only help US
+  keyboards probably.
+
+-Fixed a nasty memory leak that caused the parameter passed to any
+function to not be cleaned up when the function exited.  This could
+lead to memory growing out-of-control if the experiment uses a control
+loop to repeatedly call a function.
+
+- Added a canvas object to allow an easy resettable drawing object.
+
+- Added SetPixel() function to allow you to draw on any graphical
+  widget (labels, imagebox, canvas, textbox, but not windows or
+  shapes)
+
+- Draw() function allows 'imprinting' images on other widgets.
+
+- Once again, I am distributing a version that runs on OSX.  There may
+  be some bugs here, and there are a few functions that don't work.
+  It is not as polished as most Mac users expect.
+
+
+- One sort of important change in how parent/children are handled.
+  Previously, you could add a child to a parent and it would stay
+  there until removed, no matter what.  Even if you did this within a
+  Function, and kept the object in a local store which got deleted
+  when the function was done. This would of course give you no way to
+  access it later, so it probably only happened occasionally, for
+  widgets that remained on screen forever.  No more.  Now, you need to
+  pass the variable out of the function or make it a global, because
+  a locally-defined widget will get destroyed when the function ends,
+  and will get removed from the parent automatically.
 
 
 Version 0.10

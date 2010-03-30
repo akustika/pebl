@@ -33,3 +33,10 @@ bool PEnvironment::AddWindow(PWindow * window)
     return true;
 }
  
+
+
+PEnvironment::~PEnvironment()
+{
+
+
+}

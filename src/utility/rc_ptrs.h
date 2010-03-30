@@ -130,6 +130,8 @@ protected:
 
     void release()
     {
+        //        PrintCounts();
+        //        std::cout << ptr << std::endl;
         if (count)
             {
                 (*count)--;

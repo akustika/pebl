@@ -2,5 +2,25 @@ todo:
 
 
 Document PCanvas
+
 Document SetPixel function
-Fix GetInput so you can enter shifted characters like ()
+Update Draw() to describe Draw(widget)
+Add ResetCanvas() function
+
+Make PCanvas so it can be invisible.
+
+Fix GetInput so you can enter shifted characters like () *DONE
+todo:
+  document WaitforMouseClickWithTimout
+
+
+Update tasks that watch for "<UNKNOWN>" as an output from waitforlistkeypresswithtimeout.
+  (TOAV, PCPT, maybe others)
+
+
+Add MakeAttneave, ConvexHull, etc.
+Thickline?
+
+- Add some functions to add noise distributions to things.
+
+Document easyinput, messagebox

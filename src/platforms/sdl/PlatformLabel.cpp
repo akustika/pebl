@@ -59,6 +59,8 @@ PlatformLabel::PlatformLabel(const std::string & text, counted_ptr<PEBLObjectBas
     counted_ptr<PEBLObjectBase> myFont = counted_ptr<PEBLObjectBase>(mFontObject);
     PComplexData *  pcd = new PComplexData(myFont);
     InitializeProperty("FONT",Variant(pcd));
+    delete pcd;
+    pcd=NULL;
     InitializeProperty("WIDTH",Variant(0));
     InitializeProperty("HEIGHT",Variant(0));
 
@@ -80,6 +82,9 @@ PlatformLabel::PlatformLabel(PlatformLabel & label):
 
     counted_ptr<PEBLObjectBase> myFont = counted_ptr<PEBLObjectBase>(mFontObject);
     PComplexData *  pcd = new PComplexData(myFont);
+    delete pcd;
+    pcd=NULL;
+
     InitializeProperty("FONT",Variant(pcd));
     InitializeProperty("WIDTH",Variant(label.GetHeight()));
     InitializeProperty("HEIGHT",Variant(label.GetWidth()));
@@ -91,6 +96,7 @@ PlatformLabel::PlatformLabel(PlatformLabel & label):
 ///Standard Destructor
 PlatformLabel::~PlatformLabel()
 {
+
 }
 
 

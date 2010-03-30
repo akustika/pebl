@@ -81,7 +81,6 @@ public:
     /// with Evaluator::mFunctionMap
     static FunctionMap mFunctionMap;
  
-
     /// The static keyword defines a 'Global' variable map that can be accessed\all
     /// Evaluators. It needs to be initialized somewhere outside the class, however. This
     /// is done in the main program file.
