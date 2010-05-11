@@ -57,7 +57,7 @@ define Start(lPar)
    gSleepEasy <- 1
    Initialize()
 
-   gImnames <- ["pebl.png","frowney-big.png","smiley-big.png"]
+#   gImnames <- ["pebl.png","frowney-big.png","smiley-big.png"]
 
 
   
@@ -437,14 +437,14 @@ define Initialize()
    gColGreen <- MakeColor("darkgreen")
    gColRed   <- MakeColor("red")
  
-   gStimFont         <- MakeFont("VeraMono.ttf", 0, 24,gfg,bg1,1)       
-   gCorrFont         <- MakeFont("VeraMono.ttf", 0, 24,gcolGreen, bg1,1)
-   gIncorrFont       <- MakeFont("VeraMono.ttf", 0, 24,gcolRed,   bg1,1)
+   gStimFont         <- MakeFont(gFontNameMono, 0, 24,gfg,bg1,1)       
+   gCorrFont         <- MakeFont(gFontNameMono, 0, 24,gcolGreen, bg1,1)
+   gIncorrFont       <- MakeFont(gFontNameMono, 0, 24,gcolRed,   bg1,1)
 
-   gInstructionsFont <- MakeFont("Vera.ttf",0,18, gfg,bg,1)  
-   gHeaderFont       <- MakeFont("Vera.ttf", 0,36,gfg,bg,1)       
+   gInstructionsFont <- MakeFont(gFontNameBase,0,18, gfg,bg,1)  
+   gHeaderFont       <- MakeFont(gFontNameBase, 0,36,gfg,bg,1)       
 
-   gGraphFont <- MakeFont("Vera.ttf",0,15, gfg,bg,1)  
+   gGraphFont <- MakeFont(gFontNameBase,0,15, gfg,bg,1)  
  
    ## Make and place the instruction box, then hide it  
    gInstructions <- MakeTextBox("", gInstructionsFont, 600,300)
