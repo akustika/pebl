@@ -59,11 +59,11 @@ define Start(p)
    colors <- [gRed, gGreen, gBlue, gYellow]
 
 
-  gFontBlack        <- MakeFont("VeraMono.ttf", 0, 30, gBlack,gBg,1)       
-  gFontRed          <- MakeFont("VeraMono.ttf", 0, 30, gRed,gbg,1)       
-  gFontGreen        <- MakeFont("VeraMono.ttf", 0, 30, gGreen,gbg,1)       
-  gFontBlue         <- MakeFont("VeraMono.ttf", 0, 30, gBlue,gbg,1)       
-  gFontYellow       <- MakeFont("VeraMono.ttf", 0, 30, gYellow,gbg,1)
+  gFontBlack        <- MakeFont(gPEBLBaseFontMono, 0, 30, gBlack,gBg,1)       
+  gFontRed          <- MakeFont(gPEBLBaseFontMono, 0, 30, gRed,gbg,1)       
+  gFontGreen        <- MakeFont(gPEBLBaseFontMono, 0, 30, gGreen,gbg,1)       
+  gFontBlue         <- MakeFont(gPEBLBaseFontMono, 0, 30, gBlue,gbg,1)       
+  gFontYellow       <- MakeFont(gPEBLBaseFontMono, 0, 30, gYellow,gbg,1)
 
 
 
@@ -760,8 +760,8 @@ define Initialize()
    
 
 
-   gInstructionsFont <- MakeFont("Vera.ttf",0,18, fg,MakeColor("white"),1)  
-   gHeaderFont       <- MakeFont("Vera.ttf", 0,36,fg,gBG,1)       
+   gInstructionsFont <- MakeFont(gPEBLBaseFont,0,18, fg,MakeColor("white"),1)  
+   gHeaderFont       <- MakeFont(gPEBLBaseFont, 0,36,fg,gBG,1)       
  
    ## Make and place the instruction box, then hide it  
    gInstructions <- MakeTextBox("", gInstructionsFont, 600,300)

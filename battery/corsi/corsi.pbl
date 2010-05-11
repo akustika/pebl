@@ -61,8 +61,8 @@ If you are correct, your next list will be one longer; otherwise it will be one 
   Draw()
    WaitForDownClick()
 
-  gFont <- MakeFont("Vera.ttf",1,25,MakeColor("black"),MakeColor("white"),1)
-  gFont2 <- MakeFont("Vera.ttf",0,20,MakeColor("black"),MakeColor("white"),1)
+  gFont <- MakeFont(gPEBLBaseFont,1,25,MakeColor("black"),MakeColor("white"),1)
+  gFont2 <- MakeFont(gPEBLBaseFont,0,20,MakeColor("black"),MakeColor("white"),1)
 
 
   if(gUseCorsiPoints)

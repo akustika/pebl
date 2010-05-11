@@ -31,7 +31,7 @@ define Start(lPar)
   #Initialize basic display objects.
   lBG <- MakeColor("GREY")
   lFG <- MakeColor("black")
-  gFont <- MakeFont("Vera.ttf",0,22,lFG,lBG,1)
+  gFont <- MakeFont(gPEBLBaseFont,0,22,lFG,lBG,1)
   gWin <- MakeWindow("GREY")
   gHomeX <- gVideoWidth/2
   gHomeY <- gVideoHeight/2

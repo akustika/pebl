@@ -227,7 +227,7 @@ define Trial(cond)
      Draw()
      starttime <- GetTime()
      resp <- "<unknown>"
-     while(resp == "<unknown>" or resp == "<ANYKEY>")
+     while(resp != " ")
      {
 
        #Target Present
@@ -241,7 +241,7 @@ define Trial(cond)
        Print("screen time: " + (t2-t1))
        Print(resp)
 
-       if(resp == "<unknown>" or resp == "<ANYKEY>")
+	   if(resp != " ") 
         {
          screensum <- screensum + (t2-t1)
          screenN <- screenN + 1
@@ -268,7 +268,7 @@ define Trial(cond)
 
          ##Disappear the target and show the screen
          #Target absent
-         if(resp == "<unknown>" or resp == "<ANYKEY>")
+   	   if(resp != " ") 
          {
            showSum <- showSum + (t2-t1)
            showN <- showN + 1
@@ -292,7 +292,7 @@ define Trial(cond)
            t2 <- GetTime()
            Print("screen time: " + (t2-t1))
     
-           if(resp == "<unknown>" or resp == "<ANYKEY>") 
+       	   if(resp != " ") 
            {
            screenSum <- screenSum + (t2-t1)
            screenN <- screenN + 1
@@ -305,7 +305,7 @@ define Trial(cond)
            Draw()
            t2 <- GetTime()
            Print("show time: " + (t2-t1))
-           if(resp=="<unknown>" or resp == "<ANYKEY>")
+          if(resp != " ")
             {
              showSum <- showSum + (t2-t1)
              showN <- showN + 1

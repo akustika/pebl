@@ -48,8 +48,8 @@ Press any key to begin"
   inst2 <- "SAME        respond using shift keys      DIFFERENT"
   gFooter <- EasyLabel(inst2,gVideoWidth/2,gVideoHeight-20,gWin,24) 
 
-  gFontcorr <- MakeFont("Vera.ttf",0,40,MakeColor("darkgreen"),MakeColor("grey"),1)
-  gFontinc <-MakeFont("Vera.ttf",0,40,MakeColor("red"),MakeColor("grey"),1)
+  gFontcorr <- MakeFont(gPEBLBaseFont,0,40,MakeColor("darkgreen"),MakeColor("grey"),1)
+  gFontinc <-MakeFont(gPEBLBaseFont,0,40,MakeColor("red"),MakeColor("grey"),1)
   gFeedback <- MakeLabel("",gFontcorr)
   AddObject(gFeedback,gWin)
   Move(gFeedback,gVideoWidth/2,gVideoHeight/2)

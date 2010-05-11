@@ -6,7 +6,7 @@ define Start(lPar)
   #Initialize Font and colors
   fg <- MakeColor("GREY")
   bg <- MakeColor("RED")
-  gFont <- MakeFont("Vera.ttf",0,22,fg,bg,1)
+  gFont <- MakeFont(gPEBLBaseFont,0,22,fg,bg,1)
   gFixation <- MakeLabel("+",gFont)
   AddObject(gFixation,gWindow)		
   Move(gFixation, 300,200)

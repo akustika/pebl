@@ -147,7 +147,7 @@ define Start(p)
     c1 <- PlotDisksAnimate(config,0,450,gDisks,10)
     c2 <- PlotDisksAnimate(config1,0,130,gDisks2,10)
     Draw()
-    WritePNG("tol-screen.png",gWin)
+
     startTime <- GetTime()
     lasttime <- GetTime()
     time <- GetTime()
@@ -219,8 +219,8 @@ define Init()
   gWin <- MakeWindow("black")
  
   gSubNum <- GetSubNum(gWin)
-  gFont <- MakeFont("Vera.ttf",0,16,MakeColor("white"),MakeColor("black"),1)
-  gFont2 <- MakeFont("Vera.ttf",0,26,MakeColor("white"),MakeColor("black"),1)
+  gFont <- MakeFont(gPEBLBaseFont,0,16,MakeColor("white"),MakeColor("black"),1)
+  gFont2 <- MakeFont(gPEBLBaseFont,0,26,MakeColor("white"),MakeColor("black"),1)
 }
 
 define InitPoles()
@@ -256,11 +256,11 @@ define InitPoles()
      AddObject(hand,gWin)
      Move(hand,330,225)
     }
-   rect <- Rectangle(330,80,380,140,MakeColor("grey20"),1)
-   AddObject(rect,gWin)
+  gRect <- Rectangle(330,80,380,140,MakeColor("grey20"),1)
+  AddObject(gRect,gWin)
 
 
-   footerfont <-   MakeFont("Vera.ttf",0,22,MakeColor("grey"),MakeColor("black"),1)
+   footerfont <-   MakeFont(gPEBLBaseFont,0,22,MakeColor("grey"),MakeColor("black"),1)
 
    gFooter <- MakeLabel("Click on pile to pick up and drop disk",footerfont)
    AddObject(gFooter,gWin)

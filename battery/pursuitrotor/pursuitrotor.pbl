@@ -199,10 +199,10 @@ define Init()
   radiusInches <- (10.04-1.44)/2  #radius in inches
   gRadius <- radiusInches * gScale
 
-  back1 <- Circle(gHomeX,gHomeY,gRadius+10,MakeColor("grey40"),1)
-  AddObject(back1,gWin)  
-  back2 <- Circle(gHomeX,gHomeY,gRadius-10,MakeColor("grey"),1)
-  AddObject(back2,gWin)  
+  gback1 <- Circle(gHomeX,gHomeY,gRadius+10,MakeColor("grey40"),1)
+  AddObject(gback1,gWin)  
+  gback2 <- Circle(gHomeX,gHomeY,gRadius-10,MakeColor("grey"),1)
+  AddObject(gback2,gWin)  
   # gTargSize <- .75 * gScale/2
 
   ##How many revolutions per second

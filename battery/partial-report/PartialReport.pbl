@@ -196,8 +196,8 @@ define Initialize()
    bg2 <- MakeColor("white")
    
 
-   gInstructionsFont <- MakeFont("Vera.ttf",0,18, gFG,bg2,1)  
-   gStimFont         <- MakeFont("VeraMono.ttf", 0,24,gFG,bg,1)       
+   gInstructionsFont <- MakeFont(gPEBLBaseFont,0,18, gFG,bg2,1)  
+   gStimFont         <- MakeFont(gPEBLBaseFontMono, 0,24,gFG,bg,1)       
    
    gFooter <- MakeLabel("Respond using D F J K",gStimFont)
    AddObject(gFooter,gWin)
@@ -479,7 +479,7 @@ define GraphStats(stats)
   ##Graph the data 
   comp <-  Append(comp, GraphXYLine(datX, datY, iX, iY,scaleX,scaleY,MakeColor("darkgreen"),gWin,2))
    
-  font <- MakeFont("VeraMono.ttf", 0,14,gFG,MakeColor("white"),1)
+  font <- MakeFont(gPEBLBaseFontMono, 0,14,gFG,MakeColor("white"),1)
 
   ##Add the x labels
   xlabs <-[0,250,500,750,1000,1250]

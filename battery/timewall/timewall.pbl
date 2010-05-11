@@ -67,7 +67,7 @@ Press any key to begin."
   Draw()
 
 
-  FilePrint(gFileOut, "Subnum targtime resptime acc shortlong")
+  FilePrint(gFileOut, "Subnum trial targtime resptime acc shortlong")
   trial <- 1
   while(trial < numtrials)
    {
@@ -102,7 +102,7 @@ Press any key to begin."
   Show(gFeedback)
   Draw()
 
-  FilePrint(gFileOut,gSubNum + " " + targ + " " + resp + " " + acc +
+  FilePrint(gFileOut,gSubNum + " " + trial +" " + targ + " " + resp + " " + acc +
                       " " + shortlong)
   WaitForAnyKeyPress()
   Hide(gFeedback)

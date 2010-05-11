@@ -17,8 +17,8 @@ define Start(p)
 
   gSleepEasy <- 1
   gWin <- MakeWindow()
-  gstimFont <- MakeFont("VeraMono.ttf",0,24,MakeColor("black"),MakeColor("grey"),1)
-  gProbeFont <-MakeFont("VeraMono.ttf",0,80,MakeColor("black"),MakeColor("grey"),1)
+  gstimFont <- MakeFont(gPEBLBaseFontMono,0,24,MakeColor("black"),MakeColor("grey"),1)
+  gProbeFont <-MakeFont(gPEBLBaseFontMono,0,80,MakeColor("black"),MakeColor("grey"),1)
 
   gfileout <- FileOpenWrite("letterdigit-"+gSubNum+".txt")
 

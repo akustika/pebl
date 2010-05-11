@@ -228,8 +228,8 @@ define Initialize()
    bg2 <- MakeColor("white")
    
 
-   gInstructionsFont <- MakeFont("Vera.ttf",0,18, fg,bg2,1)  
-   gStimFont         <- MakeFont("Vera.ttf", 0,48,fg,bg,1)       
+   gInstructionsFont <- MakeFont(gPEBLBaseFont,0,18, fg,bg2,1)  
+   gStimFont         <- MakeFont(gPEBLBaseFont, 0,48,fg,bg,1)       
  
    ## Make and place the instruction box, then hide it  
    gInstructions <- MakeTextBox("", gInstructionsFont, 600,300)

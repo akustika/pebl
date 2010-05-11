@@ -211,11 +211,11 @@ define Init()
   gDoneSize <- 25
   gEntrySize <- 40
 
-  headfont <-  MakeFont("FreeSans.ttf",0,gQSize,MakeColor("NavyBlue"),MakeColor("white"),1)
-  gQfont <- MakeFont("FreeSans.ttf",0,25,MakeColor("NavyBlue"),MakeColor("grey80"),1)
-  gOptfont <-	MakeFont("FreeSans.ttf",0,40,MakeColor("Navyblue"),MakeColor("grey"),1)
-  gOptfontsm <-MakeFont("FreeSans.ttf",0,22,MakeColor("Navyblue"),MakeColor("grey"),1)
-  gDonefont <- MakeFont("VeraMono.ttf",0,gDoneSize,MakeColor("black"),MakeColor("grey"),1)
+  headfont <-  MakeFont(gPEBLBaseFont,0,gQSize,MakeColor("NavyBlue"),MakeColor("white"),1)
+  gQfont <- MakeFont(PEBLBaseFont,0,25,MakeColor("NavyBlue"),MakeColor("grey80"),1)
+  gOptfont <-	MakeFont(gPEBLBaseFont,0,40,MakeColor("Navyblue"),MakeColor("grey"),1)
+  gOptfontsm <-MakeFont(gPEBLBaseFont,0,22,MakeColor("Navyblue"),MakeColor("grey"),1)
+  gDonefont <- MakeFont(gPEBLBaseFontMono,0,gDoneSize,MakeColor("black"),MakeColor("grey"),1)
 
 
   ##The topmost pixel; where the header stops.

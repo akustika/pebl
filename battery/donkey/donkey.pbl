@@ -236,13 +236,13 @@ define Initialize()
    gColGreen <- MakeColor("darkgreen")
    gColRed   <- MakeColor("red")
  
-   gStimFont         <- MakeFont("VeraMono.ttf", 0, 16,fg,bg,1)       
+   gStimFont         <- MakeFont(gPEBLBaseFontMono, 0, 16,fg,bg,1)       
    gGraphFont       <- gStimFont
-   gCorrFont         <- MakeFont("VeraMono.ttf", 0, 24,gColGreen, bg,1)
-   gIncorrFont       <- MakeFont("VeraMono.ttf", 0, 24,gColRed,   bg,1)
+   gCorrFont         <- MakeFont(gPEBLBaseFontMono, 0, 24,gColGreen, bg,1)
+   gIncorrFont       <- MakeFont(gPEBLBaseFontMono, 0, 24,gColRed,   bg,1)
 
-   gInstructionsFont <- MakeFont("Vera.ttf",0,18, fg,bg2,1)  
-   gHeaderFont       <- MakeFont("Vera.ttf", 0,18,fg,bg,1)       
+   gInstructionsFont <- MakeFont(gPEBLBaseFont,0,18, fg,bg2,1)  
+   gHeaderFont       <- MakeFont(gPEBLBaseFont, 0,18,fg,bg,1)       
  
 
    ## Make and hide a header label

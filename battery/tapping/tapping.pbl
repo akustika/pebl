@@ -43,7 +43,7 @@ define Start(p)
   gSubNum <- GetSubNum(gWin)
   gFileOut <-FileOpenAppend("tapping-"+gSubNum+".txt")
    FilePrint(gFileOut,"sub trial domhand hand tap sumtime trialtime rt")
-  font <-  MakeFont("VeraMono.ttf",0,28,MakeColor("white"),MakeColor("black"),1)
+  font <-  MakeFont(gPEBLBaseFontMono,0,28,MakeColor("white"),MakeColor("black"),1)
   
   inst <- "In this task, you are asked to tap the keyboard as quickly as possible for a maximum of "+ maxtrials +" trials of " +
   trialtime/1000 + " seconds.  Use  the "+keylabel+" key.  Begin tapping when you see 'GO'."
