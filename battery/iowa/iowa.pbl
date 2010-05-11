@@ -360,25 +360,24 @@ define Start(lPar)
       earnings <- MakeEarningsGraph(gTotal)
       Draw()
  
-Wait(400)
+#Wait(400)
+#imname <- First(SampleN(gImNames,1))
+#backing <- Rectangle(gVideoWidth/2,gVideoHeight/2,   gVideoWidth,gVideoHeight,MakeColor("white"),1)
+#img <- MakeImage(imname)
 
-imname <- First(SampleN(gImNames,1))
-backing <- Rectangle(gVideoWidth/2,gVideoHeight/2,   gVideoWidth,gVideoHeight,MakeColor("white"),1)
-img <- MakeImage(imname)
-
-AddObject(backing,gWin)
-AddObject(img,gWin)
-Move(img,gVideoWidth/2,gVideoHeight/2)
-Draw()
-Wait(1000)
-RemoveObject(img,gWin)
-RemoveObject(backing,gWin)
-Draw()
+#AddObject(backing,gWin)
+#AddObject(img,gWin)
+#Move(img,gVideoWidth/2,gVideoHeight/2)
+#Draw()
+#Wait(1000)
+#RemoveObject(img,gWin)
+#RemoveObject(backing,gWin)
+#Draw()
 
 
       ## Print out data to the file
       FilePrint_(gFileOut, gSubNum + " " + trialnum + " " + resp + " " + reward + " " + penalty)
-      FilePrint(gFileOut, " " + net + " " + gTotal + " " + time1 + " " +  rt + " " + imname)
+      FilePrint(gFileOut, " " + net + " " + gTotal + " " + time1 + " " +  rt )
 
       Draw()
       trialnum <- trialnum + 1
