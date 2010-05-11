@@ -211,11 +211,11 @@ define Init()
   gDoneSize <- 25
   gEntrySize <- 40
 
-  headfont <-  MakeFont(gPEBLBaseFont,0,gQSize,MakeColor("NavyBlue"),MakeColor("white"),1)
-  gQfont <- MakeFont(PEBLBaseFont,0,25,MakeColor("NavyBlue"),MakeColor("grey80"),1)
-  gOptfont <-	MakeFont(gPEBLBaseFont,0,40,MakeColor("Navyblue"),MakeColor("grey"),1)
-  gOptfontsm <-MakeFont(gPEBLBaseFont,0,22,MakeColor("Navyblue"),MakeColor("grey"),1)
-  gDonefont <- MakeFont(gPEBLBaseFontMono,0,gDoneSize,MakeColor("black"),MakeColor("grey"),1)
+  headfont <-  MakeFont(gPEBLBaseFont,0,gQSize,MakeColor("NavyBlue"),MakeColor("white"),0)
+  gQfont <- MakeFont(gPEBLBaseFont,0,25,MakeColor("NavyBlue"),MakeColor("grey80"),0)
+  gOptfont <-	MakeFont(gPEBLBaseFont,0,40,MakeColor("Navyblue"),MakeColor("grey"),0)
+  gOptfontsm <-MakeFont(gPEBLBaseFont,0,22,MakeColor("Navyblue"),MakeColor("grey"),0)
+  gDonefont <- MakeFont(gPEBLBaseFontMono,0,gDoneSize,MakeColor("black"),MakeColor("grey"),0)
 
 
   ##The topmost pixel; where the header stops.
@@ -250,7 +250,7 @@ define Init()
 define Instructions(text)
 {
 
-  header <- EasyLabel("Read Instructions and click DONE when complete.",gHomeX,gTop+20,gWin,gInstSize)
+  header <- EasyLabel("Read Instructions and click NEXT when complete.",gHomeX,gTop+20,gWin,gInstSize)
 
   height <- gBottom - gTop - 50
   ques <- EasyTextBox(text,100,gTop+50,gWin,gInstSize,gVideoWidth-200,height)
@@ -267,7 +267,7 @@ define Instructions(text)
  
   back <- Rectangle(gHomeX+80,gBottom+40,150,40,MakeColor("grey60"),0)
   AddObject(back,gWin)
-  done <- MakeLabel("DONE",gdonefont)
+  done <- MakeLabel("NEXT",gdonefont)
   AddObject(done,gWin)
   Move(done,gHomeX+80,gBottom+40)
 
@@ -322,13 +322,13 @@ define Image(text,image)
   Move(img,imgwidth/2+5,gTop+imgheight/2+5)
 
   col2center <- ((imgwidth+10)+gVideoWidth)/2
-  header <- EasyLabel("Click DONE to move on.",col2center,gTop+20,gWin,gInstSize)
+  header <- EasyLabel("Click NEXT to move on.",col2center,gTop+20,gWin,gInstSize)
   ques <- EasyTextBox(text,imgWidth+10,gTop+40,gWin,20,(gVideoWidth-imgwidth-15),gBottom - gTop-50)
 
 
   back1 <- Rectangle(col2center+80,gBottom+20,120,40,MakeColor("grey60"),0)
   AddObject(back1,gWin)
-  done <- MakeLabel("DONE",gdonefont)
+  done <- MakeLabel("NEXT",gdonefont)
   AddObject(done,gWin)
   Move(done,col2center+80,gBottom+20)
 
@@ -401,7 +401,7 @@ define LongAnswer(text)
 
   back1 <- Rectangle(gHomeX,gTop+265,140,40,MakeColor("grey60"),0)
   AddObject(back1,gWin)
-  done <- MakeLabel("DONE",gdonefont)
+  done <- MakeLabel("NEXT",gdonefont)
   AddObject(done,gWin)
   Move(done,gHomeX,gTop+265)
 
@@ -425,7 +425,7 @@ define LongAnswer(text)
 
      resp <- GetInput(tb,"<return>")
      time2 <- GetTime()
-     header.text  <- "Click DONE to confirm answer, or EDIT to change answer"
+     header.text  <- "Click NEXT to confirm answer, or EDIT to change answer"
 
      Show(prev); Show(backprev)
      Show(done); Show(back1)
@@ -587,7 +587,7 @@ define Multicheck(text,opts)
   back1 <- Rectangle(gHomeX+100,top+optnum*skip,150,40,MakeColor("grey60"),0)
   AddObject(back1,gWin)
 
-  done <- MakeLabel("DONE",gdonefont)
+  done <- MakeLabel("NEXT",gdonefont)
   AddObject(done,gWin)
   Move(done,gHomeX+100,top+optnum*skip)
 
