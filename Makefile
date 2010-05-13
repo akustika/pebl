@@ -38,13 +38,16 @@ CXX = g++
 DEBUGFLAGS = -lefence -DPEBL_DEBUG -g
 
 CFLAGS =   -O3 -std=c99 -DPREFIX=$(PREFIX)
+
+
 CXXFLAGS =  -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  -DENABLE_BINRELOC -DPREFIX=$(PREFIX)  -g 
+
 
 
 SDL_CONFIG = /usr/bin/sdl-config
 
 SDL_FLAGS = -I/usr/include/SDL -D_REENTRANT
-SDL_LIBS = -L/usr/lib -Wl,-rpath,/usr/local/lib -lSDL -lpthread
+SDL_LIBS = -L/usr/lib -Wl,-rpath,/usr/local/lib -lSDL -lpthread 
 
 
 #Comment/uncomment below on OSX
@@ -289,7 +292,7 @@ DIRS = \
 main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
 
 	$(CXX) $(CXXFLAGS)   -o $(BIN_DIR)/pebl -I$(PREFIX)include/SDL -D_REENTRANT \
-	   -L$(PREFIX)/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  -lSDL_net \
+	   -L$(PREFIX)/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  -lSDL_net -lpng \
        $(OSX_FLAGS) $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, \
        $(PEBLMAIN_OBJ))
 
