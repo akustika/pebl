@@ -37,9 +37,9 @@ define GetNIMHDemographics(code,window, file)
         foreground <- MakeColor("black")
         background <- MakeColor("grey")
         white      <- MakeColor("white")
-        fontBig   <- MakeFont("Vera.ttf", 0, 22, foreground,  background,1)
-        fontSmall <- MakeFont("Vera.ttf", 0, 15, foreground,  background, 1)
-        fontTB    <- MakeFont("Vera.ttf", 0, 30, foreground,  white, 1)  
+        fontBig   <- MakeFont(gPEBLBaseFont, 0, 22, foreground,  background,1)
+        fontSmall <- MakeFont(gPEBLBaseFont, 0, 15, foreground,  background, 1)
+        fontTB    <- MakeFont(gPEBLBaseFont, 0, 30, foreground,  white, 1)  
 
         #####################################################
         ##First, ask about gender.
@@ -486,7 +486,7 @@ define EasyLabel(text,x,y,parent,fontsize)
       fgcol <- MakeColor("black")
     }
  
-  font <-  MakeFont("Vera.ttf",0,fontsize,fgcol,bgcol,1)
+  font <-  MakeFont(gPEBLBaseFont,0,fontsize,fgcol,bgcol,0)
   lab <- MakeLabel(text,font)
   AddObject(lab,parent)
   Move(lab,x,y)
@@ -505,7 +505,7 @@ define EasyTextBox(text,x,y,win,fontsize,width,height)
 #    SignalFatalError("EasyTextbox[text,x,y,window,fontsize] must be added to a window, not [" + parent+"]")
 #  }
 
-  font <-  MakeFont("Vera.ttf",0,fontsize,MakeColor("black"),MakeColor("white"),1)
+  font <-  MakeFont(gPEBLBaseFont,0,fontsize,MakeColor("black"),MakeColor("white"),1)
   tb <- MakeTextBox(text,font,width,height)
   AddObject(tb,win)
   Move(tb,x,y)
@@ -524,9 +524,10 @@ define GetSubNum(win)
     SignalFatalError("GetSubNum(win) needs a window to be specified, not [" + win + "]")
   }
 
-   bg    <- Rectangle(gVideoWidth/2,90,450,100,MakeColor("grey"),1)
+   bg    <- MakeCanvas(450,100,MakeColor("grey20"))
+   Move(bg,gVideoWidth/2,90)
    AddObject(bg,win)
-   query <- EasyLabel("Enter Participant Identifier",gVideoWidth/2,80,win,20)
+   query <- EasyLabel("Enter Participant Identifier",225,20,bg,20)
 
 
    box <- EasyTextBox("",gVideoWidth/2-50,100, win,20,160,25)

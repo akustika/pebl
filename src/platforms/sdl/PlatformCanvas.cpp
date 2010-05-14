@@ -133,7 +133,7 @@ bool  PlatformCanvas::Reset()
 
 
     //Make a surface of the prescribed size.
-    mSurface = SDL_CreateRGBSurface(SDL_SWSURFACE, mWidth, mHeight, 32,
+    mSurface = SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA, mWidth, mHeight, 32,
                                     rmask, gmask, bmask, amask);
     if(!mSurface)  PError::SignalFatalError("Surface not created in Canvas::Reset.");
     
@@ -145,7 +145,7 @@ bool  PlatformCanvas::Reset()
                                              mBackgroundColor.GetBlue(),
                                              mBackgroundColor.GetAlpha()));
     
-
+    //SDL_SetAlpha(mSurface,0,mBackgroundColor.GetAlpha());
     mReset = false;  //Reset the reset button.
 
     //If mSurface is null, then rendering failed.

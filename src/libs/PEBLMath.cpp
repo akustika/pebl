@@ -64,7 +64,6 @@ Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
     //Make a results list
     PList * resultslist = new PList();
     //Declare a temporary argument list.
-
    
     //Now, apply 
 
@@ -74,7 +73,6 @@ Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
     Variant tmpVariant;
     PComplexData * tmpPCD;
     
-    cout<< "SIZE:"  << plist->Length() << endl;
 
     //    std::list<Variant>::iterator p = plist->Begin();    
     while(!plist->IsEmpty())
@@ -89,19 +87,18 @@ Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
             delete tmpPCD;
             tmpPCD=NULL;
 
-            std::cout << "E\n";
-            std::cout<<"<"<<*arglist <<">\n";
+
             Variant result = funcname(tmpVariant);
-            cout << result << endl;
+
             resultslist->PushBack(result);
-            std::cout << "F\n";
+
             arglist->PopFront();
             delete arglist;
             arglist = NULL;
                 
             plist->PopFront();
         }
-//    std::cout << "G\n";
+
     //Now, resultslist is a PList.  Put it into a PCD.
     counted_ptr<PEBLObjectBase> tmp = counted_ptr<PEBLObjectBase>(resultslist);
     PComplexData * pcd = new PComplexData(tmp);

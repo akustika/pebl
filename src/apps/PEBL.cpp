@@ -386,6 +386,13 @@ int PEBLInterpret( int argc, char *argv[] )
     Evaluator::gGlobalVariableMap.AddVariable("gQuote",Variant("\""));
 
 
+    //Add a the default 'base font' names
+    //gPEBLBaseFont defaults to a sans serif font
+    
+    Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFont",Variant("DejaVuSans.ttf"));
+    Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontMono",Variant("DejaVuSansMono.ttf"));
+    Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontSerif",Variant("DejaVuSerif.ttf"));
+
     //Now, everything should be F-I-N-E fine.
     head = myLoader->GetMainPEBLFunction();
 

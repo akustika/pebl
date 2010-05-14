@@ -1,7 +1,7 @@
 define Start(parameter)
 {
 
-    numtrials <- 1000 #How many time trials
+    numtrials <- 100 #How many time trials
     minwait   <- 1    #what is the min wait in ms
     maxwait   <- 200 #what is the max wait is ms
 	#wait until initialization output catches up.

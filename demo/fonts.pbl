@@ -37,7 +37,7 @@ a b c d e f g h i j k l m n o p q r s t u v w x y z
      loop(f, fontnames)
      {
           label.text <- f
-          testFont <- MakeFont(f,0,22,fg,bg2,1)
+          testFont <- MakeFont(f,0,22,fg,bg2,0)
 	      SetFont(box, testFont)
 #          x <- box.text
 #          SetText(box,x)

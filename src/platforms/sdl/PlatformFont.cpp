@@ -154,8 +154,17 @@ SDL_Surface * PlatformFont::RenderText(const std::string & text)
         }
     else
         {
-            tmpSurface =  TTF_RenderUTF8_Solid(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor);
+            tmpSurface = TTF_RenderUTF8_Blended(mTTF_Font,toBeRendered.c_str(), mSDL_FGColor);
+            //tmpSurface =  TTF_RenderUTF8_Solid(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor);
         }
+
+    //   
+    //TTF_RenderText_Blended(
+    //TTF_Font *font, // This is the TTF_Font to use.
+    //char *cstr, // This is the text to render.
+    //                     SDL_Color &clr, // This is the color to use.
+    //                     );
+
 
 
 

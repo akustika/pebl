@@ -40,10 +40,15 @@ overlapping targets. See poetry demo for example.
   on numbers and other special characters.  This only help US
   keyboards probably.
 
--Fixed a nasty memory leak that caused the parameter passed to any
-function to not be cleaned up when the function exited.  This could
-lead to memory growing out-of-control if the experiment uses a control
-loop to repeatedly call a function.
+-Fixed a number of insidious and nasty memory leaks. These caused the
+ parameter passed to any function to not be cleaned up when the
+ function exited. Also, most graphical objects were never cleaned up
+ when PEBL finished using them.  For short experiments, this probably
+ made little difference, but it could lead to memory growing out-of-control if
+ the experiment uses a control loop to repeatedly call a function, or
+ for experiments that take a long time. Currently, PEBL still leaks
+ memory related to fonts, which I'll be working on fixing, but it is
+ pretty small compared to what was happening previously.
 
 - Added a canvas object to allow an easy resettable drawing object.
 
@@ -51,12 +56,12 @@ loop to repeatedly call a function.
   widget (labels, imagebox, canvas, textbox, but not windows or
   shapes)
 
-- Draw() function allows 'imprinting' images on other widgets.
+- Note that Draw() function allows 'imprinting' images on other widgets.
 
-- Once again, I am distributing a version that runs on OSX.  There may
+- After several versions without an OSX release, I am once again
+  distributing a version that runs on OSX.  There may
   be some bugs here, and there are a few functions that don't work.
   It is not as polished as most Mac users expect.
-
 
 - One sort of important change in how parent/children are handled.
   Previously, you could add a child to a parent and it would stay
@@ -68,6 +73,24 @@ loop to repeatedly call a function.
   pass the variable out of the function or make it a global, because
   a locally-defined widget will get destroyed when the function ends,
   and will get removed from the parent automatically.
+
+- The last parameter of MakeFont() was previously not well documented
+  or completely consistent.  Using 1 gives the font (and ultimately,
+  the label) a solid background; using 0 gives it a clear background,
+  and so ignored bgcolor.  Previously, using 1 did the same thing, but
+  rendered the text without smoothing so it could look blocky.  I've
+  changed this so it renders smoothly in both cases.  This should not
+  impact textboxes, because the background is still in effect.  It
+  will impact EasyLabel, which now renders transparently, rather than
+  in a color matching the background.
+
+- added gPEBLBaseFont, for easier internationalization.
+- Added three new DEJAVU fonts, which are now used by default in most
+  experiments.  This will have enable easier internationalization,
+  because DEJAVU will work for a wider variety of scripts
+  out-of-the-box. (need to document this)
+
+
 
 
 Version 0.10

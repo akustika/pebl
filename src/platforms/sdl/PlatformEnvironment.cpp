@@ -69,7 +69,7 @@ PlatformEnvironment::~PlatformEnvironment()
 {
 
     mWindows.clear();
-    //SDL_Quit();
+    SDL_Quit();
 }
 
 // Inheritable function that is called by friend method << operator of PComplexData

@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformLabel.cpp
 //    Purpose:    Contains SDL-specific visual representation of a word
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //

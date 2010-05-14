@@ -3,7 +3,7 @@
 //    Name:       libs/PEBLStream.cpp
 //    Purpose:    Built-in stream functions for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -89,7 +89,10 @@ Variant PEBLStream::FileOpenRead(Variant v)
     ///v1 contains the name of a file to open.
     counted_ptr<PEBLObjectBase> mystream = counted_ptr<PEBLObjectBase>(new PStream(v1,sdRead, stASCII));
     PComplexData * pcd = new PComplexData(mystream);
-    return Variant(pcd);
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
 }
 
 ///This opens a filestream for writing, replacing current file
@@ -102,7 +105,11 @@ Variant PEBLStream::FileOpenWrite(Variant v)
     ///v1 contains the name of a file to open.      
     counted_ptr<PEBLObjectBase> mystream = counted_ptr<PEBLObjectBase>(new PStream(v1,sdWrite, stASCII));
     PComplexData * pcd = new PComplexData(mystream);
-    return Variant(pcd);
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
+
 }
 
 ///This opens a filestream for writing, appending to end of file.
@@ -115,7 +122,12 @@ Variant PEBLStream::FileOpenAppend(Variant v)
     ///v1 contains the name of a file to open.    
     counted_ptr<PEBLObjectBase> mystream = counted_ptr<PEBLObjectBase>(new PStream(v1,sdAppend, stASCII));
     PComplexData * pcd = new PComplexData(mystream);
-    return Variant(pcd);
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
+
+
 }
 
 ///This Closes a filestream
@@ -263,7 +275,10 @@ Variant PEBLStream::FileReadList(Variant v)
 
     counted_ptr<PEBLObjectBase>  tmp2 = counted_ptr<PEBLObjectBase>(returnlist);
     PComplexData * pcd = new PComplexData(tmp2);
-    return Variant(pcd);
+    Variant tmp3 = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp3;
 }
     
 
@@ -330,7 +345,11 @@ Variant PEBLStream::FileReadTable(Variant v)
     delete myStream;
     counted_ptr<PEBLObjectBase> tmp2 =  counted_ptr<PEBLObjectBase>(returnlist);
     PComplexData * pcd = new PComplexData(tmp2);
-    return Variant(pcd);    
+    Variant tmp3 = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp3;
+
 }
 
 
@@ -429,8 +448,10 @@ Variant PEBLStream::ConnectToIP(Variant v)
     mynet->Open();
 
     PComplexData * pcd = new PComplexData(tmp2);
-    return Variant(pcd);
-
+    Variant tmp3 = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp3;
 }
 
 Variant PEBLStream::ConnectToHost(Variant v)
@@ -455,7 +476,12 @@ Variant PEBLStream::ConnectToHost(Variant v)
     mynet->Open();
 
     PComplexData * pcd = new PComplexData(tmp2);
-    return Variant(pcd);
+    Variant tmp3 = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp3;
+
+
 
 }
 
@@ -478,8 +504,11 @@ Variant PEBLStream::WaitForNetworkConnection(Variant v)
     mynet->Accept();
 
     PComplexData * pcd = new PComplexData(tmp2);
-    return Variant(pcd);
-  
+    Variant tmp3 = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp3;
+
 }
 
 Variant PEBLStream::CloseNetworkConnection(Variant v)

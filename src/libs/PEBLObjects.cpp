@@ -357,8 +357,8 @@ Variant PEBLObjects::MakeFont(Variant v)
 
 
     Variant tmp = Variant(pcd);
-    //delete pcd;  without deleting here, fonts will leak memory
-    //pcd=NULL;
+    //delete pcd;  //without deleting here, fonts will leak memory
+    //pcd=NULL;    //But deleting causes a segfault I haven't figured out.
     return tmp;
 
 }
@@ -590,6 +590,7 @@ Variant PEBLObjects::PrintProperties(Variant v)
 
     return Variant(true);
 }
+
 Variant PEBLObjects::Show(Variant v)
 {
 
@@ -728,7 +729,10 @@ Variant PEBLObjects::GetSize(Variant v)
     
     counted_ptr<PEBLObjectBase> newlist2 = counted_ptr<PEBLObjectBase>(newlist);
     PComplexData *   pcd = new PComplexData(newlist2); 
-    return Variant(pcd);
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
 }
 
 
@@ -749,8 +753,12 @@ Variant PEBLObjects::LoadSound(Variant v)
     
     counted_ptr<PEBLObjectBase> audio2 = counted_ptr<PEBLObjectBase>(myAudio);
     PComplexData *  pcd = new PComplexData(audio2);
-    return Variant(pcd);        
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
 }
+
 
 
 
@@ -854,9 +862,11 @@ Variant PEBLObjects::Line(Variant v)
 
     counted_ptr<PEBLObjectBase> myLine = counted_ptr<PEBLObjectBase>(new PlatformLine(x,y,dx,dy,color));
     PComplexData *  pcd = new PComplexData(myLine);
-    return Variant(pcd);
-
-}
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
+ }
 
 
 
@@ -889,7 +899,11 @@ Variant PEBLObjects::Rectangle(Variant v)
 
     counted_ptr<PEBLObjectBase> myRect = counted_ptr<PEBLObjectBase>(new PlatformRectangle(x,y,dx,dy,color,filled));
     PComplexData *  pcd = new PComplexData(myRect);
-    return Variant(pcd);
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
+
 
 }
 
@@ -922,8 +936,10 @@ Variant PEBLObjects::Square(Variant v)
 
     counted_ptr<PEBLObjectBase> mySquare = counted_ptr<PEBLObjectBase>(new PlatformSquare(x,y,size,color,filled));
     PComplexData *  pcd = new PComplexData(mySquare);
-    return Variant(pcd);
-
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
 }
 
 
@@ -956,7 +972,11 @@ Variant PEBLObjects::Ellipse(Variant v)
 
     counted_ptr<PEBLObjectBase> myEllipse = counted_ptr<PEBLObjectBase>(new PlatformEllipse(x,y,rx,ry,color,filled));
     PComplexData *  pcd = new PComplexData(myEllipse);
-    return Variant(pcd);
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
+
 
 }
 
@@ -990,8 +1010,11 @@ Variant PEBLObjects::Circle(Variant v)
 
     counted_ptr<PEBLObjectBase> myCircle = counted_ptr<PEBLObjectBase>(new PlatformCircle(x,y,r,color,filled));
     PComplexData *  pcd = new PComplexData(myCircle);
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
 
-    return Variant(pcd);
 }
 
 
@@ -1024,8 +1047,11 @@ Variant PEBLObjects::Polygon(Variant v)
 
     counted_ptr<PEBLObjectBase> myPolygon = counted_ptr<PEBLObjectBase>(new PlatformPolygon(x,y,xpoints,ypoints,color,filled));
     PComplexData *  pcd = new PComplexData(myPolygon);
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
 
-    return Variant(pcd);
 }
 
 
@@ -1061,7 +1087,12 @@ Variant PEBLObjects::Bezier(Variant v)
     counted_ptr<PEBLObjectBase> myBezier = counted_ptr<PEBLObjectBase>(new PlatformBezier(x,y,xpoints,ypoints,steps,color));
     PComplexData *  pcd = new PComplexData(myBezier);
 
-    return Variant(pcd);
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
+
+
 }
 
 
