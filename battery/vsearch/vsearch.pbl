@@ -1,0 +1,316 @@
+define Start(p)
+{
+  gWin <- MakeWindow("black")
+  gSleepEasy <- 1
+  gHomeX <- gVideoWidth/2
+  gHomeY <- gVideoHeight/2
+
+  gDisplayBoxSizeX <- 600  ##400 pixels/side,centered
+  gDisplayBoxSizeY <- 400  ##400 pixels/side,centered
+
+
+  MessageBox("You are about to take part in a study where you see a screen with many letters on it, and are searching for a particular target.  At the start of each trial, you will be shown the target.  Then, a screen will appear, and you will need to search for the target.  On some trials, the target will be present; on other trials it will be absent.  When you find the target or determine that it is absent, click the mouse button.  Following the mouse click, At this point, the targets will all be replaced by boxes so that you can no longer see what they were.  When this is done, click on the location of the target or the 'None' button.",gWin)
+
+   arraySize <- 30
+   targs <- ["Q"]
+   foils <- RepeatList(["U","D","G","C","O"],6)
+
+
+   targ1 <- ["T"]
+   targ2 <- ["Q"] 
+   targ3 <- []
+   foils <- RepeatList(["U","D","G","C","O"],6)
+
+   targcols <- ["white","green"]
+ 
+
+   SearchTrial(targs,foils,MakeColor("white"),MakeColor("white"))
+   SearchTrial(targs,foils,MakeColor("blue"),MakeColor("green"))
+   SearchTrial(targs,foils,MakeColor("white"),MakeColor("white"))
+   SearchTrial(targs,foils,MakeColor("blue"),MakeColor("green"))
+   SearchTrial(targs,foils,MakeColor("white"),MakeColor("white"))
+   SearchTrial(targs,foils,MakeColor("blue"),MakeColor("green"))
+   SearchTrial(targs,foils,MakeColor("white"),MakeColor("white"))
+   SearchTrial(targs,foils,MakeColor("blue"),MakeColor("green"))
+ 
+}
+
+##  This runs a single search trial. 
+##  targchars is a list of 'target' characters
+##  foilchars is a list of 'foil' characters.
+##  targcol and foilcol specify the colors of these.
+##  if absentoption == 1, there will be a 'NONE' button provided
+
+define SearchTrial(targChars, foilChars,targcol,foilcol)
+{
+
+  ShowCursor(0)  #Get rid of the cursor
+
+  ##Some startup stuff
+  fontsize <- 30
+  targFont <- MakeFont(gPEBLBaseFont,0,fontsize,targCol,MakeColor("black"),1)
+  foilFont <- MakeFont(gPEBLBaseFont,0,fontsize,foilCol,MakeColor("black"),1)
+  bgcol   <- MakeColor("grey")
+  num <- Length(targChars)+Length(foilChars)
+
+
+ ##make a label for each target.
+ i <- 1
+ targs <- []
+ bgs <- []
+ loop(t,targChars)
+  {
+    targ <- MakeLabel(t,targFont)
+    targs <- Append(targs,[targ,1])
+    bg   <- Circle(0,0,18,bgcol,0)
+    bgs   <- Append(bgs,bg)
+  }
+
+ 
+##make label for each foil (and the backgrounds)
+ foils <- []
+ loop(f,foilChars)
+  {
+    foil <- MakeLabel(f,foilFont)
+    bg   <- Circle(0,0,18,bgcol,0)
+    foils <- Append(foils,[foil,2])
+    bgs   <- Append(bgs,bg)
+  }
+
+   num <- Length(targs)+Length(foils)
+ 
+  #Compute the bounds of the display box
+   minx <- gHomeX-gDisplayBoxSizeX/2
+   maxx <- gHomeX+gDisplayBoxSizeX/2
+   miny <- gHomey-gDisplayBoxSizeY/2
+   maxy <- gHomey+gDisplayBoxSizeY/2
+
+   ##create the xy points
+   pts <- MakePoints(minx,maxx,miny,maxy,40,num)
+  
+  complex <- TRANSPOSE(Append( Merge( Transpose( Merge(targs,foils)), 
+                                 Transpose(pts)),bgs))
+
+   ##Add a 'none' button to the top, but hide it.
+    none <- EasyLabel("NONE",gHomeX,50,gWin,fontsize)
+    noneback <-  Rectangle(gHomeX,50,140,60,MakeColor("grey"),0)
+    AddObject(none,gWin)
+    AddObject(noneback,gWin)
+    Hide(none)
+    Hide(noneback)
+
+   ##Show the target
+   AddObject(targ,gWin)
+   Move(targ,gHomeX,gHomeY)
+   label <- EasyLabel("Target:",gHomeX,gHomeY-80,gWin,fontsize)
+   Draw()
+   Wait(800)
+   Draw()
+    
+  ##Add all the targets/foils to the specified positions
+   tmp <- []
+   backs <- []
+  loop(i,complex)
+  {
+
+    obj <- First(i)   
+    x <- Third(i)
+    y <- Fourth(i)
+    back <- Fifth(i)
+
+    AddObject(obj,gWin)    
+    AddObject(back,gWin)
+    Hide(back)
+    Move(back,x,y)
+    Move(obj,x,y)
+    tmp <- Append(tmp,obj)
+    backs <- Append(backs,back)
+  }
+
+
+
+  label.y <- gVideoHeight-50
+  label.text <- "Click mouse button when search is complete"
+  Draw()
+  WaitForDownClick()
+  ShowCursor(1)
+  label.text <- "Click on circle at location of target or NONE"
+  Show(label) 
+  Show(none)
+  Show(noneback)
+  RemoveObjects(tmp,gWin)
+  ShowObjects(backs)
+  Draw()
+  bgs <- Merge([noneback],bgs)
+  resp <-  WaitForClickOnTarget(bgs,Sequence(0,num,1))
+  RemoveObjects(bgs,gWin)
+  RemoveObject(label,gWin)
+  RemoveObject(none,gWin)
+  RemoveObject(noneback,gWin)
+
+  Draw()
+
+
+  return resp
+}
+
+define RemoveObjects(list,win)
+{
+   loop(i,Flatten(list))
+   { 
+     RemoveObject(i,win)
+   }
+}
+
+
+define ShowObjects(list)
+{
+   loop(i,Flatten(list))
+   { 
+     Show(i)
+   }
+}
+
+define MakePoints(xmin, xmax, ymin, ymax, tol, num)
+{
+
+   ##should you watch the points evolve?
+   watch <- 0
+   
+
+   ##Note that it is possible to arrange the situation 
+   ## so that the distribution will never be satisfied.  So, lets
+   ## set up a 'limit' at which point we give up and return the best
+   ## we have so far.
+
+   limit <- 100
+ 
+
+  ## First, just initialize num points.
+  pts <- []
+  i <- 1
+  while(i <= num)
+   {
+
+     x <- xmin + Random()*(xmax-xmin)
+     y <- ymin + Random()*(ymax-ymin)
+     pts <- Append(pts, [x,y])
+     i <- i + 1
+   }
+
+  #Now, check for the minimum distance between two points.
+   tries <- 1
+   minpair <-  GetMinDist(pts)
+
+
+   ##Move one point at a time
+   while(First(minpair) < tol and tries < limit)
+   {
+     pt1id <- Nth(minpair,2)
+     pt2id <- Nth(minpair,3)
+
+     pt1 <- Nth(pts,pt1id)
+     pt2 <- Nth(pts,pt2id)
+
+    #resample the 'bad' points
+
+     ##Half the time, try to move a little bit away from 
+     ##the closest. Otherwise, do it randomly.
+
+ 
+     pt1 <-   [ xmin + Random()*(xmax-xmin),
+                  ymin + Random()*(ymax-ymin) ]
+
+
+     ##Reassemble pts
+     tmp <- RemoveSubset(pts,[pt1id])
+
+     ##See if this configuration is an improvement
+     testpts <- Merge(tmp,[pt1])
+     minpairtest <-  GetMinDist(testpts)
+
+     ##If we've made an improvement, use it, otherwise abandon it.
+     if(First(minpairtest) >= First(minpair))
+     {
+        minpair <- minpairtest
+        pts <- testpts
+     }
+     tries <- tries + 1
+  
+   }
+
+
+  
+  return Shuffle(pts)
+}
+
+define GetMinDist(pts)
+{
+   len <- Length(pts)
+   index1 <- 1
+   mindist <- Dist(First(pts),Nth(pts,2))
+   id1 <- 1
+   id2 <- 2
+ 
+   loop(i,pts)
+   {
+     pt1 <- i
+     index2 <- index1 + 1
+ 
+
+     if(index2 <= len)
+      {
+      rest <- SubList(pts,index2, Length(pts))
+      loop(j, rest)
+       { 
+        d <- Dist(i,j)
+
+        if(d < mindist)
+        {
+          mindist <- d
+          id1 <- index1
+          id2 <- index2
+        }
+
+        index2 <- index2 + 1
+      }
+      }
+     index1  <- index1 + 1
+   }
+
+   return [mindist,id1,id2]
+}
+
+
+##  This function takes a list of anything, and a list of indexes
+##  specifying the items to extract from the list.  The indexes can
+##  be in any order, but the extracted list will be in the order 
+##  of the original list.  Items that are not numbers less than or 
+##  equal to the length of the list will be ignored.
+define RemoveSubset(list, items)
+{
+   #Check the arguments to insure they are the proper type
+    if(not IsList(list))
+	{
+	    SignalFatalError("First argument of function [RemoveSubset(<list>,<list>)] is not a list")
+	}
+    if(not IsList(items))
+	{
+	    SignalFatalError("First argument of function [RemoveSubset(<list>,<list>)] is not a list")
+	}
+
+
+    returnList <- []      #Make an initial blank list to return
+    index <- 1            #keep track of the index
+    loop(i, list)
+    {
+	#If the index is in the items list, add it to the return list
+	if(not IsMember(index, items))
+	{
+	    returnList <- Append(returnList, i)
+	}
+	index <- index + 1
+    }
+
+    return returnList
+}
