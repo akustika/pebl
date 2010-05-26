@@ -253,9 +253,9 @@ define InitPoles()
 
    if(gShowHand)
     {
-     hand   <- MakeImage("png/hand.png")
-     AddObject(hand,gWin)
-     Move(hand,330,225)
+     gHand   <- MakeImage("png/hand.png")
+     AddObject(gHand,gWin)
+     Move(gHand,330,225)
     }
   gRect <- Rectangle(330,80,380,140,MakeColor("grey20"),1)
   AddObject(gRect,gWin)
@@ -273,7 +273,7 @@ Stacks:",footerfont,100,70)
    Move(gHeader,30,50)
   ##Keep track of the image complex:
   gComplex <- []
-
+  RemoveObject(gHand,gWin)
   gFileOut <- FileOpenAppend("tol-"+gsubnum+".txt")
   gFileOutSum <- FileOpenAppend("tol-summary-"+gsubnum+".txt")
 
