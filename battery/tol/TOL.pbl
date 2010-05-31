@@ -3,8 +3,8 @@
 ##
 ##   PEBL's Tower of London Test
 ##
-##   Version 0.3
-##   Released Feb 2010
+##   Version 0.4
+##   Released May 2010
 ##
 ##
 ##
@@ -61,7 +61,7 @@ define Start(p)
 
    ##Choose which set of trials to generate based on 'type'.
      
-  if(type == "1")
+   if(type == "1")
    {
      stim <- ProgressiveDisks([3,4,5],8)  ## unconstrained pole height,
                                          ## with number of disks in
@@ -77,8 +77,7 @@ define Start(p)
    }elseif(type=="4")
    { 
 
-
-    stim <- ShalliceRandom(30)           ##Basic Shallice problem with
+    stim <- ShalliceRandom(10)           ##Basic Shallice problem with
 		 								 ##	3 disks on 
 		 								 ## different-sized poles, and
 										 ##random problems
@@ -109,6 +108,13 @@ define Start(p)
   }
 
 
+ #  gUseTimer <- 0  ##This hard-codes use of timer. Uncomment to
+                   ##override the defaults built into each particular test function.
+
+   gTimeLimit <- 120   ##default time limit, in seconds.
+ #  gUseTurnLimit <- 0  ##this hard-codes turn limits, overidding
+                       ## setting in original definition
+
   
   gInstructions.text <-"You are about to perform a task called the 'Tower of London'.  Your goal is to move a pile of disks from their original configuration to the configuration shown on the top of the screen.  You can only move one disk at a time.  To move a disk, click on the pile you want to move a disk off of, and it will move up into the hand.  Then, click on another pile, and the disk will move down to that pile.  Click the mouse to begin."
   gInstructions.font <- gFont2
@@ -122,10 +128,10 @@ define Start(p)
    
 
   FilePrint(gFileOut,"sub trial size current end step abstime trialtime clicktime done")
-  FilePrint(gFileOutSum,"sub trial size shortest start end steps time")
+  FilePrint(gFileOutSum,"sub trial size shortest startlab endlab startconf endconf steps time")
 
   gInstructions.width <- 220
-  gInstructions.height <- 500
+  gInstructions.height <- 520
   Move(gInstructions,555,50)
   gInstructions.text <- "Trial Complete. "+CR(2)+ "Click mouse to continue to the next trial."
 
@@ -139,15 +145,22 @@ define Start(p)
     config <- First(pair)
     config1 <- Second(pair)
     shortest <- Third(pair)
+	startlab <- Fourth(pair)
+    endlab <- Fifth(pair)
 
     numdisks <- Length(Flatten(config))
 
     origstring <- MakeStateString(config)
+    gMovesranout <- 0
+    gTimeranout <- 0
 
     ## Make standard and new configurations
     c1 <- PlotDisksAnimate(config,0,450,gDisks,10)
     c2 <- PlotDisksAnimate(config1,0,130,gDisks2,10)
-    Draw()
+    if(shortest > 0 and gUseTurnLimit)    
+    {
+      cGraph <- MakeGraph(shortest,shortest,650,400,"Clicks",shortest)
+    }
 
     startTime <- GetTime()
     lasttime <- GetTime()
@@ -159,10 +172,30 @@ define Start(p)
     #Allow disk moves until the two have identical configurations.
     continue <- 1
     step <- 1 
+	gEndTime <- time + gTimeLimit*1000
+    if(gUseTimer)
+    {
+      ##Timegraph defaults to 120 sec.
+      ##the ticks hsould be every 10 sec, unless there are less than 4
+      ## ticks. then every 5, then every 1 sec
+      numticks <- gTimeLimit/10
+      if(numticks < 4)
+       {
+         numticks <- gTimeLimit/5
+       }
+      if(numticks < 3)
+       {
+         numticks <- gTimeLimit
+       }
+    
+
+      gTimeGraph <- MakeGraph(gTimeLimit,gTimeLimit,710,400,"Time (sec)",numticks)
+    }
+    Draw()
+    
 
     while(continue)
     {
-
       config <- MoveDisk(config)
       time <- GetTime()
       FilePrint_(gfileout, gSubNum + " " + trial + " " + numdisks + " " +
@@ -173,18 +206,70 @@ define Start(p)
       lasttime <- time
       if(StackEqual(config,config1))
        {
+         success <- 1
          continue <- 0
          FilePrint(gfileout, " 1")
        } else {
          FilePrint(gfileout, " 0")
        }
+    ##only update the graph if we have a good measure of
+    ## shortest path, and if the global flag specifies it.
+    if(shortest > 0 and gUseTurnLimit)
+     {
+        rem <- Max([0,shortest-step])
+        UpdateGraph(cgraph,rem, 650,400,shortest)
+        #if no moves remain:
+        if(rem == 0)
+         {
+           #if continue == 0, we have solved the puzzle already. 
+           if(continue == 0)
+              {
+                  success <- 1
+              }else{
+                  gMovesRanOut <- 1     
+                  continue <- 0
+                  success <- 0
+              }
+         }
+     }
+    if(gUseTimer)
+     {  
+         if(gTimeRanOut)
+          {
+              success <- 0
+              continue <- 0
+          }
+     }
+
+    Draw()
+
     step <- step + 1 
+
+
    }
  
+    Wait(100)
+   FilePrint(gFileOutSum, gSubNum + " " + trial + " " + numdisks + 
+       " "+ shortest + " "  +   startlab+ " "+ endlab + " " +
+       origstring  + " " +  MakeStateString(config1) + " " + success + " "+
+      (step-1) + " " + (time-starttime))
 
-   FilePrint(gFileOutSum, gSubNum + " " + trial + " " + numdisks + " "+ shortest + " "+
-              origstring  + " " +  MakeStateString(config1) + " " + (step-1) + " " + (time-starttime))
-
+   if(success)
+    {
+     gInstructions.text <- "Trial Completed. "+CR(2)+ "Click mouse to continue to the next trial."   
+    } else {
+     gInstructions.text <- "Trial Incomplete. "
+     if(gMovesRanOut)
+      {
+        ginstructions.text <- gInstructions.text + "You failed to complete the problem in the number of moves required."
+      }
+     if(gtimeRanOut)
+      {
+        ginstructions.text <- gInstructions.text + "You ran out of time."
+      }
+    
+      gInstructions.text <- gInstructions.text+CR(2)+ "Click mouse to continue to the next trial."   
+    }
    RemoveObject(gInstructions,gWin)
    AddObject(gInstructions,gWin)
    Show(gInstructions)
@@ -193,6 +278,15 @@ define Start(p)
    Hide(gInstructions)
    HideAll()
    trial <- trial + 1
+   if(gUseTimer)
+    {
+      RemoveComplex(gTimeGraph)
+    }
+    
+   if(shortest > 0 and  gUseTurnLimit)
+   { 
+     RemoveComplex(cGraph)
+   }
   }
 
    gInstructions.text <- "Thank you for participating. The experiment is now complete.  Press any key to exit."
@@ -220,6 +314,7 @@ define Init()
   gWin <- MakeWindow("black")
  
   gSubNum <- GetSubNum(gWin)
+  gPEBLBaseFont <- "Vera.ttf"
   gFont <- MakeFont(gPEBLBaseFont,0,16,MakeColor("white"),MakeColor("black"),1)
   gFont2 <- MakeFont(gPEBLBaseFont,0,26,MakeColor("white"),MakeColor("black"),1)
 }
@@ -273,7 +368,7 @@ Stacks:",footerfont,100,70)
    Move(gHeader,30,50)
   ##Keep track of the image complex:
   gComplex <- []
-  RemoveObject(gHand,gWin)
+
   gFileOut <- FileOpenAppend("tol-"+gsubnum+".txt")
   gFileOutSum <- FileOpenAppend("tol-summary-"+gsubnum+".txt")
 
@@ -401,8 +496,34 @@ define PlotDisksAnimate(config,inhand,ybase,disks,steps)
 define MoveDisk(config)
 {
 
-    first <- WaitForClickOnTarget(gZones, [1,2,3])
 
+   if(gUseTimer)
+   {
+    cont <- 1
+    while(cont)
+    {
+         first <- WaitForClickOnTargetWithTimeout(gZones, [1,2,3],100)
+         if(first=="<timeout>")
+           {
+		      timeleft <- (gEndTime-GetTime())/1000
+              if(timeleft < 0)
+               {
+                   gTimeRanOut <- 1
+                   cont <- 0
+               }
+              UpdateGraph(gTimegraph,Max([0,timeleft]), 710,400,gTimeLimit)
+              Draw()
+
+           } else {
+               cont <- 0
+           }
+    }
+
+   } else {
+       ##No timer, so use just standard click.
+       first <- WaitForClickOnTarget(gZones, [1,2,3])
+
+   }
     x <- RemoveDisk(first,config)
  
     config <- First(x)
@@ -420,7 +541,38 @@ define MoveDisk(config)
       while(cont)
       {
        #Now, get the target pile 1-3
-   	   next <- WaitForClickOnTarget(gZones, [1,2,3])
+
+
+   if(gUseTimer)
+   {
+    cont <- 1
+    while(cont)
+    {
+         next <- WaitForClickOnTargetWithTimeout(gZones, [1,2,3],100)
+
+         if(next=="<timeout>")
+           {
+		      timeleft <- (gEndTime-GetTime())/1000
+              UpdateGraph(gTimegraph,Max([0,timeleft]), 710,400,gTimeLimit)
+              Draw()
+              if(timeleft < 0)
+               {
+                   gTimeRanOut <- 1
+               }
+
+
+           } else {
+               cont <- 0
+           }
+    }
+
+   } else {
+        ##No timer, so use just standard click.
+        next <- WaitForClickOnTarget(gZones, [1,2,3])
+
+   }
+
+
 
        if(Length(Nth(config ,next))<Nth(gPoleHeights,next))
           {
@@ -585,35 +737,39 @@ define StackEqual(stack1,stack2)
 define Phillips1999(set)
 {
 
+   ##Don't use the timer or turn limits here.
+   gUseTimer <- 0  
+   gUseTurnLimit <- 0  
+
    gPoleHeights <- [5,5,5]
 
-    trialsA <-  [[[[],[4,3,2,1],[5]],   [[2,3],[4],[5,1]] , -1],
-	             [[[5,3,2,4,1],[],[]],  [[],[1,4,3],[2,5]],-1],
-	             [[[4],[3,2],[5,1]],    [[2,4,3,1],[],[5]],-1],
-	             [[[3],[1,2,5],[4]],    [[],[4,3],[2,5,1]],-1],#orig. wierd
-            	 [[[],[3,5],[1,4,2]],   [[3,5],[2],[1,4]] ,-1], #original wierd
-                 [[[4,3],[5],[2,1]],    [[3,5],[2],[1,4]] ,-1],
-				 [[[2],[5,3],[1,4]],    [[],[],[5,1,4,2,3]],-1],
-				 [[[1,2,5,3,4],[],[]],  [[2,3],[],[5,4,1]],-1]]  #orig  goal wierd
+    trialsA <-  [[[[],[4,3,2,1],[5]],   [[2,3],[4],[5,1]] ,-1,0,0],
+	             [[[5,3,2,4,1],[],[]],  [[],[1,4,3],[2,5]],-1,0,0],
+	             [[[4],[3,2],[5,1]],    [[2,4,3,1],[],[5]],-1,0,0],
+	             [[[3],[1,2,5],[4]],    [[],[4,3],[2,5,1]],-1,0,0],#orig. wierd
+            	 [[[],[3,5],[1,4,2]],   [[3,5],[2],[1,4]] ,-1,0,0], #original wierd
+                 [[[4,3],[5],[2,1]],    [[3,5],[2],[1,4]] ,-1,0,0],
+				 [[[2],[5,3],[1,4]],    [[],[],[5,1,4,2,3]],-1,0,0],
+				 [[[1,2,5,3,4],[],[]],  [[2,3],[],[5,4,1]],-1,0,0]]  #orig  goal wierd
 	            
 
-    trialsB <-  [ [[[4],[2,1,5],[3]],    [[4,5,1,3],[2],[]],-1],
-                  [[[],[2,3,4,5],[1]],    [[5,1,4],[],[3,2]],-1],
-                  [[[],[2],[4,3,1,5]],    [[2,1,5,3],[],[4]],-1],
-                  [[[],[1,3],[4,5,2]],    [[3,4,2],[1,5],[]],-1], #orig goal wierd
-                  [[[5,1],[],[3,4,2]],    [[2,3,4,5],[1],[]],-1],
-                  [[[],[],[2,1,5,3,4]],   [[1],[],[5,3,4,2]],-1],
-                  [[[],[3,2,4,1,5],[]],   [[5],[1,2,3],[4]],-1],
-                  [[[],[2,5,3,4,1],[]],   [[3,2],[1],[5,4]],-1] ]
+    trialsB <-  [ [[[4],[2,1,5],[3]],    [[4,5,1,3],[2],[]],-1,0,0],
+                  [[[],[2,3,4,5],[1]],    [[5,1,4],[],[3,2]],-1,0,0],
+                  [[[],[2],[4,3,1,5]],    [[2,1,5,3],[],[4]],-1,0,0],
+                  [[[],[1,3],[4,5,2]],    [[3,4,2],[1,5],[]],-1,0,0], #orig goal wierd
+                  [[[5,1],[],[3,4,2]],    [[2,3,4,5],[1],[]],-1,0,0],
+                  [[[],[],[2,1,5,3,4]],   [[1],[],[5,3,4,2]],-1,0,0],
+                  [[[],[3,2,4,1,5],[]],   [[5],[1,2,3],[4]],-1,0,0],
+                  [[[],[2,5,3,4,1],[]],   [[3,2],[1],[5,4]],-1,0,0] ]
 
-    trialsC <-  [ [[[4,3],[],[2,1,5]],    [[4],[5,1,3],[2]],-1],
-                  [[[4,1],[5,3,2],[]],    [[2,1,4,5],[],[3]],-1],  #original wierd
-                  [[[1,3],[4,5,2],[]],    [[],[4,3,1,5],[2]],-1],
-                  [[[2],[],[5,4,3,1]],    [[],[2,1],[5,3,4]],-1],  #orig goal wierd
-                  [[[4,2,1],[3,5],[]],    [[],[1],[5,2,3,4]],-1],
-                  [[[5],[1,4,3],[2]],     [[],[2,5,3],[1,4]],-1],
-                  [[[4,1,2,5],[],[3]],    [[3,1,4],[],[5,2]],-1],
-                  [[[],[],[5,1,3,2,4]],    [[],[],[2,4,1,5,3]],-1]]
+    trialsC <-  [ [[[4,3],[],[2,1,5]],    [[4],[5,1,3],[2]],-1,0,0],
+                  [[[4,1],[5,3,2],[]],    [[2,1,4,5],[],[3]],-1,0,0],  #original wierd
+                  [[[1,3],[4,5,2],[]],    [[],[4,3,1,5],[2]],-1,0,0],
+                  [[[2],[],[5,4,3,1]],    [[],[2,1],[5,3,4]],-1,0,0],  #orig goal wierd
+                  [[[4,2,1],[3,5],[]],    [[],[1],[5,2,3,4]],-1,0,0],
+                  [[[5],[1,4,3],[2]],     [[],[2,5,3],[1,4]],-1,0,0],
+                  [[[4,1,2,5],[],[3]],    [[3,1,4],[],[5,2]],-1,0,0],
+                  [[[],[],[5,1,3,2,4]],    [[],[],[2,4,1,5,3]],-1,0,0]]
 
   if(set == "A")
   {
@@ -630,36 +786,96 @@ define Phillips1999(set)
 
 define Shallice()
 {
-   gPoleHeights <- [3,2,1]
+
+   ##Don't use the timer or turn limits here.
+   gUseTimer <- 0  
+   gUseTurnLimit <- 0  
+ 
+  gPoleHeights <- [3,2,1]
 
 s <- [
-[  [[2,1],[3],[]],[[],[3,2],[1]],-1 ],
-[ [[2,1],[3],[]],[[2],[1],[3]]  ,-1 ],
-[ [[2,1],[3],[]],[[2,3],[1],[]] ,-1 ],
-[ [[2,1],[3],[]],[[2],[1,3],[]] ,-1 ],
-[ [[2,1],[3],[]],[[1,2],[3],[]] ,-1 ],
-[ [[2,1],[3],[]],[[3],[1,2],[]] ,-1 ],
-[ [[2,1],[3],[]],[[1,3],[],[2]] ,-1 ],
-[ [[2,1],[3],[]],[[],[1,3],[2]] ,-1 ],
-[ [[2,1],[3],[]],[[1,2,3],[],[]],-1 ],
-[ [[2,1],[3],[]],[[1,3,2],[],[]],-1 ],
-[ [[2,1],[3],[]],[[3,2],[1],[]] ,-1 ],
-[ [[2,1],[3],[]],[[3],[1],[2]]  ,-1 ] ]
+[  [[2,1],[3],[]],[[],[3,2],[1]],-1,0,0 ],
+[ [[2,1],[3],[]],[[2],[1],[3]]  ,-1,0,0 ],
+[ [[2,1],[3],[]],[[2,3],[1],[]] ,-1,0,0 ],
+[ [[2,1],[3],[]],[[2],[1,3],[]] ,-1,0,0 ],
+[ [[2,1],[3],[]],[[1,2],[3],[]] ,-1,0,0 ],
+[ [[2,1],[3],[]],[[3],[1,2],[]] ,-1,0,0 ],
+[ [[2,1],[3],[]],[[1,3],[],[2]] ,-1,0,0 ],
+[ [[2,1],[3],[]],[[],[1,3],[2]] ,-1,0,0 ],
+[ [[2,1],[3],[]],[[1,2,3],[],[]],-1,0,0 ],
+[ [[2,1],[3],[]],[[1,3,2],[],[]],-1,0,0 ],
+[ [[2,1],[3],[]],[[3,2],[1],[]] ,-1,0,0 ],
+[ [[2,1],[3],[]],[[3],[1],[2]]  ,-1,0,0 ]]
 
   return s
 }
 
 define GetTOLDist(matrix,a,b,c,d)
 {
-    row <- 1 + (a-1)* 6 + b
-    col <- 1 + (c-1)* 6 + d
+    row <- (a-1)* 6 + b
+    col <- (c-1)* 6 + d
     return ToNumber(M(matrix,row,col))
 }
+
+define AssembleTrial(a1,a2,b1,b2,states,dists)
+{
+  return [M(states,a1,a2),M(states,b1,b2), GetTOLDist(dists,a1,a2,b1,b2), a1+""+a2, b1+""+b2 ]
+}
+
+## Computes the minimum distance between states, courtes of  Fimbel
+## http://sites.google.com/site/tolspace/
+##
+define StateDist()
+{
+   state <- FoldList([
+0,1,1,2,2,3,4,3,3,3,2,3,6,6,5,4,5,4,7,6,7,8,7,8,6,5,6,7,7,8,6,6,5,4,4,3,
+1,0,1,2,2,3,3,3,2,2,1,2,5,5,4,3,4,3,6,5,6,7,6,7,6,5,6,7,7,8,6,6,5,4,4,3,
+1,1,0,1,1,2,3,2,3,3,2,3,6,6,5,4,5,4,7,6,7,8,7,7,5,4,5,6,6,7,5,5,4,3,3,2,
+2,2,1,0,1,2,3,2,3,4,3,4,7,7,6,5,6,5,8,7,8,7,7,6,4,3,4,5,5,6,4,4,3,3,2,1,
+2,2,1,1,0,1,2,1,2,3,3,4,7,7,6,5,5,4,7,6,7,7,8,7,5,4,5,6,5,6,4,4,3,2,3,2,
+3,3,2,2,1,0,3,2,3,4,4,5,8,8,7,6,6,5,8,7,7,6,7,6,4,3,4,5,4,5,3,3,2,1,2,3,
+4,3,3,3,2,3,0,1,1,2,2,3,6,6,5,4,4,3,6,5,6,7,7,8,7,6,7,8,7,8,6,6,5,4,5,4,
+3,3,2,2,1,2,1,0,1,2,2,3,6,6,5,4,4,3,6,5,6,7,7,8,6,5,6,7,6,7,5,5,4,3,4,3,
+3,2,3,3,2,3,1,1,0,1,1,2,5,5,4,3,3,2,5,4,5,6,6,7,7,6,7,8,7,7,6,6,5,4,5,4,
+3,2,3,4,3,4,2,2,1,0,1,2,4,4,3,3,2,1,4,3,4,5,5,6,8,7,8,7,7,6,7,7,6,5,6,5,
+2,1,2,3,3,4,2,2,1,1,0,1,4,4,3,2,3,2,5,4,5,6,5,6,7,6,7,7,8,7,7,7,6,5,5,4,
+3,2,3,4,4,5,3,3,2,2,1,0,3,3,2,1,2,3,4,3,4,5,4,5,8,7,7,6,7,6,8,8,7,6,6,5,
+6,5,6,7,7,8,6,6,5,4,4,3,0,1,1,2,2,3,4,3,3,3,2,3,6,6,5,4,5,4,7,6,7,8,7,8,
+6,5,6,7,7,8,6,6,5,4,4,3,1,0,1,2,2,3,3,3,2,2,1,2,5,5,4,3,4,3,6,5,6,7,6,7,
+5,4,5,6,6,7,5,5,4,3,3,2,1,1,0,1,1,2,3,2,3,3,2,3,6,6,5,4,5,4,7,6,7,8,7,7,
+4,3,4,5,5,6,4,4,3,3,2,1,2,2,1,0,1,2,3,2,3,4,3,4,7,7,6,5,6,5,8,7,8,7,7,6,
+5,4,5,6,5,6,4,4,3,2,3,2,2,2,1,1,0,1,2,1,2,3,3,4,7,7,6,5,5,4,7,6,7,7,8,7,
+4,3,4,5,4,5,3,3,2,1,2,3,3,3,2,2,1,0,3,2,3,4,4,5,8,8,7,6,6,5,8,7,7,6,7,6,
+7,6,7,8,7,8,6,6,5,4,5,4,4,3,3,3,2,3,0,1,1,2,2,3,6,6,5,4,4,3,6,5,6,7,7,8,
+6,5,6,7,6,7,5,5,4,3,4,3,3,3,2,2,1,2,1,0,1,2,2,3,6,6,5,4,4,3,6,5,6,7,7,8,
+7,6,7,8,7,7,6,6,5,4,5,4,3,2,3,3,2,3,1,1,0,1,1,2,5,5,4,3,3,2,5,4,5,6,6,7,
+8,7,8,7,7,6,7,7,6,5,6,5,3,2,3,4,3,4,2,2,1,0,1,2,4,4,3,3,2,1,4,3,4,5,5,6,
+7,6,7,7,8,7,7,7,6,5,5,4,2,1,2,3,3,4,2,2,1,1,0,1,4,4,3,2,3,2,5,4,5,6,5,6,
+8,7,7,6,7,6,8,8,7,6,6,5,3,2,3,4,4,5,3,3,2,2,1,0,3,3,2,1,2,3,4,3,4,5,4,5,
+6,6,5,4,5,4,7,6,7,8,7,8,6,5,6,7,7,8,6,6,5,4,4,3,0,1,1,2,2,3,4,3,3,3,2,3,
+5,5,4,3,4,3,6,5,6,7,6,7,6,5,6,7,7,8,6,6,5,4,4,3,1,0,1,2,2,3,3,3,2,2,1,2,
+6,6,5,4,5,4,7,6,7,8,7,7,5,4,5,6,6,7,5,5,4,3,3,2,1,1,0,1,1,2,3,2,3,3,2,3,
+7,7,6,5,6,5,8,7,8,7,7,6,4,3,4,5,5,6,4,4,3,3,2,1,2,2,1,0,1,2,3,2,3,4,3,4,
+7,7,6,5,5,4,7,6,7,7,8,7,5,4,5,6,5,6,4,4,3,2,3,2,2,2,1,1,0,1,2,1,2,3,3,4,
+8,8,7,6,6,5,8,7,7,6,7,6,4,3,4,5,4,5,3,3,2,1,2,3,3,3,2,2,1,0,3,2,3,4,4,5,
+6,6,5,4,4,3,6,5,6,7,7,8,7,6,7,8,7,8,6,6,5,4,5,4,4,3,3,3,2,3,0,1,1,2,2,3,
+6,6,5,4,4,3,6,5,6,7,7,8,6,5,6,7,6,7,5,5,4,3,4,3,3,3,2,2,1,2,1,0,1,2,2,3,
+5,5,4,3,3,2,5,4,5,6,6,7,7,6,7,8,7,7,6,6,5,4,5,4,3,2,3,3,2,3,1,1,0,1,1,2,
+4,4,3,3,2,1,4,3,4,5,5,6,8,7,8,7,7,6,7,7,6,5,6,5,3,2,3,4,3,4,2,2,1,0,1,2,
+4,4,3,2,3,2,5,4,5,6,5,6,7,6,7,7,8,7,7,7,6,5,5,4,2,1,2,3,3,4,2,2,1,1,0,1,
+3,3,2,1,2,3,4,3,4,5,4,5,8,7,7,6,7,6,8,8,7,6,6,5,3,2,3,4,4,5,3,3,2,2,1,0],36)
+ return state
+}
+
 
 define FimbelOld()
 {
 
-   dists <- ReadCSV("statedist.csv")
+
+  ##Don't use the timer or turn limits here.
+  gUseTimer <- 0  
+  gUseTurnLimit <- 0  
+
 
   gPoleHeights <- [1,2,3]
  
@@ -676,24 +892,27 @@ define FimbelOld()
             [[[],[],[2,3,1]],[[1],[],[2,3]],[[],[1],[2,3]],[[],[1,3],[2]],[[3],[1],[2]],[[3],[1,2],[]]],
             [[[],[],[2,1,3]],[[3],[],[2,1]],[[],[3],[2,1]],[[],[3,1],[2]],[[1],[3],[2]],[[1],[3,2],[]]]]
 
+  ##This is the minimal distance between states:
+  dists <- StateDist()
 
-  trialsOld <- [[M(s,1,2),M(s,1,3), GetTOLDist(dists,1,2,1,3)],
-                [M(s,5,3),M(s,5,2), GetTOLDist(dists,5,3,5,2)],
-				[M(s,2,3),M(s,2,4), GetTOLDist(dists,2,3,2,4)],
-				[M(s,1,2),M(s,1,5), GetTOLDist(dists,1,2,1,5)],
-				[M(s,2,3),M(s,3,6), GetTOLDist(dists,2,3,3,6)],
+  trialsOld <- [AssembleTrial(1,2,1,3,s,dists),
+				AssembleTrial(5,3,5,2,s,dists),
+  			    AssembleTrial(2,3,2,4,s,dists),
+				AssembleTrial(1,2,1,5,s,dists),
+				AssembleTrial(2,3,3,6,s,dists),
 
-				[M(s,5,3),M(s,6,5), GetTOLDist(dists,5,3,6,5)],
-				[M(s,2,3),M(s,3,5), GetTOLDist(dists,2,3,3,5)],
-				[M(s,5,3),M(s,6,4), GetTOLDist(dists,5,3,6,4)],
-				[M(s,1,2),M(s,1,6), GetTOLDist(dists,1,2,1,6)],
-				[M(s,5,3),M(s,1,6), GetTOLDist(dists,5,3,1,6)],
+				AssembleTrial(5,3,6,5,s,dists),
+				AssembleTrial(2,3,3,5,s,dists),
+				AssembleTrial(5,3,6,4,s,dists),
+				AssembleTrial(1,2,1,6,s,dists),
+				AssembleTrial(5,3,1,6,s,dists),
 
-				[M(s,1,2),M(s,6,4), GetTOLDist(dists,1,2,6,4)],
-				[M(s,2,3),M(s,3,3), GetTOLDist(dists,2,3,3,3)],
-				[M(s,1,2),M(s,6,3), GetTOLDist(dists,1,2,6,3)],
-				[M(s,5,3),M(s,1,5), GetTOLDist(dists,5,3,1,5)],
-				[M(s,2,3),M(s,3,2), GetTOLDist(dists,2,3,3,2)]]
+				AssembleTrial(1,2,6,4,s,dists),
+				AssembleTrial(2,3,3,3,s,dists),
+				AssembleTrial(1,2,6,3,s,dists),
+				AssembleTrial(5,3,1,5,s,dists),
+				AssembleTrial(2,3,3,2,s,dists)]
+
 
    return trialsOld
 }
@@ -702,7 +921,10 @@ define FimbelOld()
 define FimbelYoung()
 {
 
-   dists <- ReadCSV("statedist.csv")
+   ##Don't use the timer or turn limits here.
+   gUseTimer <- 0  
+   gUseTurnLimit <- 0  
+
 
   gPoleHeights <- [1,2,3]
  
@@ -718,88 +940,129 @@ define FimbelYoung()
             [[[],[],[3,2,1]],[[1],[],[3,2]],[[],[1],[3,2]],[[],[1,2],[3]],[[2],[1],[3]],[[2],[1,3],[]]],
             [[[],[],[2,3,1]],[[1],[],[2,3]],[[],[1],[2,3]],[[],[1,3],[2]],[[3],[1],[2]],[[3],[1,2],[]]],
             [[[],[],[2,1,3]],[[3],[],[2,1]],[[],[3],[2,1]],[[],[3,1],[2]],[[1],[3],[2]],[[1],[3,2],[]]]  ]
+  dists <-  StateDist()
 
-  trialsYoung    <- [[M(s,2,3),M(s,1,2), GetTOLDist(dists,2,3,1,2)] , #1
-                [M(s,2,1),M(s,1,5), GetTOLDist(dists,2,1,1,5)],
-				[M(s,1,4),M(s,2,2), GetTOLDist(dists,1,4,2,2)],
-				[M(s,2,6),M(s,1,2), GetTOLDist(dists,2,6,1,2)],
-				[M(s,5,6),M(s,4,3), GetTOLDist(dists,5,6,4,3)],
+  trialsYoung    <- [
+                  AssembleTrial(2,3,1,2,s,dists),
+                  AssembleTrial(2,1,1,5,s,dists),
+                  AssembleTrial(1,4,2,2,s,dists),
+                  AssembleTrial(2,6,1,2,s,dists),
+                  AssembleTrial(5,6,4,3,s,dists),   
 
-				[M(s,3,3),M(s,4,4), GetTOLDist(dists,3,3,4,4)], #6
-				[M(s,3,4),M(s,4,3), GetTOLDist(dists,3,4,4,3)],
-				[M(s,5,3),M(s,6,3), GetTOLDist(dists,5,3,6,3)],
-				[M(s,6,3),M(s,5,3), GetTOLDist(dists,6,3,5,3)],
-				[M(s,6,4),M(s,1,4), GetTOLDist(dists,6,4,1,4)],
+                  AssembleTrial(3,3,4,4,s,dists),
+                  AssembleTrial(3,4,4,3,s,dists),
+                  AssembleTrial(5,3,6,3,s,dists),
+                  AssembleTrial(6,3,5,3,s,dists),
+                  AssembleTrial(6,4,1,4,s,dists),   
 
-				[M(s,4,6),M(s,3,4), GetTOLDist(dists,4,6,3,4)], #11
-				[M(s,2,2),M(s,6,5), GetTOLDist(dists,2,2,6,5)],
-				[M(s,3,3),M(s,2,3), GetTOLDist(dists,3,3,2,3)],
-				[M(s,2,2),M(s,3,4), GetTOLDist(dists,2,2,3,4)],
-				[M(s,6,5),M(s,1,1), GetTOLDist(dists,6,5,1,1)],
+                  AssembleTrial(4,6,3,4,s,dists),
+                  AssembleTrial(2,2,6,5,s,dists),
+                  AssembleTrial(3,3,2,3,s,dists),
+                  AssembleTrial(2,2,3,4,s,dists),
+                  AssembleTrial(6,5,1,1,s,dists),   
 
-				[M(s,2,2),M(s,6,2), GetTOLDist(dists,2,2,6,2)],#16
-				[M(s,3,1),M(s,2,3), GetTOLDist(dists,3,1,2,3)],
-				[M(s,5,2),M(s,3,2), GetTOLDist(dists,5,2,3,2)],
-				[M(s,4,4),M(s,2,6), GetTOLDist(dists,4,4,2,6)],
-				[M(s,3,2),M(s,2,3), GetTOLDist(dists,3,2,2,3)],
+                  AssembleTrial(2,2,6,2,s,dists),
+                  AssembleTrial(3,1,2,3,s,dists),
+                  AssembleTrial(5,2,3,2,s,dists),
+                  AssembleTrial(4,4,2,6,s,dists),
+                  AssembleTrial(3,2,2,3,s,dists),   
 
-				[M(s,2,1),M(s,3,1), GetTOLDist(dists,2,1,3,1)], #21
-				[M(s,3,2),M(s,1,1), GetTOLDist(dists,3,2,1,1)],
-				[M(s,2,3),M(s,4,5), GetTOLDist(dists,2,3,4,5)],
-				[M(s,2,2),M(s,3,1), GetTOLDist(dists,2,2,3,1)],
-				[M(s,4,1),M(s,1,2), GetTOLDist(dists,4,1,1,2)],
+                  AssembleTrial(2,1,3,1,s,dists),
+                  AssembleTrial(3,2,1,1,s,dists),
+                  AssembleTrial(2,3,4,5,s,dists),
+                  AssembleTrial(2,2,3,1,s,dists),
+                  AssembleTrial(4,1,1,2,s,dists),   
 
-				[M(s,1,4),M(s,3,1), GetTOLDist(dists,1,4,3,1)],#26
-				[M(s,2,5),M(s,5,3), GetTOLDist(dists,2,5,5,3)],
-				[M(s,3,6),M(s,6,5), GetTOLDist(dists,3,6,6,5)],
-				[M(s,4,6),M(s,1,5), GetTOLDist(dists,4,6,1,5)],
-				[M(s,6,3),M(s,3,1), GetTOLDist(dists,6,3,3,1)],
+                  AssembleTrial(1,4,3,1,s,dists),
+                  AssembleTrial(2,5,4,3,s,dists),
+                  AssembleTrial(3,6,6,5,s,dists),
+                  AssembleTrial(4,6,1,5,s,dists),
+                  AssembleTrial(6,3,3,1,s,dists),   
 
-				[M(s,2,2),M(s,4,6), GetTOLDist(dists,2,2,4,6)],#31
-				[M(s,2,4),M(s,5,1), GetTOLDist(dists,2,4,5,1)],
-				[M(s,2,6),M(s,6,2), GetTOLDist(dists,2,6,6,2)],
-				[M(s,3,5),M(s,6,5), GetTOLDist(dists,3,5,6,5)],
-				[M(s,5,6),M(s,2,1), GetTOLDist(dists,5,6,2,1)]]
+                  AssembleTrial(2,2,4,6,s,dists),
+                  AssembleTrial(2,4,5,1,s,dists),
+                  AssembleTrial(2,6,6,2,s,dists),
+                  AssembleTrial(3,5,6,5,s,dists),
+                  AssembleTrial(5,6,2,1,s,dists)]
+
 
    return trialsYoung
  }
 
 
-
+## ShalliceRandom uses the fimbel space.
+##
 define ShalliceRandom(numtrials)
 {
+
+
+   ##Don't use the timer or turn limits here.
+   gUseTimer <- 0  
+   gUseTurnLimit <- 0  
+
+
+  gPoleHeights <- [1,2,3]
+ 
+  ## 1=RED, 2=YELL, 3=BLUE
+  ##
+  ##
+
+  ##THIS IS ALL THE STATES
+  s <-[[[[],[],[1,2,3]],[[3],[],[1,2]],[[],[3],[1,2]],[[],[3,2],[1]],[[2],[3],[1]],[[2],[3,1],[]]],
+            [[[],[],[1,3,2]],[[2],[],[1,3]],[[],[2],[1,3]],[[],[2,3],[1]],[[3],[2],[1]],[[3],[2,1],[]]],
+            [[[],[],[3,1,2]],[[2],[],[3,1]],[[],[2],[3,1]],[[],[2,1],[3]],[[1],[2],[3]],[[1],[2,3],[]]],
+            [[[],[],[3,2,1]],[[1],[],[3,2]],[[],[1],[3,2]],[[],[1,2],[3]],[[2],[1],[3]],[[2],[1,3],[]]],
+            [[[],[],[2,3,1]],[[1],[],[2,3]],[[],[1],[2,3]],[[],[1,3],[2]],[[3],[1],[2]],[[3],[1,2],[]]],
+            [[[],[],[2,1,3]],[[3],[],[2,1]],[[],[3],[2,1]],[[],[3,1],[2]],[[1],[3],[2]],[[1],[3,2],[]]]  ]
+  dists <-  StateDist()
+
+
+   ##Don't use the timer or turn limits here.
+   gUseTimer <- 0  
+   gUseTurnLimit <- 0  
+
 
   ##Generates a random set of trials using Shallice's original 123
   ##stack heights
 
-
-  gPoleHeights <- [1,2,3]
+   id  <- Sequence(1,6,1)
 
   trials <- []   
   i <- 1
   while(i <= numtrials)
    {
-     config1 <- ShuffleDisks(3)
-     config2  <- ShuffleDisks(3)
+     a1 <- Pick(id)
+     a2 <- Pick(id)
+     b1 <- Pick(id)
+	 b2 <- Pick(id)
 
     ##Make sure the two stacks are not identical at outset:
-    while(StackEqual(config1,config2))
-    {
-      config1 <- ShuffleDisks(3)
-      config2  <- ShuffleDisks(3)
-    }
+    while(GetTOLDist(dists,a1,a2,b1,b2)<2)  # Make sure you need at
+                                            # least 2 moves
+     {
+        a1 <- Pick(id)
+        a2 <- Pick(id)
+        b1 <- Pick(id)
+        b2 <- Pick(id)
+     }
 
-    trials <- Append(trials, [config1,config2,-1])
+    trials <- Append(trials,AssembleTrial(a1,a2,b1,b2,s,dists))
     i <- i + 1
   }
   return trials
 }
 
-
+define Pick(list)
+{ 
+   return First(Shuffle(list))
+}
 
 
 define ProgressiveDisks(numdisks,numtrials)
 {
+
+   gUseTimer <- 0  
+   gUseTurnLimit <- 0  
 
   ##Generates a random set of trials using Shallice's original 123
   ##stack heights
@@ -824,7 +1087,7 @@ define ProgressiveDisks(numdisks,numtrials)
       config2  <- ShuffleDisks(size)
     }
 
-    trials <- Append(trials, [config1,config2,-1])
+    trials <- Append(trials, [config1,config2,-1,0,0])
     i <- i + 1
   }
   } 
@@ -847,5 +1110,144 @@ define RandomDisks(numdisks,numtrials)
 define M(m,i,j)
 {
   return Nth(Nth(m,i),j)
+}
+
+
+
+
+
+define MakeGraph(remaining,total,x,y,label,numticks)
+{
+
+    ##Sets up some basic parameters for plotting the graph at the bottom of the screen
+    font <- MakeFont(gPEBLBaseFont,0,12,MakeColor("grey80"),MakeColor("black"),0)
+    height <- 250
+    dataheight <- remaining/total * height
+    width  <- 20
+    scale <- height/total      ##pixels/unit
+
+    ycenter <- y
+    xcenter <- x
+
+    
+	bgcol <- MakeColor("grey20")
+#    fgcol <- MakeColor("red")
+    fgcol <- MakeColorRGB(170,0,0)
+    black <- MakeColor("grey80")
+
+	
+    #Create rectangle for background and for data
+    back <- Rectangle(xcenter,ycenter, 70, height+50, bgcol, 1)
+    data <- Rectangle(xcenter,ycenter + height/2 - dataheight/2, width, dataheight, fgcol, 1)
+     lab <- MakeLabel(label,font)
+     Move(lab,xcenter, ycenter+height/2+14)
+     
+
+    AddObject(back,gWin)
+    AddObject(data,gWin)
+    AddObject(lab,gWin)
+    ##Create all the labels, based on yvals. Add each label to the 
+    ##appropriate location, and combine them all into a single
+    ##composite to make removal easier.
+    ##These labels are all re-created each trial--they could be
+    ##static, which would be a little more efficient, but it is really 
+    ##fast as is.
+    composite <-[back,data,lab]
+
+	
+
+    yvals <- Sequence(0, total, total/numticks)
+   
+     loop(i,yvals)
+      { 
+        yy <- MakeLabel(i+"", font)
+        AddObject(yy,gWin)
+        Move(yy,  xcenter-20, ycenter + height/2 - i*scale)
+        Show(yy)
+        composite <- Append(composite,yy)
+		tick <- Line(Floor(xcenter-width/2),ycenter+height/2-i*scale,width,0,black)
+        AddObject(tick,gWin)
+        composite <- Append(composite,tick)
+        
+      }
+    Draw()
+
+
+    return composite
+}
+
+define UpdateGraph(myGraph, remaining, x,y, total)
+{
+
+    ##Sets up some basic parameters for plotting the graph at the bottom of the screen
+
+    height <- 250
+    dataheight <- remaining/total * height
+
+    ycenter <- y
+    xcenter <- x
+
+    #Extract the data from graph.
+    data <- Second(myGraph)
+    data.height <- dataheight
+    data.y <- Floor(ycenter + height/2 -dataheight/2)
+
+}
+
+
+
+##targetlist is a set of graphical objects,
+##keylist is a set of keys whose corresponding 
+##value should be returned when a graphical object is clicked upon.
+
+define WaitForClickOnTargetWithTimeout(targetlist,keylist,time)
+{
+
+  ret <- ""
+  testlist <- Transpose([targetlist,keylist])
+   
+   wait1 <- 1
+   while(wait1)
+     {
+      wait2 <- 1
+      while(wait2)
+       {
+         pos <- WaitForMouseButtonWithTimeout(time)
+
+		 if(Length(pos)==4)
+          {
+         if(Nth(pos,4)=="<pressed>")
+          {
+            wait2 <- 0
+            gClick <- pos
+          }
+         } else {
+            wait2 <- 0
+			wait1 <- 0
+            gClick <- [-1,-1]
+            ret <- "<timeout>"
+           
+         }
+       }
+
+       ##only loop through the test if wait1 is 0; otherwise
+       ##we timed out.
+      if(wait1)
+      {
+       newtargs <- []
+
+       loop(i,testlist)
+          {
+
+             if(Inside(pos,First(i)))
+             {
+			    wait1 <- 0
+                ret <- Nth(i,2)
+                break
+             }
+          }
+     }
+    }
+  return ret
 }
 
