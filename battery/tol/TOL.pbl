@@ -22,12 +22,24 @@
 ##  Phillips, L. H., Wynn, V., Gilhooly, K. J., Della Sala, S., &
 ##    Logie, R. H. (1999). The role of memory in the Tower of London
 ##    task. Memory, 7(2), 209-231.
-#
-#
 ##
-
+##
+## Schnirman et al (1998) TOL-R
+##
+## Special thanks to Adam Thomas of NIH/NIMH for implementing the
+##    TOL-R trials.
+ 
 define Start(p)
 {
+
+
+
+##  Basic translations strings are assigned in GetStrings (see bottom of file).
+##
+##
+
+   GetStrings("es")
+
 
   gShowHand     <- 1  #Show the hand graphic?
   Init()
@@ -37,24 +49,13 @@ define Start(p)
    ##  type <- "3"
    ##  to go directly to a test configuration.
    ## From here VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
-  select <- "Type number of test to use:"+ CR(2) +
-     "[1] Unconstrained pile heights, {3,4,5} disks, progressive difficulty, 30 trials"+CR(2)+
-     "[2] Unconstrained pile heights, {3,4,5} disks, Random presentation, 30 trials"+CR(2)+
-     "[3] Shallice test ([1,2,3] pile heights, 3 disks, Shallice's 12 problems."+CR(2)+
-     "[4] Shallice pile heights [1,2,3], 3 disks, 30  random trials."+CR(2)+
-     "[5] Phillips (1999) trials A (unconstrained piles, 5 disks, progressive difficulty, 8 trials)"+CR(2)+
-     "[6] Phillips (1999) trials B (unconstrained piles, 5 disks, progressive difficulty, 8 trials)"+CR(2)+
-     "[7] Phillips (1999) trials C (unconstrained piles, 5 disks, progressive difficulty, 8 trials)"+CR(2)+
-     "[8] Fimbel et al (2009) old: [1,2,3] pile heights, 3 disks, progressive difficulty, 15 trials)"+CR(2)+
-     "[9] Fimbel et al (2009) young: [1,2,3] pile heights, 3 disks, progressive difficulty, 35 trials)"+CR(3)+
-     "Edit TOL.pbl directly to specify a test configuration automatically."
 
-  gInstructions <- MakeTextBox(select,gFont,760,560)
+  gInstructions <- MakeTextBox(gSelect,gFont,760,560)
 
   AddObject(gInstructions,gWin)
   Move(gInstructions,20,20)
   Draw()
-  type <- WaitForListKeyPress(["1","2","3","4","5","6","7","8","9"])
+  type <- WaitForListKeyPress(["1","2","3","4","5","6","7","8","9","0"])
 
    ## to here ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  
 
@@ -77,7 +78,7 @@ define Start(p)
    }elseif(type=="4")
    { 
 
-    stim <- ShalliceRandom(10)           ##Basic Shallice problem with
+    stim <- ShalliceRandom(30)           ##Basic Shallice problem with
 		 								 ##	3 disks on 
 		 								 ## different-sized poles, and
 										 ##random problems
@@ -105,18 +106,36 @@ define Start(p)
 
     stim <- FimbelYoung()                ##35 Shallice-like problems
       
-  }
+   }elseif(type=="0")
+   {
+
+    stim <- TOLR()                ##TOL-R ala Schnirman
+   }
 
 
  #  gUseTimer <- 0  ##This hard-codes use of timer. Uncomment to
                    ##override the defaults built into each particular test function.
 
    gTimeLimit <- 120   ##default time limit, in seconds.
- #  gUseTurnLimit <- 0  ##this hard-codes turn limits, overidding
+ #  gUseTurnLimit <- 0  ##this hard-codes turn limits, overiding
                        ## setting in original definition
 
   
-  gInstructions.text <-"You are about to perform a task called the 'Tower of London'.  Your goal is to move a pile of disks from their original configuration to the configuration shown on the top of the screen.  You can only move one disk at a time.  To move a disk, click on the pile you want to move a disk off of, and it will move up into the hand.  Then, click on another pile, and the disk will move down to that pile.  Click the mouse to begin."
+  gInstructions.text <- gInstText1
+
+
+  if(gUseTimer)
+   {
+     gInstructions.text <- gInstructions.text + gInstText2
+   }
+  if(gUseTurnLimit)
+   {
+     gInstructions.text <- gInstructions.text +gInstText3
+   }
+
+
+
+  gInstructions.text <- gInstructions.text + CR(1) + gBegin
   gInstructions.font <- gFont2
   Draw()
 
@@ -133,7 +152,7 @@ define Start(p)
   gInstructions.width <- 220
   gInstructions.height <- 520
   Move(gInstructions,555,50)
-  gInstructions.text <- "Trial Complete. "+CR(2)+ "Click mouse to continue to the next trial."
+  gInstructions.text <- gContinue
 
 
   trial  <- 1
@@ -159,7 +178,7 @@ define Start(p)
     c2 <- PlotDisksAnimate(config1,0,130,gDisks2,10)
     if(shortest > 0 and gUseTurnLimit)    
     {
-      cGraph <- MakeGraph(shortest,shortest,650,400,"Clicks",shortest)
+      cGraph <- MakeGraph(shortest,shortest,650,400,gClickLab,shortest)
     }
 
     startTime <- GetTime()
@@ -189,7 +208,7 @@ define Start(p)
        }
     
 
-      gTimeGraph <- MakeGraph(gTimeLimit,gTimeLimit,710,400,"Time (sec)",numticks)
+      gTimeGraph <- MakeGraph(gTimeLimit,gTimeLimit,710,400,gTimeLab,numticks)
     }
     Draw()
     
@@ -256,19 +275,19 @@ define Start(p)
 
    if(success)
     {
-     gInstructions.text <- "Trial Completed. "+CR(2)+ "Click mouse to continue to the next trial."   
+     gInstructions.text <- gContinue
     } else {
-     gInstructions.text <- "Trial Incomplete. "
+     gInstructions.text <- gIncomplete
      if(gMovesRanOut)
       {
-        ginstructions.text <- gInstructions.text + "You failed to complete the problem in the number of moves required."
+        ginstructions.text <- gInstructions.text +gMovesOutLab
       }
      if(gtimeRanOut)
       {
-        ginstructions.text <- gInstructions.text + "You ran out of time."
+        ginstructions.text <- gInstructions.text + gTimeOutLab
       }
     
-      gInstructions.text <- gInstructions.text+CR(2)+ "Click mouse to continue to the next trial."   
+      gInstructions.text <- gInstructions.text+CR(2)+ gContinue
     }
    RemoveObject(gInstructions,gWin)
    AddObject(gInstructions,gWin)
@@ -289,7 +308,7 @@ define Start(p)
    }
   }
 
-   gInstructions.text <- "Thank you for participating. The experiment is now complete.  Press any key to exit."
+   gInstructions.text <- gDebriefing
 
    Show(gInstructions)
    Draw()
@@ -314,9 +333,10 @@ define Init()
   gWin <- MakeWindow("black")
  
   gSubNum <- GetSubNum(gWin)
-  gPEBLBaseFont <- "Vera.ttf"
-  gFont <- MakeFont(gPEBLBaseFont,0,16,MakeColor("white"),MakeColor("black"),1)
-  gFont2 <- MakeFont(gPEBLBaseFont,0,26,MakeColor("white"),MakeColor("black"),1)
+
+  ##These may need to be changed for a particular language.
+  gFont <- MakeFont(gPEBLBaseFont,0,15,MakeColor("white"),MakeColor("black"),1)
+  gFont2 <- MakeFont(gPEBLBaseFont,0,24,MakeColor("white"),MakeColor("black"),1)
 }
 
 define InitPoles()
@@ -356,14 +376,13 @@ define InitPoles()
   AddObject(gRect,gWin)
 
 
-   footerfont <-   MakeFont(gPEBLBaseFont,0,22,MakeColor("grey"),MakeColor("black"),1)
+   footerfont <-   MakeFont(gPEBLBaseFont,0,20,MakeColor("grey"),MakeColor("black"),1)
 
-   gFooter <- MakeLabel("Click on pile to pick up and drop disk",footerfont)
+   gFooter <- MakeLabel(gFooterLab,footerfont)
    AddObject(gFooter,gWin)
    Move(gFooter,300,490)
 
-   gHeader <- MakeTextBox("Target
-Stacks:",footerfont,100,70)
+   gHeader <- MakeTextBox(gHeaderLab,footerfont,105,95)
    AddObject(gHeader,gWin)
    Move(gHeader,30,50)
   ##Keep track of the image complex:
@@ -528,8 +547,8 @@ define MoveDisk(config)
  
     config <- First(x)
     disk <- Nth(x,2)
-
-    if(disk != 0)
+ 
+   if(disk != 0)
     {
       ##Remove the disk complex so it can be re-drawn
       RemoveComplex(gComplex)
@@ -1251,3 +1270,173 @@ define WaitForClickOnTargetWithTimeout(targetlist,keylist,time)
   return ret
 }
 
+
+##
+##
+##
+
+define TOLR()
+
+{
+
+# Schnirman et al (1998) TOL-R
+
+
+  ## Use the timer and turn limits here.
+  gUseTimer <- 1
+  gUseTurnLimit <- 1
+ 
+
+  gPoleHeights <- [1,2,3]
+
+
+
+  ## 1=RED, 2=YELL, 3=BLUE
+  ##
+  ##
+
+
+
+  ##THIS IS ALL THE STATES
+  s <-[[[[],[],[1,2,3]],[[3],[],[1,2]],[[],[3],[1,2]],[[],[3,2],[1]],[[2],[3],[1]],[[2],[3,1],[]]],
+            [[[],[],[1,3,2]],[[2],[],[1,3]],[[],[2],[1,3]],[[],[2,3],[1]],[[3],[2],[1]],[[3],[2,1],[]]],
+            [[[],[],[3,1,2]],[[2],[],[3,1]],[[],[2],[3,1]],[[],[2,1],[3]],[[1],[2],[3]],[[1],[2,3],[]]],
+            [[[],[],[3,2,1]],[[1],[],[3,2]],[[],[1],[3,2]],[[],[1,2],[3]],[[2],[1],[3]],[[2],[1,3],[]]],
+            [[[],[],[2,3,1]],[[1],[],[2,3]],[[],[1],[2,3]],[[],[1,3],[2]],[[3],[1],[2]],[[3],[1,2],[]]],
+            [[[],[],[2,1,3]],[[3],[],[2,1]],[[],[3],[2,1]],[[],[3,1],[2]],[[1],[3],[2]],[[1],[3,2],[]]]]
+
+
+  ##This is the minimal distance between states:
+  dists <- StateDist()
+ 
+
+  trialsTOLR <- [
+                  AssembleTrial(1,1,6,5,s,dists),
+                  AssembleTrial(1,4,5,1,s,dists),
+                  AssembleTrial(3,5,1,2,s,dists),
+
+                  AssembleTrial(1,4,6,1,s,dists),
+                  AssembleTrial(1,4,5,3,s,dists),
+                  AssembleTrial(1,4,2,6,s,dists),
+
+                  AssembleTrial(6,3,4,4,s,dists),
+                  AssembleTrial(1,4,6,2,s,dists),
+                  AssembleTrial(6,3,4,6,s,dists),
+
+                  AssembleTrial(3,5,5,6,s,dists),
+                  AssembleTrial(3,5,5,4,s,dists),
+                  AssembleTrial(6,3,4,3,s,dists),
+
+                  AssembleTrial(1,1,3,5,s,dists),
+                  AssembleTrial(1,4,3,4,s,dists),
+                  AssembleTrial(6,3,4,5,s,dists),
+
+                  AssembleTrial(6,3,2,1,s,dists),
+                  AssembleTrial(6,3,1,2,s,dists),
+                  AssembleTrial(6,3,2,3,s,dists),
+
+                  AssembleTrial(1,4,5,5,s,dists),
+                  AssembleTrial(1,4,3,6,s,dists),
+                  AssembleTrial(1,1,6,1,s,dists),
+
+                  AssembleTrial(1,1,3,1,s,dists),
+                  AssembleTrial(6,3,2,5,s,dists),
+                  AssembleTrial(1,1,3,2,s,dists),
+
+                  AssembleTrial(6,3,4,1,s,dists),
+                  AssembleTrial(6,3,3,2,s,dists),
+                  AssembleTrial(1,4,4,6,s,dists),
+
+                  AssembleTrial(1,4,5,6,s,dists),
+                  AssembleTrial(2,1,5,1,s,dists),
+                  AssembleTrial(3,5,1,6,s,dists)]
+
+ 
+   return trialsTOLR
+
+}
+
+ 
+
+
+
+## This provides basic translations.  To translate to a new language, copy the text between
+##  elseif(lang== "es") and }else{
+##  and past before the final }else{, ensuring you have a single pair of matching brackets.
+##  Then translate each english string to your language of choice.  Be sure to not include line breaks unless you mean it.
+##  also, make a 2-character
+##  label to specify your language.  Then, change the 'Getstrings("en") at the top of the file to 
+##  be your language of choice.  Finally, copy the function into an email and send to the pebl email list
+##  at pebl-list@lists.sourceforge.net, so others can enjoy your labor.
+
+define GetStrings(language)
+{
+
+   lang <- Uppercase(language)
+  if(lang == "EN") 
+   {
+    gSelect <- "Type number of test to use:"+ CR(2) +
+     "[1] Unconstrained pile heights, {3,4,5} disks, progressive difficulty, 30 trials"+CR(2)+
+     "[2] Unconstrained pile heights, {3,4,5} disks, Random presentation, 30 trials"+CR(2)+
+     "[3] Shallice test ([1,2,3] pile heights, 3 disks, Shallice's 12 problems."+CR(2)+
+     "[4] Shallice pile heights [1,2,3], 3 disks, 30  random trials."+CR(2)+
+     "[5] Phillips (1999) trials A (unconstrained piles, 5 disks, progressive difficulty, 8 trials)"+CR(2)+
+     "[6] Phillips (1999) trials B (unconstrained piles, 5 disks, progressive difficulty, 8 trials)"+CR(2)+
+     "[7] Phillips (1999) trials C (unconstrained piles, 5 disks, progressive difficulty, 8 trials)"+CR(2)+
+     "[8] Fimbel et al (2009) old: [1,2,3] pile heights, 3 disks, progressive difficulty, 15 trials)"+CR(2)+
+     "[9] Fimbel et al (2009) young: [1,2,3] pile heights, 3 disks, progressive difficulty, 35 trials)"+CR(2)+
+     "[0] TOL-R (Schnirman et al, 1998). [1,2,3] pile heights, 3 disks, 30 problems, time and move limit)"+CR(3)+
+     "Edit TOL.pbl directly to specify a test configuration automatically."
+
+    gHeaderLab <- "Target"+CR(1)+"Stacks:"
+    gFooterLab <- "Click on pile to pick up and drop disk"
+
+    gInstText1 <- "You are about to perform a task called the 'Tower of London'.  Your goal is to move a pile of disks from their original configuration to the configuration shown on the top of the screen.  You can only move one disk at a time, and you cannot move a disk onto a pile that has no more room (indicated by the size of the grey rectangle).  To move a disk, click on the pile you want to move a disk off of, and it will move up above the piles.  Then, click on another pile, and the disk will move down to that pile."
+    gInstText2 <- " You will have a time limit to finish each problem.  Attempt to finish each problem within the allotted time."
+    gInstText3 <- " You will have only a limited number of moves to solve each problem. Before you make your first move, think about the problem to make sure you can solve it within your move limit.  If you do not finish the problem within the limit, the turn will end and you will move on to the next problem."
+    gBegin <-  "Click the mouse to begin."
+    gContinue <- "Trial Complete. "+CR(2)+ "Click mouse to continue to the next trial."
+    gIncomplete <- "Trial Incomplete. "
+    gClickLab <- "Clicks"
+    gTimeLab <-  "Time (s)"
+    gMovesOutLab <-  "You failed to complete the problem in the number of moves required."
+    gTimeOutLab <-  "You ran out of time."
+    gDebriefing <- "Thank you for participating. The experiment is now complete.  Press any key to exit."
+
+   } elseif(lang=="ES"){
+
+     ## Note, this is not a proper Spanish translation.
+     ##
+    gSelect <- "Type number of test to use:"+ CR(2) +
+     "[1] Unconstrained pile heights, {3,4,5} disks, progressive difficulty, 30 trials"+CR(2)+
+     "[2] Unconstrained pile heights, {3,4,5} disks, Random presentation, 30 trials"+CR(2)+
+     "[3] Shallice test ([1,2,3] pile heights, 3 disks, Shallice's 12 problems."+CR(2)+
+     "[4] Shallice pile heights [1,2,3], 3 disks, 30  random trials."+CR(2)+
+     "[5] Phillips (1999) trials A (unconstrained piles, 5 disks, progressive difficulty, 8 trials)"+CR(2)+
+     "[6] Phillips (1999) trials B (unconstrained piles, 5 disks, progressive difficulty, 8 trials)"+CR(2)+
+     "[7] Phillips (1999) trials C (unconstrained piles, 5 disks, progressive difficulty, 8 trials)"+CR(2)+
+     "[8] Fimbel et al (2009) old: [1,2,3] pile heights, 3 disks, progressive difficulty, 15 trials)"+CR(2)+
+     "[9] Fimbel et al (2009) young: [1,2,3] pile heights, 3 disks, progressive difficulty, 35 trials)"+CR(2)+
+     "[0] TOL-R (Schnirman et al, 1998). [1,2,3] pile heights, 3 disks, 30 problems, time and move limit)"+CR(3)+
+     "Edit TOL.pbl directly to specify a test configuration automatically."
+
+    gHeaderLab <- "Objetivo montóns:"
+    gFooterLab <- "Haga clic en pila para recoger y llevar a disco"
+    gInstText1 <- "Estás a punto de realizar una tarea llamada 'Torre de Su Londres'. Objetivo es pasar un montón de discos desde su configuración original a la configuración mostrada en la parte superior de la pantalla. Sólo puedes mover un disco a la vez, y no se puede mover un disco sobre un montón que no tiene más espacio (indicado por el tamaño del rectángulo gris). Para mover un disco, haga clic en el montón que desea mover un disco fuera de, y se moverá hacia arriba por encima de la pila. A continuación, haga clic en otra pila, y el disco se moverá hasta que el montón. "
+    gInstText2 <- " Tendrá un límite de tiempo para terminar cada problema. Intento de terminar cada problema en el tiempo asignado."
+    gInstText3 <- " Usted tendrá solamente un número limitado de movimientos para resolver cada problema. Antes de hacer su primer movimiento, pensar en el problema para asegurarse de que puede resolver dentro de su límite de movimiento. Si no termina el problema en el límite, el a su vez terminará y se trasladará al siguiente problema."
+    gBegin <-  "Haga clic en el ratón para empezar."
+    gContinue <- "Prueba Completa. "+ CR(1) +" Haga clic en el ratón para continuar a la siguiente prueba. "
+    gIncomplete <- "Prueba Incompleta. "
+    gClickLab <- "Clics"
+    gTimeLab <-  "Tiempo (s)"
+    gMovesOutLab <-  "Usted no pudo completar el problema del número de movimientos necesarios."
+    gTimeOutLab <-  "Usted acabó el tiempo."
+    gDebriefing <- "Gracias por participar. El experimento ya está completa. Pulse cualquier tecla para salir."
+
+
+    } else{
+     Print("Language: ["+lang+"] unknown.  Falling back on English translations.")
+     GetStrings("en")
+   }
+}
