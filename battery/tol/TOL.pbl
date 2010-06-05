@@ -23,8 +23,10 @@
 ##    Logie, R. H. (1999). The role of memory in the Tower of London
 ##    task. Memory, 7(2), 209-231.
 ##
+## Schnirman, G. M., Welsh, M. C., & Retzlaff, P. D. (1998).
+##      Development of the Tower of London-Revised. Assessment,
+##       5(4), 355-360. Retrieved from
 ##
-## Schnirman et al (1998) TOL-R
 ##
 ## Special thanks to Adam Thomas of NIH/NIMH for implementing the
 ##    TOL-R trials.
@@ -112,11 +114,11 @@ define Start(p)
    }
 
 
- #  gUseTimer <- 0  ##This hard-codes use of timer. Uncomment to
+#   gUseTimer <- 0  ##This hard-codes use of timer. Uncomment to
                    ##override the defaults built into each particular test function.
 
    gTimeLimit <- 120   ##default time limit, in seconds.
- #  gUseTurnLimit <- 0  ##this hard-codes turn limits, overiding
+#  gUseTurnLimit <- 0  ##this hard-codes turn limits, overiding
                        ## setting in original definition
 
   
@@ -561,11 +563,11 @@ define MoveDisk(config)
        #Now, get the target pile 1-3
 
 
-   if(gUseTimer)
-   {
-    cont <- 1
-    while(cont)
-    {
+      if(gUseTimer)
+      {
+       timecont <- 1
+       while(timecont)
+       {
          next <- WaitForClickOnTargetWithTimeout(gZones, [1,2,3],100)
 
          if(next=="<timeout>")
@@ -580,18 +582,19 @@ define MoveDisk(config)
 
 
            } else {
-               cont <- 0
+               timecont <- 0
            }
-    }
+       }
 
-   } else {
+      } else {
         ##No timer, so use just standard click.
         next <- WaitForClickOnTarget(gZones, [1,2,3])
 
-   }
+      }
 
-
-
+   
+	  ##Check to see if the new configuration violates the pole height
+	  ##      limitation.
        if(Length(Nth(config ,next))<Nth(gPoleHeights,next))
           {
             cont <- 0
