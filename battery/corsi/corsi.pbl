@@ -623,11 +623,6 @@ define VecSum(a,b)
   return out
 }
 
-define Dist(a,b)
-{
-  return Sqrt((First(a)- First(b))^2 + (Nth(a,2) - Nth(b,2))^2)
-}
-
 define VecTimes(a,b)
 {
    tmp <- Transpose([a,b])

@@ -149,7 +149,7 @@ define Trial()
   if(gUseSound)
    {
      x <- WaitForListKeyPressWithTimeout(gKeys,2500,1)
- 	  while(x == "<unknown>")
+ 	  while(IsList(x))
   	  {
        lapse <- 1
    	   PlayBackground(gBeep)

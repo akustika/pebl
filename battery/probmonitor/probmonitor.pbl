@@ -170,7 +170,7 @@ define Trial(numdials)
       resp <- WaitForListKeyPressWithTimeOut(keylist,gDelay,1)
 
 
-      if(resp == "<unknown>" or resp == "<ANYKEY>")
+      if(IsList(resp))
       {
          #we timed out
          3

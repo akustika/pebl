@@ -226,8 +226,8 @@ define Trial(cond)
      ShowCursor(0)
      Draw()
      starttime <- GetTime()
-     resp <- "<unknown>"
-     while(resp != " ")
+     resp <- []
+     while(IsList(resp))
      {
 
        #Target Present
@@ -241,7 +241,7 @@ define Trial(cond)
        Print("screen time: " + (t2-t1))
        Print(resp)
 
-	   if(resp != " ") 
+	   if(IsList(resp))
         {
          screensum <- screensum + (t2-t1)
          screenN <- screenN + 1

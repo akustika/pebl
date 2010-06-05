@@ -185,7 +185,9 @@ define Trial(list,deadline)
   corr <- 0
   text <- "Incorrect"
 
-  if(resp == "<unknown>")
+  Print(resp)
+
+  if(IsList(resp))
     {
      corr <- 0
      tooslow <- 1

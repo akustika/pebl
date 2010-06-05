@@ -27,14 +27,18 @@
 
   gSize <- 4  #Number of rows/columns in the matrix
   giveFeedback <- 1  
-  condsize <- 50
+  condsize <- 10  ##total trials will be 12 x condsize
+                  ## 2 response conditions x
+                  ## 4 levels of difference; 0x3 + 1,2,3
+                  ## (There are an equal number of same and different trials)
+
   gDeadline <- 1500
 
   gSleepEasy <- 1
   ShowCursor(0)
 
   gWin <- MakeWindow()
-  gbackground  <-  MakeColor("darkblue")
+  gbackground  <-  MakeColor("navyblue")
   gDotColor    <-  MakeColor("white")
   gFileOut <- FileOpenWrite("patcompsd-"+gSubNum+".txt")
 
@@ -61,7 +65,7 @@ Press any key to begin"
 
   condSame <- Shuffle(Transpose([Merge(Repeat("same",condsize*3),
                                        Repeat("diff",condsize*3)),
-						     Repeat("s",condsize*2*3),
+									   Repeat("s",condsize*2*3),	
                              RepeatList([1,2,3],condsize*2)]))
 
   condDiff <- Shuffle(Transpose([Merge(Repeat("same",condsize*3),
@@ -69,6 +73,8 @@ Press any key to begin"
 						     Repeat("d",condsize*2*3),
                              RepeatList([1,2,3],condsize*2)]))
 
+  Print(Length(condSame))
+  Print(Length(condDiff))
 
   WaitForAnyKeyPress()
   Hide(gInst)
@@ -152,21 +158,23 @@ define RunBlock(block,conds,lab)
     t2 <- GetTime()
 
         
-
+	responded <- not IsList(resp)
     if(respcond == "s")
     {
-      ##condition is "same"
-       corr <- (resp == "<unknown>" and stimcond == "diff") or 
-               (resp <> "<unknown>" and stimcond == "same")
+      ##Response condition is "same": only respond when same
+	  
+       corr <- ((not responded) and stimcond == "diff") or 
+               ( responded and stimcond == "same")
 
     } else {
-       corr <- (resp == "<unknown>" and stimcond == "same") or 
-               (resp == " " and stimcond == "diff")
-    }
+      ##Response condition is "different' only respond when different.
 
+       corr <- ((not responded) and stimcond == "same") or 
+               (responded and stimcond == "diff")
+    }
     
 
-    if(resp == "<unknown>")
+    if(IsList(resp))
      {
        respcode <- "timeout"
      } else {

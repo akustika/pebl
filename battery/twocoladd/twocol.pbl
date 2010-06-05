@@ -143,7 +143,7 @@ define Trial(feedback)
           firstclick <- GetTime()-starttime
          }
 
-      if(resp == "<unknown>")
+      if(IsList(resp))
          {
            continue <- 0
            toolong <- 1
