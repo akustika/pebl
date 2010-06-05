@@ -69,7 +69,8 @@ PlatformEnvironment::~PlatformEnvironment()
 {
 
     mWindows.clear();
-    SDL_Quit();
+    //    SDL_Quit();  //this can cause a crash; SDL_Quit needs to be called at very end.
+
 }
 
 // Inheritable function that is called by friend method << operator of PComplexData

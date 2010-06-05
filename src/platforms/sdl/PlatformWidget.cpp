@@ -50,6 +50,8 @@ PlatformWidget::~PlatformWidget()
         mParent->RemoveSubWidget(this);
 
     RemoveSubWidgets();
+    
+    //This can crash here whin widget is a window--not sure why yet?
     SDL_FreeSurface(mSurface);
 
 }

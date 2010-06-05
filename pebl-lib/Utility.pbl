@@ -2,7 +2,7 @@
 #//    Name:       src/pebl-lib/Utility.pbl
 #//    Purpose:    Contains PEBL functions used for various purposes
 #//    Author:     Shane T. Mueller, Ph.D.
-#//    Copyright:  (c) 2004-2009 Shane T. Mueller <smueller@obereed.net>
+#//    Copyright:  (c) 2004-2010 Shane T. Mueller <smueller@obereed.net>
 #//    License:    GPL 2
 #//
 #//
@@ -468,10 +468,19 @@ define Lookup(key, keylist, database)
 define EasyLabel(text,x,y,parent,fontsize)
 {
 
- # if(not IsWindow(parent))
- # { 
- #   SignalFatalError("EasyLabel[text,x,y,parent,fonsize] must be added to a window, not [" + parent+"]")
- # }
+ if(not IsText(text))
+   {
+      SignalFatalError("First argument of EasyLabel[text,x,y,parent,fontsize] must be text")
+   }
+ if(not (IsNumber(x) and IsNumber(y)))
+   {
+      SignalFatalError("Second and third argument of EasyLabel[text,x,y,parent,fontsize] must be numbers")
+   }
+
+  if(not IsWidget(parent))
+  { 
+    SignalFatalError("EasyLabel[text,x,y,parent,fonsize] must be added to a window, not [" + parent+"]")
+  }
 
   bgcol <- parent.BGCOLOR
 

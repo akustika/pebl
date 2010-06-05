@@ -1,28 +1,33 @@
 todo:
 
-easylabel crashes if win is passed as second argument.
+easylabel crashes if win is passed as second argument. *done
 
 Document PCanvas
+Allow transparent PCanvas  *done; document this
+Document SetPixel function 
+Update Draw() documentation to describe Draw(widget) 
+Add ResetCanvas() function *done; document this
 
-Document SetPixel function
-Update Draw() to describe Draw(widget)
-Add ResetCanvas() function
 
-Make PCanvas so it can be invisible.
+
+
 
 Fix GetInput so you can enter shifted characters like () *DONE
 todo:
   document WaitforMouseClickWithTimout
+  - Document IsCanvas
+
 
 
 Update tasks that watch for "<UNKNOWN>" as an output from waitforlistkeypresswithtimeout.
-  (TOAV, PCPT, maybe others)
+  (TOAV, PCPT, maybe others) *done
+-fix TOAV to work, as fixed in T3 test. *done
+
+Add MakeAttneave, ConvexHull, etc. *DONE
+- Need to collect all new functions added and document them.
 
 
-Add MakeAttneave, ConvexHull, etc.
-Thickline?
-
-- Add some functions to add noise distributions to things.
+- Add some functions to add noise distributions to things.????
 
 Document easyinput, messagebox
 
@@ -33,9 +38,9 @@ blocky. Using this allows one to make a font label with a transparent
 background.  In that case, bgcol is ignored.
 
 
--fix TOAV to work, as fixed in T3 test.
 
-- Update versions of fonts we distribute (especially vera.ttf)
-- Make gPEBLFONT point to Vera.ttf, and force all auto functions to
-  use it.
+
+- Update versions of fonts we distribute (especially vera.ttf) *Added Dejavu.
+- Make gPEBLFONT point to Vera.ttf, and force all auto functions to 
+  use it.  *Done; changed to DejaVu.
 

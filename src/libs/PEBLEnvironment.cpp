@@ -1007,6 +1007,8 @@ Variant PEBLEnvironment::SystemCall(Variant v)
 }
 
 
+//  This does not currently work.
+//
 Variant PEBLEnvironment::VariableExists(Variant v)
 {
    PList * plist = v.GetComplexData()->GetList();
@@ -1014,6 +1016,14 @@ Variant PEBLEnvironment::VariableExists(Variant v)
    return Variant(1);
 }
 
+
+
+Variant PEBLEnvironment::IsText(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+
+    return plist->First().IsString();
+}
 
 
 Variant PEBLEnvironment::IsNumber(Variant v)
@@ -1077,6 +1087,21 @@ Variant PEBLEnvironment::IsTextBox(Variant v)
         }
     return Variant(false);
 }
+
+Variant PEBLEnvironment::IsCanvas(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 =  plist->First();
+    if (v1.IsComplexData())
+        {
+            if((v1.GetComplexData())->IsCanvas())
+                {
+                    return Variant(true);
+                }
+        }
+    return Variant(false);
+}
+
 
 Variant PEBLEnvironment::IsImage(Variant v)
 {

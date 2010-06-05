@@ -52,10 +52,10 @@ public:
 
 
     //These will return a single color
-    int GetRed  () const { return mRed;};
-    int GetGreen() const { return mGreen;};
-    int GetBlue () const { return mBlue;};
-    int GetAlpha() const { return mAlpha;};
+    int GetRed  () const;
+    int GetGreen() const;
+    int GetBlue () const;
+    int GetAlpha() const;
  
     //These will set a single color
     void SetRed  (int color);

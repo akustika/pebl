@@ -464,7 +464,6 @@ define ShuffleWithoutAdjacents(list)
 {
   #This does mixed shuffling of a list of subset, so that
   #within-set tokens are not adjacent in the outcome list.
-
   # Make a template with integers describing the tokens to be shuffled 
   # in this crazy way.
 
@@ -583,3 +582,77 @@ define ListBy(vals,cond)
 }
 
 
+
+
+
+##  This function takes a list of anything, and a list of indexes
+##  specifying the items to extract from the list.  The indexes can
+##  be in any order, but the extracted list will be in the order 
+##  of the original list.  Items that are not numbers less than or 
+##  equal to the length of the list will be ignored.
+define RemoveSubset(list, items)
+{
+   #Check the arguments to insure they are the proper type
+    if(not IsList(list))
+	{
+	    SignalFatalError("First argument of function [RemoveSubset(<list>,<list>)] is not a list")
+	}
+    if(not IsList(items))
+	{
+	    SignalFatalError("First argument of function [RemoveSubset(<list>,<list>)] is not a list")
+	}
+
+
+    returnList <- []      #Make an initial blank list to return
+    index <- 1            #keep track of the index
+    loop(i, list)
+    {
+	#If the index is in the items list, add it to the return list
+	if(not IsMember(index, items))
+	{
+	    returnList <- Append(returnList, i)
+	}
+	index <- index + 1
+    }
+
+    return returnList
+}
+
+
+## New for PEBL 0.11
+##
+
+define Insert(list, item, pos)
+{ 
+   if(pos == 0)
+    { 
+      new <- Merge([item],list)
+    } elseif(pos >= Length(list))
+    {
+      new <- Append(list, item)    
+ 
+    }else {
+
+      new <- FlattenN([SubList(list,1,pos),
+                      [item], 
+                      SubList(list,pos+1,Length(list))],1)
+   }
+
+  return new
+}
+
+
+define Rest(list)
+{
+  if(not IsList(list))
+   { 
+     SignalFatalError("Rest(<list>) must be given a list as argument")
+   }
+  if(Length(list)<2)
+    {
+      ret <- []
+    } else {
+      ret <- SubList(list,2,Length(list))
+}
+  return ret
+}

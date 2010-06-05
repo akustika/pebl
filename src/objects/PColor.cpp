@@ -191,7 +191,12 @@ void PColor::SetAlpha(int color)
     PEBLObjectBase::SetProperty("ALPHA",GetAlpha());
 }
 
-
+   //These will return a single color
+int PColor::GetRed  () const { return mRed;};
+int PColor::GetGreen() const { return mGreen;};
+int PColor::GetBlue () const { return mBlue;};
+int PColor::GetAlpha() const { return mAlpha;};
+ 
 
 ///This uses modular arithmetic to extract colors from unsigned int.
 ///There could be more efficient ways to do it, but this is clear, and 

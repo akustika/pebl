@@ -107,8 +107,6 @@ ostream & PlatformCanvas::SendToStream(ostream& out) const
 bool  PlatformCanvas::Reset()
 {
 
-
-
     //free the memory if it is currently pointing at something.
     if(mSurface)  SDL_FreeSurface(mSurface);
 
@@ -119,14 +117,14 @@ bool  PlatformCanvas::Reset()
     Uint32 rmask = 0xff000000;
     Uint32 gmask = 0x00ff0000;
     Uint32 bmask = 0x0000ff00;
-    Uint32 amask = 0x00000000;
+    Uint32 amask = 0x000000ff;
 
 #else
 
     Uint32 rmask = 0x000000ff;
     Uint32 gmask = 0x0000ff00;
     Uint32 bmask = 0x00ff0000;
-    Uint32 amask = 0x00000000;
+    Uint32 amask = 0xff000000;
 
 #endif
 
@@ -137,15 +135,24 @@ bool  PlatformCanvas::Reset()
                                     rmask, gmask, bmask, amask);
     if(!mSurface)  PError::SignalFatalError("Surface not created in Canvas::Reset.");
     
-
-    //Fill the box with the background color of the font.
-    SDL_FillRect(mSurface, NULL, SDL_MapRGBA(mSurface->format, 
-                                             mBackgroundColor.GetRed(),
-                                             mBackgroundColor.GetGreen(),
-                                             mBackgroundColor.GetBlue(),
-                                             mBackgroundColor.GetAlpha()));
+    //SDL_SetAlpha(mSurface,0,SDL_ALPHA_TRANSPARENT);
+    //Fill the box with the background color 
+    //std::cout << mBackgroundColor << "|" << mBackgroundColor.GetAlpha() << std::endl;
+    SDL_FillRect(mSurface, NULL, 
+                 SDL_MapRGBA( mSurface->format ,
+                              (mBackgroundColor.GetRed()),
+                              (mBackgroundColor.GetGreen()),
+                              (mBackgroundColor.GetBlue()),
+                              (mBackgroundColor.GetAlpha())));
     
-    //SDL_SetAlpha(mSurface,0,mBackgroundColor.GetAlpha());
+    
+    //    if(mBackgroundColor.GetAlpha() <.000001)
+        
+    //        {
+    //            std::cout << "Setting transparency\n";
+            //SDL_SetAlpha(mSurface,0,0);
+            
+    //        }
     mReset = false;  //Reset the reset button.
 
     //If mSurface is null, then rendering failed.

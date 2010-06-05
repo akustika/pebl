@@ -40,8 +40,7 @@ overlapping targets. See poetry demo for example.
   on numbers and other special characters.  This only help US
   keyboards probably.
 
--Fixed a number of insidious and nasty memory leaks. These caused the
- parameter passed to any function to not be cleaned up when the
+-Fixed a number of insidious and nasty memory leaks. These caused the parameter passed to any function to not be cleaned up when the
  function exited. Also, most graphical objects were never cleaned up
  when PEBL finished using them.  For short experiments, this probably
  made little difference, but it could lead to memory growing out-of-control if
@@ -91,6 +90,24 @@ overlapping targets. See poetry demo for example.
   out-of-the-box. (need to document this)
 
 
+Rest()
+Insert()
+RemoveSubset()?
+ListBy
+Sample()
+
+MakeAttneave()
+ValidateAttneaveShape
+InsertAttneavePointRandom()
+SegmentsIntersect()
+ToRight()
+GetAngle3()
+ConvexHull()
+
+ResetCanvas()
+Dist()  (Check to see if it is documented)
+GetEasyInput()
+MessageBox()
 
 
 Version 0.10

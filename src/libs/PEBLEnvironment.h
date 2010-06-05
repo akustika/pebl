@@ -84,12 +84,14 @@ namespace PEBLEnvironment
     Variant SystemCall(Variant v);
 
     Variant VariableExists(Variant v);
+    Variant IsText(Variant v);
     Variant IsNumber(Variant v);
     Variant IsInteger(Variant v);
     Variant IsFloat(Variant v);
     Variant IsString(Variant v);
     Variant IsList(Variant v);
     Variant IsTextBox(Variant v);
+    Variant IsCanvas(Variant v);
     Variant IsImage(Variant v);
     Variant IsLabel(Variant v);
     Variant IsAudioOut(Variant v);

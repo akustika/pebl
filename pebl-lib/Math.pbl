@@ -2,7 +2,7 @@
 #//    Name:       src/pebl-lib/Math.pbl
 #//    Purpose:    Contains PEBL functions used for math
 #//    Author:     Shane T. Mueller, Ph.D.
-#//    Copyright:  (c) 2005-2008 Shane T. Mueller <smueller@obereed.net>
+#//    Copyright:  (c) 2005-2010 Shane T. Mueller <smueller@obereed.net>
 #//    License:    GPL 2
 #//
 #//
@@ -378,4 +378,11 @@ define SummaryStats(data, cond)
    }
 
  return stats
+}
+
+## New in PEBL 0.11??? maybe not
+##
+define Dist(a,b)
+{
+  return Sqrt((First(a)- First(b))^2 + (Nth(a,2) - Nth(b,2))^2)
 }
