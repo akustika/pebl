@@ -511,12 +511,14 @@ define Initialize()
    fg <- MakeColor("white")
    bg2 <- MakeColor("black")
    
-   colGreen <- MakeColor("darkgreen")
+   colGreen <- MakeColor("green")
    colRed   <- MakeColor("red")
  
+ 
    gStimFont         <- MakeFont(gPEBLBaseFontMono, 0, 24,fg,bg,1)       
-   gCorrFont         <- MakeFont(gPEBLBaseFontMono, 0, 24,colGreen, bg,1)
-   gIncorrFont       <- MakeFont(gPEBLBaseFontMono, 0, 24,colRed,   bg,1)
+   gCorrFont         <- MakeFont(gPEBLBaseFontMono, 0, 30,colGreen, bg,1)
+   gIncorrFont       <- MakeFont(gPEBLBaseFontMono, 0, 30,colRed,   bg,1)
+
 
    gInstructionsFont <- MakeFont(gPEBLBaseFont,0,18, fg,bg2,1)  
    gHeaderFont       <- MakeFont(gPEBLBaseFont, 0,36,fg,bg,1)       
