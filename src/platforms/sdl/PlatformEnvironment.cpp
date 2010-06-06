@@ -70,8 +70,11 @@ PlatformEnvironment::~PlatformEnvironment()
     mWindows.clear();
 
     //    SDL_Quit();  //this can cause a crash; SDL_Quit needs to be called at very end.
-
+    // especially if there are global SDL objects like gWin remaining.
+    //probably need to explicitly delete the globalvariable map;for now SDL_quit gets
+    //called essentially in main().
 }
+
 
 // Inheritable function that is called by friend method << operator of PComplexData
 ostream & PlatformEnvironment::SendToStream(ostream& out) const

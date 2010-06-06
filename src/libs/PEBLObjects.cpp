@@ -117,7 +117,7 @@ Variant PEBLObjects::MakeWindow(Variant v)
     myWindow->Initialize(mode, depth, windowed);
     
     //Add the window to the environment
-    myEnv->AddWindow(*myWindow);
+    myEnv->AddWindow(myWindow);
 
     counted_ptr<PEBLObjectBase> tmp2   =  counted_ptr<PEBLObjectBase> (myWindow);
 

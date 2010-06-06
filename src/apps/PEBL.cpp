@@ -415,7 +415,9 @@ int PEBLInterpret( int argc, char *argv[] )
             myEval = NULL;
             //Evaluator::gGlobalVariableMap.DumpValues();
 
-            
+            //Be sure SDL quits.  It should probably be handled elsewhere,
+            //but this seems to work.
+            SDL_Quit();
             return 0;
         }
     else
@@ -434,6 +436,9 @@ void  CaptureSignal(int signal)
     delete myLoader;
 
     if(myEnv) delete myEnv;
+
+    //quit SDL here.  It should be killed els
+    SDL_Quit();
 
     raise(signal);
     exit(0);
@@ -477,7 +482,12 @@ int main(int argc,  char *argv[])
             PrintOptions();
             return 1;
         }
+
+    //This does'nt seem to have any impact.  Not sure why.
+    SDL_Quit();
+
     return PEBLInterpret(argc, argv);
+
 }
 
 
