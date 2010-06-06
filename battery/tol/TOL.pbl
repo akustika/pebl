@@ -521,7 +521,7 @@ define MoveDisk(config)
    {
     cont <- 1
     while(cont)
-    {
+     {
          first <- WaitForClickOnTargetWithTimeout(gZones, [1,2,3],100)
          if(first=="<timeout>")
            {
@@ -535,9 +535,14 @@ define MoveDisk(config)
               Draw()
 
            } else {
-               cont <- 0
+               ##Time is not out; but we need to make sure there is 
+               ##something in the pile
+			   if(Length(Nth(config,first))>0)
+                {
+                 cont <- 0
+                }
            }
-    }
+     }
 
    } else {
        ##No timer, so use just standard click.
