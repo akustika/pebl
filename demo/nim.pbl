@@ -3,9 +3,8 @@ define Start(par)
 
   Init()
   Draw()
-
+  ##Choose S for server and C for client
   resp <- WaitForListKeyPress(["S","C"])
-
 
   gStones <- 10
   quit <- 0

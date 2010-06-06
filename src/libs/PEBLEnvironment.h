@@ -62,11 +62,11 @@ namespace PEBLEnvironment
     Variant WaitForAllKeysUp(Variant v);
     Variant WaitForAnyKeyDownWithTimeout(Variant v);
     Variant WaitForAnyKeyPressWithTimeout(Variant v);
+
     Variant WaitForListKeyPressWithTimeout(Variant v);
     Variant WaitForKeyListDown(Variant v);
     Variant WaitForMouseButton(Variant v);
     Variant WaitForMouseButtonWithTimeout(Variant v);
-
 
     //Complex eventloop construction.
     Variant RegisterEvent( Variant v);

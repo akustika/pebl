@@ -57,7 +57,7 @@ protected:
     // The main environment can
     // hold multiple PWindows; usually just one, but more if
     // you want separate interfaces for the subject and the experimenter.
-    std::list<PWindow *> mWindows;
+    std::list<PWindow*> mWindows;
     
 };
 

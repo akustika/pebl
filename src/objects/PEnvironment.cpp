@@ -3,7 +3,7 @@
 //    Name:       src/objects/PEnvironment.cpp
 //    Purpose:    Contains generic specification for a PEBL Environment
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -27,7 +27,7 @@
 #include "PEnvironment.h"
 
 
-bool PEnvironment::AddWindow(PWindow * window)
+bool PEnvironment::AddWindow( PWindow * window)
 {
     mWindows.push_front(window);
     return true;

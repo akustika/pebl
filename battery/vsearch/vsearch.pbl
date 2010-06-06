@@ -1,39 +1,68 @@
+##################################################
+##  PEBL Visual Search Task
+##  Part of the PEBL Test Battery, and the
+##  PEBL Cognitive Decathlon
+##
+## (c) 2010 Shane T Mueller smueller@obereed.net
+##
+## This software may be used, adapted, altered, or 
+## redistributed without consent of the author.
+##################################################
+
 define Start(p)
 {
   gWin <- MakeWindow("black")
   gSleepEasy <- 1
-  gHomeX <- gVideoWidth/2
-  gHomeY <- gVideoHeight/2
+  gHomeX <- Round(gVideoWidth/2)
+  gHomeY <- Round(gVideoHeight/2)
 
   gDisplayBoxSizeX <- 600  ##400 pixels/side,centered
   gDisplayBoxSizeY <- 400  ##400 pixels/side,centered
-
+  gSubNum <- GetSubNum(gWin)
+  gFileOut <- FileOpenAppend("vsearch-"+gsubnum+".txt")
+  FilePrint(gFileOut,"sub trial time numtargs size targchar targcol stim resp corr rt1 rt2")
 
   MessageBox("You are about to take part in a study where you see a screen with many letters on it, and are searching for a particular target.  At the start of each trial, you will be shown the target.  Then, a screen will appear, and you will need to search for the target.  On some trials, the target will be present; on other trials it will be absent.  When you find the target or determine that it is absent, click the mouse button.  Following the mouse click, At this point, the targets will all be replaced by boxes so that you can no longer see what they were.  When this is done, click on the location of the target or the 'None' button.",gWin)
 
-   arraySize <- 30
-   targs <- ["Q"]
-   foils <- RepeatList(["U","D","G","C","O"],6)
+   ##The following specify the conditions of the experiment.
+   targs  <- ["O","X"]
+   foils <- ["U","D","G","C","Q"]
+   foilcolor <- MakeColor("white")
+   searchsize <- [10,20,30]
+   numtargs <- [0,1,5]
+   targcols <- ["white","green"]   
+   reps  <- 5
+   
+   ##These aggregate the conditions into a single design list.
+   sizes  <- (DesignFullCounterbalance(numtargs,searchsize))
+   bytargs <- DesignFullCounterbalance(targs,targcols)
+   sizebycolor <- DesignFullCounterbalance(sizes,bytargs)
+   design <- Shuffle(RepeatList(sizebycolor,reps))
+  
+  ##Move through each trial of the design.
+  trial <- 1
+  ##loop through each trial.
+  loop(i,design)
+   {
 
+     time <- GetTime()
+     numTargs <- First(First(i))
+     num      <- Second(First(i))
+     targ     <- First(Second(i))
+     targcol  <-  Second(Second(i))
 
-   targ1 <- ["T"]
-   targ2 <- ["Q"] 
-   targ3 <- []
-   foils <- RepeatList(["U","D","G","C","O"],6)
-
-   targcols <- ["white","green"]
- 
-
-   SearchTrial(targs,foils,MakeColor("white"),MakeColor("white"))
-   SearchTrial(targs,foils,MakeColor("blue"),MakeColor("green"))
-   SearchTrial(targs,foils,MakeColor("white"),MakeColor("white"))
-   SearchTrial(targs,foils,MakeColor("blue"),MakeColor("green"))
-   SearchTrial(targs,foils,MakeColor("white"),MakeColor("white"))
-   SearchTrial(targs,foils,MakeColor("blue"),MakeColor("green"))
-   SearchTrial(targs,foils,MakeColor("white"),MakeColor("white"))
-   SearchTrial(targs,foils,MakeColor("blue"),MakeColor("green"))
- 
+     out <- SearchTrial(targ,foils, MakeColor(targcol),foilcolor,numTargs,num)
+     FilePrint_(gFileOut,gSubNum + " " + trial + " " + time + " " + numTargs + " " + num + " " +targ + " " + targcol)
+     loop(j,SubList(out,3,Length(out)))
+      {
+         FilePrint_(gFileOut," " + j )
+      }
+    FilePrint(gFileOut,"")
+    trial <- trial + 1
+   }
+  MessageBox("Thank you for taking part in the study.",gWin)
 }
+
 
 ##  This runs a single search trial. 
 ##  targchars is a list of 'target' characters
@@ -41,7 +70,7 @@ define Start(p)
 ##  targcol and foilcol specify the colors of these.
 ##  if absentoption == 1, there will be a 'NONE' button provided
 
-define SearchTrial(targChars, foilChars,targcol,foilcol)
+define SearchTrial(targChar, foilChars,targcol,foilcol,numtargs,num)
 {
 
   ShowCursor(0)  #Get rid of the cursor
@@ -51,25 +80,34 @@ define SearchTrial(targChars, foilChars,targcol,foilcol)
   targFont <- MakeFont(gPEBLBaseFont,0,fontsize,targCol,MakeColor("black"),1)
   foilFont <- MakeFont(gPEBLBaseFont,0,fontsize,foilCol,MakeColor("black"),1)
   bgcol   <- MakeColor("grey")
-  num <- Length(targChars)+Length(foilChars)
 
+  ##num is the total number in the display set.  We need to create a 
+  ##list of stimulus characters exactly that long.
+
+  numfoils <- num - numtargs
+  foilset <- DesignBalancedSampling(foilChars,numfoils)
 
  ##make a label for each target.
  i <- 1
  targs <- []
  bgs <- []
- loop(t,targChars)
+ targChars <- Repeat(targChar,numtargs)
+ if(numTargs > 0)
   {
+   loop(t,targChars)
+    {
     targ <- MakeLabel(t,targFont)
     targs <- Append(targs,[targ,1])
     bg   <- Circle(0,0,18,bgcol,0)
     bgs   <- Append(bgs,bg)
+    }
+  } else {  #If there are no targets, we still need to display the search character
+    targ <- MakeLabel(targChar,targFont)
   }
 
- 
 ##make label for each foil (and the backgrounds)
  foils <- []
- loop(f,foilChars)
+ loop(f,foilset)
   {
     foil <- MakeLabel(f,foilFont)
     bg   <- Circle(0,0,18,bgcol,0)
@@ -88,7 +126,7 @@ define SearchTrial(targChars, foilChars,targcol,foilcol)
    ##create the xy points
    pts <- MakePoints(minx,maxx,miny,maxy,40,num)
   
-  complex <- TRANSPOSE(Append( Merge( Transpose( Merge(targs,foils)), 
+  complex <- Transpose(Append( Merge( Transpose( Merge(targs,foils)), 
                                  Transpose(pts)),bgs))
 
    ##Add a 'none' button to the top, but hide it.
@@ -99,14 +137,15 @@ define SearchTrial(targChars, foilChars,targcol,foilcol)
     Hide(none)
     Hide(noneback)
 
-   ##Show the target
+   ##Show the target (in this case, the last target)
    AddObject(targ,gWin)
    Move(targ,gHomeX,gHomeY)
    label <- EasyLabel("Target:",gHomeX,gHomeY-80,gWin,fontsize)
    Draw()
    Wait(800)
    Draw()
-    
+   Hide(targ)
+   
   ##Add all the targets/foils to the specified positions
    tmp <- []
    backs <- []
@@ -120,20 +159,24 @@ define SearchTrial(targChars, foilChars,targcol,foilcol)
 
     AddObject(obj,gWin)    
     AddObject(back,gWin)
+    Show(obj)
     Hide(back)
     Move(back,x,y)
     Move(obj,x,y)
     tmp <- Append(tmp,obj)
     backs <- Append(backs,back)
   }
-
-
-
+  
   label.y <- gVideoHeight-50
   label.text <- "Click mouse button when search is complete"
   Draw()
+  time1 <- GetTime()
   WaitForDownClick()
+  time2 <- GetTime()
   ShowCursor(1)
+  SetMouseCursorPosition(gHomeX,gHomeY)
+  Draw()
+  
   label.text <- "Click on circle at location of target or NONE"
   Show(label) 
   Show(none)
@@ -141,17 +184,29 @@ define SearchTrial(targChars, foilChars,targcol,foilcol)
   RemoveObjects(tmp,gWin)
   ShowObjects(backs)
   Draw()
+  time3 <- GetTime()
   bgs <- Merge([noneback],bgs)
   resp <-  WaitForClickOnTarget(bgs,Sequence(0,num,1))
+  time4 <- GetTime()
   RemoveObjects(bgs,gWin)
   RemoveObject(label,gWin)
   RemoveObject(none,gWin)
   RemoveObject(noneback,gWin)
-
+  if(numtargs==0)
+  {  
+    RemoveObject(targ,gWin)
+  }
   Draw()
+  
+  if(numtargs == 0)
+    {
+       corr <- (resp == 0)
+    } else {
+       corr <- resp <= numtargs
+    }
+   display <- ListToString(Merge(targChars,foilset))
 
-
-  return resp
+  return [numtargs, num, display, resp, corr, (time2-time1),(time4-time3)]
 }
 
 define RemoveObjects(list,win)

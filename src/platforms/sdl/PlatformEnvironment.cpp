@@ -67,8 +67,8 @@ PlatformEnvironment::PlatformEnvironment(PEBLVideoMode mode, PEBLVideoDepth dept
 ///Standard Destructor
 PlatformEnvironment::~PlatformEnvironment()
 {
-
     mWindows.clear();
+
     //    SDL_Quit();  //this can cause a crash; SDL_Quit needs to be called at very end.
 
 }

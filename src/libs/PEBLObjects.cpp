@@ -107,7 +107,7 @@ Variant PEBLObjects::MakeWindow(Variant v)
 
 
     //Create a new window, and reference it in a counted pointer.
-    PlatformWindow * myWindow = new PlatformWindow;
+    PlatformWindow *  myWindow = new  PlatformWindow();
 
     myWindow->SetBackgroundColor(PColor(color.GetString()));
     PEBLVideoMode mode = myEnv->GetVideoMode();
@@ -117,7 +117,7 @@ Variant PEBLObjects::MakeWindow(Variant v)
     myWindow->Initialize(mode, depth, windowed);
     
     //Add the window to the environment
-    myEnv->AddWindow(myWindow);
+    myEnv->AddWindow(*myWindow);
 
     counted_ptr<PEBLObjectBase> tmp2   =  counted_ptr<PEBLObjectBase> (myWindow);
 
