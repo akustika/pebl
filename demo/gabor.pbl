@@ -1,0 +1,261 @@
+define Start(p)
+{
+
+     patchsize <- 60
+     bglev <- 20
+	 sd <- 40
+     
+     gWin <- MakeWindow("grey20")
+
+
+     bg <- MakeCanvas(700,500,MakeColorRGB(bglev,bglev,bglev))
+     AddObject(bg,gWin)
+     Move(bg,gVideoWidth/2,gVideoHeight/2)
+
+     gSleepEasy <- 1
+     angles <- [0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1,1.1,1.2,1.3,1.4,
+                1.5,1.6,1.7,1.8,1.9,2,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8,2.9,3,3.1]
+     cans <- []
+     labs <- []
+     x <- 00
+    lab <- EasyLabel("Gabor patch demo",400,25,gWin,22) 
+    loop(i,angles)
+       {
+
+         t1 <- GetTime()
+     	 can <- MakeGabor(patchsize,8,sd,i,0,bglev)
+         t2 <- GetTime()
+         Print(t2-t1)
+         AddObject(can,bg)
+         Move(can,50+x,65)
+         lab1 <- EasyLabel("Angle: " + i,50+x,140,bg,12)
+         Draw()
+         x <- x + 120
+         cans <- Append(cans,can)
+         labs <- Append(labs,lab1)
+        }
+
+   cans2 <- []
+    x <- 0
+    freq <- [2,3,4,6,10,20]
+    loop(i,freq )
+       {
+
+         t1 <- GetTime()
+     	 can <- MakeGabor(patchsize,i,sd,0.25,0,bglev)
+         t2 <- GetTime()
+         Print(t2-t1)
+
+         AddObject(can,bg)
+         Move(can,50+x,220)
+         lab1 <- EasyLabel("Freq: "+ i,50+x,280,bg,12)
+         Draw()
+         x <- x + 120
+         cans2 <- Append(cans2,can)
+         labs <- Append(labs,lab1)
+        }
+
+    x <- 0
+    phases <- [0,1,2,3,4,5]
+    loop(i,phases )
+       {
+         phase <- 2*3.14159 * i/5
+
+         t1 <- GetTime()
+     	 can <- MakeGabor(patchsize,6,sd,0,i,bglev)
+         t2 <- GetTime()
+         Print(t2-t1)
+
+         AddObject(can,bg)
+         Move(can,50+x,360)
+         lab1 <- EasyLabel("Phase: "+ Round(phase*100)/100,50+x,420,bg,12)
+         Draw()
+         x <- x + 120
+         cans2 <- Append(cans2,can)
+         labs <- Append(labs,lab1)
+        }
+
+
+     lab.text <- "Demo complete. Press any key to continue."   
+     Draw()
+
+	 WaitForAnyKeyPress()
+     loop(i,labs)
+     {
+       Hide(i)
+     }
+     loop(i,cans)
+     {
+       Hide(i)
+       Move(i,350,250)
+     }
+     loop(i,cans2)
+     {
+       Hide(i)
+       Move(i,350,250)
+     }
+
+    ResetCanvas(bg)
+    lab.text <- "Press spacebar to repeat or X to exit."   
+    cont <- 1
+    while(cont)
+    {
+    loop(i , cans)
+    {
+      Show(i)
+      Draw()
+      Wait(100)
+      ResetCanvas(bg)       
+      Hide(i)
+    }
+    Draw()
+
+#    input <- WaitForListKeyPress([" ","X"])
+#    if(input == "x")
+#     {
+#       cont <- 0
+#     }	
+    }
+
+}
+
+
+define MakeGabor0(size,freq,sd, theta)
+{
+
+
+  col <- MakeColor("grey50")  #This color doesn't really matter.	
+  canvas <- MakeCanvas(size,size,col)
+  center <- size/2
+
+  grating <- Grating(size,freq,theta)
+
+  xs <- Sequence(1,size,1)
+  ys <- Sequence(1,size,1)
+
+  normmax <- NormalDensity(0)^2
+
+  ix <- 0
+  loop(line,grating)
+   {
+   iy <- 0
+   loop(val,line)
+    {
+	      ##adjust so everything is centered in the middle of the canvas 
+          xoff <- center-ix 
+          yoff <- center-iy 
+
+           ##The gaussian window
+           leva <- (NormalDensity(xoff/sd) * NormalDensity(yoff/sd))/normmax
+
+		   ##The grating
+           lev <- Round((val)*leva*256)
+		   
+           col <- MakeColorRGB(lev,lev,lev)
+           SetPoint(canvas,ix,iy,col)
+           iy <- iy + 1
+    }
+        ix <- ix + 1
+   }
+
+  return canvas
+}
+		
+				  
+###   We make this by implicitly defining greyscale values of two
+##   sine grating (x and y), and then mixing them together in
+##   appropriate combinations. Returns value between 0 and 1
+
+define Grating(size,freq, theta)
+{
+
+
+  ctheta <-  Cos(-theta)
+  stheta <-  Sin(-theta)
+
+   stuff <- []
+   i <- 0
+   while(i<size)
+   {
+
+	 x <- i/size*freq
+     line <- []
+     j <- 0
+	 while(j < size)
+      {
+
+        y <- j/size*freq
+
+		##  This is the XY position we should really be looking at, for
+		##  angle theta.
+#        newx <- x*ctheta + y*stheta
+        newy <- -x * stheta + y*ctheta
+        line <- Append(line,(Sin(newy*2*3.14159)+1)/2)
+        j <- j + 1
+      }
+     stuff <- Append(stuff, line)
+     i <- i + 1
+   }
+  return stuff
+}
+
+
+
+
+define MakeGabor(size,freq,sd, theta,phase,bglev)
+{
+
+
+  col <- MakeColor("grey50")  #This color doesn't really matter.	
+  canvas <- MakeCanvas(size,size,col)
+  center <- size/2
+
+
+  xs <- Sequence(1,size,1)
+  ys <- Sequence(1,size,1)
+
+  normmax <- NormalDensity(0)^2
+
+  ctheta <-  Cos(-theta)
+  stheta <-  Sin(-theta)
+
+
+   i <- 0
+   while(i<size)
+   {
+     j <- 0
+     x <-  i/size*freq
+	 while(j < size)
+      {
+
+        ##adjust so everything is centered in the middle of the canvas 
+		
+
+        y <-  j/size*freq
+
+		##  This is the XY position we should really be looking at, for
+		##  angle theta.
+		## newx <- x*ctheta + y*stheta - center
+        newy <- -x * stheta + y*ctheta - center
+
+        leva <-(Sin(newy*6.283185 - 1.570796+phase)+1)/2
+        ##The gaussian window
+        levb <- (NormalDensity((i-center)/sd) *  NormalDensity((j-center)/sd))/normmax
+		levb <- levb * (levb>.01)
+        ##The grating
+        lev <- Round((leva*levb*255 +(1-levb)*bglev))
+        col.red <-lev
+		col.green <- lev
+		col.blue <- lev
+
+        SetPoint(canvas,i,j,col)
+
+
+        j <- j + 1
+      }
+     i <- i + 1
+   }
+
+
+  return canvas
+}
