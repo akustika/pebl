@@ -309,7 +309,13 @@ define ResetCanvas(canvas)
 }
 
 
+## This makes an attneave figure akin to the method described by:
 ##
+## Collin, C. A., & Mcmullen, P. A. (2002). Using Matlab to generate
+## families of similar Attneave shapes. Behavior Research Methods
+## Instruments and Computers, 34(1), 55-68.
+##
+
 define MakeAttneave(radius,numpoints,minangle, maxangle)
 {
 
@@ -445,6 +451,7 @@ define ConvexHull(pts)
 
 ## This inserts the point at a random location, as long as it does not
 ## cross any other edges.
+## This is a 'helper' function, and so is not documented externally.
 define InsertAttneavePointRandom(path, point,minangle,maxangle)
 {
 
@@ -614,8 +621,8 @@ define SegmentsIntersect(x1,y1,x2,y2, a1,b1,a2,b2)
 return intersect
 }
 
-
-
+## This is a helper function, and won't be documented 
+## externally.
 define ValidateAttneaveShape(shape,minAngle,maxAngle)
 {
 
@@ -681,3 +688,104 @@ define ValidateAttneaveShape(shape,minAngle,maxAngle)
 }
 
 
+
+
+## This function  creates a 'gabor patch'.  Because it is in pebl code, it is
+## fairly slow, and will take 1-5 seconds to create a reasonable-sized patch.
+##  size is the size, in pixels, of the image
+##  freq is the number of cycle in the image (not necessarily visible)
+##  sd is the standard deviation of the gaussian envelope.  Too big will clip to size square
+##  angle of the angle of rotation of the grating, in radians
+##  phase is the phase shift of the grating, in radians
+##  bglev is the grey level (between 0 and 255) that the grating gets faded into.  darker (smaller) values
+##      seem to avoid some noticeable clipping artifacts.
+
+define MakeGabor(size,freq,sd, angle,phase,bglev)
+{
+
+  if((not IsInteger(size))) 
+    {
+       SignalFatalError("In MakeGabor(<size>,<freq>,<sd>,<angle>,<phase>,<bglev>); <size>  must be an integer")
+    }
+
+  if((not IsNumber(freq))) 
+    {
+       SignalFatalError("In MakeGabor(<size>,<freq>,<sd>,<angle>,<phase>,<bglev>); <freq>  must be an number")
+    }
+  if((not IsNumber(sd)) )
+    {
+       SignalFatalError("In MakeGabor(<size>,<freq>,<sd>,<angle>,<phase>,<bglev>); <sd>  must be an number")
+    }
+  if((not IsNumber(angle)) )
+    {
+       SignalFatalError("In MakeGabor(<size>,<freq>,<sd>,<angle>,<phase>,<bglev>); <angle>  must be an number")
+    }
+  if((not IsNumber(phase))) 
+    {
+       SignalFatalError("In MakeGabor(<size>,<freq>,<sd>,<angle>,<phase>,<bglev>); <phase>  must be an number")
+    }
+  if((not IsInteger(bglev) or bglev>255 or bglev<0) )
+    {
+       SignalFatalError("In MakeGabor(<size>,<freq>,<sd>,<angle>,<phase>,<bglev>); <bglev>  must be an integer between 0 and 255.")
+    }
+
+ 
+  ##Create the backing canvas, and find its middle
+  col <- MakeColor("grey50")  #This color doesn't really matter.	
+  canvas <- MakeCanvas(size,size,col)
+  center <- size/2
+
+
+  ##Find max of 2D normal density  
+  normmax <- NormalDensity(0)^2
+
+  ##Precompute sinetheta and cosine -that, for use in rotation matrix
+  ctheta <-  Cos(-angle)
+  stheta <-  Sin(-angle)
+
+
+   ##loop through the pixels of the canvas
+   i <- 0
+   while(i<size)
+   {
+     j <- 0
+
+     #x is the x to sample in a sine wave
+     x <-  i/size*freq-center
+
+	 while(j < size)
+      {
+ 	  #y is the y to sample in a sine wave
+        y <-  j/size*freq-center     
+
+        ## Apply rotation matrix to x and y.  We won't actually need newx
+		## newx <- x*ctheta + y*stheta
+        newy <- -x * stheta + y*ctheta
+
+        ##Compute cosine of value
+        leva <-(Cos(newy*6.283185 +phase)+1)/2  ##scale cosine to 0..1
+
+        ##The gaussian window
+        levb <- (NormalDensity((i-center)/sd) *  NormalDensity((j-center)/sd))/normmax
+		levb <- levb * (levb>.01)
+
+        ##Mix the two:
+        lev <- Round((leva*levb*255 +(1-levb)*bglev))
+
+        #Set a color to the proper level
+        col.red <-lev
+		col.green <- lev
+		col.blue <- lev
+          
+        #Paint that pixel
+        SetPoint(canvas,i,j,col)
+
+
+        j <- j + 1
+      }
+     i <- i + 1
+   }
+
+
+  return canvas
+}
