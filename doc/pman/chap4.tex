@@ -81,7 +81,7 @@ foreground color, background color, and whether it should be rendered
 anti-aliased.
 
 We distribute a series of high-quality freely available
-and redistributable fonts, including the Bitstream Vera series,
+and redistributable fonts, including the DejaVu series,
 freefont series, and a few others.  These include
 the typeface/files shown below \ref{tab:fonts}:
 
@@ -126,7 +126,7 @@ the typeface/files shown below \ref{tab:fonts}:
 \multicolumn{2}{c}{PEBL Fonts}\\
 \texttt{Stimulasia.ttf}& A small set of arrow/boxes\\
 \midrule
-\multicolumn{2}{c}{Bitstream Vera Series}\\
+\multicolumn{2}{c}{Bitstream Vera Series (Deprecated in favor of DejaVu)}\\
 \texttt{Vera.ttf}    &     Sans serif Roman-style base font\\
 \texttt{VeraMono.ttf}&     Sans serif Roman-style mono-spaced base font\\
 \texttt{VeraSe.ttf}  &     Serif Roman-style base font (similar to times)\\
@@ -137,6 +137,13 @@ the typeface/files shown below \ref{tab:fonts}:
 \texttt{VeraMoIt.ttf}&     Italic Vera Mono\\
 \texttt{VeraMoBI.ttf}&     Bold Italic Vera Mono\\
 \texttt{VeraSeBd.ttf}&     Bold Serif Vera\\
+\midrule
+\multicolumn{2}{c}{DejaJu Series (Updated version of Vera with
+  international characters}\\
+\texttt{DejaVuSerif.ttf}    &     Serif Roman-style base font (similar to times)\\
+\texttt{DejaVuSans.ttf}     &     Serif Roman-style base font\\
+\texttt{DejaVuSansMono.ttf} &   Sans serif Roman-style mono-spaced base font\\
+
 \bottomrule
 \end{tabular}
 \label{tab:fonts}
@@ -156,7 +163,8 @@ To use, you need only specify the font name in the \texttt{MakeFont()} function:
 \end{verbatim}
 This code makes a red 22-point anti-aliased font on a grey background. 
 Other fonts may be used by specifying their absolute pathname 
-or copying them to the working directory.
+or copying them to the working directory and using them.
+
 
 
 Accessible font properties:
@@ -172,6 +180,28 @@ Accessible font properties:
 \end{verbatim}
  
 
+Having the right fonts is important for translating PEBL scripts into
+new languages.  Previously, this was challenging because the default
+font used in many scripts was Vera, and Vera has poor support for international
+characters. As of  PEBL 0.11, a few things have changed to make
+international character support easier:
+\begin{itemize}
+\item Three new fonts that support international characters much
+  better (``DejaVuSans.ttf'', ``DejaVuSansMono.ttf'', and
+  ``DejaVuSerif.ttf'') are now included and available.
+\item Three new global variables are set on initiation:
+  \texttt{gPEBLBaseFont}, \texttt{gPEBLBaseFontMono}, and
+  \texttt{gPEBLBaseFontSerif}, which are set by default to these
+  three font names.
+\item Helper functions and battery tests are all updated to use these
+  values to set up fonts.
+\end{itemize}
+
+So now, many international characters will be handled by default.  For
+character sets that aren't handled by DejaVu, simply needs to change
+\texttt{gPEBLBaseFont} to name a font that can handle your characters
+(and include that font in the program directory), and everything
+should work out fine.
 
 \section{Colors} 
 
@@ -230,6 +260,7 @@ behavior.
   widget.YZOOM
 \end{verbatim}
 
+
   
 
 \section{Images}
@@ -253,6 +284,67 @@ move by the upper-left hand corner, use the PEBL-defined
 Images have all the properties available for widgets, but the width
 and height can only be read, and not set.  Width and height are
 controlled by the dimensions of the image file.
+
+\section{Canvases}
+
+A canvas is a blank rectangle, sort of like an 'imageless' image. As
+with an image, \texttt{Move()} centers the image on the specified
+point. A canvas appears similar to a Rectangle() shape, but differs in
+some important ways.  First, a Canvas has a piece of video memory
+associated with it--shapes do not.  This means that other objects can
+be added to a canvas, just as it can be added to a window.  If you
+move the canvas around, the attached objects will move with the
+canvas.  
+
+Second, individual pixels of a canvas can be set, using the SetPoint()
+function. SetPoint works on images too, but not on text.  This is
+because a Draw() command re-renders text, and so will wipe out any
+pixel damage you have done.  This can be useful for making
+special-purpose drawing functions to create stimuli, especially noise
+distributions.
+
+Finally, a canvas can be drawn on with another object.  In fact, you can you
+another image as a brush.  Add an image to a canvas, and anytime you
+call Draw() on the canvas (rather than without an argument), the image
+gets imprinted on the canvas.  This will remain until you call
+ResetCanvas().
+
+For example:
+\begin{verbatim}
+
+  tb  <- MakeCanvas(600,400,d)
+  AddObject(tb,win)
+
+  ##add the image to canvas, not win
+  pebl <- MakeImage("pebl.png")
+  AddObject(pebl,tb)
+
+  ##Nothing will appear on the screen in these intermediate draws
+  Move(pebl,100,100)
+  Draw(pebl)
+  Move(pebl,200,100)
+  Draw(pebl)
+  Move(pebl,200,200)
+  Draw(pebl)
+  Move(pebl,100,200)
+  Draw(pebl)
+
+  Draw()  ##Now, we will see the canvas with 4 pebl images on it.
+\end{verbatim}
+
+
+The draw-on trick can be used to add noise to a text stimulus.  Make
+a label and add it to a canvas, use Draw() on the label, then hide the
+label, and add noise to the canvas by using SetPoint().
+Anything drawn on the canvas won't get reset until the ResetCanvas()
+function is called.
+
+Images have all the properties available for widgets.  Size cannot be
+updated once the canvas is created.
+
+Note that the background color can have an alpha value.  If you use an
+alpha value of 0, the background will be invisible.
+
 
 \section{Shapes}
 PEBL allows you to define a number of shape objects that can be added

@@ -89,27 +89,70 @@ overlapping targets. See poetry demo for example.
   because DEJAVU will work for a wider variety of scripts
   out-of-the-box. (need to document this)
 
+New tests in battery:
 
-Rest()
-Insert()
-RemoveSubset()?
-ListBy
-Sample()
-
-MakeAttneave()
-ValidateAttneaveShape
-InsertAttneavePointRandom()
-SegmentsIntersect()
-ToRight()
-GetAngle3()
-ConvexHull()
-
-ResetCanvas()
-Dist()  (Check to see if it is documented)
-GetEasyInput()
-MessageBox()
+  scales:  A set of  four visual-analog scales commonly used for
+  rating comfort.  Can be embedded within another experiment.
 
 
+PEBL TEST BATTERY VERSION 0.6
+
+
+
+New tasks:
+
+
+  item-order test:
+  Clock test
+  Corsi blocks
+  Tapping
+  Tower of Hanoi
+
+"The PEBL Cognitive Decathlon"
+
+  Device mimicry
+  objectjudgment:
+  ptracker 
+  visual search:
+
+Major improvements:
+
+  Tower of London
+
+
+  
+New functions:
+
+Rest()+
+Insert()+
+RemoveSubset()+
+ListBy()+
+Sample()+
+MakeAttneave() +
+ValidateAttneaveShape()  (Do not document; helper function)
+InsertAttneavePointRandom() (do not document; helper function)
+
+SegmentsIntersect()+
+ToRight()+
+GetAngle3()+
+ConvexHull()+
+
+
+ResetCanvas()+
+GetEasyInput()+
+MessageBox()+
+IsText()+
+MakeCanvas()+
+IsCanvas()+
+
+SetPixel()+
+SetPoint()+
+
+
+-Version for OSX
+
+
+---------------------------------------------------------------
 Version 0.10
 
 

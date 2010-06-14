@@ -294,12 +294,13 @@ define CumNormInv(p)
 ##returns the standard normal density function.
 define NormalDensity(x)
 {
+
 	if(not IsNumber(x))
 	{
 	SignalFatalError("Argument of function [NormalDensity(<number>)] is not a number")
 	}
 
-  return  1/Sqrt(2*3.1415967) * Exp(-x^2/2)
+  return  Exp(-(x^2)/2)/Sqrt(2*3.1415967) 
 }
 
 

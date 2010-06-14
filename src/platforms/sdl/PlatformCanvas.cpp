@@ -185,3 +185,65 @@ bool PlatformCanvas::Draw()
 
 
 
+#if 0
+
+bool PlatformCanvas::GreyscaleFromMatrix()
+{
+
+
+    //Check to see if we can find the image; if not, call everything off.
+    string filename = Evaluator::gPath.FindFile(imagefilename);
+
+    if(filename == "")
+        PError::SignalFatalError(string("Unable to find image file [")  + imagefilename + string("]."));
+
+
+    //This uses the SDL_image library to load a variety of
+    //image types.
+    if(mSurface)
+        {
+            SDL_FreeSurface(mSurface);
+        }
+
+
+
+
+    //If the SDL_image library is being used, we can handle many different types
+    //of images.  If it isn't, use SDL's built-in bmp loader.    
+    
+    //uSE THE FOLLOWING:
+
+    //SDL_Surface *SDL_CreateRGBSurfaceFrom(void *pixels,
+    //                        int width, int height, int depth, int pitch,
+    //                        Uint32 Rmask, Uint32 Gmask, Uint32 Bmask, Uint32 Amask);
+
+    //Checking should be done here to insure the proper color depth,
+    //bpp, format, etc.
+    
+
+
+    //Now, set the height and width to be the same as the
+    //initial image.
+    if( mSurface)
+        {  
+
+            mWidth  = mSurface->w; 
+            mHeight = mSurface->h;
+            //These need to be set at the PWidget level because 
+            //they are not mutable at the imagebox level.
+            PImageBox::SetProperty("WIDTH", Variant(mWidth));
+            PImageBox::SetProperty("HEIGHT", Variant(mHeight));
+            return true;
+        }
+    else
+        {
+            PWidget::SetProperty("WIDTH", 0);
+            PWidget::SetProperty("HEIGHT", 0);
+            
+            return false;
+        }
+}
+
+
+
+#endif

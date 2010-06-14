@@ -392,7 +392,12 @@ clean:
 
 
 .PHONY: install
-install:
+
+uninstall:
+	rm -Rf $(PREFIX)bin/pebl
+	rm -Rf $(PREFIX)share/pebl
+
+install: uninstall
 	install -d $(PREFIX)bin/	
 	cp bin/pebl $(PREFIX)bin/pebl
 	rm -Rf $(PREFIX)share/pebl

@@ -71,6 +71,8 @@ define Start(p)
    paths <- Shuffle(paths)
    show <- Shuffle([1,1,1,1,1,0,0,0,0,0])
     conds <- Transpose([paths,show])
+
+  ##Loop through the problems:
   loop(i,conds)
    {
 
@@ -86,6 +88,7 @@ define Start(p)
 define Trial (pathname,showarms)
  {
 
+    ResetCanvas(gCanvas)
     gInstr2.text  <- "Hit space bar to see path "
     Show(gInstr2)
     Draw()
@@ -130,7 +133,7 @@ define Trial (pathname,showarms)
 
     Print("computing score")
     score <- (Score(ev,ev2))
-    Print("score computed")
+    Print("score computed:" + score)
 
     FilePrint(gFileOut, gSubNum + " " + pathname + " " + showarms + " "  +  
          targetlength + " " + targetdist + " " + targetCrit + " " +
@@ -181,6 +184,8 @@ define MakeCSVLine(list)
 
 define CollectPath(homeX,homeY,arm1,arm2,theta10,theta20)
 {
+
+
 
   arm1l <- arm1
   arm2l <- arm2
@@ -240,8 +245,8 @@ define CollectPath(homeX,homeY,arm1,arm2,theta10,theta20)
       arm1l <- arm1
       arm2l <- arm2
 	  ResetCanvas(gCanvas)
-       RemoveComplex(x)
-       RemoveComplex(trline)
+      RemoveComplex(x)
+      RemoveComplex(trline)
        ret <- DrawDevice(homeX,homeY, arm1l,arm2l,theta1,theta1+theta2,1)
        x <- First(ret)
        lastpoint <- Second(ret)
@@ -412,7 +417,7 @@ define DrawDevice(centerX,centerY, arm1, arm2, theta1,theta2,show)
 
 define RemoveComplex(objs)
 {
-   loop(i,Flatten(objs))
+    loop(i,Flatten(objs))
    {
       if(IsWidget(i))
       {
@@ -515,13 +520,14 @@ define VecDiff(a,b)
 
 define Score(pts1,pts2)
 {
-  ##pts1 and pts2 are possibly of different sizes.
-   dist <- MakeDistMatrix(pts1,pts2)
-   
-   mins1 <- GetMins(dist)
-   mins2 <- GetMins(Transpose(dist))
-   
-  return Mean(Merge(mins1,mins2))
+##pts1 and pts2 are possibly of different sizes.
+#   dist <- MakeDistMatrix(pts1,pts2)
+#   
+#   mins1 <- GetMins(dist)
+#   mins2 <- GetMins(Transpose(dist))
+#   
+#  return Mean(Merge(mins1,mins2))
+   return SurveyorsDistance(pts1, pts2)
 }
 
 
@@ -576,3 +582,24 @@ define ResetCanvas(canvas)
 {
    canvas.bgcolor <- canvas.bgcolor
 }
+
+
+##This finds the distance between a set of points p1 and p2, using
+##the "surveyor's formula" of the polygon formed by concatenating the two.
+define SurveyorsDistance(p1, p2)
+{
+   pall <- Merge(p1,Reverse(p2))
+   pall2 <- Rotate(pall,1)
+
+   points <- Transpose(Merge(Transpose(pall), Transpose(pall2)))
+
+   dist <- 0
+   loop(i,points)
+   {
+    ##     Add determinate of p1p2
+     dist <- dist + (First(i) * Fourth(i) - Third(i)*Second(i))
+   }
+
+ return dist/2
+}
+

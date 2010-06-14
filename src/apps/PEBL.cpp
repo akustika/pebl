@@ -392,7 +392,7 @@ int PEBLInterpret( int argc, char *argv[] )
     Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFont",Variant("DejaVuSans.ttf"));
     Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontMono",Variant("DejaVuSansMono.ttf"));
     Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontSerif",Variant("DejaVuSerif.ttf"));
-
+    
     //Now, everything should be F-I-N-E fine.
     head = myLoader->GetMainPEBLFunction();
 
@@ -433,12 +433,20 @@ void  CaptureSignal(int signal)
 {
     cerr << "Exiting PEBL because of captured signal.\n";
 
-    delete myLoader;
+    Evaluator::gGlobalVariableMap.Destroy();
 
+    delete myLoader; 
     if(myEnv) delete myEnv;
+    Evaluator::mFunctionMap.Destroy();
+    
+    
+    //Evaluator::gGlobalVariableMap.DumpValues();
+
+
 
     //quit SDL here.  It should be killed els
     SDL_Quit();
+
 
     raise(signal);
     exit(0);
@@ -462,9 +470,9 @@ int main(int argc,  char *argv[])
     signal(SIGSTOP, CaptureSignal);
 #endif
 
-#ifdef SIGTERM
-    signal(SIGTERM, CaptureSignal);
-#endif
+    //#ifdef SIGTERM
+    //    signal(SIGTERM, CaptureSignal);
+    //#endif
 
     signal(SIGINT, CaptureSignal);
 
@@ -533,8 +541,8 @@ void PrintOptions()
 {
     cout << "-------------------------------------------------------------------------------\n";
     cout << "PEBL: The Psychology Experiment Building Language\n";
-    cout << "Version 0.10\n";
-    cout << "(c) 2003-2009 Shane T. Mueller, Ph.D.\n";
+    cout << "Version 0.11\n";
+    cout << "(c) 2003-2010 Shane T. Mueller, Ph.D.\n";
     cout << "smueller@obereed.net   http://pebl.sf.net\n";
     cout << "-------------------------------------------------------------------------------\n";
 
@@ -553,7 +561,7 @@ void PrintOptions()
     cout << "  dga, svgalib (from console).  Also controlled via environment variables.\n\n";
     cout << "  On Windows, use either windib or directx\n";
     cout << "--display  <widthxheight>\n";
-    cout << "  Controls the screen width and height (in pixels). Defaults to 640x480.\n";
+    cout << "  Controls the screen width and height (in pixels). Defaults to 800x600.\n";
     cout << "  Currently, only the following screens are supported:\n";
     cout << "  		512x384\n";
     cout << "  		640x480\n";

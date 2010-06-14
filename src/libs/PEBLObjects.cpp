@@ -1135,3 +1135,51 @@ Variant PEBLObjects::RotoZoom(Variant v)
     
     return v1.GetComplexData();
 }
+
+
+
+//define MakeGabor(size,freq,sd, angle,phase,bglev)
+
+#if 0
+Variant PEBLObjects::Gabor(Variant v)
+{
+
+    //
+    // v[1] should be X, v[2] shoud be Y
+    // v[3] should be dx, v[4] should be dy
+    // v[5] should be the color, v[6] should be whether it is filled.
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [MakeCanvas(<width>, <height>, <color>)]: "); 
+    int width = plist->First(); plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in second parameter of function  [MakeCanvas(<width>, <height>, <color>)]: "); 
+    int height = plist->First(); plist->PopFront();
+
+
+    PError::AssertType(plist->First(), PEAT_COLOR, "Argument error in fifth parameter of function  [MakeCanvas(<x>, <y>, <dx>, <dy>, <color>)]: "); 
+    Variant color = plist->First(); plist->PopFront();
+
+
+    int size = 100;
+    double freq = 10;
+    double sd = 12;
+    double angle = 0;
+    double phase = 0;
+    int bglev = 128;
+
+    //Make a canvas:
+    counted_ptr<PEBLObjectBase> myCanvas = counted_ptr<PEBLObjectBase>(new PlatformCanvas(width,height,color));
+    PComplexData *  pcd = new PComplexData(myCanvas);
+
+    
+
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
+
+
+
+}
+#endif
