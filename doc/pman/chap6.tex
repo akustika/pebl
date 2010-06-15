@@ -2016,6 +2016,36 @@ On Client:
 \rl
 
 
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+GetEasyInput()+
+
+\item[Description]	Hides what is on the screen and presents a textbox with
+  specified message, and a second text box to enter input.  Continues
+  when 'enter' it hit at the end of text entry.
+
+\item[Usage]		
+\begin{verbatim}
+GetEasyInput(<message>,<window>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+ gWin <- MakeWindow()
+ inp <-  GetEasyInput("What is your name.",gWin)
+
+
+\end{verbatim}
+
+\item[See Also]\verb+MessageBox+	\verb+GetEasyInput+, \verb+EasyTextBox+
+\end{desc}
+
+\rl
+
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+GetInput()+
 
@@ -2360,6 +2390,30 @@ if(test)
 \item[See Also]	
 if
 \end{desc}
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+Insert()+
+
+\item[Description] Inserts an element into a list at a specified
+  position, returning the new list. The original list in unchanged.
+
+\item[Usage]	Insert(<[list]>,<item>,<position>)	
+
+\item[Example]	
+
+\begin{verbatim}
+  x <- [1,2,3,5]
+  y <- Insert(x,1,4)  
+  ##y== [1,2,3,1,5]  
+\end{verbatim}
+
+\item[See Also]	
+\verb+List()+, \verb+Merge+, \verb+Append+
+
+\end{desc}
+
 \rl
 
 
@@ -2827,13 +2881,39 @@ if(IsString(x))
 }
 \end{verbatim}
 
-\item[See Also]	\verb+IsAudioOut()+, \verb+IsColor()+, \verb+IsImage()+, \verb+IsInteger()+, 
+\item[See Also] \verb+IsText()+	\verb+IsAudioOut()+, \verb+IsColor()+, \verb+IsImage()+, \verb+IsInteger()+, 
 		\verb+IsFileStream()+, \verb+IsFloat()+, \verb+IsFont()+, \verb+IsLabel()+,
 		\verb+IsList()+, \verb+IsNumber()+, \verb+IsTextBox()+, \verb+IsWidget()+
 \end{desc}
 
 \rl
 
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+IsText()+
+
+\item[Description]	Tests whether \verb+<variant>+ is a text string.
+  Same as IsString().
+
+\item[Usage]		
+\begin{verbatim}
+IsString(<variant>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+if(IsText(x))
+{
+ tb <- MakeTextBox(x, 100, 100)
+}
+\end{verbatim}
+
+\item[See Also] \verb+IsString()+	\verb+IsAudioOut()+, \verb+IsColor()+, \verb+IsImage()+, \verb+IsInteger()+, 
+		\verb+IsFileStream()+, \verb+IsFloat()+, \verb+IsFont()+, \verb+IsLabel()+,
+		\verb+IsList()+, \verb+IsNumber()+, \verb+IsTextBox()+, \verb+IsWidget()+
+\end{desc}
+
+\rl
 
 
 
@@ -3032,6 +3112,43 @@ List(1,2,3,444)		# == [1,2,3,444]
 \end{verbatim}
 
 \item[See Also]	\verb+[ ]+, \verb+Merge()+, \verb+Append()+
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+ListBy()+
+
+\item[Description]	organizes a list into sublists, based on the
+  elements of a second list.  It returns a list of two entities: (1) a
+  condition list, describing what values were aggregated across; (2)
+  the nested list elements.  The length of each element should be the same.
+
+\item[Usage]
+\begin{verbatim}
+ListBy(<list>, <conds>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+
+	a <- Sequence(1,10,1)
+    b <- RepeatList([1,2],5)
+    x <- ListBy(a,b)
+    Print(x)
+#[[1, 2],
+#  [[1, 3, 5, 7, 9],
+#   [2, 4, 6, 8, 10]]
+#]
+
+    Print(ListBy(b,a))
+#[[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+# [[1], [2], [1], [2], [1], [2], [1], [2], [1], [2]]]
+
+\end{verbatim}
+
+\item[See Also]	\verb+List()+, \verb+[ ]+, \verb+Merge()+, \verb+Append()+
 \end{desc}
 
 \rl
@@ -3570,6 +3687,35 @@ Merge([1,2,3],[8,9]) 	# == [1,2,3,8,9]
 \end{desc}
 
 \rl
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+MessageBox()+
+
+\item[Description]	Hides what is on the screen and presents a textbox with
+  specified message, with a button to click at the bottom to continue.
+
+
+\item[Usage]		
+\begin{verbatim}
+MessageBox(<message>,<window>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+ gWin <- MakeWindow()
+ MessageBox("Click below to begin.",gWin)
+
+
+\end{verbatim}
+
+\item[See Also]	\verb+GetEasyInput+, \verb+EasyTextBox+
+\end{desc}
+
+\rl
+
+
 
 
 \begin{desc}{Name/Symbol}
@@ -4498,6 +4644,34 @@ RemoveObject( <object>, <parent>)
 \rl
 
 
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+RemoveSubset()+
+
+\item[Description] Removes a subset of elements from a list. Creates
+a new list, and does not affect the original
+
+\item[Usage]
+\begin{verbatim}
+  RemoveSubset(<list1>,<list-of-element-indices>])
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+ list1 <- [1,2,2,4,5]
+ list2 <- RemoveSubset(list1,[2,3])
+ Print(list1) #[1,2,2,4,5]
+ Print(list2) #[1,4,5]
+\end{verbatim}
+
+\item[See Also]	
+Merge,Insert,Rest
+\end{desc}
+
+\rl
+
+
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+Repeat()+
 
@@ -4606,6 +4780,34 @@ Print(rep)
 
 \item[See Also]	
  for list items: \verb+Replace()+ 
+\end{desc}
+
+\rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  \verb+Rest()+
+
+\item[Description]  Returns the 'rest' of a list; a list minus its
+  first element.  If the list is empty or has a single member, it will
+  return an empty list [].  This is a very common function in LISP.
+
+\item[Usage]        	
+\begin{verbatim}
+Rest(<list>)
+\end{verbatim}
+			  
+\item[Example]     	
+\begin{verbatim}
+
+x <- Sequence(1,5,1)
+y <- Rest(x)
+Print(rep)
+# Result:  [2,3,4,5]
+\end{verbatim}
+
+\item[See Also]	
+Insert
 \end{desc}
 
 \rl
@@ -4736,6 +4938,31 @@ Round(56.65)  # == 57
 %%% End: 
 \section{S}
 \rl
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+Sample()+
+
+\item[Description] Samples a single item from a list, returning it.
+  It is a bit more convenient at times than ShuffleN(list,1), which
+  returns a list of length 1.  Implemented as First(ShuffleN(list,1))
+
+
+\item[Usage]       	
+\begin{verbatim}
+SampleN(<list>)
+\end{verbatim}
+
+\item[Example]   	
+\begin{verbatim}
+SampleN([1,1,1,2,2])     # Returns a single number
+SampleN([1,2,3,4,5,6,7]) # Returns a single number
+\end{verbatim}
+
+\item[See Also]    	\verb+SeedRNG()+, \verb+Sample()+ \verb+ChooseN()+, \verb+SampleNWithReplacement()+, \verb+Subset()+
+\end{desc}
+
+\rl
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+SampleN()+
@@ -5058,6 +5285,45 @@ Draw()
 \end{desc}
 
 \rl
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+SetPixel()+, \verb+SetPoint()+
+
+\item[Description] Sets the pixel at x,y to a particular color.  It
+  can also be called using SetPoint().  SetPoint is primarily useful
+  for images and canvases--labels and textboxes get re-rendered upon
+  draw so any use of SetPixel will get overwritten when it gets
+  drawn.  It won't work on windows or shapes.
+
+\item[Usage]
+\begin{verbatim}
+   SetPixel(<x>,<y>,<color>)
+   SetPoint(<x>,<y>,<color>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+
+  back <- MakeCanvas(50,50)
+  AddObject(back,gWin)
+  col <- MakeColor("green")
+  xy <- [[10,10],[10,11],[10,12],[10,13]]
+   loop(i,xy)
+   {
+    SetPixel(First(i),Second(i),col)
+   }
+  Draw()
+\end{verbatim}
+
+
+\item[See Also]
+  \verb+SetPoint+, \verb+MakeGabor+
+\end{desc}
+
+\rl
+
+
 
 \begin{desc}{Name/Symbol}
 

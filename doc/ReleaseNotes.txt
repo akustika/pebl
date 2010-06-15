@@ -89,6 +89,18 @@ overlapping targets. See poetry demo for example.
   because DEJAVU will work for a wider variety of scripts
   out-of-the-box. (need to document this)
 
+- Changed the order of precedence of unary minus and power
+  function. previously, -1^2 was +1; now it operates as expected.
+
+
+--language command-line option.
+
+-Version for OSX
+-- After several years without distributing a compiled version for
+-OSX, I once again have a downloadable version.  It must be run via
+-command line or .command script.
+
+
 New tests in battery:
 
   scales:  A set of  four visual-analog scales commonly used for
@@ -118,16 +130,14 @@ New tasks:
 Major improvements:
 
   Tower of London
-
-
   
 New functions:
 
-Rest()+
-Insert()+
-RemoveSubset()+
-ListBy()+
-Sample()+
+Rest()+*
+Insert()+*
+RemoveSubset()+*
+ListBy()+*
+Sample()+*
 MakeAttneave() +
 ValidateAttneaveShape()  (Do not document; helper function)
 InsertAttneavePointRandom() (do not document; helper function)
@@ -136,20 +146,15 @@ SegmentsIntersect()+
 ToRight()+
 GetAngle3()+
 ConvexHull()+
-
-
 ResetCanvas()+
-GetEasyInput()+
-MessageBox()+
-IsText()+
+GetEasyInput()+*
+MessageBox()+*
+IsText()+*
+IsString()*
 MakeCanvas()+
 IsCanvas()+
-
-SetPixel()+
-SetPoint()+
-
-
--Version for OSX
+SetPixel()+*
+SetPoint()+*
 
 
 ---------------------------------------------------------------
@@ -354,8 +359,8 @@ display the properties an object has defined.
    other fixes.
 
 Summary list of new functions:
- IsShape *
- IsWindow *
+ IsShape 
+ IsWindow 
  GetSubNum 
  PrintList 
  FilePrintList 

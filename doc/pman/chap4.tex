@@ -138,8 +138,8 @@ the typeface/files shown below \ref{tab:fonts}:
 \texttt{VeraMoBI.ttf}&     Bold Italic Vera Mono\\
 \texttt{VeraSeBd.ttf}&     Bold Serif Vera\\
 \midrule
-\multicolumn{2}{c}{DejaJu Series (Updated version of Vera with
-  international characters}\\
+\multicolumn{2}{c}{DejaVu Series (Version of Vera with
+  international characters)}\\
 \texttt{DejaVuSerif.ttf}    &     Serif Roman-style base font (similar to times)\\
 \texttt{DejaVuSans.ttf}     &     Serif Roman-style base font\\
 \texttt{DejaVuSansMono.ttf} &   Sans serif Roman-style mono-spaced base font\\
@@ -851,8 +851,25 @@ and can later be accessed by an experiment. These are described in table~\ref{ta
 \verb+gSubNum+      &  A global variable set to whatever follows the \verb+--s+ or \\
              & \verb+--S+ command-line argument.  If no argument is given, \\
              & defaults to 0.\\
+\verb+gLanguage+   & A global variable specified on the command line
+which can be used by a script to target a specific language.  Defaults
+to 'en'.\\
 \verb+gQuote+ &A quotation mark: ".  Use it to add quotes in text.\\
 \verb+gClick+ &[x,y] location of last click, set by WaitForClickOnTarget.\\
+
+\verb+gPEBLBaseFont+& Name of the default font to use in helper
+functions and most \\
+&battery tasks. By default, set to``DejaVuSans.ttf''. Change this
+to\\
+& a new name to override.\\
+\verb+gPEBLBaseFontMono+&Name of the default mono-spaced font to use in helper
+functions \\
+& and most battery tasks. By default, set to
+``DejaVuSansMono.ttf''.  \\& Change  to a new name to override.\\
+\verb+gPEBLBaseFontSerif+&Name of the default font to use in helper
+functions \\
+&and most battery tasks. By default, set to
+``DejaVuSerif.ttf''.\\& Change to a new name to override.\\
 
 
 \bottomrule

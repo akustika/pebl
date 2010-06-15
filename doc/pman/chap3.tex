@@ -332,17 +332,13 @@ write a simple program.  Here is an annotated program:
 \begin{verbatim}
 # Any line starting with a # is a comment.  It gets ignored.
 
---------------------------------------------------------
 #Every program needs to define a function called Start() define Start(par)
 #Start needs a parameter, just in case braces below contain PEBL statements
 {
-
  ##Assign a number to a variable
  number <- 10
-
  ##Assign a string to a variable
  hello  <- "Hello World"
-
  ##Create a global variable (starts with little g)
  gGlobalText <- "Global Text"
 
@@ -361,7 +357,6 @@ define PrintIt(text, number)
   RandomizeTimer()
   #Generate a random number between 1 and number
   i <- RandomDiscrete(number)  #this is a built-in function
-  
   ##Create a counter variable
   j <- 0
   ##Keep sampling until we get the number we chose.
