@@ -1,24 +1,23 @@
-/* A Bison parser, made by GNU Bison 2.3.  */
+
+/* A Bison parser, made by GNU Bison 2.4.1.  */
 
 /* Skeleton implementation for Bison's Yacc-like parsers in C
-
-   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+   
+      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
    Free Software Foundation, Inc.
-
-   This program is free software; you can redistribute it and/or modify
+   
+   This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-
+   
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.  */
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -29,7 +28,7 @@
    special exception, which will cause the skeleton and the resulting
    Bison output files to be licensed under the GNU General Public
    License without this special exception.
-
+   
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
@@ -47,7 +46,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "2.3"
+#define YYBISON_VERSION "2.4.1"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -55,9 +54,66 @@
 /* Pure parsers.  */
 #define YYPURE 0
 
+/* Push parsers.  */
+#define YYPUSH 0
+
+/* Pull parsers.  */
+#define YYPULL 1
+
 /* Using locations.  */
 #define YYLSP_NEEDED 0
 
+
+
+/* Copy the first part of user declarations.  */
+
+/* Line 189 of yacc.c  */
+#line 1 "src/base/grammar.y"
+
+  
+#include "PNode.h"
+
+
+#include <stdio.h>
+#include <iostream>
+#include <cctype>
+#include <cstring>
+#include <vector>
+#include <stack>
+
+  
+  // Prototypes to keep the compiler happy
+  void yyerror (char *error);
+  int  yylex ();
+  extern FILE * yyin;
+  PNode * gParseTreeHead;
+  PNode * parse(const char* filename);
+  extern int yylineno;
+  char* sourcefilename;
+
+
+
+
+/* Line 189 of yacc.c  */
+#line 99 "src/base/grammar.tab.cpp"
+
+/* Enabling traces.  */
+#ifndef YYDEBUG
+# define YYDEBUG 0
+#endif
+
+/* Enabling verbose error messages.  */
+#ifdef YYERROR_VERBOSE
+# undef YYERROR_VERBOSE
+# define YYERROR_VERBOSE 1
+#else
+# define YYERROR_VERBOSE 0
+#endif
+
+/* Enabling the token table.  */
+#ifndef YYTOKEN_TABLE
+# define YYTOKEN_TABLE 0
+#endif
 
 
 /* Tokens.  */
@@ -123,115 +179,16 @@
      PEBL_UMINUS = 312
    };
 #endif
-/* Tokens.  */
-#define PEBL_AND 258
-#define PEBL_ADD 259
-#define PEBL_ARGLIST 260
-#define PEBL_ASSIGN 261
-#define PEBL_BREAK 262
-#define PEBL_COMMA 263
-#define PEBL_DEFINE 264
-#define PEBL_DIVIDE 265
-#define PEBL_DOT 266
-#define PEBL_ELSE 267
-#define PEBL_ELSEIF 268
-#define PEBL_END 269
-#define PEBL_EOF 270
-#define PEBL_EQ 271
-#define PEBL_FUNCTION 272
-#define PEBL_FUNCTIONS 273
-#define PEBL_GE 274
-#define PEBL_GT 275
-#define PEBL_IF 276
-#define PEBL_IFELSE 277
-#define PEBL_LAMBDAFUNCTION 278
-#define PEBL_LBRACE 279
-#define PEBL_LBRACKET 280
-#define PEBL_LE 281
-#define PEBL_LIBRARYFUNCTION 282
-#define PEBL_LISTHEAD 283
-#define PEBL_LISTITEM 284
-#define PEBL_LOOP 285
-#define PEBL_LPAREN 286
-#define PEBL_LT 287
-#define PEBL_MULTIPLY 288
-#define PEBL_NE 289
-#define PEBL_NEWLINE 290
-#define PEBL_NOT 291
-#define PEBL_OR 292
-#define PEBL_POWER 293
-#define PEBL_RETURN 294
-#define PEBL_RBRACE 295
-#define PEBL_RBRACKET 296
-#define PEBL_RPAREN 297
-#define PEBL_SUBTRACT 298
-#define PEBL_SEMI 299
-#define PEBL_STATEMENTS 300
-#define PEBL_START 301
-#define PEBL_VARIABLEDATUM 302
-#define PEBL_VARLIST 303
-#define PEBL_WHILE 304
-#define PEBL_FLOAT 305
-#define PEBL_INTEGER 306
-#define PEBL_STRING 307
-#define PEBL_SYMBOL 308
-#define PEBL_LOCALVAR 309
-#define PEBL_GLOBALVAR 310
-#define PEBL_FUNCTIONNAME 311
-#define PEBL_UMINUS 312
 
 
-
-
-/* Copy the first part of user declarations.  */
-#line 1 "src/base/grammar.y"
-
-  
-#include "PNode.h"
-
-
-#include <stdio.h>
-#include <iostream>
-#include <cctype>
-#include <cstring>
-#include <vector>
-#include <stack>
-
-  
-  // Prototypes to keep the compiler happy
-  void yyerror (char *error);
-  int  yylex ();
-  extern FILE * yyin;
-  PNode * gParseTreeHead;
-  PNode * parse(const char* filename);
-  extern int yylineno;
-  char* sourcefilename;
-
-
-
-
-/* Enabling traces.  */
-#ifndef YYDEBUG
-# define YYDEBUG 0
-#endif
-
-/* Enabling verbose error messages.  */
-#ifdef YYERROR_VERBOSE
-# undef YYERROR_VERBOSE
-# define YYERROR_VERBOSE 1
-#else
-# define YYERROR_VERBOSE 0
-#endif
-
-/* Enabling the token table.  */
-#ifndef YYTOKEN_TABLE
-# define YYTOKEN_TABLE 0
-#endif
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 30 "src/base/grammar.y"
 {
+
+/* Line 214 of yacc.c  */
+#line 30 "src/base/grammar.y"
+
   
   long int    iValue;  /* For the lexical analyser. NUMBER tokens */
   long double fValue;
@@ -239,22 +196,23 @@ typedef union YYSTYPE
   PNode       *exp;    /* For expressions. */
   char        *symbol; /* The name of a variable*/
   char        *function; 
-}
-/* Line 187 of yacc.c.  */
-#line 245 "src/base/grammar.tab.cpp"
-	YYSTYPE;
+
+
+
+/* Line 214 of yacc.c  */
+#line 204 "src/base/grammar.tab.cpp"
+} YYSTYPE;
+# define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
-# define YYSTYPE_IS_TRIVIAL 1
 #endif
-
 
 
 /* Copy the second part of user declarations.  */
 
 
-/* Line 216 of yacc.c.  */
-#line 258 "src/base/grammar.tab.cpp"
+/* Line 264 of yacc.c  */
+#line 216 "src/base/grammar.tab.cpp"
 
 #ifdef short
 # undef short
@@ -329,14 +287,14 @@ typedef short int yytype_int16;
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static int
-YYID (int i)
+YYID (int yyi)
 #else
 static int
-YYID (i)
-    int i;
+YYID (yyi)
+    int yyi;
 #endif
 {
-  return i;
+  return yyi;
 }
 #endif
 
@@ -417,9 +375,9 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 /* A type that is properly aligned for any stack member.  */
 union yyalloc
 {
-  yytype_int16 yyss;
-  YYSTYPE yyvs;
-  };
+  yytype_int16 yyss_alloc;
+  YYSTYPE yyvs_alloc;
+};
 
 /* The size of the maximum gap between one aligned stack and the next.  */
 # define YYSTACK_GAP_MAXIMUM (sizeof (union yyalloc) - 1)
@@ -453,12 +411,12 @@ union yyalloc
    elements in the stack, and YYPTR gives the new location of the
    stack.  Advance YYPTR to a properly aligned location for the next
    stack.  */
-# define YYSTACK_RELOCATE(Stack)					\
+# define YYSTACK_RELOCATE(Stack_alloc, Stack)				\
     do									\
       {									\
 	YYSIZE_T yynewbytes;						\
-	YYCOPY (&yyptr->Stack, Stack, yysize);				\
-	Stack = &yyptr->Stack;						\
+	YYCOPY (&yyptr->Stack_alloc, Stack, yysize);			\
+	Stack = &yyptr->Stack_alloc;					\
 	yynewbytes = yystacksize * sizeof (*Stack) + YYSTACK_GAP_MAXIMUM; \
 	yyptr += yynewbytes / sizeof (*yyptr);				\
       }									\
@@ -573,13 +531,13 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   119,   119,   127,   135,   144,   156,   157,   161,   162,
-     166,   167,   168,   176,   179,   183,   187,   196,   198,   200,
-     209,   217,   230,   236,   252,   259,   263,   270,   276,   293,
-     297,   307,   310,   314,   318,   326,   330,   336,   339,   342,
-     348,   351,   355,   358,   361,   364,   367,   370,   374,   377,
-     380,   383,   386,   389,   398,   408,   411,   414,   421,   424,
-     429,   434,   441,   442,   446,   447
+       0,   120,   120,   128,   136,   145,   157,   158,   162,   163,
+     167,   168,   169,   177,   180,   184,   188,   197,   199,   201,
+     210,   218,   231,   237,   253,   260,   264,   271,   277,   294,
+     298,   308,   311,   315,   319,   327,   331,   337,   340,   343,
+     349,   352,   356,   359,   362,   365,   368,   371,   375,   378,
+     381,   384,   387,   390,   399,   409,   412,   415,   422,   425,
+     430,   435,   442,   443,   447,   448
 };
 #endif
 
@@ -688,22 +646,22 @@ static const yytype_int16 yypact[] =
       29,    34,   -19,    35,   -19,   394,   180,   394,    39,   -90,
      -90,   -90,    65,    66,    42,    36,   -19,   -90,   -90,    -9,
      -19,   -90,   358,   -90,   -90,   -90,   394,   377,   -22,   394,
-     378,   -90,    47,   -90,   394,   394,   394,   -32,   -90,   -90,
+     378,   -90,    47,    54,   394,   394,   394,   -32,   -90,   -90,
       -2,   -90,   -90,   -90,   -19,   -19,   -19,   394,   394,   394,
      394,   394,   -19,   394,   -19,   -19,   -19,   223,   -90,    33,
      243,    79,   268,   288,   358,   358,   -90,   394,   -90,   -90,
      -90,   -19,   394,   394,   394,     2,     2,     2,     2,     2,
-     394,     2,   394,   394,   394,   -19,   -90,   -19,   394,    50,
-     -19,    51,   -90,   378,    53,    57,    57,   378,   -90,    53,
-      72,   394,   313,   -90,    72,   -90,   -19,    43,   -90,   -19,
-     -90,   180,   -19,    67,   -90,    72,   -19,    72,   394,   -90,
-     143,   -90,   333,   -19,    72,    43,   -90
+     394,     2,   394,   394,   394,   -19,   -90,   -19,   394,    51,
+     -19,    56,   -90,   378,    53,    54,    54,   378,   -90,    53,
+      71,   394,   313,   -90,    71,   -90,   -19,    43,   -90,   -19,
+     -90,   180,   -19,    68,   -90,    71,   -19,    71,   394,   -90,
+     143,   -90,   333,   -19,    71,    43,   -90
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -90,   -90,    94,    74,   -90,    55,   -41,   -34,   -66,    70,
+     -90,   -90,    93,    72,   -90,    55,   -41,   -34,   -66,    70,
       41,   -46,   -90,   -90,   -89,    86,    24,   -90,     4,    -7,
      -90
 };
@@ -724,7 +682,7 @@ static const yytype_uint8 yytable[] =
       97,    63,    91,    76,    55,    56,    58,   102,   103,   104,
       64,    65,    66,    67,   116,   110,    69,   112,   113,   114,
       87,    90,    71,    92,   100,   119,    82,   118,    93,    94,
-      95,    85,   133,   135,   122,    85,   136,     8,   148,    28,
+      95,    85,    85,   133,   122,   136,     8,    28,   135,   148,
      146,   105,   106,   107,   108,   109,    62,   111,   130,   156,
      131,   101,    29,   134,     0,     0,    99,     0,     0,     0,
        0,    90,     0,     0,     0,     0,   123,   124,   125,   141,
@@ -774,7 +732,7 @@ static const yytype_int16 yycheck[] =
       67,    37,    58,    10,    35,    31,    31,    74,    75,    76,
       31,     6,     6,    31,    41,    82,    40,    84,    85,    86,
       56,    57,    35,    59,   150,    92,    33,     8,    64,    65,
-      66,    38,    42,    42,   101,    38,    24,     3,    31,    25,
+      66,    38,    38,    42,   101,    24,     3,    25,    42,    31,
      141,    77,    78,    79,    80,    81,    36,    83,   115,   155,
      117,    70,    26,   120,    -1,    -1,   150,    -1,    -1,    -1,
       -1,    97,    -1,    -1,    -1,    -1,   102,   103,   104,   136,
@@ -1017,17 +975,20 @@ yy_symbol_print (yyoutput, yytype, yyvaluep)
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yy_stack_print (yytype_int16 *bottom, yytype_int16 *top)
+yy_stack_print (yytype_int16 *yybottom, yytype_int16 *yytop)
 #else
 static void
-yy_stack_print (bottom, top)
-    yytype_int16 *bottom;
-    yytype_int16 *top;
+yy_stack_print (yybottom, yytop)
+    yytype_int16 *yybottom;
+    yytype_int16 *yytop;
 #endif
 {
   YYFPRINTF (stderr, "Stack now");
-  for (; bottom <= top; ++bottom)
-    YYFPRINTF (stderr, " %d", *bottom);
+  for (; yybottom <= yytop; yybottom++)
+    {
+      int yybot = *yybottom;
+      YYFPRINTF (stderr, " %d", yybot);
+    }
   YYFPRINTF (stderr, "\n");
 }
 
@@ -1061,11 +1022,11 @@ yy_reduce_print (yyvsp, yyrule)
   /* The symbols being reduced.  */
   for (yyi = 0; yyi < yynrhs; yyi++)
     {
-      fprintf (stderr, "   $%d = ", yyi + 1);
+      YYFPRINTF (stderr, "   $%d = ", yyi + 1);
       yy_symbol_print (stderr, yyrhs[yyprhs[yyrule] + yyi],
 		       &(yyvsp[(yyi + 1) - (yynrhs)])
 		       		       );
-      fprintf (stderr, "\n");
+      YYFPRINTF (stderr, "\n");
     }
 }
 
@@ -1345,10 +1306,8 @@ yydestruct (yymsg, yytype, yyvaluep)
 	break;
     }
 }
-
 
 /* Prevent warnings from -Wmissing-prototypes.  */
-
 #ifdef YYPARSE_PARAM
 #if defined __STDC__ || defined __cplusplus
 int yyparse (void *YYPARSE_PARAM);
@@ -1364,11 +1323,10 @@ int yyparse ();
 #endif /* ! YYPARSE_PARAM */
 
 
-
-/* The look-ahead symbol.  */
+/* The lookahead symbol.  */
 int yychar;
 
-/* The semantic value of the look-ahead symbol.  */
+/* The semantic value of the lookahead symbol.  */
 YYSTYPE yylval;
 
 /* Number of syntax errors so far.  */
@@ -1376,9 +1334,9 @@ int yynerrs;
 
 
 
-/*----------.
-| yyparse.  |
-`----------*/
+/*-------------------------.
+| yyparse or yypush_parse.  |
+`-------------------------*/
 
 #ifdef YYPARSE_PARAM
 #if (defined __STDC__ || defined __C99__FUNC__ \
@@ -1402,14 +1360,39 @@ yyparse ()
 #endif
 #endif
 {
-  
-  int yystate;
+
+
+    int yystate;
+    /* Number of tokens to shift before error messages enabled.  */
+    int yyerrstatus;
+
+    /* The stacks and their tools:
+       `yyss': related to states.
+       `yyvs': related to semantic values.
+
+       Refer to the stacks thru separate pointers, to allow yyoverflow
+       to reallocate them elsewhere.  */
+
+    /* The state stack.  */
+    yytype_int16 yyssa[YYINITDEPTH];
+    yytype_int16 *yyss;
+    yytype_int16 *yyssp;
+
+    /* The semantic value stack.  */
+    YYSTYPE yyvsa[YYINITDEPTH];
+    YYSTYPE *yyvs;
+    YYSTYPE *yyvsp;
+
+    YYSIZE_T yystacksize;
+
   int yyn;
   int yyresult;
-  /* Number of tokens to shift before error messages enabled.  */
-  int yyerrstatus;
-  /* Look-ahead token as an internal (translated) token number.  */
-  int yytoken = 0;
+  /* Lookahead token as an internal (translated) token number.  */
+  int yytoken;
+  /* The variables used to return semantic value and location from the
+     action routines.  */
+  YYSTYPE yyval;
+
 #if YYERROR_VERBOSE
   /* Buffer for error messages, and its allocated size.  */
   char yymsgbuf[128];
@@ -1417,51 +1400,28 @@ yyparse ()
   YYSIZE_T yymsg_alloc = sizeof yymsgbuf;
 #endif
 
-  /* Three stacks and their tools:
-     `yyss': related to states,
-     `yyvs': related to semantic values,
-     `yyls': related to locations.
-
-     Refer to the stacks thru separate pointers, to allow yyoverflow
-     to reallocate them elsewhere.  */
-
-  /* The state stack.  */
-  yytype_int16 yyssa[YYINITDEPTH];
-  yytype_int16 *yyss = yyssa;
-  yytype_int16 *yyssp;
-
-  /* The semantic value stack.  */
-  YYSTYPE yyvsa[YYINITDEPTH];
-  YYSTYPE *yyvs = yyvsa;
-  YYSTYPE *yyvsp;
-
-
-
 #define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N))
-
-  YYSIZE_T yystacksize = YYINITDEPTH;
-
-  /* The variables used to return semantic value and location from the
-     action routines.  */
-  YYSTYPE yyval;
-
 
   /* The number of symbols on the RHS of the reduced rule.
      Keep to zero when no symbol should be popped.  */
   int yylen = 0;
+
+  yytoken = 0;
+  yyss = yyssa;
+  yyvs = yyvsa;
+  yystacksize = YYINITDEPTH;
 
   YYDPRINTF ((stderr, "Starting parse\n"));
 
   yystate = 0;
   yyerrstatus = 0;
   yynerrs = 0;
-  yychar = YYEMPTY;		/* Cause a token to be read.  */
+  yychar = YYEMPTY; /* Cause a token to be read.  */
 
   /* Initialize stack pointers.
      Waste one element of value and location stack
      so that they stay on the same level as the state stack.
      The wasted elements are never initialized.  */
-
   yyssp = yyss;
   yyvsp = yyvs;
 
@@ -1491,7 +1451,6 @@ yyparse ()
 	YYSTYPE *yyvs1 = yyvs;
 	yytype_int16 *yyss1 = yyss;
 
-
 	/* Each stack pointer address is followed by the size of the
 	   data in use in that stack, in bytes.  This used to be a
 	   conditional around just the two extra args, but that might
@@ -1499,7 +1458,6 @@ yyparse ()
 	yyoverflow (YY_("memory exhausted"),
 		    &yyss1, yysize * sizeof (*yyssp),
 		    &yyvs1, yysize * sizeof (*yyvsp),
-
 		    &yystacksize);
 
 	yyss = yyss1;
@@ -1522,9 +1480,8 @@ yyparse ()
 	  (union yyalloc *) YYSTACK_ALLOC (YYSTACK_BYTES (yystacksize));
 	if (! yyptr)
 	  goto yyexhaustedlab;
-	YYSTACK_RELOCATE (yyss);
-	YYSTACK_RELOCATE (yyvs);
-
+	YYSTACK_RELOCATE (yyss_alloc, yyss);
+	YYSTACK_RELOCATE (yyvs_alloc, yyvs);
 #  undef YYSTACK_RELOCATE
 	if (yyss1 != yyssa)
 	  YYSTACK_FREE (yyss1);
@@ -1535,7 +1492,6 @@ yyparse ()
       yyssp = yyss + yysize - 1;
       yyvsp = yyvs + yysize - 1;
 
-
       YYDPRINTF ((stderr, "Stack size increased to %lu\n",
 		  (unsigned long int) yystacksize));
 
@@ -1545,6 +1501,9 @@ yyparse ()
 
   YYDPRINTF ((stderr, "Entering state %d\n", yystate));
 
+  if (yystate == YYFINAL)
+    YYACCEPT;
+
   goto yybackup;
 
 /*-----------.
@@ -1553,16 +1512,16 @@ yyparse ()
 yybackup:
 
   /* Do appropriate processing given the current state.  Read a
-     look-ahead token if we need one and don't already have one.  */
+     lookahead token if we need one and don't already have one.  */
 
-  /* First try to decide what to do without reference to look-ahead token.  */
+  /* First try to decide what to do without reference to lookahead token.  */
   yyn = yypact[yystate];
   if (yyn == YYPACT_NINF)
     goto yydefault;
 
-  /* Not known => get a look-ahead token if don't already have one.  */
+  /* Not known => get a lookahead token if don't already have one.  */
 
-  /* YYCHAR is either YYEMPTY or YYEOF or a valid look-ahead symbol.  */
+  /* YYCHAR is either YYEMPTY or YYEOF or a valid lookahead symbol.  */
   if (yychar == YYEMPTY)
     {
       YYDPRINTF ((stderr, "Reading a token: "));
@@ -1594,20 +1553,16 @@ yybackup:
       goto yyreduce;
     }
 
-  if (yyn == YYFINAL)
-    YYACCEPT;
-
   /* Count tokens shifted since error; after three, turn off error
      status.  */
   if (yyerrstatus)
     yyerrstatus--;
 
-  /* Shift the look-ahead token.  */
+  /* Shift the lookahead token.  */
   YY_SYMBOL_PRINT ("Shifting", yytoken, &yylval, &yylloc);
 
-  /* Discard the shifted token unless it is eof.  */
-  if (yychar != YYEOF)
-    yychar = YYEMPTY;
+  /* Discard the shifted token.  */
+  yychar = YYEMPTY;
 
   yystate = yyn;
   *++yyvsp = yylval;
@@ -1647,7 +1602,9 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 119 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 120 "src/base/grammar.y"
     {gParseTreeHead =  new OpNode(PEBL_FUNCTIONS,(yyvsp[(2) - (3)].exp),NULL, sourcefilename, yylineno);
 
 		           (yyval.exp) = gParseTreeHead;
@@ -1655,14 +1612,18 @@ yyreduce:
     break;
 
   case 3:
-#line 127 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 128 "src/base/grammar.y"
     { gParseTreeHead = new OpNode(PEBL_FUNCTIONS, (yyvsp[(2) - (3)].exp), (yyvsp[(1) - (3)].exp), sourcefilename, yylineno);
 		           (yyval.exp) = gParseTreeHead;
 		;}
     break;
 
   case 4:
-#line 135 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 136 "src/base/grammar.y"
     { ;
 		PNode * tmpFN = new OpNode(PEBL_LAMBDAFUNCTION, (yyvsp[(4) - (7)].exp), (yyvsp[(7) - (7)].exp), sourcefilename, yylineno);  
 		PNode * tmpNode = new DataNode(Variant((yyvsp[(2) - (7)].function), P_DATA_FUNCTION), sourcefilename, yylineno);
@@ -1673,7 +1634,9 @@ yyreduce:
     break;
 
   case 5:
-#line 144 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 145 "src/base/grammar.y"
     { ;
 		PNode * tmpFN = new OpNode(PEBL_LAMBDAFUNCTION, NULL, (yyvsp[(6) - (6)].exp), sourcefilename, yylineno);  
 		PNode * tmpNode = new DataNode(Variant((yyvsp[(2) - (6)].function), P_DATA_FUNCTION), sourcefilename, yylineno);
@@ -1683,74 +1646,102 @@ yyreduce:
     break;
 
   case 6:
-#line 156 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 157 "src/base/grammar.y"
     {(yyval.exp) = (yyvsp[(1) - (1)].exp);;}
     break;
 
   case 7:
-#line 157 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 158 "src/base/grammar.y"
     {(yyval.exp) = (yyvsp[(3) - (4)].exp);;}
     break;
 
   case 8:
-#line 161 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 162 "src/base/grammar.y"
     { (yyval.exp) = (yyvsp[(1) - (2)].exp);;}
     break;
 
   case 9:
-#line 162 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 163 "src/base/grammar.y"
     { (yyval.exp) = new OpNode(PEBL_STATEMENTS, (yyvsp[(1) - (4)].exp), (yyvsp[(3) - (4)].exp), sourcefilename, yylineno);;}
     break;
 
   case 10:
-#line 166 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 167 "src/base/grammar.y"
     { (yyval.exp) = (yyvsp[(3) - (5)].exp);;}
     break;
 
   case 11:
-#line 167 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 168 "src/base/grammar.y"
     {(yyval.exp) = (yyvsp[(3) - (3)].exp);;}
     break;
 
   case 12:
-#line 168 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 169 "src/base/grammar.y"
     {
                      (yyval.exp)  = new OpNode(PEBL_STATEMENTS, (yyvsp[(3) - (5)].exp), (yyvsp[(5) - (5)].exp), sourcefilename, yylineno);
 ;}
     break;
 
   case 13:
-#line 176 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 177 "src/base/grammar.y"
     { (yyval.exp) = (yyvsp[(1) - (1)].exp); ;}
     break;
 
   case 14:
-#line 179 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 180 "src/base/grammar.y"
     { (yyval.exp) = new OpNode(PEBL_STATEMENTS, (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), sourcefilename, yylineno);;}
     break;
 
   case 15:
-#line 183 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 184 "src/base/grammar.y"
     {(yyval.exp) = (yyvsp[(1) - (2)].exp);;}
     break;
 
   case 16:
-#line 187 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 188 "src/base/grammar.y"
     {(yyval.exp) = (yyvsp[(1) - (2)].exp);;}
     break;
 
   case 17:
-#line 196 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 197 "src/base/grammar.y"
     {(yyval.exp) = (yyvsp[(1) - (1)].exp);;}
     break;
 
   case 18:
-#line 198 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 199 "src/base/grammar.y"
     {(yyval.exp) = new OpNode(PEBL_BREAK, NULL, NULL, sourcefilename, yylineno);;}
     break;
 
   case 19:
-#line 201 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 202 "src/base/grammar.y"
     { 
 	        Variant tmpV((yyvsp[(1) - (3)].symbol),P_DATA_LOCALVARIABLE);       /*create a new temporary variant*/
 		    free((yyvsp[(1) - (3)].symbol));
@@ -1760,7 +1751,9 @@ yyreduce:
     break;
 
   case 20:
-#line 210 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 211 "src/base/grammar.y"
     { 
 	        Variant tmpV((yyvsp[(1) - (3)].symbol),P_DATA_GLOBALVARIABLE);      /*create a new temporary variant*/
 		PNode * tmpNode = new DataNode(tmpV, sourcefilename, yylineno);        /*create basic pnode*/
@@ -1769,19 +1762,25 @@ yyreduce:
     break;
 
   case 21:
-#line 217 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 218 "src/base/grammar.y"
     {;
 		(yyval.exp) = new OpNode(PEBL_WHILE, (yyvsp[(3) - (6)].exp), (yyvsp[(6) - (6)].exp), sourcefilename, yylineno); ;}
     break;
 
   case 22:
-#line 230 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 231 "src/base/grammar.y"
     {
 		(yyval.exp) = new OpNode(PEBL_IF, (yyvsp[(3) - (6)].exp), (yyvsp[(6) - (6)].exp), sourcefilename, yylineno); ;}
     break;
 
   case 23:
-#line 236 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 237 "src/base/grammar.y"
     {
 		/*First make the else node*/
 		PNode * tmpNode = new OpNode(PEBL_ELSE, (yyvsp[(6) - (7)].exp), (yyvsp[(7) - (7)].exp), sourcefilename, yylineno);
@@ -1790,26 +1789,34 @@ yyreduce:
     break;
 
   case 24:
-#line 252 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 253 "src/base/grammar.y"
     {
 		PNode * tmpNode = new OpNode(PEBL_VARIABLEDATUM, (yyvsp[(3) - (8)].exp), (yyvsp[(5) - (8)].exp), sourcefilename, yylineno);
 		(yyval.exp) = new OpNode(PEBL_LOOP, tmpNode, (yyvsp[(8) - (8)].exp), sourcefilename, yylineno); ;}
     break;
 
   case 25:
-#line 259 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 260 "src/base/grammar.y"
     {(yyval.exp) = new OpNode(PEBL_RETURN, (yyvsp[(2) - (2)].exp), NULL, sourcefilename, yylineno);;}
     break;
 
   case 26:
-#line 263 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 264 "src/base/grammar.y"
     {
 
 		(yyval.exp) = (yyvsp[(3) - (3)].exp); ;}
     break;
 
   case 27:
-#line 270 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 271 "src/base/grammar.y"
     {
 		/*First make the else node*/
 
@@ -1819,7 +1826,9 @@ yyreduce:
     break;
 
   case 28:
-#line 276 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 277 "src/base/grammar.y"
     {
 
 		/*First make the else node*/
@@ -1829,57 +1838,79 @@ yyreduce:
     break;
 
   case 29:
-#line 293 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 294 "src/base/grammar.y"
     {(yyval.exp) = new OpNode(PEBL_ARGLIST, NULL, NULL, sourcefilename, yylineno);;}
     break;
 
   case 30:
-#line 297 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 298 "src/base/grammar.y"
     {(yyval.exp) = new OpNode(PEBL_ARGLIST, (yyvsp[(3) - (4)].exp), NULL, sourcefilename, yylineno);;}
     break;
 
   case 31:
-#line 307 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 308 "src/base/grammar.y"
     {(yyval.exp) = new OpNode(PEBL_LISTHEAD,(yyvsp[(3) - (4)].exp), NULL, sourcefilename, yylineno);;}
     break;
 
   case 32:
-#line 310 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 311 "src/base/grammar.y"
     {(yyval.exp) = new OpNode(PEBL_LISTHEAD, NULL, NULL, sourcefilename, yylineno);;}
     break;
 
   case 33:
-#line 314 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 315 "src/base/grammar.y"
     {(yyval.exp) = new OpNode(PEBL_LISTITEM, (yyvsp[(1) - (1)].exp), NULL, sourcefilename, yylineno);;}
     break;
 
   case 34:
-#line 318 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 319 "src/base/grammar.y"
     {(yyval.exp) = new OpNode(PEBL_LISTITEM, (yyvsp[(1) - (4)].exp), (yyvsp[(4) - (4)].exp), sourcefilename, yylineno);;}
     break;
 
   case 35:
-#line 326 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 327 "src/base/grammar.y"
     {(yyval.exp) = new OpNode(PEBL_VARLIST, (yyvsp[(1) - (1)].exp), NULL, sourcefilename, yylineno);;}
     break;
 
   case 36:
-#line 330 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 331 "src/base/grammar.y"
     {(yyval.exp) = new OpNode(PEBL_VARLIST,(yyvsp[(1) - (4)].exp),(yyvsp[(4) - (4)].exp), sourcefilename, yylineno);;}
     break;
 
   case 37:
-#line 336 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 337 "src/base/grammar.y"
     { (yyval.exp) = (yyvsp[(1) - (1)].exp);;}
     break;
 
   case 38:
-#line 339 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 340 "src/base/grammar.y"
     {(yyval.exp) = (yyvsp[(3) - (5)].exp);}
     break;
 
   case 39:
-#line 342 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 343 "src/base/grammar.y"
     {
 		Variant tmpV = 0;
 		PNode * tmpNode = new DataNode(tmpV, sourcefilename, yylineno);
@@ -1887,77 +1918,107 @@ yyreduce:
     break;
 
   case 40:
-#line 348 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 349 "src/base/grammar.y"
     {(yyval.exp) = new OpNode(PEBL_NOT, (yyvsp[(2) - (2)].exp), NULL, sourcefilename, yylineno); ;}
     break;
 
   case 41:
-#line 351 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 352 "src/base/grammar.y"
     { (yyval.exp) = new OpNode(PEBL_ADD, (yyvsp[(1) - (4)].exp), (yyvsp[(4) - (4)].exp), sourcefilename, yylineno);  ;}
     break;
 
   case 42:
-#line 355 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 356 "src/base/grammar.y"
     { (yyval.exp) = new OpNode(PEBL_DIVIDE,(yyvsp[(1) - (4)].exp), (yyvsp[(4) - (4)].exp), sourcefilename, yylineno);  ;}
     break;
 
   case 43:
-#line 358 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 359 "src/base/grammar.y"
     { (yyval.exp) = new OpNode(PEBL_MULTIPLY, (yyvsp[(1) - (4)].exp), (yyvsp[(4) - (4)].exp), sourcefilename, yylineno);;}
     break;
 
   case 44:
-#line 361 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 362 "src/base/grammar.y"
     { (yyval.exp) = new OpNode(PEBL_POWER, (yyvsp[(1) - (4)].exp), (yyvsp[(4) - (4)].exp), sourcefilename, yylineno);;}
     break;
 
   case 45:
-#line 364 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 365 "src/base/grammar.y"
     { (yyval.exp) = new OpNode(PEBL_SUBTRACT, (yyvsp[(1) - (4)].exp), (yyvsp[(4) - (4)].exp), sourcefilename, yylineno); ;}
     break;
 
   case 46:
-#line 367 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 368 "src/base/grammar.y"
     { (yyval.exp) = new OpNode(PEBL_OR, (yyvsp[(1) - (4)].exp), (yyvsp[(4) - (4)].exp), sourcefilename, yylineno); ;}
     break;
 
   case 47:
-#line 370 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 371 "src/base/grammar.y"
     { (yyval.exp) = new OpNode(PEBL_AND, (yyvsp[(1) - (4)].exp), (yyvsp[(4) - (4)].exp), sourcefilename, yylineno); ;}
     break;
 
   case 48:
-#line 374 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 375 "src/base/grammar.y"
     { (yyval.exp) = new OpNode(PEBL_LT,  (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), sourcefilename, yylineno);;}
     break;
 
   case 49:
-#line 377 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 378 "src/base/grammar.y"
     { (yyval.exp) = new OpNode(PEBL_GT,  (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), sourcefilename, yylineno);;}
     break;
 
   case 50:
-#line 380 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 381 "src/base/grammar.y"
     { (yyval.exp) = new OpNode(PEBL_GE,  (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), sourcefilename, yylineno);;}
     break;
 
   case 51:
-#line 383 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 384 "src/base/grammar.y"
     { (yyval.exp) = new OpNode(PEBL_LE,  (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), sourcefilename, yylineno);;}
     break;
 
   case 52:
-#line 386 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 387 "src/base/grammar.y"
     { (yyval.exp) = new OpNode(PEBL_EQ,  (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), sourcefilename, yylineno);;}
     break;
 
   case 53:
-#line 389 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 390 "src/base/grammar.y"
     { (yyval.exp) = new OpNode(PEBL_NE,  (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), sourcefilename, yylineno);;}
     break;
 
   case 54:
-#line 398 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 399 "src/base/grammar.y"
     {
 		PNode * tmpNode = new DataNode(Variant((yyvsp[(1) - (2)].function), P_DATA_FUNCTION), sourcefilename, yylineno);
 		(yyval.exp) = new OpNode(PEBL_FUNCTION, tmpNode, (yyvsp[(2) - (2)].exp), sourcefilename, yylineno);
@@ -1966,17 +2027,23 @@ yyreduce:
     break;
 
   case 55:
-#line 408 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 409 "src/base/grammar.y"
     { (yyval.exp) = new DataNode ((yyvsp[(1) - (1)].iValue), sourcefilename, yylineno); ;}
     break;
 
   case 56:
-#line 411 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 412 "src/base/grammar.y"
     { (yyval.exp) = new DataNode ((yyvsp[(1) - (1)].fValue), sourcefilename, yylineno);;}
     break;
 
   case 57:
-#line 414 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 415 "src/base/grammar.y"
     {
 	  Variant tmpV((yyvsp[(1) - (1)].strValue));            /*create a new temporary variant*/
 	  free((yyvsp[(1) - (1)].strValue));
@@ -1986,17 +2053,23 @@ yyreduce:
     break;
 
   case 58:
-#line 421 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 422 "src/base/grammar.y"
     { (yyval.exp) = (yyvsp[(1) - (1)].exp);;}
     break;
 
   case 59:
-#line 424 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 425 "src/base/grammar.y"
     { (yyval.exp) = (yyvsp[(1) - (1)].exp);;}
     break;
 
   case 60:
-#line 429 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 430 "src/base/grammar.y"
     { 
 		Variant tmpV((yyvsp[(1) - (1)].symbol), P_DATA_LOCALVARIABLE);           /*create a new temporary variant*/;
 		(yyval.exp) = new DataNode(tmpV, sourcefilename, yylineno);                        /*Make a new variable node here.*/
@@ -2005,7 +2078,9 @@ yyreduce:
     break;
 
   case 61:
-#line 434 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 435 "src/base/grammar.y"
     { 
 		Variant tmpV((yyvsp[(1) - (1)].symbol), P_DATA_GLOBALVARIABLE);          /*create a new temporary variant*/;
 		(yyval.exp) = new DataNode(tmpV, sourcefilename, yylineno);  /*Make a new variable node here.*/
@@ -2014,28 +2089,37 @@ yyreduce:
     break;
 
   case 62:
-#line 441 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 442 "src/base/grammar.y"
     {/*nothing*/;;}
     break;
 
   case 63:
-#line 442 "src/base/grammar.y"
+
+/* Line 1455 of yacc.c  */
+#line 443 "src/base/grammar.y"
     {/**/;;}
     break;
 
   case 64:
-#line 446 "src/base/grammar.y"
-    {/**/;;}
-    break;
 
-  case 65:
+/* Line 1455 of yacc.c  */
 #line 447 "src/base/grammar.y"
     {/**/;;}
     break;
 
+  case 65:
 
-/* Line 1267 of yacc.c.  */
-#line 2039 "src/base/grammar.tab.cpp"
+/* Line 1455 of yacc.c  */
+#line 448 "src/base/grammar.y"
+    {/**/;;}
+    break;
+
+
+
+/* Line 1455 of yacc.c  */
+#line 2123 "src/base/grammar.tab.cpp"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2045,7 +2129,6 @@ yyreduce:
   YY_STACK_PRINT (yyss, yyssp);
 
   *++yyvsp = yyval;
-
 
   /* Now `shift' the result of the reduction.  Determine what state
      that goes to, based on the state we popped back to and the rule
@@ -2111,7 +2194,7 @@ yyerrlab:
 
   if (yyerrstatus == 3)
     {
-      /* If just tried and failed to reuse look-ahead token after an
+      /* If just tried and failed to reuse lookahead token after an
 	 error, discard it.  */
 
       if (yychar <= YYEOF)
@@ -2128,7 +2211,7 @@ yyerrlab:
 	}
     }
 
-  /* Else will try to reuse look-ahead token after shifting the error
+  /* Else will try to reuse lookahead token after shifting the error
      token.  */
   goto yyerrlab1;
 
@@ -2185,9 +2268,6 @@ yyerrlab1:
       YY_STACK_PRINT (yyss, yyssp);
     }
 
-  if (yyn == YYFINAL)
-    YYACCEPT;
-
   *++yyvsp = yylval;
 
 
@@ -2212,7 +2292,7 @@ yyabortlab:
   yyresult = 1;
   goto yyreturn;
 
-#ifndef yyoverflow
+#if !defined(yyoverflow) || YYERROR_VERBOSE
 /*-------------------------------------------------.
 | yyexhaustedlab -- memory exhaustion comes here.  |
 `-------------------------------------------------*/
@@ -2223,7 +2303,7 @@ yyexhaustedlab:
 #endif
 
 yyreturn:
-  if (yychar != YYEOF && yychar != YYEMPTY)
+  if (yychar != YYEMPTY)
      yydestruct ("Cleanup: discarding lookahead",
 		 yytoken, &yylval);
   /* Do not reclaim the symbols of the rule which action triggered
@@ -2249,7 +2329,9 @@ yyreturn:
 }
 
 
-#line 453 "src/base/grammar.y"
+
+/* Line 1675 of yacc.c  */
+#line 454 "src/base/grammar.y"
 
 
 void yyerror (char *error)
