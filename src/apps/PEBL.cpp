@@ -227,6 +227,7 @@ int PEBLInterpret( int argc, char *argv[] )
     enum PEBLVideoDepth displayDepth;
     bool windowed = true;
     bool unicode = true;
+    Variant lang = "en";
     Variant subnum = 0;
     //Extract the command-line variables to bind   
     for(int j = 1; j < argc; j++)
@@ -257,6 +258,7 @@ int PEBLInterpret( int argc, char *argv[] )
 #if defined(PEBL_UNIX)
                             setenv("SDL_VIDEODRIVER", argv[j] ,1);
 #else
+
                             _putenv((std::string("SDL_VIDEODRIVER=") + std::string(argv[j])).c_str());
 #endif
                         }
@@ -283,6 +285,10 @@ int PEBLInterpret( int argc, char *argv[] )
             else if(strcmp(argv[j],"--unicode")==0)
                 {
                     unicode = true;
+                }
+            else if(strcmp(argv[j],"--language")==0)
+                {
+                    lang = argv[++j];
                 }
         }
             
@@ -382,6 +388,10 @@ int PEBLInterpret( int argc, char *argv[] )
     //Add the subject identifier.
     Evaluator::gGlobalVariableMap.AddVariable("gSubNum",subnum);
     
+
+    Evaluator::gGlobalVariableMap.AddVariable("gLanguage",lang);
+
+
     //Add a special 'quote' character.
     Evaluator::gGlobalVariableMap.AddVariable("gQuote",Variant("\""));
 
@@ -509,7 +519,8 @@ std::list<std::string> GetFiles(int argc,  char * argv[])
             if(strcmp(argv[i], "-v")==0 ||
                strcmp(argv[i], "-V")==0 || 
                strcmp(argv[i], "-s")==0 ||
-               strcmp(argv[i], "-S") == 0)
+               strcmp(argv[i], "-S") == 0 ||
+               strcmp(argv[i], "--language")==0)
                 {
                     //This is the variable switch.  get rid of it and the next argument.
                     i++;
@@ -574,6 +585,8 @@ void PrintOptions()
     cout << "--depth\n";
     cout << "  Controls the pixel depth.  Depends on your video card.  Currently,\n";
     cout << "  depths of 2,8,15,16,24, and 32 are allowed on the command-line.\n";
+    cout << "--language <2 char lang code>\n";
+    cout << "  Allows you to specify at the command line a language to enable \n selecting different text labels.\n";
     cout << "--windowed\n";
     cout << "--fullscreen\n";
     cout << "  Controls whether the script will run in a window or fullscreen.\n\n";

@@ -316,7 +316,7 @@ define ResetCanvas(canvas)
 ## Instruments and Computers, 34(1), 55-68.
 ##
 
-define MakeAttneave(radius,numpoints,minangle, maxangle)
+define MakeAttneave(size,numpoints,minangle, maxangle)
 {
 
   ##First, sample numpoints xy points
@@ -328,13 +328,13 @@ define MakeAttneave(radius,numpoints,minangle, maxangle)
    {
     num <- num + 1
     #Use sampling-and-reject to get points within a circle
-    tryX <- Round((Random()-.5)*radius)
-    tryY <- Round((Random()-.5)*radius)
+    tryX <- Round((Random()-.5)*size)
+    tryY <- Round((Random()-.5)*size)
 
-    while(Sqrt(tryX^2 + tryY^2) > radius)
+    while(Sqrt(tryX^2 + tryY^2) > size)
     {
-      tryX <- Round((Random()-.5)*radius)
-      tryY <- Round((Random()-.5)*radius)
+      tryX <- Round((Random()-.5)*size)
+      tryY <- Round((Random()-.5)*size)
     }
 
    ##Add the point
@@ -357,6 +357,7 @@ define MakeAttneave(radius,numpoints,minangle, maxangle)
    #add the least to the polygon.
    bad <- []   
    remlen <- Length(rem)+1
+
    ##If the remander is not empty and shrinking, keep going.
    while(Length(rem)>0 and Length(rem) <remlen)
     {
@@ -381,7 +382,7 @@ define MakeAttneave(radius,numpoints,minangle, maxangle)
 
    if(Length(rem)>0 or test==0)
    {
-      hull <-  MakeAttneave(radius,numpoints,minangle, maxangle)
+      hull <-  MakeAttneave(size,numpoints,minangle, maxangle)
    }
 
   return hull
@@ -464,9 +465,6 @@ define InsertAttneavePointRandom(path, point,minangle,maxangle)
 
      path2 <- Rotate(path,try)
 
-     xx <- gHomeX
-     yy <- gHomeY
-   
      #try inserting at the beginning of the path
 	 prev <- Second(path2)
      a <-First(path2)

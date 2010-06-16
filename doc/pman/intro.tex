@@ -247,7 +247,7 @@ and  command-line arguments.\\
 Examples:
 \begin{verbatim}
 pebl experiment.pbl -s sub1 --fullscreen --display 800x600 --driver dga
-pebl experiment.pbl --driver xf86
+pebl experiment.pbl --driver xf86  --language es
 pebl experiment.pbl -v 33 -v 2 --fullscreen --display 640x480 
 \end{verbatim}
  
@@ -351,6 +351,15 @@ overriding any command-line parameters.
   likely never useful.  Changing depths can, for
   some drivers and video cards, enable better performance or
   possibly better video sychrony.
+
+  
+\item
+\begin{verbatim}
+--language
+\end{verbatim}
+  Allows user to specify a language code that can get tested for
+  within a script to select proper translation.  It sets a global
+  variable gLanguage, and is ``en'' by default.
 
 \item
 \verb+--windowed+ or \verb+--fullscreen+

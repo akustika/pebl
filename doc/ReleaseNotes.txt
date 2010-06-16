@@ -28,39 +28,39 @@ obsolete.
                  RELEASE NOTES
 -------------------------------------------------
 
-
-
 Version 0.11
 
--Changed WaitForClickOnTarget to go from end to front, rather than
-front to end.  This should make it easier to click on the topmost of
-overlapping targets. See poetry demo for example.
+
+Major changes:
+-Fixed a number of insidious and nasty memory leaks. These caused the
+ parameter passed to any function to not be cleaned up when the
+ function exited. Also, most graphical objects were never cleaned up
+ when PEBL finished using them.  For short experiments, this probably
+ made little difference, but it could lead to memory growing out-of-control if
+ the experiment uses a control loop to repeatedly call a function, or
+ for experiments that take a long time. These massive changes will in
+ the long run improve performance of PEBL substantially, but there may
+ be edge cases here and there that create unwanted crashes.  
 
 - Fixed the GetInput function so it accepts the uppercase characters
   on numbers and other special characters.  This only help US
   keyboards probably.
 
--Fixed a number of insidious and nasty memory leaks. These caused the parameter passed to any function to not be cleaned up when the
- function exited. Also, most graphical objects were never cleaned up
- when PEBL finished using them.  For short experiments, this probably
- made little difference, but it could lead to memory growing out-of-control if
- the experiment uses a control loop to repeatedly call a function, or
- for experiments that take a long time. Currently, PEBL still leaks
- memory related to fonts, which I'll be working on fixing, but it is
- pretty small compared to what was happening previously.
+- Added a new canvas object to allow an easy resettable drawing object.
 
-- Added a canvas object to allow an easy resettable drawing object.
 
 - Added SetPixel() function to allow you to draw on any graphical
   widget (labels, imagebox, canvas, textbox, but not windows or
-  shapes)
+  shapes) 
 
-- Note that Draw() function allows 'imprinting' images on other widgets.
+- Also, made MakeGabor() function which uses SetPixel and canvases to
+  create parametric gabor patches.
 
 - After several versions without an OSX release, I am once again
   distributing a version that runs on OSX.  There may
   be some bugs here, and there are a few functions that don't work.
-  It is not as polished as most Mac users expect.
+  It is not as polished as most Mac users expect, but seems to work
+  fairly well.
 
 - One sort of important change in how parent/children are handled.
   Previously, you could add a child to a parent and it would stay
@@ -73,6 +73,42 @@ overlapping targets. See poetry demo for example.
   a locally-defined widget will get destroyed when the function ends,
   and will get removed from the parent automatically.
 
+
+- A number of changes to make translation easier:
+
+  + Created new global variables gPEBLBaseFont, gPEBLBaseFontSerif,
+  gPEBLBaseFontMono, which name, by default, the newly-included DejaVu
+  series fonts. This should improve translation, because the previous
+  'default' font had poor coveragge for international characters, while
+  DejaVu has much better.  Plus, for character sets DejaVu doesn't
+  handle, you can override with a custom font which should then work
+  for helper functions like EasyTextBox().
+
+  + Added three new DEJAVU fonts, which are now used by default in most
+  experiments.  This will have enable easier internationalization,
+  because DEJAVU will work for a wider variety of scripts
+  out-of-the-box. 
+
+  + The command-line option --language is now available.  This has no direct effect
+  other than setting the global variable gLanguage to the string
+  specified on the command line.  It can be used to select text
+  strings in order to translate.  Currently, the iowa task, the bcst,
+  task, and the Tower of London task will look for gLanguage and
+  select text strings based on it, but only a crude spanish version
+  (--language "ES") exists for TOL and no alternate translations exist
+  for the other tasks.
+
+
+Minor changes:
+
+-Changed WaitForClickOnTarget to go from end to front, rather than
+front to end.  This should make it easier to click on the topmost of
+overlapping targets. See poetry demo for example.
+
+
+- Note that Draw() function allows 'imprinting' images on other widgets.
+
+
 - The last parameter of MakeFont() was previously not well documented
   or completely consistent.  Using 1 gives the font (and ultimately,
   the label) a solid background; using 0 gives it a clear background,
@@ -83,78 +119,68 @@ overlapping targets. See poetry demo for example.
   will impact EasyLabel, which now renders transparently, rather than
   in a color matching the background.
 
-- added gPEBLBaseFont, for easier internationalization.
-- Added three new DEJAVU fonts, which are now used by default in most
-  experiments.  This will have enable easier internationalization,
-  because DEJAVU will work for a wider variety of scripts
-  out-of-the-box. (need to document this)
 
 - Changed the order of precedence of unary minus and power
   function. previously, -1^2 was +1; now it operates as expected.
 
 
---language command-line option.
+New functions:
 
--Version for OSX
--- After several years without distributing a compiled version for
--OSX, I once again have a downloadable version.  It must be run via
--command line or .command script.
-
-
-New tests in battery:
-
-  scales:  A set of  four visual-analog scales commonly used for
-  rating comfort.  Can be embedded within another experiment.
+Rest():   returns end of a list
+Insert(): puts an item into a list
+RemoveSubset(): removes a subset of elements from a list
+ListBy():  aggregates a list by sublists defined by another list.
+Sample():  pick one item from a list.
+MakeAttneave(): create an attneave shape.
+SegmentsIntersect(): see if two segments intersect
+ToRight():  see if a point is to the right of a segment
+GetAngle3():  get the angle abc
+ConvexHull(): finds convex hull of a set of points
+ResetCanvas(): erases anything that has been drawn on a canvas
+GetEasyInput(): simple way to get text input.
+MessageBox():  simple way to give a message
+IsText():     is this text?
+IsString():  is this text?
+MakeCanvas(): creates a canvas
+IsCanvas():  tests whether something is a canvas
+SetPixel():  changes the color of a pixel on a canvas
+SetPoint():  identical to SetPixel
+WaitForMouseClickWithTimeout(): make a click within a time limit.
 
 
 PEBL TEST BATTERY VERSION 0.6
 
-
-
 New tasks:
 
+scales:  A set of  four visual-analog scales commonly used for
+ rating comfort.  Can be embedded within another experiment.
 
-  item-order test:
-  Clock test
-  Corsi blocks
-  Tapping
-  Tower of Hanoi
 
-"The PEBL Cognitive Decathlon"
+Item-order test: see two character strings and determine whether they
+  are the same or different.
 
-  Device mimicry
-  objectjudgment:
-  ptracker 
-  visual search:
+Clock test: attentional vigilance task: pips on a clock face light up
+  once per second; respond when a pip is skipped.
+
+Corsi blocks: classic visuo-spatial working memory task.
+Tapping: tap as fast as you can
+Tower of Hanoi: crude version of TOH task.
+
+I've also included a set of tasks designed for an upcoming paper,
+called the "PEBL Cognitive Decathlon".  Among several existing tasks,
+it also includes:
+
+Device mimicry: Make copies of a figure with a 4-df etch-a-sketch
+objectjudgment: Are two attneave shapes identical?  Are they identify
+if rotatet?
+ptracker: Compensatory tracker task 
+visual search:  Classic visual search paradigm; fairly flexible.
+
 
 Major improvements:
 
-  Tower of London
-  
-New functions:
-
-Rest()+*
-Insert()+*
-RemoveSubset()+*
-ListBy()+*
-Sample()+*
-MakeAttneave() +
-ValidateAttneaveShape()  (Do not document; helper function)
-InsertAttneavePointRandom() (do not document; helper function)
-
-SegmentsIntersect()+
-ToRight()+
-GetAngle3()+
-ConvexHull()+
-ResetCanvas()+
-GetEasyInput()+*
-MessageBox()+*
-IsText()+*
-IsString()*
-MakeCanvas()+
-IsCanvas()+
-SetPixel()+*
-SetPoint()+*
+ Tower of London: Substantial improvements;  We now include about 10
+ pre-canned published problem sets, including Fimbel's and TOL-R.
 
 
 ---------------------------------------------------------------

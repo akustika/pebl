@@ -40,7 +40,7 @@ DEBUGFLAGS = -lefence -DPEBL_DEBUG -g
 CFLAGS =   -O3 -std=c99 -DPREFIX=$(PREFIX)
 
 
-CXXFLAGS =  -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  -DENABLE_BINRELOC -DPREFIX=$(PREFIX)  -g 
+CXXFLAGS =  -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  -DENABLE_BINRELOC -DPREFIX=$(PREFIX)  
 
 
 

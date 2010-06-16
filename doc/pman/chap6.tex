@@ -859,6 +859,55 @@ Also see nim.pbl for example of two-way network connection.
 \rl
 
 
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] \verb+ConvexHull()+
+
+\item[Description]	Computes the convex hull of a set of [x,y]
+  points. It returns a set of points that forms the convex hull, with
+  the first and last point identical.  A convex hull is the set of
+  outermost points, such that a polygon connecting just those points
+  will encompass all other points, and such that no angle is acute.
+  It is used in MakeAttneave.
+
+\item[Usage]
+\begin{verbatim}
+   ConvexHull(<list-of-x-y-points>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim} 
+  pts <- [[0.579081, 0.0327737], [0.0536094, 0.378258], 
+          [0.239628, 0.187751], [0.940625, 0.26526], 
+          [0.508748, 0.840846], [0.352604, 0.200193], 
+          [0.38684, 0.212413], [0.00114761, 0.768165],
+          [0.432963, 0.629412]]
+
+
+  Print(ConvexHull(pts))
+
+\end{verbatim}
+
+output:
+[[0.940625, 0.26526]
+, [0.508748, 0.840846]
+, [0.00114761, 0.768165]
+, [0.0536094, 0.378258]
+, [0.239628, 0.187751]
+, [0.579081, 0.0327737]
+, [0.940625, 0.26526]
+
+
+
+
+\item[See Also]
+  \verb+MakeAttneave+,
+
+\end{desc}
+
+\rl
+
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+Cos()+
 			 
@@ -1963,6 +2012,37 @@ GetAngle(<x>,<y>)
 
 
 \begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+GetAngle3()+
+
+\item[Description]	Gets  an angle (in radians) of abc.
+
+
+\item[Usage]
+\begin{verbatim}
+GetAngle3(<a>,<b>,<c>)
+\end{verbatim}
+
+\item[Example]	
+
+
+
+\begin{verbatim}
+   a <- [0.579081, 0.0327737]
+   b <- [0.0536094, 0.378258]
+   c <- [0.239628, 0.187751]
+
+  Print(GetAngle3(a,b,c)) ## .2157
+
+\end{verbatim}
+
+\item[See Also]	\verb+DegtoRad+, \verb+RadToDeg+, \verb+GetAngle+, \verb+ToRight+
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+GetCursorPosition()+
 
 \item[Description]	Returns an integer specifying where in a textbox the edit cursor is.  The value indicates which character it is on.
@@ -2490,6 +2570,32 @@ if(IsAudioOut(x))
   \verb+IsWidget()+
 \end{desc}
 
+\rl
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+IsCanvas()+
+
+\item[Description]	Tests whether \verb+<variant>+ is a Canvas widget.
+
+\item[Usage]
+\begin{verbatim}
+IsCanvas(<variant>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+if(IsCanvas(x)
+{
+   SetPixel(x,10,10,MakeColor("red"))
+}
+\end{verbatim}
+
+\item[See Also] \verb+IsAudioOut()+, \verb+IsImage()+,
+  \verb+IsInteger()+, \verb+IsFileStream()+, \verb+IsFloat()+,
+  \verb+IsFont()+, \verb+IsLabel()+, \verb+IsList()+,
+  \verb+IsNumber()+, \verb+IsString()+, \verb+IsTextBox()+, \verb+IsText()+
+  \verb+IsWidget()+, \verb+IsWindow()+
+\end{desc}
 \rl
 
 
@@ -3387,6 +3493,141 @@ loop(<counter>, <list>)
 \rl
 
 
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+MakeAttneave()+
+
+\item[Description] Makes a random 'attneave' figure, according to the
+  method described by Collin \& McMullen
+(Collin, C. A., \& Mcmullen, P. A. (2002). Using Matlab to generate
+ families of similar Attneave shapes. Behavior Research Methods
+ Instruments and Computers, 34(1), 55-68.).
+
+An Attneave figure is a complex polygon that can be used as a
+stimulus in a number of situations.  It actually returns a sequence
+of points that can be fed into Polygon() to produce the actual
+stimulus.
+
+
+MakeAttneave uses ConvexHull, and two undocumented helper functions
+found in Graphics.pbl: InsertAttneavePointRandom() and
+ValidateAttneaveShape().  One can override these by defining new
+versions of them within your own experiment. This could be reasonable
+to provide stronger constraints over things like minimum/maximum side
+lengths, angles, complexity, etc.
+
+MakeAttneave uses a sampling-and-rejection scheme to create in-bounds
+shapes.  Thus, if you specify impossible or nearly-impossible
+constraints, the time necessary to create shapes may be very long or
+infinite.
+
+ The arguments to MakeAttneave are:
+\begin{itemize}
+\item size: size, in pixels, of a square from which points are
+  sampled in a uniform distribution.  Points outside the inscribed
+  circle with diameter size are rejected and resampled, to produce a
+  uniform-by-area sampling distribution.
+
+\item numpoints: number of points the attneave polygon will have
+
+\item minangle: smallest angle acceptable in resulting polygon (in degrees).
+\item maxangle: largest angle acceptable in resulting polygon (in degrees).
+
+\end{itemize}
+
+
+\item[Usage]
+\begin{verbatim}
+  MakeAttneave(size,numpoints,minangle,maxangle)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+
+
+  gWin <- MakeWindow()
+  shape <- MakeAttneave(100,5+RandomDiscrete(5),5,170)
+  pts <- Transpose(shape)
+  poly <- Polygon(200,200,First(pts),Second(pts),MakeColor("blue"),1)
+  AddObject(poly,gWin)
+  Draw()
+  WaitForAnyKeyPress()
+\end{verbatim}
+\item[See Also]	\verb+MakeImage()+, \verb+Polygon()+, \verb+Square()+
+
+\end{desc}
+
+\rl
+
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+MakeCanvas()+
+
+\item[Description] Makes a canvas object  \verb+<x>+ pixels by
+  \verb+y+ pixels, in color \verb+<color>+.
+
+A canvas is an empty colored or transparent rectangle which other
+objects can be added to using AddObject.  When the canvas gets moved,
+the attached objects move as well. 
+
+The background of a canvas can be made invisible by using a color
+with alpha channel == 0.
+
+The Setpixel and SetPoint functions let you change individual pixels
+on a canvas, to enable adding noise, drawing functional images, etc.
+
+A canvas gets 'cleared' by calling ResetCanvas(canvas)
+
+Any object added to a canvas creates an 'imprint' on the canvas that
+remains if the object is moved.  This allows you to use another image
+as a paintbrush on the canvas, and lets you to add noise to text.
+Because a text label gets re-rendered when its drawn, if you want to
+add pixel noise to a stimulus, you can create a label, add it to a
+canvas, then add pixel noise to the canvas.
+
+
+Note: On OSX, there are sometimes crashes related to drawing and moving objects on canvases.
+
+\item[Usage]
+\begin{verbatim}
+MakeCanvas(<x>, <y>, <color>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+  gWin <- MakeWindow()
+  clear <- MakeColor("white")
+  clear.alpha <- 0
+  x <- MakeCanvas(300,300,clear)  #make a transparent canvas
+  AddObject(x,gWin)
+  Move(x,300,300)
+  img <- MakeImage("pebl.png")
+  AddObject(img,x)
+  Move(img,100,100)
+  Draw(x)          #imprint the imago on the canvas
+  Move(img,100,200)
+  Draw(x)          #imprint the imago on the canvas
+  Hide(img)
+
+
+  #draw a line on the canvas
+   i <- 10
+   red <- MakeColor("red")
+  while(i < 200)
+   {
+     SetPixel(x,20,i,red)
+     i <- i + 1
+   }
+  Draw()
+  WaitForAnyKeyPress()
+\end{verbatim}
+\item[See Also]	\verb+MakeImage()+, \verb+SetPixel()+,
+  \verb+MakeGabor()+, \verb+ResetCanvas()+
+\end{desc}
+
+\rl
 
 
 \begin{desc}{Name/Symbol}
@@ -3434,21 +3675,32 @@ MakeColorRGB(<red>, <green>, <blue>)
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+MakeFont()+
 
-\item[Description]	Makes a font.
+\item[Description]	Makes a font.  The first argument must be a text
+  name of a font.  The font can reside anywhere in PEBL's search path,
+  which would primarily include the media/fonts directory, and the
+  working directory (where the script is saved).
+
+ *  style changes from normal to bold/underline, italic.
+*   fgcolor and bgcolor need to be colors, not just names of colors
+ * if show-backing is 0, the font gets rendered with an invisible
+*   background; otherwise with a bgcolor background. 
+Note: previous to PEBL 0.11, the final argument = 0 rendered the font
+*   with non anti-aliased background, which I can see almost no use for.
 
 \item[Usage]
 \begin{verbatim}
-MakeFont(<ttf_filename>, <style>, <size>, 
-<fgcolor>, <bgcolor>, <anti-aliased>)
+MakeFont(<ttf_filename>, <style>, <size>, <fgcolor>, <bgcolor>, <show-backing>)
 \end{verbatim}
 
 \item[Example]	
+
+  font <- MakeFont("Vera.ttf",0,22,MakeColor("black"), MakeColor("white"),1)
+
 
 \item[See Also]	
 \end{desc}
 
 \rl
-
 
 
 \begin{desc}{Name/Symbol}
@@ -4786,6 +5038,61 @@ Print(rep)
 
 
 \begin{desc}{Name/Symbol}
+\item[Name/Symbol]  \verb+ResetCanvas()+
+
+\item[Description]  Resets a canvas, so that anything drawn onto it is
+  erased and returned to its background color.  Implemented by
+  resetting the background color to itself: 
+  canvas.color <- canvas.  The function does not return the canvas,
+  but has the side effect of resetting it.
+
+
+\item[Usage]        	
+\begin{verbatim}
+ResetCanvas(<list>)
+\end{verbatim}
+			  
+\item[Example]     	
+\begin{verbatim}
+
+#create a canvas, add pixel noise, then reset and repeat.
+define Start(p)
+{
+  gWin <- MakeWindow()
+  canvas <- MakeCanvas(100,100,MakeColor("black"))
+  AddObject(canvas,gWin); Move(canvas,300,300)
+  Draw()
+  white <- MakeColor("white")
+  ##add pixel noise
+  j <- 1
+  while(j < 5)
+   {
+  i <- 1
+  while(i < 200)
+   {
+     SetPixel(canvas,Round(Random()*100),Round(Random()*100),white)
+     i <- i +1 
+   }
+  Draw()
+  WaitForAnyKeyPress()
+  ResetCanvas(canvas)
+  Draw()
+   j <- j + 1
+  }
+  WaitForAnyKeyPress()
+
+}
+\end{verbatim}
+
+\item[See Also]	
+SetPixel(), MakeCanvas(), Draw()
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
 \item[Name/Symbol]  \verb+Rest()+
 
 \item[Description]  Returns the 'rest' of a list; a list minus its
@@ -5142,6 +5449,36 @@ On Client:
 
 
 \begin{desc}{Name/Symbol}
+\item[Name/Symbol]   	\verb+SegmentsIntersect()+
+
+\item[Description] Determines whether two line segments, defined by
+  four xy point pairs, intersect. Two line segments that share a
+  corner return 0, although they could be considered to intersect.
+
+This function is defined in pebl-lib/Graphics.pbl
+
+\item[Usage] 
+\begin{verbatim}
+ SegmentsIntersect(x1,y1,x2,y2, a1,b1,a2,b2)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+ SegmentsIntersect(1,0,2,0,  1,2,2,2)  #0
+ SegmentsIntersect(1,0,2,0,  1,0,2,2)  #0, though they share 1,0
+ SegmentsIntersect(1,1,3,1,  2,2,2,0)  #1
+
+
+\end{verbatim}
+
+\item[See Also]    	\verb+GetAngle3+, \verb+ToRight+
+\end{desc}
+
+\rl
+
+
+
+\begin{desc}{Name/Symbol}
 \item[Name/Symbol]   	\verb+Sequence()+
 
 \item[Description] Makes a sequence of numbers from \verb+<start>+ to
@@ -5235,10 +5572,8 @@ SetFont(<text-widget>, <font>)
 
 \item[Example]   	
 \begin{verbatim}
-fontGreen <- MakeFont("vera.ttf",1,22,MakeColor("green"),
-MakeColor("black"), 1)
-fontRed   <- MakeFont("vera.ttf",1,22,MakeColor("red"),
-MakeColor("black"), 1)
+fontGreen <- MakeFont("vera.ttf",1,22,MakeColor("green"),MakeColor("black"), 1)
+fontRed   <- MakeFont("vera.ttf",1,22,MakeColor("red"),MakeColor("black"), 1)
 label <- MakeLabel(fontGreen, "Correct")
 
 #Do trial here.       	
@@ -6181,6 +6516,37 @@ Print(a + 1)		# produces the output 3233.
 
 
 \begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+ToRight()+
+              
+\item[Description]  	Determines whether a point p3 is 'to the right'
+  of a line segment defined by p1  to p2.  Works essentially by
+  computing the determinant.
+
+\item[Usage]
+\begin{verbatim}
+  ToRight(<p1>,<p2>,<p3>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+  a <- [100,0]
+  b <- [100,100]
+  c <- [150,50]
+  ToRight(a,b,c) # returns 1; true
+  ToRight(b,a,c) # returns 0; false
+
+\end{verbatim}
+
+\item[See Also]  
+\verb+GetAngle()+ \verb+GetAngle3+, \verb+SegmentsIntersect+
+\end{desc}
+
+\rl
+
+
+
+
+\begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+ToString()+
 
 \item[Description] Converts value to a string representation. Most
@@ -6478,7 +6844,7 @@ WaitForKeyListDown(["a","z"])
   unused, but may be deployed in the future for differences in how
   or when things should be returned.  Returns the value of the pressed
   key.  If the function terminates by exceeding the \verb+<timeout>+,
-  it will return the string \verb+"<unknown>"+.
+  it will return the string \verb+["<timeout>"]+.
 
 \item[Usage]
 \begin{verbatim}
@@ -6492,14 +6858,14 @@ section ``Keyboard Entry'' for complete list of keynames.
 \item[Example]     	
 \begin{verbatim}
   x <- WaitForListKeyPressWithTimeout(["a","z"],2000,1)
-  if(x == "<unknown>") 
+  if(IsList(x))
   {
      Print("Did Not Respond.")
   }
 \end{verbatim}
 
 \item[See Also]	
-   \verb+WaitForKeyListDown+, \verb+WaitForListKeyPress+
+   \verb+WaitForKeyListDown+, \verb+WaitForListKeyPress+, \verb+WaitForKeyPressWithTimeout+
  \end{desc}
 
 \rl
@@ -6592,6 +6958,53 @@ WaitForKeyPress(<key>)
      x <- WaitForMouseButton()
      if(Nth(x,4)=="<pressed>")
       {
+          continue <- 0
+      }
+ }
+ Print("Clicked")
+\end{verbatim}
+
+
+\item[See Also]
+  \verb+ShowCursor+, \verb+WaitForMouseButtonWithTimeout+
+  \verb+SetMouseCursorPosition+, \verb+GetMouseCursorPosition+
+\end{desc}
+
+\rl
+\rl
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+WaitForMouseButtonWithTimeout()+
+
+\item[Description] Waits for a mouse click event to occur, or a
+  timeout to be reached.
+  This takes a single argument: timeout delay in ms. When clicked, it returns a
+  4-tuple list, indicating:
+  \verb+[xpos, ypos, button id [1-3], "<pressed>" or "<released>"]+
+
+  when not click and timeout is reached, it returns a list:
+   \verb+[timeout]+
+
+
+\item[Usage]
+
+
+\begin{verbatim}
+   WaitForMouseButtonWithTimeOut()
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+## Here is how to wait for a mouse down-click
+
+ continue <- 1
+ while(continue)
+ {
+     x <- WaitForMouseButtonWithTimeout()
+     if(First(x)=="<timeout>")
+      {
+         Print("time is "+GetTime())
+          continue <- 1
+      } else {
           continue <- 0
       }
  }
