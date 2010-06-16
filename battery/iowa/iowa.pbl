@@ -49,7 +49,18 @@ define Start(lPar)
    }else{
     tag <-"-keyboard"
    }
-   textlist <- FileReadList("labels-en"+tag+".txt")
+
+   gLanguage <- Uppercase(gLanguage)
+   if(gLanguage=="EN")
+      {
+	     textlist <- FileReadList("labels-en"+tag+".txt")
+	  }elseif(gLanguage=="ES"){
+	     #no spanish file exists; use english
+  	     textlist <- FileReadList("labels-en"+tag+".txt")
+     }else{
+ 	     textlist <- FileReadList("labels-en"+tag+".txt")
+     }
+
 
    gFontNameMono <- gPEBLBaseFontMono  #defaults to "VeraMono.ttf"
    gFontNameBase <- gPEBLBaseFont      #defaults to "Vera.ttf" 
