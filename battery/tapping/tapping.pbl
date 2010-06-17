@@ -15,7 +15,7 @@ define Start(p)
 
   ## The time of each trial
   trialtime <- 10*1000   #number of seconds * 1000 = ms
-  maxTrials <- 10
+  maxTrials <- 8
 
 
   #Change useKeyPad from 0 to 1 to use the keyboard number pad.
@@ -43,7 +43,7 @@ define Start(p)
   gSubNum <- GetSubNum(gWin)
   gFileOut <-FileOpenAppend("tapping-"+gSubNum+".txt")
    FilePrint(gFileOut,"sub trial domhand hand tap sumtime trialtime rt")
-  font <-  MakeFont(gPEBLBaseFontMono,0,28,MakeColor("white"),MakeColor("black"),1)
+  font <-  MakeFont(gPEBLBaseFontMono,0,24,MakeColor("white"),MakeColor("black"),1)
   
   inst <- "In this task, you are asked to tap the keyboard as quickly as possible for a maximum of "+ maxtrials +" trials of " +
   trialtime/1000 + " seconds.  Use  the "+keylabel+" key.  Begin tapping when you see 'GO'."
@@ -114,7 +114,7 @@ define Start(p)
   {
 
   data <- []
-  trial <- 0
+  trial <- 1
 
   tb.text <-inst + CR(2) + "On this round, you will use your " +
   hand + " hand.  "+ CR(2) + "Press the '"+keylabel+"' Key to begin"
@@ -129,7 +129,7 @@ define Start(p)
   complete <- 0    
   while((not complete) and trial <= maxtrials)
    {
-     trial <- trial + 1
+
      sumx  <- 0.0
      sumxx <- 0.0
      ##On the trial, gate the beginning with the "+keylabel+" press
@@ -213,8 +213,8 @@ define Start(p)
    if(trial >= 5)
    {
 
-
-     last5 <- SubList(First(Transpose(data)),1+trial-5,trial)
+    
+     last5 <- SubList(First(Transpose(data)),trial-5+1,trial)
 	 range <- Max(last5)-Min(last5)
 
      ##if the range is small, we can quit
@@ -224,7 +224,7 @@ define Start(p)
      }
    }
 
-
+   trial <- trial + 1
    WaitForKeyPress(contkey)
   }
 
@@ -255,9 +255,11 @@ define Start(p)
   WaitForKeyPress(contkey)
 
 
+
+
    if(complete)
     {
-       last5 <- SubList(data,trial+1-5,trial)
+       last5 <- SubList(data,trial-5,trial-1)
        d2 <- Transpose(last5)
 
     } else {
