@@ -9,6 +9,14 @@ Begin VB.Form Form1
    LinkTopic       =   "Form1"
    ScaleHeight     =   10065
    ScaleWidth      =   12255
+   Begin VB.TextBox Text4 
+      Height          =   375
+      Left            =   4440
+      TabIndex        =   19
+      Text            =   "en"
+      Top             =   2040
+      Width           =   735
+   End
    Begin VB.ComboBox Combo3 
       Height          =   315
       ItemData        =   "Form1.frx":08CA
@@ -168,6 +176,14 @@ Begin VB.Form Form1
       Top             =   4080
       Width           =   11415
    End
+   Begin VB.Label Label4 
+      Caption         =   "Language Code:"
+      Height          =   255
+      Left            =   4200
+      TabIndex        =   18
+      Top             =   1800
+      Width           =   1215
+   End
    Begin VB.Label Label3 
       Caption         =   "Participant Code:"
       Height          =   375
@@ -177,7 +193,7 @@ Begin VB.Form Form1
       Width           =   1215
    End
    Begin VB.Label Label2 
-      Caption         =   "Launcher for PEBL 0.10"
+      Caption         =   "Launcher for PEBL 0.11"
       Height          =   255
       Left            =   10080
       TabIndex        =   10
@@ -295,6 +311,13 @@ Case 3:
 Case Else:
 Execute = Execute + " 16 "
 End Select
+
+If Text4.Text <> "" Then
+ Execute = Execute + " --language " + Text4.Text
+End If
+
+Execute = Execute
+
 '  MsgBox Execute
 '  MsgBox CurDir()
   
