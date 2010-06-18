@@ -79,7 +79,7 @@ define Start(p)
   ## 2: l2a: identify all the targets            (GetResponsesL2)
   ## 3: l2b: identify a single target            (GetResponsesIDPos)
   ## 4: l3:  identify the prey a predator is tracking.
-  ## 5: l3: identify direction critter is oving in (GetResponsesL3)
+  ## 5: l3:  identify direction critter is oving in (GetResponsesL3)
 
 
   ##the different conditions, with trials per condition.
@@ -108,6 +108,7 @@ define Start(p)
 
   inst <- EasyTextBox("",25,5,gWin,16,gVideoWidth-50,150)
 
+#  Print(blocks)
   #Main Loop
 
   block <- 1
@@ -724,7 +725,6 @@ define GetResponsesAnticipate1(outputhead,endpred, endprey)
 ##  heading in by clicking.
 ##
 
-
 define GetResponsesL3(outputhead)
 {
 
@@ -735,7 +735,12 @@ define GetResponsesL3(outputhead)
   
 
   ##Make replacement points for one of the targets
-  target1 <- Sample(Merge(gPred,gPrey))
+  targs <- Merge(gPred,gPrey)
+  ##enumerate which one is the target
+  targID <- RandomDiscrete(Length(targs))
+  target1 <- Nth(targs,targID)
+  angle1 <- target1.rotation
+
   plotpoints <- First(GetPositions([target1]))
   targCol <- MakeColor("grey")
   selCol <- MakeColor("lightcoral")
@@ -743,48 +748,26 @@ define GetResponsesL3(outputhead)
 
 
   circle <-   Circle(First(plotpoints),Second(plotpoints),10,selCol,1)
-
   AddObject(circle,gWin)
   Draw()
 
 
   back <- Rectangle(gHomeX,700,150,40,MakeColor("grey60"),0)
   AddObject(back,gWin)
-  donefont <- MakeFont(gPEBLBaseFontMono,0,30,MakeColor("grey"),MakeColor("black"),1)
+  donefont <- MakeFont("VeraMono.ttf",0,30,MakeColor("grey"),MakeColor("black"),1)
   done <- MakeLabel("DONE",donefont)
   AddObject(done,gWin)
   Move(done,gHomeX,700)
-  Move(target1,gHomeX+100,700)
+  Move(target1,gHomeX+140,700)
+  bg <- Rectangle(gHomeX+140,700,90,50,bgCol,1);AddObject(bg,gWin)
+  
   target1.rotation <- 0
   Show(target1)
 
   buttons <- [back,done]
 
-##  imgs <- Merge(gPred,SortBy(gPrey,[1,3,2,4]))
-##    buttons <- []
-##    ##Add target 'buttons' in the right positions.
-##    xs <- [gHomeX-250,gHomeX-150, gHomeX-50,gHomeX+50,gHomeX+150,gHomeX+250]
-##    stim <- Transpose([xs, imgs])
-##    loop(i,stim)
-##     {
-##        xpos <- First(i)
-##        bg <- Rectangle(xpos,660,90,50,bgCol,1)
-##        AddObject(bg,gWin)
-##        buttons <- Append(buttons,bg)
-
-
-##        img <-Second(i) 
-##        Show(img)
-##        img.rotation <- 90
-##        Move(img,xpos,660)
-##     }
-
-##    ##We want the pictures on top of the buttons.
-##    RemoveComplex(imgs)
-##    AddComplex(imgs,gWin)
-
   ##Now, identify each target in turn
-   gHeader.text <- "In what direction is the target heading?"
+   gHeader.text <- "In what direction is the red target heading?"
    Show(gHeader)
 
   ##Wait for a cilck, then confirm.
@@ -820,11 +803,13 @@ define GetResponsesL3(outputhead)
 
       
     }
+
+  FilePrint(gFileOut,outputhead + " Click " +targID + " " +      angle1 +       " NA "      +  GetTime() + " " +  angle )
   gHeader.text <- ""
   RemoveComplex(tmp)  
   RemoveObject(circle,gWin)
   RemoveComplex(buttons)
-
+  RemoveObject(bg,gWin)
   ShowComplex(gPrey,1)
   ShowComplex(gPred,1)
   Draw()
@@ -835,7 +820,6 @@ define GetResponsesL3(outputhead)
   gTime <- GetTime()
 
 }
-
 
 
 
