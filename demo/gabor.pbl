@@ -1,9 +1,11 @@
 define Start(p)
 {
 
-     patchsize <- 100
+
+     patchsize <- 80
      bglev <- 20
-	 sd <- 20
+     sd <- 10
+   
      
      gWin <- MakeWindow("grey20")
 
@@ -135,5 +137,3 @@ define Start(p)
     }
 
 }
-
-

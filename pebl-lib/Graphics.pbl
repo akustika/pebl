@@ -331,7 +331,7 @@ define MakeAttneave(size,numpoints,minangle, maxangle)
     tryX <- Round((Random()-.5)*size)
     tryY <- Round((Random()-.5)*size)
 
-    while(Sqrt(tryX^2 + tryY^2) > size)
+    while(Sqrt(tryX^2 + tryY^2) > size/2)
     {
       tryX <- Round((Random()-.5)*size)
       tryY <- Round((Random()-.5)*size)

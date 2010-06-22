@@ -244,6 +244,7 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
             cerr << "Surface refcount: " << mSurface->refcount << endl;            
             cerr << "--------------------------------------------------------------------------------\n\n";
 
+            SDL_WM_SetCaption("PEBL Experiment","PEBL Experiment");
             return true;
         }
 
