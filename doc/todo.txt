@@ -1,55 +1,9 @@
 todo:
-easylabel crashes if win is passed as second argument. *done
-
-Document PCanvas  *done
-Allow transparent PCanvas  *done & documented
-
-
-Update Draw() documentation to describe Draw(widget) 
-Add ResetCanvas() function *done; document this*
 
 
 
 
-- segfault when window is global and program aborted early *fixed
-- but not when a local copy is made of gWin  *fixed
-
-
-Fix GetInput so you can enter shifted characters like () *DONE
-todo:
-  document WaitforMouseButtonWithTimout+
-  - Document IsCanvas+*
-Document SetPixel/Setpoint function ++*
-
-
-Update tasks that watch for ["<timeout>"] as an output from waitforlistkeypresswithtimeout.
-  (TOAV, PCPT, maybe others) *done
-
--fix TOAV to work, as fixed in T3 test. *done
-
-Add MakeAttneave,*
- ConvexHull, etc. *DONE
-- Need to collect all new functions added and document them.*
-
-
-- Add some functions to add noise distributions to things (makegabor) (using setpixel)
-
--Document MakeGabor()+*
--Document Geteasyinput+*
-, messagebox+*
-
-
-update/ Document how  the last parameter of MakeFont(), if set to 0,
-is now rendered smoothly using alpha transparency.  Before it was
-blocky. Using this allows one to make a font label with a transparent
-background.  In that case, bgcol is ignored. *done
-
-- MakeColorRGBA doesn't work.  Is this even a function? No, just MakeColorRGB.
-
--still get a segfault on capturesignal in gabor.pbl.  Maybe 
- children aren't getting properly removed?  -fixed.
 
 - Update versions of fonts we distribute (especially vera.ttf) *Added Dejavu.
-- Make gPEBLFONT point to Vera.ttf, and force all auto functions to 
-  use it.  *Done; changed to DejaVu.
+
 
