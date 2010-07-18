@@ -405,7 +405,7 @@ Private Sub Form_Load()
 
 Combo1.ListIndex = 2
 Combo2.ListIndex = 2
-Combo3.ListIndex = 1
+Combo3.ListIndex = 0
 
 'Try to find the file pebl-init.txt.  If it doesn't exist,
 'no worries
