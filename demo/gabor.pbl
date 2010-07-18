@@ -10,9 +10,9 @@ define Start(p)
      gWin <- MakeWindow("grey20")
 
 
-     bg <- MakeCanvas(700,500,MakeColorRGB(bglev,bglev,bglev))
-     AddObject(bg,gWin)
-     Move(bg,gVideoWidth/2,gVideoHeight/2)
+#     bg <- MakeCanvas(700,500,MakeColorRGB(bglev,bglev,bglev))
+#     AddObject(bg,gWin)
+#     Move(bg,gVideoWidth/2,gVideoHeight/2)
 
      gSleepEasy <- 1
      angles <- Sequence(0,6.283,6.283/10)
@@ -28,9 +28,9 @@ define Start(p)
      	 can <- MakeGabor(patchsize,8,sd,i,0,bglev)
          t2 <- GetTime()
          Print(t2-t1)
-         AddObject(can,bg)
-         Move(can,50+x,65)
-         lab1 <- EasyLabel("Angle: " + i,50+x,140,bg,12)
+         AddObject(can,gWin)
+         Move(can,50+x,95)
+         lab1 <- EasyLabel("Angle: " + i,50+x,170,gWin,12)
          Draw()
          x <- x + 120
          cans <- Append(cans,can)
@@ -48,9 +48,9 @@ define Start(p)
          t2 <- GetTime()
          Print(t2-t1)
 
-         AddObject(can,bg)
-         Move(can,50+x,220)
-         lab1 <- EasyLabel("Freq: "+ i,50+x,280,bg,12)
+         AddObject(can,gWin)
+         Move(can,50+x,250)
+         lab1 <- EasyLabel("Freq: "+ i,50+x,310,gWin,12)
          Draw()
          x <- x + 120
          cans2 <- Append(cans2,can)
@@ -69,9 +69,9 @@ define Start(p)
          t2 <- GetTime()
          Print(t2-t1)
 
-         AddObject(can,bg)
-         Move(can,50+x,360)
-         lab1 <- EasyLabel("Phase: "+ Round(phase*100)/100,50+x,420,bg,12)
+         AddObject(can,gWin)
+         Move(can,50+x,390)
+         lab1 <- EasyLabel("Phase: "+ Round(phase*100)/100,50+x,450,gWin,12)
          Draw()
          x <- x + 120
          cans3 <- Append(cans3,can)
@@ -105,7 +105,7 @@ define Start(p)
      }
 
 
-    ResetCanvas(bg)
+
     lab.text <- "Press spacebar to repeat or X to exit."   
     cont <- 1
 
@@ -120,7 +120,7 @@ define Start(p)
        }
         Draw()
         Wait(100)
-        ResetCanvas(bg)       
+
     
        loop(j,i)
        {
