@@ -334,7 +334,7 @@ LeftChar=1
 Open=0
 Top=0
 CursorCol=1
-CursorRow=70
+CursorRow=69
 TopLine=69
 LeftChar=1
 [Editor_48]
@@ -477,8 +477,8 @@ Top=0
 Open=0
 Top=0
 CursorCol=1
-CursorRow=69
-TopLine=69
+CursorRow=71
+TopLine=65
 LeftChar=1
 [Editor_69]
 Open=0
@@ -673,5 +673,17 @@ LeftChar=1
 Open=0
 Top=0
 [Editor_113]
+Open=0
+Top=0
+[Editor_114]
+Open=0
+Top=0
+[Editor_115]
+Open=0
+Top=0
+[Editor_116]
+Open=0
+Top=0
+[Editor_117]
 Open=0
 Top=0
