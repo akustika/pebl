@@ -89,15 +89,25 @@ Major changes:
   because DEJAVU will work for a wider variety of scripts
   out-of-the-box. 
 
-  + The command-line option --language is now available.  This has no direct effect
-  other than setting the global variable gLanguage to the string
-  specified on the command line.  It can be used to select text
-  strings in order to translate.  Currently, the iowa task, the bcst,
+  + Added ukai and UnBatang fonts to enable handling of Chinese,
+  Korean, and Japanese text.
+
+  + The command-line option --language is now available.  This does
+  two things.  First, it sets the global variable gLanguage to the string
+  specified on the command line.  This is used to select text
+  strings in order to choose the proper translation on several of the
+  battery tests.  Currently, the iowa task, the bcst,
   task, and the Tower of London task will look for gLanguage and
   select text strings based on it, but only a crude spanish version
   (--language "ES") exists for TOL and no alternate translations exist
-  for the other tasks.
+  for the other tasks.  In addition, it will set the gPEBLBaseFont
+  specified to ukai.ttc if you specify CN, or UnBatang.ttf if you
+  specify KO or JP.
 
+  + Translation of BCST into polish, Korean, and Chinese.
+  + Translation of Bechara's cardsort into Polish, Korean, Chinese.
+  + Translation of TOL into spanish, as a demo (gracias google).  A
+  Portuguese version is in the works.
 
 Minor changes:
 
@@ -118,7 +128,6 @@ overlapping targets. See poetry demo for example.
   impact textboxes, because the background is still in effect.  It
   will impact EasyLabel, which now renders transparently, rather than
   in a color matching the background.
-
 
 - Changed the order of precedence of unary minus and power
   function. previously, -1^2 was +1; now it operates as expected.
@@ -171,11 +180,13 @@ called the "PEBL Cognitive Decathlon".  Among several existing tasks,
 it also includes:
 
 Device mimicry: Make copies of a figure with a 4-df etch-a-sketch
-objectjudgment: Are two attneave shapes identical?  Are they identify
-if rotatet?
-ptracker: Compensatory tracker task 
-visual search:  Classic visual search paradigm; fairly flexible.
 
+objectjudgment: Are two attneave shapes identical?  Are they identify
+if rotated?
+
+ptracker: Compensatory tracker task 
+
+visual search:  Classic visual search paradigm; fairly flexible.
 
 Major improvements:
 
