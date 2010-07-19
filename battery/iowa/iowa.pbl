@@ -35,7 +35,9 @@ define Start(lPar)
  ## Part of  The PEBL Psychological Testing Battery
  ##
  ##
-   
+ ## Polish translation contributed by  Artur Pilacinski
+ ## Chinese translation contributed by y 
+ ##
   
   ##How many trials?
   numtrials <- 100
@@ -54,7 +56,7 @@ define Start(lPar)
    ##   translation file
 
    gLanguage <- Lowercase(gLanguage)
-   textlist <- FileReadList("labels-"+gLanguage+tag+".txt")
+   textlist <- FileReadList(Lowercase("translations/labels-"+gLanguage+tag+".txt"))
 
 
    gFontNameMono <- gPEBLBaseFontMono  #defaults to "VeraMono.ttf"
@@ -133,15 +135,25 @@ define Start(lPar)
    ##  GetNIMHDemographics(gSubNum, gWin, "igt-demographics.txt")
 
    ## Give instructions; wait for them to hit a key, 
-   inst <- Nth(textlist, 1)
+   inst1 <- Nth(textlist, 1)
+   inst2 <- Nth(textlist, 2)
+   inst3 <- Nth(textlist, 3)
 
 
-   SetText(gInstructions,inst)
+   SetText(gInstructions,inst1)
 
    Hide(gFooter)
    Show(gInstructions)
    Draw()  
 
+   WaitForIt()
+   gInstructions.text <- inst2
+   Draw()
+   WaitForIt()
+  
+
+   gInstructions.text <- inst3
+   Draw()
    WaitForIt()
 
    Hide(gInstructions)
@@ -175,10 +187,10 @@ define Start(lPar)
 
 
 
-   deck1text <- MakeLabel(Nth(textlist,2),gHeaderFont)
-   deck2text <- MakeLabel(Nth(textlist,3),gHeaderFont)
-   deck3text <- MakeLabel(Nth(textlist,4),gHeaderFont)
-   deck4text <- MakeLabel(Nth(textlist,5),gHeaderFont)
+   deck1text <- MakeLabel(Nth(textlist,4),gHeaderFont)
+   deck2text <- MakeLabel(Nth(textlist,5),gHeaderFont)
+   deck3text <- MakeLabel(Nth(textlist,6),gHeaderFont)
+   deck4text <- MakeLabel(Nth(textlist,7),gHeaderFont)
 
 
 
@@ -210,19 +222,19 @@ define Start(lPar)
    
 
    ##Turn the header on during the task.
-   gHeader.text <- Nth(textlist,6)
+   gHeader.text <- Nth(textlist,8)
    Show(gHeader)
 
    gTotal <- 2000
-   totstring <-Nth(textlist,7)
+   totstring <-Nth(textlist,9)
    gTotalLabel <- MakeLabel(totstring+gTotal,gHeaderFont)
    AddObject(gTotalLabel,gWin)
    Move(gTotalLabel,450,380)
 
-   textchoice <-  Nth(textlist,8)
-   textreward <-  Nth(textlist,9)
-   textpenalty <-  Nth(textlist,10)
-   textnetgain <-  Nth(textlist,11)
+   textchoice <-  Nth(textlist,10)
+   textreward <-  Nth(textlist,11)
+   textpenalty <-  Nth(textlist,12)
+   textnetgain <-  Nth(textlist,13)
 
    gFooter.text <- textchoice+ CR(1) + textreward  + CR(1) + 
                    textpenalty+  CR(1) + textnetgain
@@ -400,9 +412,9 @@ define Start(lPar)
    ##Now, show debriefing info.
 
 
-   feed1 <- Nth(textlist, 12)
-   feed2 <- Nth(textlist,13)
-   feed3 <- Nth(textlist,14)
+   feed1 <- Nth(textlist, 14)
+   feed2 <- Nth(textlist,15)
+   feed3 <- Nth(textlist,16)
    feedback <-  feed1 + gTotal+".  "
 
    if(gTotal > 3000) 
