@@ -48,6 +48,8 @@
 #include <iostream>
 #include <signal.h>
 #include <list>
+#include <string>
+#include <algorithm>
 
 //Unix-specific definitions
 #if defined(PEBL_UNIX)
@@ -389,7 +391,11 @@ int PEBLInterpret( int argc, char *argv[] )
     Evaluator::gGlobalVariableMap.AddVariable("gSubNum",subnum);
     
 
-    Evaluator::gGlobalVariableMap.AddVariable("gLanguage",lang);
+    //Translate lang to the uppercase 2-letter code
+    std::string tmps =lang;
+    transform(tmps.begin(),tmps.end(),tmps.begin(),toupper);
+    
+    Evaluator::gGlobalVariableMap.AddVariable("gLanguage",Variant(tmps));
 
 
     //Add a special 'quote' character.
@@ -398,11 +404,27 @@ int PEBLInterpret( int argc, char *argv[] )
 
     //Add a the default 'base font' names
     //gPEBLBaseFont defaults to a sans serif font
+    if(tmps == "CN")
+        {
+            //ukai handles chinese
+            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFont",Variant("fireflysung.ttf"));
+            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontMono",Variant("fireflysung.ttf"));
+            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontSerif",Variant("fireflysung.ttf"));
+
+        }else if(tmps == "KO" | tmps == "JP")
+        {
+            //UnBatang handles korean, japanese
+            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFont",Variant("UnBatang.ttf"));
+            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontMono",Variant("UnBatang.ttf"));
+            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontSerif",Variant("UnBatang.ttf"));
     
-    Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFont",Variant("DejaVuSans.ttf"));
-    Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontMono",Variant("DejaVuSansMono.ttf"));
-    Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontSerif",Variant("DejaVuSerif.ttf"));
-    
+        } else
+        {
+            //DejaVu handles most western fonts.
+            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFont",Variant("DejaVuSans.ttf"));
+            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontMono",Variant("DejaVuSansMono.ttf"));
+            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontSerif",Variant("DejaVuSerif.ttf"));
+        }
     //Now, everything should be F-I-N-E fine.
     head = myLoader->GetMainPEBLFunction();
 
