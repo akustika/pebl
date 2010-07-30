@@ -69,7 +69,6 @@ define Start(lPar)
 
   gFileOut <-FileOpenWrite("bcst-" + gSubNum +".txt")
 
-
   gSleepEasy <- 1
   persevs <- []
   totCorr <- 0
@@ -82,6 +81,10 @@ define Start(lPar)
 
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
+
+  Print(gPEBLBaseFont)
+  Print(gPEBLBaseFontMono)
+
   if(gUseMouse==0)
    {
      ShowCursor(0)  #hide the cursor
@@ -224,7 +227,7 @@ define Start(lPar)
       #Display the card
       card <- Nth(s,4)
       AddObject(card,gWin)
-      Move(card,500,350)
+      Move(card,500,380)
  	  Draw()
       time0 <- GetTime()
 
@@ -518,9 +521,9 @@ define Initialize()
    colRed   <- MakeColor("red")
  
  
-   gStimFont         <- MakeFont(gPEBLBaseFontMono, 0, 24,fg,bg,1)       
-   gCorrFont         <- MakeFont(gPEBLBaseFontMono, 0, 30,colGreen, bg,1)
-   gIncorrFont       <- MakeFont(gPEBLBaseFontMono, 0, 30,colRed,   bg,1)
+   gStimFont         <- MakeFont(gPEBLBaseFontMono, 0, 24,fg,bg,0)       
+   gCorrFont         <- MakeFont(gPEBLBaseFontMono, 0, 30,colGreen, bg,0)
+   gIncorrFont       <- MakeFont(gPEBLBaseFontMono, 0, 30,colRed,   bg,0)
 
 
    gInstructionsFont <- MakeFont(gPEBLBaseFont,0,18, fg,bg2,1)  
@@ -541,7 +544,7 @@ define Initialize()
    #Create the insturctions cue
    gPrompt <- MakeLabel(gPromptText,gStimFont)
    AddObject(gPrompt,gWin)
-   Move(gPrompt,350,225)
+   Move(gPrompt,350,250)
    Hide(gPrompt)
 
 
