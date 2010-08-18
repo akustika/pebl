@@ -1,0 +1,120 @@
+define Start(p)
+{
+
+  prestime <- 250
+
+  gWin <- MakeWindow("black")
+  gSubNum <- GetSubNum(gWin)
+  gSleepEasy <- 1
+  ShowCursor(0)
+
+  fileout <- FileOpenAppend("mullerlyer-"+gSubNum+".txt")
+  header <- EasyLabel("which is longer?",gVideoWidth/2,20,gWin,22)
+  footer <- EasyLabel("<lshift>                 <rshift>",gVideoWidth/2,gVideoHeight-40,gWin,22)
+
+   trials <- 50
+   trial <- 1
+
+   diff <- 0
+   while(trial<=trials)
+   {
+
+     ##determine difference between the two; +/-
+
+     l1 <- 190 + Random() * 40
+     l2 <- l1 + diff
+
+     line1 <- MakeMLStim(250,gVideoHeight/2,l1,50,100)
+     line2 <-MakeMLStim(gVideoWidth-250,gVideoHeight/2,l2,50,80)
+     AddComplex(line1,gWin)
+     AddComplex(line2,gWin)
+     Draw()
+     RemoveComplex(line1,gWin)
+     RemoveComplex(line2,gWin)
+     Wait(prestime)
+#     WaitForAnyKeyPress()
+
+    Show(header)
+    Show(footer)
+    Draw()     
+    t1 <- GetTime()
+    resp <-  WaitForListKeyPress(["<lshift>","<rshift>"])
+    t2 <- GetTime()
+
+    corr <- ScoreResp(resp,diff)
+ 
+    ##Determine next diff semi-randomly
+    ##if correct, move diff toward (or past) 0
+    if(corr)
+      {
+        diff <- diff - Sign(diff) *5 + Floor(Random()*11)-5
+      }else{
+        diff <- diff + Sign(diff) *5 + Floor(Random()*11)-5
+      }
+
+    Hide(header)
+    Hide(footer)
+    Draw()
+    Wait(500)
+    FilePrint(fileout,gsubnum+" " +trial + " " +l1 + " " + l2 + " " +  diff + " " +resp + " " +corr +" " + t1 + " " + (t2-t1))
+    trial <- trial + 1
+  }
+
+
+
+}
+
+define ScoreResp(resp,diff)
+{
+     if((resp == "<lshift>" and diff<0) or
+         (resp == "<rshift>" and diff>0))
+       {
+          corr<- 1
+       }else{
+          corr <- 0
+       }
+ return corr
+}
+
+
+##This makes vertical M-L illusion stimuli
+define MakeMLStim(x,y,length,tailsize, tailangle)
+{
+   
+   ##Compute dx and dy for tails based on size and angle
+   ## angle of 90 = straight out; 
+   dx <- tailsize * Cos(tailangle-90)
+   dy <- tailsize * Sin(tailangle-90)
+   
+
+   width <- 6
+   ##first, make the line
+   col <- MakeColor("white")
+   l1 <- ThickLine(x,y-length/2,x,y+length/2,width,col)
+
+   l2a <- ThickLine(x,y+length/2-1,x+dx,y+length/2+dy,width,col)
+   l2b <- ThickLine(x,y+length/2-1,x-dx,y+length/2+dy,width,col)
+
+   l3a <- ThickLine(x,y-length/2+1,x+dx,y-length/2-dy,width,col)
+   l3b <- ThickLine(x,y-length/2+1,x-dx,y-length/2-dy,width,col)
+  
+   return [l1,l2a,l2b,l3a,l3b]
+}
+
+
+define AddComplex(comp,win)
+  {
+     loop(i,comp)
+     {
+        AddObject(i,win)
+     }
+  }
+
+
+define RemoveComplex(comp,win)
+  {
+     loop(i,comp)
+     {
+        RemoveObject(i,win)
+     }
+  }
