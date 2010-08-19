@@ -5,85 +5,245 @@ define Start(p)
    gStim <- FileReadList("Uppercase.txt")
    gFont <- MakeFont(gPEBLBaseFont,0,22,MakeColor("black"),MakeColor("black"),0)
    gWin <- MakeWindow("black")
+   gSleepEasy <- 1
 
-   trial <- Transpose([[1,1,2,2,3,3,4,4,5,5],
-                      [1,2,2,3,3,4,4,5,5,6]])
+   gSubNum <- GetSubNum(gWin)
+   gFileOut <- FileOpenAppend("switch-"+gSubNum+".csv")
+   
+   coltmplt <-   [1,1,2,2,3,3,4,4,5,5]
+   numtmplt <-   [1,2,3,4,5,1,2,3,4,5]
+   shapetmplt <- [1,2,1,3,2,4,3,5,4,5]
+   
 
-    Trial(trial)
-    Trial(trial)
-    Trial(trial)
+   FilePrint(gFileOut,"gSubNum,timestamp,testtype,numcues,numerr,tooslow,waittime,perftime,medtime")
+
+    i <- 1
+
+
+    ##Consistent 2 rule
+    type <- 1
+    cuebase <- Shuffle([[1,2],[2,3],[1,3]])
+    loop(base,cuebase)
+     {
+
+      seq <- Sequence(1,5,1)
+      tmpcol <- Shuffle(seq)
+      tmpnum <- Shuffle(seq)
+      tmpshape <- Shuffle(seq)
+
+      trial <- Shuffle(Transpose([Replace(coltmplt,Transpose([seq,tmpcol])),
+	          Replace(numtmplt,Transpose([seq,tmpnum])),
+              Replace(shapetmplt,Transpose([seq,tmpshape]))]))
+
+      cues <-RepeatList(base,9)
+
+      time <- GetTime()
+      ret  <- Trial(trial,cues)
+
+      waittime <- Third(ret)
+      perftime <- Fourth(ret)
+      medtime <- Fifth(ret)
+      tooslow <- Nth(ret,6)
+
+     x <- FilePrint(gFileOut,gSubNum + "," + TimeStamp()+ ","+ type + "," +
+                First(ret) + "," + Second(ret) +","+ tooslow +","+waittime + 
+                ","+perftime+","+medtime)
+
+     Print(x)
+
+      i <- i + 1
+
+    }
+
+
+    ##Consistent order-3 rule
+    type <- 2
+    threes <- [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+    cuebase <- SampleN(threes,3)
+    loop(base,cuebase)
+     {
+
+      seq <- Sequence(1,5,1)
+      tmpcol <- Shuffle(seq)
+      tmpnum <- Shuffle(seq)
+      tmpshape <- Shuffle(seq)
+
+      trial <- Shuffle(Transpose([Replace(coltmplt,Transpose([seq,tmpcol])),
+	          Replace(numtmplt,Transpose([seq,tmpnum])),
+              Replace(shapetmplt,Transpose([seq,tmpshape]))]))
+
+      cues <-RepeatList(base,6)
+
+      time <- GetTime()
+      ret  <- Trial(trial,cues)
+
+      waittime <- Third(ret)
+      perftime <- Fourth(ret)
+      medtime <- Fifth(ret)
+      tooslow <- Nth(ret,6)
+
+     x <- FilePrint(gFileOut,gSubNum + "," + TimeStamp()+ ","+ type + "," +
+                First(ret) + "," + Second(ret) +","+ tooslow +","+waittime + 
+                ","+perftime+","+medtime)
+
+     Print(x)
+    
+   i <- i + 1
+
+    }
+
+
+    ##Random order-3 rule
+    type <- 3
+    times <- [1,2,3]
+    loop(x,times)
+     {
+
+      seq <- Sequence(1,5,1)
+      tmpcol <- Shuffle(seq)
+      tmpnum <- Shuffle(seq)
+      tmpshape <- Shuffle(seq)
+
+      trial <- Shuffle(Transpose([Replace(coltmplt,Transpose([seq,tmpcol])),
+	          Replace(numtmplt,Transpose([seq,tmpnum])),
+              Replace(shapetmplt,Transpose([seq,tmpshape]))]))
+
+
+      cues <- ShuffleEpoch([1,2,3],6)
+
+      time <- GetTime()
+      ret  <- Trial(trial,cues)
+
+      waittime <- Third(ret)
+      perftime <- Fourth(ret)
+      medtime <- Fifth(ret)
+      tooslow <- Nth(ret,6)
+      FilePrint(gFileOut,gSubNum + "," + TimeStamp()+ ","+ type + "," +
+                First(ret) + "," + Second(ret) +","+ tooslow +","+waittime + 
+                ","+perftime+","+medtime)
+     
+      i <- i + 1
+
+    }
+
+   Print(GetTime()/1000/60)
+   Print(TimeStamp())
 
 }
 
 
-
-
-
-define Trial(setup)
+define Trial(setup,cues)
 {
+
+
+  cue <- EasyLabel("Click mouse to begin",gVideoWidth/2,20,gWin,44)
 
   circs <- []
   texts <- []
+  backs <- []
+  rts <- [] ##list of correct response times.
+   tooslow <- 0
+   cor <- 0
+   inc <- 0
+   first <- -1
 
-   points <- NonOverlapLayout(100,gVideoWidth-100,100,gVideoHeight-100,60,10)
+   black <- MakeColor("black")
+   points <- NonOverlapLayout(100,gVideoWidth-100,100,gVideoHeight-100,80,10)
    stim <- PasteTables(setup,points)
+   stim <- PasteTables(stim,Transpose([Sequence(1,10,1)]))
    labels <- SampleN(gStim,6)
 
-     back <- Circle(First(First(points)),Second(First(points)),35,MakeColor("white"),1)
+     back <- Circle(First(First(points)),Second(First(points)),40,MakeColor("white"),1)
      AddObject(back,gWin)
 
       loop(i,stim)
        {
           color <- Nth(gCols,First(i))
-
           label <- Nth(labels,Second(i))+""
-          x <- Third(i)
-          y <- Fourth(i)
 
-          p1 <- Circle(x,y,30,color,1)
+          x <- Fourth(i)
+          y <- Fifth(i)
+          p1 <- GetShape(Third(i),x,y,color)
+          pback <- Circle(x,y,35,black,1)
           t <- MakeLabel(label,gFont)
           Move(t,x,y)
+
+          AddObject(pback,gWin)
           AddObject(p1,gWin)
           AddObject(t,gWin)
          
+          backs <- Append(backs,pBack)
           texts <- Append(texts,t)
           circs <- Append(circs,p1)
 
        }
    Draw()
+   t0 <- GetTime()
 
    ids <- Sequence(1,10,1)
 
-   resp <- 0
+   labels <- ["Color","Letter","Shape"]
+   resp <- First(stim)
    next <- 1
    done <- 0
-   while(not done)
-   {
-     resp <- WaitForClickOnTarget(circs,ids)
-     if(resp == next)
-     { 
-        next <- next + 1
-  
-        Move(back,Third(First(stim)),Fourth(First(stim)))
-        Draw()
-        stim <- Rotate(stim,1)
-        Print("Correct")       
-     }else{
-       Print("wrong")
-    }
-     if(next > 10)
-      {
-        done <- 1
-      }
 
+   WaitForDownClick()
+   t1 <- GetTime()
+   lasttime <- t1
+   Draw()
+   loop(rule,cues)
+   {
+
+
+     curid <- Nth(resp,6)
+     currentval <- Nth(resp,rule)
+	 cue.text <- Nth(labels,rule)
+     Draw()
+
+     cont <- 1
+     while(cont)
+      {
+       respa <- WaitForClickOnTarget(backs,stim)
+       time <- GetTime()
+       ##resp is the clicked-on stim string.
+
+     if(Nth(respa,rule) == currentval and 
+         Nth(respa,6) <> curid)
+      { 
+    ###Correct
+        rt <- (time-lasttime)
+        rts <- Append(rts, rt)
+        tooslow <- tooslow + (rt > 2000)
+        lasttime <- time    
+        resp <- respa  
+        Move(back,Fourth(resp),Fifth(resp))
+        Draw()
+        cont <- 0
+#        Print("Correct")       
+        cor <- cor + 1
+		if(first<0)
+         {
+           first <- GetTime()
+         }
+     }else{
+       inc <- inc + 1 
+#       Print("wrong")
+      }
+     }
 
    }
+  tend <- time
+
+  Print(rts)
+  return [cor,inc,(t1-t0),(tend-t1),Median(rts),tooslow]
 }
 
 define PasteTables(tab1,tab2)
 {
+
    a <- Transpose(tab1)
    b <- Transpose(tab2)
+
 
    return Transpose(Merge(a,b))
 }
@@ -254,6 +414,36 @@ define VecSum(a,b)
 }
 
 
+define GetShape(type,x,y,color)
+{
+    if(type==1)
+     {
+         shape <- Circle(x,y,30,color,1)
+     }elseif(type==2)
+    {
+        shape <- Square(x,y,42,color,1)
+    } elseif(type==3)
+    {
+
+      shape <- Plus(0,0,30,20,color)
+      Move(shape,x,y)
+
+   } elseif(type==4)
+   {
+       shape <- Ellipse(x,y,30,22,color,1)
+		
+   } elseif(type==5)
+   {
+       pts <- MakeStarPoints(30,20,7)
+       shape <- Polygon(x,y,First(pts),Second(pts),color,1)
+
+   }else{
+    SignalFatalError("Unknown shape type in GetShape.")
+   }
+  return shape
+}
+
+
 
 ##  This function takes a list of anything, and a list of indexes
 ##  specifying the items to extract from the list.  The indexes can
@@ -286,4 +476,28 @@ define RemoveSubset(list, items)
     }
 
     return returnList
+}
+
+
+define ShuffleEpoch(list,times)
+{
+   out <- Shuffle(list)
+   i <-1
+   next <- First(list)
+   try <- out
+   while(i < times)
+   {
+    try <- Shuffle(list)    
+    while(First(try)==First(out))
+    {
+
+      try <- Shuffle(list)    
+    }
+
+
+     out <- Merge(Reverse(try),out)
+
+    i <- i + 1
+   }
+  return out
 }
