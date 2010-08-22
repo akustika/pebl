@@ -1,5 +1,5 @@
 #####################################################
-## PEBL  four-choice response time task, Version 0.1
+## PEBL  four-choice response time task, Version 0.2
 ## as described by  Wilkinson & Houghton (1975),
 ## and  test 7 of the  UTC test battery.
 ##
@@ -8,7 +8,9 @@
 ##  UNIFIED TRI-SERVICES COGNITIVE PERFORMANCE  ASSESSMENT BATTERY: 
 ##  REVIEW AND METHODOLOGY, DTIC Document #ADA181697
 ##  http://stinet.dtic.mil/oai/oai?verb=getRecord&metadataPrefix=html&identifier=ADA181697
-## Version 0.1 (c) 2008 Shane T. Mueller
+## Version 0.1 Released 2008
+## Version 0.2 2010 Shane T. Mueller
+##   -fixed key mapping error for fvjn version.
 ## smueller@obereed.net
 ##
 #####################################################
@@ -33,7 +35,7 @@ define Start(p)
   ShowCursor(0)
 
 ##Identify how we should do the responses.
- gKBInst <- " Keyboard"+CR(1)+"    F     J" + CR(1) + "     N V"
+ gKBInst <- " Keyboard"+CR(1)+"    F     J" + CR(1) + "     V N"
  gKPInst <- "  Keypad"+CR(1)+"     4  5" + CR(1) + "     1  2"
 
 
@@ -44,8 +46,8 @@ define Start(p)
 
  if(gRtype == "1")
   {
-    gKeys <- ["F","J","N","V"]
-    gMatch <- ["f","j","n","v"]
+    gKeys <- ["F","J","V","N"]
+    gMatch <- ["f","j","v","n"]
     gInst <- gKBInst 
  } else {
     gKeys <- ["<KP_4>","<KP_5>", "<KP_1>", "<KP_2>"]
@@ -85,8 +87,8 @@ define Start(p)
    rt <-   Nth(dat2,2)
 
    feedback <-   Print("-------------------------------------") +CR(1)
-   feedback <- feedback + Print("PEBL 4-choice Response Task Version 0.1") + CR(1)
-   feedback <- feedback + Print("(c) 2008 Shane T. Mueller smueller@obereed.net") + CR(1)
+   feedback <- feedback + Print("PEBL 4-choice Response Task Version 0.2") + CR(1)
+   feedback <- feedback + Print("Released 2010 Shane T. Mueller smueller@obereed.net") + CR(1)
    feedback <- feedback + Print("Version of Wilkinson & Houghton (1975) 4-choice task") + CR(1)
    feedback <- feedback + Print(GetPEBLVersion()) + CR(1)
    feedback <- feedback + Print(TimeStamp()) + CR(1)
