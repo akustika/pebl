@@ -1,7 +1,18 @@
 define Start(p)
 {
 
-   gCols <- [MakeColor("red"),MakeColor("blue"),MakeColor("yellow"), MakeColor("darkgreen"),MakeColor("grey"),MakeColor("orange")]
+#   gCols <- [MakeColor("red"),MakeColor("darkblue"),MakeColor("yellow"),MakeColor("grey"),MakeColor("darkgreen")]
+
+   ##Number of clicks per trial.
+   triallength <- 12
+   
+   ##These should be basically color-blind safe:
+   gCols <- [MakeColorRGB(230,159,0),  #orange
+   	    MakeColorRGB(86,180,233),  #skyblue
+	    MakeColorRGB(0,158,115),   #blue-green
+      	    MakeColorRGB(240,228,66),  #yellow
+	    MakeColorRGB(213,94,0)]   #vermillion (red)
+
    gStim <- FileReadList("Uppercase.txt")
    gFont <- MakeFont(gPEBLBaseFont,0,22,MakeColor("black"),MakeColor("black"),0)
    gWin <- MakeWindow("black")
@@ -13,9 +24,37 @@ define Start(p)
    coltmplt <-   [1,1,2,2,3,3,4,4,5,5]
    numtmplt <-   [1,2,3,4,5,1,2,3,4,5]
    shapetmplt <- [1,2,1,3,2,4,3,5,4,5]
-   
+   FilePrint(gFileOut,"gSubNum,timestamp,testtype,numcues,numerr,tooslow,waittime,perftime,medtime")   
 
-   FilePrint(gFileOut,"gSubNum,timestamp,testtype,numcues,numerr,tooslow,waittime,perftime,medtime")
+################################################################
+## Instructions:
+
+ gInst <- EasyTextBox("",50,50,gWin,18,gVideoWidth-100,200)
+ gInst.text <- "In this test, you will see a screen with colored shapes like you see below.  Each shape will have a letter on it.  One shape will be circled.  When you click the mouse to begin, a 'match rule' will be shown at the top.  You can click now to see this. It will read 'COLOR'.  This tells you that you need to find the symbol that matches the color of the currently circled symbol.  When you find it, the circle will jump to the next spot, and you will see a new rule at the top. In this example, it will be LETTER, so find the shape with the matching letter. Try this screen for practice."
+
+
+   gLeft <- 150
+   gRight <- gVideoWidth-gLeft
+   gUpper <- 350
+   gLower <- gVideoHeight-50
+
+
+  Draw()
+  Trial(Transpose([coltmplt,numtmplt,shapetmplt]),[1,2,3,1,2,3])
+
+
+ 
+   gInst.text <- "Great. In the first three trials, there will be only two rules, and the rules will alternate between the two rules.  Press any key to begin."
+  Draw()
+   gLeft <- 150
+   gRight <- gVideoWidth-gLeft
+   gUpper <- 100
+   gLower <- gVideoHeight-gUpper 
+
+  WaitFordownClick()
+  Hide(gInst)
+  Draw()
+
 
     i <- 1
 
@@ -35,7 +74,7 @@ define Start(p)
 	          Replace(numtmplt,Transpose([seq,tmpnum])),
               Replace(shapetmplt,Transpose([seq,tmpshape]))]))
 
-      cues <-RepeatList(base,9)
+      cues <-SubList(RepeatList(base,Ceiling(triallength/2)),1,trialLength)
 
       time <- GetTime()
       ret  <- Trial(trial,cues)
@@ -49,13 +88,19 @@ define Start(p)
                 First(ret) + "," + Second(ret) +","+ tooslow +","+waittime + 
                 ","+perftime+","+medtime)
 
-     Print(x)
+
 
       i <- i + 1
 
     }
 
-
+    gInst.text <- "Now, for three trials, you will alternate between all three rules, but in a consistent order.  Try to remember the order of the rules, so you can anticipate them and not have to refer to the rule cue.  Click mouse to begin."
+    Show(gInst)
+    Draw()
+    WaitForDownCLick()
+    Draw()
+    Hide(gInst)
+    Draw()
     ##Consistent order-3 rule
     type <- 2
     threes <- [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
@@ -69,10 +114,10 @@ define Start(p)
       tmpshape <- Shuffle(seq)
 
       trial <- Shuffle(Transpose([Replace(coltmplt,Transpose([seq,tmpcol])),
-	          Replace(numtmplt,Transpose([seq,tmpnum])),
-              Replace(shapetmplt,Transpose([seq,tmpshape]))]))
+   	               Replace(numtmplt,Transpose([seq,tmpnum])),
+                       Replace(shapetmplt,Transpose([seq,tmpshape]))]))
 
-      cues <-RepeatList(base,6)
+      cues <-SubList(RepeatList(base,Ceiling(trialLength/3)),1,trialLength)
 
       time <- GetTime()
       ret  <- Trial(trial,cues)
@@ -92,7 +137,13 @@ define Start(p)
 
     }
 
-
+    gInst.text <- "Now you will alternate between all three rules, but in a random order.  Click mouse to begin."
+    Show(gInst)
+    Draw()
+    WaitForDownCLick()
+    Draw()
+    Hide(gInst)
+    Draw()
     ##Random order-3 rule
     type <- 3
     times <- [1,2,3]
@@ -109,7 +160,8 @@ define Start(p)
               Replace(shapetmplt,Transpose([seq,tmpshape]))]))
 
 
-      cues <- ShuffleEpoch([1,2,3],6)
+      cues <- SubList(ShuffleEpoch([1,2,3],
+                          Ceiling(trialLength/3)),1,trialLength)
 
       time <- GetTime()
       ret  <- Trial(trial,cues)
@@ -136,7 +188,8 @@ define Trial(setup,cues)
 {
 
 
-  cue <- EasyLabel("Click mouse to begin",gVideoWidth/2,20,gWin,44)
+
+  cue <- EasyLabel("Click here to begin",gVideoWidth/2,20,gWin,44)
 
   circs <- []
   texts <- []
@@ -148,7 +201,7 @@ define Trial(setup,cues)
    first <- -1
 
    black <- MakeColor("black")
-   points <- NonOverlapLayout(100,gVideoWidth-100,100,gVideoHeight-100,80,10)
+   points <- NonOverlapLayout(gLeft,gRight,gUpper,glower,80,10)
    stim <- PasteTables(setup,points)
    stim <- PasteTables(stim,Transpose([Sequence(1,10,1)]))
    labels <- SampleN(gStim,6)
@@ -187,7 +240,8 @@ define Trial(setup,cues)
    next <- 1
    done <- 0
 
-   WaitForDownClick()
+   WaitForClickOnTarget([cue],[1])
+
    t1 <- GetTime()
    lasttime <- t1
    Draw()
@@ -421,7 +475,7 @@ define GetShape(type,x,y,color)
          shape <- Circle(x,y,30,color,1)
      }elseif(type==2)
     {
-        shape <- Square(x,y,42,color,1)
+        shape <- Square(x,y,45,color,1)
     } elseif(type==3)
     {
 
