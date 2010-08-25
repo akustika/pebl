@@ -13,18 +13,24 @@ define Start(p)
       	    MakeColorRGB(240,228,66),  #yellow
 	    MakeColorRGB(213,94,0)]   #vermillion (red)
 
+   gColNames <- ["orange","skyblue","bluegreen","yellow","red"]
+   gShapeNames <- ["circle","square","plus","ellipse","star"]
+
    gStim <- FileReadList("Uppercase.txt")
    gFont <- MakeFont(gPEBLBaseFont,0,22,MakeColor("black"),MakeColor("black"),0)
    gWin <- MakeWindow("black")
    gSleepEasy <- 1
 
    gSubNum <- GetSubNum(gWin)
+   gFileOutSum <- FileOpenAppend("switch-summary-"+gSubNum+".csv")
    gFileOut <- FileOpenAppend("switch-"+gSubNum+".csv")
-   
+   gRuleNames <- ["color","letter","shape"]
    coltmplt <-   [1,1,2,2,3,3,4,4,5,5]
    numtmplt <-   [1,2,3,4,5,1,2,3,4,5]
    shapetmplt <- [1,2,1,3,2,4,3,5,4,5]
-   FilePrint(gFileOut,"gSubNum,timestamp,testtype,numcues,numerr,tooslow,waittime,perftime,medtime")   
+   FilePrint(gFileOutSum,"gSubNum,timestamp,testtype,numcues,numerr,tooslow,waittime,perftime,medtime")   
+
+   FilePrint(gFileOut,"gSubNum,block,type,try,successes,rule,lastrule,curid,currentval,correct,matchColor,matchLetter,matchShape,matchLast,curcolor,curletter,curshape,targcolor,targletter,targshape,clickcolor,clickletter,clickshapetargx,targy,targid,corsum,incsum,time,rt")
 
 ################################################################
 ## Instructions:
@@ -39,6 +45,8 @@ define Start(p)
    gLower <- gVideoHeight-50
 
 
+  gType <- 0
+  gBlock <- 0
   Draw()
   Trial(Transpose([coltmplt,numtmplt,shapetmplt]),[1,2,3,1,2,3])
 
@@ -59,12 +67,13 @@ define Start(p)
     i <- 1
 
 
+
     ##Consistent 2 rule
-    type <- 1
+    gType <- 1
     cuebase <- Shuffle([[1,2],[2,3],[1,3]])
     loop(base,cuebase)
      {
-
+       gBlock <- gBlock  + 1
       seq <- Sequence(1,5,1)
       tmpcol <- Shuffle(seq)
       tmpnum <- Shuffle(seq)
@@ -84,7 +93,7 @@ define Start(p)
       medtime <- Fifth(ret)
       tooslow <- Nth(ret,6)
 
-     x <- FilePrint(gFileOut,gSubNum + "," + TimeStamp()+ ","+ type + "," +
+     x <- FilePrint(gFileOutSum,gSubNum + "," + TimeStamp()+ ","+ gType + "," +
                 First(ret) + "," + Second(ret) +","+ tooslow +","+waittime + 
                 ","+perftime+","+medtime)
 
@@ -102,12 +111,12 @@ define Start(p)
     Hide(gInst)
     Draw()
     ##Consistent order-3 rule
-    type <- 2
+    gType <- 2
     threes <- [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
     cuebase <- SampleN(threes,3)
     loop(base,cuebase)
      {
-
+      gBlock <- gBlock  + 1
       seq <- Sequence(1,5,1)
       tmpcol <- Shuffle(seq)
       tmpnum <- Shuffle(seq)
@@ -127,7 +136,7 @@ define Start(p)
       medtime <- Fifth(ret)
       tooslow <- Nth(ret,6)
 
-     x <- FilePrint(gFileOut,gSubNum + "," + TimeStamp()+ ","+ type + "," +
+     x <- FilePrint(gFileOutSum,gSubNum + "," + TimeStamp()+ ","+ gType + "," +
                 First(ret) + "," + Second(ret) +","+ tooslow +","+waittime + 
                 ","+perftime+","+medtime)
 
@@ -145,11 +154,12 @@ define Start(p)
     Hide(gInst)
     Draw()
     ##Random order-3 rule
-    type <- 3
+    gType <- 3
     times <- [1,2,3]
     loop(x,times)
      {
 
+      gBlock <- gBlock  + 1
       seq <- Sequence(1,5,1)
       tmpcol <- Shuffle(seq)
       tmpnum <- Shuffle(seq)
@@ -170,8 +180,11 @@ define Start(p)
       perftime <- Fourth(ret)
       medtime <- Fifth(ret)
       tooslow <- Nth(ret,6)
-      FilePrint(gFileOut,gSubNum + "," + TimeStamp()+ ","+ type + "," +
-                First(ret) + "," + Second(ret) +","+ tooslow +","+waittime + 
+      lastmatches <- Nth(ret,7)  ##How many times the error matched a feature of the current.
+      matchany <- Nth(ret,8)     ##How many times did the error match any feature of the current.
+
+      FilePrint(gFileOutSum,gSubNum + "," + TimeStamp()+ ","+ gType + "," +
+                First(ret) + "," + Second(ret)+ ","+lasttmatches+","+matchany+","+ tooslow +","+waittime + 
                 ","+perftime+","+medtime)
      
       i <- i + 1
@@ -235,32 +248,40 @@ define Trial(setup,cues)
 
    ids <- Sequence(1,10,1)
 
-   labels <- ["Color","Letter","Shape"]
+   rulelabs <- ["Color","Letter","Shape"]
    resp <- First(stim)
    next <- 1
    done <- 0
+   rt <- -1
 
    WaitForClickOnTarget([cue],[1])
 
    t1 <- GetTime()
    lasttime <- t1
    Draw()
+   try <- 0
+   successes <- 0
+   lastrule <- 0
+   lastmatches <- 0 # Count how many mis-clicks matched the previous rule
+   matchanys <- 0   # count hom many mis-clicks matched any dimension of the current selection
+   current <- First(stim)
+
    loop(rule,cues)
    {
 
 
      curid <- Nth(resp,6)
      currentval <- Nth(resp,rule)
-	 cue.text <- Nth(labels,rule)
+     cue.text <- Nth(rulelabs,rule)
      Draw()
-
+    
      cont <- 1
      while(cont)
       {
        respa <- WaitForClickOnTarget(backs,stim)
        time <- GetTime()
-       ##resp is the clicked-on stim string.
-
+       ##respa is the clicked-on stim string.
+      try <- try + 1
      if(Nth(respa,rule) == currentval and 
          Nth(respa,6) <> curid)
       { 
@@ -273,23 +294,58 @@ define Trial(setup,cues)
         Move(back,Fourth(resp),Fifth(resp))
         Draw()
         cont <- 0
+
+       correct <- 1
 #        Print("Correct")       
         cor <- cor + 1
-		if(first<0)
+	if(first<0)
          {
            first <- GetTime()
          }
+
+      matchColor <- 0
+      matchLetter <- 0
+      matchShape <- 0
+      matchlast <- 0
+
      }else{
        inc <- inc + 1 
+       correct <- 0
 #       Print("wrong")
-      }
-     }
+        #lets do some scoring for type of error.
 
+
+        ## Let's check whether the clicked-on object matches each 
+        ##of the three features of the current one.  If correct,
+        ## they all should match
+	matchColor <- First(resp)==First(respa)
+        matchLetter <-Second(resp)==Second(respa)
+        matchShape <- Third(resp)==Third(respa)
+	matchlast <- Nth([matchColor,matchLetter,matchShape],lastrule)
+        matchany <- matchcolor or matchletter or matchshape
+
+	matchanys <- matchanys + matchany
+        lastmatches <- lastmatches + matchlast
+        
+      }
+
+       out <-  FilePrint(gFileOut,gSubNum+","+ gBlock + "," + gType+","+
+        try+","+successes+"," + Nth(gRuleNames,rule) + ","+Nth(gRuleNames,lastrule)+","+curid+","+
+       currentval+","+correct+","+matchColor+","+matchLetter+","+matchShape+","+matchLast+","+
+        Nth(gColNames,First(current))+","+Nth(labels,Second(current))+","+Nth(gShapeNames,Third(current))+","+
+        Nth(gColNames,First(resp))+","+Nth(labels,Second(resp))+","+Nth(gShapeNames,Third(resp))+","+
+        Nth(gColNames,First(respa))+","+Nth(labels,Second(respa))+","+Nth(gShapeNames,Third(respa))+","+
+        Fourth(respa)+","+Fifth(respa)+","+Nth(respa,6)+","+cor+","+inc+","+time+","+rt)
+#      Print(out)
+     }
+   current <- resp
+   successes <- successes + 1
+    lastrule <- rule
    }
   tend <- time
 
-  Print(rts)
-  return [cor,inc,(t1-t0),(tend-t1),Median(rts),tooslow]
+ # Print(rts)
+  return [cor,inc,(t1-t0),(tend-t1),Median(rts),tooslow,lastmatches,matchanys]
 }
 
 define PasteTables(tab1,tab2)
