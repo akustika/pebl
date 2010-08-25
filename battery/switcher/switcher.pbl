@@ -4,7 +4,7 @@ define Start(p)
 #   gCols <- [MakeColor("red"),MakeColor("darkblue"),MakeColor("yellow"),MakeColor("grey"),MakeColor("darkgreen")]
 
    ##Number of clicks per trial.
-   triallength <- 8
+   triallength <- 12
    
    ##These should be basically color-blind safe:
    gCols <- [MakeColorRGB(230,159,0),  #orange
@@ -48,8 +48,8 @@ define Start(p)
   gType <- 0
   gBlock <- 0
   Draw()
-#  Trial(Transpose([coltmplt,numtmplt,shapetmplt]),[1,2,3,1,2,3])
-  Trial(Transpose([coltmplt,numtmplt,shapetmplt]),ShuffleEpoch([1,2,3],5))
+  Trial(Transpose([coltmplt,numtmplt,shapetmplt]),[1,2,3,1,2,3])
+#  Trial(Transpose([coltmplt,numtmplt,shapetmplt]),ShuffleEpoch([1,2,3],4))
 
 
  
