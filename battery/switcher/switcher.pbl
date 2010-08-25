@@ -4,7 +4,7 @@ define Start(p)
 #   gCols <- [MakeColor("red"),MakeColor("darkblue"),MakeColor("yellow"),MakeColor("grey"),MakeColor("darkgreen")]
 
    ##Number of clicks per trial.
-   triallength <- 12
+   triallength <- 8
    
    ##These should be basically color-blind safe:
    gCols <- [MakeColorRGB(230,159,0),  #orange
@@ -28,7 +28,7 @@ define Start(p)
    coltmplt <-   [1,1,2,2,3,3,4,4,5,5]
    numtmplt <-   [1,2,3,4,5,1,2,3,4,5]
    shapetmplt <- [1,2,1,3,2,4,3,5,4,5]
-   FilePrint(gFileOutSum,"gSubNum,timestamp,testtype,numcues,numerr,tooslow,waittime,perftime,medtime")   
+   FilePrint(gFileOutSum,"gSubNum,timestamp,testtype,numcues,numerr,matchlast,matchany,tooslow,waittime,perftime,medtime")   
 
    FilePrint(gFileOut,"gSubNum,block,type,try,successes,rule,lastrule,curid,currentval,correct,matchColor,matchLetter,matchShape,matchLast,curcolor,curletter,curshape,targcolor,targletter,targshape,clickcolor,clickletter,clickshapetargx,targy,targid,corsum,incsum,time,rt")
 
@@ -48,11 +48,12 @@ define Start(p)
   gType <- 0
   gBlock <- 0
   Draw()
-  Trial(Transpose([coltmplt,numtmplt,shapetmplt]),[1,2,3,1,2,3])
+#  Trial(Transpose([coltmplt,numtmplt,shapetmplt]),[1,2,3,1,2,3])
+  Trial(Transpose([coltmplt,numtmplt,shapetmplt]),ShuffleEpoch([1,2,3],5))
 
 
  
-   gInst.text <- "Great. In the first three trials, there will be only two rules, and the rules will alternate between the two rules.  Press any key to begin."
+   gInst.text <- "Great. In the first three trials, there will be only two rules, and the rules will alternate between the two rules.  Click mouse to begin."
   Draw()
    gLeft <- 150
    gRight <- gVideoWidth-gLeft
@@ -92,11 +93,12 @@ define Start(p)
       perftime <- Fourth(ret)
       medtime <- Fifth(ret)
       tooslow <- Nth(ret,6)
+      lastmatches <- Nth(ret,7)  ##How many times the error matched a feature of the current.
+      matchany <- Nth(ret,8)     ##How many times did the error match any feature of the current.
 
-     x <- FilePrint(gFileOutSum,gSubNum + "," + TimeStamp()+ ","+ gType + "," +
-                First(ret) + "," + Second(ret) +","+ tooslow +","+waittime + 
-                ","+perftime+","+medtime)
-
+      FilePrint(gFileOutSum,gSubNum + "," + TimeStamp()+ ","+ gType + "," +
+                First(ret) + "," + Second(ret)+ ","+lastmatches+","+matchany+","+ tooslow +","+waittime + ","+perftime+","+medtime)
+     
 
 
       i <- i + 1
@@ -135,12 +137,12 @@ define Start(p)
       perftime <- Fourth(ret)
       medtime <- Fifth(ret)
       tooslow <- Nth(ret,6)
+      lastmatches <- Nth(ret,7)  ##How many times the error matched a feature of the current.
+      matchany <- Nth(ret,8)     ##How many times did the error match any feature of the current.
 
-     x <- FilePrint(gFileOutSum,gSubNum + "," + TimeStamp()+ ","+ gType + "," +
-                First(ret) + "," + Second(ret) +","+ tooslow +","+waittime + 
-                ","+perftime+","+medtime)
-
-     Print(x)
+      FilePrint(gFileOutSum,gSubNum + "," + TimeStamp()+ ","+ gType + "," +
+                First(ret) + "," + Second(ret)+ ","+lastmatches+","+matchany+","+ tooslow +","+waittime + ","+perftime+","+medtime)
+     
     
    i <- i + 1
 
@@ -184,8 +186,7 @@ define Start(p)
       matchany <- Nth(ret,8)     ##How many times did the error match any feature of the current.
 
       FilePrint(gFileOutSum,gSubNum + "," + TimeStamp()+ ","+ gType + "," +
-                First(ret) + "," + Second(ret)+ ","+lasttmatches+","+matchany+","+ tooslow +","+waittime + 
-                ","+perftime+","+medtime)
+                First(ret) + "," + Second(ret)+ ","+lastmatches+","+matchany+","+ tooslow +","+waittime + ","+perftime+","+medtime)
      
       i <- i + 1
 
@@ -588,26 +589,52 @@ define RemoveSubset(list, items)
     return returnList
 }
 
-
+##This shuffles by epoch, with the restrictions that:
+## 1. no two adjacent conditions are alike
+## 2. no two adjacent epochs are identical.
 define ShuffleEpoch(list,times)
 {
-   out <- Shuffle(list)
+   out <- [Shuffle(list)]
    i <-1
    next <- First(list)
    try <- out
+   last <- First(out)
    while(i < times)
    {
     try <- Shuffle(list)    
-    while(First(try)==First(out))
+    while(First(try)==First(First(out)) or Listequal(try,last))
     {
 
       try <- Shuffle(list)    
     }
 
-
-     out <- Merge(Reverse(try),out)
+     last <- try
+     out <- Merge([Reverse(try)],out)
 
     i <- i + 1
    }
-  return out
+  return Flatten( out)
+}
+
+
+
+define ListEqual(l1,l2)
+{
+  if(Length(l1)==Length(l2))
+  {
+   same <- 1
+
+
+   loop(i,Transpose([l1,l2]))
+    {
+     if(not (First(i) == Nth(i,2)))
+      {
+        same <- 0
+      }
+
+    }
+   } else {
+     same <- 0
+   } 
+  return same
 }
