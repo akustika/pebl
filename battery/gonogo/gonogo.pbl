@@ -1,0 +1,117 @@
+##  PEBL Go-Nogo task
+##  Designed after method described in:
+ #Br J Dev Psychol. Author manuscript; available in PMC 2009 October 6.
+#Bezdjian, S. Baker, L. A., Lozano, D. I & Raine, A. (2009).
+#Assessing inattention and impulsivity in children during the Go/NoGo task
+#Br J Dev Psychol. 2009 June 1; 27(2): 365–383. doi: 10.1348/026151008X314919.
+## http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2757760/
+##
+##
+
+define Start(p)
+{
+ 
+  gWin <- MakeWindow("black")
+  gSleepEasy <- 1
+  ShowCursor(0) 
+
+  practice <- ["P","R","P","P","R"]
+
+  DoBlock(practice,"P")
+
+  #The stimuli are the same for both blocks of trials.
+  stim <- Shuffle(Merge(Repeat("P",128), Repeat("R",32)))
+
+ #Condition 1 is the 'P-Go' condition, with 160 trials  
+  DoBlock(stim,"P") 
+  stim <- Shuffle(stim)
+
+ #Condition 2 is the R-Go condition  
+ DoBlock(stim,"R")
+
+}
+
+
+define DoBlock(trials,correctresponse)
+{
+
+
+
+  linecol <- MakeColor("darkgrey")
+  color <- MakeColor("blue")
+  sizegrid <- 200
+  xhome <- gVideoWidth/2
+  yhome <- gVideoHeight/2
+   xs <- [xhome-sizegrid/2,xhome+sizegrid/2,xhome-sizegrid/2,xhome+sizegrid/2]
+   ys <-[yhome-sizegrid/2,yhome-sizegrid/2,yhome+sizegrid/2,yhome+sizegrid/2]
+
+  xys <- Transpose([xs,ys])
+
+   ##Make the grid
+   lines <- [ThickLine(xhome-sizegrid,yhome-sizegrid,xhome+sizegrid,yhome-sizegrid,5,linecol)]
+   lines <- Append(lines,ThickLine(xhome-sizegrid,yhome,xhome+sizegrid,yhome,5,linecol))
+   lines <- Append(lines,ThickLine(xhome-sizegrid,yhome+sizegrid,xhome+sizegrid,yhome+sizegrid,5,linecol))
+ 
+   lines <- Append(lines,ThickLine(xhome-sizegrid,yhome-sizegrid,xhome-sizegrid,yhome+sizegrid,5,linecol))
+   lines <- Append(lines,ThickLine(xhome,yhome-sizegrid,xhome,yhome+sizegrid,5,linecol))
+   lines <- Append(lines,ThickLine(xhome+sizegrid,yhome-sizegrid,xhome+sizegrid,yhome+sizegrid,5,linecol))
+
+  AddObjects(lines,gWin)
+
+   stars <- []
+    pts <- MakeStarPoints(40,20,6) 
+  loop(xy, xys)
+     {
+    
+          shape <- Polygon(First(xy),Second(xy),First(pts),Second(pts),color,1)
+           AddObject(shape,gWin)
+          stars <- Append(stars,shape)
+     }
+
+  head <- EasyLabel("Make response to "+correctresponse,xhome,20, gWin,30)
+  stim <- EasyLabel("",xhome,yhome, gWin,40)
+  Hide(stim)
+
+
+  #Wait some unspecified duration
+  loop(i,trials)
+  {
+     Draw()
+     Wait(1500)
+     choice <- RandomDiscrete(4)
+      xy <- Nth(xys,choice)
+       Move(stim,Round(First(xy)),Round(Second(xy)))
+       star <- Nth(stars,choice)
+       Hide(star)      
+      stim.text <- i 
+      Show(stim)
+       Draw()
+      starttime <- GetTime()
+      resp <- WaitForListKeyPressWithTimeout([" "],500,1)
+      endtime <- GetTime()
+       if(IsList(resp))
+        {
+           resp <- "NONE"
+        }
+        if(i == correctresponse)
+         {
+            present <- 1
+         } else {
+            present <- 0
+         }
+        
+       corr <- correctresponse == resp or (resp=="NONE" and not (correctresponse == i))
+       Show(star)
+       Hide(stim)
+ }
+   Draw()
+}
+
+
+define AddObjects(list,win)
+{
+   loop(i,list)
+    {
+      AddObject(i,win)
+    }
+}
