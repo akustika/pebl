@@ -1,0 +1,85 @@
+define Start(p)
+{
+
+  gWin <- MakeWindow()
+  Draw()
+
+
+  gFront <- MakeImage("forward.png")
+  gBack <- MakeImage("back.png")
+  AddObject(gFront,gWin)
+  AddObject(gBack,gWin)
+  Move(gFront,gVideoWidth/2,gVideoHeight/2-100)  
+  Move(gBack,gVideoWidth/2,gVideoHeight/2-100)  
+  Hide(gFront)
+  Hide(gBack)
+  gFront.zoomX <- .6
+  gFront.zoomY <- .6
+  gBack.zoomX <- .6
+  gBack.zoomY <- .6
+
+
+  Trial(1,1,1,1)
+  Trial(1,1,-1,1)
+  Trial(1,-1,1,1)
+  Trial(1,-1,-1,1)
+  Trial(-1,1,1,1)
+  Trial(-1,1,-1,1)
+  Trial(-1,-1,1,1)
+  Trial(-1,-1,-1,1)
+
+
+  Trial(1,1,1,-1)
+  Trial(1,1,-1,-1)
+  Trial(1,-1,1,-1)
+  Trial(1,-1,-1,-1)
+  Trial(-1,1,1,-1)
+  Trial(-1,1,-1,-1)
+  Trial(-1,-1,1,-1)
+  Trial(-1,-1,-1,-1)
+   
+}
+
+
+define Trial(forback, updown, rightleft, squarecircle)
+{
+
+   xx <- gVideoWidth/2 
+   yy <- gVideoHeight/2-100
+
+   if(forback==1)
+     {
+         img <- gFront
+     }else {
+         img <- gBack
+     }
+
+   if(updown == 1)
+     {
+         #do nothing
+         img.rotation <- 0
+     }else{
+         img.rotation <- 180
+
+     }
+
+   if(squarecircle == 1)
+     {
+        targ <- Square(0,0,60,MakeColor("navyblue"),1)
+         
+     }else{
+        targ <- Circle(0,0,30,MakeColor("navyblue"),1)
+     }
+
+
+    pos <- forback * updown*rightleft
+
+    targ.x <- xx + pos*60
+	targ.y <- yy + updown*30
+    Show(img)
+    AddObject(targ,gWin)
+    Draw()
+    WaitForAnyKeyPress()
+    Hide(img)
+
+}
