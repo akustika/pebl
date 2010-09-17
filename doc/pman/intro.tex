@@ -18,8 +18,11 @@ document was prepared with editorial and formatting help from Gulab
 Parab and Samuele Carcagno. Contributions are welcome and encouraged.
 
 \chapter{Usage}
+Most users will be able to download a precompiled version of PEBL and
+run experiments directly. Some advanced users may wish to compile
+their own version, however.  The next section describes how to do this.
 
-\section{How to Compile}
+\sect{How to Compile}
 
 Currently, there is no automated compile procedure.  PEBL requires the
 \texttt{SDL}, \texttt{SDL-image}, \texttt{SDL-gfx} and
@@ -55,10 +58,6 @@ and elsewhere on the net.  Email the PEBL list for more details.
 
 \subsection{Mac OSX}
 
-Currently, (versions after 0.09) PEBL in untested on Macintosh.  It
-should compile and run acceptably, but we do not currently distribute
-a binary version. 
-
 PEBL is compiled
 and runs from the command-line, and resides in
 \texttt{/usr/local/share/pebl} and \texttt{/usr/local/bin}.  To
@@ -93,7 +92,7 @@ necessary files and libraries in \texttt{/usr/local/share/pebl}.  PEBL can be
 run from the command line by invoking \texttt{/usr/local/bin/pebl}.
 
 
-\section{How to Run a PEBL Program}
+\sect{How to Run a PEBL Program}
 
 
 \subsection{Linux}
@@ -153,9 +152,10 @@ configure with a text file.
 
 The launcher is written in Visual Basic, and so you might need some
 \texttt{.dll} files in order for it to run.
-
+\newpage
 When the launcher is run, it first looks for a file called
 \texttt{pebl-init.txt}. This file should have the following format:
+
 \begin{verbatim}
 ---------------Beginning of file----------------------
 "Quoted_Path_To_PEBL_Executable"
@@ -195,12 +195,26 @@ window.
 
 \subsection{ Macintosh OSX}
 
-The latest version of PEBL packaged for OSX is 0.07.  Until hardware/developers are available, newer versions for OSX will need to be compiled on your own.
+The latest version of PEBL packaged for OSX is 0.11. Currently, PEBL requires a 64-bit computer OS, but it could conceivably be complied on 32 OSX.
 
-Installing \texttt{pebl.pkg} places PEBL in
+On OSX, PEBL can be run as a command-line tool, just as in linux.
+Also, you can make a .command file (see instructions in the
+installer), and the test battery includes a script that will create
+.command launchers for each of the test battery experiments.  There
+are instructions in the installation .zip for creating this.  Also, 
+I've included a little drop-on
+script courtesy of applescript.  These are little
+application launchers that let you drag a script onto the launcher
+(you can put the script anywhere too), and it will launch with the
+specified options.  Applescript is available on all OSX machines, so
+you should be able to edit this to do things like collect experiment
+options and subject numbers, launch multiple scripts, upload data
+afterwords, and so on.
+
+
+Installing PEBL via the install command file places PEBL in\\
 \texttt{/usr/local/share/pebl} and \texttt{/usr/local/bin}.
-Currently, PEBL must be run from the command-line (there is no
-graphical front-end).  Open a terminal (in the applications folder)
+To run via the command line  Open a terminal (in the applications folder)
 and type at the \texttt{\$} prompt:
 \begin{verbatim}
 $ /usr/local/bin/pebl
@@ -222,7 +236,7 @@ On OSX, there is no such thing as double-buffering.  However, under
 fullscreen mode, drawing can be synced to the vertical refresh. But as
 a caveat, this has not yet been implemented.
 
-\section{How to stop running a program}
+\sect{How to stop running a program}
 
 In order to improve performance, PEBL runs at the highest
 priority possible on your computer.  This means that if it
@@ -232,7 +246,7 @@ combination that will immediately terminate the program and
 report the location at which it became stuck in your code: \newline press \verb+<CTRL><SHIFT><ALT><\>+ simultaneously.
   
 
-\section{Command-line arguments}
+\sect{Command-line arguments}
 \label{sec:2.5}
 Some aspects of PEBL's display can be controlled via
 command-line arguments.  Some of these are platform
@@ -246,7 +260,8 @@ and  command-line arguments.\\
 \\
 Examples:
 \begin{verbatim}
-pebl experiment.pbl -s sub1 --fullscreen --display 800x600 --driver dga
+pebl experiment.pbl -s sub1 --fullscreen --display 800x600
+      --driver dga
 pebl experiment.pbl --driver xf86  --language es
 pebl experiment.pbl -v 33 -v 2 --fullscreen --display 640x480 
 \end{verbatim}
@@ -332,13 +347,13 @@ command-line argument.  If it does not, PEBL should exit
 and disply a useful error message; of course, it could
 possibly damage your hardware. 
 
-
 For the sake of convenience, the width, height, and bit depth can be
 accessed from within a PEBL script using the global variables
 \texttt{gVideoWidth}, \texttt{gVideoHeight}, and \texttt{gVideoDepth}.
 If these values are set within a script before the function
 \verb+MakeWindow()+ is called,  the window will be created with these values,
-overriding any command-line parameters.
+overriding any command-line parameters.  Many of the test battery tests define these within the script,
+overriding whatever command-line parameters are given.
   
 \item
 \begin{verbatim}

@@ -9,8 +9,11 @@
 %\usepackage{multicol}
 %\usepackage{fancyvrb}
 %\usepackage{graphicx}
+\usepackage{fancyhdr}
 \usepackage{caption}
 \usepackage{calc}
+\usepackage{color}
+
 \captionsetup[table]{aboveskip=5pt,belowskip=5pt,position=top,margin=10pt,font=small,labelfont=bf,format=hang}
 \captionsetup[figure]{aboveskip=0pt,belowskip=0pt,position=top,margin=10pt,font=small,labelfont=bf,format=hang}
 %\setlength{\textwidth}{6in}
@@ -18,8 +21,8 @@
 %\setlength{\topmargin}{1in}
 %\setlength{\oddsidemargin}{.75in}
 %\setlength{\evensidemargin}{.75in}
-
-
+\pagestyle{fancy}
+\sloppy
 
 \setcounter{secnumdepth}{2}
 
@@ -41,12 +44,34 @@
             urlcolor=black  
 } 
 
+\setlength{\parindent}{0mm}
+
+%make grey box for headers
+\definecolor{MyGray}{rgb}{0.26,0.26,0.26}
+\makeatletter\newenvironment{graybox}{%
+   \begin{lrbox}{\@tempboxa}\begin{minipage}{\columnwidth}}{\end{minipage}\end{lrbox}%
+   \colorbox{MyGray}{\color{white}\usebox{\@tempboxa}}
+}\makeatother
+%make a new section header
+\newcommand\sect[1]{{
+\vspace{10pt}
+\begin{graybox}
+\Huge\color{white}\section{#1}
+\end{graybox}
+}}
+
 \begin{document}
 
 \pagenumbering{roman}
+\rule{\textwidth}{1mm}
 \begin{center}
 \LARGE
 \textbf{The PEBL Manual} \\
+
+\large
+Programming and Usage Guide for\\
+The Psychology Experiment Building Language\\
+PEBL Version 0.11\\
 \vspace{0.7cm}\Large \textbf{Shane T.~Mueller}
 \end{center}
 \rule{\textwidth}{1mm}
@@ -60,8 +85,16 @@
 \\
 
 
-Current for PEBL Version 0.11 -- July 2010 \\
+Current for PEBL Version 0.11 -- August 2010 \\
 \href{http://pebl.sourceforge.net}{http://pebl.sourceforge.net}
+
+
+\newpage
+\normalsize
+\noindent COPYRIGHT \copyright 2010 Shane T.~Mueller. All rights reserved.\\
+\vspace{2cm}
+ISBN  978-0-557-65817-6\\
+
 \tableofcontents
 
 \clearpage

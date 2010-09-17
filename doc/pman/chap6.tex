@@ -1,24 +1,35 @@
-\chapter{Detailed Function and Keyword Reference.}
+\chapter{Detailed Function and Keyword Reference}
 \label{sec:six}
 
 \setlength{\parindent}{0pt}
 
 \newcommand{\rl}{\rule{\textwidth}{0.3mm}}
 
+%% \newenvironment{desc}[1]
+%%  {\begin{list}{}%
+%%   {\renewcommand\makelabel[1]{{##1:}\hfil}%
+%%    \settowidth\labelwidth{\makelabel{#1}}%
+%%    \setlength\leftmargin{\labelwidth+\labelsep}}}%
+%%  {\end{list}}
+
 \newenvironment{desc}[1]
- {\begin{list}{}%
-  {\renewcommand\makelabel[1]{{##1:}\hfil}%
-   \settowidth\labelwidth{\makelabel{#1}}%
-   \setlength\leftmargin{\labelwidth+\labelsep}}}%
- {\end{list}}
+  {\begin{minipage}[b]{\linewidth}
+   \rl%
+   \vspace{3pt}%
+   \begin{list}{}%
+   {\renewcommand\makelabel[1]{{##1:}\hfil}%
+    \settowidth\labelwidth{\makelabel{#1}}%
+    \setlength\leftmargin{\labelwidth+\labelsep}}}%
+  {\end{list}%
+   \vspace{1pt}%
+   \end{minipage}%
+   }
 
 
+\vfill
+\sect{Symbols}
+\vfill
 
-
-\rl
-\section{Symbols}
-
-\rl
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] \verb!+!
@@ -43,14 +54,10 @@ concatenates strings together.
 \end{verbatim}
 
 \item[See Also]     \verb!-!, \texttt{ToString()}
-
 \end{desc}
-
-\rl
 
 
 \begin{desc}{Name/Symbol}
-
 \item[Name/Symbol] \verb+-+
 
 \item[Description]  Subtracts one expression from another
@@ -63,7 +70,7 @@ concatenates strings together.
 
 \end{desc}
 
-\rl     
+
 
 
 \begin{desc}{Name/Symbol}
@@ -83,7 +90,7 @@ concatenates strings together.
 
 \end{desc} 
 
-\rl
+
 
 \begin{desc}{Name/Symbol}
    
@@ -103,7 +110,7 @@ concatenates strings together.
 
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -123,7 +130,7 @@ concatenates strings together.
 
 \end{desc}
 
-\rl
+
 
 \begin{desc}{Name/Symbol}
 
@@ -140,7 +147,7 @@ concatenates strings together.
 
 \end{desc}
 
-\rl
+
 
 \begin{desc}{Name/Symbol}     
 
@@ -158,7 +165,7 @@ concatenates strings together.
 \end{desc} 
 
 
-\rl
+
      
 \begin{desc}{Name/Symbol}
 
@@ -176,7 +183,7 @@ concatenates strings together.
 
 \end{desc}   
 
-\rl
+
 
 \begin{desc}{Name/Symbol}
 
@@ -195,7 +202,7 @@ concatenates strings together.
 
 \end{desc}
 
-\rl
+
 
 \begin{desc}{Name/Symbol}
 
@@ -217,7 +224,7 @@ concatenates strings together.
 \item[See Also]     
 \end{desc}
 
-\rl
+
 
 \begin{desc}{Name/Symbol}
 
@@ -241,7 +248,7 @@ concatenates strings together.
 \item[See Also]     \texttt{List()}
 \end{desc}
 
-\rl
+
 
 \begin{desc}{Name/Symbol}
 
@@ -267,7 +274,7 @@ See Also:     	\verb+>+, \verb+>=+, \verb+<=+, \verb+==+, \verb+~=+, \verb+!=+, 
 
 \end{desc}
 
-\rl
+
 
 
 
@@ -294,7 +301,7 @@ if(j > 55)
 \item[See Also]     	\verb+<+, \verb+>=+, \verb+<=+, \verb+==+, \verb+~=+, \verb+!=+, \verb+<>+
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -321,7 +328,7 @@ if(j <= 33)
 
 \end{desc}
 
-\rl
+
 
 \begin{desc}{Name/Symbol}
 
@@ -346,7 +353,7 @@ if(j >= 55)
 \item[See Also]     	\verb+<,+ \verb+>+, \verb+<=+, \verb+==+, \verb+~=+, \verb+!=+, \verb+<>+
 \end{desc}
 
-\rl
+
 
 \begin{desc}{Name/Symbol}
 
@@ -365,7 +372,7 @@ if(j >= 55)
 \item[See Also]     	\verb+<,+ \verb+>+, \verb+>=+, \verb+<=+, \verb+~=+, \verb+!=+, \verb+<>+
 \end{desc}
 
-\rl
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+<>+, \verb+!=+, \verb+~=+
@@ -380,10 +387,10 @@ if(j >= 55)
 
 \end{desc}
 
-\rl 
-
-\section{A} 
-\rl
+\vfill
+\newpage
+\sect{A} 
+\vfill
 
 \begin{desc}{Name/Symbol}
 
@@ -405,7 +412,7 @@ Abs(23)    	# ==23
 \item[See Also]     	\verb+Round()+, \verb+Floor()+, \verb+AbsFloor()+, \verb+Sign()+, \verb+Ceiling()+
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -428,7 +435,7 @@ AbsFloor(32.88)    	# == 32
 \item[See Also]     	\verb+Round()+, \verb+Floor()+, \verb+Abs()+, \verb+Sign()+, \verb+Ceiling()+
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -448,7 +455,7 @@ ACos(<num>)
 
 \end{desc}
 
-\rl
+
  
 
 
@@ -465,7 +472,7 @@ ACos(<num>)
 \item[See Also]    	\verb+RemoveObject()+
 \end{desc}
 
-\rl
+
 
 
 
@@ -485,7 +492,7 @@ ACos(<num>)
 
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -514,7 +521,7 @@ Print(double)
 \item[See Also]     	\verb+List()+, \verb+[ ]+, \verb+Merge()+
 \end{desc}
 
-\rl
+
 
 
 
@@ -534,7 +541,7 @@ ASin(<num>)
 \item[See Also]    	 \verb+Cos()+, \verb+Sin()+, \verb+Tan()+, \verb+ATan()+, \verb+ACos()+, \verb+ATan()+ 
 \end{desc}
 
-\rl
+
 
 
 
@@ -551,10 +558,11 @@ ASin(<num>)
 \item[See Also]    	\verb+Cos()+, \verb+Sin()+, \verb+Tan()+, \verb+ATan()+, \verb+ACos()+, \verb+ATan()+ 
 \end{desc}
 
-\rl
+\vfill
+\newpage
+\sect{B} 
+\vfill
 
-\section{B}
-\rl
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+Bezier+ 
@@ -569,7 +577,8 @@ to appear. <steps> denotes how smooth the approximation will be.
 
 \item[Usage]		
 \begin{verbatim}
-  Bezier(<x>,<y>,<xpoints>,<ypoints>,<steps>,<color>)
+  Bezier(<x>,<y>,<xpoints>,<ypoints>,
+         <steps>,<color>)
 \end{verbatim}
 
 \item[Example]	
@@ -578,7 +587,8 @@ to appear. <steps> denotes how smooth the approximation will be.
    #This makes a T
    xpoints <- [-10,10,10,20,20,-20,-20,-10]
    ypoints <- [-20,-20,40,40,50,50,40,40]
-  p1 <-    Bezier(100,100,xpoints, ypoints,5, MakeColor("black"))
+  p1 <-    Bezier(100,100,xpoints, ypoints,
+           5, MakeColor("black"))
   AddObject(p1,win)
   Draw()
 \end{verbatim}
@@ -588,7 +598,7 @@ to appear. <steps> denotes how smooth the approximation will be.
 \verb+MakeNGonPoints()+
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -628,7 +638,7 @@ to appear.
 \verb+MakeNGonPoints()+
 \end{desc}
 
-\rl
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+break+
@@ -652,12 +662,10 @@ loop(i ,[1,3,5,9,2,7])
 \item[See Also]   	\verb+loop+, \verb+return+
 \end{desc}
 
-\rl
-
-
-\section{C}
-\rl
-
+\vfill
+\newpage
+\sect{C}
+\vfill
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+Ceiling()+
@@ -678,7 +686,7 @@ Ceiling(-33.02) 	# == -33
 \item[See Also]     	\verb+Round()+, \verb+Floor()+, \verb+AbsFloor()+, \verb+Ceiling()+
 \end{desc}
 
-\rl
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+ChooseN()+
@@ -698,14 +706,19 @@ ChooseN(<list>, <n>)
 
 \item[Example]   	
 \begin{verbatim}
-ChooseN([1,1,1,2,2], 5)     # Returns 5 numbers
-ChooseN([1,2,3,4,5,6,7], 3) # Returns 3 numbers from 1 and 7
+
+# Returns 5 numbers
+ChooseN([1,1,1,2,2], 5)     
+
+# Returns 3 numbers from 1 and 7:
+ChooseN([1,2,3,4,5,6,7], 3) 
+
 \end{verbatim}
 
 \item[See Also]    	\verb+SampleN()+, \verb+SampleNWithReplacement()+, \verb+Subset()+
 \end{desc}
 
-\rl
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Circle()+
@@ -734,7 +747,7 @@ Circle(<x>, <y>, <r>,<color>)
 \item[See Also]	\verb+Square()+, \verb+Ellipse()+, \verb+Rectangle()+, \verb+Line()+
 \end{desc}
 
-\rl
+
 
 
 
@@ -758,11 +771,11 @@ Circle(<x>, <y>, <r>,<color>)
 \end{verbatim}
 Also see nim.pbl for example of two-way network connection.
 \item[See Also]
-  \verb+ConnectToIP+, \verb+ConnectToHost+, \verb+GetData+, \verb+WaitForNetworkConnection+,
-   \verb+SendData+, \verb+ConvertIPString+
+  \verb+ConnectToIP+, \verb+ConnectToHost+,  \verb+WaitForNetworkConnection+, \\
+  \verb+GetData+,  \verb+SendData+, \verb+ConvertIPString+
 \end{desc}
 
-\rl
+
 
 
 
@@ -791,10 +804,11 @@ Also see nim.pbl for example of two-way network connection.
 
 \item[See Also]
   \verb+ConnectToIP+, \verb+GetData+, 
-\verb+WaitForNetworkConnection+, \verb+SendData+, \verb+ConvertIPString+, \verb+CloseNetworkConnection+
+\verb+WaitForNetworkConnection+,\\
+ \verb+SendData+, \verb+ConvertIPString+, \verb+CloseNetworkConnection+
 \end{desc}
 
-\rl
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+ConnectToIP()+
@@ -821,11 +835,11 @@ Also see nim.pbl for example of two-way network connection.
 \end{verbatim}
 
 \item[See Also]
-  \verb+ConnectToHost+, \verb+GetData+, \verb+WaitForNetworkConnection+,
+  \verb+ConnectToHost+, \verb+GetData+, \verb+WaitForNetworkConnection+,\\
    \verb+SendData+, \verb+ConvertIPString+, \verb+CloseNetworkConnection+
 \end{desc}
 
-\rl
+
 
 
 
@@ -852,11 +866,11 @@ Also see nim.pbl for example of two-way network connection.
 \end{verbatim}
 
 \item[See Also]
-  \verb+ConnectToHost+, \verb+ConnectToIP+, \verb+GetData+, \verb+WaitForNetworkConnection+,
-   \verb+SendData+, \verb+ConvertIPString+, \verb+CloseNetworkConnection+
+  \verb+ConnectToHost+, \verb+ConnectToIP+, \verb+GetData+, \\ \verb+WaitForNetworkConnection+,
+   \verb+SendData+, \\\verb+CloseNetworkConnection+
 \end{desc}
 
-\rl
+
 
 
 
@@ -877,18 +891,21 @@ Also see nim.pbl for example of two-way network connection.
 
 \item[Example]	
 \begin{verbatim} 
-  pts <- [[0.579081, 0.0327737], [0.0536094, 0.378258], 
-          [0.239628, 0.187751], [0.940625, 0.26526], 
-          [0.508748, 0.840846], [0.352604, 0.200193], 
-          [0.38684, 0.212413], [0.00114761, 0.768165],
-          [0.432963, 0.629412]]
-
-
+pts <- [[0.579081, 0.0327737], 
+         [0.0536094, 0.378258], 
+         [0.239628, 0.187751], 
+         [0.940625, 0.26526], 
+         [0.508748, 0.840846],
+         [0.352604, 0.200193], 
+         [0.38684, 0.212413],
+         [0.00114761, 0.768165],
+         [0.432963, 0.629412]]
   Print(ConvexHull(pts))
 
 \end{verbatim}
 
 output:
+\begin{verbatim}
 [[0.940625, 0.26526]
 , [0.508748, 0.840846]
 , [0.00114761, 0.768165]
@@ -897,7 +914,7 @@ output:
 , [0.579081, 0.0327737]
 , [0.940625, 0.26526]
 
-
+\end{verbatim}
 
 
 \item[See Also]
@@ -905,7 +922,7 @@ output:
 
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -923,7 +940,7 @@ output:
 \item[See Also]     	\verb+Sin()+, \verb+Tan()+, \verb+ATan()+, \verb+ACos()+, \verb+ATan()+
 \end{desc}
 
-\rl     
+
 
 
 \begin{desc}{Name/Symbol}
@@ -945,7 +962,7 @@ output:
 \end{desc}
 
 
-\rl
+
 
 
 
@@ -968,13 +985,13 @@ CrossFactorWithoutDuplicates([a,b,c])
 # == [[a,b],[a,c],[b,a],[b,c],[c,a],[c,b]]
 \end{verbatim}
 
-\item[See Also] \verb+DesignFullCounterBalance()+, \verb+Repeat()+, \verb+DesignBalancedSampling()+,
- \verb+DesignGrecoLatinSquare()+,
+\item[See Also] \verb+DesignFullCounterBalance()+, \verb+Repeat()+,\\ \verb+DesignBalancedSampling()+,
+ \verb+DesignGrecoLatinSquare()+,\\
   \verb+DesignLatinSquare()+,  \verb+RepeatList()+, 
-  \verb+LatinSquare()+ \verb+Shuffle()+
+  \verb+LatinSquare()+,\\ \verb+Shuffle()+
 \end{desc}
 
-\rl
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+CumNormInv()+
 
@@ -1001,10 +1018,10 @@ CumNormInv(<p>)
 \end{desc}
 
 
-\rl
-\section{D}
-\rl
-
+\vfill
+\newpage
+\sect{D}
+\vfill
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+define+
@@ -1028,7 +1045,7 @@ define functionname (parameters)
 \item[See Also]
 \end{desc}   	
 
-\rl
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+DegToRad()+
@@ -1048,14 +1065,14 @@ DegToRad(180) # == 3.14159...
 \item[See Also]    	\verb+Cos()+, \verb+Sin()+, \verb+Tan()+, \verb+ATan()+, \verb+ACos()+, \verb+ATan()+ 
 \end{desc}
 
-\rl
+
 
 
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+DesignBalancedSampling()+
 
-\item[Description] 	Samples elements "roughly" equally.
+\item[Description] 	Samples elements ``roughly'' equally.
   		This function returns a list of repeated samples from
  		\verb+<treatment_list>+, such that each element in \verb+<treatment_list>+ 
 		appears approximately equally.  Each element from 
@@ -1080,13 +1097,14 @@ DesignBalancedSampling([1,2,3,4,5],12)
 \end{verbatim}
 
 \item[See Also]	\verb+CrossFactorWithoutDuplicates()+,
-  \verb+Shuffle()+, \verb+DesignFullCounterBalance()+,
-  		\verb+DesignGrecoLatinSquare()+, \verb+DesignLatinSquare()+, \verb+Repeat()+, 
-		\verb+RepeatList()+,  \verb+LatinSquare()+
+  \verb+Shuffle()+,\\ \verb+DesignFullCounterBalance()+,
+  		\verb+DesignGrecoLatinSquare()+, \\
+\verb+DesignLatinSquare()+, \verb+Repeat()+, 
+		\verb+RepeatList()+,  \\\verb+LatinSquare()+
 
 \end{desc}
 
-\rl
+
 
 
 
@@ -1115,12 +1133,13 @@ DesignFullCounterbalance(a,b)	# == [[1,9],[1,8],[1,7],
 
 \item[See Also] \verb+CrossFactorWithoutDuplicates()+,
   \verb+LatinSquare()+, \verb+Shuffle()+,
-  \verb+DesignBalancedSampling()+, \verb+DesignGrecoLatinSquare()+, 
+  \verb+DesignBalancedSampling()+, 
+\\\verb+DesignGrecoLatinSquare()+, 
   \verb+DesignLatinSquare()+, \verb+Repeat()+, \verb+RepeatList()+,
 
 \end{desc}
 
-\rl
+
 
 
 
@@ -1135,8 +1154,9 @@ DesignFullCounterbalance(a,b)	# == [[1,9],[1,8],[1,7],
 
 \item[Usage]
 \begin{verbatim}
-DesignGrecoLatinSquare(<factor_list>, <treatment_list>, 
-<treatment_list>)
+DesignGrecoLatinSquare(<factor_list>, 
+                       <treatment_list>, 
+                       <treatment_list>)
 \end{verbatim}
 
 \item[Example]
@@ -1150,13 +1170,13 @@ Print(DesignGrecoLatinSquare(x,y,z))
 #               [[a, r, y], [b, p, z], [c, q, x]]]
 \end{verbatim}
 
-\item[See Also] \verb+CrossFactorWithoutDuplicates()+, \verb+LatinSquare()+
-  \verb+DesignFullCounterBalance()+, \verb+DesignBalancedSampling()+,
+\item[See Also] \verb+CrossFactorWithoutDuplicates()+, \verb+LatinSquare()+,\\
+  \verb+DesignFullCounterBalance()+, \verb+DesignBalancedSampling()+,\\
   \verb+DesignLatinSquare()+, \verb+Repeat()+, \verb+RepeatList()+,
   \verb+Shuffle()+
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -1169,7 +1189,8 @@ Print(DesignGrecoLatinSquare(x,y,z))
 
 \item[Usage]
 \begin{verbatim}
-DesignLatinSquare(<treatment1_list>, <treatment2_list>)
+DesignLatinSquare(<treatment1_list>, 
+                  <treatment2_list>)
 \end{verbatim}
 
 \item[Example]
@@ -1188,7 +1209,7 @@ design <- DesignLatinSquare(order,treatment)
   \verb+RepeatList()+, \verb+Shuffle()+, \verb+Rotate()+
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -1213,7 +1234,7 @@ Dist(<xylist1>, <xylist2>)
 \item[See Also]	
 \end{desc}
 
-\rl
+
 
 
 
@@ -1232,7 +1253,7 @@ Div(<num>, <mod>)
 \item[See Also]	\verb+Mod()+
 \end{desc}
 
-\rl
+
 
 
 
@@ -1253,7 +1274,7 @@ Draw(<object>)
 \item[See Also]	\verb+DrawFor()+, \verb+Show()+, \verb+Hide()+
 \end{desc}
 
-\rl
+
 
 
 
@@ -1275,10 +1296,11 @@ DrawFor( <object>, <cycles>)
 \item[See Also]	\verb+Draw()+, \verb+Show()+, \verb+Hide()+
 \end{desc}
 
-\rl
-\section{E}
-\rl
 
+\vfill
+\newpage
+\sect{E}
+\vfill
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+EasyLabel()+
@@ -1305,7 +1327,7 @@ EasyLabel( <text>,<x>, <y>, <win>, <fontsize>)
 \end{desc}
 
 
-\rl
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+EasyTextBox()+
@@ -1317,19 +1339,21 @@ EasyLabel( <text>,<x>, <y>, <win>, <fontsize>)
 
 \item[Usage]
 \begin{verbatim}
-EasyTextBox( <text>,<x>, <y>, <win>, <fontsize>,<width>,<height>)
+EasyTextBox( <text>,<x>, <y>, <win>,
+             <fontsize>,<width>,<height>)
 \end{verbatim}
 
 \item[Example]	
 \begin{verbatim}
   win <- MakeWindow()
-  entry <- EasyTextBox("1 2 3 4 5",200,100,win,12,200,50)
+  entry <- EasyTextBox("1 2 3 4 5",200,100,
+                        win,12,200,50)
   Draw()
 \end{verbatim}
 \item[See Also]	
 \verb+EasyLabel()+, \verb+MakeTextBox()+
 \end{desc}
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -1359,9 +1383,6 @@ Ellipse(<x>, <y>, <rx>, <ry>,<color>)
 \item[See Also]	\verb+Square()+, \verb+Circle()+, \verb+Rectangle()+, \verb+Line()+
 \end{desc}
 
-\rl
-
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+EndOfFile()+
@@ -1384,9 +1405,6 @@ while(not EndOfFile(fstream))
 \item[See Also]	
 \end{desc}
 
-\rl
-
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+EndOfLine()+
@@ -1403,9 +1421,6 @@ EndOfLine(<filestream>)
 \item[See Also]	
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Enquote()+
 
@@ -1419,7 +1434,8 @@ Enquote("one two three")
 \item[Example]
 \begin{verbatim}
  ##use to add quoted text to instructions.
- instructions <- "Respond whenever you see an "+ Enquote("X")
+ instructions <- "Respond whenever you see an "+ 
+                  Enquote("X")
 
   ##Use it for saving data that may have spaces: 
   resp <-  GetInput(tb, "<enter>")
@@ -1430,9 +1446,6 @@ Enquote("one two three")
 \item[See Also]	
  gQuote 
 \end{desc}
-
-\rl
-
 
 
 
@@ -1456,9 +1469,6 @@ Exp(3)		# == 20.0855
 
 \item[See Also]	\verb+Log()+
 \end{desc}
-
-\rl
-
 
 
 
@@ -1484,11 +1494,10 @@ ExtractListItems(myList, [2,4,5,1,4])
 \item[See Also]	\verb+Subset()+, \verb+SubList()+, \verb+SampleN()+
 \end{desc}
 
-\rl
-
-\section{F}
-\rl
-
+\vfill
+\newpage
+\sect{F}
+\vfill
 
 
 \begin{desc}{Name/Symbol}
@@ -1513,9 +1522,6 @@ FileClose(x)
 
 \end{desc}
 
-\rl
-
-
 
 
 \begin{desc}{Name/Symbol}
@@ -1534,9 +1540,6 @@ FileOpenAppend(<filename>)
 \item[See Also]	\verb+FileClose()+, \verb+FileOpenRead()+, \verb+FileOpenWrite()+
 \end{desc}
 
-\rl
-
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+FileOpenRead()+
@@ -1554,9 +1557,6 @@ FileOpenRead(<filename>)
 \item[See Also]	\verb+FileClose()+, \verb+FileOpenAppend()+, \verb+FileOpenWrite()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+FileOpenWrite()+
 
@@ -1572,9 +1572,6 @@ FileOpenWrite(<filename>)
 
 \item[See Also]	\verb+FileClose()+, \verb+FileOpenAppend()+, \verb+FileOpenRead()+
 \end{desc}
-
-\rl
-
 
 
 
@@ -1598,9 +1595,6 @@ FilePrint(fstream, "Another Line.")
 \item[See Also]	\verb+Print()+, \verb+FilePrint_()+
 \end{desc}
 
-\rl
-
-
 
 
 \begin{desc}{Name/Symbol}
@@ -1622,9 +1616,6 @@ FilePrint_(fstream, "This line doesn't end.")
 
 \item[See Also]	\verb+Print_()+, \verb+FilePrint()+
 \end{desc}
-
-\rl
-
 
 
 \begin{desc}{Name/Symbol}
@@ -1664,9 +1655,6 @@ FilePrintList(fstream,Flatten([[1,2],[3,4],[5,6]]))
 \item[See Also]	\verb+Print()+, \verb+Print_()+, \verb+FilePrint()+, \verb+FilePrint_()+, \verb+PrintList()+,
 \end{desc}
 
-\rl
-
-
 
 
 \begin{desc}{Name/Symbol}
@@ -1682,10 +1670,10 @@ FileReadCharacter(<filestream>)
 \item[Example]	
 
 \item[See Also]	
+   \verb+FileReadList()+, \verb+FileReadTable()+
+   \verb+FileReadLine()+, 	\verb+FileReadText()+, 	\verb+FileReadWord()+,
+
 \end{desc}
-
-\rl
-
 
 
 
@@ -1703,10 +1691,11 @@ FileReadLine(<filestream>)
 \item[Example]	
 
 \item[See Also]	
+
+	\verb+FileReadCharacter()+,\verb+FileReadList()+, \verb+FileReadTable()+
+	\verb+FileReadText()+, 	\verb+FileReadWord()+,
+
 \end{desc}
-
-\rl
-
 
 
 
@@ -1730,10 +1719,11 @@ FileReadList("data.txt")
 \end{verbatim}
 
 \item[See Also]
+
+	\verb+FileReadCharacter()+, \verb+FileReadTable()+
+	\verb+FileReadLine()+, 	\verb+FileReadText()+, 	\verb+FileReadWord()+,
+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+FileReadTable()+
@@ -1754,11 +1744,11 @@ FileReadTable(<filename>, <optional-separator>)
 a <- FileReadTable("data.txt")
 \end{verbatim}
 
-\item[See Also]	\verb+FileReadList()+
+\item[See Also]	
+	\verb+FileReadCharacter()+,\verb+FileReadList()+, 
+	\verb+FileReadLine()+, 	\verb+FileReadText()+, 	\verb+FileReadWord()+,
+
 \end{desc}
-
-\rl
-
 
 
 
@@ -1778,11 +1768,11 @@ FileReadText(<filename>)
 instructions <- FileReadText("instructions.txt")
 \end{verbatim}
 
-\item[See Also]	\verb+FileReadList()+, \verb+FileReadTable()+
+\item[See Also]	
+	\verb+FileReadCharacter()+,\verb+FileReadList()+, \verb+FileReadTable()+
+	\verb+FileReadLine()+, 	\verb+FileReadWord()+,
+
 \end{desc}
-
-\rl
-
 
 
 \begin{desc}{Name/Symbol}
@@ -1800,10 +1790,10 @@ FileReadWord(<filestream>)
 \item[Example]	
 
 \item[See Also]	\verb+FileReadLine()+, \verb+FileReadTable()+, \verb+FileReadList()+
+	\verb+FileReadCharacter()+,\verb+FileReadList()+, \verb+FileReadTable()+
+	\verb+FileReadLine()+, 	\verb+FileReadText()+, 	\verb+FileReadWord()+,
+
 \end{desc}
-
-\rl
-
 
 
 
@@ -1825,9 +1815,6 @@ FindInString("about","bo") 	# == 2
 \item[See Also]	\verb+SplitString()+
 \end{desc}
 
-\rl
-
-
 
 
 \begin{desc}{Name/Symbol}
@@ -1847,9 +1834,6 @@ First([3,33,132])		# == 3
 
 \item[See Also]	\verb+Nth()+, \verb+Last()+
 \end{desc}
-
-\rl
-
 
 
 \begin{desc}{Name/Symbol}
@@ -1872,9 +1856,6 @@ Flatten([1,2,[3,4],[5,[6,7],8],[9]])	# == [1,2,3,4,5,6,7,8,9]
 \item[See Also]	\verb+FlattenN()+, \verb+FoldList()+
 \end{desc}
 
-\rl
-
-
 
 
 \begin{desc}{Name/Symbol}
@@ -1895,9 +1876,6 @@ Flatten([1,2,[3,4],[5,[6,7],8],[9]],1)
 
 \item[See Also]	\verb+Flatten()+, \verb+FoldList()+
 \end{desc}
-
-\rl
-
 
 
 
@@ -1921,9 +1899,6 @@ Floor(-32.23) 	# == -33
 \item[See Also]	\verb+AbsFloor()+, \verb+Round()+, \verb+Ceiling()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+FoldList()+
 
@@ -1941,9 +1916,6 @@ FoldList([1,2,3,4,5,6,7,8],2)	# == [[1,2],[3,4],[5,6],[7,8]]
  
 \item[See Also]	\verb+FlattenN()+, \verb+Flatten()+
 \end{desc}
-
-\rl
-
 
 
 \begin{desc}{Name/Symbol}
@@ -1976,9 +1948,10 @@ Format(<value>, <length>)
 \verb+CR()+ \verb+Tab()+
 \end{desc}
 
-\rl
-\section{G}
-\rl
+\vfill
+\newpage
+\sect{G}
+\vfill
 
 
 \begin{desc}{Name/Symbol}
@@ -2006,9 +1979,6 @@ GetAngle(<x>,<y>)
 
 \item[See Also]	\verb+DegtoRad+, \verb+RadToDeg+
 \end{desc}
-
-\rl
-
 
 
 \begin{desc}{Name/Symbol}
@@ -2038,9 +2008,6 @@ GetAngle3(<a>,<b>,<c>)
 \item[See Also]	\verb+DegtoRad+, \verb+RadToDeg+, \verb+GetAngle+, \verb+ToRight+
 \end{desc}
 
-\rl
-
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+GetCursorPosition()+
@@ -2056,9 +2023,6 @@ GetCursorPosition(<textbox>)
 
 \item[See Also]	\verb+SetCursorPosition()+, \verb+MakeTextBox()+, \verb+SetText()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+GetData()+
@@ -2093,9 +2057,6 @@ On Client:
    \verb+SendData+, \verb+ConvertIPString+, \verb+CloseNetworkConnection+
 \end{desc}
 
-\rl
-
-
 
 
 
@@ -2123,9 +2084,6 @@ GetEasyInput(<message>,<window>)
 \item[See Also]\verb+MessageBox+	\verb+GetEasyInput+, \verb+EasyTextBox+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+GetInput()+
 
@@ -2140,9 +2098,6 @@ GetInput(<textbox>,<escape-key>)
 
 \item[See Also]	\verb+SetEditable()+, \verb+GetCursorPosition()+, \verb+MakeTextBox()+, \verb+SetText()+
 \end{desc}
-
-\rl
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+GetMouseCursorPosition()+
 
@@ -2167,9 +2122,6 @@ GetInput(<textbox>,<escape-key>)
   \verb+SetMouseCursorPosition+, \verb+GetMouseCursorPosition+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+GetNIMHDemographics()+
 
@@ -2192,19 +2144,18 @@ x0413 Thu Apr 24 14:11:54 2004 2 N 5
 
 \item[Usage]
 \begin{verbatim}
-GetNIMHDemographics(<code-to-print-out>, <window>, <filename>)
+GetNIMHDemographics(<code-to-print-out>,
+                     <window>, <filename>)
 \end{verbatim} 
 
 \item[Example]
 \begin{verbatim}
-GetNIMHDemographics("x0413", gwindow, "x0413-demographics.txt")
+GetNIMHDemographics("x0413", gwindow, 
+                    "x0413-demographics.txt")
 \end{verbatim}
 
 \item[See Also]	
 \end{desc}
-
-\rl
-
 
 
 
@@ -2225,9 +2176,6 @@ Print(GetPEBLVersion())
 
 \item[See Also]	\verb+TimeStamp()+
 \end{desc}
-
-\rl
-
 
 
 \begin{desc}{Name/Symbol}
@@ -2252,9 +2200,6 @@ y <- Nth(xy, 2)
 
 \item[See Also]	
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+GetSubNum()+
@@ -2281,9 +2226,6 @@ Note: gSubNum can also be set from the command line.
 \item[See Also]
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+GetSystemType()+
 
@@ -2301,7 +2243,7 @@ GetSystemType()
 ## after a window gWin has been defined.
    if(GetSystemType() == "WINDOWS")
     {
-      SignalFatalError("This experiment is untested on windows")
+      SignalFatalError("Experiment untested on windows")
     }
 
 \end{verbatim}
@@ -2310,8 +2252,6 @@ GetSystemType()
   \verb+SystemCall()+
 \end{desc}
 
-
-\rl
 
 
 \begin{desc}{Name/Symbol}
@@ -2330,9 +2270,6 @@ GetText(<widget>)
 
 \item[See Also]	\verb+SetCursorPosition()+, \verb+GetCursorPosition()+, \verb+SetEditable()+, \verb+MakeTextBox()+
 \end{desc}
-
-\rl
-
 
 
 \begin{desc}{Name/Symbol}
@@ -2358,11 +2295,10 @@ Print("Response time is: " + (b - a))
 \item[See Also]	\verb+TimeStamp()+
 \end{desc}
 
-\rl
-
-\section{H}
-\rl
-
+\vfill
+\newpage
+\sect{H}
+\vfill
 
 
 \begin{desc}{Name/Symbol}
@@ -2401,11 +2337,10 @@ Draw()		# image1 will appear.
 \item[See Also]	\verb+Show()+
 \end{desc}
 
-\rl
-
-
-\section{I}
-\rl
+\vfill
+\newpage
+\sect{I}
+\vfill
 
 
 \begin{desc}{Name/Symbol}
@@ -2429,10 +2364,7 @@ if(test)
 \item[See Also]	
 \end{desc}
 
-\rl
-
-
-
+\vfill
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+if...elseif...else+            
@@ -2470,7 +2402,6 @@ if(test)
 \item[See Also]	
 if
 \end{desc}
-\rl
 
 
 \begin{desc}{Name/Symbol}
@@ -2479,8 +2410,10 @@ if
 \item[Description] Inserts an element into a list at a specified
   position, returning the new list. The original list in unchanged.
 
-\item[Usage]	Insert(<[list]>,<item>,<position>)	
-
+\item[Usage]	
+\begin{verbatim}
+Insert(<[list]>,<item>,<position>)	
+\end{verbatim}
 \item[Example]	
 
 \begin{verbatim}
@@ -2494,20 +2427,20 @@ if
 
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Inside()+
 
-\item[Description] Determines whether an [x,y] point is inside another
+\item[Description] Determines whether an \verb+[x,y]+ point is inside another
   object.  Will operate correctly for rectangles, squares, circles,
-  textboxes, images, and labels. [xylist] can be a list containing
+  textboxes, images, and labels. \verb+[xylist]+ can be a list containing
   [x,y], and if it is longer the other points will be ignored (such as
-  the list returned by WaitForMouseButton().  Returns 1 if inside, 0
+  the list returned by \verb+WaitForMouseButton()+.  Returns 1 if inside, 0
   if not inside.
 
-\item[Usage]	Inside(<[xylist]>,<object>)	
+\item[Usage]
+\begin{verbatim}
+Inside(<[xylist]>,<object>)	
+\end{verbatim}
 
 \item[Example]	
 
@@ -2527,23 +2460,20 @@ if
 
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+IsAnyKeyDown()+
 
 \item[Description]	
 
 \item[Usage]		
+\begin{verbatim}
+  IsAnyKeyDown()
+\end{verbatim}
 
 \item[Example]	
 
 \item[See Also]	
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+IsAudioOut()+
@@ -2569,9 +2499,6 @@ if(IsAudioOut(x))
   \verb+IsNumber()+, \verb+IsString()+, \verb+IsTextBox()+,
   \verb+IsWidget()+
 \end{desc}
-
-\rl
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+IsCanvas()+
 
@@ -2596,7 +2523,7 @@ if(IsCanvas(x)
   \verb+IsNumber()+, \verb+IsString()+, \verb+IsTextBox()+, \verb+IsText()+
   \verb+IsWidget()+, \verb+IsWindow()+
 \end{desc}
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -2624,9 +2551,6 @@ if(IsColor(x)
   \verb+IsWidget()+, \verb+IsWindow()+
 \end{desc}
 
-\rl
-
-
 
 
 \begin{desc}{Name/Symbol}
@@ -2653,9 +2577,6 @@ if(IsImage(x))
   \verb+IsNumber()+, \verb+IsString()+, \verb+IsTextBox()+,
   \verb+IsWidget()+
 \end{desc}
-
-\rl
-
 
 
 
@@ -2693,9 +2614,6 @@ IsInteger(test)		# false
   \verb+IsWidget()+
 \end{desc}
 
-\rl
-
-
 
 
 \begin{desc}{Name/Symbol}
@@ -2722,9 +2640,6 @@ if(IsFileStream(x))
   \verb+IsNumber()+, \verb+IsString()+, \verb+IsTextBox()+,
   \verb+IsWidget()+
 \end{desc}
-
-\rl
-
 
 
 
@@ -2761,9 +2676,6 @@ IsFloat(test)  	# true
   \verb+IsWidget()+
 \end{desc}
 
-\rl
-
-
 
 
 \begin{desc}{Name/Symbol}
@@ -2791,9 +2703,6 @@ if(IsFont(x))
   \verb+IsWidget()+
 \end{desc}
 
-\rl
-
-
 
 
 \begin{desc}{Name/Symbol}
@@ -2808,9 +2717,6 @@ if(IsFont(x))
 \item[See Also]	\verb+IsKeyUp()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+IsKeyUp()+
 
@@ -2822,9 +2728,6 @@ if(IsFont(x))
 
 \item[See Also]	\verb+IsKeyDown()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+IsLabel()+
@@ -2850,9 +2753,6 @@ if(IsLabel(x)
   \verb+IsNumber()+, \verb+IsString()+, \verb+IsTextBox()+,
   \verb+IsWidget()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+IsList()+
@@ -2882,9 +2782,6 @@ if(IsList(x))
   \verb+IsWidget()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+IsMember()+
 
@@ -2903,9 +2800,6 @@ IsMember(2,[1,4,6,7,2,7,7,7]) 		# true
 
 \item[See Also]	
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+IsNumber()+
@@ -2932,9 +2826,6 @@ if(IsNumber(x))
   \verb+IsList()+, \verb+IsString()+, \verb+IsTextBox()+,
   \verb+IsWidget()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+IsShape+
@@ -2966,9 +2857,6 @@ if(IsShape(x))
   \verb+IsTextBox()+, \verb+IsWindow()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+IsString()+
 
@@ -2991,9 +2879,6 @@ if(IsString(x))
 		\verb+IsFileStream()+, \verb+IsFloat()+, \verb+IsFont()+, \verb+IsLabel()+,
 		\verb+IsList()+, \verb+IsNumber()+, \verb+IsTextBox()+, \verb+IsWidget()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+IsText()+
@@ -3018,9 +2903,6 @@ if(IsText(x))
 		\verb+IsFileStream()+, \verb+IsFloat()+, \verb+IsFont()+, \verb+IsLabel()+,
 		\verb+IsList()+, \verb+IsNumber()+, \verb+IsTextBox()+, \verb+IsWidget()+
 \end{desc}
-
-\rl
-
 
 
 \begin{desc}{Name/Symbol}
@@ -3047,9 +2929,6 @@ if(IsTextBox(x))
   \verb+IsList()+, \verb+IsNumber()+, \verb+IsString()+,
   \verb+IsWidget()+
 \end{desc}
-
-\rl
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+IsWidget+
 
@@ -3075,7 +2954,7 @@ if(IsWidget(x))
   \verb+IsList()+, \verb+IsNumber()+, \verb+IsString()+,
   \verb+IsTextBox()+
 \end{desc}
-\rl
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+IsWindow+
@@ -3102,17 +2981,11 @@ if(IsWindow(x))
   \verb+IsTextBox()+
 \end{desc}
 
-\rl
+\vfill
+\newpage
+\sect{L}
+\vfill
 
-
-
-
-%%% Local Variables: 
-%%% mode: latex
-%%% TeX-master: "main"
-%%% End: 
-\section{L}
-\rl
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Last()+
@@ -3132,9 +3005,6 @@ Last([1,2,3,444])	# == 444
 
 \item[See Also]	\verb+Nth()+, \verb+First()+
 \end{desc}
-
-\rl
-
 
 
 
@@ -3171,9 +3041,6 @@ Print(LatinSquare([11,12,13,14,15,16]))
 
 \end{desc}
 
-\rl
-
-
 
 
 \begin{desc}{Name/Symbol}
@@ -3199,9 +3066,6 @@ Line(<x>, <y>, <dx>, <dy>, <color>)
 \end{verbatim}
 \item[See Also]	\verb+Square()+, \verb+Ellipse()+, \verb+Rectangle()+, \verb+Circle()+
 \end{desc}
-
-\rl
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+List()+
 
@@ -3219,9 +3083,6 @@ List(1,2,3,444)		# == [1,2,3,444]
 
 \item[See Also]	\verb+[ ]+, \verb+Merge()+, \verb+Append()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+ListBy()+
@@ -3256,9 +3117,6 @@ ListBy(<list>, <conds>)
 
 \item[See Also]	\verb+List()+, \verb+[ ]+, \verb+Merge()+, \verb+Append()+
 \end{desc}
-
-\rl
-
  
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+ListToString()+
@@ -3280,9 +3138,6 @@ ListToString(["a","b","c","d","e"])		# == "abcde"
 \item[See Also] \verb+SubString+, \verb+StringLength+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Length()+
 
@@ -3301,9 +3156,6 @@ Length([1,3,55,1515])	# == 4
 \item[See Also]	\verb+StringLength()+
 \end{desc}
 
-\rl
-
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+LoadSound()+
@@ -3321,9 +3173,6 @@ LoadSound(<filename>)
 \item[See Also]	
 \end{desc}
 
-\rl
-
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Log10()+
@@ -3340,9 +3189,6 @@ Log10(<num>)
 \item[See Also]	\verb+Log2()+, \verb+LogN()+, \verb+Ln()+, \verb+Exp()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Log2()+
 
@@ -3357,9 +3203,6 @@ Log2(<num>)
 
 \item[See Also]	\verb+Log()+, \verb+LogN()+, \verb+Ln()+, \verb+Exp()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+LogN()+
@@ -3379,9 +3222,6 @@ LogN(256,2)	# == 8
 
 \item[See Also]	\verb+Log()+, \verb+Log2()+, \verb+Ln()+, \verb+Exp()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Lowercase()+
@@ -3403,9 +3243,6 @@ Lowercase("POtaTo")	# == "potato"
 \item[See Also]	\verb+Uppercase()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Ln()+
 
@@ -3420,9 +3257,6 @@ Ln(<num>)
 
 \item[See Also]	\verb+Log()+, \verb+Log2()+, \verb+LogN()+, \verb+Exp()+     
 \end{desc}
-
-\rl
-
 
 
 
@@ -3444,7 +3278,8 @@ Lookup(<key>,<keylist>,<database>)
 
 \begin{verbatim}
  keys     <- [1,2,3,4,5]
- database <- ["market","home","roast beef","none","wee wee wee"]
+ database <- ["market","home","roast beef",
+              "none","wee wee wee"]
  Print(Lookup(3,keys,database))) 
 
 ## Or, do something like this:
@@ -3462,9 +3297,6 @@ Print(Lookup("alex", key, data))
 \end{verbatim}
 \item[See Also]	
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+loop()+
@@ -3487,32 +3319,23 @@ loop(<counter>, <list>)
 \item[See Also]	\verb+while()+, \verb+{ }+
 \end{desc}
 
-\rl
-
-\section{M}
-\rl
+\vfill
+\newpage
+\sect{M}
+\vfill
 
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+MakeAttneave()+
 
-\item[Description] Makes a random 'attneave' figure, according to the
-  method described by Collin \& McMullen
-(Collin, C. A., \& Mcmullen, P. A. (2002). Using Matlab to generate
- families of similar Attneave shapes. Behavior Research Methods
- Instruments and Computers, 34(1), 55-68.).
+\item[Description] Makes a random 'Attneave' figure\footnote{(Collin, C. A., \& Mcmullen, P. A. (2002). Using Matlab to generate  families of similar Attneave shapes. Behavior Research Methods
+ Instruments and Computers, 34(1), 55-68.).}. An Attneave figure is a complex polygon that can be used as a
+stimulus in a number of situations.  It returns a sequence
+of points for use in Polygon().
 
-An Attneave figure is a complex polygon that can be used as a
-stimulus in a number of situations.  It actually returns a sequence
-of points that can be fed into Polygon() to produce the actual
-stimulus.
-
-
-MakeAttneave uses ConvexHull, and two undocumented helper functions
-found in Graphics.pbl: InsertAttneavePointRandom() and
-ValidateAttneaveShape().  One can override these by defining new
-versions of them within your own experiment. This could be reasonable
-to provide stronger constraints over things like minimum/maximum side
+MakeAttneave uses ConvexHull,  InsertAttneavePointRandom() and
+ValidateAttneaveShape(), found in Graphics.pbl.  Override these
+to change constraints such as  minimum/maximum side
 lengths, angles, complexity, etc.
 
 MakeAttneave uses a sampling-and-rejection scheme to create in-bounds
@@ -3522,18 +3345,12 @@ infinite.
 
  The arguments to MakeAttneave are:
 \begin{itemize}
-\item size: size, in pixels, of a square from which points are
-  sampled in a uniform distribution.  Points outside the inscribed
-  circle with diameter size are rejected and resampled, to produce a
-  uniform-by-area sampling distribution.
-
-\item numpoints: number of points the attneave polygon will have
-
-\item minangle: smallest angle acceptable in resulting polygon (in degrees).
-\item maxangle: largest angle acceptable in resulting polygon (in degrees).
-
+\item size: size, in pixels, of a circle from which points are
+  sampled in a uniform distribution. 
+\item numpoints: number of points in the polygon.
+\item minangle: smallest angle acceptable (in degrees).
+\item maxangle: largest angle acceptable  (in degrees).
 \end{itemize}
-
 
 \item[Usage]
 \begin{verbatim}
@@ -3542,24 +3359,17 @@ infinite.
 
 \item[Example]	
 \begin{verbatim}
-
-
   gWin <- MakeWindow()
   shape <- MakeAttneave(100,5+RandomDiscrete(5),5,170)
   pts <- Transpose(shape)
-  poly <- Polygon(200,200,First(pts),Second(pts),MakeColor("blue"),1)
+  poly <- Polygon(200,200,First(pts),Second(pts),
+                  MakeColor("blue"),1)
   AddObject(poly,gWin)
   Draw()
   WaitForAnyKeyPress()
 \end{verbatim}
 \item[See Also]	\verb+MakeImage()+, \verb+Polygon()+, \verb+Square()+
-
 \end{desc}
-
-\rl
-
-
-
 
 
 \begin{desc}{Name/Symbol}
@@ -3568,27 +3378,17 @@ infinite.
 \item[Description] Makes a canvas object  \verb+<x>+ pixels by
   \verb+y+ pixels, in color \verb+<color>+.
 
-A canvas is an empty colored or transparent rectangle which other
-objects can be added to using AddObject.  When the canvas gets moved,
-the attached objects move as well. 
-
-The background of a canvas can be made invisible by using a color
-with alpha channel == 0.
-
-The Setpixel and SetPoint functions let you change individual pixels
-on a canvas, to enable adding noise, drawing functional images, etc.
-
-A canvas gets 'cleared' by calling ResetCanvas(canvas)
-
-Any object added to a canvas creates an 'imprint' on the canvas that
+A canvas is an object that other objects can be attached to, and imprinted upon.
+When the canvas gets moved, the attached objects move as well. The background of a canvas can be
+made invisible by using a color with alpha channel == 0. The Setpixel
+and SetPoint functions let you change individual pixels on a canvas,
+to enable adding noise, drawing functional images, etc. A canvas gets
+'cleared' by calling ResetCanvas(canvas). Any object added to a canvas creates an 'imprint' on the canvas that
 remains if the object is moved.  This allows you to use another image
 as a paintbrush on the canvas, and lets you to add noise to text.
 Because a text label gets re-rendered when its drawn, if you want to
 add pixel noise to a stimulus, you can create a label, add it to a
 canvas, then add pixel noise to the canvas.
-
-
-Note: On OSX, there are sometimes crashes related to drawing and moving objects on canvases.
 
 \item[Usage]
 \begin{verbatim}
@@ -3600,17 +3400,17 @@ MakeCanvas(<x>, <y>, <color>)
   gWin <- MakeWindow()
   clear <- MakeColor("white")
   clear.alpha <- 0
-  x <- MakeCanvas(300,300,clear)  #make a transparent canvas
+  #make a transparent canvas:
+  x <- MakeCanvas(300,300,clear)  
   AddObject(x,gWin)
   Move(x,300,300)
   img <- MakeImage("pebl.png")
   AddObject(img,x)
   Move(img,100,100)
-  Draw(x)          #imprint the imago on the canvas
+  Draw(x)          #imprint the image on the canvas
   Move(img,100,200)
-  Draw(x)          #imprint the imago on the canvas
+  Draw(x)          #imprint the image on the canvas
   Hide(img)
-
 
   #draw a line on the canvas
    i <- 10
@@ -3626,9 +3426,6 @@ MakeCanvas(<x>, <y>, <color>)
 \item[See Also]	\verb+MakeImage()+, \verb+SetPixel()+,
   \verb+MakeGabor()+, \verb+ResetCanvas()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+MakeColor()+
@@ -3647,9 +3444,6 @@ MakeColor(<colorname>)
 \item[See Also]	\verb+MakeColorRGB()+, \verb+RGBtoHSV()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+MakeColorRGB()+ 
 
@@ -3666,9 +3460,6 @@ MakeColorRGB(<red>, <green>, <blue>)
 \item[See Also]	\verb+MakeColor()+, \verb+RGBtoHSV()+
 \end{desc}
 
-\rl
-
-
 
 
 
@@ -3679,29 +3470,26 @@ MakeColorRGB(<red>, <green>, <blue>)
   name of a font.  The font can reside anywhere in PEBL's search path,
   which would primarily include the media/fonts directory, and the
   working directory (where the script is saved).
-
- *  style changes from normal to bold/underline, italic.
-*   fgcolor and bgcolor need to be colors, not just names of colors
- * if show-backing is 0, the font gets rendered with an invisible
-*   background; otherwise with a bgcolor background. 
-Note: previous to PEBL 0.11, the final argument = 0 rendered the font
-*   with non anti-aliased background, which I can see almost no use for.
-
+  \begin{itemize}
+  \item  style changes from normal to bold/underline, italic.
+  \item    fgcolor and bgcolor need to be colors, not just names of colors
+  \item  if show-backing is 0, the font gets rendered with an invisible
+  \item    background; otherwise with a bgcolor background. (Note: previous to PEBL 0.11, the final argument = 0 rendered the font  with non anti-aliased background, which I can see almost no use for.)
+\end{itemize}
 \item[Usage]
 \begin{verbatim}
-MakeFont(<ttf_filename>, <style>, <size>, <fgcolor>, <bgcolor>, <show-backing>)
+MakeFont(<ttf_filename>, <style>, <size>, 
+         <fgcolor>, <bgcolor>, <show-backing>)
 \end{verbatim}
 
 \item[Example]	
-
-  font <- MakeFont("Vera.ttf",0,22,MakeColor("black"), MakeColor("white"),1)
-
+\begin{verbatim}
+  font <- MakeFont("Vera.ttf",0,22,MakeColor("black"),
+                    MakeColor("white"),1)
+\end{verbatim}
 
 \item[See Also]	
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+MakeImage()+
@@ -3719,9 +3507,6 @@ MakeImage(<filename>)
 
 \item[See Also]	
 \end{desc}
-
-\rl
-
 
 
 
@@ -3741,9 +3526,6 @@ MakeLabel(<text>, <font>)
 
 \item[See Also]	
 \end{desc}
-
-\rl
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+MakeNGonPoints()+
 
@@ -3752,9 +3534,11 @@ Creates a set of points that form a regular n-gon.  It can be
 transformed with functions like \verb+RotatePoints+, or it can be 
 used to create a graphical object with \verb+Polygon+.
 
-Note: MakeNGonPoints returns a list [[x1, x2, x3,...],[y1,y2,y3,...]],
+Note: \verb+MakeNGonPoints+ returns a list like:
+\begin{verbatim}
+  [[x1, x2, x3,...],[y1,y2,y3,...]],
+\end{verbatim}
 while Polygon() takes the X and Y lists independently.
-
 
 \item[Usage]
 \begin{verbatim}
@@ -3765,7 +3549,8 @@ MakeNGonPoints(<radius>, <num_peaks>)
 \begin{verbatim}
    window <- MakeWindow()
    ngonp <- MakeNGonPoints(50,10)
-   ngon <- PolyGon(200,200,First(ngonp),Nth(ngonp,2),MakeColor("red"),1)
+   ngon <- PolyGon(200,200,First(ngonp),Nth(ngonp,2),
+                   MakeColor("red"),1)
    AddObject(ngon,window)
    Draw()
 \end{verbatim}
@@ -3773,9 +3558,6 @@ MakeNGonPoints(<radius>, <num_peaks>)
 \item[See Also]	
 \verb+MakeStarPoints+, \verb+Polygon+, \verb+RotatePoints+, \verb+ZoomPoints+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+MakeStarPoints()+
@@ -3785,19 +3567,24 @@ Creates a set of points that form a regular star.  It can be
 transformed with functions like \verb+RotatePoints+, or it can be 
 used to create a graphical object with \verb+Polygon+.
 
-Note: MakeStarPoints returns a list [[x1, x2, x3,...],[y1,y2,y3,...]],
-while Polygon() takes the X and Y lists independently.
+Note: \verb+MakeStarPoints+ returns a list:
+\begin{verbatim}
+[[x1, x2, x3,...],[y1,y2,y3,...]],
+\end{verbatim}
+while \verb+Polygon()+ takes the X and Y lists independently.
 
 \item[Usage]
 \begin{verbatim}
-MakeNGonPoints(<outer_radius>, <inner_radius>, <num_peaks>)
+MakeStarPoints(<outer_radius>, <inner_radius>,
+                <num_peaks>)
 \end{verbatim}
 
 \item[Example]	
 \begin{verbatim}
    window <- MakeWindow()
    sp <- MakeStarPoints(50,20,10)
-   star <- PolyGon(200,200,First(sp),Nth(sp,2),MakeColor("red"),1)
+   star <- PolyGon(200,200,First(sp),Nth(sp,2),
+                   MakeColor("red"),1)
    AddObject(star,window)
    Draw()
 \end{verbatim}
@@ -3805,9 +3592,6 @@ MakeNGonPoints(<outer_radius>, <inner_radius>, <num_peaks>)
 \item[See Also]	
 \verb+MakeNGonPoints+, \verb+Polygon+, \verb+RotatePoints+, \verb+ZoomPoints+
 \end{desc}
-
-\rl
-
 
 
 \begin{desc}{Name/Symbol}
@@ -3834,9 +3618,6 @@ font, 100, 250)
 		\verb+GetCursorPosition()+, \verb+SetEditable()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+MakeWindow()+ 
 
@@ -3852,9 +3633,6 @@ MakeWindow(<color>)
 
 \item[See Also]	
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Max()+            
@@ -3875,9 +3653,6 @@ Max(<list>)
 \item[See Also]	\verb+Min()+, \verb+Mean()+, \verb+StDev()+
 \end{desc}
 
-\rl
-
-
 
 
 
@@ -3897,9 +3672,6 @@ Max(<list>)
 \item[See Also]	\verb+Median()+, \verb+Quantile()+, \verb+StDev()+, \verb+Min()+, \verb+Max()+
 \end{desc}
 
-\rl
-
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Median()+
@@ -3916,9 +3688,6 @@ Max(<list>)
 \end{verbatim}
 \item[See Also]	\verb+Mean()+, \verb+Quantile()+, \verb+StDev()+, \verb+Min()+, \verb+Max()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Merge()+
@@ -3937,9 +3706,6 @@ Merge([1,2,3],[8,9]) 	# == [1,2,3,8,9]
 
 \item[See Also]	\verb+[ ]+, \verb+Append()+, \verb+List()+
 \end{desc}
-
-\rl
-
 
 
 \begin{desc}{Name/Symbol}
@@ -3965,9 +3731,6 @@ MessageBox(<message>,<window>)
 \item[See Also]	\verb+GetEasyInput+, \verb+EasyTextBox+
 \end{desc}
 
-\rl
-
-
 
 
 \begin{desc}{Name/Symbol}
@@ -3989,9 +3752,6 @@ Min(<list>)
 \item[See Also]	\verb+Max()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Mod()+
 
@@ -4010,9 +3770,6 @@ Mod(3, 10)	# == 3
 
 \item[See Also]	\verb+Div()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Move()+
@@ -4033,9 +3790,6 @@ Move(label, 33, 100)
 
 \item[See Also]	\verb+MoveCorner()+, \verb+MoveCenter()+, \verb+.X+ and \verb+.Y+ properties.
 \end{desc}
-
-\rl
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+MoveCenter()+
 
@@ -4054,9 +3808,6 @@ MoveCenter(TextBox, 33, 100)
 
 \item[See Also]	\verb+Move()+, \verb+MoveCenter()+, \verb+.X+ and \verb+.Y+ properties
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+MoveCorner()+
@@ -4077,9 +3828,6 @@ MoveCorner(label, 33, 100)
 \item[See Also]	\verb+Move()+, \verb+MoveCenter()+, \verb+.X+ and \verb+.Y+ properties
 \end{desc}
 
-\rl
-
-
 
 
 
@@ -4096,9 +3844,11 @@ MoveCorner(label, 33, 100)
 \item[See Also]	\verb+and+, \verb+or+
 \end{desc}
 
-\rl
-\section{N}
-\rl
+\vfill
+\newpage
+\sect{N}
+\vfill
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+NormalDensity()+
@@ -4124,9 +3874,6 @@ NormalDensity(<x>)
 \item[See Also]	\verb+RandomNormal()+, \verb+CumNormInv()+ 
 \end{desc}
 
-\rl
-
-
 
 
 \begin{desc}{Name/Symbol}
@@ -4150,9 +3897,6 @@ Print(Nth(a,3)) 		# == 'c'
 \item[See Also]	\verb+First()+, \verb+Last()+ 
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+NthRoot()+
 
@@ -4168,9 +3912,10 @@ NthRoot(<num>, <root>)
 \item[See Also]	
 \end{desc}
 
-\rl
-\section{O}
-\rl
+\vfill
+\newpage
+\sect{O}
+\vfill
 
 
 \begin{desc}{Name/Symbol}
@@ -4184,9 +3929,6 @@ NthRoot(<num>, <root>)
 
 \item[See Also]	\verb+and+, \verb+not+
 \end{desc}
-
-\rl
-
 
 
 
@@ -4212,9 +3954,10 @@ NthRoot(<num>, <root>)
 \item[See Also]	\verb+Rank()+
 \end{desc}
 
-\rl
-\section{P}
-\rl
+\vfill
+\newpage
+\sect{P}
+\vfill
 
 
 \begin{desc}{Name/Symbol}
@@ -4233,9 +3976,6 @@ PlayForeground(<sound>)
 \item[See Also]	\verb+PlayBackground()+, \verb+Stop()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+PlayBackground()+
  
@@ -4250,9 +3990,6 @@ PlayBackground(<sound>)
 
 \item[See Also]	\verb+PlayForeground()+, \verb+Stop()+
 \end{desc}
-
-\rl
-
 
 
 \begin{desc}{Name/Symbol}
@@ -4288,9 +4025,6 @@ to appear.
 \verb+MakeNGonPoints()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+Polygon+ 
 
@@ -4304,7 +4038,8 @@ to appear.
 
 \item[Usage]		
 \begin{verbatim}
-  Polygon(<x>,<y>,<xpoints>,<ypoints>,<color>,<filled>)
+  Polygon(<x>,<y>,<xpoints>,<ypoints>,
+          <color>,<filled>)
 \end{verbatim}
 
 \item[Example]	
@@ -4313,7 +4048,8 @@ to appear.
    #This makes a T
    xpoints <- [-10,10,10,20,20,-20,-20,-10]
    ypoints <- [-20,-20,40,40,50,50,40,40]
-  p1 <-    Polygon(100,100,xpoints, ypoints,MakeColor("black"),1)
+  p1 <-    Polygon(100,100,xpoints, ypoints,
+                   MakeColor("black"),1)
   AddObject(p1,win)
   Draw()
 \end{verbatim}
@@ -4322,9 +4058,6 @@ to appear.
 \verb+BlockE()+, \verb+Bezier()+, \verb+MakeStarPoints()+,
 \verb+MakeNGonPoints()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Pow()+ 
@@ -4345,9 +4078,6 @@ Pow(5,0)	# == 1
 \item[See Also]     
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Print()+
 
@@ -4367,9 +4097,6 @@ Print(<value>)
 \end{verbatim}
 \item[See Also]	\verb+Print_()+, \verb+FilePrint()+
 \end{desc}
-
-\rl
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+PrintProperties()+
 
@@ -4409,9 +4136,6 @@ PrintProperties(<object>)
 \item[See Also]	\verb+Print()+
 \end{desc}
 
-\rl
-
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Print_()+
@@ -4435,9 +4159,6 @@ Print("Another line")
 
 \item[See Also]	\verb+Print()+, \verb+FilePrint()+
 \end{desc}
-
-\rl
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+PrintList()+
 
@@ -4473,13 +4194,11 @@ PrintList(Flatten([[1,2],[3,4],[5,6]]))
 \item[See Also]	\verb+Print()+, \verb+Print_()+, \verb+FilePrint()+, \verb+FilePrint_()+, \verb+FilePrintList()+,
 \end{desc}
 
-\rl
+\vfill
+\newpage
+\sect{Q}
+\vfill
 
-
-
-
-\section{Q}
-\rl
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Quantile()+
@@ -4501,11 +4220,10 @@ Quantile(<list>, <num>)
 \item[See Also]	\verb+StDev()+, \verb+Median()+, \verb+Mean()+, \verb+Max()+, \verb+Min()+
 \end{desc}
 
-\rl
-
-
-\section{R}
-\rl
+\vfill
+\newpage
+\sect{R}
+\vfill
 
 
 \begin{desc}{Name/Symbol}
@@ -4522,9 +4240,6 @@ RadToDeg( <rad>)
 
 \item[See Also]     	\verb+DegToRad()+, \verb+Tan()+, \verb+Cos()+, \verb+Sin()+, \verb+ATan()+, \verb+ASin()+, \verb+ACos()+
 \end{desc}
-
-\rl
-
 
 
 \begin{desc}{Name/Symbol}
@@ -4544,9 +4259,6 @@ a <- Random()
 
 \item[See Also]		\verb+Random()+, \verb+RandomBernoulli()+, \verb+RandomBinomial()+, \verb+RandomDiscrete()+, \verb+RandomExponential()+, \verb+RandomLogistic()+, \verb+RandomLogNormal()+, \verb+RandomNormal()+, \verb+RandomUniform()+, \verb+RandomizeTimer()+, \verb+SeedRNG()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+RandomBernoulli()+
@@ -4569,9 +4281,6 @@ RandomBernoulli(.3)
   \verb+RandomLogNormal()+, \verb+RandomNormal()+,
   \verb+RandomUniform()+, \verb+RandomizeTimer()+, \verb+SeedRNG()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+RandomBinomial+
@@ -4597,9 +4306,6 @@ RandomBinomial(.3, 10)		# returns a number from 0 to 10
 		\verb+RandomizeTimer()+, \verb+SeedRNG()+    
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+RandomDiscrete()+
 
@@ -4615,7 +4321,8 @@ RandomDiscrete(<num>)
          
 \item[Example]	
 \begin{verbatim}
-RandomDiscrete(30) # Returns a random integer between 1 and 30
+ # Returns a random integer between 1 and 30:
+RandomDiscrete(30)
 \end{verbatim}
 
 \item[See Also]	\verb+Random()+, \verb+RandomBernoulli()+, \verb+RandomBinomial+, 
@@ -4623,9 +4330,6 @@ RandomDiscrete(30) # Returns a random integer between 1 and 30
 		\verb+RandomLogNormal()+, \verb+RandomNormal()+, \verb+RandomUniform()+,
 		\verb+RandomizeTimer()+, \verb+SeedRNG()+    
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+RandomExponential()+
@@ -4648,7 +4352,7 @@ RandomExponential(100)
 		\verb+RandomNormal()+, \verb+RandomUniform()+, \verb+RandomizeTimer+, \verb+SeedRNG()+
 \end{desc}
 
-\rl                            
+
 
 
 \begin{desc}{Name/Symbol}
@@ -4672,9 +4376,6 @@ x <- Random()
 		\verb+RandomLogNormal()+, \verb+RandomNormal()+, \verb+RandomUniform()+, \verb+SeedRNG()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+RandomLogistic()+  
 
@@ -4693,15 +4394,12 @@ RandomLogistic(<p>)
 		\verb+RandomNormal()+, \verb+RandomUniform()+, \verb+RandomizeTimer+, \verb+SeedRNG()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+RandomLogNormal()+
 
 \item[Description]  	Returns a random number according to the log-normal 
 		distribution with parameters \verb+<median>+ and \verb+<spread>+. Generated 
-		by calculating median \verb!*! exp(spread \verb!*! RandomNormal(0,1)). 
+		by calculating $median \verb!*! exp(spread \verb!*! RandomNormal(0,1))$. 
 		\verb+<spread>+ is a shape parameter, and only affects the variance 
 		as a function of the median; similar to the coefficient of 
 		variation.  A value near 0 is a sharp distribution (.1-.3), 
@@ -4723,9 +4421,6 @@ RandomLogNormal(5000, .1)
 		\verb+RandomNormal()+, \verb+RandomUniform()+, \verb+RandomizeTimer+, \verb+SeedRNG()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+RandomNormal()+
 
@@ -4743,9 +4438,6 @@ RandomNormal(<mean>, <stdev>)
 		\verb+RandomDiscrete()+, \verb+RandomExponential()+, \verb+RandomLogistic()+, 
 		\verb+RandomLogNormal()+, \verb+RandomUniform()+, \verb+RandomizeTimer+, \verb+SeedRNG()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+RandomUniform()+
@@ -4765,9 +4457,6 @@ RandomUniform(<num>)
   \verb+RandomLogNormal()+, \verb+RandomNormal()+, \verb+RandomizeTimer()+,
   \verb+SeedRNG()+
 \end{desc}
-
-\rl
-
 
 
 \begin{desc}{Name/Symbol}
@@ -4790,9 +4479,6 @@ RandomUniform(<num>)
 
 \item[See Also]	\verb+Order()+
 \end{desc}
-
-\rl
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+ReadCSV()+
 
@@ -4814,7 +4500,7 @@ RandomUniform(<num>)
 
 \item[See Also]	\verb+FileReadTable()+, \verb+FileReadList+, \verb+StripQuotes+
 \end{desc}
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -4844,9 +4530,6 @@ Rectangle(<x>, <y>, <dx>, <dy>, <color>)
 \item[See Also]	 \verb+Circle()+, \verb+Ellipse()+, \verb+Square()+, \verb+ Line()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+ReflectPoints+
 
@@ -4869,9 +4552,6 @@ axis x=0, returning a similar [[x],[y]] list.  Identical to
 \item[See Also] \verb+ZoomPoints()+, \verb+RotatePoints+
 \end{desc}
 
-\rl
-
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+RemoveObject()+
@@ -4892,9 +4572,6 @@ RemoveObject( <object>, <parent>)
 
 \item[See Also]	
 \end{desc}
-
-\rl
-
 
 
 \begin{desc}{Name/Symbol}
@@ -4917,11 +4594,8 @@ a new list, and does not affect the original
 \end{verbatim}
 
 \item[See Also]	
-Merge,Insert,Rest
+\verb+Merge()+, \verb+Insert()+, \verb+Rest()+
 \end{desc}
-
-\rl
-
 
 
 \begin{desc}{Name/Symbol}
@@ -4942,15 +4616,13 @@ Repeat(<object>, <n>)
 x <- "potato"
 y <- repeat(x, 10)
 Print(y)
-# produces ["potato","potato","potato","potato","potato", 
-#           "potato","potato","potato","potato","potato"]
+# produces ["potato","potato","potato",
+            "potato","potato", "potato",
+            "potato","potato","potato","potato"]
 \end{verbatim}
 	     	     
 \item[See Also]    	\verb+RepeatList()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+RepeatList()+
@@ -4971,9 +4643,6 @@ RepeatList([1,2],3) # == [1,2,1,2,1,2]
 
 \item[See Also]    	\verb+Repeat()+, \verb+Merge()+, \verb+[ ]+
 \end{desc}
-
-\rl
-
 
 
 \begin{desc}{Name/Symbol}
@@ -5006,9 +4675,6 @@ Print(Replace(x,rep))
 \verb+ReplaceChar()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  \verb+ReplaceChar()+
 
@@ -5034,16 +4700,16 @@ Print(rep)
  for list items: \verb+Replace()+ 
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  \verb+ResetCanvas()+
 
 \item[Description]  Resets a canvas, so that anything drawn onto it is
   erased and returned to its background color.  Implemented by
   resetting the background color to itself: 
-  canvas.color <- canvas.  The function does not return the canvas,
+\begin{verbatim}
+  canvas.color <- canvas. 
+\end{verbatim}
+ The function does not return the canvas,
   but has the side effect of resetting it.
 
 
@@ -5070,7 +4736,8 @@ define Start(p)
   i <- 1
   while(i < 200)
    {
-     SetPixel(canvas,Round(Random()*100),Round(Random()*100),white)
+     SetPixel(canvas,Round(Random()*100),
+              Round(Random()*100),white)
      i <- i +1 
    }
   Draw()
@@ -5085,11 +4752,8 @@ define Start(p)
 \end{verbatim}
 
 \item[See Also]	
-SetPixel(), MakeCanvas(), Draw()
+\texttt+SetPixel()+, \texttt+MakeCanvas()+, \texttt+Draw()+
 \end{desc}
-
-\rl
-
 
 
 \begin{desc}{Name/Symbol}
@@ -5106,7 +4770,6 @@ Rest(<list>)
 			  
 \item[Example]     	
 \begin{verbatim}
-
 x <- Sequence(1,5,1)
 y <- Rest(x)
 Print(rep)
@@ -5114,11 +4777,8 @@ Print(rep)
 \end{verbatim}
 
 \item[See Also]	
-Insert
+\verb+Insert()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  \verb+RGBtoHSV()+
@@ -5142,9 +4802,6 @@ x <- RGBtoHSV(MakeColor("red))
    \verb+MakeColor()+, \verb+MakeColorRGB+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+return+
 
@@ -5162,9 +4819,6 @@ define funcname()
 
 \item[See Also]	
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Rotate()+
@@ -5189,9 +4843,6 @@ Rotate([1,11,111],1)  # == [11,111,1]
 \item[See Also]    	\verb+Transpose()+
 \end{desc}
 
-\rl
-
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+RotatePoints+
@@ -5214,9 +4865,6 @@ around the point \verb+[0,0]+,  returning a similar \verb+[[x],[y]]+ list.
 \item[See Also] \verb+ZoomPoints()+, \verb+ReflectPoints+
 \end{desc}
 
-\rl
-
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+Round()+
@@ -5237,14 +4885,11 @@ Round(56.65)  # == 57
 \item[See Also]     	\verb+Ceiling()+, \verb+Floor()+, \verb+AbsFloor()+, \verb+ToInt()+
 \end{desc}
 
-\rl
+\vfill
+\newpage
+\sect{S}
+\vfill
 
-%%% Local Variables: 
-%%% mode: latex
-%%% TeX-master: "main"
-%%% End: 
-\section{S}
-\rl
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+Sample()+
@@ -5256,20 +4901,17 @@ Round(56.65)  # == 57
 
 \item[Usage]       	
 \begin{verbatim}
-SampleN(<list>)
+Sample(<list>)
 \end{verbatim}
 
 \item[Example]   	
 \begin{verbatim}
-SampleN([1,1,1,2,2])     # Returns a single number
-SampleN([1,2,3,4,5,6,7]) # Returns a single number
+Sample([1,1,1,2,2])     # Returns a single number
+Sample([1,2,3,4,5,6,7]) # Returns a single number
 \end{verbatim}
 
 \item[See Also]    	\verb+SeedRNG()+, \verb+Sample()+ \verb+ChooseN()+, \verb+SampleNWithReplacement()+, \verb+Subset()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+SampleN()+
@@ -5290,14 +4932,11 @@ SampleN(<list>, <n>)
 \item[Example]   	
 \begin{verbatim}
 SampleN([1,1,1,2,2], 5)     # Returns 5 numbers
-SampleN([1,2,3,4,5,6,7], 3) # Returns 3 numbers from 1 and 7
+SampleN([1,2,3,4,5,6,7], 3) # Returns 3 numbers 
 \end{verbatim}
 
 \item[See Also]    	\verb+ChooseN()+, \verb+SampleNWithReplacement()+, \verb+Subset()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+SampleNWithReplacement()+
@@ -5323,9 +4962,6 @@ SampleNWithReplacement(x, 10)
 \item[See Also]     	\verb+SampleN()+, \verb+ChooseN()+, \verb+Subset()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+SDTBeta()+
 
@@ -5348,9 +4984,6 @@ SDTBeta(<hr>, <far>)
 
 \item[See Also]\verb+SDTDPrime()+,
 \end{desc}
-
-\rl
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+SDTDPrime()+
 
@@ -5376,9 +5009,6 @@ SDTDPrime(<hr>, <far>)
 
 \item[See Also]\verb+SDTBeta()+,
 \end{desc}
-
-\rl
-
 
 
 
@@ -5411,9 +5041,6 @@ SeedRNG(<num>)
 \item[See Also]	
      \verb+RandomizeTimer()+
 \end{desc}
-
-\rl
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+SendData()+
 
@@ -5445,9 +5072,6 @@ On Client:
   \verb+ConnectToIP+, \verb+ConnectToHost+, \verb+WaitForNetworkConnection+, \verb+GetData+, \verb+ConvertIPString+, \verb+CloseNetworkConnection+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]   	\verb+SegmentsIntersect()+
 
@@ -5459,23 +5083,26 @@ This function is defined in pebl-lib/Graphics.pbl
 
 \item[Usage] 
 \begin{verbatim}
- SegmentsIntersect(x1,y1,x2,y2, a1,b1,a2,b2)
+ SegmentsIntersect(x1,y1,x2,y2, 
+                   a1,b1,a2,b2)
 \end{verbatim}
 
 \item[Example]
 \begin{verbatim}
- SegmentsIntersect(1,0,2,0,  1,2,2,2)  #0
- SegmentsIntersect(1,0,2,0,  1,0,2,2)  #0, though they share 1,0
- SegmentsIntersect(1,1,3,1,  2,2,2,0)  #1
+ SegmentsIntersect(1,0,2,0, 
+                   1,2,2,2)  #0
+
+ #returns 0, though they share (1,0)
+ SegmentsIntersect(1,0,2,0,
+                    1,0,2,2)  
+ SegmentsIntersect(1,1,3,1,
+                   2,2,2,0)  #1
 
 
 \end{verbatim}
 
 \item[See Also]    	\verb+GetAngle3+, \verb+ToRight+
 \end{desc}
-
-\rl
-
 
 
 \begin{desc}{Name/Symbol}
@@ -5506,9 +5133,6 @@ Sequence(10,0,-1)   # == [10,9,8,7,6,5,4,3,2,1]
 \item[See Also]    	\verb+Repeat()+, \verb+RepeatList()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+SetCursorPosition()+
 
@@ -5527,9 +5151,6 @@ SetCursorPosition(tb, 23)
 
 \item[See Also]   	\verb+SetEditable()+, \verb+GetCursorPosition()+, \verb+SetText()+, \verb+GetText()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+SetEditable()+
@@ -5553,9 +5174,6 @@ SetEditable(tb, 1)
 \item[See Also]    	\verb+GetEditable()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+SetFont()+
 
@@ -5572,8 +5190,12 @@ SetFont(<text-widget>, <font>)
 
 \item[Example]   	
 \begin{verbatim}
-fontGreen <- MakeFont("vera.ttf",1,22,MakeColor("green"),MakeColor("black"), 1)
-fontRed   <- MakeFont("vera.ttf",1,22,MakeColor("red"),MakeColor("black"), 1)
+fontGreen <- MakeFont("vera.ttf",1,22, 
+                      MakeColor("green"),
+                      MakeColor("black"), 1)
+fontRed   <- MakeFont("vera.ttf",1,22,
+                      MakeColor("red"),
+                      MakeColor("black"), 1)
 label <- MakeLabel(fontGreen, "Correct")
 
 #Do trial here.       	
@@ -5592,9 +5214,6 @@ Draw()
 \item[See Also]    	\verb+SetText()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+SetMouseCursorPosition()+
 
@@ -5610,7 +5229,8 @@ Draw()
 \begin{verbatim}
 
   ##Set mouse to center of screen:
-  SetMouseCursorPosition(gVideoWidth/2,gVideoHeight/2)
+  SetMouseCursorPosition(gVideoWidth/2,
+                         gVideoHeight/2)
 \end{verbatim}
 
 
@@ -5618,9 +5238,6 @@ Draw()
   \verb+ShowCursor+, \verb+WaitForMouseButton+,
   \verb+SetMouseCursorPosition+, \verb+GetMouseCursorPosition+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+SetPixel()+, \verb+SetPoint()+
@@ -5656,9 +5273,6 @@ Draw()
   \verb+SetPoint+, \verb+MakeGabor+
 \end{desc}
 
-\rl
-
-
 
 \begin{desc}{Name/Symbol}
 
@@ -5687,9 +5301,6 @@ Draw()
 
 \item[See Also]    	\verb+GetText()+, \verb+SetFont()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+Show()+
@@ -5722,9 +5333,6 @@ Draw()
 \item[See Also]     	\verb+Hide()+
 \end{desc}
 
-\rl
-
-
 
 
 \begin{desc}{Name/Symbol}
@@ -5755,9 +5363,6 @@ ShowCursor(1)
 \item[See Also] 
 \end{desc}
 
-\rl
-
-
 
 
 \begin{desc}{Name/Symbol}
@@ -5779,9 +5384,6 @@ Print(Shuffle([1,2,3,4,5]))
 \item[See Also]    	\verb+Sort()+, \verb+SortBy()+, \verb+ShuffleRepeat()+,
                     \verb+ShuffleWithoutAdjacents()+
 \end{desc}
-
-\rl
-
 
 
 
@@ -5808,14 +5410,11 @@ Print(ShuffleRepeat([1,2,3,4,5]),3)
                     \verb+ShuffleWithoutAdjacents()+
 \end{desc}
 
-\rl
-
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+ShuffleWithoutAdjacents()+
 
-\item[Description] 	Randomly shuffles  <nested-list>, attempting to
+\item[Description] 	Randomly shuffles  \verb+<nested-list>+, attempting to
   create a list where the nested elements do not appear adjacently in
   the new list. Returns a list that is flattened one level. It will
   always return a shuffled list, but it is not guaranteed to return
@@ -5832,19 +5431,22 @@ ShuffleWithoutAdjacents(<nested-list>)
 \item[Example]
 
 \begin{verbatim}
-Print(ShuffleWithoutAdjacents([[1,2,3], [4,5,6], [7,8,9]])
+Print(ShuffleWithoutAdjacents([[1,2,3],
+                               [4,5,6],
+                               [7,8,9]])
 ## Example Output: 
 ## [8, 5, 2, 7, 4, 1, 6, 9, 3]
 ## [7, 4, 8, 1, 9, 2, 5, 3, 6]
 
 ## Non-nested items are shuffled without constraint
-Print(ShuffleWithoutAdjacents([[1,2,3], 11,12,13,14,15,16]))
+Print(ShuffleWithoutAdjacents([[1,2,3], 
+                              11,12,13,14,15,16]))
 ## output: [13, 11, 2, 14, 3, 15, 1, 16, 12]
 ##         [13, 12, 2, 16, 15, 11, 1, 14, 3]
 ##         [11, 1, 15, 2, 12, 16, 14, 13, 3]
 
-## Sometimes the constraints cannot be satisfied.  9 will always
-## appear in position 2
+## Sometimes the constraints cannot be satisfied.  
+## 9 will always appear in position 2
 Print(ShuffleWithoutAdjacents([[1,2,3], 9])
 ## output: [3, 9, 1, 2]
 ##         [2, 9, 3, 1]
@@ -5854,9 +5456,6 @@ Print(ShuffleWithoutAdjacents([[1,2,3], 9])
 \item[See Also]    	\verb+Shuffle()+, \verb+Sort()+, \verb+SortBy()+,
         \verb+ShuffleRepeat()+, \verb+ShuffleWithoutAdjacents()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+Sign()+
@@ -5878,9 +5477,6 @@ Sign(65)      # == 1
 \item[See Also]     	\verb+Abs()+
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+SignalFatalError()+
 
@@ -5898,14 +5494,12 @@ If(not IsList(x))
 {
  SignalFatalError("Tried to frobnicate a List.")
 }
-##Prints out error message and line/filename of function
+##Prints out error message and 
+##line/filename of function
 \end{verbatim}
 
 \item[See Also]     	\verb+Print()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+Sin()+
@@ -5924,9 +5518,6 @@ Sin(<deg>)
 \item[See Also]    	\verb+Cos()+, \verb+Tan()+, \verb+ATan()+, \verb+ACos()+, \verb+ATan()+ 
 \end{desc}
 
-\rl
-
-
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+Sort()+
 
@@ -5944,9 +5535,6 @@ Sort([3,4,2,1,5]) # == [1,2,3,4,5]
 
 \item[See Also]    	\verb+SortBy()+, \verb+Shuffle()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+SortBy()+
@@ -5967,9 +5555,6 @@ SortBy(["Bobby","Greg","Peter"], [3,1,2])
 
 \item[See Also]    	\verb+Shuffle()+, \verb+Sort()+
 \end{desc}
-
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+SplitString()+
@@ -5995,9 +5580,6 @@ SplitString("Everybody Loves a Clown", " ")
 
 \item[See Also]     	\verb+FindInString()+
 \end{desc}
-
-\rl
-
 
 
 
@@ -6028,9 +5610,6 @@ Ellipse(<x>, <y>, <size>, <color>)
 \item[See Also]	 \verb+Circle()+, \verb+Ellipse()+, \verb+Rectangle()+, \verb+Line()+
 \end{desc}
 
-\rl
-
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+Sqrt()+ 
@@ -6050,7 +5629,7 @@ Sqrt(100)  # == 10
 \item[See Also]	
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6071,7 +5650,7 @@ StDev(<list>)
 \item[See Also]     	\verb+Min()+, \verb+Max()+, \verb+Mean()+, \verb+Median()+, \verb+Quantile()+, \verb+Sum()+
 \end{desc}
 
-\rl
+
 
 
 
@@ -6103,7 +5682,7 @@ Stop(buzz)
 \item[See Also]    	\verb+PlayForeground()+, \verb+PlayBackGround()+
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6126,7 +5705,7 @@ StringLength("")             # == 0
 \item[See Also]    	\verb+Length()+, \verb+SubString()+
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6151,7 +5730,7 @@ StripQuotes(<text>)
 \item[See Also]    	\verb+StripSpace()+
 \end{desc}
 
-\rl
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+StripSpace()+
@@ -6175,7 +5754,7 @@ StripSpaces(<text>)
 \item[See Also]    	\verb+StripQuotes()+
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6197,7 +5776,7 @@ SubList([1,2,3,4,5,6],3,5)	# == [3,4,5]
 \item[See Also]    	\verb+SubSet()+, \verb+ExtractListItems()+
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6223,7 +5802,7 @@ Subset([1,2,3,4,5], [23,4,2])		# == [2,4]
 \item[See Also]   	\verb+SubList()+, \verb+ExtractItems()+, \verb+SampleN()+
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6248,7 +5827,7 @@ SubString("abcdefghijklmnop",3,5)	# == "cdefg"
 \item[See Also]	
 \end{desc}
 
-\rl
+
 
 
 
@@ -6272,7 +5851,7 @@ Sum(<list>)
 \item[See Also]     	\verb+Min()+, \verb+Max()+, \verb+Mean()+, \verb+Median()+, \verb+Quantile()+, \verb+StDev()+
 \end{desc}
 
-\rl
+
 
 
 
@@ -6305,7 +5884,7 @@ Result:
 \item[See Also]	
   	\verb+StDev()+, \verb+Min()+, \verb+Max()+, \verb+Mean()+, \verb+Median()+, \verb+Quantile()+, \verb+Sum()+
 \end{desc}
-\rl
+
 
 
 
@@ -6335,7 +5914,8 @@ SystemCall("text-of-command")
      }
       if(x <> 0)
       {
-         SignalFatalError("Expected file input.txt does not exist")
+         SignalFatalError("Expected file ["+
+               "input.txt] does not exist")
       }
 
 
@@ -6344,13 +5924,12 @@ SystemCall("text-of-command")
 \item[See Also]	
   \verb+GetSystemType()+
 \end{desc}
-\rl
 
+\vfill
+\newpage
+\sect{T}
+\vfill
 
-
-
-\section{T}
-\rl
 
 
 \begin{desc}{Name/Symbol}
@@ -6373,7 +5952,7 @@ SystemCall("text-of-command")
 \verb+Format()+, \verb+CR()+
 \end{desc}
 
-\rl     
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+Tan()+	
@@ -6393,7 +5972,7 @@ Tan(180)
 \item[See Also]    	\verb+Cos()+, \verb+Sin()+, \verb+ATan()+, \verb+ACos()+, \verb+ATan()+ 
 \end{desc}
 
-\rl
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+ThickLine()+	
@@ -6403,14 +5982,16 @@ Tan(180)
 
 \item[Usage]       	
 \begin{verbatim}
-ThickLine(<x1>,<y1>,<x2>,<y2>,<size-in-pixels>,<color>)
+ThickLine(<x1>,<y1>,<x2>,<y2>,
+          <size-in-pixels>,<color>)
 \end{verbatim}
 
 \item[Example]
 \begin{verbatim}
    
 
-   a <- ThickLine(10,10,300,400,20,MakeColor("red"))
+   a <- ThickLine(10,10,300,400,20,
+                MakeColor("red"))
    AddObject(a,gWin)
    Draw()
 
@@ -6418,7 +5999,7 @@ ThickLine(<x1>,<y1>,<x2>,<y2>,<size-in-pixels>,<color>)
 
 \item[See Also]  \verb+Line()+, \verb+Polygon()+
 \end{desc}
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6444,7 +6025,7 @@ Print(a)
 \item[See Also]     	\verb+GetTime()+
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6469,7 +6050,7 @@ ToInteger("3213")  # == 3213
 \item[See Also]    	\verb+Round()+, \verb+Ceiling()+, \verb+AbsCeiling()+, \verb+Floor()+, \verb+AbsFloor()+
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6487,7 +6068,7 @@ ToFloat(<number>)
 \item[See Also]	
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6512,7 +6093,7 @@ Print(a + 1)		# produces the output 3233.
 \item[See Also]     	\verb+ToString()+, \verb+ToFloat()+, \verb+Round()+
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6541,7 +6122,7 @@ Print(a + 1)		# produces the output 3233.
 \verb+GetAngle()+ \verb+GetAngle3+, \verb+SegmentsIntersect+
 \end{desc}
 
-\rl
+
 
 
 
@@ -6570,7 +6151,7 @@ Print(a + "111")
 \item[See Also] \verb+ToString()+, \verb|+|.
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6587,7 +6168,7 @@ Print(a + "111")
 \item[See Also]	
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6603,16 +6184,20 @@ Transpose(<list-of-lists>)
 
 \item[Example]     	
 \begin{verbatim}
-Transpose([[1,11,111],[2,22,222],[3,33,333], [4,44,444]])
-# == [[1,2,3,4],[11,22,33,44],[111,222,333,444]]
+Transpose([[1,11,111],[2,22,222],
+           [3,33,333], [4,44,444]])
+# == [[1,2,3,4],[11,22,33,44],
+#      [111,222,333,444]]
 \end{verbatim}
 
 \item[See Also]    	\verb+Rotate()+
 \end{desc}
 
-\rl
-\section{U}
-\rl
+\vfill
+\newpage
+\sect{U}
+\vfill
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6635,9 +6220,11 @@ Uppercase("POtaTo")  # == "POTATO"
 \item[See Also]     	\verb+Lowercase()+
 \end{desc}
 
-\rl
-\section{W}
-\rl
+\vfill
+\newpage
+\sect{W}
+\vfill
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6659,7 +6246,7 @@ Wait(15)
 \item[See Also]	
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6676,7 +6263,7 @@ Wait(15)
 
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6697,7 +6284,7 @@ Wait(15)
             \verb+WaitForAnyKeyPress()+
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6716,13 +6303,13 @@ WaitForAnyKeyDownWithTimeout(<time>)
 \item[See Also]	
 \end{desc}
 
-\rl
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+WaitForClickOnTarget()+
 
 \item[Description]	
-  Allows you to specify a list of graphical objects in <objectlist> and awaits a click
+  Allows you to specify a list of graphical objects in \verb+<objectlist>+ and awaits a click
   on any one of them, returning the corresponding key in <keylist>.  Also, sets the 
   global variable gClick which saves the location of the click, if 
   you need it for something else.
@@ -6738,25 +6325,27 @@ WaitForAnyKeyDownWithTimeout(<time>)
   objs <- []
   loop(i,resp)
   {
-    tmp <- EasyLabel(resp +". ", 100+50*i,100,gWin,15)
+    tmp <- EasyLabel(resp +". ", 100+50*i,100,
+                     gWin,15)
     obj <- Append(obj,tmp)
   }
   click  <- WaitForClickOnTarget(obj,resp)
   Print("You clicked on " + click)
-  Print("Click location: [" + First(gClick) + ", " + Second(gClick) + "]")
+  Print("Click location: [" + First(gClick) + 
+        ", " + Second(gClick) + "]")
 \end{verbatim}
 \item[See Also]	
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+WaitForClickOnTarget()+
 
 \item[Description]	
-  Allows you to specify a list of graphical objects in <objectlist> and awaits a click
-  on any one of them, returning the corresponding key in <keylist>.  Also, sets the 
+  Allows you to specify a list of graphical objects in \verb+<objectlist>+ and awaits a click
+  on any one of them, returning the corresponding key in \verb+<keylist>+.  Also, sets the 
   global variable gClick which saves the location of the click, if 
   you need it for something else.
 \item[Usage]		
@@ -6771,18 +6360,20 @@ WaitForAnyKeyDownWithTimeout(<time>)
   objs <- []
   loop(i,resp)
   {
-    tmp <- EasyLabel(resp +". ", 100+50*i,100,gWin,15)
+    tmp <- EasyLabel(resp +". ",
+             100+50*i,100,gWin,15)
     obj <- Append(obj,tmp)
   }
   click  <- WaitForClickOnTarget(obj,resp)
   Print("You clicked on " + click)
-  Print("Click location: [" + First(gClick) + ", " + Second(gClick) + "]")
+  Print("Click location: [" + First(gClick) + 
+        ", " + Second(gClick) + "]")
 \end{verbatim}
 \item[See Also]	
   \verb+WaitForDownClick()+, \verb+WaitForMouseButton()+
 \end{desc}
 
-\rl
+
 
 
 
@@ -6790,22 +6381,31 @@ WaitForAnyKeyDownWithTimeout(<time>)
 \item[Name/Symbol]  	\verb+WaitForDownClick()+
 
 \item[Description]	Will wait until the mouse button is clicked down.  Returns
-  the same   \verb+[xpos, ypos, button id [1-3], "<pressed>" or "<released>"]+
- 4-tuple as WatForMouseButton, but the last will always be "<pressed>".
-
-  Useful as a 'click mouse to continue' probe.
+  the same 4-tuple as \verb+WaitForMouseButton:+
+\begin{verbatim}
+ [xpos,
+   ypos, 
+   button id [1-3], 
+   "<pressed>" or "<released>"]
+\end{verbatim}
+ but the last element will always be \verb+<pressed>+.
+ Useful as a 'click mouse to continue' probe.
 
 \item[Usage]		
-   WaitForDownClick()
-\item[Example]	
+ \verb+ WaitForDownClick()+
 
+\item[Example]	
+\begin{verbatim}
   x <- WaitForDownClick()
-  Print("Click location: [" + First(x) + ", " + Second(x) + "]")  
+  Print("Click location: [" + First(x) + 
+        ", " + Second(x) + "]")  
+\end{verbatim}
+
 \item[See Also]	
   \verb+WaitForClickOnTarget()+, \verb+WaitForMouseButton()+
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6827,7 +6427,7 @@ WaitForKeyListDown(["a","z"])
 \item[See Also]	
  \end{desc}
 
-\rl
+
 
 
 
@@ -6857,7 +6457,8 @@ section ``Keyboard Entry'' for complete list of keynames.
 
 \item[Example]     	
 \begin{verbatim}
-  x <- WaitForListKeyPressWithTimeout(["a","z"],2000,1)
+  x <- WaitForListKeyPressWithTimeout(["a","z"],
+                                       2000,1)
   if(IsList(x))
   {
      Print("Did Not Respond.")
@@ -6868,7 +6469,7 @@ section ``Keyboard Entry'' for complete list of keynames.
    \verb+WaitForKeyListDown+, \verb+WaitForListKeyPress+, \verb+WaitForKeyPressWithTimeout+
  \end{desc}
 
-\rl
+
 
 
 
@@ -6897,7 +6498,7 @@ WaitForListKeyPress(["a","z"])
    \verb+WaitForKeyListDown+, \verb+WaitForListKeyPressWithTimeout+
  \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -6918,8 +6519,6 @@ WaitForKeyPress(<key>)
 \item[See Also]     	\verb+WaitForAnyKeyPress()+, \verb+WaitForKeyRelease()+, \verb+WaitForListKeyPress()+
 \end{desc}
 
-\rl
-
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+WaitForKeyUp()+
@@ -6934,14 +6533,19 @@ WaitForKeyPress(<key>)
 \end{desc}
 
 
-\rl
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+WaitForMouseButton()+
 
 \item[Description] Waits for a mouse click event to occur.
   This takes no arguments, and returns a 4-tuple list, indicating:
 
-  \verb+[xpos, ypos, button id [1-3], "<pressed>" or "<released>"]+
+\begin{verbatim}
+[xpos, 
+ ypos, 
+ button id [1-3], 
+ "<pressed>" or "<released>"]
+\end{verbatim}
 
 \item[Usage]
 \begin{verbatim}
@@ -6970,8 +6574,8 @@ WaitForKeyPress(<key>)
   \verb+SetMouseCursorPosition+, \verb+GetMouseCursorPosition+
 \end{desc}
 
-\rl
-\rl
+
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+WaitForMouseButtonWithTimeout()+
 
@@ -6979,14 +6583,16 @@ WaitForKeyPress(<key>)
   timeout to be reached.
   This takes a single argument: timeout delay in ms. When clicked, it returns a
   4-tuple list, indicating:
-  \verb+[xpos, ypos, button id [1-3], "<pressed>" or "<released>"]+
-
+\begin{verbatim}
+[xpos,
+ ypos, 
+ button id [1-3], 
+ "<pressed>" or "<released>"]
+\end{verbatim}
   when not click and timeout is reached, it returns a list:
    \verb+[timeout]+
 
-
 \item[Usage]
-
 
 \begin{verbatim}
    WaitForMouseButtonWithTimeOut()
@@ -7017,7 +6623,7 @@ WaitForKeyPress(<key>)
   \verb+SetMouseCursorPosition+, \verb+GetMouseCursorPosition+
 \end{desc}
 
-\rl
+
 
 
 
@@ -7050,7 +6656,7 @@ WaitForKeyPress(<key>)
    \verb+SendData+, \verb+ConvertIPString+, \verb+CloseNetworkConnection+
 \end{desc}
 
-\rl
+
 
 
 \begin{desc}{Name/Symbol}
@@ -7089,7 +6695,6 @@ while(i <= 10)
 
 \end{desc}
 
-\rl
 
 
 
@@ -7123,23 +6728,23 @@ while(i <= 10)
      AddObject(img,gWin)
      while(gid < 100)
       {
-         Move(img,RandomDiscrete(800),RandomDiscrete(600))
+         Move(img,RandomDiscrete(800),
+                  RandomDiscrete(600))
          DrawMe()
       }
 
    }   
   
 \end{verbatim}
-
 \item[See Also]	\verb+FileWriteTable+
-
 \end{desc}
 
-\rl
+\vfill
+\newpage
 
+\sect{Z}
+\vfill
 
-\section{Z}
-\rl
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+ZeroPad+
@@ -7189,10 +6794,7 @@ adjusted relative to zero, not relative to their center.
 \end{verbatim}
 
 \item[See Also] \verb+RotatePoints()+, \verb+ReflectPoints+
-\end{desc}
-
-\rl
-
+\end{desc} 
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "main"

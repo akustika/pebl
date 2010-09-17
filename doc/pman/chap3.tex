@@ -1,8 +1,8 @@
 
 \chapter{How to Write a PEBL Program}
 
-
-\section{Basic PEBL Scripts}
+\vfill
+\sect{Basic PEBL Scripts}
 
 PEBL has a fairly straightforward and forgiving syntax, and implements
 most of its interesting functionality in a large object system and
@@ -57,8 +57,8 @@ A number of sample PEBL programs can be found in the \texttt{/demo}
 
 
 
-
-\section{Case Sensitivity}
+\vfill
+\sect{Case Sensitivity}
 
 PEBL uses case to specify an item's token type. This serves as an extra contextual cue to the programmer, so that the program reads more easily and communicates more clearly.
 
@@ -72,8 +72,8 @@ Currently, syntax keywords (like loop, if, define, etc.) must be
 lowercase, for technical reasons. We hope to eliminate this limitation in the future.
 
 
-
-\section{ Syntax}
+\vfill
+\sect{ Syntax}
 
 PEBL has a simple and forgiving syntax, reminiscent of \texttt{S+} (or\texttt{ R})
 and \texttt{c}. However, differences do exist.
@@ -131,7 +131,8 @@ Another difference between \texttt{c} and PEBL is that in PEBL, \verb+{}+ bracke
 not optional: they are required to define code blocks, such as those
 found in \texttt{if} and \texttt{while} statements and loops.
 
-\section{Expressions}
+\vfill
+\sect{Expressions}
 
 An expression is a set of operations that produces a
 result.  In PEBL, every function is an expression, as is any
@@ -198,8 +199,8 @@ If you desire a long body of text without linebreaks, you must define it pieceme
 
 
 
-
-\section{Variables}
+\vfill
+\sect{Variables}
 
 PEBL can store the results of expressions in
 named variables.  Unlike many programming languages, PEBL
@@ -305,6 +306,7 @@ which would theoretically change the string pointed to by `\texttt{a}' to
 \texttt{"yourXstring"}.  If there were, `\texttt{b}' would also point to \texttt{"yourXstring"}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subsection{Passing by Reference and by Value}
 
 The discussion in \ref{sec:copies_and_ass} on copying has implications for passing
@@ -314,8 +316,8 @@ window into a function, you do not want to make a copy of
 that window on which to operate.  If the value is a string or a
 number, a copy of that value is made and passed into the function.
   
-
-\section{Functions}
+\vfill
+\sect{Functions}
 
 The true power of PEBL lies in its extensive library of
 functions that allow specific experiment-related tasks to be
@@ -323,8 +325,8 @@ accomplished easily. For the sake of convenience, the library is divided into a 
 is transparent to the user, who does not need to know where
 a function resides in order to use it. Chapter \ref{sec:five} includes a quick reference to functions; Chapter \ref{sec:six} includes a complete alphabetical reference.
 
-
-\section{ A Simple Program}
+\newpage
+\sect{ A Simple Program}
 
 The previous sections provide everything you need to know to
 write a simple program.  Here is an annotated program:
@@ -332,20 +334,20 @@ write a simple program.  Here is an annotated program:
 \begin{verbatim}
 # Any line starting with a # is a comment.  It gets ignored.
 
-#Every program needs to define a function called Start() define Start(par)
-#Start needs a parameter, just in case braces below contain PEBL statements
+#Every program needs to define a function called Start() 
+#Start always needs a parameter
+define Start(par)
 {
- ##Assign a number to a variable
- number <- 10
- ##Assign a string to a variable
- hello  <- "Hello World"
+
+ number <- 10   ##Assign a number to a variable
+
+ hello  <- "Hello World"  ##Assign a string to a variable
  ##Create a global variable (starts with little g)
  gGlobalText <- "Global Text"
 
  ##Call a user-defined function (defined below).
  value <-  PrintIt(hello, number)
  ##It returned a value
-
  #Call a built-in function
  Print("Goodbye. " + value)
 }
@@ -367,12 +369,8 @@ define PrintIt(text, number)
        j <- j + 1
   }
 
-  #return the counter variable.
-  return(j)
+  return(j)  #return the counter variable.
 }
-
---------------------------------------------------------
-
 \end{verbatim}
 More sample programs can be found in the \texttt{demo/} and \texttt{experiments/} directories of the PEBL source tree.
 

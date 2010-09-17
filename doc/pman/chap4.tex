@@ -16,21 +16,24 @@ properties and accessor function are listed in the decriptions of
 their relevant objects below.
 
 
-\section{Lists}
+\sect{Lists}
 
-Lists are  incredibly useful and flexible storage
-structures that play an important role in PEBL. A list is
-simply a series of variables. It is  like an array, except
-that it takes longer to access items later in the
-list than items at the beginning. But it is much easier to
-do things like split and combine lists of items than arrays of items. And given the speed of 
-computers, accessing elements of a list is not too costly,
-unless the list is really long (thousands of items). The \texttt{Nth} function can extract items from a list, but it is somewhat costly, and there are often better ways.
+Lists are incredibly useful and flexible storage structures that play
+an important role in PEBL. A list is simply a series of variables. It
+is like an array, except that it takes longer to access items later in
+the list than items at the beginning. But it is much easier to do
+things like split and combine lists of items than arrays of items. And
+given the speed of computers, accessing elements of a list is not too
+costly, unless the list is really long (thousands of items). The
+\texttt{Nth} function can extract items from a list, but it is
+somewhat costly, and there are often better ways.
 
-
+\newpage
 For example, suppose you want to print out every item in a list. Looping through, accessing, and printing all the items of a list is a traditional approach:
 \begin{verbatim}
-  list <- Sequence(1,9,1) #could also be written [1,2,3,4,5,6,7,8,9]
+ #This could also be written [1,2,3,4,5,6,7,8,9]
+  list <- Sequence(1,9,1) 
+
   len <- Length(list)
   i <- 1
   while (i <= len)
@@ -50,7 +53,8 @@ considerable problem for larger lists.
 However, there is an alternative.  Items from
 lists can be iterated over using the `\texttt{loop}' command:  
 \begin{verbatim}
-  list <- Sequence(1,9,1)#could also be written [1,2,3,4,5,6,7,8,9]
+  #This could also be written [1,2,3,4,5,6,7,8,9]
+  list <- Sequence(1,9,1)
   loop(item, list) 
   {
     Print(item)
@@ -72,8 +76,8 @@ discussed in Section~\ref{sec:copies_and_ass}:~Copies and Assignment.
 
 
 
-
-\section{Fonts}
+\newpage
+\sect{Fonts}
 
 PEBL uses truetype fonts for the display of text in labels and other text
 widgets.  In addition to the filename, font objects have the following properties: style (i.e., normal, bold, italic, underline), size (in points),
@@ -86,6 +90,7 @@ freefont series, and a few others.  These include
 the typeface/files shown below \ref{tab:fonts}:
 
 \begin{table}[htbp]
+\small
 \caption{Typeface/Files Available in PEBL}
 \begin{tabular}{ll}
 \toprule
@@ -190,7 +195,7 @@ international character support easier:
   better (``DejaVuSans.ttf'', ``DejaVuSansMono.ttf'', and
   ``DejaVuSerif.ttf'') are now included and available.
 \item Three new global variables are set on initiation:
-  \texttt{gPEBLBaseFont}, \texttt{gPEBLBaseFontMono}, and
+  \texttt{gPEBLBaseFont}, \\ \texttt{gPEBLBaseFontMono}, and
   \texttt{gPEBLBaseFontSerif}, which are set by default to these
   three font names.
 \item Helper functions and battery tests are all updated to use these
@@ -203,7 +208,7 @@ character sets that aren't handled by DejaVu, simply needs to change
 (and include that font in the program directory), and everything
 should work out fine.
 
-\section{Colors} 
+\sect{Colors} 
 
 Colors are PEBL objects.  A color can be created by specifying its name 
 using the \texttt{MakeColor()} function, or by specifying its RGB values using the \texttt{MakeColorRGB()} function. A list of colors and their respective RGB values can be found in the \texttt{Colors.txt} file in the documentation directory. There are nearly 800 from which to choose, so you can create 
@@ -218,14 +223,14 @@ Accessible color properties:
 \end{verbatim}
  
 
-\section{Windows}
+\sect{Windows}
 
 To run an experiment, you usually need to create a window in which 
 to display stimuli.  This is done with the \texttt{MakeWindow()} function. \texttt{MakeWindow()} will create a grey window by default, or you can 
 specify a color.  Currently, an experiment can have only one window.
 
 
-\section{Graphical Widgets}
+\sect{Graphical Widgets}
 
 Graphical widgets are the building blocks of experimental stimuli. 
 Currently, three widgets are available: images, labels, and textboxes.  
@@ -263,7 +268,7 @@ behavior.
 
   
 
-\section{Images}
+\sect{Images}
 
 PEBL can read numerous image types, courtesy of the
 \texttt{SDL\_image} library.  Use the \texttt{MakeImage()} function to
@@ -285,7 +290,7 @@ Images have all the properties available for widgets, but the width
 and height can only be read, and not set.  Width and height are
 controlled by the dimensions of the image file.
 
-\section{Canvases}
+\sect{Canvases}
 
 A canvas is a blank rectangle, sort of like an 'imageless' image. As
 with an image, \texttt{Move()} centers the image on the specified
@@ -346,7 +351,7 @@ Note that the background color can have an alpha value.  If you use an
 alpha value of 0, the background will be invisible.
 
 
-\section{Shapes}
+\sect{Shapes}
 PEBL allows you to define a number of shape objects that can be added
 to another widget.  A demonstration script exercising these shapes is found in demo/shapes.pbl.
 
@@ -463,8 +468,8 @@ The following is a list of shape and their properties.
 .x  (x position of start) \\
 .y  (y position of start)\\
 
-
-\section{Text Labels}
+\newpage
+\sect{Text Labels}
 
 You can create a text label object with the \texttt{MakeLabel()} function, 
 which requires specifying a font, and the foreground and background colors.  Labels are only a single line of text. Like images, when you move them,
@@ -486,7 +491,7 @@ The \verb+.HEIGHT+ and \verb+.WIDTH+ accessible, but cannot be changed
 because they are controlled by the text and the font size.
 
 
-\section{Text Boxes}
+\sect{Text Boxes}
 
 A text box is a graphical widget that contains a body of text.  Text
 automatically wraps when it is too long to fit on a single line.  Like
@@ -504,7 +509,7 @@ Textbox properties:
  
 
 
-\section{User-Editable Text Boxes}
+\sect{User-Editable Text Boxes}
 
 Text box editing can be performed using the \verb+GetInput(<textbox>,<escape-key>)+ function.  This returns the text that is present in the box when the participant hits the key associated with \verb+<escape-key>+.  
 \verb+<escape-key>+ is just a text-based code that describes the keypress 
@@ -523,15 +528,15 @@ See the Keyboard Entry section below for a more complete list.
 Translation from string to keyboard input is still crude, 
 and is handled in \texttt{src/utility/PEBLUtility.cpp:TranslateString} 
 
-
-\section{Audio}
+\newpage
+\sect{Audio}
 
 Currently, audio output is very primitive, and there are no facilities for recording or analyzing audio input. Audio \texttt{.wav} files can be loaded with the \texttt{LoadSound()} function, which returns an audio stream object that can be played  with either the \texttt{PlayForeground()} or \texttt{PlayBackground()} functions.  
 The \texttt{PlayForeground()} function returns once the sound is finished playing; \texttt{PlayBackground()} returns immediately and the sound plays in a separate thread.  When using \texttt{PlayBackground}, playing can be stopped using the \texttt{Stop()} function.  If another \texttt{PlayForeground()} or \texttt{PlayBackground()} is then used,
 the initial sound will immediately terminate and the new file will play. Currently, PEBL can only play one sound at a time.
 
 
-\section{Keyboard Entry}
+\sect{Keyboard Entry}
 
 PEBL can examine the state of the keyboard, and wait for various
 keyboard events to happen. Functions such as
@@ -568,7 +573,7 @@ Also, the traditional "modifier" keys can serve as normal keys:
 \end{verbatim}
 
 
-\section{Files}
+\sect{Files}
 
 Files are objects that can be read from or written to using several PEBL functions. To use a file object, create one using one of the functions 
 listed below.  Each function returns a file object:
@@ -578,8 +583,8 @@ FileOpenWrite()
 FileOpenAppend()
 \end{verbatim}
 
-For example, you can use the command \texttt{myfile <-
-  FileOpenRead("stimuli.txt")} 
+For example, you can use the command:\\
+ \texttt{myfile <-  FileOpenRead("stimuli.txt")} \\
 to create `\texttt{myfile}', a readable
 file stream.
 
@@ -589,7 +594,7 @@ or read from.  When you are finished, you can close a filestream
 Using the `\texttt{FileClose()}' function.
 
 
-\section{Network Connections}
+\sect{Network Connections}
 
 PEBL has limited ability to open and communicate via  TCP/IP
 connections, either some other system (e.g., for synchronizing with an
@@ -648,7 +653,7 @@ used in later communication.
 Once connected, the distinction between client and server essentially
 disappears.  However, to communicate, one computer must send data with
 the \texttt{SendData(net, data)}, and the other must receive the
-data, using the \texttt{GetData(net, size)} function.  PEBL can
+data, using the \\\texttt{GetData(net, size)} function.  PEBL can
 only send text strings, and you must know the length of the message
 you want to receive.  More complex communication can be done by
 creating a set of PEBL functions that encapsulate messages into text
@@ -660,14 +665,14 @@ of the data.
 
 \subsection{Closing networks}
 If you are using a network connection to synchronize timing of two
-computers, you probably want to close the network connection with
+computers, you probably want to close the network connection with\\
 \texttt{CloseNetworkConnection(net)} after you have synchronized, to
 avoid any extra overhead.
 
 A simple example of an experiment that uses TCP/IP to communicate is
 the NIM game in  demo/nim.pbl.
 
-\section{The Event Loop}
+\sect{The Event Loop}
 
 To assist in testing for multiple input events simultaneously, 
 PEBL implements an event loop that will quickly scan multiple conditions
@@ -676,7 +681,7 @@ This is currently primarily a back-end system
 which will be developed more in the future.
 
 
-\section{Errors and Warnings}
+\sect{Errors and Warnings}
 
 PEBL does a great deal of error-checking to ensure that your program
 will run.  If you crash with a segmentation fault, this is an error
@@ -686,7 +691,7 @@ led to the warning.  On Linux, the warning and this location are
 printed to the command-line upon exit; on MS Windows, they are printed
 to the file \texttt{stderr.txt}.
 
-You can use the error system in your own scripts with the
+You can do error checking  in your own scripts with the
 \texttt{SignalFatalError()} function.  This is especially useful in
 combination with the functions testing the type of object passed into 
 the function.  To ensure proper processing and ease of debugging, test
@@ -695,16 +700,17 @@ the format of an argument passed into a function:
 \begin{verbatim}
 define MyFunction(par)
  {
-   if(not IsList(par))
-   {SignalFatalError("MyFunction was passed a non-list variable.")}
-
-   ## Do stuff here.
+  if(not IsList(par))
+  {
+   SignalFatalError("MyFunction passed a non-list variable.")
+  }
+  ##Do other stuff here
  }
 \end{verbatim}
  
 
 
-\section{Paths and Path Searching}
+\sect{Paths and Path Searching}
 
 Numerous functions and objects open files on your computer to read in
 information such as graphics, sounds, fonts, program files, and text files.  When you attempt to open a file, PEBL will search in a number of places, 
@@ -724,9 +730,9 @@ media/images
 media/text
 \end{itemize}
   
-You can also specify other paths to be searched by specifying them on the command line.  Be sure to end the directory with whatever is appropriate for your platform, e.g.~ `\char92' on Microsoft Windows or `/' on Linux.
+You can also specify other paths to be searched by specifying them on the command line.  Be sure to end the directory with whatever is appropriate for your platform, e.g.~ `\textbackslash' on Microsoft Windows or `/' on Linux.
 
-\section{Provided Media Files}
+\sect{Provided Media Files}
 \label{sec:media}
 
 PEBL comes with various media files that can be specified from 
@@ -817,7 +823,7 @@ few other things).
 \vspace{1cm}
 
 
-\section{Special Variables}
+\sect{Special Variables}
 
 There are a number of special variables that be set by PEBL, 
 and can later be accessed by an experiment. These are described in table~\ref{tab:special}.
@@ -829,8 +835,7 @@ and can later be accessed by an experiment. These are described in table~\ref{ta
 \toprule
 \textbf{Name}&\textbf{Purpose}\\
 \midrule
-\verb+gKeepLooping+ & Controls continued execution in event loop. \\
- &           (Not currently useful).\\
+\verb+gKeepLooping+ & Controls continued execution in event loop (unused). \\
 \addlinespace[.2cm]
 \verb+gSleepEasy+      &Sets 'busy-waiting' to be either on or off.\\
                        &Busy-waiting can improve timing, but is often\\
@@ -841,36 +846,28 @@ and can later be accessed by an experiment. These are described in table~\ref{ta
              &  display width, if that width is available. \\
 \addlinespace[.2cm]
 \verb+gVideoHeight+ & 	The height in pixels of the display (set by\\
-             & 	default or command-line). Changing this before calling \\
-             &  \verb+MakeWindow()+ will change the display height, if that \\
-             &  height is available.\\
+             & 	default or command-line). Change this before using \\
+             &  \verb+MakeWindow()+ to change the display height\\
+
 \addlinespace[.2cm]
 \verb+gVideoDepth+    &      	The bit depth of the video.\\
 
 \addlinespace[.2cm]
 \verb+gSubNum+      &  A global variable set to whatever follows the \verb+--s+ or \\
-             & \verb+--S+ command-line argument.  If no argument is given, \\
-             & defaults to 0.\\
-\verb+gLanguage+   & A global variable specified on the command line
-which can be used by a script to target a specific language.  Defaults
-to 'en'.\\
+             & \verb+--S+ command-line argument.  Defaults to ``0''.\\
+
+\verb+gLanguage+   & A global variable specified on the command line\\
+&which can be used by a script to target a specific \\
+&language.  Defaults to 'en'.\\
 \verb+gQuote+ &A quotation mark: ".  Use it to add quotes in text.\\
-\verb+gClick+ &[x,y] location of last click, set by WaitForClickOnTarget.\\
-
-\verb+gPEBLBaseFont+& Name of the default font to use in helper
-functions and most \\
-&battery tasks. By default, set to``DejaVuSans.ttf''. Change this
-to\\
-& a new name to override.\\
-\verb+gPEBLBaseFontMono+&Name of the default mono-spaced font to use in helper
-functions \\
-& and most battery tasks. By default, set to
-``DejaVuSansMono.ttf''.  \\& Change  to a new name to override.\\
-\verb+gPEBLBaseFontSerif+&Name of the default font to use in helper
-functions \\
-&and most battery tasks. By default, set to
-``DejaVuSerif.ttf''.\\& Change to a new name to override.\\
-
+\verb+gClick+ &[x,y] location last click in WaitForClickOnTarget.\\
+\verb+gPEBLBaseFont+& Name of the default font to use in helper functions\\
+                    &and most battery tasks. By default, set to \\
+                    &``DejaVuSans.ttf''. Change to  override.\\
+\verb+gPEBLBaseFontMono+&Name of the default mono-spaced font\\
+&  By default, it is set to ``DejaVuSansMono.ttf''. \\
+\verb+gPEBLBaseFontSerif+&Name of the default serif font.\\
+& By default, it is set to ``DejaVuSerif.ttf''.\\
 
 \bottomrule
 \end{tabular}
