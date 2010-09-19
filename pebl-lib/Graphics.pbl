@@ -787,3 +787,125 @@ define MakeGabor(size,freq,sd, angle,phase,bglev)
 
   return canvas
 }
+
+
+
+define LandoltRing(outer,inner, angle, lgap, color, bgcolor)
+{ 
+
+    degree <- DegtoRad(angle)
+
+ 
+    centerX <- Ceiling(outer/2+1)
+    centerY <- Ceiling(outer/2+1)
+
+     back <- MakeCanvas(outer+2,outer+2,bgcolor)
+
+
+     
+     circ <-    Circle(centerX, centerY,Floor(outer/2),color,1)
+     AddObject(circ,back)
+     Draw(back)
+
+     circ.r <- inner/2
+     circ.color <- bgcolor
+
+
+     x <- outer * Cos(degree)
+     y <- outer * Sin(degree)
+     line <- ThickLine(centerX,centerY, centerx+x,centery+y,lgap,bgcolor)
+     AddObject(line,back)
+     Draw(back)
+     RemoveObject(circ,back)
+     RemoveObject(line,back)
+     return back
+}
+
+
+define KaneszaSquare(squaresize, circleradius,fg,bg)
+{
+
+     #The proper size of the whole thing is depends on both the square and the circles
+    
+    size <- squaresize + 2*circleradius
+    centerX <- Ceiling(size/2)+1
+    centerY <- Ceiling(size/2)+1
+
+    back <- MakeCanvas(size+2,size+2,bg)
+
+
+    circX <- [centerX+squaresize/2,centerX+squaresize/2,centerX-squaresize/2,centerX-squaresize/2]     
+    circY <- [centerY+squaresize/2,centerY-squaresize/2,centerY+squaresize/2,centerY-squaresize/2]     
+
+    circ <-    Circle(centerX, centerY,circleRadius,fg,1)
+    AddObject(circ,back)
+    loop(i,Transpose([circX,circY]))
+     {
+         Move(circ,First(i),Second(i))
+         Draw(back)
+     }
+
+     square <- Square(centerX,centerY,squareSize,bg,1)
+     AddObject(square,back)
+     Draw(back)
+
+     RemoveObject(circ,back)
+     RemoveObject(square,back)
+     return back
+}
+
+
+
+
+
+
+
+define KaneszaPolygon(points, circTF, circleradius,fg,bg,show)
+{
+
+     #The proper size of the whole thing is depends on both the square and the circles
+     tp <- Transpose(points)
+     xs <-  First(tp)
+     ys <- Second(tp)
+
+    minX <- Min(xs)
+    maxX <- Max(xs)
+    minY <- Min(ys)
+    maxY<-  Max(ys)
+
+    sizeX <- maxX-minX + 2*circleradius
+    sizeY <- maxY-minY + 2*circleradius
+
+    centerX <- Ceiling(sizeX/2)+1
+    centerY <- Ceiling(sizeY/2)+1
+
+    back <- MakeCanvas(sizeX+2,sizeY+2,bg)
+
+    tmp <- Transpose([xs,ys,circTF])
+    circ <-    Circle(0,0,circleRadius,fg,1)
+    AddObject(circ,back)
+
+    loop(i,tmp)
+     {
+         if(Third(i))
+          {
+             Move(circ,First(i)-minX+circleRadius,Second(i)-minY+circleRadius)
+             Draw(back)
+          }
+     }
+      RemoveObject(circ,back)
+
+     poly <- Polygon(circleRadius-minX,circleRadius-minY,xs,ys,bg,1)
+     AddObject(poly,back)
+     Draw(back)
+     if(show)
+      {
+       poly <- Polygon(circleRadius-minX,circleRadius-minY,xs,ys,fg,0)
+       AddObject(poly,back)
+       Draw(back)
+      }
+
+     RemoveObject(circ,back)
+     RemoveObject(poly,back)
+     return back
+}
