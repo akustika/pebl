@@ -2,7 +2,7 @@
 ###########################################################
 ##  Berg's Card Sorting Task, Version 0.6
 ##  (better known as the Wisconsin Card Sorting Test (tm)).
-##  For use with PEBL 0.06 or later
+##  For use with PEBL 0.10 or later
 ##  http://pebl.sf.net
 ##  Part of  The PEBL Psychological Testing Battery
 ##  2006-03 Released into Public Domain
@@ -16,14 +16,13 @@
 ## Polish translation contributed by Artur Pilacinski
 ## Korean translation contributed by Hyunsoo ra ma 
 ## Chinese translation contributed by Yu-Hsiang Wu 
+## Portuguese translation contributed by Arthur Kummer
 ###########################################################
 ##  Raw data file outputs:
 ##  subnum, trialnum, category count, color, shape, number, response, accuracy
 ##  perseveration count, absolute time, response time.
 define Start(lPar)
 {
-
-
 
   ## repeats is the number of times you go through the deck (deck size 
   ## depends on whether useReduced is 0 or 1).
@@ -82,8 +81,8 @@ define Start(lPar)
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
 
-  Print(gPEBLBaseFont)
-  Print(gPEBLBaseFontMono)
+#  Print(gPEBLBaseFont)
+#  Print(gPEBLBaseFontMono)
 
   if(gUseMouse==0)
    {
@@ -93,6 +92,7 @@ define Start(lPar)
    gColors <-  ["Red", "Green","Yellow","Blue"]
    gShapes <-  ["Triangle","Star","Cross","Circle"]
    gNumbers <- ["1","2","3","4"]
+   ##Does this really work?
    rules <- ShuffleWithoutAdjacents([[1,1,1],[2,2,2],[3,3,3]])
 
   ##Mix up the order if we aren't using canonical stimulus cards.
@@ -214,6 +214,16 @@ define Start(lPar)
   rules <- Rotate(rules,1)
   lastrule <- -1
    
+  failuretomaintain <- 0  ##failure to maintain set
+
+  trialsoncat        <- 0  ##how long have you been working on this trial?
+  trialspercat      <- [] ##Keep a list of the trials taken per category.
+                          ##This is used to measure learning-to-learn
+  erroroncat        <- 0  ##how many errors on this category
+  errorspercat      <- [] ##Keep a list of the errors made on the category
+                          ##This is used to measure learning-to-learn
+ 
+  conceptual        <- 0  ##Record conceptual responses: 3-runs or greater
   firstCat <- 0
   run <- 0
   persev <- 0
@@ -224,6 +234,8 @@ define Start(lPar)
   ##Loop through each stimulus card
    loop(s,stim)
    {
+      trialsoncat <- trialsoncat+1
+
       #Display the card
       card <- Nth(s,4)
       AddObject(card,gWin)
@@ -257,10 +269,14 @@ define Start(lPar)
       
       ##animate the card location.
 
-      frames <- 6     
       #Get end location
       x <- 125/2 + 28*ToNumber(resp) + 125*(ToNumber(resp)-1)
       y <- 105
+     ##compute distance to travel to scale frames to distance.
+      dist <- Sqrt((y-card.y)^2 + (x-card.x)^2)
+      #Increase stepsize to animate faster
+      stepsize <- 100
+      frames <- Ceiling(dist/stepsize)+1  
 
 	  ydiff <- (y - card.y)/(frames)
       xdiff <- (x - card.x)/(frames)
@@ -284,6 +300,20 @@ define Start(lPar)
       } else {
         ##It is incorrect.
         feedback <- gIncorrect    
+        ##Increment failuretomaintain if run>=5
+        if(run>=5)
+         {
+		    failuretomaintain<- failuretomaintain+1
+         }
+
+        erroroncat <- erroroncat + 1  ##  increment category-specific
+                                      ##  error 
+
+        ##Increment conceptual responses here, when the run ends on an error
+        if(run>=3)  
+         {
+           conceptual <- conceptual + run
+         }
         run <- 0
      
       }
@@ -314,8 +344,8 @@ define Start(lPar)
          ##  This trial was not a perseveration (it could be either correct or incorrect)
     
          ##Make sure these are defined
-               trialPersev   <- 0
-               trialPersevErr <- 0
+           trialPersev   <- 0
+           trialPersevErr <- 0
            ##If the runflag is still 1, that means this is the first non-perseverative response
            ## in the category.  Unset the flag and record the length of the run.
            if(persrunflag)
@@ -374,6 +404,11 @@ define Start(lPar)
         lastrule <- rule
         rule <- First(rules)
         rules <- Rotate(rules,1)
+
+        #Update conceptual responses when a category is complete
+        conceptual <- conceptual + run
+
+
         run <- 0
         numCats <- numCats + 1
         numCatsExp <- numCatsExp + 1
@@ -389,6 +424,12 @@ define Start(lPar)
         {
           firstcat <- trialnum
         }
+		##update the trialsoncat/trialspercat counters
+		trialspercat <-Append(trialspercat,trialsoncat)
+        errorspercat <-Append(errorspercat, erroroncat)
+        erroroncat <- 0
+		trialsoncat <- 0
+
       }
 
       trialnum <- trialnum + 1
@@ -399,12 +440,61 @@ define Start(lPar)
       }
     }
 
+    #The last card may have ended before the end.
+    #If it were complete, run would have been reset to 0.  
+    #Add partial run to conceptual responses
+	if(run>=3)
+     {
+        conceptual <- conceptual + run
+     }
+
+
 	##Do the final output and computations.
 
   ##compute hand things up-front
    num <- trialnum - 1
    err <- num - totCorr
    nonp <-  (err-totPersErr)
+
+   #################################################
+   ##compute learning-to-learn.
+    if(Length(trialspercat)>2)
+   {
+    if((Length(trialspercat)>3) or 
+        (Length(trialspercat)==3 and  Third(trialspercat)>=10))
+ 		{
+        #Compute the number of extra trials, and the 
+
+        diffs  <- []
+        lastpc <- "XXX"
+          
+        tt <- 1  ##trial counter
+        loop(i,Transpose([trialspercat,errorspercat]))
+         {
+           ##Only use this if there were 10 or more trials
+           if(i>=10)
+              {
+                  pc <- Second(i)/First(i)*100
+              }
+
+           if(tt > 1)
+            {
+                diffs <- Append(diffs,pc-lastpc)
+                
+            }
+           tt <- tt + 1
+           lastpc <- pc
+         }
+         learningtolearn <- Mean(diffS)
+
+      } else {
+       ##Invalid to compute learning-to-learn
+        learningtolearn <- "Not enough data"
+      }} else{
+       ##Invalid to compute learning-to-learn
+        learningtolearn <- "Not enough data"
+      }
+
 
    FileClose(gFileOut)
    report <-FileOpenWrite("bcst-report-" + gSubNum +".txt")
@@ -413,7 +503,7 @@ define Start(lPar)
    FilePrint(report," a free version of the Wisconsin Card Sorting Task (tm)*")
    FilePrint(report," (c) 2008-2010 Shane T. Mueller")
    
-   FilePrint(report," Version 0.6")
+   FilePrint(report," Version 0.8")
    FilePrint(report," "+GetPEBLVersion())
    FilePrint(report," "+TimeStamp())
    FilePrint(report," Participant Code: " + gSubNum)
@@ -466,9 +556,11 @@ define Start(lPar)
 
 
    FilePrint(report,"8. Trials to complete 1st cat:   "+ firstcat) 
-   FilePrint(report,"9. Failure to maintain set:     NOT COMPUTED")
-   FilePrint(report,"10. Learning to Learn:           NOT COMPUTED")
-   FilePrint(report,"11. Conceptual Level responses:  NOT COMPUTED")
+   FilePrint(report,"9. Failure to maintain set:      "+failuretomaintain)
+   FilePrint(report,"10. Learning to Learn:           "+learningtolearn)
+   FilePrint(report,"11. Conceptual Level Responses:  "+conceptual)
+   FilePrint(report,"    Percent CLR:                  "+100*(conceptual/Length(stim)))
+   
    FilePrint(report,"12. Perseverative Runs: Min    Max   Mean   Total")
    FilePrint(report,"                         "+Min(persrun)+ "      "+ Max(persrun) + "     "  + Roundoff(Mean(persrun),3) + "   " + Sum(persrun))
    FilePrint(report,"---------------------------------------------------")	
@@ -544,7 +636,7 @@ define Initialize()
    #Create the insturctions cue
    gPrompt <- MakeLabel(gPromptText,gStimFont)
    AddObject(gPrompt,gWin)
-   Move(gPrompt,350,250)
+   Move(gPrompt,350,340)
    Hide(gPrompt)
 
 
