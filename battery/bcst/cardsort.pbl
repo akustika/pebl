@@ -559,10 +559,16 @@ define Start(lPar)
    FilePrint(report,"9. Failure to maintain set:      "+failuretomaintain)
    FilePrint(report,"10. Learning to Learn:           "+learningtolearn)
    FilePrint(report,"11. Conceptual Level Responses:  "+conceptual)
-   FilePrint(report,"    Percent CLR:                  "+100*(conceptual/Length(stim)))
+   FilePrint(report,"    Percent CLR:                  "+Roundoff(100*(conceptual/num),1))
    
    FilePrint(report,"12. Perseverative Runs: Min    Max   Mean   Total")
-   FilePrint(report,"                         "+Min(persrun)+ "      "+ Max(persrun) + "     "  + Roundoff(Mean(persrun),3) + "   " + Sum(persrun))
+   if(Length(persrun)>0)
+  {
+   FilePrint(report,"                         "+Min(persrun)+ "  "+ Max(persrun) + "     "  + Roundoff(Mean(persrun),3) + "   " +
+   Sum(persrun))
+  } else{
+   FilePrint(report,"no perseverative runs")
+  }
    FilePrint(report,"---------------------------------------------------")	
 
    FilePrint(report,"Notes:") 
