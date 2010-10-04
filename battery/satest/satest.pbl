@@ -1,8 +1,18 @@
+##
+##  The PEBL Situation Awareness Test (SATEST)
+##
+## Released into public domain by Shane T Mueller
+## July 2010
+##
+## Version 0.2:  add language translations, and reporting
+##
+
 define Start(p)
 {
    
    Init()
- 
+   GetStrings(gLanguage)
+
    gSubNum <- GetSubNum(gWin)
    gLogFile <- FileOpenAppend("data/satest-log.txt")
    gFileOut <- FileOpenAppend("data/satest-"+gSubNum+".txt")
@@ -27,7 +37,9 @@ define Start(p)
    maxwait <- 4000
    gLastTime <- GetTime()  ##Keeps track of the current ticker, so that
    gTime <- gLastTime+1    ## movement is not tied to the refresh rate.
-   
+
+   ##This holds the data   
+   dat <- []
 
 ##Make the predators/prey
 
@@ -79,7 +91,7 @@ define Start(p)
   ## 2: l2a: identify all the targets            (GetResponsesL2)
   ## 3: l2b: identify a single target            (GetResponsesIDPos)
   ## 4: l3:  identify the prey a predator is tracking.
-  ## 5: l3:  identify direction critter is oving in (GetResponsesL3)
+  ## 5: l3: identify direction critter is oving in (GetResponsesL3)
 
 
   ##the different conditions, with trials per condition.
@@ -108,7 +120,6 @@ define Start(p)
 
   inst <- EasyTextBox("",25,5,gWin,16,gVideoWidth-50,150)
 
-#  Print(blocks)
   #Main Loop
 
   block <- 1
@@ -118,7 +129,7 @@ define Start(p)
 
      if(block == 1)
       {
-         inst.text <- "In this task, you will monitor a set of five creatures (insects and lizards) crawling around on the screen.  Each lizard is chasing a single insect, and chases it until it catches and eats it.  Lizards will also eat any other insect they run across.   Your job is to watch these creatures.  Every few seconds, we will interrupt you and ask you about the creatures.  One type of probe will just ask you to click the mouse at the locations of each target.  Try a few of these right now to get a feel for it. Click mouse to begin."
+         inst.text <- gInst1
          Show(inst)
          Draw()
          WaitForDownClick()
@@ -126,7 +137,7 @@ define Start(p)
          Draw()
       }elseif(block == 2)
       {
-         inst.text <- "Another type of interruption will show a circle surrounding a particular creature, and you will need to specify which type of creature it was.  Try a few of these now as well. Click the mouse to begin."
+         inst.text <- gInst2 
          Show(inst)
          Draw()
          WaitForDownClick()
@@ -135,7 +146,7 @@ define Start(p)
       }elseif(block == 3)
       {
 
-         inst.text <- "The final type of interruption will ask you to identify the direction a target was moving in.   In this probe, a target will be replaced by a red dot, and an image of the target will appear at the bottom of the screen. Click on the screen to specify which direction it was facing in, then hit 'DONE' to continue.  You can click more than once if you think you didn't get the direction right the first time.  Try a few of these now as well. Click the mouse to begin."
+         inst.text <- gInst3
          ShowComplex(gPrey,0)
          ShowComplex(gPred,0)
 
@@ -149,7 +160,7 @@ define Start(p)
 
       }elseif(block == 4)
       {
-         inst.text <- "Now, we will do a longer block of the first type of interruption.  On these trials, you will only need to monitor the locations of the creatures.  Click the mouse to begin."
+         inst.text <-gInst4
          Show(inst)
          Draw()
          WaitForDownClick()
@@ -158,7 +169,7 @@ define Start(p)
 
       }elseif(block == 5)
       {
-         inst.text <- "Now, we will do a longer block of the second type of interruption.  On these trials, you will need to identify the type of creature at the probed location.  Click the mouse to begin."
+         inst.text <- gInst5
          Show(inst)
          Draw()
          WaitForDownClick()
@@ -167,7 +178,7 @@ define Start(p)
 
       }elseif(block == 6)
       {
-         inst.text <- "Now, we will do a longer block of the third type of interruption.  On these trials, you will need to monitor the target of each lizard.  Click the mouse to begin."
+         inst.text <- gInst6 
          Show(inst)
          Draw()
          WaitForDownClick()
@@ -179,7 +190,7 @@ define Start(p)
          ShowComplex(gPrey,0)
          ShowComplex(gPred,0)
 
-         inst.text <- "Finally, you will do a block where any of the three probes can occur.  Click the mouse to begin."
+         inst.text <- gInst7
          Show(inst)
          Draw()
          WaitForDownClick()
@@ -254,6 +265,8 @@ define Start(p)
    Draw()
    Wait(10) 
 
+   ##Only interupt if the delay has been long enough
+   ##and if it has been long enough since somebody was eaten
 
    if(GetTime() > qtime and eatencount > numtojump)
    {
@@ -268,16 +281,20 @@ define Start(p)
          outputhead <- gsubnum + " " + block + " " + trial + " "+
          probenum+ " "  + i + " " + starttime + " " + GetTime() + " " + Logpos()
 
+         ##Here, trial means trial type, not trial 'number'.
          if(trial == 1)
          {
            x <- GetResponsesL1(outputhead)
+           Print(x)
          } elseif (trial==2){
-           x <- GetResponsesL2(outputhead)
+           x <- GetResponsesIDPos(outputhead)
          } elseif(trial==3) {
            x <- GetResponsesIDPos(outputhead)
          } else {
             x <- GetResponsesL3(outputhead)
          }
+
+         dat <- Append(dat,Merge([block],x))
 
          #Compute next interruption time
          qtime <- GetTime() + minwait + (maxwait-minwait)*Random()
@@ -294,10 +311,17 @@ define Start(p)
  }
   block <- block + 1
  }
+  
+  ##Dat should contain summarized data now.
+
+  Print(dat)
+  fileout <- FileOpenWrite("data/SAsummary-"+gSubNum+".txt")
+  PrintSAStats(dat,fileout)
+  FileClose(fileout)
 
   FilePrint(gLogFile,"SATEST end " +GetTime() + " " + TimeStamp() + "  " + gSubNum )
 
-  inst.text <- "Thank you.  You may now move to the next test.  Click mouse to complete."
+  inst.text <- gInstEnd
   Show(inst)
   Draw()
   WaitForDownClick()
@@ -348,11 +372,13 @@ define GetResponsesL1(outputhead)
 #  done <- MakeLabel("DONE",donefont)
 #  AddObject(done,gWin)
 #  Move(done,gHomeX,700)
+
+
  
-  gHeader.text <- "Click on location of each insect or lizard."
+  gHeader.text <- gHead1
   Show(gHeader)
   Draw()
-
+  time0 <- GetTime()
   clicks <- 0
 
   while(cont)
@@ -383,7 +409,7 @@ define GetResponsesL1(outputhead)
 #  RemoveObject(back,gWin)
 #  RemoveObject(done,gWin)
 
-  
+  timeEnd <- GetTime()  
   ShowComplex(gPrey,1)
   ShowComplex(gPred,1)
   Draw()
@@ -394,8 +420,9 @@ define GetResponsesL1(outputhead)
 
 
    score <-  Round(Score(clickpoints, Merge(gCurPrey,gCurPred)))/100
-    FilePrint(gFileOut,outputhead + " Summary NA NA NA " + GetTime() + " " + score)
-   gHeader.text <- "Average Miss:  [" + score  +" inches].  Click the mouse to continue"
+
+   FilePrint(gFileOut,outputhead + " Summary NA NA NA " + GetTime() + " " + score)
+   gHeader.text <- gHead2a + score  + gHead2b
    Show(gHeader)
    Draw()
   
@@ -411,106 +438,9 @@ define GetResponsesL1(outputhead)
          
   gTime <- GetTime()
 
+  return ["SA1",score,(timeEnd-time0)]
 }
 
-
-##  This gets level 2 SA: the identities of targets.
-##
-define GetResponsesL2(outputhead)
-{
-
-  nresponses <- Length(gPred) + Length(gPrey)
-
-  tmp <- []
-  ShowCursor(1)  
-  Draw()
-  cont <- 1
-  
-
-  ##Make replacement points for each of the targets
-  plotpoints <- GetPositions(Merge(gPred,gPrey))
-  targCol <- MakeColor("grey")
-  selCol <- MakeColor("lightcoral")
-  bgCol <-  MakeColor("grey60")
-
-  loop(i,plotpoints)
-  {
-    
-    tmp <- Append(tmp,   Circle(First(i),Second(i),10,targcol,1))
-   
-  }
-
-  AddComplex(tmp,gWin)
-  Draw()
-
-
-   imgs <- Merge(gPred,SortBy(gPrey,[1,3,2,4]))
-   buttons <- []
-   ##Add target 'buttons' in the right positions.
-   xs <- [gHomeX-250,gHomeX-150, gHomeX-50,gHomeX+50,gHomeX+150,gHomeX+250]
-   stim <- Transpose([xs, imgs])
-   loop(i,stim)
-    {
-       xpos <- First(i)
-       bg <- Rectangle(xpos,660,90,50,bgCol,1)
-       AddObject(bg,gWin)
-       buttons <- Append(buttons,bg)
-
-
-       img <-Second(i) 
-       Show(img)
-       img.rotation <- 90
-       Move(img,xpos,660)
-    }
-
-   ##We want the pictures on top of the buttons.
-   RemoveComplex(imgs)
-   AddComplex(imgs,gWin)
-
-  ##Now, identify each target in turn
-   gHeader.text <- "Click on location of red target"
-   Show(gHeader)
-
-  ##Now, go through each target
-  sss <- Transpose([buttons,imgs])
-  loop(i,sss)
-   {
-
-     button <- First(i)
-     bug <- Second(i)
-
-     button.color <- selCol
-     Draw()
-
-	 targx <-WaitForClickOnTarget(tmp,Sequence(1,nresponses,1))
-    
-	 targobj <- Nth(tmp,targx)
-     button.color <- bgCol
-     Move(bug,targobj.x,targobj.y)
-
-
-     
-   }
-
-  RemoveComplex(tmp)  
-  RemoveComplex(buttons)
-
-  ShowComplex(gPrey,0)
-  ShowComplex(gPred,0)
-
-  Draw()
-  WaitForDownClick()
-  Draw()
-  WaitForDownClick()
-  ##Compute the score
-  Draw()
-
-     
-
-  ##Update master time counter for smooth animation.
-  gTime <- GetTime()
-
-}
 
 
 
@@ -564,10 +494,12 @@ define GetResponsesIDPos(outputhead)
    AddComplex(imgs,gWin)
 
    ##Now, identify a target
-   gHeader.text <- "Which creature was at target location?"
+   gHeader.text <- gHead4
    Show(gHeader)
    Draw()
 
+  corrs <- 0
+  time0 <- GetTime()
 
   circ <-  Circle(0,0,50,targcol,0)
   targs <- SampleN(Sequence(1,nresponses,1),numprobes)
@@ -585,7 +517,7 @@ define GetResponsesIDPos(outputhead)
 
      ##I should score targx for being correct
      corr <- targx == targid
-
+     corrs <- corrs+corr
      FilePrint(gFileOut,outputhead + " Click " + i + " " +  targid + " " + targx  + " " +  GetTime() + " " + corr)        
    
 
@@ -607,6 +539,8 @@ define GetResponsesIDPos(outputhead)
   ##Update master time counter for smooth animation.
   gTime <- GetTime()
 
+
+  return ["SA2",(corrs/numprobes),(gTime-time0)]
 }
 
 
@@ -628,25 +562,7 @@ define GetResponsesAnticipate1(outputhead,endpred, endprey)
   cont <- 1
   
 
-  ##Make replacement points for each of the targets
-#  plotpoints <- GetPositions(Merge(gPred,gPrey))
-#  endpoints <- Merge(endpred, endprey)
-
- 
-#  tofrom <- Transpose([GetPositions(gPred),endpred])
-#  blue <- MakeColor("blue")
   tmp <- []
-#   loop(line, tofrom)
-#    { 
-
-#      p1 <- First(line)
-#      p2 <- Second(line)
-
-#     x <- ThickLine(First(p1),Second(p1), 
-# 	              First(p2), Second(p2), 5,blue)
-#    AddObject(x,gWin)
-#    }
-
 
   #show the prey
   ShowComplex(gPrey,1)
@@ -682,15 +598,18 @@ define GetResponsesAnticipate1(outputhead,endpred, endprey)
 
 
   ##Now, identify each target in turn
-  gHeader.text <- "Which bug was this predator (the red dot) tracking?"
+  gHeader.text <- gHead5
   Show(gHeader)
 
   Draw()
 
   ##Now, loop through the predators and identify the target of each.
   
-  preyIDs <- Sequence(1,Length(gPrey),1)
 
+  ##Go through each predator
+  preyIDs <- Sequence(1,Length(gPrey),1)
+  corrs <- 0         ##How many correct in this round?
+  time0 <- GetTime() ##get start time.
   id <-1    
   loop(i,targpoints)
   {
@@ -703,12 +622,12 @@ define GetResponsesAnticipate1(outputhead,endpred, endprey)
 
      predtarg <- Nth(gPredTargets,id) 
      corr <- predtarg == x ##how to know if this is correct?
-     
+     corrs <- corrs + corr  
      FilePrint(gFileOut,outputhead + " Click " + id  + " " + (predtarg+2)+ " " + (x+2)  +" " +  GetTime() + " " + corr)        
  
     id <- id + 1
   }
-
+   timeEnd <- GetTime()
   RemoveComplex(tmp)
   ShowComplex(gPrey,1)
   ShowComplex(gPred,1)
@@ -716,6 +635,8 @@ define GetResponsesAnticipate1(outputhead,endpred, endprey)
   Draw()
   Wait(500)
   gTime <- GetTime()
+
+  return ["L3a", (corrs/(id-1)), (timeEnd - time0)]
 }
 
 
@@ -724,6 +645,7 @@ define GetResponsesAnticipate1(outputhead,endpred, endprey)
 ##  This picks a target, then has one identify the direction it is
 ##  heading in by clicking.
 ##
+
 
 define GetResponsesL3(outputhead)
 {
@@ -735,12 +657,8 @@ define GetResponsesL3(outputhead)
   
 
   ##Make replacement points for one of the targets
-  targs <- Merge(gPred,gPrey)
-  ##enumerate which one is the target
-  targID <- RandomDiscrete(Length(targs))
-  target1 <- Nth(targs,targID)
-  angle1 <- target1.rotation
-
+  targID <- RandomDiscrete(Length(gPred)+Length(gPrey))
+  target1 <- Nth(Merge(gPred,gPrey),targID)
   plotpoints <- First(GetPositions([target1]))
   targCol <- MakeColor("grey")
   selCol <- MakeColor("lightcoral")
@@ -748,44 +666,49 @@ define GetResponsesL3(outputhead)
 
 
   circle <-   Circle(First(plotpoints),Second(plotpoints),10,selCol,1)
+
   AddObject(circle,gWin)
   Draw()
 
 
   back <- Rectangle(gHomeX,700,150,40,MakeColor("grey60"),0)
   AddObject(back,gWin)
-  donefont <- MakeFont("VeraMono.ttf",0,30,MakeColor("grey"),MakeColor("black"),1)
-  done <- MakeLabel("DONE",donefont)
+  donefont <- MakeFont(gPEBLBaseFontMono,0,30,MakeColor("grey"),MakeColor("black"),1)
+  done <- MakeLabel(gDone,donefont)
   AddObject(done,gWin)
   Move(done,gHomeX,700)
-  Move(target1,gHomeX+140,700)
-  bg <- Rectangle(gHomeX+140,700,90,50,bgCol,1);AddObject(bg,gWin)
-  
+  Move(target1,gHomeX+100,700)
+  r <- target1.rotation
   target1.rotation <- 0
   Show(target1)
 
   buttons <- [back,done]
 
   ##Now, identify each target in turn
-   gHeader.text <- "In what direction is the red target heading?"
+   gHeader.text <- gHead6
    Show(gHeader)
+
 
   ##Wait for a cilck, then confirm.
    repeat <- 1
    targ <- plotpoints
-
+   time0 <- GetTime()
+   clickedongrid <- 0
    while(repeat)
     {
 
       Draw()
       resp <- WaitForDownClick()
-      gHeader.text <- "Adjust or click 'done' to continue"
+      gHeader.text <- gHead7
 
       if(Inside(resp,gField))
       {
+
+       clickedongrid <- 1
        ##First compute angle betwee target and click
 
        Hide(circle)
+
        Move(target1,circle.x,circle.y)
        dx <- First(resp)- First(targ)
        dy <- Second(resp) - Second(targ)
@@ -793,23 +716,32 @@ define GetResponsesL3(outputhead)
        target1.rotation <- angle
        Show(target1)
 
+      
       } else {
-        if(Inside(resp,back))
+        #If you click on done AND you have clicked on the grid, move on.
+        if(Inside(resp,back) and clickedongrid )
         {
          repeat <- 0
         }
 
-      }
+     ###
+     ### DATA ARE NOT RECORDED IN THIS CONDITION.
 
-      
+      }
     }
 
-  FilePrint(gFileOut,outputhead + " Click " +targID + " " +      angle1 +       " NA "      +  GetTime() + " " +  angle )
+     rada <- DegToRad(angle)
+     radr <- DegToRad(r)
+    deltangle <- RadToDeg(ACos(Cos(rada) * Cos(radr) + Sin(rada)*Sin(radr)))
+    FilePrint(gFileOut,outputhead + " ANGLE " + targID  + " " + target1.x+ " " + target1.y + " "+ r +" " + angle + " " +  GetTime() + " " + deltangle)
+
+
+  timeEnd <- GetTime()
   gHeader.text <- ""
   RemoveComplex(tmp)  
   RemoveObject(circle,gWin)
   RemoveComplex(buttons)
-  RemoveObject(bg,gWin)
+
   ShowComplex(gPrey,1)
   ShowComplex(gPred,1)
   Draw()
@@ -818,8 +750,9 @@ define GetResponsesL3(outputhead)
 
   ##Update master time counter for smooth animation.
   gTime <- GetTime()
-
+  return ["SA3b",deltangle,(timeEnd-time0)]
 }
+
 
 
 
@@ -1142,7 +1075,7 @@ define Init()
    gMinY <- 200
    gMaxY <- gVideoHeight-gMinY
 
-   gField <- Rectangle(gHomeX, gHomeY, gVideoWidth-gMinx*2 + 50,gVideoHeight-gMinY*2+50,MakeColor("white"),1)
+   gField <- Rectangle(gHomeX, gHomeY, gVideoWidth-gMinx*2 + 50,gVideoHeight-gMinY*2+50,MakeColor("grey90"),1)
    AddObject(gField,gWin)
    
 
@@ -1340,4 +1273,145 @@ define LogPos()
   }
 
   return text
+}
+
+
+
+
+define GetStrings(lang)
+{
+  lang <- Uppercase(lang)
+
+  if(lang=="EN")
+  {
+
+    gInst1 <-  "In this task, you will monitor a set of five creatures (insects and lizards) crawling around on the screen.  Each lizard is chasing a single insect, and chases it until it catches and eats it.  Lizards will also eat any other insect they run across.   Your job is to watch these creatures.  Every few seconds, we will interrupt you and ask you about the creatures.  One type of probe will just ask you to click the mouse at the locations of each target.  Try a few of these right now to get a feel for it. Click mouse to begin."
+
+    gInst2 <- "Another type of interruption will show a circle surrounding a particular creature, and you will need to specify which type of creature it was.  Try a few of these now as well. Click the mouse to begin."
+
+    gInst3 <- "The final type of interruption will ask you to identify the direction a target was moving in.   In this probe, a target will be replaced by a red dot, and an image of the target will appear at the bottom of the screen. Click on the screen to specify which direction it was facing in, then hit 'DONE' to continue.  You can click more than once if you think you didn't get the direction right the first time.  Try a few of these now as well. Click the mouse to begin."
+
+    gInst4 <-  "Now, we will do a longer block of the first type of interruption.  On these trials, you will only need to monitor the locations of the creatures.  Click the mouse to begin."
+
+    gInst5 <- "Now, we will do a longer block of the second type of interruption.  On these trials, you will need to identify the type of creature at the probed location.  Click the mouse to begin."
+
+    gInst6 <- "Now, we will do a longer block of the third type of interruption.  On these trials, you will need to identify the direction the creatures are heading in.  Click the mouse to begin."
+  
+    gInst7 <- "Finally, you will do a block where any of the three probes can occur.  Click the mouse to begin."
+    gInstEnd <- "Thank you.  You may now move to the next test.  Click mouse to complete."
+
+
+     gHead1 <-  "Click on location of each insect or lizard."
+     gHead2a <- "Average Miss:  ["
+     gHead2b <- " inches].  Click the mouse to continue"
+     gHead3 <-  "Click on location of red target"
+     gHead4 <-  "Which creature was at target location?"
+     gHead5 <-  "Which bug was this predator (the red dot) tracking?"
+     gHead6 <-  "In what direction is the target heading?"
+     gHead7 <- "Adjust or click 'done' to continue"
+     
+     gDone <- "DONE"
+
+
+
+  } else {
+
+   GetStrings("en")
+  }
+
+}
+
+
+
+
+define PrintSAStats(dat,file)
+{  
+  dat <- Transpose(dat)
+  by1 <- ListBy(Transpose(SubList(dat,2,4)),First(dat))
+  by <- First(by1)
+  dat2 <- Second(by1)
+  Print("BY1")
+  Print(by1)
+  Print("BY")
+  Print(by)
+  Print("dat2")
+  Print(dat2)
+  timeall <- []
+  accall <- []
+
+  ##There are seven rounds. Compute mean/sd of each probe type during each block
+  loop(block,dat2)
+   {
+       Print(block)
+       x <- Transpose(block)
+       type <- First(x)
+       acc <- Second(x)
+       time <- Third(x)
+
+       accagg <- SummaryStats(acc,type)
+       timeagg <- SummaryStats(time,type)
+       timeall <- Append(timeall,timeagg)
+       accall <- Append(accall, accagg)
+
+   }
+  Print("timeall")
+  Print(timeall)
+  Print("accall")
+  Print(accall)
+
+  FilePrint(file,"===============================================")
+  FilePrint(file,"      Summary results from PEBL SA Test")
+  FilePrint(file,"===============================================")
+  FilePrint(file,GetPEBLVersion())
+  FilePrint(file,TimeStamp())
+  FilePrint(file,"System type: "+GetSystemTYpe())
+  FilePrint(file, CR(2))
+  FilePrint(file,"--------------------------------------------")
+  FilePrint(file,"              Practice:")
+  FilePrint(file,"SA     N    Acc   Time")
+  FilePrint(file,"--------------------------------------------")
+  tmpt <- First(First(timeall))
+  tmpa <- First(First(accall))
+  FilePrint(file,"1    "+Second(tmpt) + "   " + (Fourth(tmpa))+ "  " + Round(Fourth(tmpt)))
+ 
+  tmpt <- First(Second(timeall))
+  tmpa <- First(Second(accall))
+  FilePrint(file,"2    "+Second(tmpt) + "   " + (Fourth(tmpa))+ "  " + Round(Fourth(tmpt)))
+
+  tmpt <- First(Third(timeall))
+  tmpa <- First(Third(accall))
+  FilePrint(file,"3    "+Second(tmpt) + "   " + Round(Fourth(tmpa))+ "  " + Round(Fourth(tmpt)))
+   FilePrint(file,"--------------------------------------------")
+
+
+  tmpt4 <- First(Nth(timeall,4))
+  tmpa4 <- First(Nth(accall,4))
+  tmpt5 <- First(Nth(timeall,5))
+  tmpa5 <- First(Nth(accall,5))
+  tmpt6 <- First(Nth(timeall,6))
+  tmpa6 <- First(Nth(accall,6))
+  tmpt7a <- First(Nth(timeall,7))
+  tmpa7a <- First(Nth(accall,7))
+  tmpt7b <- Second(Nth(timeall,7))
+  tmpa7b <- Second(Nth(accall,7))
+  tmpt7c <- Third(Nth(timeall,7))
+  tmpa7c <- Third(Nth(accall,7))
+
+  FilePrint(file,"--------------------------------------------")
+  FilePrint(file,"               TEST:")
+  FilePrint(file,"        N         Accuracy          Time")
+  FilePrint(file,"SA  Sing Dual    Single Dual    Single Dual ")
+  FilePrint(file,"--------------------------------------------")
+
+  FilePrint(file,"1    "+Second(tmpt4)+" " + Second(tmpt7a) + "      " + Format(Roundoff(Fourth(tmpa4),3),5)+      " " + Format( Roundoff(Fourth(tmpa7a),3),5) +      "      " + Round(Fourth(tmpt4)) + " "+Round(Fourth(tmpt7a)))
+  FilePrint(file,"2    "+Second(tmpt5) + " " + Second(tmpt7b)+ "      " + Format(Roundoff(Fourth(tmpa5),3),5)+      " " + Format(Roundoff(Fourth(tmpa7b),3),5) +       "      " + Round(Fourth(tmpt5)) + " "+Round( Fourth(tmpt7b)))
+  FilePrint(file,"3    "+Second(tmpt6) +" " + Second(tmpt7b)+ "      " + Format(Round(Fourth(tmpa6)),5)+           " " +Format( Round(Fourth(tmpa7c)),5) +            "      " + Round(Fourth(tmpt6)) + " "+Round( Fourth(tmpt7c)))
+  FilePrint(file,"--------------------------------------------")
+}
+
+
+define Roundoff(num,digits)
+{ 
+
+  return   Round(num*10^digits)/(10^digits)
 }
