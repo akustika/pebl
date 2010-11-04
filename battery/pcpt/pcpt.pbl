@@ -8,7 +8,7 @@
 ##  2006-02 Released into Public Domain
 ##  by Shane T. Mueller, Ph.D. (smueller at obereed dot net)
 ##
-##  Version 0.3 
+##  Version 0.4
 ##
 ##
 ##  Continuous performance task modeled after Conners Continuous 
@@ -24,6 +24,9 @@
 ##  task.  As of Version 0.3, the default is for this feedback to be
 ##  OFF, unlike earlier released prior to 2009.
 ## 
+##  For version 0.4, block length was changed from 18 to 20, to match
+##  the number of trials reported by Conners.
+##
 ##  References:
 ##  C. Keith Conners,  Jeffery N. Epstein,  Adrian Angold,  
 ##      John Klaric (2003) Continuous performance test performance 
@@ -42,7 +45,7 @@ define Start(lPar)
   Print(TimeStamp())
 
    cycles   <-  6          ## Number of times the 3-ISI cycle is repeated
-   blockSize <- 18         ## Number of trials per block
+   blockSize <- 20         ## Number of trials per block
    presTime  <- 250        ## Presentation time in ms.
    isiVals   <- [1000, 2000, 4000]
    probX     <- 0.1
