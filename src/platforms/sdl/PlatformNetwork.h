@@ -3,7 +3,7 @@
 //    Name:       src/devices/PNetwork.h
 //    Purpose:    Class for handling network communication (tcpip)
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2006- Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2006-2010  Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   

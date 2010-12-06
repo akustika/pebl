@@ -73,8 +73,15 @@ void PlatformNetwork::SetHostIP(unsigned int ip)
 
 void PlatformNetwork::SetPort(unsigned int port)
 {
-  mPort = port;
-  mAddress->port =port;
+
+    //SDL swaps the byte order in the SDL_Net library for some reason.
+    //So we need to pre-swap to ensure we get the right port.
+
+    mPort = SDL_SwapBE16(port);
+    mAddress->port = mPort;
+
+    //std::cout << "Port: " << port <<"|"<<mPort << "|"<<mAddress->port<< std::endl;
+    //std::cout << "tmp: " <<tmp << std::endl;
 
 }
 
@@ -84,7 +91,7 @@ void PlatformNetwork::SetHostName(std::string hostname)
 {
 
   mHostName = hostname;
-  SDLNet_ResolveHost(mAddress,mHostName.c_str(), mPort);
+  SDLNet_ResolveHost(mAddress,mHostName.c_str(), mAddress->port);
 
 
   //std::cout<< "Host address from name ["  << mAddress->host << "]"<< std::endl;
@@ -117,7 +124,7 @@ void PlatformNetwork::Accept()
   tmpAddress->host = INADDR_ANY;
   tmpAddress->port = mPort;
 
-
+  std::cout << "unable"  << tmpAddress->port << endl;
   TCPsocket listener = SDLNet_TCP_Open(tmpAddress);
 
   if(!listener)
@@ -191,11 +198,11 @@ std::string PlatformNetwork::Receive(int length)
 	  message[length]  = '\0';
 	  if(result == -1)
 		{
-		  PError::SignalFatalError("Error recieving  data from " + mHostName + ".");
+		  PError::SignalFatalError("Error receiving  data from " + mHostName + ".");
 		}
 	  else if(result == 0)
 		{
-		  PError::SignalFatalError("Error recieving data from " + mHostName + ". Connection Closed by peer.");
+		  PError::SignalFatalError("Error receiving data from " + mHostName + ". Connection Closed by peer.");
 		}
 	}else{
 	  PError::SignalFatalError("Trying to receive data without an open connection.");
