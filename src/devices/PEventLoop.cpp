@@ -150,7 +150,10 @@ PEvent PEventLoop::Loop()
     while(myEval->gGlobalVariableMap.RetrieveValue("gKeepLooping") 
           && mStates.size() != 0)
         {
-            
+              //Output time for each event loop cycle.
+              //std::cerr <<  "time:"<< SDL_GetTicks() << std::endl;
+                                             
+
             //At the beginning of a cycle, the event queue has not yet been primed.
             gEventQueue->Prime();
             
@@ -168,14 +171,14 @@ PEvent PEventLoop::Loop()
                                         {
                                             //Now, just test the device.
                                             result = mStates[i]->TestDevice();
-                                            
-                                            
+                                               
                                             if(result)
                                                 {
                                                     returnval = gEventQueue->GetFirstEvent();
 
                                                     //The test was successful.  Add a global variable giving the time of the event.
-                                                    // myEval->gGlobalVariableMap.AddVariable("gLastEventTime", eventQueue->GetFirstEvent().GetTime());
+                                                    
+                                                   // myEval->gGlobalVariableMap.AddVariable("gLastEventTime", gEventQueue->GetFirstEvent().GetTime());
 
                                                     if(mNodes[i])  //Execute mNodes
                                                         {
@@ -202,6 +205,7 @@ PEvent PEventLoop::Loop()
                         }
                     else
                         {
+                         
                             //The test examines the device's state directly.
                             result = mStates[i]->TestDevice();
                             if(result)

@@ -1,0 +1,83 @@
+//* -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*- */
+/////////////////////////////////////////////////////////////////////////////////
+//    Name:       src/devices/PParallelPort.h
+//    Purpose:    Class for handling Parallel Port Communication
+//    Author:     Shane T. Mueller, Ph.D.
+//    Copyright:  (c) 2010 Shane T. Mueller <smueller@obereed.net>
+//    License:    GPL 2
+//
+//   
+//
+//     This file is part of the PEBL project.
+//
+//    PEBL is free software; you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation; either version 2 of the License, or
+//    (at your option) any later version.
+//
+//    PEBL is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with PEBL; if not, write to the Free Software
+//    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+////////////////////////////////////////////////////////////////////////////////
+#ifndef __PPARALLELPORT_H__
+#define __PPARALLELPORT_H__
+
+#include "PDevice.h"
+#include "../base/PEBLObject.h"
+#include <fstream>
+#include <string>
+
+
+
+///  This is the base File Stream class.  
+///  It is used to read and write files.
+///  It is also a subclass of PDevice, which means that it can be added to the 
+///  event loop for interesting between-process communications, and probably even used as
+///  a basis for other input devices.
+
+class PNetwork: public PDevice, virtual public PEBLObjectBase
+{
+    
+public:    
+
+
+    ///The Standard constructor.  
+    PParallelPort();
+    
+    ///The Standard destructor.  
+    virtual ~PParallelPort();
+    
+    virtual void SetHostIP(unsigned int host){mHost = host;};
+    virtual unsigned int GetHost(){return mHost;};
+    
+    virtual void SetHostName(std::string hostname){mHostName = hostname;};
+    virtual std::string GetHostName(){return mHostName;};
+
+    virtual void SetPort(unsigned int port){mPort = port;};
+    virtual unsigned int GetPort(){return mPort;};
+
+
+protected:
+
+    //Inheritable printing Method.
+    virtual std::ostream& SendToStream(std::ostream& out)const; 
+
+    std::string mHostName;
+    unsigned int mHost;
+    unsigned int mPort;
+
+    bool mIsOpen;
+
+private:
+
+
+};
+
+
+
+#endif
