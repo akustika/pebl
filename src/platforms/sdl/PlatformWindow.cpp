@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformWindow.cpp
 //    Purpose:    Contains SDL-specific interface for the main window class.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -190,22 +190,75 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
         }
 
     
-       //Re-stare the values
-       myEval->gGlobalVariableMap.AddVariable("gVideoWidth", width);
-       myEval->gGlobalVariableMap.AddVariable("gVideoHeight", height);
-       myEval->gGlobalVariableMap.AddVariable("gVideoDepth", depth);
-       delete myEval;
-       
-       
-       //INitialize the SDL surface with the appropriate flags.
-       mSurface=SDL_SetVideoMode(width,height,depth,vflags);
-       
-       if ( mSurface == NULL )
-    {          
-        cerr << "Unable to set " << width << "x" << height << ": " << depth << " video mode: " << SDL_GetError() << endl;
-            return false;
-        }
-    else
+    //Re-store the values
+    myEval->gGlobalVariableMap.AddVariable("gVideoWidth", width);
+    myEval->gGlobalVariableMap.AddVariable("gVideoHeight", height);
+    myEval->gGlobalVariableMap.AddVariable("gVideoDepth", depth);
+    delete myEval;
+    
+    bool success = 0;
+    //INitialize the SDL surface with the appropriate flags.
+    mSurface=SDL_SetVideoMode(width,height,depth,vflags);
+    
+    if ( mSurface == NULL )
+        {          
+            //If we fail, try to do our best.
+            cerr << "Unable to set " << width << "x" << height << ": " << depth << " video mode: " << SDL_GetError() << endl;
+
+
+            //Get a list of available resolutions and try these out.
+            SDL_Rect** modes = SDL_ListModes(NULL,vflags);
+            if(modes == (SDL_Rect**)0)
+                {
+                    cerr << "No Video Modes Available" << endl;
+                } else{
+                for(int i=0; modes[i];++i)
+                    {
+                        width=modes[i]->w;
+                        height=modes[i]->h;
+
+
+                        cerr << "Trying resolution:" << width << "x" << height << ": " << depth << " video mode:\n ";
+                        mSurface = SDL_SetVideoMode(width,height,depth,vflags);
+                        if(mSurface)
+                            {
+                               cerr << "Using resolution:" << width << "x" << height << ": " << depth << " video mode:\n ";
+                               
+                                success = true;
+                                break;
+                            }else{
+                            cerr << "..........Resolution failed\n";
+                        }
+                    }
+                
+                cerr<< "Resolution may not be optimal.  Alternate resolutions available on system include:\n";
+
+                modes =SDL_ListModes(NULL,vflags);
+                for(int ii=0; modes[ii]; ++ii)
+                    {
+                        cerr << ii<< ". gVideoWidth <-"<< modes[ii]->w<<"; gVideoHeight<- " << modes[ii]->h <<"\n";                    
+                    }
+
+                
+            }
+            if(success)
+                {
+                    //something worked out!
+                    myEval->gGlobalVariableMap.AddVariable("gVideoWidth", width);
+                    myEval->gGlobalVariableMap.AddVariable("gVideoHeight", height);
+                    myEval->gGlobalVariableMap.AddVariable("gVideoDepth", depth);
+                }else{
+                
+                //None of the resolutions worked out.
+                return false;
+            }
+
+
+        }else{
+        success = true;
+    }
+
+    if(success)
         {
             cerr << "\n\n--------------------------------------------------------------------------------\n";        
             cerr << " Current Video Mode:" << endl;
@@ -247,7 +300,7 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
             SDL_WM_SetCaption("PEBL Experiment","PEBL Experiment");
             return true;
         }
-
+    return false;
 }
 
 bool PlatformWindow::Draw()
