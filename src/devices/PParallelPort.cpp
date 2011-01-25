@@ -56,12 +56,22 @@ PParallelPort::PParallelPort():
 
 PParallelPort::~PParallelPort()
 {
+    if(mIsOpen)
+        Close();
 }
 
 
 
 void PParallelPort::Init()
 {
+    //This works on linux:
+    int out = ioperm(mPort, 3, 1);
+    mIsOpen = true;
+    if(out==0)
+        {
+            PUtility::SignalFatalError("Unable to Access Parallel Port.  Make sure script is run with root access.\n");
+        }
+
 
 }
 
@@ -84,15 +94,14 @@ void PParallelPort::SetPort(Variant v)
 }
 
 
-void PParallelPort::SendByte()
-{
-}
-
 void PParallelPort::Close()
 {
+    int out =ioperm(mPort,3,0);
+    mIsOpen = false;
 }
 
 
+////////////////////////////////////////////////
 //Returns a byte (char) with five lowest bits
 //indicating state of pins:
 // 15, Error
@@ -106,14 +115,22 @@ char PParallelPort::GetStatusState()
     return (inb(mPort+1)>>3)^0x10;
 }
 
-//Gets a byt whos bits are pins 2...9
+//Gets a byte whos bits are pins 2...9 (for dual-mode ports)
+// 
 char PParallelPort::GetDataState()
 {
     return (inb(mPort));
 }
 
-// Sets port to output mode
+//sets the data bytes (pins 2..9) to the specified state.
+void PParallelPort::SetDataState(char x)
+{
+    outb(x,mPort)
+}
+
+// Sets port to output mode.  This works for dual-mode ports.
 //
+
 void PParallelPort::SetOutputMode()
 {
     char x;
