@@ -25,7 +25,22 @@ experiments down the road when your current hardware systems are
 obsolete. 
 
 
+
+
+
+
+
+
                  RELEASE NOTES
+
+-------------------------------------------------
+
+Version 0.12
+
+
+ Updated manual dexterity test
+ Added AppendFile function
+
 -------------------------------------------------
 
 Version 0.11
