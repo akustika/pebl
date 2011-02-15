@@ -2,8 +2,12 @@ todo:
 
 
 
+ - add reporting for TOL of additional statistics.
+ - Add a FileExists() function???
+ - Add a Dir() functions???
 
+ -automatic subject code/experiment name logging?
+ - Make/document various layout functions
+ - Make a function that unloads the window but keeps running the PEBL.
 
-- Update versions of fonts we distribute (especially vera.ttf) *Added Dejavu.
-
-
+ - save clock test to file + instructions (it may already exist?)
