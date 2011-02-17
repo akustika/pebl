@@ -1,6 +1,6 @@
 define Start(p)
 {
-
+##
 ## "Victoria" implementation of the stroop task.
 ##
 ##
@@ -25,6 +25,8 @@ define Start(p)
    ##CReate the response order at the bottom
    colororder <- Shuffle([1,2,3,4])
    gColorNames <- SortBy(gColorBaseNames,colororder)
+
+   ##Do not transate these color strings
    gColors     <- SortBy(["red","green","blue","yellow"],colororder)
 
 
@@ -261,10 +263,10 @@ define Block(stim,dotraining)
      yellow <- gFontBlack
 
  
-     foot1 <- MakeLabel("[1] "+First(gColorNames),red)
-     foot2 <- MakeLabel("[2] "+Second(gColorNames),green)
-     foot3 <- MakeLabel("[3] "+Third(gColorNames),blue)
-     foot4 <- MakeLabel("[4] "+Fourth(gColorNames),yellow)
+     foot1 <- MakeLabel("["+First(gKeys)+"] "+First(gColorNames),red)
+     foot2 <- MakeLabel("["+Second(gKeys)+"] "+Second(gColorNames),green)
+     foot3 <- MakeLabel("["+Third(gKeys)+"] "+Third(gColorNames),blue)
+     foot4 <- MakeLabel("["+Fourth(gKeys)+"] "+Fourth(gColorNames),yellow)
   
 
    feet <- [foot1,foot2,foot3,foot4]
@@ -286,20 +288,22 @@ if(dotraining)
     patch <- Rectangle(gVideoWidth/2,gVideoHeight/2,300,100,MakeColor("black"),1)
     AddObject(patch,gWin)
     Draw()
-    resp <- ""
-     while(not (resp == " "))
+    resp <- 1
+	patch.color <- gblack
+	Draw()
+    while(not (resp == 5))
       {
-         resp <- WaitForListKeyPress([1,2,3,4," "])
-
-         ##translate response to a color
 
 
-       colname <- Nth(gColors, ToNumber(resp))
-       patch.color <- ChooseColor(colname)
-       Draw()
+         resp <- WaitForIt(Append(gKeys," ")) 
+		 if(resp != 5)
+          {
+            colname <- Nth(gColors, resp)
+            patch.color <- ChooseColor(colname)
+            Draw()
+           }
       }
 
-  
     RemoveObject(patch,gWin)
     Hide(gInstructions)
    } 
@@ -373,12 +377,12 @@ if(dotraining)
         while(not corr)
          {
            timea <- GetTime()      #timea is start of last presentation
-           resp <-  WaitForListKeyPress([1,2,3,4])
+           resp <-  WaitForIt(gKeys)
            timeend <- GetTime()      #time1 is end response
 
            responses <- responses +1
            corr <- ScoreTrial(resp,"",Second(id),2)
-           colname <- Nth(gColorNames, ToNumber(resp))
+           colname <- Nth(gColorNames, (resp))
 
           
            if(not corr)
@@ -498,8 +502,6 @@ define ScoreTrial(resp,wordname,colorname,btype)
 {
  ##  responses are: 1.red 2.green 3.blue 4.yellew
 
-   
-
   corr <- 0
 
 
@@ -507,12 +509,12 @@ define ScoreTrial(resp,wordname,colorname,btype)
   ## by color and by name.
   if(btype==1) 
   {
-    if( Nth(gColors, ToNumber(resp)) ==wordname)
+    if( Nth(gColors, resp) ==wordname)
       {
  	  corr <- 1
       }
   } else {
-    if( Nth(gColors, ToNumber(resp)) ==colorname)
+    if( Nth(gColors, resp) ==colorname)
      {
        corr <- 1
      }
@@ -573,17 +575,18 @@ define Initialize()
    
    if(Uppercase(gLanguage)=="PT") {
 
-
+   gKeys <- ["1","2","3","4"]
+   keystring <-  First(gKeys) +", "+ Second(gKeys)+ ", " +Third(gKeys)+ ", e "+ Fourth(gkeys)
    gColorBaseNames <- ["vermelho","verde","azul","amarelo"]
    gWords   <- ["cada","hoje","nunca","tudo"]
-   gPracticeText <- "Antes de começarmos, tire um momento para aprender a relação entre as cores e os números do teclado.  Pressione os números 1-4 consecutivamente para praticar os estímulos e a barra de espaço para começar o teste."
+   gPracticeText <- "Antes de começarmos, tire um momento para aprender a relação entre as cores e os números do teclado.  Pressione os números "+keystring+" consecutivamente para praticar os estímulos e a barra de espaço para começar o teste."
 
-   gInst1 <- "Você está prestes a ser avaliado em relação a quão bem você consegue ler palavras e as cores em que elas aparecem. Nessa primeira parte, você deverá nomear as cores dos círculos o mais rápido que você puder. Siga o retângulo cinza e pressione a tecla correta [1-4] apropriadamente.
+   gInst1 <- "Você está prestes a ser avaliado em relação a quão bem você consegue ler palavras e as cores em que elas aparecem. Nessa primeira parte, você deverá nomear as cores dos círculos o mais rápido que você puder. Siga o retângulo cinza e pressione a tecla correta ["+keystring+"] apropriadamente.
 
 
    Pressione qualquer tecla para começar."
  
-   gInst2 <-  "Dessa vez, nomeia as cores das palavras o mais rápido que puder. Siga o retângulo cinza e pressione a tecla correta [1-4] apropriadamente.
+   gInst2 <-  "Dessa vez, nomeia as cores das palavras o mais rápido que puder. Siga o retângulo cinza e pressione a tecla correta ["+keystring+"] apropriadamente.
 
 
    Pressione qualquer tecla para começar."
@@ -598,18 +601,50 @@ define Initialize()
    gHeadBlock <- "Pressione a tecla para indicar a cor."
    gExitText <-"Você terminou. Obrigado por participar."    
 
-    }else{
-
-   ##Default to ENGLISH
+    }elseif(Uppercase(gLanguage)=="SK")
+  {
+   ##Slovakian here:
+   gKeys <- ["a","f","j",";"]
+   keystring <-  First(gKeys) +", "+ Second(gKeys)+ ", " +Third(gKeys)+ ", and "+ Fourth(gkeys)
    gColorBaseNames <- ["red","green","blue","yellow"]
    gWords   <- ["when","hard","and","over"]
-   gPracticeText <- "Before we begin, take a moment to learn the mapping between colors and the keyboard numbers.  Press the numbers 1-4 consecutively to practice the stimuli, and space bar to begin the test." 
-   gInst1 <- "You are about to be tested regarding how well you can read words and the colors they appear in. In the first part, you must name the colors of the dots as quickly as you can. Follow the gray rectangle and press the correct key [1-4] accordingly.
+   gPracticeText <- "Before we begin, take a moment to learn the mapping between colors and the keys.  Press the keys ["+ keystring +
+                    "] consecutively to practice the stimuli, and space bar to begin the test." 
+   gInst1 <- "You are about to be tested regarding how well you can read words and the colors they appear in. In the first part, you must name the colors of the dots as quickly as you can. Follow the gray rectangle and press the correct keys  ["+keystring+"] accordingly.
 
 
    Press any key to begin."
  
-   gInst2 <-  "This time, name the colors of the words as quickly as you can. Follow the gray rectangle and press the correct key [1-4] accordingly.
+   gInst2 <-  "This time, name the colors of the words as quickly as you can. Follow the gray rectangle and press the correct key ["+keystring+"] accordingly.
+
+
+   Press any key to begin."
+ 
+
+   gInst3 <- "Again, name the colors in which the words are printed as quickly as you can. Don't read the word! Instead, name the color in which the word is printed.
+
+
+   Press any key to begin."
+ 
+   gHeadBegin <-"Press any key to begin"
+   gHeadBlock <- "Press key to indicate color."
+   gExitText <-"You are now finished. Thank you for participating."
+
+    } else {
+
+   ##Default to ENGLISH
+   gKeys <- ["1","2","3","4"]
+   keystring <-  First(gKeys) +", "+ Second(gKeys)+ ", " +Third(gKeys)+ ", and "+ Fourth(gkeys)
+   gColorBaseNames <- ["red","green","blue","yellow"]
+   gWords   <- ["when","hard","and","over"]
+   gPracticeText <- "Before we begin, take a moment to learn the mapping between colors and the keys.  Press the keys ["+ keystring +
+                    "] consecutively to practice the stimuli, and space bar to begin the test." 
+   gInst1 <- "You are about to be tested regarding how well you can read words and the colors they appear in. In the first part, you must name the colors of the dots as quickly as you can. Follow the gray rectangle and press the correct keys  ["+keystring+"] accordingly.
+
+
+   Press any key to begin."
+ 
+   gInst2 <-  "This time, name the colors of the words as quickly as you can. Follow the gray rectangle and press the correct key ["+keystring+"] accordingly.
 
 
    Press any key to begin."
@@ -844,4 +879,25 @@ define ShuffleRepeat(list, n)
     }
    }
   return tmp
+}
+
+
+##This enables using other keys to do input.
+##it takes a list of keys, and returns the relative index.
+define WaitForIt(keylist)
+{
+   code <- Sequence(1,Length(keylist),1)
+   
+   resp <- (WaitForListKeyPress(keylist))
+   outid <- 0
+   loop(i,Transpose([keylist,code]))
+    {
+       if(Uppercase(resp) == Uppercase(First(i)))
+       {
+	     outid <- Second(i)
+		 break
+       }
+    }
+
+   return (outid)
 }
