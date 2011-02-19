@@ -812,8 +812,35 @@ Variant PEBLObjects::Stop(Variant v)
 Variant PEBLObjects::MakeSineWave(Variant v)
 {
 
-    PError::SignalFatalError("Function [MakeSineWave] Not implemented.");
-    return Variant(false);
+   //v[1] should have the filename
+    PList * plist = v.GetComplexData()->GetList();
+
+    
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_NUMBER, "Argument error in first parameter of  function [MakeSineWave(<freq>,<length>,<amplitude>)]: "); 
+
+    Variant v2 = plist->First(); plist->PopFront();
+    PError::AssertType(v2, PEAT_INTEGER, "Argument error in second parameter of function [MakeSineWave(<freq>,<length>,<amplitude>)]: "); 
+
+    Variant v3 = plist->First(); plist->PopFront();
+    PError::AssertType(v3, PEAT_NUMBER, "Argument error in third parameter of function [MakeSineWave(<freq>,<length>,<amplitude>)]: "); 
+
+    if((((long double)v3>1.0 )| ((long double)v3<-1.0)))
+        {
+            PError::SignalWarning("amplitude in MakeSineWave(<freq>,<length>,<amplitude> will produce clipping if greater than 1.0"); 
+        }
+
+    PlatformAudioOut * myAudio = new PlatformAudioOut();
+    myAudio->CreateSineWave((long double)v1,(int)v2, (long double)v3);
+    myAudio->Initialize();
+    
+    counted_ptr<PEBLObjectBase> audio2 = counted_ptr<PEBLObjectBase>(myAudio);
+    PComplexData *  pcd = new PComplexData(audio2);
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
+
 }
 
 Variant PEBLObjects::MakeSquareWave(Variant v)

@@ -192,7 +192,7 @@ namespace PEBLObjects
             {"PLAYBACKGROUND",    PlayBackground,   1, 1},
             {"PLAYFOREGROUND",    PlayForeground,   1, 1},
             {"STOP",              Stop,             1, 1},
-            {"MAKESINEWAVE",      MakeSineWave,     2, 2},
+            {"MAKESINEWAVE",      MakeSineWave,     3, 3},
             {"MAKESQUAREWAVE",    MakeSquareWave,   2, 2},
             {"MAKESAWTOOTHWAVE",  MakeSawtoothWave, 2, 2},
             {"MAKECHIRP",         MakeChirp,        3, 3},

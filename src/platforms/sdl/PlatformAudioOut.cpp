@@ -35,7 +35,7 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_audio.h"
 
-
+#include <cmath>
 
 void PlayCallBack(void * dummy, Uint8 * stream, int len);
 
@@ -111,12 +111,121 @@ bool PlatformAudioOut::LoadSoundFile(const string & soundfilename)
     mWave.spec.userdata = &mWave;
 
     //Set the global playback wave to the current wave.
-    gWaveStream = &mWave;
+    //gWaveStream = &mWave;
 
 
     return true;
 
 }
+
+
+bool PlatformAudioOut::CreateSineWave(float freq, long unsigned int mslength, long double amplitude)
+{
+    
+
+    //mslength is time in ms.
+    unsigned int sampfreq=44100;  
+
+    long unsigned int length = mslength/1000.0*sampfreq;
+    
+    Uint8 *data = new Uint8[length];
+    int dat;
+    
+    cout << freq << ":" << mslength << ":" << length  << endl;
+    for(unsigned int i=0; i<length;i++)
+        {
+            double base = (sin(i*6.28/(sampfreq/freq))*amplitude+1)/2;
+            if(base<0)base=0;
+            if(base>1)base=1;
+            //base is bounded between 0 and 1
+            dat = int(base*256);
+            //cout << base << "," << amplitude  << ","<< dat << endl;
+            data[i] = dat;
+
+        }
+
+    LoadSoundFromData(data,sampfreq,length);
+}
+
+
+
+
+bool PlatformAudioOut::LoadSoundFromData( Uint8 *buffer, unsigned int freq,int size)
+{
+
+
+
+    /* setup audio */
+    SDL_AudioSpec spec;
+    SDL_AudioSpec obtained;
+    
+    
+    /* Allocate a desired SDL_AudioSpec */
+    //spec = (SDL_AudioSpec *) malloc(sizeof(SDL_AudioSpec));
+    
+    /* Allocate space for the obtained SDL_AudioSpec */
+    //    obtained = (SDL_AudioSpec *) malloc(sizeof(SDL_AudioSpec));
+    
+
+    
+    spec.freq =freq;
+    spec.format=AUDIO_U8;
+    spec.channels=1;
+    spec.silence=0x80;
+    spec.samples=4096;
+    spec.callback= PlayCallBack;
+    spec.userdata=&mWave;
+
+
+    mWave.spec = spec;
+    mWave.audio=buffer;
+    mWave.audiopos=0;
+    mWave.audiolen=size;
+    mWave.volume=50;
+    mWave.name="Generated data";
+        
+
+	/* Load the wave file into memory */
+    //	if ( SDL_LoadWAV_RW(rw,1, &mWave.spec, &mWave.audio, &mWave.audiolen) == NULL )
+    //        {
+    //			std::cerr << "Couldn't load created audio data: " << SDL_GetError() << std::endl;
+    //            return false;
+    //        }
+
+    SDL_OpenAudio(&spec,&obtained);
+    mWave.spec=obtained;
+
+    cerr << "------------------------------------\n";
+    cerr << "Loading Sound Data.  Specs:\n";
+    cerr << "Frequency:   [" << mWave.spec.freq << "]\n";
+    cerr << "Format:      [" << mWave.spec.format << "]\n";
+    cerr << "Channels:    [" << mWave.spec.channels << "]\n";
+    cerr << "Silence:     [" << mWave.spec.silence  << "]\n";
+    cerr << "Samples:     [" << mWave.spec.samples  << "]\n";
+    cerr << "Size:        [" << mWave.spec.size     << "]\n";
+    cerr << "------------------------------------\n";
+    mLoaded = true;
+
+
+
+
+    //Check to see if we can find the sound file; if not, call everything off.
+    mFilename = "<INTERNALLY GENERATED>";
+
+
+    mWave.name = mFilename.c_str();
+    mWave.spec.callback = PlayCallBack;
+    mWave.spec.userdata = &mWave;
+
+    //Set the global playback wave to the current wave.
+    //gWaveStream = &mWave;
+    Initialize();
+    return true;
+
+}
+
+
+
 
 
 //This must be called after the audio is initialized but before it can
@@ -213,14 +322,14 @@ void PlayCallBack(void * udata, Uint8 * stream, int len)
     //   cerr << "waveleft: " <<  waveleft << "  len:" << len << endl;
     if(waveleft >= len)
         {
-            SDL_MixAudio(stream, waveptr, len, SDL_MIX_MAXVOLUME);
+            SDL_MixAudio(stream, waveptr, len, SDL_MIX_MAXVOLUME-20);
             wave->audiopos += len;
             
         }
     else
         {
             //This plays the rest of the file and stops playing.
-            SDL_MixAudio(stream, waveptr, waveleft, SDL_MIX_MAXVOLUME);
+            SDL_MixAudio(stream, waveptr, waveleft, SDL_MIX_MAXVOLUME-20);
             wave->audiopos += waveleft;
             SDL_PauseAudio(1);
             wave->audiopos=0;  //Reset it back to the beginning.

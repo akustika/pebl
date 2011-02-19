@@ -52,8 +52,11 @@ class PlatformAudioOut: virtual public PAudioOut, public PEBLObjectBase
     ~PlatformAudioOut();
   
     bool LoadSoundFile(const std::string & filename);
+    bool LoadSoundFromData( Uint8 *buffer, unsigned int freq,int size);
 
-    bool CreateSineWave(float freq, double length, int amplitude);
+
+    bool CreateSineWave(float freq, long unsigned int length,long double volume);
+
     bool CreateSquareWave(float freq, double length, int amplitude);
     bool CreateSawtoothWave(float freq, double length, int amplitude);
     bool CreateChirp();
