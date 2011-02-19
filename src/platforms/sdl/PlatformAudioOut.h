@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformAudioOut.h
 //    Purpose:    Contains platform-specific sound playing routines
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -35,11 +35,13 @@
 #include <string>
 
 struct AudioInfo{
+
     SDL_AudioSpec spec;
     Uint8   *audio;			/* Pointer to wave data */
     Uint32   audiolen;		/* Length of wave data */
     int      audiopos;		/* Current play position */
     int      volume;           /* Relative volume. 0-100*/
+    const char*    name;
 };
   
 class PlatformAudioOut: virtual public PAudioOut, public PEBLObjectBase
@@ -63,8 +65,8 @@ class PlatformAudioOut: virtual public PAudioOut, public PEBLObjectBase
     
     bool Initialize();
 
-    void AddTrack(const std::string &  handle, AudioInfo track);
-    void RemoveTrack(const std::string &  handle);
+    //    void AddTrack(const std::string &  handle, AudioInfo track);
+    //    void RemoveTrack(const std::string &  handle);
 
     Uint8 * MixTracks();
     
@@ -77,6 +79,8 @@ private:
     bool mLoaded;               //This will be true when a file 
                                 //has been loaded or a buffer has been
                                 //generated.
+
+    std::string mFilename;
     AudioInfo mWave;
 };
 

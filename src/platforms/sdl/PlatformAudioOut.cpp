@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformAudioOut.cpp
 //    Purpose:    Contains platform-specific audio playing routines
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -36,10 +36,17 @@
 #include "SDL/SDL_audio.h"
 
 
+
 void PlayCallBack(void * dummy, Uint8 * stream, int len);
+
+//initiate static data for callback.
+extern AudioInfo *gWaveStream=NULL;
+
 
 using std::string;
 using std::cerr;
+using std::cout;
+using std::endl;
 
 PlatformAudioOut::PlatformAudioOut():
     PEBLObjectBase(CDT_AUDIOOUT)
@@ -53,13 +60,13 @@ PlatformAudioOut::PlatformAudioOut(const string &  soundfilename):
 {
 
     //Check to see if we can find the sound file; if not, call everything off.
-    string filename = Evaluator::gPath.FindFile(soundfilename);
+    string mFilename = Evaluator::gPath.FindFile(soundfilename);
 
-    if(filename == "")
+    if(mFilename == "")
         PError::SignalFatalError(string("Unable to find sound file [")  + soundfilename + string("]."));
 
     
-    LoadSoundFile(filename.c_str());
+    LoadSoundFile(mFilename.c_str());
     Initialize();    
 }
 
@@ -74,14 +81,14 @@ PlatformAudioOut::~PlatformAudioOut()
 bool PlatformAudioOut::LoadSoundFile(const string & soundfilename)
 {
     //Check to see if we can find the sound file; if not, call everything off.
-    string filename = Evaluator::gPath.FindFile(soundfilename);
+    mFilename = Evaluator::gPath.FindFile(soundfilename);
 
-    if(filename == "")
+    if(mFilename == "")
         PError::SignalFatalError(string("Unable to find sound file [")  + soundfilename + string("]."));
 
  
 	/* Load the wave file into memory */
-	if ( SDL_LoadWAV(filename.c_str(), &mWave.spec, &mWave.audio, &mWave.audiolen) == NULL )
+	if ( SDL_LoadWAV(mFilename.c_str(), &mWave.spec, &mWave.audio, &mWave.audiolen) == NULL )
         {
 			std::cerr << "Couldn't load " << mFileName << ": " << SDL_GetError() << std::endl;
             return false;
@@ -97,9 +104,18 @@ bool PlatformAudioOut::LoadSoundFile(const string & soundfilename)
     cerr << "Size:        [" << mWave.spec.size     << "]\n";
     cerr << "------------------------------------\n";
     mLoaded = true;
+
+
+    mWave.name = mFilename.c_str();
     mWave.spec.callback = PlayCallBack;
     mWave.spec.userdata = &mWave;
+
+    //Set the global playback wave to the current wave.
+    gWaveStream = &mWave;
+
+
     return true;
+
 }
 
 
@@ -119,11 +135,18 @@ bool PlatformAudioOut::Initialize()
     return true;
 }
 
-
+//  This plays the sound using the callback mixer function (in the background)
+//
 bool PlatformAudioOut::Play()
 {
-    SDL_CloseAudio();  //Close the current audio stream just in case something is playing.
-    Initialize();
+
+    SDL_LockAudio();
+    mWave.audiopos = 0;
+    gWaveStream = &mWave;
+    SDL_UnlockAudio();
+
+    //    Initialize();
+
     SDL_PauseAudio(0);
     
     return true;
@@ -135,38 +158,54 @@ bool PlatformAudioOut::Play()
 bool PlatformAudioOut::PlayForeground()
 {
 
-    SDL_CloseAudio();
-    Initialize();
+    
+
+    SDL_LockAudio();
+
+    mWave.audiopos = 0;
+    gWaveStream = &mWave;
+
+    SDL_UnlockAudio();
+
+
+
     SDL_PauseAudio(0);
     while(SDL_GetAudioStatus() == SDL_AUDIO_PLAYING)
         {
             //Wait at least 10 ms before checking again.
             SDL_Delay(10);
+            //cout << "---------- playing    ["<<SDL_GetTicks() << endl;
         }
-    SDL_CloseAudio();
 
+    SDL_PauseAudio(1);
     return true;
+
 }
 
 bool PlatformAudioOut::Stop()
 {
     SDL_PauseAudio(1);
     //Set the audio stream back to the beginning.
-    SDL_CloseAudio();
+    //SDL_CloseAudio();
     mWave.audiopos=0;
+
     return true;
 }
 
+
+
 void PlayCallBack(void * udata, Uint8 * stream, int len)
 {
+
 
     //    cerr << "Callback Called\n" <<endl;
     Uint8 * waveptr;
     int waveleft;
 
     //Cast udata to a proper form--this is dangerous and nasty.
-    AudioInfo * wave = (AudioInfo*)(udata);
-    
+    AudioInfo * wave = gWaveStream;//(AudioInfo*)(udata);
+
+
     //Put pointer at the proper place in the buffer.
     waveptr = wave->audio + wave->audiopos;
     waveleft = wave->audiolen - wave->audiopos;
