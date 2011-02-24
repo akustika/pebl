@@ -1,6 +1,6 @@
 #!/usr/local/bin/pebl
 ###########################################################
-## Digit Span, Version 0.1
+## Digit Span, Version 0.2
 ## For use with PEBL 0.06 or later
 ## http://pebl.sf.net
 ## Part of  The PEBL Psychological Testing Battery
@@ -17,13 +17,17 @@
 ## This saves two files, a basic data file in regular format and one
 ## line per trial; and a second log file which lists stimuli, responses 
 ## response times, etc.
+##
+##  Version 0.2 enables both forward and backward digit span;
+##   saves as .csv
 ###########################################################
 
 define Start(lPar)
 {
 
   ## results are stored in tmpresults.dat
-  gFileOut <-FileOpenAppend("dspan-" + gSubNum +".txt")
+  Print("Data are saved in ["+"dspan-" + gSubNum +".csv]")
+  gFileOut <-FileOpenAppend("dspan-" + gSubNum +".csv")
  
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
@@ -32,6 +36,11 @@ define Start(lPar)
   ## presentation.
   gUseAudio <- 1
 
+  gDirection <- "backward"  #change "forward" to "backward" to do
+                            #backward scoring
+						   
+  gAllowBackspace <- 1     ##Allow users to backspace over responses?
+  gAllowSkip      <- 1     ##Allow users to skip over cells?
 
   ## Version can be hard-coded here, or entered with the -v command-line
   ## argument. 1 indicates traditional low-to-high; 2 indicates high-to-low;
@@ -93,7 +102,34 @@ define Start(lPar)
 
 
    ## Give instructions; wait for them to hit a key, 
-   inst <- "You are about to take part in a memory test.  You will be presented with a sequence of digits, one at a time on the screen.Each digit will occur only once during a list.  You will then be asked to type the list of digits exactly in order.  If you do not know  what digit comes next, you can skip over it by typing the '-' key.  Once entered, you cannot go back to edit your responses. "
+if(gDirection=="forward")
+{
+   inst <- "You are about to take part in a memory test.  You will be presented with a sequence of digits, one at a time on the screen. Each digit will occur only once during a list.  You will then be asked to type the list of digits EXACTLY THE ORDER YOU SAW THEM IN.  "
+
+}else{
+
+   inst <- "You are about to take part in a memory test.  You will be presented with a sequence of digits, one at a time on the screen.  Each digit will occur only once during a list.  You will then be asked to type the list of digits, IN THE OPPOSITE ORDER YOU SAW THEM IN.  That is, if you saw 12345, respond 54321.  "
+
+}
+
+if(gAllowSkip)
+  {
+    inst <- inst + "If you do not know  what digit comes next, you can skip over it by typing the '-' key. Try to put the numbers you saw in the original list positions.  "  
+
+}else{
+
+    inst <- inst + "If you do not know  what digit comes next, you must guess a number, but try to put the numbers you saw in their original list positions.  "
+
+}
+
+
+if(gAllowBackspace)
+{
+  inst <- inst + "If you make a mistake, you can use the backspace key to make a correction. "
+} else {
+  inst <- inst + "Once entered a number, you cannot go back to edit your responses. "
+}
+
 
    lthInst <- inst + " You will start with a list of three items, and will get three different lists at each length.  If you are able to recall two out of three lists completely correctly, you will move on to the next longest list length."
    htlInst <- inst + " You will start with a list of ten digits, and will get three chances to recall at each length.  After three trials, you will move down to the next lower list length.  You will continue until you are able to recall all 
@@ -108,6 +144,8 @@ three lists at a specific length completely correctly."
    Hide(gInstructions)
    Draw()
 
+
+  FilePrint(gFileOut, "subnum,version,direction,endearly,trialnum,length,try,input,response,correct,resptime")
  
 ####################################################
 ####################################################
@@ -126,7 +164,7 @@ three lists at a specific length completely correctly."
     {
 
       Wait(iti)
-	  FilePrint_(gFileOut, gSubNum + " " + gVersion + " " + endearly + " " + trialnum + " " + length + " " + try + " ")
+	  FilePrint_(gFileOut, gSubNum + "," + gVersion + "," + gDirection+"," + endearly + "," + trialnum + "," + length + "," + try + ",")
       stimuli <- SampleN(stim,length)
       corr <-  Trial(stimuli)
 
@@ -176,8 +214,10 @@ three lists at a specific length completely correctly."
        }
 
       } elseif(gVersion == 2) {
+
+
 	  #############################
-      ## Backward Memory Span (from longest to short)
+      ## Version 2 uses from longest to short list lengths
 
       try <- try + 1
       currcorrect <- currcorrect + corr
@@ -279,7 +319,10 @@ define Trial(stimpairs)
   Show(gStimLabel)
 
   Draw()
-  PlayForeground(gReady)
+  if(gUseAudio)
+   {
+     PlayForeground(gReady)
+   } 
   Wait(800)
   Hide(gStimLabel)
   Draw()
@@ -300,7 +343,7 @@ define Trial(stimpairs)
     t2 <- GetTime()
     Wait(gISI - (t2-t1))
   }
-  FilePrint_(gFileOut, " ")
+  FilePrint_(gFileOut, ",")
   ##Play a response signal.
 
 
@@ -317,10 +360,23 @@ define Trial(stimpairs)
   Show(gStimLabel)
   Draw()
   corr <- 0
-  responses <- ["1","2","3","4","5","6","7","8","9","0","-","<backspace>","<return>"]
+
+  responses <- ["1","2","3","4","5","6","7","8","9","0","<return>"]
+  if(gAllowBackspace)
+  {
+    responses <- Append(responses,"<backspace>")
+  }
+
+  if(gAllowSkip)
+  {
+    responses <- Append(responses,"-")
+  }
+
+
   position <- 1
   resp <- ""
 
+  time1 <- GetTime()
   while(not resp == "<return>")
   {
     resp <- WaitForListKeyPress(responses)
@@ -329,10 +385,17 @@ define Trial(stimpairs)
 	    if(Length(responseList) == 1) 
         {  
            responseList <- []
-	   position <- 1
+   	       position <- 1
         } else {
-           responseList <- SubList(responselist, 1, Length(responseList)-1)
-           position <- position - 1
+		  if(gDirection=="forward")
+            {
+              responseList <- SubList(responselist, 1, Length(responseList)-1)
+              position <- position - 1
+  		    }else{
+
+              responseList <- SubList(responselist, 2, Length(responseList))
+              position <- position - 1
+            }
         }
 
 
@@ -341,26 +404,42 @@ define Trial(stimpairs)
          33
      } else {
 
-        if(position <= length) {
+        if(position <= length) 
+		{
           position <- position + 1
-          responseList <- Append(responseList,resp)
-          } 
-     }
-    
-    resptext <- ListToString(Merge(responseList,Repeat("_",(length - position + 1))))
+		  if(gDirection == "forward")
+            { 
+              responseList <- Append(responselist, resp)
+            } else {
+              responseList <- Merge([resp],responseList)
+            }
+        }
+    }
+	if(gDirection == "forward") 
+      {
+       resptext <- ListToString(Merge(responseList,Repeat("_",(length - position + 1))))
+      }else{
+       resptext <- ListToString(Merge(Repeat("_",(length - position + 1)),responseList))
+      }
+   
     gStimLabel.text <- resptext
     Draw()
-  }
 
-  FilePrint_(gFileOut,resptext)
+
 
   ##See if things are correct.
-  if( ListToString(stim) == resptext)
-   {
-	 corr <- 1
-   }
+     if( ListToString(stim) == resptext)
+     {
+    	 corr <- 1
+     }else{
+	     corr <- 0
+     }
+  }
+  time2 <- GetTime()
 
-  FilePrint(gFileOut," " + corr)
+  ##finish up the data output.
+  FilePrint(gFileOut,resptext+","+corr+","+(time2-time1))
+
 
   Wait(200)
 
