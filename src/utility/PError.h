@@ -3,8 +3,8 @@
 //    Name:       src/utility/PError.h
 //    Purpose:    Utility class for signaling warnings and errors
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2011 Shane T. Mueller
-//                  <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
+//
 //    License:    GPL 2
 //
 //   
@@ -56,6 +56,7 @@ enum PErrorAssertType
         PEAT_FILESTREAM,
         PEAT_FONT,
         PEAT_IMAGEBOX,        
+        PEAT_JOYSTICK,        
         PEAT_KEYBOARD,        
         PEAT_LIST,
         PEAT_NETWORKCONNECTION,
@@ -65,7 +66,6 @@ enum PErrorAssertType
         PEAT_LABEL,
         PEAT_WIDGET,
         PEAT_WINDOW
-
     };
 
 
