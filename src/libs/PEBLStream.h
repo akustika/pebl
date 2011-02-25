@@ -3,7 +3,7 @@
 //    Name:       libs/PEBLStream.h
 //    Purpose:    Stream-based Function Library for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -81,6 +81,9 @@ namespace PEBLStream
     
     Variant EndOfLine(Variant v);
     Variant EndOfFile(Variant v);
+    
+    //Copies the contents of one file to another.
+    Variant AppendFile(Variant v);
 
 
     // The following control TCP/IP connections and communications.
@@ -97,6 +100,14 @@ namespace PEBLStream
     //This writes a 'screenshot' to a png file.
     Variant WritePNG(Variant v);
 
+    
+
+    //These functions open, send, receive, and close
+    //a parallel port object.
+    Variant OpenPPort(Variant v);
+    Variant SetPPortState(Variant v);
+    Variant GetPPortState(Variant v);
+    Variant SetPPortMode(Variant v);
 
 }
 #endif

@@ -3,7 +3,7 @@
 //    Name:       libs/PEBLStream.cpp
 //    Purpose:    Built-in stream functions for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -34,16 +34,28 @@
 #include "../utility/PError.h"
 #include "../utility/PEBLPath.h"
 #include "../utility/PEBLUtility.h"
+#include "../devices/PParallelPort.h"
 
 
 #include <list>
 #include <iostream>
+#include <fstream>
+
+//This is for pport stuff used for testing.
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/io.h>
+
+#define BASE 0x378
+
+const static int BSIZE =4096;
 
 using std::cout;
 using std::flush;
 using std::cerr;
 using std::endl;
-
+using std::ios_base;
 
 
 Variant PEBLStream::Print(Variant v)
@@ -98,6 +110,14 @@ Variant PEBLStream::FileOpenRead(Variant v)
 ///This opens a filestream for writing, replacing current file
 Variant PEBLStream::FileOpenWrite(Variant v)
 {
+
+
+    // should be able to create the directory if it doesn't exist.
+    //    char sysText[256];
+    //    sprintf( systext, "mkdir -p %s", path ); // path is a char * to the string representing the directory you want to create
+    //    system( systext );
+ 
+
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in function FileOpenWrite(<string>)]: ");  
@@ -425,6 +445,57 @@ Variant PEBLStream::EndOfFile(Variant v)
 }
 
 
+    //Copies the contents of one file to another.
+Variant PEBLStream::AppendFile(Variant v)
+{
+    //v[1] should have the filename
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_STRING, "Argument error in function [AppendFile(<file1>,<file2>)]:  ");    
+ 
+    string filename1 = v1.GetString();
+
+    
+    Variant v2 = plist->First(); 
+    PError::AssertType(v2, PEAT_STRING, "Argument error in function [AppendFile(<file1>,<file2>)]:  ");    
+ 
+    //Search through the paths for the file, because it may be a 'special' file.
+    string filename2 = Evaluator::gPath.FindFile(v2.GetString());
+    
+    if(filename2 == "")
+        PError::SignalFatalError(string("Unable to find file [")  + v2.GetString() + string("] in AppendFile"));
+
+    //open files in binary mode so we can do a direct copy.
+    
+    std::ifstream in(filename2.c_str(), ios_base::in|ios_base::binary);
+    std::ofstream out(filename1.c_str(), ios_base::out|ios_base::app|ios_base::binary);
+
+
+    if(!in.is_open())
+        {
+            PError::SignalWarning("Unable to open file ["+filename2+"]. No data copied.");
+        }
+    if(!out.is_open())
+        {
+            PError::SignalFatalError("Unable to open file ["+filename1+"]. Check permissions or determine whether directory exists.");
+        }
+
+
+    char buf[BSIZE];
+    do {
+        in.read(&buf[0],BSIZE);
+        out.write(&buf[0],in.gcount());
+    }while (in.gcount()>0);
+
+    in.close();
+    out.close();
+    return Variant(1);
+}
+
+
+
+
+
 
 Variant PEBLStream::ConnectToIP(Variant v)
 {
@@ -589,3 +660,222 @@ Variant PEBLStream::WritePNG(Variant v)
 
     return Variant(1);
 }
+
+
+
+Variant PEBLStream::OpenPPort(Variant v)
+{
+    //v[1] should have a text string indicating
+    //lpt1/lpt2/lpt3 (which may not really map onto
+    //those ports for any individual system.
+
+
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_STRING, "Argument error in first parameter of function [OpenPPort(<port>)]: ");
+
+    unsigned char data;       /* value of the data register */
+    unsigned char control;    /* value of the control register */
+    
+
+    if(0)
+        {
+            //hardcode some parport stuff here for testing.
+            if (iopl(3))
+                printf("Could't get the port addresses\n");
+            
+
+
+            /* enable data register output by bringing bit 5 of control */
+            /* register low                                             */
+            
+            control = inb(BASE + 2);
+            cout << "control byte:" << (int)control << endl;
+            outb(control & ~0x20, BASE + 2);
+            
+            /* write the value */
+            outb((unsigned char) 255, BASE);
+            
+            /* Wait a few secs, so we can see it.*/
+            struct timespec a,b;
+            a.tv_sec  = 5;   
+            a.tv_nsec = 100000; //1 ms
+            int retval = nanosleep(&a,&b);
+            
+            /* disable data register output by bringing bit 5 of control */
+            /* register high                                             */
+            
+            control = inb(BASE + 2);
+            cout << "control byte:" << (int)control << endl;
+            outb(control | 0x20, BASE + 2);
+            
+            
+            /* read and print the value */
+            printf("Port 0x%x reads 0x%x\n", BASE, inb(BASE));
+        }
+    
+    counted_ptr<PEBLObjectBase> tmp2 = counted_ptr<PEBLObjectBase>(new PParallelPort());
+    PParallelPort * pport = dynamic_cast<PParallelPort*>(tmp2.get());
+    
+    
+    pport->SetPort(v1);
+    pport->Init();
+            
+
+    PComplexData * pcd = new PComplexData(tmp2);
+    Variant tmp3 = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp3;
+
+}
+
+
+//This sets the pport state on the data bits
+Variant PEBLStream::SetPPortState(Variant v)
+{
+   //v[1] should have an pport 
+   //v[2] should have a list of bits 0/1
+
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_PARALLELPORT, "Argument error in first parameter of function [SetPPortState(<pport>,<integer>)]: ");   
+
+    counted_ptr<PEBLObjectBase> tmp1 = (v1.GetComplexData())->GetObject();
+    PParallelPort * mypport = dynamic_cast<PParallelPort*>(tmp1.get());
+    
+
+    Variant v2 = plist->First();
+    PError::AssertType(v2, PEAT_INTEGER, "Argument error in second parameter of function [SetPPortState(<pport>,<integer>)]: ");   
+
+    char x = (int)v2;
+    mypport->SetDataState(x);
+
+
+    return Variant(true);
+}
+
+
+Variant PrintByte(int x)
+{
+    int d = 8;
+	Variant buffer="";
+
+	for (;d>0;d--)
+		{
+            buffer = buffer + Variant("|") + Variant((int)(x & 1));
+            x >>= 1;
+
+		}
+
+    buffer = buffer + Variant("|");
+
+  return buffer;
+}
+
+// This gets the state of the parallel port.  It may be platform-specific.
+//
+Variant PEBLStream::GetPPortState(Variant v)
+{
+    //v[1] should have an pport 
+
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_PARALLELPORT, "Argument error in first parameter of function [GetPPortState(<pport>]: ");
+
+    counted_ptr<PEBLObjectBase> tmp1 = (v1.GetComplexData())->GetObject();
+    PParallelPort * mypport = dynamic_cast<PParallelPort*>(tmp1.get());
+    
+
+    char x1 = mypport->GetDataState();
+
+    Variant byte = PrintByte(x1);
+
+    return byte;
+}
+
+
+
+// This sets the state of the parallel port to either input or output.
+//
+Variant PEBLStream::SetPPortMode(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_PARALLELPORT, "Argument error in first parameter of function [SetPPortMode(<pport>,<mode>)]: ");   
+
+    counted_ptr<PEBLObjectBase> tmp1 = (v1.GetComplexData())->GetObject();
+    PParallelPort * mypport = dynamic_cast<PParallelPort*>(tmp1.get());
+    
+
+    Variant v2 = plist->First();
+    PError::AssertType(v2, PEAT_STRING, "Argument error in second parameter of function [SetPPortState(<pport>,<mode>)]: ");   
+
+    if(v2 == "<input>")
+        mypport->SetInputMode();
+    else if(v2 == "<output>")
+        mypport->SetOutputMode();
+    else
+        PError::SignalFatalError(Variant("Unknown mode type [")+v2+
+                                 Variant("] in SetPPortState.  Must be <input> or <output>."));
+
+    return Variant(true);
+}
+
+#if 0
+// This waits for a change in the PPORT state (on the data bits)
+//
+Variant PEBLStream::WaitForPPortData(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_PARALLELPORT, "Argument error in first parameter of function [WaitForPPortData(<pport>)]: ");   
+
+    counted_ptr<PEBLObjectBase> tmp1 = (v1.GetComplexData())->GetObject();
+    PParallelPort * mypport = dynamic_cast<PParallelPort*>(tmp1.get());
+    
+    //Create a pport test correspending to keydown. 
+    //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
+    PDevice * device = new PParallelPort(mypport);
+    ValueState  * state = new ValueState(1, DT_EQUAL, key, device, PDT_KEYBOARD);
+
+    //NULL,NULL will terminate the looping
+    string  funcname = "";
+    PList* params = NULL;
+    Evaluator::mEventLoop.RegisterState(state,funcname, params);
+    PEvent returnval = Evaluator::mEventLoop.Loop();
+
+    //Now, clear the event loop tests
+    Evaluator::mEventLoop.Clear();
+
+    return Variant(returnval.GetDummyEvent().value);
+
+}
+
+
+// This waits for a change in the PPORT state (on the status bits)
+//
+Variant PEBLStream::WaitForPPortStatus(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_PARALLELPORT, "Argument error in first parameter of function [SetPPortMode(<pport>,<mode>)]: ");   
+
+    counted_ptr<PEBLObjectBase> tmp1 = (v1.GetComplexData())->GetObject();
+    PParallelPort * mypport = dynamic_cast<PParallelPort*>(tmp1.get());
+    
+
+    Variant v2 = plist->First();
+    PError::AssertType(v2, PEAT_STRING, "Argument error in second parameter of function [SetPPortState(<pport>,<mode>)]: ");   
+
+    if(v2 == "<input>")
+        mypport->SetInputMode();
+    else if(v2 == "<output>")
+        mypport->SetOutputMode();
+    else
+        PError::SignalFatalError(Variant("Unknown mode type [")+v2+
+                                 Variant("] in SetPPortState.  Must be <input> or <output>."));
+
+    return Variant(true);
+}
+#endif
