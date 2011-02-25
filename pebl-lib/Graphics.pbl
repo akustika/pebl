@@ -74,15 +74,15 @@ define ZoomPoints(pts,xZoom,yZoom)
 
 define Plus(x,y,size, width, color)
 {
-   x1 <- x-size
-   x2 <- x-width/2
-   x3 <- x+width/2
-   x4 <- x+size
+   x1 <- -size
+   x2 <- -width/2
+   x3 <- width/2
+   x4 <- size
 
-   y1 <- y-size
-   y2 <- y-width/2
-   y3 <- y+width/2
-   y4 <- y+size
+   y1 <- -size
+   y2 <- -width/2
+   y3 <- width/2
+   y4 <- size
 
    xs <- [x1,x1,x2,x2,x3,x3,x4,x4,x3,x3,x2,x2]
    ys <- [y3,y2,y2,y1,y1,y2,y2,y3,y3,y4,y4,y3]
@@ -790,6 +790,194 @@ define MakeGabor(size,freq,sd, angle,phase,bglev)
 
 
 
+
+# ##  Make num points within region xmin.xmax,ymin.ymax having
+# ##  centers no closer than tol.  Do as good as you can in limit steps
+# ##
+# define NonOverlapLayout(xmin, xmax, ymin, ymax, tol, num)
+# {
+
+#    ##should you watch the points evolve?
+#    watch <- 0
+   
+
+#    ##Note that it is possible to arrange the situation 
+#    ## so that the distribution will never be satisfied.  So, lets
+#    ## set up a 'limit' at which point we give up and return the best
+#    ## we have so far.
+
+#    limit <- 100
+ 
+
+#   ## First, just initialize num points.
+#   pts <- []
+#   i <- 1
+#   while(i <= num)
+#    {
+
+#      x <- xmin + Random()*(xmax-xmin)
+#      y <- ymin + Random()*(ymax-ymin)
+#      pts <- Append(pts, [x,y])
+#      i <- i + 1
+#    }
+
+#   #Now, check for the minimum distance between two points.
+#    tries <- 1
+#    minpair <-  GetMinDist(pts)
+
+
+#    ##Move one point at a time
+#    while(First(minpair) < tol and tries < limit)
+#    {
+
+#      pt1id <- Nth(minpair,2)
+#      pt2id <- Nth(minpair,3)
+
+	
+#      pt1 <- Nth(pts,pt1id)
+#      pt2 <- Nth(pts,pt2id)
+
+
+#     #resample the 'bad' points
+
+#      ##Half the time, try to move a little bit away from 
+#      ##the closest. Otherwise, do it randomly.
+
+#      if(0)
+#      {
+
+#        ##This doesn't seem to work.
+#        lastpt <- pt1       
+#        pt1 <- [-1,-1]
+#        while((First(lastpt) > xmin) and (First(lastpt)<xmax) and 
+#               (Second(lastpt) > ymin) and (Second(lastpt)<ymax))
+#          {
+#            #Resampling
+#            dist <- Random() * tol
+#            diff <- [First(pt2) - First(pt1),Second(pt2)-Second(pt1)]     
+#            pt1 <- VecSum(pt2,VecTimes(diff,[dist,dist]))
+#            if(watch)
+#            {
+# 		     Print("watch this")
+#            }
+#          }
+
+        
+
+
+#      } else{
+ 
+#      pt1 <-   [ xmin + Random()*(xmax-xmin),
+#                   ymin + Random()*(ymax-ymin) ]
+
+#     }
+#    #   pt2 <-   [ xmin + Random()*(xmax-xmin),
+#    #                ymin + Random()*(ymax-ymin) ]
+
+
+#      ##Reassemble pts
+#      tmp <- RemoveSubset(pts,[pt1id])
+
+#      ##See if this configuration is an improvement
+#      testpts <- Merge(tmp,[pt1])
+#      minpairtest <-  GetMinDist(testpts)
+
+#      ##If we've made an improvement, use it, otherwise abandon it.
+#      if(First(minpairtest) >= First(minpair))
+#      {
+#         minpair <- minpairtest
+#         pts <- testpts
+#      }
+#      tries <- tries + 1
+
+  
+#    }
+
+
+  
+#   return Shuffle(pts)
+# }
+
+
+
+# define LayoutGrid(xmin,xmax,ymin,ymax, wide,tall, horvert)
+# {
+
+#     xskip <- (xmax-xmin)/(wide+1)
+#     yskip <- (ymax-ymin)/(tall+1)
+
+#     pts <- []
+
+
+
+#     if(horvert == 1)
+#      {
+#     x <- xmin+xskip
+#       loop(i,Sequence(1,wide,1))
+#        {   
+#          y <- ymin+yskip
+#         loop(j,Sequence(1,tall,1))
+#          {
+
+#             pts <- Append(pts, [x,y])
+#             y <- y + yskip
+#          }
+#          x <- x + xskip
+#        }
+#     } else {
+
+#       y <- ymin+yskip
+#       loop(i,Sequence(1,tall,1))
+#        {   
+#          x <- xmin+xskip
+#         loop(j,Sequence(1,wide,1))
+#          {
+
+#             pts <- Append(pts, [x,y])
+#             x <- x + xskip
+#          }
+#         y <- y + yskip
+#        }
+
+
+#     }
+
+#   return pts
+  
+# }
+
+
+
+# define LayoutGrid2(high,across,centerx,centery,width,height)
+# {
+
+#      points <- []
+#      i <- 1
+
+#      dx <- width/(across-1)
+# 	 dy <- height/(high-1)
+#      x <- centerx - width/2
+#      y <- centery - height/2
+#      while(i <= high)
+#       {
+
+#  	    j <- 1 
+#         x <- centerx-width/2
+#         while(j <= across)
+#         { 
+#           j <- j + 1
+#  		  points <- Append(points,[x,y])
+# 		  x <- x + dx
+#         }
+# 	   y <- y + dy
+#        i <- i + 1
+#       }
+   
+
+#   return points
+# }
+
+
 define LandoltRing(outer,inner, angle, lgap, color, bgcolor)
 { 
 
@@ -909,3 +1097,4 @@ define KaneszaPolygon(points, circTF, circleradius,fg,bg,show)
      RemoveObject(poly,back)
      return back
 }
+
