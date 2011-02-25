@@ -58,6 +58,7 @@ public:
     PEBLVideoDepth  GetVideoDepth(){return mVideoDepth;};
     bool GetWindowed(){return mWindowed;};
     
+    Variant GetScreenModes();
 
     //overloaded generic PEBLObjectBase methods
     virtual bool SetProperty(std::string, Variant v);

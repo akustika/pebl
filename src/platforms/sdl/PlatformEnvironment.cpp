@@ -1,5 +1,5 @@
 //* -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*- */
-/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 //    Name:       src/platforms/sdl/PlatformEnvironment.cpp
 //    Purpose:    Contains SDL-specific interface for the main environment.
 //    Author:     Shane T. Mueller, Ph.D.
@@ -23,7 +23,7 @@
 //    You should have received a copy of the GNU General Public License
 //    along with PEBL; if not, write to the Free Software
 //    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 #include "PlatformEnvironment.h"
 
 #include "../../objects/PEnvironment.h"
@@ -184,3 +184,34 @@ Variant  PlatformEnvironment::GetCursorPosition()
     PComplexData *   pcd = new PComplexData(newlist2); 
     return Variant(pcd);
 }
+//
+Variant PlatformEnvironment::GetScreenModes()
+{
+
+    const SDL_VideoInfo * current = SDL_GetVideoInfo();
+
+    //Get a list of available resolutions and try these out.
+    SDL_Rect** modes = SDL_ListModes(NULL, SDL_FULLSCREEN);
+
+
+    PList * baselist = new PList();
+    PComplexData * pcd=NULL;
+    
+    modes =SDL_ListModes(NULL,SDL_FULLSCREEN);
+    for(int ii=0; modes[ii]; ++ii)
+        {
+
+             PList * newlist = new PList();
+             newlist->PushFront(Variant(modes[ii]->w));
+             newlist->PushBack(Variant(modes[ii]->h));
+             counted_ptr<PEBLObjectBase> newlist2 = counted_ptr<PEBLObjectBase>(newlist);
+             pcd = new PComplexData(newlist2); 
+             baselist->PushBack(Variant(pcd));             
+             //cerr << ii<< ". gVideoWidth <-"<< modes[ii]->w<<"; gVideoHeight<- " << modes[ii]->h <<"\n";                    
+        }
+
+    counted_ptr<PEBLObjectBase> baselist2 = counted_ptr<PEBLObjectBase>(baselist);    
+    pcd = new PComplexData(baselist2); 
+    return Variant(pcd);
+}
+

@@ -63,6 +63,7 @@ ostream & PlatformWindow::SendToStream(ostream& out) const
     return out;
 }
 
+
 int PlatformWindow::GetVideoFlags()
 {
 	int videoFlags;
@@ -302,6 +303,7 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
         }
     return false;
 }
+
 
 bool PlatformWindow::Draw()
 {
