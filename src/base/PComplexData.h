@@ -46,7 +46,7 @@
 #include "../platforms/sdl/PlatformAudioOut.h"
 #include "../platforms/sdl/PlatformNetwork.h"
 #include "../utility/rc_ptrs.h"
-
+#include "../devices/PParallelPort.h"
 #include <iostream>
 
 
@@ -158,6 +158,7 @@ public:
     bool IsDrawSquare() const;
     bool IsDrawRectangle() const;
     bool IsCanvas() const;
+    bool IsParallelPort() const;
 
 
     void SetProperty(std::string, Variant v);

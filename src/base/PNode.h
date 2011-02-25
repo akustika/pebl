@@ -3,7 +3,7 @@
 //    Name:       src/base/PNode.h
 //    Purpose:    Primary data structure for code
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -65,7 +65,7 @@ public:
     std::string  GetFilename()const {return mSourceFile;};
     int GetLineNumber()const {return mLineNumber;};
     void SetFunctionName(const std::string &funcname);
-    std::string GetFunctionName()const{return "";};
+    std::string GetFunctionName()const{return mFunctName;};
 
     virtual void DestroyChildren();
 private:

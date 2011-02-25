@@ -3,7 +3,7 @@
 //    Name:       src/base/PEBLObject.h
 //    Purpose:    Simple base class for objects
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2005-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2005-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -57,7 +57,8 @@ enum ComplexDataType {
     CDT_LABEL,
     CDT_DRAWOBJECT,
     CDT_NETWORKCONNECTION,
-    CDT_CANVAS
+    CDT_CANVAS,
+    CDT_PARALLELPORT
 };
 
 class PComplexData;

@@ -89,7 +89,7 @@ void PNode::SetFileInfo(const string & filename, int linenumber)
 }
 void PNode::SetFunctionName(const std::string & funcname)
 {
-    //    mFunctionName = funcname;
+    mFunctName = funcname;
 }
 
 void PNode::DestroyChildren()

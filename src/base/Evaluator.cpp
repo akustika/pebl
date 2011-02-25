@@ -558,7 +558,11 @@ bool Evaluator::Evaluate(const OpNode * node)
 
 
                 const OpNode * node0 =(OpNode*)(node->GetLeft());
-                
+                //We should be able to tell the name of the function
+
+                //cout << node << endl;
+                //cout << node0 << endl;
+                std::string name = node->GetFunctionName();
 
                 int min = ((DataNode*)(node0->GetLeft()))->GetValue();
                 int max = ((DataNode*)(node0->GetRight()))->GetValue();
@@ -597,7 +601,8 @@ bool Evaluator::Evaluate(const OpNode * node)
                 if(numargs < min || numargs > max)
                     {
                         std::ostrstream message;
-                        message << "In Function [" << mScope << "]:";
+                        message << "In scope [" << mScope << "]:";
+                        message << "function ["<<name<<"]:";
                         message << "Incorrect number of arguments.  Wanted between " << min 
                                 << " and " << max << " but got " << numargs << ".";
 

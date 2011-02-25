@@ -3,7 +3,7 @@
 //    Name:       src/base/PComplexData.h
 //    Purpose:   Contains base class for complex data, held by the Variant Class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -97,51 +97,54 @@ counted_ptr<PEBLObjectBase> PComplexData::GetObject() const
 
 std::string PComplexData::GetTypeName() const
 {
-  switch (GetType() )
-  {
-    case CDT_LIST:
-      return "Complex Data: List";
+    switch (GetType() )
+        {
+        case CDT_LIST:
+            return "Complex Data: List";
+            
+        case CDT_ENVIRONMENT:
+            return "Complex Data: Environment";
+            
+        case CDT_WINDOW:
+            return "Complex Data: Window";
+            
+        case CDT_COLOR:
+            return "Complex Data: Color";
+            
+        case CDT_FONT:
+            return "Complex Data: Font";
+            
+        case CDT_LABEL:
+            return "Complex Data: Label";
+            
+        case CDT_TEXTBOX:
+            return "Complex Data: TextBox";
+            
+        case CDT_IMAGEBOX:
+            return "Complex Data: ImageBox";
+            
+        case CDT_KEYBOARD:
+            return "Complex Data: Keyboard";
+            
+        case CDT_FILESTREAM:
+            return "Complex Data: FileStream";
+            
+        case CDT_AUDIOOUT:
+            return "Complex Data: Audio Out";
+            
+        case CDT_DRAWOBJECT:
+            return "Complex Data: Drawing Object";
+            
+        case CDT_NETWORKCONNECTION:
+            return "Complex Data: Network Connection";
 
-    case CDT_ENVIRONMENT:
-      return "Complex Data: Environment";
-
-    case CDT_WINDOW:
-      return "Complex Data: Window";
-
-    case CDT_COLOR:
-      return "Complex Data: Color";
-
-    case CDT_FONT:
-      return "Complex Data: Font";
-
-    case CDT_LABEL:
-      return "Complex Data: Label";
-
-    case CDT_TEXTBOX:
-      return "Complex Data: TextBox";
-
-    case CDT_IMAGEBOX:
-      return "Complex Data: ImageBox";
-
-    case CDT_KEYBOARD:
-      return "Complex Data: Keyboard";
-
-    case CDT_FILESTREAM:
-      return "Complex Data: FileStream";
-
-    case CDT_AUDIOOUT:
-      return "Complex Data: Audio Out";
-
-    case CDT_DRAWOBJECT:
-      return "Complex Data: Drawing Object";
-
-  case CDT_NETWORKCONNECTION:
-      return "Complex Data: Network Connection";
-
-    case CDT_UNDEFINED:
-    default:
-      return "Complex Data: Undefined";
-
+        case CDT_PARALLELPORT:
+            return "Complex Data: Parallel Port";
+            
+        case CDT_UNDEFINED:
+        default:
+            return "Complex Data: Undefined";
+            
   }
 
 }
@@ -255,6 +258,13 @@ bool PComplexData::IsCanvas() const
 bool PComplexData::IsNetworkConnection() const
 {
   return GetType() == CDT_NETWORKCONNECTION;
+}
+
+
+
+bool PComplexData::IsParallelPort() const
+{
+  return GetType() == CDT_PARALLELPORT;
 }
 
 

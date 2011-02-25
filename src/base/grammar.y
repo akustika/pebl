@@ -399,7 +399,7 @@ exp:	        datum                   { $$ = $1;}
 		PEBL_FUNCTIONNAME arglist {
 		PNode * tmpNode = new DataNode(Variant($1, P_DATA_FUNCTION), sourcefilename, yylineno);
 		$$ = new OpNode(PEBL_FUNCTION, tmpNode, $2, sourcefilename, yylineno);
-        free($1);
+		free($1);
 		}
 		;
 
