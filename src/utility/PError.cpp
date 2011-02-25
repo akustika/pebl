@@ -3,7 +3,7 @@
 //    Name:       src/utility/PError.cpp
 //    Purpose:    Utility class for signaling warnings and errors
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -395,6 +395,21 @@ void PError::AssertType(Variant v, int type, const string & outsideMessage)
           break;
           
           
+        case PEAT_PARALLELPORT:
+             
+            if(v.IsComplexData())
+                {
+                    if((v.GetComplexData())->IsParallelPort())
+                        {
+                            //Everything is fine, return without error.
+                            return;
+                        }
+                }
+            message = outsideMessage;
+            message +="Wanted parallelport but got " + GetTypeName(v) + ": "+ v.GetString();
+            SignalFatalError(message);
+
+          break;
 
 
             
