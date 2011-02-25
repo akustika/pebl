@@ -3,7 +3,7 @@
 //    Name:       src/devices/PDevice.h
 //    Purpose:    Master Generic Device Class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -46,6 +46,7 @@ enum PEBL_DEVICE_TYPE
         PDT_STREAM,
         PDT_EVENT_QUEUE,
         PDT_AUDIO_OUT,
+        PDT_PORT,
         PDT_DUMMY
 	};
 

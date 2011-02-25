@@ -205,7 +205,8 @@ PEvent PEventLoop::Loop()
                         }
                     else
                         {
-                         
+                            //mStates isn't a device-type state.
+
                             //The test examines the device's state directly.
                             result = mStates[i]->TestDevice();
                             if(result)
