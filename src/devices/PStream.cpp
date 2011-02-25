@@ -32,6 +32,7 @@
 #include <list>
 #include <string>
 #include <algorithm>
+#include <sys/stat.h> 
 
 using std::ostream;
 using std::fstream;
@@ -59,16 +60,27 @@ PStream::PStream(const string & filename, StreamDirection dir, StreamType type):
             mFileStream = new fstream(mStreamFileName.c_str(),  ios_base::in);        
             if(!mFileStream->is_open())
                 {
-                    PError::SignalFatalError("Unable to open file ["+ mStreamFileName+"] for reading");
+                    PError::SignalFatalError("Unable to open file ["+ mStreamFileName+"] for reading. It may be in a location you do not have privilege to access.");
                 }
 
             break;
 
         case sdWrite:
+            struct stat stFileInfo;
+            int intStat;
+
+            // Attempt to get the file attributes
+            intStat = stat(mStreamFileName.c_str(),&stFileInfo);
+            cout << "file attributes: " << intStat << endl;
+            cout << "st_mode: "<< stFileInfo.st_mode << endl;
+            cout << "st_gid: "<< stFileInfo.st_gid << endl;
+            cout << "st_uid: "<< stFileInfo.st_uid << endl;
+
+   
             mFileStream = new fstream(mStreamFileName.c_str(),  ios_base::out);
             if(!mFileStream->is_open())
                 {
-                    PError::SignalFatalError("Unable to open file ["+ mStreamFileName+"] for writing");
+                    PError::SignalFatalError("Unable to open file ["+ mStreamFileName+"] for writing.  Its directory may not exist or it may be in a location you do not have privilege to access.");
                 }
 
             break;
@@ -77,7 +89,7 @@ PStream::PStream(const string & filename, StreamDirection dir, StreamType type):
             mFileStream = new fstream(mStreamFileName.c_str(), ios_base::out | ios_base::app);
             if(!mFileStream->is_open())
                 {
-                    PError::SignalFatalError("Unable to open file ["+ mStreamFileName+"] for appending");
+                    PError::SignalFatalError("Unable to open file ["+ mStreamFileName+"] for appending.  Its directory may not exist or it may be in a location you do not have privilege to access.");
                 }
 
             break;
