@@ -2,6 +2,10 @@ todo:
 
 
 
+
+- itemorder test uses Z/Zed; change to length 7???
+
+
  - add reporting for TOL of additional statistics.
  - Add a FileExists() function???
  - Add a Dir() functions???
@@ -10,4 +14,19 @@ todo:
  - Make/document various layout functions
  - Make a function that unloads the window but keeps running the PEBL.
 
+
+
+
+- Print("") a message in test batteries about where data is saved.  Maybe link that to FileClose()?
+
+
+- file concatenation function (appendfile?).
+
+- streams of experiments
+
+- FileExists() to test whether a file is there
+
+- WaitForAnyKeyPressForTimeout doesn't work.
+
  - save clock test to file + instructions (it may already exist?)
+
