@@ -140,7 +140,7 @@ namespace PEBLStream
 
             {"ENDOFLINE",            EndOfLine,        1, 1},
             {"ENDOFFILE",            EndOfFile,        1, 1},
-
+            {"APPENDFILE",           AppendFile,       2, 2},
 
             {"CONNECTTOIP", ConnectToIP,               2, 2},
             {"CONNECTTOHOST", ConnectToHost,           2, 2},
@@ -150,6 +150,11 @@ namespace PEBLStream
             {"SENDDATA", SendData,                     2,2},
             {"GETDATA", GetData,                       2,2},
             {"WRITEPNG", WritePNG,                     2,2},
+
+            {"OPENPPORT",OpenPPort,                   1,1},
+            {"SETPPORTSTATE",SetPPortState,           2,2},
+            {"GETPPORTSTATE",GetPPortState,           1,1},
+            {"SETPPORTMODE", SetPPortMode,           2,2},
 
             {0,            0,  0, 0}
         };
@@ -253,7 +258,10 @@ namespace PEBLEnvironment
             {"SIGNALFATALERROR",                SignalFatalError,   1,1},
             {"TRANSLATEKEYCODE",                TranslateKeyCode,  1, 1},
             {"TIMESTAMP",                       TimeStamp,         0, 0},
-            {"GETPEBLVERSION",                  GetPEBLVersion,    0, 0},
+
+            {"GETVIDEOMODES",                  GetVideoModes,    0, 0},
+            {"GETPEBLVERSION",                  GetPEBLVersion,    0, 0},       
+
             {"GETSYSTEMTYPE",                   GetSystemType,     0, 0},
             {"SYSTEMCALL",                      SystemCall,        1,1},
             {"VARIABLEEXISTS",                  VariableExists,    1,1},

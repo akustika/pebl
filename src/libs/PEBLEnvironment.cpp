@@ -974,6 +974,11 @@ Variant PEBLEnvironment::TimeStamp(Variant v)
 }
 
 
+Variant PEBLEnvironment::GetVideoModes(Variant v)
+{
+    return myEnv->GetScreenModes();
+
+}
 
 Variant  PEBLEnvironment::GetPEBLVersion(Variant v)
 {

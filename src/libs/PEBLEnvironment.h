@@ -79,6 +79,7 @@ namespace PEBLEnvironment
     Variant SignalFatalError(Variant v);
     Variant TranslateKeyCode(Variant v);
     Variant TimeStamp(Variant v);
+    Variant GetVideoModes(Variant v);
     Variant GetPEBLVersion(Variant v);
     Variant GetSystemType(Variant v);
     Variant SystemCall(Variant v);
