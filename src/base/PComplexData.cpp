@@ -97,54 +97,57 @@ counted_ptr<PEBLObjectBase> PComplexData::GetObject() const
 
 std::string PComplexData::GetTypeName() const
 {
-    switch (GetType() )
-        {
-        case CDT_LIST:
-            return "Complex Data: List";
-            
-        case CDT_ENVIRONMENT:
-            return "Complex Data: Environment";
-            
-        case CDT_WINDOW:
-            return "Complex Data: Window";
-            
-        case CDT_COLOR:
-            return "Complex Data: Color";
-            
-        case CDT_FONT:
-            return "Complex Data: Font";
-            
-        case CDT_LABEL:
-            return "Complex Data: Label";
-            
-        case CDT_TEXTBOX:
-            return "Complex Data: TextBox";
-            
-        case CDT_IMAGEBOX:
-            return "Complex Data: ImageBox";
-            
-        case CDT_KEYBOARD:
-            return "Complex Data: Keyboard";
-            
-        case CDT_FILESTREAM:
-            return "Complex Data: FileStream";
-            
-        case CDT_AUDIOOUT:
-            return "Complex Data: Audio Out";
-            
-        case CDT_DRAWOBJECT:
-            return "Complex Data: Drawing Object";
-            
-        case CDT_NETWORKCONNECTION:
-            return "Complex Data: Network Connection";
 
-        case CDT_PARALLELPORT:
-            return "Complex Data: Parallel Port";
-            
-        case CDT_UNDEFINED:
-        default:
-            return "Complex Data: Undefined";
-            
+  switch (GetType() )
+  {
+    case CDT_LIST:
+      return "Complex Data: List";
+
+    case CDT_ENVIRONMENT:
+      return "Complex Data: Environment";
+
+    case CDT_WINDOW:
+      return "Complex Data: Window";
+
+    case CDT_COLOR:
+      return "Complex Data: Color";
+
+    case CDT_FONT:
+      return "Complex Data: Font";
+
+    case CDT_LABEL:
+      return "Complex Data: Label";
+
+    case CDT_TEXTBOX:
+      return "Complex Data: TextBox";
+
+    case CDT_IMAGEBOX:
+      return "Complex Data: ImageBox";
+
+    case CDT_KEYBOARD:
+      return "Complex Data: Keyboard";
+
+    case CDT_FILESTREAM:
+      return "Complex Data: FileStream";
+
+  case CDT_AUDIOOUT:
+      return "Complex Data: Audio Out";
+
+  case CDT_DRAWOBJECT:
+      return "Complex Data: Drawing Object";
+
+  case CDT_NETWORKCONNECTION:
+      return "Complex Data: Network Connection";
+  
+  case CDT_PARALLELPORT:
+      return "Complex Data: Parallel Port";
+
+  case CDT_JOYSTICK:
+      return "Complex Data: Joystick";
+
+  case CDT_UNDEFINED:
+  default:
+      return "Complex Data: Undefined";
   }
 
 }
@@ -224,6 +227,12 @@ bool PComplexData::IsTextBox() const
 bool PComplexData::IsImageBox() const
 {
   return GetType() == CDT_IMAGEBOX;
+}
+
+
+bool PComplexData::IsJoystick() const
+{
+  return GetType() == CDT_JOYSTICK;
 }
 
 

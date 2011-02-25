@@ -3,7 +3,7 @@
 //    Name:       src/base/PComplexData.h
 //    Purpose:    Contains definition for the complex data type, held by the Variant Class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -30,8 +30,8 @@
 //#include "PEBLObject.h"
 
 #include "PList.h"
-#include "../objects/PColor.h"
 
+#include "../objects/PColor.h"
 
 #include "../platforms/sdl/PlatformEnvironment.h"
 #include "../platforms/sdl/PlatformWindow.h"
@@ -46,7 +46,9 @@
 #include "../platforms/sdl/PlatformAudioOut.h"
 #include "../platforms/sdl/PlatformNetwork.h"
 #include "../utility/rc_ptrs.h"
+#include "../platforms/sdl/PlatformJoystick.h"
 #include "../devices/PParallelPort.h"
+
 #include <iostream>
 
 
@@ -158,7 +160,9 @@ public:
     bool IsDrawSquare() const;
     bool IsDrawRectangle() const;
     bool IsCanvas() const;
+    bool IsJoystick() const;
     bool IsParallelPort() const;
+
 
 
     void SetProperty(std::string, Variant v);
