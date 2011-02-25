@@ -38,6 +38,7 @@
 #include <list>
 #include <stdio.h>
 
+#include "../../utility/PError.h"
 
 #if defined PEBL_WIN32
 #include <windows.h>
@@ -58,7 +59,8 @@ PlatformEnvironment::PlatformEnvironment(PEBLVideoMode mode, PEBLVideoDepth dept
     mVideoMode(mode),
     mVideoDepth(depth),
     mWindowed(windowed),
-    mUnicode(unicode)
+    mUnicode(unicode),
+    mNumJoysticks(0)
 {
     mIsInitialized = false;
 }
@@ -89,6 +91,8 @@ ostream & PlatformEnvironment::SendToStream(ostream& out) const
 ///This method initiates everything needed to display the main window
 void PlatformEnvironment::Initialize()
 {
+
+
     mIsInitialized = true;
     if ( SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_NOPARACHUTE ) < 0 )
         {
@@ -184,6 +188,47 @@ Variant  PlatformEnvironment::GetCursorPosition()
     PComplexData *   pcd = new PComplexData(newlist2); 
     return Variant(pcd);
 }
+
+
+
+// This will initialize the joystick subsystem
+// and return the number of available joysticks.
+int PlatformEnvironment::GetNumJoysticks()
+{
+    //Initialize joystick subsystem if has not yet been.
+    if(SDL_InitSubSystem(SDL_INIT_JOYSTICK)<0)
+        {
+            PError::SignalWarning("No joysticks available");
+        }
+    int num   =  SDL_NumJoysticks();
+    
+    return num;
+}
+
+
+
+
+// This will initialize the joystick subsystem
+// and return the number of available joysticks.
+Variant PlatformEnvironment::GetJoystick(int index)
+{
+
+    if(index < 1 || index > SDL_NumJoysticks())
+        {
+            PError::SignalFatalError("Requesting an invalid joystick");
+        }
+    //    SDL_Joystick * joystick = SDL_JoystickOpen(int index);
+    PlatformJoystick* joystick = new PlatformJoystick(index+1);
+    
+
+
+    counted_ptr<PEBLObjectBase> tmp = counted_ptr<PEBLObjectBase>(joystick);
+
+    PComplexData *   pcd = new PComplexData(tmp); 
+    return Variant(pcd);
+    
+}
+
 //
 Variant PlatformEnvironment::GetScreenModes()
 {
@@ -214,4 +259,5 @@ Variant PlatformEnvironment::GetScreenModes()
     pcd = new PComplexData(baselist2); 
     return Variant(pcd);
 }
+
 
