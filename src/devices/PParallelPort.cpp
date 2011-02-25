@@ -1,9 +1,9 @@
-//* -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*- */
-/////////////////////////////////////////////////////////////////////////////////
+/* -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*- */
+////////////////////////////////////////////////////////////////////////////////
 //    Name:       src/devices/PParellelPort.cpp
 //    Purpose:    Class for handling parallel port
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2010-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -28,26 +28,27 @@
 #include "../utility/PError.h"
 
 #if defined (PEBL_LINUX)
-#include "sys/io.h"
-#endif
 
+#endif
+#include <sys/io.h>
 using std::ostream;
 using std::fstream;
 using std::flush;
 using std::string;
 using std::cout;
+using std::endl;
 
-
+#define mPort 0x378
 
 enum PEBLPPort
     {
         PEBLPPortLPT1=0x378,
         PEBLPPortLPT2=0x278,
         PEBLPPortLPTX=0x3BC
-    }
+    };
 
 PParallelPort::PParallelPort():
-    mPort(PEBLPPortLPT1),
+    mmPort(PEBLPPortLPT1),
     mIsOpen(false)
 {
     mCDT = CDT_PARALLELPORT;
@@ -64,12 +65,18 @@ PParallelPort::~PParallelPort()
 
 void PParallelPort::Init()
 {
-    //This works on linux:
+
+           
+    //This works on linux: open 3 bytes to access
     int out = ioperm(mPort, 3, 1);
+    //int out = iopl(3);
     mIsOpen = true;
-    if(out==0)
+    std::cerr << "Initiating parallel port.  Return value :["<<out<<"]\n";
+
+    //    EmulateStandardPort();
+    if(out)
         {
-            PUtility::SignalFatalError("Unable to Access Parallel Port.  Make sure script is run with root access.\n");
+            PError::SignalFatalError("Unable to Access Parallel Port.  Make sure script is run with root access.\n");
         }
 
 
@@ -79,14 +86,14 @@ void PParallelPort::SetPort(Variant v)
 {
     if(v=="LPT1")
         {
-            mPort = PEBLPPortLPT1;
+            mmPort = PEBLPPortLPT1;
         
         }else if(v=="LPT2")
         {
-            mPort = PEBLPPortLPT2;
+            mmPort = PEBLPPortLPT2;
         } else if(v=="LPTX")
         {
-            mPort = PEBLPPortLPTX;
+            mmPort = PEBLPPortLPTX;
         }else{
         std::cerr << "Cannot set port to ["<<v<<"].  Setting to LPT1.\n";
     }
@@ -112,47 +119,81 @@ void PParallelPort::Close()
 
 char PParallelPort::GetStatusState()
 {
-    return (inb(mPort+1)>>3)^0x10;
+
+    return inb(mPort+1);
+    //    return (inb(mPort+1)>>3)^0x10;
 }
 
 //Gets a byte whos bits are pins 2...9 (for dual-mode ports)
 // 
 char PParallelPort::GetDataState()
 {
+    
     return (inb(mPort));
 }
 
 //sets the data bytes (pins 2..9) to the specified state.
 void PParallelPort::SetDataState(char x)
 {
-    outb(x,mPort)
+    outb(x,mPort);
 }
+
+
+void PParallelPort::EmulateStandardPort()
+{
+
+
+}
+
 
 // Sets port to output mode.  This works for dual-mode ports.
 //
-
 void PParallelPort::SetOutputMode()
 {
-    char x;
-    x = inb(mPort+2);
-    outb(x & 0xdf, mPort+2);
+
+    unsigned char x;
+    x = inb(mPort+2);  //get state of control register
+
+    outb(x & ~0x20, mPort+2);
 }
 
 
-
-// Sets port to output mode
+// Sets port to input mode
 //
 void PParallelPort::SetInputMode()
 {
-    char x;
-    x = inb(mPort+2);
-    outb(x | 0x20, mPort+2);
-}
 
-char PParallelPort::
+
+    unsigned char x = 0;
+    x = inb(mPort+2);
+    //  turns 7th bit of the control byte  on
+    outb( x | 0x20, mPort+2);
+
+}
 
 ostream & PParallelPort::SendToStream(ostream & out) const
 {
     out << "<Generic Parallel Port Object>" << flush;
     return out;
+}
+
+
+
+//Interface: 0 for data bits; 1 for status bits
+int PParallelPort::GetState(int iface)
+{
+    int out =0;
+    if(iface==0)
+        {
+            SetOutputMode();
+            SetDataState(255);
+            SetInputMode();
+            out = GetDataState();
+        } else 
+        if(iface==1)
+            {
+                out = GetStatusState();
+            }
+
+     return out;
 }

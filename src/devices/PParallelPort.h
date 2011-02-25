@@ -3,7 +3,7 @@
 //    Name:       src/devices/PParallelPort.h
 //    Purpose:    Class for handling Parallel Port Communication
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -34,13 +34,7 @@
 
 
 
-///  This is the base File Stream class.  
-///  It is used to read and write files.
-///  It is also a subclass of PDevice, which means that it can be added to the 
-///  event loop for interesting between-process communications, and probably even used as
-///  a basis for other input devices.
-
-class PNetwork: public PDevice, virtual public PEBLObjectBase
+class PParallelPort: public PDevice, virtual public PEBLObjectBase
 {
     
 public:    
@@ -52,25 +46,23 @@ public:
     ///The Standard destructor.  
     virtual ~PParallelPort();
     
-    virtual void SetHostIP(unsigned int host){mHost = host;};
-    virtual unsigned int GetHost(){return mHost;};
-    
-    virtual void SetHostName(std::string hostname){mHostName = hostname;};
-    virtual std::string GetHostName(){return mHostName;};
-
-    virtual void SetPort(unsigned int port){mPort = port;};
-    virtual unsigned int GetPort(){return mPort;};
-
+    virtual void Init();
+    virtual void SetPort(Variant v);
+    virtual void Close();
+    virtual char GetStatusState();
+    virtual char GetDataState();
+    virtual void SetDataState(char x);
+    virtual void EmulateStandardPort();
+    virtual void SetOutputMode();
+    virtual void SetInputMode();
+    virtual int  GetState(int iface);
 
 protected:
 
     //Inheritable printing Method.
     virtual std::ostream& SendToStream(std::ostream& out)const; 
 
-    std::string mHostName;
-    unsigned int mHost;
-    unsigned int mPort;
-
+    unsigned int mmPort;
     bool mIsOpen;
 
 private:
