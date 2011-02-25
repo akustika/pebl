@@ -46,6 +46,10 @@ enum PEBL_DEVICE_TYPE
         PDT_STREAM,
         PDT_EVENT_QUEUE,
         PDT_AUDIO_OUT,
+        PDT_JOYSTICK_AXIS,
+        PDT_JOYSTICK_BALL,
+        PDT_JOYSTICK_BUTTON,
+        PDT_JOYSTICK_HAT,
         PDT_PORT,
         PDT_DUMMY
 	};
