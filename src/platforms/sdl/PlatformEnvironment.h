@@ -72,6 +72,11 @@ public:
     virtual Variant GetCursorPosition();
 
     virtual bool GetUnicode(){return mUnicode;};
+
+    virtual int GetNumJoysticks();
+    virtual Variant GetJoystick(int index);
+
+
 protected:
     virtual std::ostream & SendToStream(std::ostream& out) const;    
 
@@ -82,7 +87,10 @@ private:
 
     bool mWindowed;
     bool mUnicode;
+    int mNumJoysticks;
+
     void __SetProps__();
+
 };
 
 
