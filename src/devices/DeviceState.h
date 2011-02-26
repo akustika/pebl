@@ -55,6 +55,14 @@ enum DeviceTest
     };
 
 
+enum DeviceTestType
+    {
+        DTT_VALUESTATE    ,
+        DTT_INTERVALSTATE ,
+        DTT_REGIONSTATE   
+    };
+
+
 //This is the generic DeviceState base class.  It is a way to describe a set
 //of states of a device could be in, and then test against the actual state
 //of the device.
@@ -92,11 +100,10 @@ protected:
     DeviceTest mDeviceTest;
     PDevice * mDevice;
 
-
+    
     PEBL_DEVICE_TYPE mPDT;  //This keeps track of the ultimate device.  For 
                             //events, this will be different from mDevice, which will be
                             // an eventqueue. 
-
 };
 
 class ValueState: public DeviceState
@@ -111,7 +118,7 @@ protected:
 private:
     int mValue;
 };
-
+    
 
 class IntervalState: public DeviceState
 {
