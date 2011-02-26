@@ -1,21 +1,23 @@
 define Start(p)
 {
 
-  prestime <- 250
+  prestime <- 250           ##how long to do the presentation
+  trials <- 50             ##Number of trials
 
   gWin <- MakeWindow("black")
   gSubNum <- GetSubNum(gWin)
   gSleepEasy <- 1
   ShowCursor(0)
 
-  fileout <- FileOpenAppend("mullerlyer-"+gSubNum+".txt")
+  fileout <- FileOpenAppend("mullerlyer-"+gSubNum+".csv")
   header <- EasyLabel("which is longer?",gVideoWidth/2,20,gWin,22)
   footer <- EasyLabel("<lshift>                 <rshift>",gVideoWidth/2,gVideoHeight-40,gWin,22)
 
-   trials <- 50
-   trial <- 1
 
-   diff <- 0
+
+   diff <- 0    ##start diff value.
+   ##Use a jittered staircase method to find point of indifference.
+   trial <- 1
    while(trial<=trials)
    {
 
@@ -56,7 +58,7 @@ define Start(p)
     Hide(footer)
     Draw()
     Wait(500)
-    FilePrint(fileout,gsubnum+" " +trial + " " +l1 + " " + l2 + " " +  diff + " " +resp + " " +corr +" " + t1 + " " + (t2-t1))
+    FilePrint(fileout,gsubnum+"," +trial + "," +l1 + "," + l2 + "," +  diff + "," +resp + "," +corr +"," + t1 + "," + (t2-t1))
     trial <- trial + 1
   }
 
