@@ -3,7 +3,7 @@
 //    Name:       src/base/Variant.h
 //    Purpose:    Contains the Variant Class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003--2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003--2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //

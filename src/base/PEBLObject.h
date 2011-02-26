@@ -50,6 +50,7 @@ enum ComplexDataType {
     CDT_FILESTREAM,
     CDT_FONT,
     CDT_IMAGEBOX,
+    CDT_JOYSTICK,
     CDT_KEYBOARD,
     CDT_LIST,
     CDT_TEXTBOX,
