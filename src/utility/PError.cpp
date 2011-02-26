@@ -255,8 +255,26 @@ void PError::AssertType(Variant v, int type, const string & outsideMessage)
             SignalFatalError(message);
             
             break;
+
+
+
+        case PEAT_JOYSTICK:
             
+            if(v.IsComplexData())
+                {
+                    if((v.GetComplexData())->IsJoystick())
+                        {
+                            //Everything is fine, return without error.
+                            return;
+                        }
+                }
+            message = outsideMessage;
+            message +="Wanted Joystick but got " + GetTypeName(v) + ": "+ v.GetString();
+            SignalFatalError(message);
             
+            break;
+
+
         case PEAT_KEYBOARD:
             
             if(v.IsComplexData())

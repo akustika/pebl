@@ -57,6 +57,7 @@ public:
     const string  StripFile(const string &  file);     
     const string  MergePathAndFile(const string &  path, const string & file);  
     bool IsDirectory(const string & pathname);
+    
 
     friend std::ostream & operator << (std::ostream & out, const PEBLPath & path);
     std::ostream & Print(std::ostream & out) const;

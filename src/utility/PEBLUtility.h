@@ -3,7 +3,7 @@
 //    Name:       utility/PEBLUtility.h
 //    Purpose:    Miscellaneous Utility Functions used in PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -51,6 +51,7 @@ namespace PEBLUtility
 
     long double Log2(long double val);
     long int Round(long double val);
+    long double Round(long double val, long int prec);
     long int Truncate(long double val);
 
     Variant Tokenize(const char* line, char separator);
@@ -69,6 +70,11 @@ namespace PEBLUtility
 
     PEBLVideoMode GetVideoMode(std::string modeline);
     PEBLVideoDepth GetVideoDepth(std::string depthline);
+
+
+    Variant GetDirectoryListing(std::string path);
+    Variant IsDirectory(std::string path);
+    Variant FileExists(std::string path);
 }
 
 

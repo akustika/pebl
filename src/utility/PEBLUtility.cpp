@@ -3,7 +3,7 @@
 //    Name:       utility/PEBLUtility.cpp
 //    Purpose:    Miscellaneous Utility Functions used in PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -40,6 +40,10 @@
 #include <strstream>
 #include <algorithm>
 #include <png.h>
+
+#include <dirent.h>
+#include <errno.h>
+#include <sys/stat.h>
 
 //Some math libraries contain this, but let's not take any chances.
 #define PI 3.141592653589793238462643383279502884197169399375
@@ -192,7 +196,22 @@ long int PEBLUtility::Round(long double val)
 #elif defined(round)
     return round((double)val);
 #else
-    return (long int) floor(val);
+    return (long int) floor(val+.5);
+#endif
+}
+
+long double PEBLUtility::Round(long double val, long int prec)
+{
+    double off = pow(10,prec);
+#if defined(roundl)
+
+    return (long double)roundl(val*off)/off;
+#elif defined(round)
+
+    return (long double)round((double)val*off)/off;
+#else
+
+    return (long double) ((long int)(floor(val*off+.5))/off);
 #endif
 }
 
@@ -898,5 +917,70 @@ std::string PEBLUtility::ShiftSwitch(int modkeys, std::string lower, std::string
     else
         return lower;
 }
+
+
+Variant PEBLUtility::IsDirectory(std::string path)
+{
+    DIR *dirp;
+    struct dirent *entry;
+    dirp = opendir(path.c_str());
+
+
+    if(dirp)
+        {
+            return Variant(1);
+        }
+    else
+        {
+            //std::cerr << "Error type: " <<errno << std::endl;
+            return Variant(0);
+        }
+    //entry->d_type;
+
+
+    
+}
+
+Variant PEBLUtility::FileExists(std::string path)
+{
+
+    struct stat stFileInfo; 
+    //may need to use _stat on windows
+    int out = stat(path.c_str(),&stFileInfo);
+    
+    //  We can get better info about the file
+    //  if we look at out.
+    return Variant(out==0);
+}
+
+
+
+
+ 
+Variant PEBLUtility::GetDirectoryListing(std::string path)
+{
+    DIR *dirp;
+    struct dirent *entry;
+    PList * plist = new PList();
+    PComplexData*pcd=NULL;
+
+    dirp = opendir(path.c_str());
+    if(dirp)
+        {
+        
+        while(entry = readdir(dirp))
+            {
+                plist->PushBack(Variant(entry->d_name));
+            }
+        }
+
+        closedir(dirp);
+
+        counted_ptr<PEBLObjectBase> pob = counted_ptr<PEBLObjectBase>(plist);
+        pcd = new PComplexData(pob); 
+        
+        return Variant(pcd);
+}
+
 
 
