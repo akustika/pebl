@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLEnvironment.cpp
 //    Purpose:    General Environment Function Library for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -96,7 +96,7 @@ Variant  PEBLEnvironment::Wait(Variant v)
     //Now, clear the event loop tests
     Evaluator::mEventLoop.Clear();
     delete device;
-
+    
     return Variant(returnval.GetDummyEvent().value);
 }
 
@@ -900,21 +900,475 @@ Variant PEBLEnvironment::SetCursorPosition(Variant v)
 
 
 
+    //basic joystick stuff
+Variant PEBLEnvironment::GetNumJoysticks(Variant v)
+{
+    return myEnv->GetNumJoysticks();
+}
+
+//This returns a joystic to use, based on its name.
+Variant  PEBLEnvironment::GetJoystick(Variant v)
+{
+
+    PList * plist = v.GetComplexData()->GetList();
+    //The first argument should be an integer specifying the joystick index
+    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in argument of function [GetJoystick(<int>)]: "); 
+    int id = plist->First();
+    plist->PopFront();
 
 
- //Complex eventloop construction.
+    PlatformJoystick * js = new PlatformJoystick(id);
+    counted_ptr<PEBLObjectBase> joy = counted_ptr<PEBLObjectBase>(js);
+    PComplexData *   pcd = new PComplexData(joy);
+    return Variant(pcd);
+
+}
+
+Variant  PEBLEnvironment::GetNumJoystickAxes(Variant v)
+{
+
+    PList * plist = v.GetComplexData()->GetList();
+    //The first argument should be a joystick
+    PError::AssertType(plist->First(), PEAT_JOYSTICK, "Argument error in argument of function [GetNumJoystickAxes(<joystick>)]: ");
+    
+    PlatformJoystick * joystick = dynamic_cast<PlatformJoystick*>(plist->First().GetComplexData()->GetObject().get());
+    
+    return Variant(joystick->GetNumAxes());
+}
+
+
+Variant  PEBLEnvironment::GetNumJoystickBalls(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    //The first argument should be a joystick
+    PError::AssertType(plist->First(), PEAT_JOYSTICK, "Argument error in argument of function [GetNumJoystickBalls(<joystick>)]: ");
+    
+    PlatformJoystick * joystick = dynamic_cast<PlatformJoystick*>(plist->First().GetComplexData()->GetObject().get());
+
+    
+    return Variant(joystick->GetNumBalls());
+
+}
+Variant PEBLEnvironment::GetNumJoystickButtons(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    //The first argument should be a joystick
+    PError::AssertType(plist->First(), PEAT_JOYSTICK, "Argument error in argument of function [GetNumJoystickButtons(<joystick>)]: ");
+    PlatformJoystick * joystick = dynamic_cast<PlatformJoystick*>(plist->First().GetComplexData()->GetObject().get());
+
+
+    
+    return Variant(joystick->GetNumButtons());
+
+}
+Variant  PEBLEnvironment::GetNumJoystickHats(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    //The first argument should be a joystick
+    PError::AssertType(plist->First(), PEAT_JOYSTICK, "Argument error in argument of function [GetNumJoystickHats(<joystick>)]: ");
+    PlatformJoystick * joystick = dynamic_cast<PlatformJoystick*>(plist->First().GetComplexData()->GetObject().get());
+
+    
+    return Variant(joystick->GetNumHats());
+
+}
+
+
+Variant  PEBLEnvironment::GetJoystickButtonState(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    //The first argument should be a joystick
+    PError::AssertType(plist->First(), PEAT_JOYSTICK, "Argument error in first argument of function [GetJoystickButtonState(<joystick>,<button>)]: ");
+    PlatformJoystick * joystick = dynamic_cast<PlatformJoystick*>(plist->First().GetComplexData()->GetObject().get());
+    plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in second argument of function [GetJoystickButtonState(<joystick>,<button>)]: ");
+    unsigned int button  = (unsigned int)(int)(plist->First());
+
+
+    return joystick->GetButtonState(button);
+}
+
+Variant  PEBLEnvironment::GetJoystickAxisState(Variant v)
+{
+
+    PList * plist = v.GetComplexData()->GetList();
+    //The first argument should be a joystick
+    PError::AssertType(plist->First(), PEAT_JOYSTICK, "Argument error in first argument of function [GetJoystickAxisState(<joystick>,<axis>)]: ");
+    PlatformJoystick * joystick = dynamic_cast<PlatformJoystick*>(plist->First().GetComplexData()->GetObject().get());
+    plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in second argument of function [GetJoystickAxisState(<joystick>,<axis>)]: ");
+
+    unsigned int axis  = (unsigned int)(int)(plist->First());
+
+
+    return joystick->GetAxisState(axis);
+
+}
+
+
+Variant  PEBLEnvironment::GetJoystickHatState(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    //The first argument should be a joystick
+    PError::AssertType(plist->First(), PEAT_JOYSTICK, "Argument error in first argument of function [GetJoystickHatState(<joystick>,<hat>)]: ");
+    PlatformJoystick * joystick = dynamic_cast<PlatformJoystick*>(plist->First().GetComplexData()->GetObject().get());
+    plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in second argument of function [GetJoystickHatState(<joystick>,<hat>)]: ");
+
+    unsigned int hat  = (unsigned int)(int)(plist->First());
+
+    return joystick->GetHatState(hat);
+    
+}
+
+
+Variant  PEBLEnvironment::GetJoystickBallState(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    //The first argument should be a joystick
+    PError::AssertType(plist->First(), PEAT_JOYSTICK, "Argument error in first argument of function [GetJoystickBallState(<joystick>,<button>)]: ");
+    PlatformJoystick * joystick = dynamic_cast<PlatformJoystick*>(plist->First().GetComplexData()->GetObject().get());
+    plist->PopFront();
+
+    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in second argument of function [GetJoystickBallState(<joystick>,<button>)]: ");
+    unsigned int button  = (unsigned int)(int)(plist->First());
+
+
+    return joystick->GetBallState(button);
+    
+
+}
+
+
+// This takes an event definition, and function, 
+// 
+//
+// First parameter is device as a <string> should take Device as a 
+//Complex eventloop construction.
+//  arguments are:
+//
+//  device
+//  intface
+//  comparison  
+//  function name
+//  parameters???
+//
+//
+//
+//
 Variant  PEBLEnvironment::RegisterEvent( Variant v)
 {
-    PError::SignalFatalError("Function [RegisterEvent] Not implemented.");
+
+    //v[1] should have the parameter-a letter
+    PList * plist = v.GetComplexData()->GetList();
+
+
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [RegisterEvent(<string>)]:  ");    
+    string mystring = PEBLUtility::ToUpper(plist->First()); plist->PopFront();
+
+    PDevice*device;
+    
+    enum PEBL_DEVICE_TYPE devicetype = PDT_DUMMY;
+
+
+    
+    if(mystring== "<KEYBOARD>")
+        {
+            device = new PlatformKeyboard(myKeyboard);
+            devicetype = PDT_KEYBOARD;
+        }else if(mystring == "<MOUSE_MOVEMENT>")
+        {
+            device = gEventQueue;
+            devicetype = PDT_MOUSE_MOVEMENT;
+        }else if(mystring == "MOUSE_BUTTON")
+        {
+            device = gEventQueue;
+            devicetype = PDT_MOUSE_BUTTON;
+        }else if(mystring==  "<TIMER>")
+        {
+        
+            //This has the potential to leak:
+            device = new PlatformTimer(myTimer);
+            devicetype = PDT_TIMER;
+
+            //this will be a state, not an event.
+
+            
+        }else if (mystring == "<JOYSTICK_BUTTON>")
+        {
+
+            device = gEventQueue;
+            devicetype = PDT_JOYSTICK_BUTTON;
+
+        }else if (mystring == "<JOYSTICK_HAT>")
+        {
+
+            device = gEventQueue;
+            devicetype = PDT_JOYSTICK_HAT;
+
+
+        }else if (mystring == "<JOYSTICK_AXIS>")
+        {
+
+            device = gEventQueue;
+            devicetype = PDT_JOYSTICK_HAT;
+
+        }else if (mystring == "<JOYSTICK_BALL>")
+        {
+
+            device = gEventQueue;
+            devicetype = PDT_JOYSTICK_HAT;
+        }else
+        {
+            //Note: PDT_stream, PDTevent_queue, and PDT_audio_out
+            //not handled.
+            
+            PError::SignalFatalError("Unknown Device\n");
+        }
+
+
+    //Netx argument is the interface
+    Variant intface =(plist->First()); plist->PopFront();
+
+
+    //Next argument is a value or range
+    //It should be either a number,
+    // or a list of 2 or 4 items
+    Variant p = plist->First();plist->PopFront();
+    Variant v1,v2,v11,v12,v21,v22;
+    enum DeviceTestType testtype;
+
+
+
+    if(p.IsNumber())
+        {
+
+            testtype =DTT_VALUESTATE;
+            PError::AssertType(p, PEAT_INTEGER, "In RegisterEvent, test bounds not a number:");    
+            //valuestate
+            
+            // this will crash!!!       }else if (p.IsList())
+        }else
+        {
+
+
+            PList * myList = (PList*)(p.GetComplexData()->GetObject().get());
+            // This will be either intervalstate or regionstate
+            // if it is an intervalstate, the list well have two numbers inside it
+            // for a regionstate, the list will have two sublists.
+            
+             v1 = myList->First();myList->PopFront();
+             v2 = myList->First();myList->PopFront();
+            
+             if(0)//v1.IsList())
+                {
+
+                    
+
+                    //regionstate;
+                    testtype =DTT_REGIONSTATE;
+
+                    PList * sublist1 = (PList*)(v1.GetComplexData()->GetObject().get());
+                    PList * sublist2 = (PList*)(v2.GetComplexData()->GetObject().get());
+
+                    //Could this end up destroying a global list???
+                    v11 = sublist1->First(); sublist1->PopFront();
+                    v12 = sublist1->First(); 
+                    v21 = sublist2->First(); sublist1->PopFront();
+                    v22 = sublist2->First(); 
+
+                }
+            else
+                {
+
+                    testtype = DTT_INTERVALSTATE;
+                    PError::AssertType(v1, PEAT_NUMBER, "In RegisterEvent, test bounds not a number:");    
+                    PError::AssertType(v2, PEAT_NUMBER, "In RegisterEvent, test bounds not a number:");    
+                    //intervalstate
+                    //ValueState  * state = new ValueState(1, DT_EQUAL, key, device, PDT_KEYBOARD);
+                    
+                   
+                }
+
+
+        }
+    // else
+    //        {
+    //
+    //            std::cerr << "h\n";
+    //            PError::SignalFatalError(" argument of function [RegisterEvent() must be a number or a list: ");    
+    //        }
+    
+
+
+    //Create a keyboard test correspending to keydown. 
+    //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
+
+    //   intervalstate or
+    //   regionstate:
+    //      inside
+    //      not_outside
+    //      outside
+    //      note_inside
+    //      on_edge
+
+    //   other:
+    //   TRUE
+    //   FALSE
+
+
+    PError::AssertType(plist->First(), PEAT_STRING, 
+                       "Error in  of function [RegisterEvent(<device>,<interface>,<function>)]: ");    
+
+    
+    std::string test = PEBLUtility::ToUpper(plist->First()); plist->PopFront();
+
+
+    enum DeviceTest type;
+
+    switch(testtype)
+        {
+        case DTT_VALUESTATE:
+    
+
+            if(test == "<NOTEQUAL>")
+                {
+                    type = DT_NOT_EQUAL;
+                }
+            else if(test == "<EQUAL>")
+                {
+                    type = DT_EQUAL;
+                }
+            else if(test == "<LESSTHAN>")
+                {
+                    type = DT_LESS_THAN;
+                }
+            else if(test == "<GREATERTHAN>")
+                {
+                    type = DT_GREATER_THAN;
+                }
+            else if(test =="<LEQ>")
+                {
+                    type = DT_LESS_THAN_OR_EQUAL;
+                }
+            else if( test == "<GEQ>")
+                {
+                    type = DT_GREATER_THAN_OR_EQUAL;
+                }
+            else if(test == "<TRUE>")
+                {
+                    type = DT_TRUE;
+                }
+            else if(test == "<FALSE>")
+                {
+                    type = DT_FALSE;
+                }else{
+
+                PError::SignalFatalError("test type not available for value comparisons");
+            }
+            
+            break;
+
+            //The same test types are available
+            //for intervals and regions.
+        case DTT_INTERVALSTATE:
+        case DTT_REGIONSTATE:
+
+            if(test =="<INSIDE>")
+                {
+                    type = DT_INSIDE;
+                }
+            else if(test == "<OUTSIDE>")
+                {
+                    type = DT_OUTSIDE;
+                }
+            else if (test == "<TRUE>")
+                {
+                    type = DT_TRUE;
+                }
+            else if (test == "<FALSE>")
+                {
+                    type = DT_FALSE;
+                }
+            else if( test == "<ON_EDGE>")
+                {
+                    type = DT_ON_EDGE;
+                }
+            else if(test =="<NOT_INSIDE>")
+                {
+                    type = DT_NOT_INSIDE;
+                }
+            else if(test == "<NOT_OUTSIDE>")
+                {
+                    type = DT_OUTSIDE;
+                }else
+                {
+                    PError::SignalFatalError("Test type not available for region or interval test");
+                }
+
+        }
+
+
+
+
+    PError::AssertType(plist->First(), PEAT_STRING, "Error in parameter of function [RegisterEvent(<device>,<xxx>,<functionname>)]:  ");
+    string funcname = PEBLUtility::ToUpper(plist->First()); plist->PopFront();
+    //Can we check to see if funcname exists in the functionmap?
+
+
+
+
+
+    DeviceState * state  = NULL;
+    
+    switch(testtype)
+        {
+        case DTT_VALUESTATE:
+            state = new ValueState((int)p, type, (int)intface, device, devicetype);
+            break;
+        case DTT_INTERVALSTATE:
+            state = new IntervalState((int)v1,(int)v2, type, (int)intface, device, devicetype);
+            break;
+        case DTT_REGIONSTATE:
+            state = new RegionState((int)v11, (int)v12, (int)v21, (int)v22, type, (int)intface, device, devicetype);
+            break;
+        }
+
+
+
+    //NULL,NULL will terminate the looping
+    
+    PList* params = NULL;
+    
+    if(devicetype == PDT_TIMER)
+        {
+            Evaluator::mEventLoop.RegisterState(state,funcname, params);
+        }
+    else
+        {
+            Evaluator::mEventLoop.RegisterEvent(state,funcname, params);
+        }
+    
+
     return Variant(0);
 }
+
+
 Variant  PEBLEnvironment::StartEventLoop(Variant v)
 {
-    PError::SignalFatalError("Function [StartEventLoop] Not implemented.");
-    return Variant(0);
+
+    PEvent returnval = Evaluator::mEventLoop.Loop();
+    return Variant(returnval.GetDummyEvent().value);
+
 }
+
+
 Variant  PEBLEnvironment::ClearEventLoop(Variant v)
 {
+
     Evaluator::mEventLoop.Clear();
     return Variant(0);
 }
@@ -982,8 +1436,8 @@ Variant PEBLEnvironment::GetVideoModes(Variant v)
 
 Variant  PEBLEnvironment::GetPEBLVersion(Variant v)
 {
-    
-    return Variant("PEBL Version 0.11");
+   
+    return Variant("PEBL Version 0.12");
 }
 
 
@@ -1012,6 +1466,44 @@ Variant PEBLEnvironment::SystemCall(Variant v)
 }
 
 
+
+
+
+Variant PEBLEnvironment::IsDirectory(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [IsDirectory(<pathname>)]:  ");    
+
+    Variant out = PEBLUtility::IsDirectory(plist->First());
+    return out;
+}
+
+
+Variant PEBLEnvironment::GetDirectoryListing(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [GetDirectoryListing(<pathname>)]:  ");    
+
+    Variant out = PEBLUtility::GetDirectoryListing(plist->First());
+    return out;
+}
+
+
+
+Variant PEBLEnvironment::FileExists(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [FileExists(<filename>)]:  ");    
+
+    Variant out = PEBLUtility::FileExists(plist->First());
+    return out;
+}
+
+
+
 //  This does not currently work.
 //
 Variant PEBLEnvironment::VariableExists(Variant v)
@@ -1037,6 +1529,7 @@ Variant PEBLEnvironment::IsNumber(Variant v)
 
     return plist->First().IsNumber();
 }
+
 
 Variant PEBLEnvironment::IsInteger(Variant v)
 {
@@ -1092,6 +1585,26 @@ Variant PEBLEnvironment::IsTextBox(Variant v)
         }
     return Variant(false);
 }
+
+
+
+Variant PEBLEnvironment::IsJoystick(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+
+    Variant v1 =  plist->First();
+    if (v1.IsComplexData())
+        {
+            if((v1.GetComplexData())->IsJoystick())
+                {
+                    return Variant(true);
+                }
+        }
+    return Variant(false);
+}
+
+
+
 
 Variant PEBLEnvironment::IsCanvas(Variant v)
 {

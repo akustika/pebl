@@ -3,7 +3,7 @@
 //    Name:       src/libs/Functions.h
 //    Purpose:    Defines function tables
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -70,7 +70,7 @@ namespace PEBLMath
             {"RADTODEG",      RadToDeg, 1, 1},
         
             //Rounding
-            {"ROUND",         Round,    1, 1},
+            {"ROUND",         Round,    1, 2},
             {"FLOOR",         Floor,    1, 1},
             {"CEILING",       Ceiling,  1, 1},
         
@@ -253,8 +253,27 @@ namespace PEBLEnvironment
             {"WAITFORMOUSEBUTTONWITHTIMEOUT",   WaitForMouseButtonWithTimeout, 1,2},
 
 
+            {"GETNUMJOYSTICKS",                 GetNumJoysticks,      0, 0},
+            {"OPENJOYSTICK",                    GetJoystick,       1, 1},
+            {"GETNUMJOYSTICKAXES",              GetNumJoystickAxes,   1, 1},
+            {"GETNUMJOYSTICKBALLS",             GetNumJoystickBalls,  1, 1},
+            {"GETNUMJOYSTICKBUTTONS",           GetNumJoystickButtons,1, 1},
+            {"GETNUMJOYSTICKHATS",              GetNumJoystickHats,   1, 1},
+
+            {"GETJOYSTICKBUTTONSTATE",          GetJoystickButtonState, 2, 2},
+            {"GETJOYSTICKAXISSTATE",            GetJoystickAxisState,   2, 2},
+            {"GETJOYSTICKHATSTATE",             GetJoystickHatState,    2, 2},
+            {"GETJOYSTICKBALLSTATE",            GetJoystickBallState,   2, 2},
+
+
             {"CLEAREVENTLOOP",                  ClearEventLoop,     0, 0},
             {"GETINPUT",                        GetInput,           2, 2},
+
+            {"REGISTEREVENT",                   RegisterEvent,      4,5},
+            {"STARTEVENTLOOP",                  StartEventLoop,      0,0},          
+            {"CLEAREVENTLOOP",                  ClearEventLoop,      0,0},
+
+
             {"SIGNALFATALERROR",                SignalFatalError,   1,1},
             {"TRANSLATEKEYCODE",                TranslateKeyCode,  1, 1},
             {"TIMESTAMP",                       TimeStamp,         0, 0},
@@ -266,7 +285,11 @@ namespace PEBLEnvironment
             {"SYSTEMCALL",                      SystemCall,        1,1},
             {"VARIABLEEXISTS",                  VariableExists,    1,1},
 
-            {"ISTEXT",                        IsText,          1,1},
+            {"ISDIRECTORY",                     IsDirectory,        1,1},
+            {"FILEEXISTS",                      FileExists,        1,1},
+            {"GETDIRECTORYLISTING",             GetDirectoryListing,1,1},
+            
+            {"ISTEXT",                          IsText,          1,1},
             {"ISNUMBER",                        IsNumber,          1,1},
             {"ISINTEGER",                       IsInteger,          1,1},
             {"ISFLOAT",                         IsFloat,            1,1},

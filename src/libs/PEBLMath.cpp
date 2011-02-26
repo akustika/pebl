@@ -53,7 +53,6 @@ using std::endl;
 Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
 {
 
-    cout << "Recursing on: " << v << endl;
     //If this function is called, v is a list of elements.
     //We should call the function on each element of the list, creating 
     //a list of the results, turn this into a variant, and return it.
@@ -74,29 +73,36 @@ Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
     PComplexData * tmpPCD;
     
 
+
     //    std::list<Variant>::iterator p = plist->Begin();    
     while(!plist->IsEmpty())
         {
 
+            //Create new variant list to pass to function
             arglist = new PList();
-            arglist->PushFront(plist->First());
 
+            //Add the first element of plist to it
+            arglist->PushFront(plist->First());
+            
+            //make it into a PCD
             tmpObj = counted_ptr<PEBLObjectBase>(arglist);
             tmpPCD = (new PComplexData(tmpObj));
+            //Create variant to hold it.
             tmpVariant = Variant(tmpPCD);
-            delete tmpPCD;
+            
+            //tmpPCD is now part of tmpVariant, so we don't need to destroy it.
+            //delete tmpPCD;
             tmpPCD=NULL;
 
 
             Variant result = funcname(tmpVariant);
-
             resultslist->PushBack(result);
 
-            arglist->PopFront();
+            //Get rid of arglist so we can make a new one.
             delete arglist;
             arglist = NULL;
-                
             plist->PopFront();
+
         }
 
     //Now, resultslist is a PList.  Put it into a PCD.
@@ -142,8 +148,8 @@ Variant PEBLMath::Recurse2(Variant v, Variant (*funcname)(Variant), Variant argu
 
             pcd = new PComplexData(tmp3);
             Variant tmp = Variant(pcd);
-            delete pcd;
-            pcd=NULL;
+            //delete pcd;
+            //pcd=NULL;
 
             resultslist->PushBack(funcname(tmp));        //Execute
             arglist->PopFront();                             //Pop of argument to move to next one.
@@ -222,7 +228,7 @@ Variant PEBLMath::Ln(Variant v)
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, Ln);
+            return Recurse(v1, Ln);
 
         }
     else
@@ -279,7 +285,7 @@ Variant PEBLMath::Exp(Variant v)
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, Exp);
+            return Recurse(v1, Exp);
 
         }
     else
@@ -338,7 +344,7 @@ Variant PEBLMath::Sqrt(Variant v)
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, Sqrt);
+            return Recurse(v1, Sqrt);
 
         }
     else
@@ -402,7 +408,7 @@ Variant PEBLMath::Tan(Variant v)
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, Tan);
+            return Recurse(v1, Tan);
 
         }
     else
@@ -429,7 +435,7 @@ Variant PEBLMath::Sin(Variant v)
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, Sin);
+            return Recurse(v1, Sin);
 
         }
     else
@@ -454,7 +460,7 @@ Variant PEBLMath::Cos(Variant v)
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, Cos);
+            return Recurse(v1, Cos);
         }
     else
         {
@@ -477,7 +483,7 @@ Variant PEBLMath::ATan(Variant v)
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, ATan);
+            return Recurse(v1, ATan);
 
         }
     else
@@ -501,7 +507,7 @@ Variant PEBLMath::ASin(Variant v)
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, ASin);
+            return Recurse(v1, ASin);
 
         }
     else
@@ -524,7 +530,7 @@ Variant PEBLMath::ACos(Variant v)
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, ACos);
+            return Recurse(v1, ACos);
 
         }
     else
@@ -551,7 +557,7 @@ Variant PEBLMath::DegToRad(Variant v)
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, DegToRad);
+            return Recurse(v1, DegToRad);
 
         }
     else
@@ -578,7 +584,7 @@ Variant PEBLMath::RadToDeg(Variant v)
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, RadToDeg);
+            return Recurse(v1, RadToDeg);
 
         }
     else
@@ -599,12 +605,24 @@ Variant PEBLMath::Round(Variant v)
     Variant v1 = plist->First();
     if(v1.IsNumber())
         {
-            return Variant(PEBLUtility::Round(v1.GetFloat()));
+
+            plist->PopFront();
+
+            if(plist->IsEmpty())
+                {
+                    return Variant(PEBLUtility::Round(v1.GetFloat()));
+                }else{
+
+                Variant v2 =plist->First();
+
+                PError::AssertType(v2, PEAT_INTEGER,"Second (optional) argument  in [Round(number, precision)] must be an integer: ");            
+                return Variant(PEBLUtility::Round(v1.GetFloat(),v2.GetInteger()));
+            }
+
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, Round);
-
+            return Recurse(v1, Round);
         }
     else
         {
@@ -626,7 +644,7 @@ Variant PEBLMath::Floor(Variant v)
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, Floor);
+            return Recurse(v1, Floor);
 
         }
     else
@@ -648,7 +666,7 @@ Variant PEBLMath::Ceiling(Variant v)
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, Ceiling);
+            return Recurse(v1, Ceiling);
 
         }
     else
@@ -669,7 +687,7 @@ Variant PEBLMath::AbsFloor(Variant v)
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, AbsFloor);
+            return Recurse(v1, AbsFloor);
 
         }
     else
@@ -788,7 +806,7 @@ Variant PEBLMath::Sign(Variant v)
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, Sign);
+            return Recurse(v1, Sign);
 
         }
     else
@@ -814,7 +832,7 @@ Variant PEBLMath::Abs(Variant v)
         }
     else if(v1.GetComplexData()->IsList())
         {
-            return Recurse(v, Abs);
+            return Recurse(v1, Abs);
 
         }
     else

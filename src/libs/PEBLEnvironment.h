@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLEnvironment.h
 //    Purpose:    General Environment Function Library for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -68,6 +68,24 @@ namespace PEBLEnvironment
     Variant WaitForMouseButton(Variant v);
     Variant WaitForMouseButtonWithTimeout(Variant v);
 
+    //basic joystick stuff
+    Variant GetNumJoysticks(Variant v);
+    Variant GetJoystick(Variant v);
+    Variant GetNumJoystickAxes(Variant v);
+    Variant GetNumJoystickBalls(Variant v);
+    Variant GetNumJoystickButtons(Variant v);
+    Variant GetNumJoystickHats(Variant v);
+
+
+    Variant GetJoystickButtonState(Variant v);
+    Variant GetJoystickAxisState(Variant v);
+    Variant GetJoystickHatState(Variant v);
+    Variant GetJoystickBallState(Variant v);
+
+    
+
+
+
     //Complex eventloop construction.
     Variant RegisterEvent( Variant v);
     Variant StartEventLoop(Variant v);
@@ -84,6 +102,11 @@ namespace PEBLEnvironment
     Variant GetSystemType(Variant v);
     Variant SystemCall(Variant v);
 
+
+    Variant IsDirectory(Variant v);
+    Variant GetDirectoryListing(Variant v);
+    Variant FileExists(Variant v);
+
     Variant VariableExists(Variant v);
     Variant IsText(Variant v);
     Variant IsNumber(Variant v);
@@ -92,6 +115,7 @@ namespace PEBLEnvironment
     Variant IsString(Variant v);
     Variant IsList(Variant v);
     Variant IsTextBox(Variant v);
+    Variant IsJoystick(Variant v);
     Variant IsCanvas(Variant v);
     Variant IsImage(Variant v);
     Variant IsLabel(Variant v);
