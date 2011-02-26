@@ -6,9 +6,7 @@ define Start(p)
 ##
 ##
 
-
-
-   ##The number of trials per block (and condition)
+ ##The number of trials per block (and condition)
 
    reps <- 6 #24 items per test
    Initialize()
@@ -60,11 +58,11 @@ define Start(p)
 
 
 
-  gFileOut <- FileOpenWrite("vstroop-"+gSubNum+".txt")
+  gFileOut <- FileOpenWrite("vstroop-"+gSubNum+".csv")
   gSumFileOut <- FileOpenWrite("vstroop-summary-"+gSubNum+".txt")
 
 
-  FilePrint(gFileOut,"subnum block trial word color part xpos ypos resp rname correct intrusion numresponses time0 timea timeend trialtime responsetime")
+  FilePrint(FileOut,"subnum,block,trial,word,color,part,xpos,ypos,resp,rname,correct,intrusion,numresponses,time0,timea,timeend,trialtime,responsetime")
 
   gTrial <- 0
   gBlock <- 0
@@ -126,7 +124,6 @@ define Start(p)
    #Initialize data collectors
    gErr  <- []; gRT   <- []; gCond <- []
 
-
    gHead <- gHeadBlock
    ########################################################
    ##Do the Dot naming  (block 1)
@@ -135,9 +132,6 @@ define Start(p)
 
    resp1 <- First(out1)
    time1 <- Second(out1)
-
-
-
 
 
    ########################################################
@@ -325,6 +319,7 @@ if(dotraining)
     time1 <- GetTime()
 
     #Add the highlight rectangle BEHIND the stimulus
+
     highlight <- Rectangle(0,0,120,60,MakeColor("grey"),0)
     AddObject(highlight,gWin)
 
@@ -399,9 +394,9 @@ if(dotraining)
            } else{
              intrusion <- 0
            }
-       FilePrint(gFileOut,gSubNum+ " " + gBlock + " " +trial + " " + First(id) + " " + Second(id)+
-        " " + Third(id) + " " + Fourth(id) + " "+ Fifth(id)+ " " + resp + " " + colname + " "  + corr + " " +intrusion + " "+responses + " " +
-        time0+ " "+ timea + " " + timeend + " " +(timeend-time0) + " " + (timeend-timea))
+       FilePrint(gFileOut,gSubNum+ "," + gBlock + "," +trial + "," + First(id) + "," + Second(id)+
+        "," + Third(id) + "," + Fourth(id) + ","+ Fifth(id)+ "," + resp + "," + colname + ","  + corr + "," +intrusion + ","+responses + "," +
+        time0+ ","+ timea + "," + timeend + "," +(timeend-time0) + "," + (timeend-timea))
 
           intrusions <- intrusions + intrusion
          }
@@ -601,6 +596,32 @@ define Initialize()
    gHeadBlock <- "Pressione a tecla para indicar a cor."
    gExitText <-"Você terminou. Obrigado por participar."    
 
+    }elseif(Uppercase(gLanguage)=="RU"){
+
+   ##Use russian
+   gColorBaseNames <- ["красный","зелёный","синий","жёлтый"]
+   gWords   <- ["when","hard","and","over"]
+   gPracticeText <- "Before we begin, take a moment to learn the mapping between colors and the keyboard numbers.  Press the numbers 1-4 consecutively to practice the stimuli, and space bar to begin the test." 
+   gInst1 <- "You are about to be tested regarding how well you can read words and the colors they appear in. In the first part, you must name the colors of the dots as quickly as you can. Follow the gray rectangle and press the correct key [1-4] accordingly.
+
+
+   Press any key to begin."
+ 
+   gInst2 <-  "This time, name the colors of the words as quickly as you can. Follow the gray rectangle and press the correct key [1-4] accordingly.
+
+
+   Press any key to begin."
+ 
+
+   gInst3 <- "Again, name the colors in which the words are printed as quickly as you can. Don't read the word! Instead, name the color in which the word is printed.
+
+
+   Press any key to begin."
+ 
+   gHeadBegin <-"Press any key to begin"
+   gHeadBlock <- "Press key to indicate color."
+   gExitText <-"You are now finished. Thank you for participating."
+
     }elseif(Uppercase(gLanguage)=="SK")
   {
    ##Slovakian here:
@@ -660,8 +681,6 @@ define Initialize()
    gExitText <-"You are now finished. Thank you for participating."
 
     }
-
-
  }
 
 
