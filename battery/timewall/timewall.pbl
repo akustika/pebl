@@ -10,7 +10,7 @@
 ## 54), Wright Air Development Center, Wright-Patterson Air Force Base, Ohio.
 ## 
 ## Jerison, H. J. and J. Arginteanu, 1958, Time Judgements, Acoustic Noise, and
-## Judqinent Drift, (WADC-TR-57-454) Wright Air Development Center, Wright-
+## Judgement Drift, (WADC-TR-57-454) Wright Air Development Center, Wright-
 ## Patterson Air Force Base, Ohio (AJ-130963).
 ##
 ## Perez,  W. A., Masline, P. J., Ramsey, E. G. and Urban, K. E. (1984).
@@ -33,7 +33,7 @@ define Start(p)
   maxtime <- 10000          #Maximumu transit time
 
   gWin <- MakeWindow("lightblue")
-  gFileOut <- FileOpenWrite("timewall-"+gSubNum+".dat")
+  gFileOut <- FileOpenWrite("timewall-"+gSubNum+".csv")
   gSleepEasy <- 1
 
 inst <- "This is an experiment to see how well you can estimate the speed of a moving square target.  The target will always start at the top of the screen and descend at a constant rate toward the bottom.  After the target is two-thirds of the way down, it    will pass behind a wall and become invisible.    Your task is to press a button at the exact moment the moving target would pass through the notch marked at the very bottom of the display.  In making this judgement, you are not to count or use any other rhythm method to facilitate your judgement.     Instead, follow the target with your eyes and imagine it continuing straight down behind the wall to the notch. After you have pressed the button, you will receive feedback as to where the target actually was and whether you over or underestimated the time interval.   When you are ready, press a key on the keyboard and the next target shall emerge from the top.   The task continues for "+numtrials + " trials.  
@@ -67,7 +67,7 @@ Press any key to begin."
   Draw()
 
 
-  FilePrint(gFileOut, "Subnum trial targtime resptime acc shortlong")
+  FilePrint(gFileOut, "subnum,trial,targtime,resptime,acc,shortlong")
   trial <- 1
   while(trial < numtrials)
    {
@@ -102,8 +102,8 @@ Press any key to begin."
   Show(gFeedback)
   Draw()
 
-  FilePrint(gFileOut,gSubNum + " " + trial +" " + targ + " " + resp + " " + acc +
-                      " " + shortlong)
+  FilePrint(gFileOut,gSubNum + "," + trial +"," + targ + "," + resp + "," + acc +
+                      "," + shortlong)
   WaitForAnyKeyPress()
   Hide(gFeedback)
   trial <- trial + 1
