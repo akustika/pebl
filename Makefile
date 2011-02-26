@@ -2,7 +2,7 @@
 #//////////////////////////////////////////////////////////////////////////////
 #//////////////////////////////////////////////////////////////////////////////
 #//
-#//	Copyright (c) 2003-2010
+#//	Copyright (c) 2003-2011
 #//	Shane T. Mueller, Ph.D.  smueller at obereed dot net
 #//
 #//     This file is part of the PEBL project.
@@ -141,7 +141,8 @@ PDEVICES_SRC =  $(DEVICES_DIR)/PDevice.cpp \
 	$(DEVICES_DIR)/DeviceState.cpp \
 	$(DEVICES_DIR)/PStream.cpp \
 	$(DEVICES_DIR)/PAudioOut.cpp \
-	$(DEVICES_DIR)/PNetwork.cpp 
+	$(DEVICES_DIR)/PNetwork.cpp \
+	$(DEVICES_DIR)/PParallelPort.cpp 
 
 
 PDEVICES_OBJ  = $(patsubst %.cpp, %.o, $(PDEVICES_SRC))
@@ -398,7 +399,9 @@ uninstall:
 	rm -Rf $(PREFIX)share/pebl
 
 install: uninstall
+
 	install -d $(PREFIX)bin/	
+
 	cp bin/pebl $(PREFIX)bin/pebl
 	rm -Rf $(PREFIX)share/pebl
 	install -d $(PREFIX)share/pebl
@@ -413,7 +416,7 @@ install: uninstall
 	rm -Rf $(PREFIX)share/pebl/media/text/CVS
 	rm -Rf $(PREFIX)share/pebl/pebl-lib/CVS
 	chmod -R uga+r $(PREFIX)share/pebl/
-
+#	chmod +s $(PREFIX)bin/pebl ##suid root
 
 ifeq (.depend,$(wildcard .depend))
 include .depend
