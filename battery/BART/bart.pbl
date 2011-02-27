@@ -1,9 +1,6 @@
 define Start(p)
 {
 
-
-
-
       gStartBalloonSize <- 10
 
   	  GetStrings(gLanguage)
@@ -44,7 +41,6 @@ define Start(p)
 	  group4 <- Merge(set8,set9)
 
 	  trials <- FlattenN([group1,group2,group3,group4],1)
-
 
 	  loop(i,trials)
       {
@@ -240,9 +236,9 @@ define Init()
   	  AddObject(glastLab2,gWin)
 
 
-      gBlow <-LoadSound("blow2.wav")
-      gPop <- LoadSound("pop.wav")
-      gKaching <- LoadSound("kaching.wav")
+      gBlow <-LoadSound("sounds/blow2.wav")
+      gPop <- LoadSound("sounds/pop.wav")
+      gKaching <- LoadSound("sounds/kaching.wav")
 }
 
 define UpdateScreen(radius)
