@@ -61,6 +61,7 @@ enum PErrorAssertType
         PEAT_LIST,
         PEAT_NETWORKCONNECTION,
         PEAT_PARALLELPORT,
+        PEAT_COMPORT,
         PEAT_TEXTOBJECT,
         PEAT_TEXTBOX,
         PEAT_LABEL,

@@ -428,6 +428,22 @@ void PError::AssertType(Variant v, int type, const string & outsideMessage)
             SignalFatalError(message);
 
           break;
+          
+        case PEAT_COMPORT:
+             
+            if(v.IsComplexData())
+                {
+                    if((v.GetComplexData())->IsComPort())
+                        {
+                            //Everything is fine, return without error.
+                            return;
+                        }
+                }
+            message = outsideMessage;
+            message +="Wanted ComPort but got " + GetTypeName(v) + ": "+ v.GetString();
+            SignalFatalError(message);
+
+          break;
 
 
             
