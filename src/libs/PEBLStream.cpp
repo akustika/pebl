@@ -879,3 +879,73 @@ Variant PEBLStream::WaitForPPortStatus(Variant v)
     return Variant(true);
 }
 #endif
+
+
+// This sets the state of the parallel port to either input or output.
+//
+Variant PEBLStream::OpenComPort(Variant v)
+{
+
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_INTEGER, "Argument error in first parameter of function [OpenComPort(<portnumber>,<baud>)]: ");
+
+
+
+    Variant v2 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_INTEGER, "Argument error in first parameter of function [OpenComPort(<portnumber>),<baud>]: ");
+
+
+    counted_ptr<PEBLObjectBase> tmp2 = counted_ptr<PEBLObjectBase>(new PComPort((int)v1,(int)v2));
+    PComPort * cport = dynamic_cast<PComPort*>(tmp2.get());
+    
+    
+    cport->Init();
+            
+
+    PComplexData * pcd = new PComplexData(tmp2);
+    Variant tmp3 = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp3;
+}
+
+
+
+// 
+//
+Variant PEBLStream::ComPortGetByte(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_COMPORT, "Argument error in first parameter of function [ComPortGetByte(<port>)]: ");   
+
+    counted_ptr<PEBLObjectBase> tmp1 = (v1.GetComplexData())->GetObject();
+    PComPort * cport = dynamic_cast<PComPort*>(tmp1.get());
+    
+    unsigned char out = cport->GetByte();
+
+
+    return Variant((int)out);
+}
+
+// 
+//
+Variant PEBLStream::ComPortSendByte(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_COMPORT, "Argument error in first parameter of function [ComPortSendByte(<port>,<int>)]: ");   
+
+    Variant v2 = plist->First();
+    PError::AssertType(v2,PEAT_INTEGER,"Argument error in second parameter of function [ComPortSendByte(<port>,<int>)]: ");
+        
+
+    counted_ptr<PEBLObjectBase> tmp1 = (v1.GetComplexData())->GetObject();
+    PComPort * cport = dynamic_cast<PComPort*>(tmp1.get());
+    unsigned char send = v2.GetInteger();    
+     
+    cport->PSendByte(send);
+
+    return Variant(0);
+}

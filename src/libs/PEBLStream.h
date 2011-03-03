@@ -109,5 +109,14 @@ namespace PEBLStream
     Variant GetPPortState(Variant v);
     Variant SetPPortMode(Variant v);
 
+
+    //These functions open, send, receive, and close
+    //a serial (com) port; also usb-mounted comport devices
+    //ala ftdi chips and the dlp-io8 and relatives.
+    Variant OpenComPort(Variant v);
+    Variant ComPortSendByte(Variant v);
+    Variant ComPortGetByte(Variant v);
+
+
 }
 #endif

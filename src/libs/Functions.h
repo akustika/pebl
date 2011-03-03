@@ -156,6 +156,12 @@ namespace PEBLStream
             {"GETPPORTSTATE",GetPPortState,           1,1},
             {"SETPPORTMODE", SetPPortMode,           2,2},
 
+            {"OPENCOMPORT",      OpenComPort,          1,1},
+            {"COMPORTSENDBYTE",  ComPortSendByte,      2,2},
+            {"COMPORTGETBYTE",   ComPortGetByte,       1,1},
+
+
+
             {0,            0,  0, 0}
         };
 }
@@ -269,7 +275,7 @@ namespace PEBLEnvironment
             {"CLEAREVENTLOOP",                  ClearEventLoop,     0, 0},
             {"GETINPUT",                        GetInput,           2, 2},
 
-            {"REGISTEREVENT",                   RegisterEvent,      4,5},
+            {"REGISTEREVENT",                   RegisterEvent,      5,6},
             {"STARTEVENTLOOP",                  StartEventLoop,      0,0},          
             {"CLEAREVENTLOOP",                  ClearEventLoop,      0,0},
 
