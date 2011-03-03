@@ -31,8 +31,8 @@
 #include <vector>
 #include "DeviceState.h"
 #include "PEvent.h"
-
-
+#include "../utility/rc_ptrs.h"
+#include "../base/PEBLObject.h"
 class PDevice;
 class PList;
 class PNode;
@@ -51,8 +51,8 @@ public:
     //One way to use the event loop is to register condition states of devices. The
     //loop then examines the devices on each loop, determining if the device is 
     //in some certain state. These methods add and remove such states.
-    void RegisterState(DeviceState * state, const std::string & function, PList * parameters);
-    void RegisterEvent(DeviceState * state, const std::string & function, PList * parameters);
+    void RegisterState(DeviceState * state, const std::string & function, Variant parameters);
+    void RegisterEvent(DeviceState * state, const std::string & function, Variant parameters);
     void RemoveState(DeviceState state);
 
     //Another way to use the event loop is to register conditions associated with 'events'
@@ -80,7 +80,7 @@ protected:
     //function nodes and parameters to execute when true.
     std::vector<DeviceState*> mStates;
     std::vector<PNode *> mNodes;
-    std::vector<PList *> mParameters;
+    std::vector<Variant> mParameters;
 
     //The following structure keep track of whether the 
     //state is a 'normal' device query test (false) or

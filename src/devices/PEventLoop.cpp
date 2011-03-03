@@ -32,11 +32,13 @@
 #include "../base/Evaluator.h"
 #include "../base/PComplexData.h"
 #include "../base/PEBLObject.h"
+#include "../base/grammar.tab.hpp"
 
 #include "../libs/PEBLEnvironment.h"
 #include <iostream>
 
 using std::flush;
+using std::endl;
 
 extern PlatformEventQueue * gEventQueue;
 
@@ -58,8 +60,11 @@ PEventLoop::~PEventLoop()
 /// in an event-loop.  This allows multiple tests to be registered (time limit, key press, etc.)
 /// and tested within a fairly tight compiled loop, without the user having to write his/her own 
 /// interpreted event loop.
-void PEventLoop::RegisterState(DeviceState * state, const std::string & function, PList * parameters)
+void PEventLoop::RegisterState(DeviceState * state,
+                               const std::string & function,
+                               Variant parameters)
 {
+
 
     //Add the state to the states list.
     mStates.push_back(state);
@@ -67,15 +72,38 @@ void PEventLoop::RegisterState(DeviceState * state, const std::string & function
     //null PNode onto the vector; this is a short-cut for an end-of-loop event.
     if(function != "")
         {
+
+            //Get the node associated with the function name.
+            //Note that node will be the right node of a PEBL_FUNCTION node
+            //The namenode goes on the left.
+            Variant fname = Variant(function.c_str(),P_DATA_FUNCTION);
+            DataNode * namenode = new DataNode(fname,"user-generated function",-1);                                        
+
+            //On the right, we need a node representing the lambda function.
+
+            //we need the arglist too.
+
             PNode * node = Evaluator::mFunctionMap.GetFunction(function);
-            mNodes.push_back(node);
+
+            PNode * arglist = ((OpNode*)node)->GetLeft();
+
+            PNode * fnode = new OpNode(PEBL_FUNCTION, namenode, arglist, "user-generated", -1);
+
+
+            mNodes.push_back(fnode);
+
+
         }
     else
         {
-
+            
             mNodes.push_back(NULL);
         }
     //Add parameters, for use later.
+    //parameters is passed in as a pointer, and must be attached to a counted pointer
+    //if we are to maintain it once the original function is gone.
+
+
     mParameters.push_back(parameters);
     mIsEvent.push_back(false);
 }
@@ -87,23 +115,41 @@ void PEventLoop::RegisterState(DeviceState * state, const std::string & function
 
 /// This method takes over ownership of the DeviceState, and is responsible for cleaning it up 
 /// when finished.
-void PEventLoop::RegisterEvent(DeviceState * state, const std::string &  function, PList * parameters)
+void PEventLoop::RegisterEvent(DeviceState * state, const std::string &  function, Variant parameters)
 {
+
+
     //Add the state to the states list.
     mStates.push_back(state);
     //Make a PNode representing the function. If the function-name is null, push a
     //null PNode onto the vector; this is a short-cut for an end-of-loop event.
     if(function != "")
         {
+
+            //Get the node associated with the function name.
+            //Note that node will be the right node of a PEBL_FUNCTION node
+            //The namenode goes on the left.
+            Variant fname = Variant(function.c_str(),P_DATA_FUNCTION);
+            DataNode * namenode = new DataNode(fname,"user-generated function",-1);                                        
+
+            //On the right, we need a node representing the lambda function.
+            
             PNode * node = Evaluator::mFunctionMap.GetFunction(function);
-            mNodes.push_back(node);
+
+            PNode * arglist =  ((OpNode*)node)->GetLeft();
+
+            PNode * fnode = new OpNode(PEBL_FUNCTION, namenode, arglist, "user-generated", -1);
+
+
+
+            mNodes.push_back(fnode);
         }
     else
         {
-
             mNodes.push_back(NULL);
         }
     //Add parameters, for use later.
+    
     mParameters.push_back(parameters);
     mIsEvent.push_back(true);
 }
@@ -187,16 +233,16 @@ PEvent PEventLoop::Loop()
 
                                                     if(mNodes[i])  //Execute mNodes
                                                         {
+
                                                             //Add the parameters, as a list, to the stack.
-                                                            counted_ptr<PEBLObjectBase> tmpList = counted_ptr<PEBLObjectBase>(mParameters[i]);
                                                             
-                                                            PComplexData * pcd = new PComplexData(tmpList);
-                                                            Variant tmp = Variant(pcd);
-                                                            delete pcd;
-                                                            pcd= NULL;
-                                                            myEval->Push(tmp);
-                                                            myEval->Evaluate(mNodes[i]);
+
+                                                            myEval->Push(mParameters[i]);
+
+                                                            //myEval->Evaluate(mNodes[i]);
+                                                            myEval->CallFunction((OpNode*)mNodes[i]);
                                                             myEval->Pop();
+
                                                         }
                                                     else                                             //If mNodes[i] is null, terminate
                                                         {
@@ -242,20 +288,31 @@ PEvent PEventLoop::Loop()
                                             returnval.SetDummyEvent(pde);
                                         }
                                     //If mNodes[i] is null, terminate
+ 
                                     if(mNodes[i])
                                         {
+                                            //cout << i << ": " << mNodes[i] << std::endl;
+
                                             //Add the parameters, as a list, to the stack.
-                                            counted_ptr<PEBLObjectBase> tmpList = counted_ptr<PEBLObjectBase>(mParameters[i]);
-                                            PComplexData * pcd = new PComplexData(tmpList);
-                                            Variant tmp = Variant(pcd);
-                                            delete pcd;
-                                            pcd= NULL;
-                                            myEval->Push(tmp);
-                                            myEval->Evaluate(mNodes[i]);
+                                            //Put the parameter on the top of the stack.
+
+                                            Variant v2 = Variant(mParameters[i]);
+
+                                            myEval->Push(v2);
+
+
+
+                                            //myEval->Evaluate(mNodes[i]);
+                                            myEval->CallFunction((OpNode*)mNodes[i]);
                                             //The top of the stack will be whatever is returned,
                                             //which should be nothing, or at least
-                                            
+                                            //cout << "About to pop:" << myEval->Peek() << std::endl;
+
+                                            //The return value is currently unused.
+                                            // we could use it to remove an event dynamically.
+                                           
                                             myEval->Pop();
+
 
                                         }
                                     else
@@ -285,7 +342,8 @@ PEvent PEventLoop::Loop()
                         struct timespec a,b;
                         a.tv_sec  = 0;   
                         a.tv_nsec = 100000; //1 ms
-                        int retval = nanosleep(&a,&b);
+                        //int retval = nanosleep(&a,&b);
+                        nanosleep(&a,&b);
                     }
                 }
 #endif
