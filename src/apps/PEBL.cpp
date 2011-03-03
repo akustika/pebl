@@ -3,7 +3,7 @@
 //    Name:       src/apps/PEBL.cpp
 //    Purpose:    The primary PEBL run-time interpreter.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -211,13 +211,13 @@ int PEBLInterpret( int argc, char *argv[] )
     delete head;
     head = NULL;
 
-
+#if 0
     cerr << "\n\n--------------------------------\n";
     cerr << "Functions used in program: " << endl;
     cerr << "--------------------------------\n";
     Evaluator::mFunctionMap.DumpValues();
     cerr << "--------------------------------\n\n";
-
+#endif
 
     //Parse command-line arguments.
 
@@ -307,14 +307,14 @@ int PEBLInterpret( int argc, char *argv[] )
 
     //These can be controlled by a command-line option
     // setenv("SDL_VIDEODRIVER", "dga",1);  //Requires root privileges to run;  fullscreen.
-    // setenv("SDL_VIDEODRIVER", "svgalib",1);  //Requires root and special library
+    //setenv("SDL_VIDEODRIVER", "svgalib",1);  //Requires root and special library; allows you to run on virtual terminal.
     // setenv("SDL_VIDEODRIVER", "x11",1);
 
     
     //Now, set the priority to the highest it can go.
 
     //setpriority(PRIO_PROCESS,0,PRIO_MIN);
-    setpriority(PRIO_PROCESS,0,0);
+     setpriority(PRIO_PROCESS,0,0);
     int priority = getpriority(PRIO_PROCESS,0);
     cerr << "Process running at a nice value of " << priority << endl;
     
@@ -411,7 +411,7 @@ int PEBLInterpret( int argc, char *argv[] )
             Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontMono",Variant("fireflysung.ttf"));
             Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontSerif",Variant("fireflysung.ttf"));
 
-        }else if(tmps == "KO" | tmps == "JP")
+        }else if((tmps == "KO") | (tmps == "JP"))
         {
             //UnBatang handles korean, japanese
             Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFont",Variant("UnBatang.ttf"));
