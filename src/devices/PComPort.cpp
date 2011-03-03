@@ -3,7 +3,7 @@
 //    Name:       src/devices/PParellelPort.cpp
 //    Purpose:    Class for handling parallel port
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2010-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -24,12 +24,16 @@
 //    along with PEBL; if not, write to the Free Software
 //    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ////////////////////////////////////////////////////////////////////////////////
-#include "PParallelPort.h"
+#include "PComPort.h"
+#include "../utility/rs232.h"
 #include "../utility/PError.h"
+
 
 #if defined (PEBL_LINUX)
 
 #endif
+
+
 #include <sys/io.h>
 using std::ostream;
 using std::fstream;
@@ -38,162 +42,146 @@ using std::string;
 using std::cout;
 using std::endl;
 
-#define mPort 0x378
 
-enum PEBLPPort
-    {
-        PEBLPPortLPT1=0x378,
-        PEBLPPortLPT2=0x278,
-        PEBLPPortLPTX=0x3BC
-    };
-
-PParallelPort::PParallelPort():
-    mmPort(PEBLPPortLPT1),
+PComPort::PComPort(unsigned int port,
+                   unsigned int baud):
     mIsOpen(false)
 {
-    mCDT = CDT_PARALLELPORT;
+    mCDT = CDT_COMPORT;
+    SetPort(port,baud);
 }
 
 
-PParallelPort::~PParallelPort()
+PComPort::~PComPort()
 {
     if(mIsOpen)
-        Close();
-}
-
-
-
-void PParallelPort::Init()
-{
-
-           
-    //This works on linux: open 3 bytes to access
-    int out = ioperm(mPort, 3, 1);
-    //int out = iopl(3);
-    mIsOpen = true;
-    std::cerr << "Initiating parallel port.  Return value :["<<out<<"]\n";
-
-    //    EmulateStandardPort();
-    if(out)
-        {
-            PError::SignalFatalError("Unable to Access Parallel Port.  Make sure script is run with root access.\n");
-        }
-
-
-}
-
-void PParallelPort::SetPort(Variant v)
-{
-    if(v=="LPT1")
-        {
-            mmPort = PEBLPPortLPT1;
-        
-        }else if(v=="LPT2")
-        {
-            mmPort = PEBLPPortLPT2;
-        } else if(v=="LPTX")
-        {
-            mmPort = PEBLPPortLPTX;
-        }else{
-        std::cerr << "Cannot set port to ["<<v<<"].  Setting to LPT1.\n";
-    }
-
-}
-
-
-void PParallelPort::Close()
-{
-    int out =ioperm(mPort,3,0);
+        CloseComport(mPort);
     mIsOpen = false;
 }
 
 
-////////////////////////////////////////////////
-//Returns a byte (char) with five lowest bits
-//indicating state of pins:
-// 15, Error
-// 13, Select
-// 12, Paper empty
-// 10, ACK
-// 11. Busy
 
-char PParallelPort::GetStatusState()
+void PComPort::Init()
 {
 
-    return inb(mPort+1);
-    //    return (inb(mPort+1)>>3)^0x10;
+    //init
+    if(!mIsOpen)
+        {
+            int out = OpenComport(mPort,mBaud);
+
+            mIsOpen = true;
+            std::cerr << "Initiating comport port.  Return value :["<<out<<"]\n";
+
+
+            if(out)
+                {
+                    PError::SignalFatalError("Unable to Open Com Port.  Make sure script is run with root access.\n");
+                }
+        }
+
 }
 
-//Gets a byte whos bits are pins 2...9 (for dual-mode ports)
-// 
-char PParallelPort::GetDataState()
+void PComPort::SetPort(unsigned int portnum,unsigned int baud)
 {
+
+#ifdef PEBL_LINUX
+
+    int bauds[23] ={50,75,110,134,150,200,300,600,1200,1800,2400,4800,9600,19200,38400,57600,115200,230400,
+                    460800,500000,576000,921600,1000000};
+
+    if(portnum < 16)
+        {
+            mPortName = Variant("ttyS")+Variant((int)portnum);
+        }
+    elseif(portnum < 22)
+        {
+            mPortName = Variant("ttyUSB")+Variant((int)(portnum-16));
+        }
+    else
+        {
+            PError::SignalFatalError(Variant("Attempted to set improper port number:")+(int)portnum);
+        }
+
+
+#else
+    int bauds[19] ={NULL,NULL,110,NULL,NULL,NULL,300,600,1200,NULL,2400,4800,9600,19200,38400,57600,115200,128000,256000};
+
+    if(portnum < 16)
+        {
+            mPortName = Variant("COM")+Variant((int)(portnum+1));
+        }
+#endif
+    //baud rate should be checked against legal bauds on each platform.
+    mBaud = baud;
+    mPort = portnum;    
+}
+
+
+void PComPort::PSendByte(unsigned char byte)
+{
+    int check = SendByte(mPort,byte);
+
+    //if check == 1, nothing was sent
+}
+
+unsigned char PComPort::GetByte()
+{
+    unsigned char out;
+    int check = PollComport(mPort,&out,1);
+    if(check==0)
+        {
+            return 0;
+        } else
+        {
+            
+            return out;
+        }
+}
+
+
+
+
+Variant PComPort::GetBytes(int n)
+{
+
     
-    return (inb(mPort));
+    unsigned char *out;
+    out = new unsigned char[n];
+
+    int check = PollComport(mPort,out,n);
+    Variant got = Variant(out);
+    //    int get = n;
+    //    Variant got ="";
+    //    while(get > 0)
+    //        {
+    //            int x = get>100?100:get;
+    //            
+    //            int check = PollComport(mPort,&out,get);
+    //            got = got + Variant(out[]);
+    //            get -= check;
+    //        }
+
+    return got;
 }
 
-//sets the data bytes (pins 2..9) to the specified state.
-void PParallelPort::SetDataState(char x)
+Variant PComPort::GetPortName()
 {
-    outb(x,mPort);
+    return mPortName;
+}
+
+void PComPort::Close()
+{
+
+    CloseComport(mPort);
 }
 
 
-void PParallelPort::EmulateStandardPort()
+
+
+ostream & PComPort::SendToStream(ostream & out) const
 {
-
-
-}
-
-
-// Sets port to output mode.  This works for dual-mode ports.
-//
-void PParallelPort::SetOutputMode()
-{
-
-    unsigned char x;
-    x = inb(mPort+2);  //get state of control register
-
-    outb(x & ~0x20, mPort+2);
-}
-
-
-// Sets port to input mode
-//
-void PParallelPort::SetInputMode()
-{
-
-
-    unsigned char x = 0;
-    x = inb(mPort+2);
-    //  turns 7th bit of the control byte  on
-    outb( x | 0x20, mPort+2);
-
-}
-
-ostream & PParallelPort::SendToStream(ostream & out) const
-{
-    out << "<Generic Parallel Port Object>" << flush;
+    out << "<Generic Com Port Object>" << flush;
     return out;
 }
 
 
-
-//Interface: 0 for data bits; 1 for status bits
-int PParallelPort::GetState(int iface)
-{
-    int out =0;
-    if(iface==0)
-        {
-            SetOutputMode();
-            SetDataState(255);
-            SetInputMode();
-            out = GetDataState();
-        } else 
-        if(iface==1)
-            {
-                out = GetStatusState();
-            }
-
-     return out;
-}
