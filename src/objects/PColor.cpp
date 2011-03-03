@@ -192,10 +192,10 @@ void PColor::SetAlpha(int color)
 }
 
    //These will return a single color
-int PColor::GetRed  () const { return mRed;};
-int PColor::GetGreen() const { return mGreen;};
-int PColor::GetBlue () const { return mBlue;};
-int PColor::GetAlpha() const { return mAlpha;};
+int PColor::GetRed  () const { return mRed;}
+int PColor::GetGreen() const { return mGreen;}
+int PColor::GetBlue () const { return mBlue;}
+int PColor::GetAlpha() const { return mAlpha;}
  
 
 ///This uses modular arithmetic to extract colors from unsigned int.
