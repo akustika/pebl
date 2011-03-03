@@ -59,7 +59,8 @@ enum ComplexDataType {
     CDT_DRAWOBJECT,
     CDT_NETWORKCONNECTION,
     CDT_CANVAS,
-    CDT_PARALLELPORT
+    CDT_PARALLELPORT,
+    CDT_COMPORT
 };
 
 class PComplexData;

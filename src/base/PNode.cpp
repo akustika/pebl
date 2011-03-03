@@ -324,6 +324,7 @@ DataNode::DataNode(const string &  filename, int linenumber):
 #ifdef VERBOSE_PNODE_CONSTRUCTION_MESSAGES
     cerr << "\tConstructing DataNode without value \n";
 #endif
+    mValue = Variant();
 }
 
 

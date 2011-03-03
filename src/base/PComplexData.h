@@ -48,6 +48,7 @@
 #include "../utility/rc_ptrs.h"
 #include "../platforms/sdl/PlatformJoystick.h"
 #include "../devices/PParallelPort.h"
+#include "../devices/PComPort.h"
 
 #include <iostream>
 
@@ -162,6 +163,7 @@ public:
     bool IsCanvas() const;
     bool IsJoystick() const;
     bool IsParallelPort() const;
+    bool IsComPort() const;
 
 
 

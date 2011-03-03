@@ -142,6 +142,9 @@ std::string PComplexData::GetTypeName() const
   case CDT_PARALLELPORT:
       return "Complex Data: Parallel Port";
 
+  case CDT_COMPORT:
+      return "Complex Data: Com Port";
+
   case CDT_JOYSTICK:
       return "Complex Data: Joystick";
 
@@ -274,6 +277,11 @@ bool PComplexData::IsNetworkConnection() const
 bool PComplexData::IsParallelPort() const
 {
   return GetType() == CDT_PARALLELPORT;
+}
+
+bool PComplexData::IsComPort() const
+{
+  return GetType() == CDT_COMPORT;
 }
 
 

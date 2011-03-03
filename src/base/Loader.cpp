@@ -150,11 +150,12 @@ void Loader::LoadUserFunctions(OpNode * node)
     // a PEBL_FUNCTION and the right is either a  PEBL_FUNCTIONS
     //or a NULL.  If null, we are done.
     
+
     //Add the PEBL_FUNCTION
     node1 = (OpNode*)(node->GetLeft());
     if(node1->GetOp() == PEBL_FUNCTION)
         {
-
+            
             Evaluator::mFunctionMap.AddFunction( ((DataNode*)(((OpNode*)node1)->GetLeft()))->GetValue(),
                                                  (OpNode*)node1->GetRight());      
         }

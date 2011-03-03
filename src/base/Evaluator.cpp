@@ -3,7 +3,7 @@
 //    Name:       src/base/Evaluator.cpp
 //    Purpose:    Defines an class that can evaluate PNodes
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003--2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003--2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -470,6 +470,8 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //Get the variable list.
                 const PNode * node1 = node->GetLeft();
                 
+
+
                 //Get the argument list.
                 Variant v1 = Pop();
 
@@ -483,6 +485,7 @@ bool Evaluator::Evaluate(const OpNode * node)
 
                 if( v1.IsStackSignal() && v1.GetSignal() == STACK_LIST_HEAD)
                     {
+                        //v1 is empty, so make a dummy parameter list to send.
 
                         tmpList = counted_ptr<PEBLObjectBase>(new PList());
                     }
@@ -491,24 +494,29 @@ bool Evaluator::Evaluate(const OpNode * node)
                 if( v1.IsComplexData())
                     {
 
+                        //extract the object out of v1 to send.
                         tmpList = v1.GetComplexData()->GetObject(); 
                     }
 
 
 
+
                 Variant v2 = 0;
-                list<Variant>::iterator p;
+
                 //iterate through the lists and assign values to variables.
                 PList * tmp = (PList*)(tmpList.get());
 
+                list<Variant>::iterator p = tmp->Begin();
+                
                 while(node1)
                     {
+
                         //Get the variable name
                         v2 = ((DataNode*)(((OpNode*)node1)->GetLeft()))->GetValue();
 
 
 
-                        if(!tmp ||( tmp && tmp->Length()==0))
+                        if(p==tmp->End())// ||( tmp && tmp->Length()==0))
                             {
                                 //Too few arguments.
                                 string message =  "Too few arguments passed to function [" + mScope + "].";
@@ -519,19 +527,21 @@ bool Evaluator::Evaluate(const OpNode * node)
                         
                             }
                         
-                        //Get the value, remove it from the list.
-                        p = tmp->Begin();
-                        
+                        //Get the value,
+                        //p = tmp->Begin();
+
                         //Add pair to variable map.  This should always be a local variable map.
                         mLocalVariableMap.AddVariable(v2, *p);
                         //remove it from the front of the list.
-                        tmp->PopFront();
+                        p++;//tmp->PopFront();
                         //Move to the next item.
                         node1 = ((OpNode*)node1)->GetRight();
                     }
 
 
-                if(tmp && tmp->Length() > 0)
+
+                //if(tmp && tmp->Length() > 0)
+                if(p != tmp->End())
                     {
                         //Too many arguments.
                         string message = string("Too many arguments passed to function [" + mScope + "].");
@@ -540,6 +550,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                         PError::SignalFatalError(message);
                     }
                     
+
                 //Now, get the code block and execute it.
                 const PNode * node2 = node->GetRight();
                 Evaluate(node2);
@@ -560,10 +571,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                 const OpNode * node0 =(OpNode*)(node->GetLeft());
                 //We should be able to tell the name of the function
 
-                //cout << node << endl;
-                //cout << node0 << endl;
                 std::string name = node->GetFunctionName();
-
                 int min = ((DataNode*)(node0->GetLeft()))->GetValue();
                 int max = ((DataNode*)(node0->GetRight()))->GetValue();
 
@@ -1072,19 +1080,24 @@ bool Evaluator::Evaluate(const OpNode * node)
 
         case PEBL_RETURN:
             {
-                //The return keyword is used ONLY at the very end of a function, since returning abruptly
-                //is a nasty thing to do to an evaluator.  It simply pushes a dummy variant  STACK_RETURN_DUMMY onto
-                //the stack and then evaluates the left node.  Consequently, after the return expression is evaluated,
-                //the stack depth will be two instead of one. The CallFunction() method then extracts the top of the
-                //stack from the function scope and puts it on the caller's stack, otherwise it puts a '1' to indicate
-                //that the function has returned successfully.  
+                //The return keyword is used ONLY at the very end of a
+                //function.  Here, we pushes a dummy variant
+                //STACK_RETURN_DUMMY onto the stack and then evaluates
+                //the left node.  Consequently, after the return
+                //expression is evaluated, the stack depth will be two
+                //instead of one. The CallFunction() method then
+                //extracts the top of the stack from the function
+                //scope and puts it on the caller's stack, otherwise
+                //it puts a '1' to indicate that the function has
+                //returned successfully.
                 
-                //This is done to avoid the potentially confusing construct in LISP and others that the final
+                //This is done to avoid the potentially confusing
+                //construct in LISP and others that the final
                 //expression in a function is the return value.
                 
-                //This is a nasty and error-proned way to signal a return value; we will see if it works.
+                //This is a brittle way to signal a return value.
             
-
+                //
                 Push(Variant(STACK_RETURN_DUMMY));
             
                 const PNode * node1 = node->GetLeft();
@@ -1198,18 +1211,21 @@ void Evaluator::CallFunction(const OpNode * node)
 {
 
 
+
     // First get the right node (the argument list) and evaluate it.
     // This will end up with a list Variant on top of the stack. 
-
     const PNode *node1 = node->GetRight();
+
     Evaluate(node1);
 
     // The parameters for a function are in a list on the top of the stack.
     // A function should pull the list off the stack and push it onto
     // the stack of the new evaluator scope.
-  
+
+    //    cout << dynamic_cast<DataNode*>(node->GetLeft())->GetValue() << endl;
     //Get the name of the function.  
     Variant funcname =dynamic_cast<DataNode*>(node->GetLeft())->GetValue();
+
 
     const PNode * node2 = mFunctionMap.GetFunction(funcname);
 
@@ -1225,13 +1241,13 @@ void Evaluator::CallFunction(const OpNode * node)
     //and doesn't need its own new scope, so don't create one in that case.
     
 
-    
+
     switch(((OpNode*)node2)->GetOp())
         {
         case PEBL_LAMBDAFUNCTION:
             {   //Need to create a new scope to allow for variable declaration
                 //within case statement
-                
+
                 //get the top item of the stack.
                 Variant v = Pop();
                 
@@ -1269,6 +1285,7 @@ void Evaluator::CallFunction(const OpNode * node)
             break;
             
         case PEBL_LIBRARYFUNCTION:
+
 
             Evaluate(node2);
 
