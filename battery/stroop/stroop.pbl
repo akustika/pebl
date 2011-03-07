@@ -597,7 +597,7 @@ define Block(stim, btype, colorresp)
   ##   adjust their locations
    if((colorresp ==0) or ( colorresp==1) ){
 
-     foot1 <- MakeLabel("[1] red   ",red)
+     foot1 <- MakeLabel("[1] red ",red)
      foot2 <- MakeLabel("[2] green ",green)
      foot3 <- MakeLabel("[3] blue  ",blue)
      foot4 <- MakeLabel("[4] yellow",yellow)

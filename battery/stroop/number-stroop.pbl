@@ -1,0 +1,726 @@
+ #######################################################
+ ##
+ ## Numerical Stroop Task
+ ##
+ ## (c) 2011 Shane T. Mueller and Alena Esposito
+ ## smueller at obereed dot net
+ ## PEBL Numerical Stroop Task, Version 0.1
+ ## 
+ ## 
+ ## 
+ ##  Modeled, roughly on  Hernandez et al. (2010).
+ ##
+ ## Spanish translation by Alena Esposito
+ ##
+ ##
+ ## 
+ ## Here is a description of the numerical Stroop directly from Hernandez
+ ##et al. (2010). Participants were asked to indicate, as fast
+ ##and accurately as possible, how many items appeared in each
+ ##trial. The number of items ranged from 1 to 3, and participants had
+ ##to press the keys 1, 2 or 3 on the keyboard with the index, middle
+ ##and ring fingers of their dominant hand, respectively. There was a
+ ##Distractor variable with three conditions:
+ ##
+## (a) alphabetic characters (neutral condition:e.g., Z, GGG, MM);
+## (b) digits whose value matched the number of items
+##(congruent condition: 1, 22, 333); and 
+## (c) digits whose value did not
+##match the number of items (incongruent condition: e.g., 2, 33, 111,
+##etc.).
+##
+## The experiment consisted of two blocks of 84 trials each
+##(preceded by a training block of 24 trials). The three distractor
+##conditions were represented the same number of times in each block in
+##a random fashion. On each trial, a central fixation cross appeared for
+##1000 ms, immediately followed by the target, which was presented for
+##2000 ms or until a response was given.  I believe the training block
+##should tell the participant whether or not they are correct.  I am
+##also not concerned about having 2 separate blocks.  One block with a
+##practice of 24 and then 100 test trials should work.  The trials need
+##to be in the same order for each participant.
+
+
+define Start(p)
+{
+
+
+   ##
+   ##  Options:
+
+   ##  Set gResponseType to either "keyboard" or "audio" to change the
+   ## response method
+   ##
+   gResponseType <- "keyboard"
+   gResponseType <- "audio"
+
+
+   ## The voice key will trip when 55% of the last 
+   ## gVoiceKeyDuration 1-ms bins are above the threshold.
+   ## Based on input power and microphone noise, you may 
+   ## need to adjust these parameters.
+ 
+   gVoiceKeyThreshold <- .35
+   gVoiceKeyDuration  <- 200
+
+   ##Should the audio buffer be saved?
+   gSaveAudio <- 1
+
+   ##command to compress audio
+   gCompressAudio <- 1
+   gCompressor <- "oggenc "
+
+
+   ## If set to 1, it will use the same sequence of stimuli every time.
+   ## If set to 0, it will regenerate randomly on each run.
+   usePreset <- 1
+   
+   gFixationTime <- 1000  #time for the fixation cross
+   gResponseTimeout <- 2000 #Time limit given for responding
+
+   ##Set gLanguage here to hard code
+    gLanguage <- "ES"
+
+   GetStrings(gLanguage)
+   Print("initializing")
+   Initialize()
+   Print("Numerical stroop initialized")
+
+   ##Enter the subject code here if one wasn't already provided.
+   if(gSubNum == 0)
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
+
+   
+   MakeDirectory("data/"+gSubNum)
+
+   gFileOut <- FileOpenAppend("data/"+gSubnum+"/numstroop-"+gSubNum+".csv")
+   gPooledFileOut <- FileOpenAppend("data/numstroop-pooled.csv")
+   gSumFileOut <- FileOpenWrite("data/" + gSubNum + "/numstroop-summary-" + gSubNum+".txt")
+   gLog <- FileOpenAppend("data/nstroop-log.csv")
+
+
+   FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+",NUMERICAL STROOP,"+gResponseType+",STARTED") 
+
+   ##Create a vocal buffer if we have one
+   if(gResponseType == "audio")
+    {
+      gResponseBuffer <- MakeAudioInputBuffer(3500)
+    }
+   #TODO: If version >= 0.12, we should check to see if the file exists and will overwrite data.
+
+
+  ###############################
+  ## Create the basic stimuli
+  ###############################
+
+  ##This, by default, reads in a fixed
+  block0 <- PracticeTrials(usepreset)
+  block1 <- Round1Trials(usepreset)
+  block2 <- Round2Trials(usepreset)
+
+
+  FilePrint(gFileOut,"subnum,block,trial,word,color,")
+
+  gTrial <- 0
+  gBlock <- 0
+
+  #################################
+  ##Show the instructions.  
+   gInstructions.text <- gInstructionsText
+   Show(gInstructions)
+   Hide(gHeader)
+   Draw()
+   WaitForAnyKeyPress()
+   Hide(gInstructions)
+   Show(gHeader)
+   Draw()
+
+   
+   #Initialize data collectors
+   gErr  <- []; gRT   <- []; gCond <- []
+
+
+
+   ##Do the practice round
+   ##
+   gHeader.text <- gTestHeaderText
+   loop(trial,block0)
+   {
+      DoTrial(trial,gResponseType,"data/"+gSubNum+"/trial-"+ZeroPad(gTrial,3)+"-")
+	  gTrial <- gTrial + 1
+   }
+
+
+
+   ##Do Round 1
+   ##
+   loop(trial,block1)
+   {
+      DoTrial(trial,gResponseType,"data/"+gSubNum+"/trial-"+ZeroPad(gTrial,3)+"-")
+	  gTrial <- gTrial + 1
+   }
+
+
+
+   ##Do Round 2
+   ##
+   loop(trial,block2)
+   {
+      DoTrial(trial,gResponseType,"data/"+gSubNum+"/trial-"+ZeroPad(gTrial,3)+"-")
+	  gTrial <- gTrial + 1
+   }
+
+
+
+
+
+   text <- CR(3)+ 
+            "Round              Time taken     Responses made    Intrusions"+CR(1)+
+            "--------------------------------------------------------------"+CR(1)+
+            "Part D:            "+Format(Round(time1/10)/100,10) + "     " + resp1+ CR(1) +
+            "Part W:            "+Format(Round(time2/10)/100 ,10) +"     " + resp2+CR(1) +
+            "Part C:            "+Format(Round(time3/10)/100,10) + "     " + resp3+ "                " + intrusions+CR(1)+
+            "Efficiency(C/D):   "+Format((time3/time1),10) +       "     "+ resp3/resp1+CR(1)+
+            "Efficiency(C/W):   "+Format((time3/time2),10) +       "     "+ resp3/resp2
+       
+
+
+   FilePrint(gSumFileOut,"------------------------------------------")
+   FilePrint(gSumFileOut,"PEBL Numerical Stroop Task, Version 1.0")
+   FilePrint(gSumFileOut,"http://pebl.sf.net")
+   FilePrint(gSumFileOut,"Shane T. Mueller")
+   FilePrint(gSumFileOut, GetPEBLVersion())
+   FilePrint(gSumFileOut,"------------------------------------------")
+   FilePrint(gSumFileOut,"Response Order:"+gColors) 
+   FilePrint(gSumFileOut, "Subject code: "+gSubNum)
+   FilePrint(gSumFileOut, "Time:         "+TimeStamp())
+   FilePrint(gSumFileOut,"------------------------------------------")
+   FilePrint(gSumFileOut,text)
+   FilePrint(gSumFileOut,"------------------------------------------")
+
+   filesum <- FileOpenAppend("data/stroop-num-sumall.csv")
+   FilePrint(filesum, gSubNum + "," + TimeStamp() + "," + GetTime()+"," + time1+ ","+ resp1+","+ time2+","+resp2+","+time3+","+resp3+","+intrusions)
+
+   FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+","+"NUMERICAL STROOP,"+gInputType+",ENDED") 
+#   MessageBox("This output only provided for testing.  Uncomment for deployment"+CR(1)+text,gWin)
+   MessageBox(gExitText,gWin)
+}
+
+###################################################
+## basic function for a single trial
+
+define DoTrial(stim,cond,code)
+{
+
+   gFooter2.text <- gFooter2Text
+if(cond == "keyboard")
+  {
+
+   gFooter1.text <- gFooter1textManual
+   Show(gFooter1)
+   Show(gFooter2)
+}else{
+   gFooter1.text <- gFooter1textVocal
+   Show(gFooter1)
+   Show(gFooter2)
+}
+
+   
+  fname <- code + "-"+StringLength(Second(stim))+".wav"
+
+   ##Condition is the response type.
+   type <- First(stim)
+   Show(gStimLabel)
+   gStimLabel.text <- Second(stim)
+   Draw()
+   time1 <- GetTime()
+   if(cond == "keyboard")
+    {
+
+
+	    resp <-WaitForListKeyPressWithTimeout([1,2,3],2000)
+        time2 <- GetTime()
+         if(resp == "<timeout>")
+           {
+             gStimLabel.text <- "Too Slow"
+          	 Draw()
+             Wait(500)
+           }
+    }elseif(cond=="audio")
+    {
+
+	    resp <-  GetVocalResponseTime(gResponseBuffer,gVoiceKeyThreshold, gVoiceKeyDuration)
+        time2 <- GetTime()
+		Print(resp)
+        if(Third(resp)==0)
+         {
+            gStimLabel.text <- "Too Slow"
+			Draw()
+			Wait(500)
+         }
+        gFooter1.text <- gFooter1textManual2
+		Hide(gStimLabel)
+        Draw()
+        resp2 <-WaitForListKeyPress([1,2,3,4])
+
+	} else{
+     SignalFatalError("Unknown response type: "+cond)
+    }
+
+    Hide(gStimLabel)
+    Draw()
+
+    if(gSaveAudio)
+         {
+            SaveAudioToWaveFile(fname,gResponseBuffer)		
+			if(gCompressAudio)
+             {
+			    SystemCall(gCompressor + fname)
+				if(GetSystemType()=="LINUX" or GetSystemType()=="OSX")
+                 {
+     				SystemCall("rm "+fname)
+                 } else {
+     				SystemCall("del "+fname)
+                 }
+			 }
+         }
+     
+
+    Wait(500)
+
+
+}
+
+
+
+##
+## 
+define PrintMe(file,text)
+{
+  FilePrint(file,text)
+  Print(text)
+}
+
+define PrintMe_(file,text)
+{
+  FilePrint_(file,text)
+  Print_(text)
+
+}
+
+define PrintTable(file,table)
+{
+   PrintMe(file,"------------------------------------")
+   loop(i,table)
+   { 
+       loop(j,i)
+         {
+            PrintMe_(file,RoundOff(j,3) + Tab(1))
+
+         }
+      PrintMe(file,"")
+  
+   }
+   PrintMe(file,"------------------------------------")
+
+}
+
+
+
+
+define PracticeTrials(usepreset)
+{ 
+  if(usePreset)
+   {
+      x <- [["N", "G"], ["C", "333"], ["I", "3"], ["N", "MMM"], ["N", "GG"], ["I", "111"], ["I", "2"], ["C", "22"],
+            ["I", "33"], ["I", "11"], ["C", "1"], ["I", "222"], ["C", "1"], ["N", "ZZ"], ["I", "111"], ["N", "ZZZ"],
+            ["C", "333"], ["C", "22"], ["N", "MM"], ["N", "GGG"], ["N", "M"], ["I", "222"], ["C", 1], ["C", "333"]]
+
+   }else {
+      x <- GenerateStimuli(8)
+
+   }
+  return x
+}
+
+
+define Round1Trials(usepreset)
+{
+  if(usePreset)
+   {
+      x <-[["C", "1"], ["C", "333"], ["I", "222"], ["C", "22"], ["C", "22"], ["I", "222"], ["I", "33"],
+    ["N", "G"], ["C", "1"], ["N", "GG"], ["C", "333"], ["N", "ZZZ"], ["C", "22"], ["N", "ZZZ"], ["I", "111"],
+    ["I", "2"], ["N", "G"], ["I", "11"], ["I", "2"], ["N", "MMM"], ["C", "333"], ["I", "11"], ["C", "1"],
+    ["N", "ZZ"], ["I", "3"], ["N", "MM"], ["N", "GGG"], ["I", "33"], ["I", "33"], ["C", "22"], ["C", "333"],
+    ["C", "333"], ["C", "333"], ["C", "1"], ["N", "M"], ["N", "GGG"], ["C", "1"], ["I", "3"], ["N", "ZZ"], ["C", "22"],
+    ["C", "333"], ["C", "1"], ["I", "222"], ["C", "1"], ["I", "33"], ["I", "3"], ["N", "MMM"], ["I", "111"], ["C", "22"],
+    ["N", "M"], ["C", "22"], ["C", "22"], ["N", "GGG"], ["I", "2"], ["I", "222"], ["N", "ZZZ"], ["I", "111"], ["N", "M"],
+    ["I", "3"], ["N", "Z"], ["N", "MM"], ["N", "GG"], ["N", "G"], ["N", "M"], ["N", "MM"], ["N", "MMM"], ["I", "2"], ["N", "GG"],
+    ["C", "22"], ["N", "Z"], ["I", "11"], ["N", "ZZ"], ["N", "Z"], ["I", "111"], ["C", "1"], ["I","222"], ["I", "33"],
+    ["I", "111"], ["C", "1"], ["C", "333"], ["C", "333"], ["I", "2"], ["I", "11"],["C", "333"]]
+
+   }else {
+      x <- GenerateStimuli(28)
+
+   }
+  return x
+}
+
+
+define Round2Trials(usepreset)
+{
+  if(usePreset)
+   
+  {
+
+        x <-  [["N", "MM"],["C", "22"],["N", "MM"],["C", "333"],["C", "333"],["N", "G"],["N", "GG"],["I", "3"],["C", "22"],["I", "3"],["I", "11"],["I", "111"],["I", "111"],["N", "G"],["N", "ZZZ"],["N", "GG"],["N", "ZZ"],["C", "22"],["N", "MMM"],["N", "MMM"],["N", "GGG"],["I", "3"],["I", "2"],["N", "ZZ"],["N", "MM"],["C", "333"],["N", "M"],["I", "222"],["C", "22"],["I", "111"],["C", "333"],["C", "333"],["C", "333"],["N", "GGG"],["N", "GGG"],["I", "222"],["N", "G"],["C", "1"],["I", "33"],["C", "1"],["I", "33"],["N", "MMM"],["N", "G"],["I", "222"],["N", "ZZZ"],["C", "1"],["I", "111"],["N", "M"],["C", "1"],["C", "333"],["I", "11"],["C", "1"],["C", "1"],["I", "3"],["I", "2"],["I", "2"],["I", "11"],["I", "2"],["N", "GG"],["N", "Z"],["I", "11"],["I", "111"],["I", "33"],["N", "ZZZ"],["N", "Z"],["C", "1"],["N", "ZZ"],["C", "333"],["I", "222"],["C", "22"],["I", "3"],["C", "22"],["C", "22"],["N", "M"],["N", "Z"],["C", "22"],["C", "1"],["I", "33"],["C", "22"],["C", "333"],["C", "22"],["I", "11"],["I", "33"],["C", "1"]]
+
+   }else {
+      x <- GenerateStimuli(28)
+   }
+  return x
+} 
+
+##create a shuffled set of stimuli with
+##num stimili from each of the three sets.
+define GenerateStimuli(num)
+{
+
+
+   neutrals <-     RepeatEnough(gNeutralStim,num)
+   incongruents <- RepeatEnough(gIncongruentStim, num)
+   congruents <-   RepeatEnough(gCongruentStim, num)
+
+   type <- Flatten([Repeat("N",num),Repeat("I",num),Repeat("C",num)])
+  
+
+  return Shuffle(Transpose([type,Flatten([neutrals,incongruents,congruents])]))
+
+}
+
+
+##for now, assumes the tables are the same size
+define PasteTables(tab1,tab2)
+{
+   a <- Transpose(tab1)
+   b <- Transpose(tab2)
+
+   return Transpose(Merge(a,b))
+}
+
+
+
+
+
+
+##  This is a standard initializer function that sets up typical
+##  objects used in experiments.
+define Initialize()
+{
+  
+  ## Uncomment to eliminate busy-wait (mostly for older machines or
+  ## laptops that might overheat.)
+  gSleepEasy <- 1
+
+
+  ##Initialize Window, etc.
+  gWin <- MakeWindow("grey40")   
+  ShowCursor(0)
+  ##Initialize Font and colors
+
+   gBG <- MakeColor("grey40")
+   fg  <- MakeColor("black")
+
+   
+
+
+   gInstructionsFont <- MakeFont(gPEBLBaseFont,0,22, fg,MakeColor("white"),1)  
+   gHeaderFont       <- MakeFont(gPEBLBaseFont, 0,20,fg,gBG,1)
+   gStimFont         <- MakeFont(gPEBLBaseFont,0,60,fg,gBG,0)
+ 
+
+   ## Make and place the instruction box, then hide it  
+   gInstructions <- MakeTextBox("", gInstructionsFont, 600,400)
+   AddObject(gInstructions, gWin)
+   Move(gInstructions, gVideoWidth/2-300, 100)
+   Hide(gInstructions)
+
+   ## Make and hide a header label
+   gHeader <- MakeLabel("",gStimFont)
+   AddObject(gHeader,gWin)
+   Move(gHeader, gVideoWidth/2, 50)
+   Hide(gHeader)
+
+   gStimLabel <- MakeLabel("",gStimFont)
+   AddObject(gStimLabel,gWin)
+   Move(gStimLabel, gVideoWidth/2, gVideoHeight/2)
+   Hide(gStimLabel)
+ 
+   gFooter1 <- MakeLabel("",gHeaderFont)
+   AddObject(gFooter1,gWin)
+   Move(gFooter1, gVideoWidth/2, gVideoHeight-150)
+   Hide(gFooter1)
+
+   gFooter2 <- MakeLabel("",gHeaderFont)
+   AddObject(gFooter2,gWin)
+   Move(gFooter2, gVideoWidth/2, gVideoHeight-100)
+   Hide(gFooter2)
+
+   if(not FileExists("data"))
+    {
+	   Print("Creating 'data' directory")
+       MakeDirectory("data")
+
+    } elseif(not IsDirectory("data"))
+    {
+       SignalFatalError("File named 'data' exists.  Remove so data directory can be created.")    
+    }
+}
+
+
+define GetStrings(language)
+{
+
+##stimili are defined here because different languages may require different number or letter characters.
+  
+
+   gNeutralStim    <- ["Z","ZZ","ZZZ","M","MM","MMM","G","GG","GGG"]
+   gIncongruentStim <- ["11","111","2","222","3","33"]
+   gCongruentStim  <- ["1","22","333"]
+
+   gKeys <- ["1","2","3"]
+   keystring <-  First(gKeys) +", "+ Second(gKeys)+ ", or " +Third(gKeys)
+
+
+    gInstructionsText<- "You are about to take part in an study in which you will be asked to determine how many characters are displayed on the computer screen.  There will either be one, two, or three characters.  Sometimes the characters will be letters, and other times they will be numbers.  Some examples include:
+      Z       1     2      3        (respond by pressing '1')
+     MM    11   22    33       (respond by pressing '2')
+    GGG  111  222  333     (respond by pressing '3').  
+
+Remember to ignore the actual identity of the character.  Press any key to try a practice round."
+
+    gBreak1Text <- "Practice is complete.  Now you will be tested for real.  Remember to answer as quickly and accurately as possible.  Press any key to begin."
+    gBreak2Text <- "You may now take a short break.  When you resume, remember to  answer as quickly and accurately as possible.  Press any key to continue."
+
+    gPracticeHeaderText <- "PRACTICE"
+	gTestHeaderText    <-  "TEST"
+
+    gFooter1TextManual <- "Please press "+keystring+" for the number of characters that appear on the screen"
+    gFooter1TextManual2 <- "Please press "+keystring+" or '4' for other error."
+    gFooter1TextVocal <- "Please say '"+keystring+"' in response to the number of characters you see appear on the screen"
+	gFooter2Text <-"Respond as quickly and accurately as possible."
+
+    gExitText <-"You are now finished. Thank you for participating."
+
+
+ }
+
+
+
+
+## This finds mean and SD RT for 
+## each of the conditions specified in delays
+##
+define Aggregate(vals, cond)
+{
+
+  ## start by sorting values by condition,
+  ## then move through them and analyze subparts.
+
+  valX <- SortBy(vals,cond)
+  condX <- Sort(cond)
+  trials <- Transpose([condX,valX])
+  
+  stats <- []
+  lastVal <- First(condX)
+
+  tmpVals <- []  
+
+  loop(i, trials)
+  {
+
+     ## if the current delay differs from the previous delay,
+	 ## we should analyze what is in tmp right now.
+     if(First(i) != lastVal)
+     {
+
+       stats <- Append(stats,
+                      [lastVal, Length(tmpVals), Median(tmpVals),
+	                  Mean(tmpVals), StdDev(tmpVals)])
+       tmpVals <- []
+     }
+
+    lastVal <- First(i) 
+    tmpVals <- Append(tmpVals, Nth(i, 2))
+ }
+
+  stats <- Append(stats,
+                [lastVal, Length(tmpVals),
+                 Median(tmpVals), Mean(tmpVals), StdDev(tmpVals)])
+
+
+ return stats
+}
+ 
+define RoundOff(val,sig)
+ {
+   s <- 10 ^ sig
+  
+  return   Round( val *s)/s
+ 
+ } 
+
+##Finds difference between two lists.
+define ListDiff(l1,l2)
+{
+  tmp <- Transpose([l1,l2])
+  new <- []
+  loop(i,tmp)
+   {
+      new <- Append(new,First(i)-Second(i))
+   }
+ return new
+}
+
+
+##This creates a stimulus deck with the special
+## constraints of vic-stroop.  It creates a balanced list
+## 4x6=24 items long of pairs of words and colors
+
+
+
+define ShuffleMe(words, colors, matchesOK)
+{
+
+##If matchesOK==1, then matching is OK (blocks 1 and 2)
+##In that case, we can just create individual lists 24-long and shuffle.
+
+  if(matchesOK)
+   {
+
+       ##Create baseline shuffled templates   
+       basewords <- RepeatEnough([1,2,3,4],24)
+	   basecols <- RepeatEnough([1,2,3,4],24)
+
+      outwords <- Replace(basewords, Transpose([[1,2,3,4],words]))
+      outcols  <- Replace(basecols, Transpose([[1,2,3,4],colors]))
+      outlist <- Transpose([outwords,outcols])
+
+
+
+
+   } else {
+
+
+      list <- []
+      i <- 1
+      while(i <= 6)
+       {
+        ##we need to be sure words and colors do not match
+        matchany <- 1  
+        while(matchany)
+         {
+
+            trywords <- Shuffle([1,2,3,4])
+    	    trycols <- Shuffle([1,2,3,4])
+            matchany <- MatchAny(trywords,trycols)
+         }
+
+        
+        out <- Transpose([trywords,trycols])
+ 
+       ##Make sure the transition doesn't repeat
+       if(i>1)
+       {
+
+            lastpair <- Last(list)
+            lastword <- First(lastpair)
+            lastcol <- Second(lastpair)
+    
+          ##Make sure the transition between sublists is good.
+          badtransition <- 1
+          while(badtransition)
+           {
+            out <- Rotate(out,1)
+            
+            nextpair <- First(out)
+            nextword <-First(nextpair)
+            nextcol <- Second(nextpair)
+  
+
+            badtransition <- (nextword==lastword) or  (nextcol==lastcol)
+
+ 
+           }
+
+       }
+          list <- Merge(list,out)
+        i <- i + 1
+      }
+
+     ##list just contains numbers. Recode into the proper labels
+      tmp <- Transpose(list)
+
+      outwords <- Replace(First(tmp), Transpose([[1,2,3,4],words]))
+      outcols  <- Replace(Second(tmp), Transpose([[1,2,3,4],colors]))
+      outlist <- Transpose([outwords,outcols])
+   }
+   return outlist
+
+}
+
+## Repeat list enough times to make it length long.
+## 
+define RepeatEnough(list,length)
+{
+ 
+   l <- Length(list)
+   times <- Ceiling(length/l)
+   tmp <- Flatten(ShuffleRepeat(list,times))
+
+
+   return SubList(tmp,1,length)
+}
+
+
+
+define MatchAny(list1,list2)
+{
+   match <- 0
+   loop(i,Transpose([list1,list2]))
+    {
+        if(First(i)==Second(i))
+        {
+            match <- 1
+           if(match)
+            {
+              break
+            }
+        }
+    }
+  return match
+}
+
+
+
+##This enables using other keys to do input.
+##it takes a list of keys, and returns the relative index.
+define WaitForIt(keylist)
+{
+   code <- Sequence(1,Length(keylist),1)
+   
+   resp <- (WaitForListKeyPress(keylist))
+   outid <- 0
+   loop(i,Transpose([keylist,code]))
+    {
+       if(Uppercase(resp) == Uppercase(First(i)))
+       {
+	     outid <- Second(i)
+		 break
+       }
+    }
+
+   return (outid)
+}
