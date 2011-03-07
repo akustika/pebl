@@ -36,6 +36,7 @@
 #include "SDL/SDL_audio.h"
 
 #include <cmath>
+#include <fstream>
 
 void PlayCallBack(void * dummy, Uint8 * stream, int len);
 
@@ -43,6 +44,7 @@ void PlayCallBack(void * dummy, Uint8 * stream, int len);
 extern AudioInfo *gWaveStream=NULL;
 
 
+using namespace std;
 using std::string;
 using std::cerr;
 using std::cout;
@@ -99,7 +101,7 @@ bool PlatformAudioOut::LoadSoundFile(const string & soundfilename)
 
     if(gWaveStream)
         {
-            cout << "***********************gwavestream existeth\n";
+            //cout << "***********************gwavestream existeth\n";
             bool samefreq = mWave.spec.freq==gWaveStream->spec.freq;
             bool sameformat = mWave.spec.format==gWaveStream->spec.format;
             bool samechannels = mWave.spec.channels==gWaveStream->spec.channels;
@@ -308,7 +310,9 @@ bool PlatformAudioOut::CreateSineWave(float freq, long unsigned int mslength, lo
 
 
 //;unsigned int freq,int size)
-bool PlatformAudioOut::LoadSoundFromData( Uint8 *buffer, long unsigned int size, SDL_AudioSpec *spec)
+bool PlatformAudioOut::LoadSoundFromData( Uint8 *buffer, 
+                                          long unsigned int size, 
+                                          SDL_AudioSpec *spec)
 {
 
 
@@ -318,8 +322,9 @@ bool PlatformAudioOut::LoadSoundFromData( Uint8 *buffer, long unsigned int size,
     
     
     /* Allocate a desired SDL_AudioSpec */
-    //spec = (SDL_AudioSpec *) malloc(sizeof(SDL_AudioSpec));
-    
+    SDL_AudioSpec *spec2 = (SDL_AudioSpec *) malloc(sizeof(SDL_AudioSpec));
+    memcpy(spec2,spec,sizeof(SDL_AudioSpec));
+
     /* Allocate space for the obtained SDL_AudioSpec */
     //    obtained = (SDL_AudioSpec *) malloc(sizeof(SDL_AudioSpec));
     
@@ -334,8 +339,8 @@ bool PlatformAudioOut::LoadSoundFromData( Uint8 *buffer, long unsigned int size,
       spec.userdata=&mWave;
     */
 
-
-    mWave.spec = *spec;
+    
+    mWave.spec = *spec2;
     mWave.audio=buffer;
     mWave.audiopos=0;
     mWave.audiolen=size;
@@ -350,19 +355,6 @@ bool PlatformAudioOut::LoadSoundFromData( Uint8 *buffer, long unsigned int size,
     //            return false;
     //        }
 
-    cout << "opening\n";
-    if(SDL_OpenAudio(spec,&obtained)<0)
-        {
-            cout << "can't open audio--already opened.\n";
-            mWave.spec = *spec;
-        }else
-        {
-     
-            mWave.spec=obtained;
-            delete(spec);
-        }
-    //I can only delete spec if this is original.  
-
 
     cerr << "------------------------------------\n";
     cerr << "Loading Sound Data.  Specs:\n";
@@ -374,19 +366,23 @@ bool PlatformAudioOut::LoadSoundFromData( Uint8 *buffer, long unsigned int size,
             
         case AUDIO_U8:
             form="AUDIO_U8";
+            mWave.bytesPerSample = 8;
             break;
             
-        case AUDIO_U16LSB:
-            form = "AUDIO_U16LSB";
+        case AUDIO_U16:
+            form = "AUDIO_U16";
+            mWave.bytesPerSample = 2;
             break;
 
 
         case AUDIO_S8:
             form="AUDIO_S8";
+            mWave.bytesPerSample = 1;
             break;
 
         case AUDIO_S16:
             form="AUDIO_S16";
+            mWave.bytesPerSample = 2;
             break;
 
            
@@ -427,6 +423,64 @@ bool PlatformAudioOut::LoadSoundFromData( Uint8 *buffer, long unsigned int size,
 
 }
 
+
+//
+//  This is nearly identical to a piece of code in PlatformAudioIn
+//
+void PlatformAudioOut::SaveBufferToWave(Variant filename)
+{
+    //Code here adapted from
+    //http://www.codeproject.com/Messages/3208219/How-to-write-mic-data-to-wav-file.aspx
+
+	int bitsPerSample = mWave.bytesPerSample*8;
+
+    //Unclear about these chunk things:
+	int subchunk1size = 16;
+	int numChannels = mWave.spec.channels;
+
+	int subchunk2size = mWave.audiolen;
+    cout<<"subchunk2size: "  << subchunk2size << endl;
+	int chunksize = 36+subchunk2size;
+
+
+	int audioFormat = 1;  //PCM
+
+    int sampleRate = mWave.spec.freq;
+	int byteRate = mWave.spec.freq*numChannels*bitsPerSample/8;
+	int blockAlign = numChannels*bitsPerSample/8;
+
+
+    cout <<"--------------------------------------------\n";
+    cout << "saving file        ["<< filename<<"]\n";
+    cout << "bitspersample:      " << bitsPerSample <<endl;
+    cout << "Channels:           " << numChannels <<endl;
+    cout << "frequency:          " << sampleRate << endl;
+    cout << "byterate:           " << byteRate << endl;
+
+
+    std::fstream myFile (filename.GetString().c_str(), ios::out | ios::binary);
+
+	// write the wav file per the wav file format
+	myFile.seekp (0, ios::beg); 
+	myFile.write ("RIFF", 4);					// chunk id
+	myFile.write ((char*) &chunksize, 4);	    // chunk size (36 + SubChunk2Size))
+	myFile.write ("WAVE", 4);					// format
+	myFile.write ("fmt ", 4);					// subchunk1ID
+	myFile.write ((char*) &subchunk1size, 4);	// subchunk1size (16 for PCM)
+	myFile.write ((char*) &audioFormat, 2);		// AudioFormat (1 for PCM)
+	myFile.write ((char*) &numChannels, 2);		// NumChannels
+	myFile.write ((char*) &sampleRate, 4);		// sample rate
+	myFile.write ((char*) &byteRate, 4);		// byte rate (SampleRate * NumChannels * BitsPerSample/8)
+	myFile.write ((char*) &blockAlign, 2);		// block align (NumChannels * BitsPerSample/8)
+	myFile.write ((char*) &bitsPerSample, 2);	// bits per sample
+
+	myFile.write ("data", 4);					// subchunk2ID
+	myFile.write ((char*) &subchunk2size, 4);	// subchunk2size (NumSamples * NumChannels * BitsPerSample/8)
+		
+	myFile.write ((char*)(mWave.audio), mWave.audiolen);	// data
+
+
+}
 
 
 
@@ -504,7 +558,20 @@ bool PlatformAudioOut::Stop()
     return true;
 }
 
+AudioInfo * PlatformAudioOut::GetAudioInfo()
+{
+    AudioInfo * tmp = new AudioInfo(mWave);
 
+#if 0
+    cout << "---------------------------\n";
+    cout << "getting info in pao:getaudioinfo\n";
+    cout << "freq     "<<mWave.spec.freq << " -- " << tmp->spec.freq  <<endl;
+    cout << "length:  " <<mWave.audiolen<< "--" << tmp->audiolen <<     endl;
+    cout << "---------------------------\n";
+#endif 
+
+    return tmp;
+};
 
 void PlayCallBack(void * udata, Uint8 * stream, int len)
 {

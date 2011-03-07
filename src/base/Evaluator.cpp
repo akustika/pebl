@@ -608,16 +608,15 @@ bool Evaluator::Evaluate(const OpNode * node)
 
                 if(numargs < min || numargs > max)
                     {
-                        std::ostrstream message;
-                        message << "In scope [" << mScope << "]:";
-                        message << "function ["<<name<<"]:";
-                        message << "Incorrect number of arguments.  Wanted between " << min 
-                                << " and " << max << " but got " << numargs << ".";
+
+                        Variant message = Variant("In scope [") + mScope + Variant("]:") +
+                            Variant("function [") +name+Variant("]:")+
+                            Variant("Incorrect number of arguments.  Wanted between ")+
+                            Variant(min) + Variant(" and ") +Variant( max) + Variant(" but got ") + Variant( numargs);
 
 
-
-                        message.put(0);
-                        PError::SignalFatalError(message.str());
+                        cout << message << endl;
+                        PError::SignalFatalError(message);
                     }
 
                 
@@ -903,9 +902,12 @@ bool Evaluator::Evaluate(const OpNode * node)
                         //Make a Variant out of it, and put it on the stack. 
                         counted_ptr<PEBLObjectBase> pl = counted_ptr<PEBLObjectBase>(tmpList);
 
+                        
+
+                        
+                        //There is a memory leak here, revealed by efence:
+
                         PComplexData  pcd =  PComplexData(pl);
-
-
                         Variant v2 = Variant(&pcd);
                         Push(v2);
                     }

@@ -25,6 +25,7 @@
 //    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ////////////////////////////////////////////////////////////////////////////////
 #include "PEBLUtility.h"
+#include "PError.h"
 #include "rc_ptrs.h"
 #include "../base/Variant.h"
 #include "../base/PComplexData.h"
@@ -43,6 +44,13 @@
 
 #include <dirent.h>
 #include <errno.h>
+
+
+#ifdef PEBL_WINDOWS
+#include <direct.h>
+#elif defined(PEBL_LINUX)
+#include <sys/stat.h>
+#endif
 #include <sys/stat.h>
 
 //Some math libraries contain this, but let's not take any chances.
@@ -922,7 +930,7 @@ std::string PEBLUtility::ShiftSwitch(int modkeys, std::string lower, std::string
 Variant PEBLUtility::IsDirectory(std::string path)
 {
     DIR *dirp;
-    struct dirent *entry;
+    //struct dirent *entry;
     dirp = opendir(path.c_str());
 
 
@@ -968,10 +976,11 @@ Variant PEBLUtility::GetDirectoryListing(std::string path)
     if(dirp)
         {
         
-        while(entry = readdir(dirp))
-            {
-                plist->PushBack(Variant(entry->d_name));
-            }
+            //not this is an assignment, not an equality
+            while((entry = readdir(dirp)))
+                {
+                    plist->PushBack(Variant(entry->d_name));
+                }
         }
 
         closedir(dirp);
@@ -984,3 +993,31 @@ Variant PEBLUtility::GetDirectoryListing(std::string path)
 
 
 
+Variant PEBLUtility::MakeDirectory(std::string path)
+
+{
+
+    if(FileExists(path) && IsDirectory(path))
+        {
+            return Variant(1);
+        }
+
+#ifdef PEBL_UNIX
+
+ 
+    if (mkdir(path.c_str(), 0777) == -1) 
+       {
+           PError::SignalFatalError("Unable to create directory: " + Variant(strerror(errno)));
+       }
+    std::cout << "created directory [" << path <<"]\n";
+#elif defined(PEBL_WINDOWS)
+    
+    if (mkdir(path.c_str()) == -1) 
+        {
+            PError::SignalFatalError("Unable to create directory: " + Variant(strerror(errno)));
+        }
+    
+#endif
+   
+    return Variant(1);
+}

@@ -82,8 +82,9 @@ namespace PEBLObjects
     Variant MakeSquareWave(Variant v);
     Variant MakeSawtoothWave(Variant v);
     Variant MakeChirp(Variant v);
-
-
+    Variant MakeAudioInputBuffer(Variant v);
+    Variant SaveAudioToWaveFile(Variant v);
+    Variant GetVocalResponseTime(Variant v);
 
     //Functions to draw things.
     Variant Line(Variant v);

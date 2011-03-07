@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLObjects.cpp
 //    Purpose:    Function Library for managing PEBL Objects
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -51,6 +51,7 @@
 #include "../platforms/sdl/PlatformEventQueue.h"
 #include "../platforms/sdl/PlatformTextBox.h" 
 #include "../platforms/sdl/PlatformCanvas.h"
+#include "../platforms/sdl/PlatformAudioIn.h"
 
 #include "PEBLList.h"
 
@@ -841,6 +842,98 @@ Variant PEBLObjects::MakeSineWave(Variant v)
     pcd=NULL;
     return tmp;
 
+}
+
+
+Variant PEBLObjects::MakeAudioInputBuffer(Variant v)
+{
+
+    //
+     PList * plist = v.GetComplexData()->GetList();
+
+    
+     Variant v1 = plist->First(); plist->PopFront();
+     PError::AssertType(v1, PEAT_NUMBER, "Argument error in first parameter of  function [MakeAudioInputBuffer(<duration>)]: "); 
+
+
+     PlatformAudioIn * myAudio = new PlatformAudioIn();
+     myAudio->CreateBuffer(v1);
+
+     AudioInfo * tmp= myAudio->ReleaseAudioOutBuffer();
+     delete myAudio;
+
+     //Variant out = myAudio->VoiceKey(v,(long double)v1,(int)v2);
+     PlatformAudioOut * myOut = new PlatformAudioOut();
+     myOut->LoadSoundFromData((tmp->audio),tmp->audiolen,&(tmp->spec));
+     myOut->Initialize();
+  
+     counted_ptr<PEBLObjectBase> audio2 = counted_ptr<PEBLObjectBase>(myOut);
+     PComplexData *  pcd = new PComplexData(audio2);
+     Variant tmpv = Variant(pcd);
+     //     delete pcd;
+     pcd=NULL;
+     return tmpv;
+}
+
+
+Variant PEBLObjects::SaveAudioToWaveFile(Variant v)
+{
+
+
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_STRING, "Argument error in first parameter of function [SaveAudioToWaveFile(<filename>,<audio-buffer>)]: ");   
+
+
+    Variant v2 = plist->First(); plist->PopFront();
+    PError::AssertType(v2, PEAT_AUDIOOUT, "Argument error second parameter of function [SaveAudioToWaveFile(<filename>,<audio-buffer>)]: "); 
+
+    PlatformAudioOut * myAudio = dynamic_cast<PlatformAudioOut*>(v2.GetComplexData()->GetObject().get());
+    myAudio->SaveBufferToWave(v1);
+    return Variant(true);        
+
+
+}
+
+
+
+
+
+Variant PEBLObjects::GetVocalResponseTime(Variant v)
+{
+
+    //
+     PList * plist = v.GetComplexData()->GetList();
+
+    
+     Variant v1 = plist->First(); plist->PopFront();
+//     PError::AssertType(v1, PEAT_NUMBER, "Argument error in first parameter of  function [MakeSineWave(<freq>,<length>,<amplitude>)]: "); 
+
+     Variant v2 = plist->First(); plist->PopFront();
+//     PError::AssertType(v2, PEAT_INTEGER, "Argument error in second parameter of function [MakeSineWave(<freq>,<length>,<amplitude>)]: "); 
+
+     Variant v3 = plist->First(); plist->PopFront();
+//     PError::AssertType(v3, PEAT_NUMBER, "Argument error in third parameter of function [MakeSineWave(<freq>,<length>,<amplitude>)]: "); 
+
+//     if((((long double)v3>1.0 )| ((long double)v3<-1.0)))
+//         {
+//             PError::SignalWarning("amplitude in MakeSineWave(<freq>,<length>,<amplitude> will produce clipping if greater than 1.0"); 
+//         }
+
+     //v1 should be a audiout object, which has our buffer.
+
+     PlatformAudioOut * po = dynamic_cast<PlatformAudioOut*>(v1.GetComplexData()->GetObject().get());
+     AudioInfo * tmp = po->GetAudioInfo();
+
+     PlatformAudioIn * myAudio = new PlatformAudioIn();
+     myAudio->UseBuffer(tmp); 
+     myAudio->Initialize(1);
+     //delete tmp;
+     //     tmp= NULL;
+
+     Variant out = myAudio->VoiceKey((long double)v2,(int)v3);
+     
+     return out;
 }
 
 Variant PEBLObjects::MakeSquareWave(Variant v)

@@ -203,11 +203,18 @@ namespace PEBLObjects
             {"PLAYBACKGROUND",    PlayBackground,   1, 1},
             {"PLAYFOREGROUND",    PlayForeground,   1, 1},
             {"STOP",              Stop,             1, 1},
+
             {"MAKESINEWAVE",      MakeSineWave,     3, 3},
+
             {"MAKESQUAREWAVE",    MakeSquareWave,   2, 2},
             {"MAKESAWTOOTHWAVE",  MakeSawtoothWave, 2, 2},
             {"MAKECHIRP",         MakeChirp,        3, 3},
-            
+
+
+            {"MAKEAUDIOINPUTBUFFER", MakeAudioInputBuffer, 1,1},
+            {"SAVEAUDIOTOWAVEFILE",   SaveAudioToWaveFile, 2,2},
+            {"GETVOCALRESPONSETIME", GetVocalResponseTime, 3,3},
+
             {"LINE",              Line,            5, 5},
             {"RECTANGLE",         Rectangle,       6, 6},
             {"SQUARE",            Square,          5, 5},
@@ -294,7 +301,8 @@ namespace PEBLEnvironment
             {"ISDIRECTORY",                     IsDirectory,        1,1},
             {"FILEEXISTS",                      FileExists,        1,1},
             {"GETDIRECTORYLISTING",             GetDirectoryListing,1,1},
-            
+            {"MAKEDIRECTORY",                   MakeDirectory,      1,1},
+
             {"ISTEXT",                          IsText,          1,1},
             {"ISNUMBER",                        IsNumber,          1,1},
             {"ISINTEGER",                       IsInteger,          1,1},

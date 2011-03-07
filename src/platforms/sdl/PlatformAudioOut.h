@@ -39,11 +39,19 @@ struct AudioInfo{
     SDL_AudioSpec spec;
     Uint8   *audio;			/* Pointer to wave data */
     Uint32   audiolen;		/* Length of wave data */
-    int      audiopos;		/* Current play position */
+    Uint32      audiopos;		/* Current play position */
+
+
+    unsigned int bytesPerSample;  //size of a sample
+	Uint32 recordpos;      //current index in the buffer (in bytes)
+    Uint32 counter;        //A counter to use that keeps track of samples
+                           //since the beginning of recording.
+
+
     int      volume;           /* Relative volume. 0-100*/
     const char*    name;
 };
-  
+
 class PlatformAudioOut: virtual public PAudioOut, public PEBLObjectBase
 {
  public:
@@ -53,6 +61,8 @@ class PlatformAudioOut: virtual public PAudioOut, public PEBLObjectBase
   
     bool LoadSoundFile(const std::string & filename);
     bool LoadSoundFromData( Uint8 *buffer, long unsigned int size, SDL_AudioSpec *spec);
+
+    void SaveBufferToWave(Variant filename);
     bool CreateSineWave(float freq, long unsigned int length,long double volume);
 
     bool CreateSquareWave(float freq, double length, int amplitude);
@@ -64,6 +74,7 @@ class PlatformAudioOut: virtual public PAudioOut, public PEBLObjectBase
     bool Stop();
     
     bool ConvertAudio(AudioInfo & info);    
+    AudioInfo * GetAudioInfo();
     bool Initialize();
 
     //    void AddTrack(const std::string &  handle, AudioInfo track);

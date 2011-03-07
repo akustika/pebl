@@ -36,6 +36,7 @@
 #include <string>
 #include <signal.h>
 
+using std::cout;
 using std::cerr;
 using std::endl;
 using std::string;
@@ -45,17 +46,27 @@ void PError::SignalFatalError(const string & message)
 
     const PNode * node = Evaluator::gEvalNode;
 
+    std::cout << "vvvvvvvvvvvvvvvvvverror\n";
+    std::cout << message << endl;
+    std::cout << "^^^^^^^^^^^^^^^^^^error\n";
+    Evaluator::gCallStack.PrintCallStack(cout);
     Evaluator::gCallStack.PrintCallStack(cerr);
-    if(node)
+
+ 
+   if(node)
         {
+            cout << "\nError near line " << node->GetLineNumber() <<   " of file " << node->GetFilename()  << ":\n\t";
             cerr << "\nError near line " << node->GetLineNumber() <<   " of file " << node->GetFilename()  << ":\n\t";
             cerr << message << endl;
         }
     else
         {
+            cout << "\nError before files are loaded.\n";
             cerr << "\nError before files are loaded.\n";
             cerr << message << endl;
         }
+
+   std::cout << "done \n";
  
     raise(SIGTERM);
     exit(0);

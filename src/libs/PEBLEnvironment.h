@@ -106,6 +106,7 @@ namespace PEBLEnvironment
     Variant IsDirectory(Variant v);
     Variant GetDirectoryListing(Variant v);
     Variant FileExists(Variant v);
+    Variant MakeDirectory(Variant v);
 
     Variant VariableExists(Variant v);
     Variant IsText(Variant v);

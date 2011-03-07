@@ -75,6 +75,7 @@ namespace PEBLUtility
     Variant GetDirectoryListing(std::string path);
     Variant IsDirectory(std::string path);
     Variant FileExists(std::string path);
+    Variant MakeDirectory(std::string path);
 }
 
 

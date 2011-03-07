@@ -1504,6 +1504,18 @@ Variant PEBLEnvironment::FileExists(Variant v)
 
 
 
+Variant PEBLEnvironment::MakeDirectory(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [MakeDirectory(<dirname>)]:  ");    
+
+    Variant out = PEBLUtility::MakeDirectory((std::string)(plist->First()));
+    return out;
+}
+
+
+
 //  This does not currently work.
 //
 Variant PEBLEnvironment::VariableExists(Variant v)
