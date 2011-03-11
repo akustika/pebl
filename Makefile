@@ -37,25 +37,25 @@ C   = gcc
 CXX = g++ 
 DEBUGFLAGS = -lefence -DPEBL_DEBUG -g
 
-CFLAGS =   -O3 -std=c99 -DPREFIX=$(PREFIX)
+CFLAGS =   -O3 -std=c99 -DPREFIX=$(PREFIX) -g 
 
 
-CXXFLAGS =  -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  -DENABLE_BINRELOC -DPREFIX=$(PREFIX)  
+CXXFLAGS =  -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  -DENABLE_BINRELOC -DPREFIX=$(PREFIX)  -g 
 
 
 
 SDL_CONFIG = /usr/bin/sdl-config
 
 SDL_FLAGS = -I/usr/include/SDL -D_REENTRANT
-SDL_LIBS = -L/usr/lib -Wl,-rpath,/usr/local/lib -lSDL -lpthread 
+SDL_LIBS = -L/usr/lib -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lSDL -lpthread 
 
 
 #Comment/uncomment below on OSX
 #OSX_FLAGS = -framework AppKit -lSDLmain -DPEBL_OSX
 OSX_FLAGS =
 
-SDLIMG_FLAGS =  -L/usr/lib -Wl,-rpath,/usr/lib
-SDLIMG_LIBS =   -lSDL -lpthread -lSDL_image -lSDL_net
+SDLIMG_FLAGS =  -L/usr/lib -L/usr/local/lib -Wl,-rpath,/usr/lib
+SDLIMG_LIBS =   -lSDL -lpthread -lSDL_image -lSDL_net -lSDL_audioin
 
 
 SHELL = /bin/bash
@@ -90,10 +90,14 @@ vpath %.l   $(SRC_DIR)
 PUTILITIES_SRC = $(UTIL_DIR)/PEBLUtility.cpp \
 		$(UTIL_DIR)/PError.cpp \
 		$(UTIL_DIR)/BinReloc.cpp \
-		$(UTIL_DIR)/PEBLPath.cpp
+		$(UTIL_DIR)/PEBLPath.cpp 
 
-PUTILITIES_OBJ  = $(patsubst %.cpp, %.o, $(PUTILITIES_SRC))
-PUTILITIES_INC  = $(patsubst %.cpp, %.h, $(PUTILITIES_SRC))
+
+PUTILITIES_OBJ1  = $(patsubst %.cpp, %.o, $(PUTILITIES_SRC))
+PUTILITIES_OBJ  = $(patsubst %.c, %.o, $(PUTILITIES_OBJ1))   ##Get the .c file
+PUTILITIES_INC1  = $(patsubst %.cpp, %.h, $(PUTILITIES_SRC))
+PUTILITIES_INC  = $(patsubst %.c, %.h, $(PUTILITIES_INC1))   ##Get the plain .c file
+
 
 
 PEBLBASE_SRCXX =	$(BASE_DIR)/Evaluator.cpp \
@@ -110,8 +114,9 @@ PEBLBASE_SRCXX =	$(BASE_DIR)/Evaluator.cpp \
 
 PEBLBASE_OBJXX = $(patsubst %.cpp, %.o, $(PEBL_SRCXX))
 
-
-PEBLBASE_SRC = lex.yy.c
+##This just collects plain .c files:
+PEBLBASE_SRC = lex.yy.c \
+		$(UTIL_DIR)/rs232.c
 PEBLBASE_OBJ = $(patsubst %.c, %.o, $(PEBL_SRC))
 
 
@@ -125,8 +130,8 @@ POBJECT_SRC  =  $(OBJECTS_DIR)/PEnvironment.cpp \
 		$(OBJECTS_DIR)/PFont.cpp \
 		$(OBJECTS_DIR)/PTextObject.cpp \
 		$(OBJECTS_DIR)/PLabel.cpp \
-		$(OBJECTS_DIR)/PTextBox.cpp \
-		$(PUTILITIES_SRC)
+		$(OBJECTS_DIR)/PTextBox.cpp 
+##		$(PUTILITIES_SRC)
 
 
 POBJECT_OBJ  = $(patsubst %.cpp, %.o, $(POBJECT_SRC))
@@ -142,7 +147,10 @@ PDEVICES_SRC =  $(DEVICES_DIR)/PDevice.cpp \
 	$(DEVICES_DIR)/PStream.cpp \
 	$(DEVICES_DIR)/PAudioOut.cpp \
 	$(DEVICES_DIR)/PNetwork.cpp \
-	$(DEVICES_DIR)/PParallelPort.cpp 
+	$(DEVICES_DIR)/PJoystick.cpp \
+	$(DEVICES_DIR)/PParallelPort.cpp \
+	$(DEVICES_DIR)/PComPort.cpp 
+
 
 
 PDEVICES_OBJ  = $(patsubst %.cpp, %.o, $(PDEVICES_SRC))
@@ -163,15 +171,17 @@ PLATFORM_SDL_SRC  =	$(SDL_DIR)/PlatformEnvironment.cpp \
 			$(SDL_DIR)/PlatformCanvas.cpp \
 			$(SDL_DIR)/SDLUtility.cpp \
 		   	$(SDL_DIR)/PlatformEventQueue.cpp \
+			$(SDL_DIR)/PlatformAudioIn.cpp \
 			$(SDL_DIR)/PlatformAudioOut.cpp \
-			$(SDL_DIR)/PlatformNetwork.cpp
+			$(SDL_DIR)/PlatformNetwork.cpp \
+			$(SDL_DIR)/PlatformJoystick.cpp
 
 PLATFORM_SDL_OBJ  = 	$(patsubst %.cpp, %.o, $(PLATFORM_SDL_SRC))
 PLATFORM_SDL_INC  = 	$(patsubst %.cpp, %.h, $(PLATFORM_SDL_SRC))
 
 
 FUNCTIONLIB_SRC = $(LIBS_DIR)/PEBLMath.cpp \
-		  		$(LIBS_DIR)/PEBLStream.cpp \
+			  	$(LIBS_DIR)/PEBLStream.cpp \
 	 	  		$(LIBS_DIR)/PEBLObjects.cpp \
                   $(LIBS_DIR)/PEBLEnvironment.cpp \
                   $(LIBS_DIR)/PEBLList.cpp \
@@ -263,6 +273,7 @@ PEBLMAIN_SRC = 		$(APPS_DIR)/PEBL.cpp \
 			$(PDEVICES_SRC) \
 			$(FUNCTIONLIB_SRC) \
 			$(POBJECT_SRC) \
+			$(PUTILITIES_SRC) \
 			$(PLATFORM_SDL_SRC)
 
 PEBLMAIN_OBJ = $(patsubst %.cpp, %.o, $(PEBLMAIN_SRC))
@@ -293,7 +304,7 @@ DIRS = \
 main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
 
 	$(CXX) $(CXXFLAGS)   -o $(BIN_DIR)/pebl -I$(PREFIX)include/SDL -D_REENTRANT \
-	   -L$(PREFIX)/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  -lSDL_net -lpng \
+	   -L$(PREFIX)/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  -lSDL_net -lpng -lSDL_audioin\
        $(OSX_FLAGS) $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, \
        $(PEBLMAIN_OBJ))
 
@@ -377,7 +388,6 @@ dox: $(PEBLBASE_SRCXX)
 
 
 remake: ready clean $(PROGS)
-
 ready:
 	-rm -f $(OUT_DIR)/*
 
