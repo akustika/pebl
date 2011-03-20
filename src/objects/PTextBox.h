@@ -3,7 +3,7 @@
 //    Name:       src/objects/PTextBox.h
 //    Purpose:    Contains generic specs for non-editable a text box
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -68,7 +68,9 @@ public:
 
     virtual int IncrementCursor();
     virtual int DecrementCursor();
-        
+    
+    virtual void SetLineWrap(bool state);
+
     virtual void HandleKeyPress(int keycode, int modkeys);
 
 
@@ -85,9 +87,10 @@ protected:
     virtual std::ostream & SendToStream(std::ostream& out) const{return out;};
 
 
-    bool mEditable;   //Whether the box is editable.
-    int  mCursorPos;    //The character position of the cursor.
+    bool mEditable;       //Whether the box is editable.
+    int  mCursorPos;      //The character position of the cursor.
     bool mCursorChanged;  //True if cursor has moved.
+    bool mLineWrap;       //Should lines get wrapped, or just truncated?
     
 };
 

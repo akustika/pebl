@@ -68,6 +68,8 @@ namespace PEBLEnvironment
     Variant WaitForMouseButton(Variant v);
     Variant WaitForMouseButtonWithTimeout(Variant v);
 
+    Variant GetMouseState(Variant v);
+
     //basic joystick stuff
     Variant GetNumJoysticks(Variant v);
     Variant GetJoystick(Variant v);

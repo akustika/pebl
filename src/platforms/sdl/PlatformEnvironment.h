@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformEnvironment.h
 //    Purpose:    Contains platform-specific environment initiation
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -70,7 +70,7 @@ public:
     virtual int ShowCursor(int val);
     virtual int SetCursorPosition(int x, int y);
     virtual Variant GetCursorPosition();
-
+    virtual Variant  GetMouseState();  //gets the buttons too!!!
     virtual bool GetUnicode(){return mUnicode;};
 
     virtual int GetNumJoysticks();

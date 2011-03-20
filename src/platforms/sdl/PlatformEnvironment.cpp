@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformEnvironment.cpp
 //    Purpose:    Contains SDL-specific interface for the main environment.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -110,7 +110,8 @@ void PlatformEnvironment::Initialize()
             SDL_EnableUNICODE(mUnicode);
             cerr << "Successfully initialized SDL Graphics" << endl;
             char name[32];
-            cerr  << "Using audio driver: " <<  SDL_AudioDriverName(name, 32) << endl;
+            //I get a bad text here and essentially crash cerr???
+            //cerr  << "Using audio driver: " <<  SDL_AudioDriverName(name, 32) << endl;
 
         }
 
@@ -179,6 +180,7 @@ Variant  PlatformEnvironment::GetCursorPosition()
 {
     int x = 0;
     int y = 0;
+    SDL_PumpEvents();
     SDL_GetMouseState(&x,&y);
 
     PList * newlist = new PList();
@@ -189,6 +191,28 @@ Variant  PlatformEnvironment::GetCursorPosition()
     return Variant(pcd);
 }
 
+
+Variant  PlatformEnvironment::GetMouseState()
+{
+    int x = 0;
+    int y = 0;
+    SDL_PumpEvents();
+    int button = SDL_GetMouseState(&x,&y);
+    int b1 = button & SDL_BUTTON(1);
+    int b2 = button & SDL_BUTTON(2);
+    int b3 = button & SDL_BUTTON(3);
+
+    PList * newlist = new PList();
+    newlist->PushFront(Variant(x));
+    newlist->PushBack(Variant(y));
+    newlist->PushBack(Variant(b1));
+    newlist->PushBack(Variant(b2));
+    newlist->PushBack(Variant(b3));
+
+    counted_ptr<PEBLObjectBase> newlist2 = counted_ptr<PEBLObjectBase>(newlist);
+    PComplexData *   pcd = new PComplexData(newlist2); 
+    return Variant(pcd);
+}
 
 
 // This will initialize the joystick subsystem

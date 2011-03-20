@@ -264,7 +264,7 @@ namespace PEBLEnvironment
             {"WAITFORLISTKEYPRESSWITHTIMEOUT",  WaitForListKeyPressWithTimeout, 3,3},
             {"WAITFORMOUSEBUTTON",              WaitForMouseButton, 0,1},
             {"WAITFORMOUSEBUTTONWITHTIMEOUT",   WaitForMouseButtonWithTimeout, 1,2},
-
+            {"GETMOUSESTATE",                   GetMouseState,           0,0},
 
             {"GETNUMJOYSTICKS",                 GetNumJoysticks,      0, 0},
             {"OPENJOYSTICK",                    GetJoystick,       1, 1},

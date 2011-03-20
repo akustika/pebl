@@ -43,7 +43,7 @@
 #include <png.h>
 
 #include <dirent.h>
-#include <errno.h>
+//#include <errno.h>
 
 
 #ifdef PEBL_WINDOWS
@@ -1007,14 +1007,14 @@ Variant PEBLUtility::MakeDirectory(std::string path)
  
     if (mkdir(path.c_str(), 0777) == -1) 
        {
-           PError::SignalFatalError("Unable to create directory: " + Variant(strerror(errno)));
+           PError::SignalFatalError("Unable to create directory: " );//+ Variant(strerror(errno)));
        }
-    std::cout << "created directory [" << path <<"]\n";
+    //std::cout << "created directory [" << path <<"]\n";
 #elif defined(PEBL_WINDOWS)
     
     if (mkdir(path.c_str()) == -1) 
         {
-            PError::SignalFatalError("Unable to create directory: " + Variant(strerror(errno)));
+            PError::SignalFatalError("Unable to create directory: ");// + Variant(strerror(errno)));
         }
     
 #endif

@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformTextBox.cpp
 //    Purpose:    Contains SDL-specific interface for the text boxes.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -162,6 +162,7 @@ bool  PlatformTextBox::RenderText()
     while(i != mBreaks.end() && totalheight < (unsigned int) mHeight)
         {
 
+
             //mBreaks holds the 'starting' positions of each line.
             linelength = *i - linestart;
             if(linelength>0)
@@ -257,34 +258,38 @@ void PlatformTextBox::FindBreaks()
     unsigned int linelength = 0;
     unsigned int totalheight = 0;
 
-
     mBreaks.clear();
+
 
     //Now, let's reserve space in mBreaks, roughly twice the amount we
     //think we need. This will make adding elements take less time.
-
+    
     int width = mFont->GetTextWidth(mText);
     mBreaks.reserve(width / mWidth * 2);
-
+    
     
     while( (totalheight < (unsigned int) mHeight  &&
-             newlinestart < mText.size()))
+            newlinestart < mText.size()))
         {
-
+            
             linelength   = FindNextLineBreak(linestart);
-
+            
             //Increment the placekeepers:
-          //This is where the next line will start.
-
+            //This is where the next line will start.
+            
             newlinestart = linestart+ linelength; 
             totalheight += height;
-
+            
             mBreaks.push_back(newlinestart);
             linestart=newlinestart;
             
         }
-}
 
+        
+
+
+}
+    
 
 /// This returns the number of characters after curposition
 /// that the next line should break at.
@@ -296,6 +301,7 @@ int PlatformTextBox::FindNextLineBreak(unsigned int curposition)
     unsigned int lastsep  = 0;
     unsigned int sep      = 0;
     std::string tmpstring;
+
 
     //loop through the entire text from curposition on.
     while (curposition + sublength < mText.size()+1)
@@ -310,45 +316,88 @@ int PlatformTextBox::FindNextLineBreak(unsigned int curposition)
 
                     //If the width of the current line is too big, break at the last separator.
                     if(mFont->GetTextWidth(tmpstring) > (unsigned int)mWidth)
-                        return sep+1;
-                    else
-                        return sublength+1;
-                }
-            
-     
-            if(mText[curposition + sublength] == ' '
-               || mText[curposition + sublength] == '-')
-                //               || curposition + sublength == mText.size())
-                {  
-                    //either of these are word breaks; potential line breaks.  
-
-                    //Increment word separator holders
-                    lastsep = sep;
-                    sep = sublength ;
-
-                    tmpstring = mText.substr(curposition, sublength);
-
-                    //Check the size of the line.
-                    if(mFont->GetTextWidth(tmpstring) > (unsigned int)mWidth) 
                         {
-                            //the text is too big for a single line, so return the last word break, but only
-                            //if the size is greater than 0. In that case, return the current separator, which 
-                            //will not fit on the line, but it will get chopped off.
-
-                            if(lastsep != 0)
+                            //if we are now too long, we should back up to the previous
+                            //break; unless that break was the beginning of the line.  If
+                            //that is the case, back up one character, and crudely break
+                            //within a text line.
+                            if(lastsep>0)
                                 {
+
                                     return lastsep+1;
                                 }
                             else
                                 {
-                                    return sep+1;
+                                    
+
+                                    if(mLineWrap)
+                                        {
+                                            //We have no natural break 'sep' on this line,
+                                            //and the current line is too long.
+                                            while(mFont->GetTextWidth(tmpstring) >(unsigned int)mWidth)
+                                                {
+                                                    sublength--;
+                                                    tmpstring = mText.substr(curposition,sublength);
+                                                }
+                                            
+                                            return sublength;
+                                        }
+                                    else
+                                        {
+                                            return sublength+1;
+                                        }
                                 }
+                        }
+                    else
+                        {
+
+                            return sublength+1;
                         }
                 }
 
-            sublength ++;
+
+            //if we allow line wrapping, allow lines to wrap at other places too.
+            if(mLineWrap)
+                {
+     
+                    if(mText[curposition + sublength] == ' '
+                       || mText[curposition + sublength] == '-')
+                        //               || curposition + sublength == mText.size())
+                        {  
+                            //either of these are word breaks; potential line breaks.  
+                            
+                            //Increment word separator holders
+                            lastsep = sep;
+                            sep = sublength ;
+                            
+                            tmpstring = mText.substr(curposition, sublength);
+                            
+                            //Check the size of the line.
+                            if(mFont->GetTextWidth(tmpstring) > (unsigned int)mWidth) 
+                                {
+                                    //the text is too big for a single line, so return the last word break, but only
+                                    //if the size is greater than 0. In that case, return the current separator, which 
+                                    //will not fit on the line, but it will get chopped off.
+                                    
+                                    if(lastsep != 0)
+                                        {
+
+                                            return lastsep+1;
+                                        }
+                                    else
+                                        {
+
+                                            return sep+1;
+                                        }
+                                }
+                        }
+
+
+                }
+            sublength++;
         }
     //The rest of the text must fit in the space allotted; return that number.    
+
 
     return sublength-1;
 }

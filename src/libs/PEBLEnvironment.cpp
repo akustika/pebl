@@ -893,7 +893,11 @@ Variant PEBLEnvironment::SetCursorPosition(Variant v)
      return Variant(1);
 }
 
-
+Variant PEBLEnvironment::GetMouseState(Variant v)
+{
+   return myEnv->GetMouseState();
+    
+}
 
     //basic joystick stuff
 Variant PEBLEnvironment::GetNumJoysticks(Variant v)

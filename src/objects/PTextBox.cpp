@@ -3,7 +3,7 @@
 //    Name:       src/objects/PTextBox.cpp
 //    Purpose:    Contains generic specification for a read-only text box.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -41,8 +41,8 @@ PTextBox::PTextBox():
     PTextObject(""),
     mEditable(false),
     mCursorPos(0),
-    mCursorChanged(true)
-
+    mCursorChanged(true),
+    mLineWrap(true)
 {
     InitializeProperty("TEXT",Variant(""));
     InitializeProperty("WIDTH",Variant(0));
@@ -50,6 +50,7 @@ PTextBox::PTextBox():
     InitializeProperty("EDITABLE",Variant(false));
     InitializeProperty("CURSORPOS",Variant(0));
     InitializeProperty("NAME",Variant("<TEXTBOX>"));
+    InitializeProperty("LINEWRAP",Variant(1));
 }
 
 
@@ -58,7 +59,8 @@ PTextBox::PTextBox(std::string text, int width, int height):
     PTextObject(text),
     mEditable(false),
     mCursorPos(0),
-    mCursorChanged(true)
+    mCursorChanged(true),
+    mLineWrap(true)
 { 
     InitializeProperty("TEXT",Variant(text));
     InitializeProperty("WIDTH",Variant(width));
@@ -66,6 +68,7 @@ PTextBox::PTextBox(std::string text, int width, int height):
     InitializeProperty("EDITABLE",Variant(false));
     InitializeProperty("CURSORPOS",Variant(0));
     InitializeProperty("NAME",Variant("<TEXTBOX>"));
+    InitializeProperty("LINEWRAP",Variant(1));
 }
 
 
@@ -76,7 +79,9 @@ PTextBox::PTextBox( PTextBox & text)
     mText = text.GetText();
     mEditable = false;
     mCursorPos = 0;
+    mLineWrap = true;
     InitializeProperty("NAME",Variant("<TEXTBOX>"));
+    InitializeProperty("LINEWRAP",Variant(1));
 }
 
 PTextBox::~PTextBox()
@@ -103,7 +108,7 @@ bool PTextBox::SetProperty(std::string name, Variant v)
         mTextChanged=true;}
     else if(name == "EDITABLE")SetEditable(v);
     else if(name == "CURSORPOS") SetCursorPosition(v);
-        
+    else if(name == "LINEWRAP") SetLineWrap(v);
     else return false;
     
     return true;
@@ -123,7 +128,7 @@ ObjectValidationError PTextBox::ValidateProperty(std::string name, Variant v)con
 
 ObjectValidationError PTextBox::ValidateProperty(std::string name)const
 {
-    if(name == "CURSORPOS")
+    if(name == "CURSORPOS"| name=="LINEWRAP")
         return OVE_VALID;
     else
         return PTextObject::ValidateProperty(name);
@@ -236,6 +241,12 @@ void PTextBox::SetWidth(int w)
 {
     mWidth = w;
     mTextChanged = true;
+}
+
+
+void PTextBox::SetLineWrap(bool state)
+{
+    mLineWrap = state;
 }
 
 void PTextBox::HandleKeyPress(int keycode, int modkeys)
