@@ -310,11 +310,11 @@ define SDTDPrime(hr,far)
 {
 	if(not IsNumber(hr))
 	{
-	SignalFatalError("First argument of function [SDTDPrime(<hr>,<far>)] is not a number")
+  	  SignalFatalError("First argument of function [SDTDPrime(<hr>,<far>)] is not a number")
 	}
 	if(not IsNumber(far))
 	{
-	SignalFatalError("Second argument of function [SDTDPrime(<hr>,<far>)] is not a number")
+	  SignalFatalError("Second argument of function [SDTDPrime(<hr>,<far>)] is not a number")
 	}
 
    return CumNormInv(far)-CumNormInv(hr)

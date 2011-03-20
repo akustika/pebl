@@ -34,144 +34,53 @@
 define GetNIMHDemographics(code,window, file)
 {
 
-        foreground <- MakeColor("black")
-        background <- MakeColor("grey")
-        white      <- MakeColor("white")
-        fontBig   <- MakeFont(gPEBLBaseFont, 0, 22, foreground,  background,1)
-        fontSmall <- MakeFont(gPEBLBaseFont, 0, 15, foreground,  background, 1)
-        fontTB    <- MakeFont(gPEBLBaseFont, 0, 30, foreground,  white, 1)  
+
+        background <- MakeColor("grey40")
+    	bg <- MakeCanvas(gVideoWidth,gVideoHeight,background)
+		AddObject(bg,window)
+		Move(bg,gVideoWidth/2,gVideoHeight/2)
+		Draw(bg)
 
         #####################################################
         ##First, ask about gender.
 
-        question <- MakeLabel("What is your sex/gender?",fontBig)
-        option1  <- MakeLabel("1. Male", fontSmall) 
-        option2  <- MakeLabel("2. Female", fontSmall) 
-        option3  <- MakeLabel("3. Prefer not to say.", fontSmall) 
-        option4  <- MakeLabel(" ", fontSmall) 
-        option5  <- MakeLabel(" ", fontSmall) 
-        option6  <- MakeLabel(" ", fontSmall) 
-                                          
-        #Add the text to the window
-        AddObject(question, window)
-      
-        AddObject(option1, window)
-        AddObject(option2, window)
-        AddObject(option3, window)
-        AddObject(option4, window)
-        AddObject(option5, window)
-        AddObject(option6, window)
 
+        responseGender <- GetEasyChoice("What is your sex/gender?",
+		 				["1. Male", "2. Female", "3. Prefer not to say"],
+						["M","F","N"],window)
 
-        #Position in properly
-        MoveCorner(question, 100, 150)            
-        MoveCorner(option1, 120, 220)
-        MoveCorner(option2, 120, 240)
-        MoveCorner(option3, 120, 260)
-        MoveCorner(option4, 120, 280)
-        MoveCorner(option5, 120, 300)
-        MoveCorner(option6, 120, 320)
-         
-        Draw()
-        
-        #Get their response
-        responseGender <- WaitForListKeyPress(["1", "2", "3"])
- 
-         
-        Hide(question)
-        Hide(option1)
-        Hide(option2)
-        Hide(option3)
         Draw()        
 
         ##########################################################
         ##Ask about ethnicity
-        SetText(question, "Are you of Hispanic or Latino/Latina Heritage?")
-        SetText(option1, "[Y] Yes")
-        SetText(option2, "[N] No")
-        MoveCorner(question,100, 150)
-        MoveCorner(option1, 120, 220)
-        MoveCorner(option2, 120, 240)
+        responseEthnicity <- GetEasyChoice("Are you of Hispanic or Latino/Latina Heritage?",
+		 				["Yes", "No"],
+						["hisp","nothisp"],window)
 
-        Show(question)
-        Show(option1)
-        Show(option2)
-        Draw()
-       
-        responseEthnicity <- WaitForListKeyPress(["Y", "N"])
-       
-        Hide(question)
-        Hide(option1)
-        Hide(option2)
-        Draw()
 
         ##########################################################
         ##Ask about Race
 
-        SetText(question, "What is your race?")
-        SetText(option1, "[1] American Indian or Native American")
-        SetText(option2, "[2] Asian")
-        SetText(option3, "[3] Native Hawaiian or Pacific Islander")
-        SetText(option4, "[4] Black/African American")
-        SetText(option5, "[5] White")
-        SetText(option6, "[6] Other/Prefer not to say")
+        responseRace <- GetEasyChoice("What is your race?",
+           ["American Indian or Native American", 
+		    "Asian", 
+            "Native Hawaiian or Pacific Islander",
+			"Black/African American",
+			"White",
+			 "Other/Prefer not to say"],
+			["amind","asian","pacis","afam","white","other"],window)
 
-        MoveCorner(question, 100, 150)            
-        MoveCorner(option1, 120, 220)
-        MoveCorner(option2, 120, 240)
-        MoveCorner(option3, 120, 260)
-        MoveCorner(option4, 120, 280)
-        MoveCorner(option5, 120, 300)
-        MoveCorner(option6, 120, 320)
-
-        Show(question)
-        Show(option1)
-        Show(option2)
-        Show(option3)
-        Show(option4)
-        Show(option5)
-        Show(option6)
-        Draw()
-        responseRace <- WaitForListKeyPress(["1", "2", "3", "4", "5", "6"])
-
-
-
-        Hide(question)
-        Hide(option1)
-        Hide(option2)
-        Hide(option3)    
-        Hide(option4)    
-        Hide(option5)
-        Hide(option6)
-        Draw()
 
         ##############################################################
         ##Ask about Age.
-        SetText(question, "How old are you (in years)?")
-        SetText(option1,"Hit 'enter' key when age is entered.")
-                  
-        MoveCorner(question,100,150)
-        MoveCorner(option1, 100,250)
-        Show(question)
-        Show(option1)
-        tb <- MakeTextBox("",fontTB,100,40)
-        AddObject(tb,window)
-        MoveCorner(tb,100,180)
-        Draw()
-        responseAge <-  GetInput(tb, "<return>")
-                  
+		responseAge <- GetEasyInput("How old are you (in years)?",window)
+
+                 
 
         fileOut <- FileOpenAppend(file)
-        FilePrint(fileOut, code + " " + TimeStamp() + " " + responseGender+ " " + responseEthnicity + " " + responseRace + " " + responseAge)
+        FilePrint(fileOut, code + "," + TimeStamp() + "," + responseGender+ "," + responseEthnicity + "," + responseRace + "," + responseAge)
         FileClose(fileOut)
-        RemoveObject(question,window)
-        RemoveObject(option1,window)
-        RemoveObject(option2,window)
-        RemoveObject(option3,window)
-        RemoveObject(option4,window)
-        RemoveObject(option5,window)
-        RemoveObject(option6,window)
-        RemoveObject(tb,window)
+        RemoveObject(bg,window)
 }     
 
 
@@ -620,6 +529,63 @@ define MessageBox(text,win)
 
 }
 
+define GetEasyChoice(text,choices,output,win)
+{
+
+ ShowCursor(1)
+ if(not IsWindow(win))
+  { 
+    SignalFatalError("GetEasyChoice(win) needs a window to be specified, not [" + win + "]")
+  }
+
+  if(not(Length(choices) == Length(output)))
+   {
+     SignalFatalError("In GetEasyChoice(text,choices,output,win), choices and output need to be lists of the same length")
+   }
+
+   bgcol <- win.BGCOLOR
+   bg  <- MakeCanvas(gVideoWidth,gVideoHeight,bgcol)
+   Move(bg,gVideoWidth/2,gVideoHeight/2)
+   AddObject(bg,win)
+
+   box <- EasyTextBox(text+CR(1)+"Click box to select option.",50,50, win,20,gVideoWidth-100,100)
+   
+
+   tmp <- []
+   clickon <- []
+   y <- 200
+
+
+   skip <- Min([(gVideoHeight-220)/Length(output),100])
+   squaresize <- Min([40,skip-5])
+
+   loop(i, choices)
+    {
+      bg <- Square(180,y,squaresize,MakeColor("grey"),1)
+	  AddObject(bg,win)
+      lab <- EasyLabel(i,80, y,win,25)
+	  Move(lab, 220+ lab.width/2,y)
+      tmp <- Append(tmp,lab)
+      clickon <- Append(clickon,bg)
+     y <- y + skip
+    }
+
+   Draw()
+
+	x <-   WaitForClickOnTarget(clickon,output )
+
+   RemoveObject(bg,win)
+
+   loop(i,Transpose([tmp,clickon]))
+    {
+      RemoveObject(First(i),win)
+  	  RemoveObject(Second(i),win)
+    }
+
+   Draw()
+
+  return x
+}
 
 
 ##  This takes a number, and pads
@@ -670,7 +636,7 @@ define Inside(click,object)
      }
     
 
-   if(IsImage(object) or IsLabel(object) or 
+   if(IsImage(object) or IsLabel(object) or  IsCanvas(object) or
       object.name == "<RECTANGLE>" or object.name == "<SQUARE>")
    {
 	##First, determine object limits

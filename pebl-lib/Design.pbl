@@ -438,6 +438,10 @@ define Reverse(list)
 
 
 
+##Note that shufflerepeat ensures that there are no
+##duplicates at transitions between lists.  This could lead
+##to infinite loops if you shuffle a list of identical items
+
 define ShuffleRepeat(list, n)
 {
 
