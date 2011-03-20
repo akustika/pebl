@@ -1,12 +1,45 @@
 ##  This is a PEBL script that acts as a cross-platform 
 ##  launcher for PEBL.
+##  Version 0.1: Initial release, to accompany PEBL 0.12.
+##  (c) 2011 Shane T. Mueller, Ph.D. smueller@obereed.net
 ##
 
 define Start(p)
 {
 
 
-   gViewerCommand <- "gedit"
+  ## todo: 
+  ##       open directory.
+  ##       concatenate data files???
+
+
+  ##This allows you to open up the description file directly.
+  gEditDescription <- 1
+
+  systemType <- GetSystemType()
+
+  if(systemType == "LINUX") 
+   {
+
+    gViewerCommand <- "gedit"
+    gPEBLName      <- "pebl"
+    gOpenManual    <- "acroread /usr/local/share/pebl/doc/PEBLManual0.12.pdf&"
+	gOpenURL        <- "firefox"
+
+	
+   }elseif(systemType=="WIN32")   {
+     
+     gViewerCommand <- "c:\windows\notepad.exe"
+     gPEBLName      <- "c:\Program Files\PEBL\pebl.exe"
+     gOpenManual    <- "c:\Program Files\acroread c:\Program Files\PEBL\doc\PEBLManual0.12.pdf"
+     gOpenURL       <- "c:\Program Files\iexplore.exe"
+
+   }elseif(systemType == "OSX")
+   {
+     gViewerCommand <- "open"
+     gPEBLName      <- "/opt/local/bin/pebl"
+     gOpenManual    <- "acroread /opt/local/share/pebl/doc/PEBLManual0.12.pdf"
+   }
 
    gSleepEasy <- 1
    gVideoWidth <- 1000
@@ -26,7 +59,7 @@ define Start(p)
        }
 
 	   fullscreen <- ToNumber(Second(Lookup("fullscreen",keys,config)))
-       
+	   nimhdemographics <- ToNumber(Second(Lookup("nimhdemo",keys,config)))       
 	   subcode    <- Second(Lookup("subcode",keys,config))
 	   experimenter <-Second(Lookup("experimenter",keys,config))
 	   language <-Second(Lookup("language",keys,config))
@@ -46,18 +79,24 @@ define Start(p)
         experimenter <- "default"
         language <- "en"
         expchain <- []         ##sequence of experiments to run
-
+		nimhdemographics <- 0
       }
+
   if(fullscreen)
     {
       fstext  <- "X"
     } else { 
       fstext <- ""
     }
+  if(nimhdemographics)
+    {
+	  demotext <- "X"
+    }else{
+	  demotext <- ""
+    }
 
-
-
-   selectlist <- []
+   ##keep track of the offset/select pairs when you move to new directories.
+   selectStack <- []
    selected <-1     #Which item is selected in the fileview
    offset <- 0      #offset in the fileview
 
@@ -83,35 +122,28 @@ define Start(p)
 
    filelist <- FilterDir(GetDirectoryListing(DirlistToText(dirchain)),dirchain)
    flatfilelist <- Flatten(filelist)
+   
+ 
+ 
 
 
 
 
-
-   bg <- MakeCanvas(200,500,MakeColor("grey20"))
-
-   run <- MakeLabel(" Run Selected Script ",font)
-   AddObject(run,win)
-   Move(run,xbase+100,yBase+height+20)
-
-
-   exit <- MakeLabel("              EXIT            ",font)
-   AddObject(exit,win)
-   Move(exit,xbase+100,ybase+height+50)
+   run        <- MakeButton(xbase+100,ybase-30,200,win,"Run selected script")
+   edit       <- MakeButton(xbase+55,ybase+height+20,120,win,"Edit script")
+   exit       <- MakeButton(xbase+55,ybase+height+50,120,win,"EXIT")
+   viewoutput <- MakeButton(xbase+200,ybase+height+20,150,win,"View debug output")
+   viewerror  <- MakeButton(xbase+200,ybase+height+50,150,win,"View error output")
+   addtochain <- MakeButton(xbase+340,ybase+height+20,120,win,"Add to chain")
+   clearchain <- MakeButton(xbase+340,ybase+height+50,120,win,"Clear chain")
 
 
-   viewoutput <- MakeLabel(" View debug output ",font)
-   AddObject(viewoutput,win)
-   Move(viewoutput,xbase+420,ybase+100)
 
-   viewerror <- MakeLabel("  View error output  ",font)
-   AddObject(viewerror,win)
-   Move(viewerror,xbase+420,ybase+125)
-
-   edit <- MakeLabel("       Edit script        ",font)
-   AddObject(edit,win)
-   Move(edit,xbase+100,ybase+height+80)
-
+   ##upper right buttons
+   openmanual <- MakeButton(690,50,130,win,"Open Manual")
+   about      <- MakeButton(850,50,130,win,"About")
+   requestfeature <- MakeButton(690,75,130,win,"Request Feature")
+   visitweb <- MakeButton(850,75,130,win,"Visit Website")
 
    ##################################################
    ##  
@@ -123,26 +155,22 @@ define Start(p)
    chainlist.linewrap <- 0
    chainlist.text <- MakeExpChainText(expchain)
 
-   addtochain <- MakeLabel(" Add to chain ",font)
-   AddObject(addtochain,win)
-   Move(addtochain,300, yBase+height+20)
 
-   clearchain <- MakeLabel(" Clear chain ",font)
-   AddObject(clearchain,win)
-   Move(clearchain,450,yBase+height+20)
-   
-   launchchain <- MakeLabel("   Launch chain   ",font)
-   AddObject(launchchain,win)
-   Move(launchchain,375,yBase+height+50)
-   
+   launchchain <- MakeButton(chaintitle.x,chaintitle.y-20,200,win,"Launch Chain")
+ 
 
-
-   yheight <- exit.height
 
 
    
+   bg <- MakeCanvas(200,500,MakeColor("grey20"))
    AddObject(bg,win)
    MoveCorner(bg,xbase,ybase)
+
+ 
+  
+   path <- EasyLabel(DirListToText(dirchain),(xbase+width/2), ybase-10, win,fontsize)
+   yheight <- path.height
+
 
    portalnum <- Floor((bg.height-gutter*4)/yheight)
    portalheight <- yheight*portalnum
@@ -179,21 +207,24 @@ define Start(p)
    slidebin <- Rectangle(xBase+width-gutter,portal.y+portal.height/2,10,portal.height,MakeColor("grey70"),1)
 
 
-   subjectbox <- EasyTextBox(subcode,xbase+width+10,ybase,win,fontsize,60,yheight)
-   sublabel   <- EasyLabel("Participant code:", xbase+width+70,subjectbox.y-10,win,fontsize)
+   subjectbox <- EasyTextBox(subcode,xbase+width+150,ybase,win,fontsize,60,yheight)
+   sublabel   <- EasyLabel("Participant code:", xbase+width+70,subjectbox.y+subjectbox.height/2,win,fontsize)
+   MoveCorner(sublabel,subjectbox.x-sublabel.width-10,subjectbox.y)
    subboxhighlight <- Rectangle(subjectbox.x+subjectbox.width/2,subjectbox.y+subjectbox.height/2,subjectbox.width,subjectbox.height,MakeColor("red"),0)
    AddObject(subboxhighlight,win)
    Hide(subboxhighlight)
 
 
-   expbox <- EasyTextBox(experimenter,xbase+width+10,ybase+40,win,fontsize,60,yheight)
-   explabel   <- EasyLabel("Experimenter:", xbase+width+70,expbox.y-10,win,fontsize)
+   expbox <- EasyTextBox(experimenter,xbase+width+150,ybase+40,win,fontsize,60,yheight)
+   explabel   <- EasyLabel("Experimenter:", expbox.x,expbox.y,win,fontsize)
+   MoveCorner(explabel,expbox.x-explabel.width-10,expbox.y)
    expboxhighlight <- Rectangle(expbox.x+expbox.width/2,expbox.y+expbox.height/2,expbox.width,expbox.height,MakeColor("red"),0)
    AddObject(expboxhighlight,win)
    Hide(expboxhighlight)
 
-   langbox <- EasyTextBox(language,xbase+width+10,ybase+80,win,fontsize,60,yheight)
-   langlabel   <- EasyLabel("Language:", xbase+width+70,langbox.y-10,win,fontsize)
+   langbox <- EasyTextBox(language,xbase+width+150,ybase+80,win,fontsize,60,yheight)
+   langlabel   <- EasyLabel("Language:", langbox.x,langbox.y,win,fontsize)
+   MoveCorner(langlabel,langbox.x-langlabel.width-10,langbox.y)
    langboxhighlight <- Rectangle(langbox.x+langbox.width/2,langbox.y+langbox.height/2,langbox.width,langbox.height,MakeColor("red"),0)
    AddObject(langboxhighlight,win)
    Hide(langboxhighlight)
@@ -203,6 +234,11 @@ define Start(p)
    ##Fullscreen checkbox:
    fullscreenbox    <-EasyTextBox(fstext,           xbase+width+10,ybase+120,win,fontsize,yheight,yheight)
    fullscreenlabel  <- EasyLabel("Fullscreen", xbase+width+70,ybase+120+yheight/2,win,fontsize)
+
+
+   ##Fullscreen checkbox:
+   demobox    <-EasyTextBox(demotext,             xbase+width+130,ybase+120,win,fontsize,yheight,yheight)
+   demolabel  <- EasyLabel("Collect demographics", xbase+width+230,ybase+120+yheight/2,win,fontsize)
 
 
 
@@ -240,8 +276,8 @@ define Start(p)
      ##find out if there is a text description of the selected text.
 
 	 descname <- DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt"
-
-  
+	 path.text <- DirListToText(dirchain)
+  	 MoveCorner(path,xbase+2,ybase-18)
 
 	 if(FileExists(descname))
       {
@@ -290,11 +326,13 @@ define Start(p)
      tmp <-	 WaitForClickOnTarget([portal,upbg,downbg,exit,slidebin,
 						run,subjectbox,fullscreenbox,expbox,langbox,
     				   addtochain,clearchain,launchchain,viewoutput,viewerror,
-					   edit],
+					   edit,openmanual,requestfeature,visitweb,about,
+					   description,demobox],
 				   [1,2,3,4,5,
 				   6,7,8,9,10,
 				   11,12,13,14,15,
-				   16])
+				   16,17,18,19,20,
+				   21,22])
 
 	 if(tmp==2)  ## up arrow
       {
@@ -332,17 +370,43 @@ define Start(p)
               {		
 
 
-                dirchain <- AppendDirlist(dirchain,Nth(flatfilelist,selected))
-    		   filelist <- FilterDir(GetDirectoryListing(DirlistToText(dirchain)),dirchain)
-     		   flatfilelist <- Flatten(filelist)
+               dirchain <- AppendDirlist(dirchain,Nth(flatfilelist,selected))
+			   if(Length(dirchain)<(Length(selectstack)+1))
+               {	
+
+			      ##we are backing up.
+				  last <- Nth(selectstack,Length(selectstack))
+				  selected <- 	First(last)
+			      offset <- Second(last)
+
+
+				  ##Remove the last item.
+				  if(Length(selectstack)<=1)
+                  { 
+                    selectStack <- []
+                  } else {
+    
+    			      selectStack <-SubList(selectstack,1,Length(selectstack)-1)
+				  }
+       		     filelist <- FilterDir(GetDirectoryListing(DirlistToText(dirchain)),dirchain)
+         		 flatfilelist <- Flatten(filelist)
+
+ 			   }elseif(Length(dirchain)>Length(selectstack))
+               {
+			     #We opened a new subdirectory.
+                 selectStack <- Append(selectstack,[selected, offset])
+       		     offset <- 0
+			
+        		   filelist <- FilterDir(GetDirectoryListing(DirlistToText(dirchain)),dirchain)
+         		   flatfilelist <- Flatten(filelist)
+
      		   selected <- Length(First(filelist)) + 1
-    		   if(selected > Length(flatfilelist) or 
+      		   if(selected > Length(flatfilelist) or 
     		      selected > portalnum)
                     {
                       selected <- 1 
-                     }
-       		   offset <- 0
-
+                    }
+               }
 
               }            
             } else {
@@ -365,11 +429,13 @@ define Start(p)
       }elseif(tmp ==4) ##Exit
       {
 
+      PushButton(exit)
 	  ##save settings on exit.
 	  out <- [["fullscreen",fullscreen],
 	          ["subcode",subcode],
 			  ["experimenter",experimenter],
-			  ["language",language]]
+			  ["language",language],
+			  ["nimhdemo",nimhdemographics]]
 
 	  loop(i,expchain)
        {
@@ -382,7 +448,7 @@ define Start(p)
 	     cont <- 0
       }elseif(tmp==6) ##hit 'run'
       {
-
+         PushButton(run)
 
 	     if(IsDirectory(DirListTotext(dirchain)+Nth(flatfilelist,selected)))
          {		
@@ -402,11 +468,17 @@ define Start(p)
 
          } else {
 
+       	  if(nimhdemographics)
+    	  {
+	      	  GetNIMHDemographics(subcode,win,"demographics-log.csv")
+          }
+
              RunScript(dirchain,Nth(flatfilelist,selected),fullscreen,language,logfile,subcode,experimenter)
 
           }
       }elseif(tmp==7)  ##Change subject code
       {
+	   
        ##subject box
 	   Show(subboxhighlight)
 	   Draw()
@@ -441,26 +513,30 @@ define Start(p)
       }elseif(tmp==11)  ##Add to chain
       {
 
+	     PushButton(addtochain)
 
 		 fname <- Nth(flatfilelist,selected)
-		 len <- StringLength(fname)	
-		 if(len>4)	
-           {
-		            if(SubString(fname,len-3,len)==".pbl")
-	     			{
-         			   expchain <- Append(expchain,[dirchain,fname])
-					   chainlist.text <- MakeExpChainText(expchain)
-				 	 }
-		  }
-		  Print(expchain)
+		 if(IsPEBLFile(fname))
+         {
+		   expchain <- Append(expchain,[dirchain,fname])
+		   chainlist.text <- MakeExpChainText(expchain)
+
+         }
+
 	   
       }elseif(tmp==12)  ##clear chain
       {
+	    PushButton(clearchain)
         expchain <- []        
 		chainlist.text <- MakeExpChainText(expchain)
 	   
       }elseif(tmp==13)  ##launch chain
       {
+      PushButton(launchchain)
+	  if(nimhdemographics)
+	  {
+	  	  GetNIMHDemographics(subcode,win,"demographics-log.csv")
+      }
  	  loop(i,expchain)
        {
 	      dc <- First(i)
@@ -470,17 +546,64 @@ define Start(p)
    
       }elseif(tmp==14)  ##View debug output
       {
-   	     SystemCall(gViewerCommand+ " " + DirListToText(dirchain)+"stdout.txt")
+	     PushButton(viewoutput)  
+ 	     SystemCall(gViewerCommand+ " " + DirListToText(dirchain)+"stdout.txt &")
       
       }elseif(tmp==15)  ##View error output
       {
-         SystemCall(gViewerCommand+ " " + DirListToText(dirchain)+"stderr.txt")
-      }elseif(tmp==16)  ##View debug output
+	     PushButton(viewerror)
+         SystemCall(gViewerCommand+ " " + DirListToText(dirchain)+"stderr.txt &")
+      }elseif(tmp==16)  ##Edit script
       {
-         SystemCall(gViewerCommand+ " " + DirListToText(dirchain)+Nth(flatfilelist,selected))
+		  PushButton(edit)
+	      if(IsPEBLFile(Nth(flatfilelist,selected)))
+            {
+              SystemCall(gViewerCommand+ " " + DirListToText(dirchain)+Nth(flatfilelist,selected))
+            }
+      }elseif(tmp==17)  ##Open Manual
+      {
+	     PushButton(openmanual)
+         SystemCall(gOpenManual)	  
+
+      }elseif(tmp==18)  ##Request Feature
+      {
+	     PushButton(requestfeature)
+         SystemCall(gOpenURL + " https://fundry.com/project/69-pebl&")
+
+
+      }elseif(tmp==19)  ##Visit web
+      {
+	     PushButton(visitweb)
+         SystemCall(gOpenURL+ " http://pebl.sourceforge.net&")	  
+
+
+      }elseif(tmp==20)  ##About
+      {
+	     PushButton(about)
+		 MessageBox("PEBL is a system for creating and running psychology experiments.  It is developed by Shane T Mueller, Ph.D., and includes more than 50 standard psychology lab experiments.  You can use PEBL to create your own tests or modify previous ones FREE OF CHARGE. Find out more at http://pebl.sf.net
+
+This launcher is written in PEBL itself, allowing a fairly uniform launcher on all platforms. Only .pbl  files and directories are shown in the file window--use your file manager to get the data after your experiment is complete. Click on a directory that has been selected to open it.  Add scripts to the experiment chain window to run a sequence of experiment in a row, all using the same subject code.  
+
+ *The file [PEBLLaunch-log.txt] contains a log of every experiment launched from the launcher.
+ *Debug output from each script (using the Print() command) is saved in the file [stdout.txt] file in a script's directory.
+ *Error and automatic messages from each script are saved in the file [stderr.txt] in a script's directory.",win)
+
+      } elseif(tmp==21) ##edit description
+      {
+        if(gEditDescription)
+         {
+              SystemCall(gViewerCommand+ " " + DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt&")
+         }
+      }elseif(tmp==22)
+      {
+	     nimhdemographics <- 1-nimhdemographics
+		 if(nimhdemographics)
+		 {
+		   demobox.text <- "X"
+         }else{
+		   demobox.text <- ""
+         }
       }
-
-
 
      Draw()
    }
@@ -502,19 +625,15 @@ define FilterDir(inlist,path)
     if(IsDirectory(pathhead+i))
       {
 
-        tmpdir <- Append(tmpdir,i)
+       tmpdir <- Append(tmpdir,i)
       }else{
 	  
-	   len <- StringLength(i)
-	   if(len>4)
+       if(IsPEBLFile(i))
         {
-
-          if(SubString(i,len-3,len) ==".pbl")
-           {
             tmppbl <- Append(tmppbl,i)
-           }
+        
         }
-      }
+     }
   }
   return [Sort(tmpdir),Sort(tmppbl)]
 
@@ -638,11 +757,11 @@ define Filter(list,match)
   }
   tmp <- []
   list2 <- Transpose([list,match])
-  Print("filtering:" )
+
   
   loop(i,list2)
   {
-    Print(i)
+
     if(Second(i))
     {
       tmp<- Append(tmp,First(i))
@@ -662,7 +781,7 @@ define RunScript(dirchain,filename,fullscreen,language,logfile,subcode,experimen
 		   callstring <- callstring + " --fullscreen "
          }
 
-		 callstring <- callstring + " --language " + language + " >> stdout.txt 2> stderr.txt"
+		 callstring <- callstring + " --language " + language + " > stdout.txt 2> stderr.txt"
   
 
          FilePrint(logfile,TimeStamp() + "," + DirListToText(dirchain)+ filename+","+GetPEBLVersion() + "," + experimenter + "," + subcode + "," +"fullscreen:["+fullscreen+"],"+ language + "," + callstring+ ","+"STARTED")
@@ -674,4 +793,68 @@ define RunScript(dirchain,filename,fullscreen,language,logfile,subcode,experimen
          FilePrint(logfile,TimeStamp() + "," + DirListToText(dirchain)+filename+","+GetPEBLVersion() +
 		 "," + experimenter + "," + subcode + "," +"fullscreen:["+fullscreen+"],"+ language + "," + callstring+ ","+"FINISHED")
 
+}
+
+
+
+define IsPEBLFile(fname)
+{
+
+  returnval <- 0
+  len <- StringLength(fname)	
+  if(len>4)	
+           {
+            if(SubString(fname,len-3,len)==".pbl")
+	     			{
+					  returnval <-  1
+                    }
+
+          }
+   return returnval
+}
+
+
+define MakeButton(x,y,width,win,label)
+{
+   col <- MakeColor("grey70")
+   button <-MakeCanvas(width,20,col)
+
+
+
+   font<- MakeFont(gPEBLBaseFont,0,15,MakeColor("black"),MakeColor("white"),0)
+   label <- MakeLabel(label,font)
+
+   AddObject(label,button)
+   Move(label,width/2,9)
+   Draw(button)
+   
+   rect <-Rectangle(Floor(button.width/2),Floor(button.height/2),button.width,button.height,MakeColor("grey25"),0)
+   AddObject(rect,button)
+   Draw(rect)
+   Move(rect,rect.x-1,rect.y-1)
+   Draw(rect)
+   Move(rect,rect.x-1,rect.y-1)
+   Draw(rect)
+#   Move(rect,rect.x-1,rect.y-1)
+#   Draw(rect)
+   RemoveObject(rect,button)
+
+   AddObject(button,win)
+   
+   Move(button,x,y)
+   
+   return button
+}
+
+
+define PushButton(tmp)
+{
+
+
+	     Move(tmp,tmp.x+2,tmp.y+2)
+		 Draw()
+		 Wait(100)
+		 Move(tmp,tmp.x-2,tmp.y-2)
+		 Draw()
+		 
 }
