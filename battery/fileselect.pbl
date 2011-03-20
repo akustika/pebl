@@ -1,0 +1,677 @@
+##  This is a PEBL script that acts as a cross-platform 
+##  launcher for PEBL.
+##
+
+define Start(p)
+{
+
+
+   gViewerCommand <- "gedit"
+
+   gSleepEasy <- 1
+   gVideoWidth <- 1000
+   gVideoheight <- 700
+   win <- MakeWindow()
+
+
+   if(FileExists(".config"))
+      {
+       config <- (ReadCSV(".config"))
+	   
+	   ##read in the keys--first characters.
+	   keys <- []
+	   loop(i,config)
+	   {
+	     keys<- Append(keys,First(i))
+       }
+
+	   fullscreen <- ToNumber(Second(Lookup("fullscreen",keys,config)))
+       
+	   subcode    <- Second(Lookup("subcode",keys,config))
+	   experimenter <-Second(Lookup("experimenter",keys,config))
+	   language <-Second(Lookup("language",keys,config))
+
+   	   expchain <- []         ##sequence of experiments to run
+   	   ##Get all config entries named 'expchain'
+	   chains <- Filter(config,Match("EXPCHAIN",keys))
+	   loop(i,chains)
+        {
+		   expchain <- Append(expchain,  [SubList(i,3,Length(i)),Second(i)])
+        }  
+
+      } else {
+ 
+        fullscreen <- 0
+        subcode <- "1"
+        experimenter <- "default"
+        language <- "en"
+        expchain <- []         ##sequence of experiments to run
+
+      }
+  if(fullscreen)
+    {
+      fstext  <- "X"
+    } else { 
+      fstext <- ""
+    }
+
+
+
+   selectlist <- []
+   selected <-1     #Which item is selected in the fileview
+   offset <- 0      #offset in the fileview
+
+
+
+   logFile <- FileOpenAppend("PEBLLaunch-log.txt")
+
+
+   width <- 200
+   height <- 500
+   gutter <- 10   
+
+   xbase <- 10
+   ybase <- 100
+
+   dirchain <- ["."]  ##this is a history of the directories you have 
+                      ##navigated to.
+
+
+
+   fontsize <- 15
+   font <- MakeFont(gPEBLBaseFont,0,fontsize,MakeColor("black"),MakeColor("white"),1)
+
+   filelist <- FilterDir(GetDirectoryListing(DirlistToText(dirchain)),dirchain)
+   flatfilelist <- Flatten(filelist)
+
+
+
+
+
+   bg <- MakeCanvas(200,500,MakeColor("grey20"))
+
+   run <- MakeLabel(" Run Selected Script ",font)
+   AddObject(run,win)
+   Move(run,xbase+100,yBase+height+20)
+
+
+   exit <- MakeLabel("              EXIT            ",font)
+   AddObject(exit,win)
+   Move(exit,xbase+100,ybase+height+50)
+
+
+   viewoutput <- MakeLabel(" View debug output ",font)
+   AddObject(viewoutput,win)
+   Move(viewoutput,xbase+420,ybase+100)
+
+   viewerror <- MakeLabel("  View error output  ",font)
+   AddObject(viewerror,win)
+   Move(viewerror,xbase+420,ybase+125)
+
+   edit <- MakeLabel("       Edit script        ",font)
+   AddObject(edit,win)
+   Move(edit,xbase+100,ybase+height+80)
+
+
+   ##################################################
+   ##  
+   ##  graphical widgets related to the chain launcher.
+
+   ##chain-launcher
+   chaintitle <- EasyLabel("Experiment Chain:",xbase+210+150,290,win,18)
+   chainlist <- EasyTextBox("",xbase+210,300,win,fontsize,300,300)
+   chainlist.linewrap <- 0
+   chainlist.text <- MakeExpChainText(expchain)
+
+   addtochain <- MakeLabel(" Add to chain ",font)
+   AddObject(addtochain,win)
+   Move(addtochain,300, yBase+height+20)
+
+   clearchain <- MakeLabel(" Clear chain ",font)
+   AddObject(clearchain,win)
+   Move(clearchain,450,yBase+height+20)
+   
+   launchchain <- MakeLabel("   Launch chain   ",font)
+   AddObject(launchchain,win)
+   Move(launchchain,375,yBase+height+50)
+   
+
+
+   yheight <- exit.height
+
+
+   
+   AddObject(bg,win)
+   MoveCorner(bg,xbase,ybase)
+
+   portalnum <- Floor((bg.height-gutter*4)/yheight)
+   portalheight <- yheight*portalnum
+
+   portal <- MakeTextBox("",font,width-gutter*3,portalheight)
+
+   portal.linewrap <-0
+   AddObject(portal,win)
+   Move(portal,xbase+gutter,ybase+gutter*2)
+
+
+   description <- MakeTextBox("Description: No description found.",font,420,250)
+   AddObject(description,win)
+   Move(description,570,110)
+
+   title <- EasyLabel("PEBL Launcher for "+ GetPEBLVersion(),gVideoWidth/2,20,win,30)
+
+   screenshotbase <- Rectangle(780,530,420,320,MakeColor("black"),1)
+   screenshotdummy <- Rectangle(780,530,400,300,MakeColor("white"),1)
+   AddObject(screenshotbase,win)
+   AddObject(screenshotdummy,win)
+   screenshot <- screenshotdummy
+
+   selection <- Rectangle(portal.x+portal.width/2,0,portal.width,yheight,MakeColor("black"),0)
+   
+   up <- Polygon(xbase+width-gutter,ybase+gutter,[-5,5,0],[5,5,-5],MakeColor("grey"),1)
+   down <- Polygon(xbase+width-gutter,portal.y+portal.height+gutter,[-5,5,0],[-5,-5,5],MakeColor("grey"),1)
+   
+   upbg <- Square(xbase+width-gutter, ybase+gutter,  10,MakeColor("grey"),0)
+   downbg <- Square(xbase+width-gutter, portal.y+portal.height+gutter, 10,MakeColor("grey"),0)
+
+
+   bug <- Rectangle(xBase+width-gutter,ybase+gutter+20,10,20,MakeColor("grey40"),1)
+   slidebin <- Rectangle(xBase+width-gutter,portal.y+portal.height/2,10,portal.height,MakeColor("grey70"),1)
+
+
+   subjectbox <- EasyTextBox(subcode,xbase+width+10,ybase,win,fontsize,60,yheight)
+   sublabel   <- EasyLabel("Participant code:", xbase+width+70,subjectbox.y-10,win,fontsize)
+   subboxhighlight <- Rectangle(subjectbox.x+subjectbox.width/2,subjectbox.y+subjectbox.height/2,subjectbox.width,subjectbox.height,MakeColor("red"),0)
+   AddObject(subboxhighlight,win)
+   Hide(subboxhighlight)
+
+
+   expbox <- EasyTextBox(experimenter,xbase+width+10,ybase+40,win,fontsize,60,yheight)
+   explabel   <- EasyLabel("Experimenter:", xbase+width+70,expbox.y-10,win,fontsize)
+   expboxhighlight <- Rectangle(expbox.x+expbox.width/2,expbox.y+expbox.height/2,expbox.width,expbox.height,MakeColor("red"),0)
+   AddObject(expboxhighlight,win)
+   Hide(expboxhighlight)
+
+   langbox <- EasyTextBox(language,xbase+width+10,ybase+80,win,fontsize,60,yheight)
+   langlabel   <- EasyLabel("Language:", xbase+width+70,langbox.y-10,win,fontsize)
+   langboxhighlight <- Rectangle(langbox.x+langbox.width/2,langbox.y+langbox.height/2,langbox.width,langbox.height,MakeColor("red"),0)
+   AddObject(langboxhighlight,win)
+   Hide(langboxhighlight)
+
+
+
+   ##Fullscreen checkbox:
+   fullscreenbox    <-EasyTextBox(fstext,           xbase+width+10,ybase+120,win,fontsize,yheight,yheight)
+   fullscreenlabel  <- EasyLabel("Fullscreen", xbase+width+70,ybase+120+yheight/2,win,fontsize)
+
+
+
+
+   AddObject(slidebin,win) 
+   AddObject(upbg,win)
+   AddObject(up,win)
+   AddObject(downbg,win)
+   AddObject(down,win)
+   AddObject(bug,win)
+   AddObject(selection,win)
+
+
+
+
+##Some state variables are initialized here
+
+
+
+
+   portal.text <- DirToText(First(filelist),Second(filelist),offset,dirchain)
+
+   selection.y <- portal.y+yheight*(selected-.5)
+   Draw()
+   cont <- 1
+   while(cont)
+    { 
+
+
+
+     selection.y <- portal.y+yheight*(selected-.5-offset)
+	 bugy <- (offset / (Length(flatfilelist)-portalnum-1))*(portalHeight-gutter*2)
+     portal.text <- DirToText(First(filelist),Second(filelist),offset,dirchain)
+
+     ##find out if there is a text description of the selected text.
+
+	 descname <- DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt"
+
+  
+
+	 if(FileExists(descname))
+      {
+
+	     text <- FileReadText(descname)
+		 description.text <- "Description: " + text 
+      } else {
+         description.text <- "Description: No description found." 
+      }
+
+     screenname <-DirListToText(dirchain)+Nth(flatfilelist,selected)+".png"
+
+	 if(FileExists(screenname))
+      {
+
+	     RemoveObject(screenshot,win)
+	     screenshot <- MakeImage(screenname)
+
+		 AddObject(screenshot,win)
+ 		 ##scale to 400x300
+		 scale <- 400/screenshot.width  
+
+		 screenshot.zoomX <- scale
+		 screenshot.zoomY <- scale
+
+		 Move(screenshot,780,530)
+
+
+		 		 
+
+      } else {
+	  
+	     RemoveObject(screenshot,win)
+		 screenshot <- screenshotdummy
+		 AddObject(screenshot,win)
+
+
+      }
+	  
+
+	 #make sure bug fits inside its channel.
+	 bug.y <- Max([Min([bugY+ybase+gutter*2,slidebin.y+slidebin.height/2-gutter]),portal.y+gutter])
+
+     Draw()
+
+     tmp <-	 WaitForClickOnTarget([portal,upbg,downbg,exit,slidebin,
+						run,subjectbox,fullscreenbox,expbox,langbox,
+    				   addtochain,clearchain,launchchain,viewoutput,viewerror,
+					   edit],
+				   [1,2,3,4,5,
+				   6,7,8,9,10,
+				   11,12,13,14,15,
+				   16])
+
+	 if(tmp==2)  ## up arrow
+      {
+	    offset <- Max([offset - 1,0])
+
+        if(selected<=offset)
+          {
+		    selected <- offset + 1
+          }
+        if(selected > offset+portalnum)
+          {
+		    selected <- offset+portalnum
+          }
+
+      }elseif(tmp==3) ## down arrow
+      {
+	    offset <- Min([offset+1, Length(flatfilelist)-portalnum])
+		selected <- Max([offset+1,selected])
+
+      }elseif(tmp==1)  #Click was on the portal.
+      {
+
+	      ##update selection rectangle here
+	      clicky <- Second(gClick)
+		  newselected <- Floor((clicky-portal.y)/yheight)+1 + offset
+
+		  ##if we click past the last entry, don't adjust selection
+		  if(newselected > Length(flatfilelist))
+          {
+		      selected <- selected ##do nothing
+          }elseif(selected == newselected)
+ 		   {
+
+     	     if(IsDirectory(DirListTotext(dirchain)+Nth(flatfilelist,selected)))
+              {		
+
+
+                dirchain <- AppendDirlist(dirchain,Nth(flatfilelist,selected))
+    		   filelist <- FilterDir(GetDirectoryListing(DirlistToText(dirchain)),dirchain)
+     		   flatfilelist <- Flatten(filelist)
+     		   selected <- Length(First(filelist)) + 1
+    		   if(selected > Length(flatfilelist) or 
+    		      selected > portalnum)
+                    {
+                      selected <- 1 
+                     }
+       		   offset <- 0
+
+
+              }            
+            } else {
+		      selected <- newselected
+           }
+		  
+      }elseif(tmp == 5) ##click on the slider bin
+      {
+
+         clicky  <- Second(gClick)
+		 proportion <- ((clicky - portal.y)/portal.height)
+
+		 offset  <- Floor(proportion * (Length(flatfilelist) - portalnum))
+		 if(selected < offset or selected > offset+portalnum)
+          {
+             selected <- offset+1
+          }
+
+  
+      }elseif(tmp ==4) ##Exit
+      {
+
+	  ##save settings on exit.
+	  out <- [["fullscreen",fullscreen],
+	          ["subcode",subcode],
+			  ["experimenter",experimenter],
+			  ["language",language]]
+
+	  loop(i,expchain)
+       {
+	     ilist <- Merge([Second(i)],First(i))
+	     out <- Append(out,["EXPCHAIN",ilist])
+       }
+      FileSaveTable(out,".config")
+
+
+	     cont <- 0
+      }elseif(tmp==6) ##hit 'run'
+      {
+
+
+	     if(IsDirectory(DirListTotext(dirchain)+Nth(flatfilelist,selected)))
+         {		
+
+
+           dirchain <- AppendDirlist(dirchain,Nth(flatfilelist,selected))
+		   filelist <- FilterDir(GetDirectoryListing(DirlistToText(dirchain)),dirchain)
+		   flatfilelist <- Flatten(filelist)
+ 		   selected <- Length(First(filelist)) + 1
+		   if(selected > Length(flatfilelist) or 
+		      selected > portalnum)
+            {
+              selected <- 1 
+            }
+		   offset <- 0
+
+
+         } else {
+
+             RunScript(dirchain,Nth(flatfilelist,selected),fullscreen,language,logfile,subcode,experimenter)
+
+          }
+      }elseif(tmp==7)  ##Change subject code
+      {
+       ##subject box
+	   Show(subboxhighlight)
+	   Draw()
+	   subcode <- GetInput(subjectbox,"<return>")
+	   Hide(subboxhighlight)
+	   
+      }elseif(tmp==8)
+      {
+	     fullscreen <- 1-fullscreen
+		 if(fullscreen)
+		 {
+		   fullscreenbox.text <- "X"
+         }else{
+		   fullscreenbox.text <- ""
+         }
+      }elseif(tmp==9)  ##Change experimenter code
+      {
+       ##experimenter box
+	   Show(expboxhighlight)
+	   Draw()
+	   experimenter <- GetInput(expbox,"<return>")
+	   Hide(expboxhighlight)
+	   
+      }elseif(tmp==10)  ##Change language code
+      {
+       ##languagebox
+	   Show(langboxhighlight)
+	   Draw()
+	   language <- GetInput(langbox,"<return>")
+	   Hide(langboxhighlight)
+	   
+      }elseif(tmp==11)  ##Add to chain
+      {
+
+
+		 fname <- Nth(flatfilelist,selected)
+		 len <- StringLength(fname)	
+		 if(len>4)	
+           {
+		            if(SubString(fname,len-3,len)==".pbl")
+	     			{
+         			   expchain <- Append(expchain,[dirchain,fname])
+					   chainlist.text <- MakeExpChainText(expchain)
+				 	 }
+		  }
+		  Print(expchain)
+	   
+      }elseif(tmp==12)  ##clear chain
+      {
+        expchain <- []        
+		chainlist.text <- MakeExpChainText(expchain)
+	   
+      }elseif(tmp==13)  ##launch chain
+      {
+ 	  loop(i,expchain)
+       {
+	      dc <- First(i)
+		  fname <- Second(i)
+          RunScript(dc,fname,fullscreen,language,logfile,subcode,experimenter)
+       }
+   
+      }elseif(tmp==14)  ##View debug output
+      {
+   	     SystemCall(gViewerCommand+ " " + DirListToText(dirchain)+"stdout.txt")
+      
+      }elseif(tmp==15)  ##View error output
+      {
+         SystemCall(gViewerCommand+ " " + DirListToText(dirchain)+"stderr.txt")
+      }elseif(tmp==16)  ##View debug output
+      {
+         SystemCall(gViewerCommand+ " " + DirListToText(dirchain)+Nth(flatfilelist,selected))
+      }
+
+
+
+     Draw()
+   }
+
+
+}
+
+##This is a hard-coded filter;
+##it will only return .pbl files and directories.
+define FilterDir(inlist,path)
+{
+
+  pathhead <- DirListTotext(path)
+  tmpdir <- []
+  tmppbl <- []
+  loop(i, inlist)
+  {
+
+    if(IsDirectory(pathhead+i))
+      {
+
+        tmpdir <- Append(tmpdir,i)
+      }else{
+	  
+	   len <- StringLength(i)
+	   if(len>4)
+        {
+
+          if(SubString(i,len-3,len) ==".pbl")
+           {
+            tmppbl <- Append(tmppbl,i)
+           }
+        }
+      }
+  }
+  return [Sort(tmpdir),Sort(tmppbl)]
+
+}
+
+
+
+define DirToText(dirlist,filelist,offset,path)
+{ 
+
+  pathhead <- DirListTotext(path)
+
+  tmp <- []
+  loop(i,dirlist)
+  {
+    tmp <- Append(tmp,  i +"\"+ CR(1))
+  }
+
+  loop(i,filelist)
+  {
+    tmp <- Append(tmp,  i + CR(1))
+  }
+
+  ##this crashes here sometimes
+  list <- SubList(tmp,offset+1,Length(tmp))
+
+ return ListToString(list)
+}
+
+define AppendDirList(dirlist,dir)
+{
+
+ if(dir == ".")
+   {
+     dirlist <- dirlist
+   }elseif(not dir == "..")   
+   {
+      dirlist <- Append(dirlist,dir)
+   } else {
+      if((not Last(dirlist) == ".") and
+	     (not Last(dirlist) == ".."))
+	  {
+	      dirlist <- SubList(dirlist,1,Length(dirlist)-1)
+      } else {
+	      dirlist <- Append(dirlist,dir)
+      }
+   }
+
+   return dirlist
+}
+
+
+##appends a set of nested directories into a path.
+define DirlistToText(list)
+{
+  tmp <- ""
+  loop(i,list)
+  {		 
+     tmp <- tmp + i+ "/"
+  }
+  return tmp
+}
+
+
+define  FileSaveTable(table,filename)
+{
+
+  outfile <- FileOpenWrite(".config")  
+  loop(i,table)
+    {
+       FilePrint_(outfile, First(i) + ",")
+
+	   if(IsList(Second(i)))
+        {
+		   sep <- ""
+		   loop(j,Second(i))
+           {
+		      FilePrint_(outfile,sep+j)
+			  sep <- ","
+           }
+		   FilePrint(outfile,"")
+        } else {
+		  FilePrint(outfile,Second(i))
+        }
+    }
+  FileClose(outfile)
+}
+
+
+##This makes the text to put in the expchain box.
+define MakeExpChainText(expchain)
+{
+	tmp <- ""
+  loop(i,expchain)
+	{
+ 	 tmp <- tmp +DirlistToText(First(i))+Second(i) + CR(1)
+	  
+    }
+  return tmp	
+}
+
+
+##returns a list of 0/1 indicating which elements of 
+##keys match key
+define Match(key,keys)
+{
+  tmp <- []
+  loop(i,keys)
+  {
+    tmp <- Append(tmp, key==i)
+  }
+ return tmp
+}
+
+
+define Filter(list,match)
+{
+  if(not Length(list)==Length(match))
+  {
+     SignalFatalError("List and match list much be of equal length in Filter(<list>,<match>)")
+  }
+  tmp <- []
+  list2 <- Transpose([list,match])
+  Print("filtering:" )
+  
+  loop(i,list2)
+  {
+    Print(i)
+    if(Second(i))
+    {
+      tmp<- Append(tmp,First(i))
+    }
+  }
+  return tmp
+}
+
+
+define RunScript(dirchain,filename,fullscreen,language,logfile,subcode,experimenter)
+{
+
+
+		 callstring <- "cd " + DirListToText(dirchain) +"; pebl " +filename + " -s " + subcode
+		 if(fullscreen)
+		 {
+		   callstring <- callstring + " --fullscreen "
+         }
+
+		 callstring <- callstring + " --language " + language + " >> stdout.txt 2> stderr.txt"
+  
+
+         FilePrint(logfile,TimeStamp() + "," + DirListToText(dirchain)+ filename+","+GetPEBLVersion() + "," + experimenter + "," + subcode + "," +"fullscreen:["+fullscreen+"],"+ language + "," + callstring+ ","+"STARTED")
+
+         #### Run the experiment!!!!
+		 SystemCall(callstring)
+
+
+         FilePrint(logfile,TimeStamp() + "," + DirListToText(dirchain)+filename+","+GetPEBLVersion() +
+		 "," + experimenter + "," + subcode + "," +"fullscreen:["+fullscreen+"],"+ language + "," + callstring+ ","+"FINISHED")
+
+}
