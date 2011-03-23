@@ -46,8 +46,9 @@
 //#include <errno.h>
 
 
-#ifdef PEBL_WINDOWS
+#ifdef PEBL_WIN32
 #include <direct.h>
+#include <windows.h>
 #elif defined(PEBL_LINUX)
 #include <sys/stat.h>
 #endif
@@ -1000,7 +1001,7 @@ Variant PEBLUtility::MakeDirectory(std::string path)
     if(FileExists(path) && IsDirectory(path))
         {
             return Variant(1);
-        }
+          }
 
 #ifdef PEBL_UNIX
 
@@ -1009,15 +1010,75 @@ Variant PEBLUtility::MakeDirectory(std::string path)
        {
            PError::SignalFatalError("Unable to create directory: " );//+ Variant(strerror(errno)));
        }
-    //std::cout << "created directory [" << path <<"]\n";
-#elif defined(PEBL_WINDOWS)
-    
+
+#elif defined(PEBL_WIN32)
     if (mkdir(path.c_str()) == -1) 
         {
             PError::SignalFatalError("Unable to create directory: ");// + Variant(strerror(errno)));
         }
-    
+
 #endif
-   
+
     return Variant(1);
+}
+
+Variant PEBLUtility::LaunchFile(std::string file)
+{
+        
+
+   cout << "Running launchfile\n";   
+#if defined(PEBL_WIN32) 
+    HINSTANCE hInst = ShellExecute(0,                           
+                                   "open",                      // Operation to perform
+                                   file.c_str(),                // document name???Application name
+                                   NULL,                        // Additional parameters
+                                   0,                           // Default directory
+                                   SW_SHOW);
+
+#elif defined(PEBL_LINUX)
+    std::string call2 = "xdg-open " + file;
+     int x = system(call2.c_str());  //do a system call with the argument string.
+
+#elif defined(PEBL_OSX)
+     std::string call2 = "open " + file;
+     int x = system(call2.c_str());  //do a system call with the argument string.
+   
+ #endif
+return Variant(0);
+}
+
+
+Variant PEBLUtility::SystemCall(std::string call, std::string args)
+{
+   cout << "Systemcalling inner\n";   
+
+
+#if defined( PEBL_UNIX )   
+
+    std::string tmp = call + " " + args;
+
+    const char* call2 = tmp.c_str();
+    int x = system(call2);  //do a system call with the argument string.
+
+#elif defined (PEBL_WIN32)
+    std::string tmp = call + " " + args;
+
+   cout << "["<<tmp <<"]"<< std::endl;
+  STARTUPINFO info={sizeof(info)};
+  PROCESS_INFORMATION processInfo;
+   char* callstring = const_cast<char *>(tmp.c_str());
+   if (CreateProcess(NULL,callstring, NULL, NULL, TRUE, 0, NULL, NULL, &info, &processInfo))
+{
+    ::WaitForSingleObject(processInfo.hProcess, INFINITE);
+    CloseHandle(processInfo.hProcess);
+    CloseHandle(processInfo.hThread);
+} else {
+        cout << "createprocess failed\n";
+        cout << GetLastError() << std::endl;
+       }
+
+#endif
+
+
+
 }

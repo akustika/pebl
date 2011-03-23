@@ -50,6 +50,10 @@
 #include <ctime>
 #include <string>
 
+#if defined(PEBL_WIN32x)
+//#include <shellapi.h>
+#include <windows.h>
+#endif
 using std::string;
 
 /// The following initiates classes used by functions in the Environment library.
@@ -91,7 +95,7 @@ Variant  PEBLEnvironment::Wait(Variant v)
     //NULL,NULL will terminate the looping
     string funcname = "";
 
-    Evaluator::mEventLoop.RegisterState(state, funcname, Variant(NULL));
+    Evaluator::mEventLoop.RegisterState(state, funcname, Variant(0));
     PEvent returnval = Evaluator::mEventLoop.Loop();
     //Now, clear the event loop tests
     Evaluator::mEventLoop.Clear();
@@ -200,7 +204,7 @@ Variant PEBLEnvironment::WaitForKeyDown(Variant v)
     string  funcname = "";
 
 
-    Evaluator::mEventLoop.RegisterState(state,funcname, Variant(NULL));
+    Evaluator::mEventLoop.RegisterState(state,funcname, Variant(0));
     PEvent returnval = Evaluator::mEventLoop.Loop();
 
     //Now, clear the event loop tests
@@ -230,7 +234,7 @@ Variant PEBLEnvironment::WaitForKeyUp(Variant v)
 
     //NULL,NULL will terminate the looping
     string funcname = "";
-    Evaluator::mEventLoop.RegisterState(state, funcname, Variant(NULL));
+    Evaluator::mEventLoop.RegisterState(state, funcname, Variant(0));
     PEvent returnval = Evaluator::mEventLoop.Loop();
 
     //Now, clear the event loop tests
@@ -258,7 +262,7 @@ Variant PEBLEnvironment::WaitForAnyKeyDown(Variant v)
     //NULL,NULL will terminate the looping
     string  funcname = "";
 
-    Evaluator::mEventLoop.RegisterState(state, funcname, Variant(NULL));
+    Evaluator::mEventLoop.RegisterState(state, funcname, Variant(0));
     PEvent returnval = Evaluator::mEventLoop.Loop();
 
     //Now, clear the event loop tests
@@ -291,7 +295,7 @@ Variant PEBLEnvironment::WaitForKeyPress(Variant v)
     //NULL,NULL will terminate the looping
     string funcname = "";
 
-    Evaluator::mEventLoop.RegisterEvent(state,funcname, Variant(NULL));
+    Evaluator::mEventLoop.RegisterEvent(state,funcname, Variant(0));
     PEvent returnval = Evaluator::mEventLoop.Loop();
 
     //Now, clear the event loop tests
@@ -322,7 +326,7 @@ Variant PEBLEnvironment::WaitForKeyRelease(Variant v)
     //NULL,NULL will terminate the looping
     string funcname = "";
 
-    Evaluator::mEventLoop.RegisterEvent(state, funcname, Variant(NULL));
+    Evaluator::mEventLoop.RegisterEvent(state, funcname, Variant(0));
     PEvent returnval = Evaluator::mEventLoop.Loop();
 
     //Now, clear the event loop tests
@@ -349,7 +353,7 @@ Variant PEBLEnvironment::WaitForAnyKeyPress(Variant v)
     //NULL,NULL will terminate the looping
     string  funcname = "";
 
-    Evaluator::mEventLoop.RegisterEvent(state, funcname, Variant(NULL));
+    Evaluator::mEventLoop.RegisterEvent(state, funcname, Variant(0));
     PEvent returnval = Evaluator::mEventLoop.Loop();
 
     //Now, clear the event loop tests
@@ -375,7 +379,7 @@ Variant PEBLEnvironment::WaitForAllKeysUp(Variant v)
     
     //NULL,NULL will terminate the looping
     string  funcname = "";
-    Evaluator::mEventLoop.RegisterState(state,funcname, Variant(NULL));
+    Evaluator::mEventLoop.RegisterState(state,funcname, Variant(0));
     PEvent returnval = Evaluator::mEventLoop.Loop();
 
     //Now, clear the event loop tests
@@ -412,8 +416,8 @@ Variant PEBLEnvironment::WaitForAnyKeyDownWithTimeout(Variant v)
 
     //NULL,NULL will terminate the looping
     string  funcname = "";
-    Evaluator::mEventLoop.RegisterState(state,funcname, Variant(NULL));
-    Evaluator::mEventLoop.RegisterState(timestate, funcname, Variant(NULL));
+    Evaluator::mEventLoop.RegisterState(state,funcname, Variant(0));
+    Evaluator::mEventLoop.RegisterState(timestate, funcname, Variant(0));
     PEvent returnval = Evaluator::mEventLoop.Loop();
 
     //Now, clear the event loop tests
@@ -455,8 +459,8 @@ Variant PEBLEnvironment::WaitForAnyKeyPressWithTimeout(Variant v)
     //NULL,NULL will terminate the looping
     string  funcname = "";
 
-    Evaluator::mEventLoop.RegisterState(state,funcname, Variant(NULL));
-    Evaluator::mEventLoop.RegisterState(timestate, funcname, Variant(NULL));
+    Evaluator::mEventLoop.RegisterState(state,funcname, Variant(0));
+    Evaluator::mEventLoop.RegisterState(timestate, funcname, Variant(0));
     PEvent returnval = Evaluator::mEventLoop.Loop();
 
     //    std::cout << "Returnval: "<<returnval.GetType() << std::endl;
@@ -1459,14 +1463,34 @@ Variant PEBLEnvironment::GetSystemType(Variant v)
 }
 
 
-Variant PEBLEnvironment::SystemCall(Variant v)
+Variant PEBLEnvironment::LaunchFile(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
-    std::string call  = plist->First().GetString();
+    std::string file  = plist->First().GetString(); plist->PopFront();
+    
+    PEBLUtility::LaunchFile(file.c_str());        
+  return Variant(0);
+}           
+
+Variant PEBLEnvironment::SystemCall(Variant v)
+{
+        
+    PList * plist = v.GetComplexData()->GetList();
+    std::string call  = plist->First().GetString(); plist->PopFront();
     
     const char* call2 = call.c_str();
     int x = system(call2);  //do a system call with the argument string.
-    return Variant(x);
+#if defined( PEBL_UNIXX )   
+
+#elif defined (PEBL_WIN32X)
+   cout << "syscall 2\n";
+    std::string  args = plist->First().GetString(); plist->PopFront();
+    const char* call2 = call.c_str();
+    PEBLUtility::SystemCall(call.c_str(),args.c_str());
+
+#endif
+    return Variant(1);
+
 }
 
 
@@ -1513,7 +1537,7 @@ Variant PEBLEnvironment::MakeDirectory(Variant v)
     PList * plist = v.GetComplexData()->GetList();
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [MakeDirectory(<dirname>)]:  ");    
-
+    cout << "Making directory in penviremnt" << plist->First()<<std::endl;
     Variant out = PEBLUtility::MakeDirectory((std::string)(plist->First()));
     return out;
 }

@@ -347,12 +347,13 @@ PEvent PEventLoop::Loop()
                     }
                 }
 #endif
-#if defined(PEBL_WINDOWS)
+#if defined(PEBL_WIN32)
            if(myEval->gGlobalVariableMap.Exists("gSleepEasy") )
                 {
                     if(myEval->gGlobalVariableMap.RetrieveValue("gSleepEasy"))
                     {
-                       Sleep(1);  //sleep about 1 ms(might be as much as 10)
+                       //Sleep(1);  //sleep about 1 ms(might be as much as 10)
+                       SDL_Delay(1);
                     }
                 }
 

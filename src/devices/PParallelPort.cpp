@@ -28,9 +28,22 @@
 #include "../utility/PError.h"
 
 #if defined (PEBL_LINUX)
+#include <sys/io.h>
+#endif
+
+
+#if defined (PEBL_WIN32)
+#include <windows.h>
+#include <conio.h>
+#include <stdio.h>
+
+//Prototype function typefed for DLL function Inp32:
+  typedef short (_stdcall *inpfuncPtr)(short portaddr);
+  typedef void (_stdcall *oupfuncPtr)(short portaddr, short datum);
+
 
 #endif
-#include <sys/io.h>
+
 using std::ostream;
 using std::fstream;
 using std::flush;
@@ -39,6 +52,9 @@ using std::cout;
 using std::endl;
 
 #define mPort 0x378
+
+int Inp32(int i){return 1;};
+int Out32(int i,int x ){return 1;};
 
 enum PEBLPPort
     {
@@ -66,18 +82,50 @@ PParallelPort::~PParallelPort()
 void PParallelPort::Init()
 {
 
-           
+#ifdef PEBL_LINUX           
     //This works on linux: open 3 bytes to access
     int out = ioperm(mPort, 3, 1);
     //int out = iopl(3);
     mIsOpen = true;
     std::cerr << "Initiating parallel port.  Return value :["<<out<<"]\n";
 
+
     //    EmulateStandardPort();
     if(out)
         {
             PError::SignalFatalError("Unable to Access Parallel Port.  Make sure script is run with root access.\n");
         }
+
+
+#elif defined(PEBL_WIND32)
+   HINSTANCE hLib;
+   hLib = LoadLibrary("inpout32.dll");
+   if(hLib == NULL)
+   {
+      PError::SignalFatalError("Unable to load library inpout32.dll.  Cannot initiate parallel port device");
+   }
+
+// Get the address of the Input function 
+
+     inp32fp = (inpfuncPtr) GetProcAddress(hLib, "Inp32");
+
+     if (inp32fp == NULL) 
+     {
+       PError::SignalFatalError("Unable to get Inp32.");
+     }
+
+
+     oup32fp = (oupfuncPtr) GetProcAddress(hLib, "Out32");
+
+     if (oup32fp == NULL) {
+
+        PError::SignalFatalError("Unable to get oup32");
+     }
+
+
+#endif
+
+
 
 
 }
@@ -95,6 +143,8 @@ void PParallelPort::SetPort(Variant v)
         {
             mmPort = PEBLPPortLPTX;
         }else{
+
+        //SHould allow to set to arbitrary hex-coded port address here.
         std::cerr << "Cannot set port to ["<<v<<"].  Setting to LPT1.\n";
     }
 
@@ -103,7 +153,13 @@ void PParallelPort::SetPort(Variant v)
 
 void PParallelPort::Close()
 {
+#ifdef PEBL_LINUX
     int out =ioperm(mPort,3,0);
+#elif defined (PEBL_WIN32)
+
+ //This doesnot work yet:
+//    FreeLibrary(hLib);
+#endif
     mIsOpen = false;
 }
 
@@ -119,8 +175,11 @@ void PParallelPort::Close()
 
 char PParallelPort::GetStatusState()
 {
-
+#if defined(PEBL_LINUX)
     return inb(mPort+1);
+#elif defined (PEBL_WIN32)
+    return Inp32(mPort+1); 
+#endif
     //    return (inb(mPort+1)>>3)^0x10;
 }
 
@@ -128,20 +187,30 @@ char PParallelPort::GetStatusState()
 // 
 char PParallelPort::GetDataState()
 {
-    
+#if defined(PEBL_LINUX)
     return (inb(mPort));
+
+#elif defined (PEBL_WIN32)
+    return Inp32(mPort); 
+#endif
+    
 }
 
 //sets the data bytes (pins 2..9) to the specified state.
 void PParallelPort::SetDataState(char x)
 {
-    outb(x,mPort);
+#if defined(PEBL_LINUX)
+     outb(x,mPort);
+#elif defined (PEBL_WIN32)
+     Out32(mPort,x);
+#endif
+
 }
 
 
 void PParallelPort::EmulateStandardPort()
 {
-
+//Not functional
 
 }
 
@@ -152,9 +221,15 @@ void PParallelPort::SetOutputMode()
 {
 
     unsigned char x;
+#if defined(PEBL_LINUX)
     x = inb(mPort+2);  //get state of control register
-
     outb(x & ~0x20, mPort+2);
+#elif defined (PEBL_WIN32)
+    x = Inp32(mPort+2); 
+    Out32(mPort+2,x&~0x20);
+#endif
+
+
 }
 
 
@@ -162,12 +237,18 @@ void PParallelPort::SetOutputMode()
 //
 void PParallelPort::SetInputMode()
 {
-
-
+     
     unsigned char x = 0;
+
+#if defined(PEBL_LINUX)
     x = inb(mPort+2);
     //  turns 7th bit of the control byte  on
     outb( x | 0x20, mPort+2);
+#elif defined (PEBL_WIN32)
+    x = Inp32(mPort+2); 
+    Out32(mPort+2,x|0x20);
+#endif
+
 
 }
 

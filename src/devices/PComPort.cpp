@@ -29,12 +29,11 @@
 #include "../utility/PError.h"
 
 
-#if defined (PEBL_LINUX)
-
+#if defined (PEBL_UNIX)
+#include <sys/io.h>
 #endif
 
 
-#include <sys/io.h>
 using std::ostream;
 using std::fstream;
 using std::flush;

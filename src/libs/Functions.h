@@ -295,7 +295,8 @@ namespace PEBLEnvironment
             {"GETPEBLVERSION",                  GetPEBLVersion,    0, 0},       
 
             {"GETSYSTEMTYPE",                   GetSystemType,     0, 0},
-            {"SYSTEMCALL",                      SystemCall,        1,1},
+            {"LAUNCHFILE",                      LaunchFile,        1,1},
+            {"SYSTEMCALL",                      SystemCall,        1,2},
             {"VARIABLEEXISTS",                  VariableExists,    1,1},
 
             {"ISDIRECTORY",                     IsDirectory,        1,1},

@@ -45,7 +45,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+
+#if defined(PEBL_LINUX)
 #include <sys/io.h>
+#endif
 
 #define BASE 0x378
 
@@ -677,7 +680,7 @@ Variant PEBLStream::OpenPPort(Variant v)
     unsigned char data;       /* value of the data register */
     unsigned char control;    /* value of the control register */
     
-
+#if 0
     if(0)
         {
             //hardcode some parport stuff here for testing.
@@ -713,7 +716,8 @@ Variant PEBLStream::OpenPPort(Variant v)
             /* read and print the value */
             printf("Port 0x%x reads 0x%x\n", BASE, inb(BASE));
         }
-    
+#endif
+
     counted_ptr<PEBLObjectBase> tmp2 = counted_ptr<PEBLObjectBase>(new PParallelPort());
     PParallelPort * pport = dynamic_cast<PParallelPort*>(tmp2.get());
     
