@@ -17,7 +17,7 @@ define Start(p)
   gEditDescription <- 1
 
   systemType <- GetSystemType()
-
+  Print(systemtype)
   if(systemType == "LINUX") 
    {
 
@@ -27,18 +27,24 @@ define Start(p)
 	gOpenURL        <- "firefox"
 
 	
-   }elseif(systemType=="WIN32")   {
+   }elseif(systemType=="WINDOWS")   {
      
      gViewerCommand <- "c:\windows\notepad.exe"
-     gPEBLName      <- "c:\Program Files\PEBL\pebl.exe"
-     gOpenManual    <- "c:\Program Files\acroread c:\Program Files\PEBL\doc\PEBLManual0.12.pdf"
-     gOpenURL       <- "c:\Program Files\iexplore.exe"
+     gPEBLName      <- "c:\Progra~1\PEBL\bin\pebl.exe"
+     gOpenManual    <- ""
+     gManualLoc     <- "C:\PEBL.pdf"
+     gOpenURL       <- ""
+    Print(gPEBLName)
+    Print(gOpenManual)
+    Print(gOpenURL)
 
    }elseif(systemType == "OSX")
    {
      gViewerCommand <- "open"
      gPEBLName      <- "/opt/local/bin/pebl"
      gOpenManual    <- "acroread /opt/local/share/pebl/doc/PEBLManual0.12.pdf"
+
+
    }
 
    gSleepEasy <- 1
@@ -547,35 +553,39 @@ define Start(p)
       }elseif(tmp==14)  ##View debug output
       {
 	     PushButton(viewoutput)  
- 	     SystemCall(gViewerCommand+ " " + DirListToText(dirchain)+"stdout.txt &")
+ 	     LaunchFile(DirListToText(dirchain)+"stdout.txt")
+  
+#	     SystemCall(gViewerCommand,  DirListToText(dirchain)+"stdout.txt &")
       
       }elseif(tmp==15)  ##View error output
       {
 	     PushButton(viewerror)
-         SystemCall(gViewerCommand+ " " + DirListToText(dirchain)+"stderr.txt &")
+         LaunchFile(DirListToText(dirchain)+"stderr.txt")
+         #SystemCall(gViewerCommand, DirListToText(dirchain)+"stderr.txt &")
       }elseif(tmp==16)  ##Edit script
       {
 		  PushButton(edit)
 	      if(IsPEBLFile(Nth(flatfilelist,selected)))
             {
-              SystemCall(gViewerCommand+ " " + DirListToText(dirchain)+Nth(flatfilelist,selected))
+              LaunchFile(DirListToText(dirchain)+Nth(flatfilelist,selected))
             }
       }elseif(tmp==17)  ##Open Manual
       {
 	     PushButton(openmanual)
-         SystemCall(gOpenManual)	  
-
+         #SystemCall(gManualLoc,"")	  
+ 	    LaunchFile(gManualLoc)
       }elseif(tmp==18)  ##Request Feature
       {
 	     PushButton(requestfeature)
-         SystemCall(gOpenURL + " https://fundry.com/project/69-pebl&")
+         SystemCall("https://fundry.com/project/69-pebl","")
 
 
       }elseif(tmp==19)  ##Visit web
       {
 	     PushButton(visitweb)
-         SystemCall(gOpenURL+ " http://pebl.sourceforge.net&")	  
-
+         #SystemCall("http://pebl.sourceforge.net","")	  
+	   Launchfile("http://pebl.sourceforge.net")	  
+	   
 
       }elseif(tmp==20)  ##About
       {
@@ -592,7 +602,8 @@ This launcher is written in PEBL itself, allowing a fairly uniform launcher on a
       {
         if(gEditDescription)
          {
-              SystemCall(gViewerCommand+ " " + DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt&")
+            LaunchFile(DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt")
+         	#SystemCall(gViewerCommand,  DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt")
          }
       }elseif(tmp==22)
       {
@@ -774,20 +785,19 @@ define Filter(list,match)
 define RunScript(dirchain,filename,fullscreen,language,logfile,subcode,experimenter)
 {
 
-
-		 callstring <- "cd " + DirListToText(dirchain) +"; pebl " +filename + " -s " + subcode
+		 callstring <- "cd " + DirListToText(dirchain) + "&" +gPEBLName + " "  +filename + " -s " + subcode
 		 if(fullscreen)
 		 {
 		   callstring <- callstring + " --fullscreen "
-         }
+                 }
 
-		 callstring <- callstring + " --language " + language + " > stdout.txt 2> stderr.txt"
+		 callstring <- callstring + " --language " + language 
   
 
          FilePrint(logfile,TimeStamp() + "," + DirListToText(dirchain)+ filename+","+GetPEBLVersion() + "," + experimenter + "," + subcode + "," +"fullscreen:["+fullscreen+"],"+ language + "," + callstring+ ","+"STARTED")
 
          #### Run the experiment!!!!
-		 SystemCall(callstring)
+		 SystemCall(callstring," &pause")
 
 
          FilePrint(logfile,TimeStamp() + "," + DirListToText(dirchain)+filename+","+GetPEBLVersion() +
