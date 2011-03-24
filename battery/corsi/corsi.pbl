@@ -1,7 +1,6 @@
 define Start(p)
 {
 
-
   
   gUseCorsiPoints <- 1        ## Use standard locations or regenerate
                               ## on each trial?
@@ -35,11 +34,13 @@ define Start(p)
 
   gScale <- 3                 ##scale between mm and pixels.
   gTargetSize <- 30 * gScale
-  gSleepEasy <- 1
+  gSleepEasy <- 0
   gWin <- MakeWindow("black")
 
   gHomeX <- gVideoWidth/2
   gHomeY <- gVideoHeight/2
+
+  gBeep <- LoadSound("beep.wav")
 
 
   if(gSubNum==0)
@@ -48,7 +49,7 @@ define Start(p)
    }
 
   gFileOut <- FileOpenWrite("data/corsi-" + gSubNum + ".txt")
-  gLogFile <- FileOpenAppend("data/corsi-log.txt")
+#  gLogFile <- FileOpenAppend("data/corsi-log.txt")
 #  ShowCursor(0)
   Draw()
   
@@ -132,7 +133,7 @@ If you are correct, your next list will be one longer; otherwise it will be one 
 
 
      out  <-  Trial(targxy,stim)
-     Print(out)
+#     Print(out)
      corr <- First(out)
      scoreCI <- Second(out)
      inp <- Third(out)
@@ -249,15 +250,26 @@ define Trial(xy,stimseq)
       time1 <- GetTime()
       resp <-  WaitForClickOnTarget(clickon,ids)
       time2 <- GetTime()
+
+	  
       if(resp > 0)
       {
         pos <- Nth(clickon,resp+1)
         Move(targ,pos.x,pos.y)
         Show(targ)
         Draw()
-        Wait(250)
+
+
+#       call <- "echo -e " + gQuote + "\a"+gQuote
+#		SystemCall(call)
+#   	    PlayBackground(gBeep)
+#		Wait(50)
+#		Stop(gBeep)
+
+        Wait(200)
         Hide(targ)
         Draw()
+
         resps <- Append(resps,resp)
         rts <- Append(rts,(time2-time1))
       }
@@ -661,6 +673,28 @@ define KesselsTrials()
    [4,2,6,8,1,7,9,3,5]]
  
   return x
+}
+
+define PCSForward()
+{
+   x <- [[3,10],[7,4],
+         [1,9,3],[8,7,2],
+         [4,9,1,6],[10,6,2,7],
+		 [6,5,1,4,8],[5,7,9,8,2],         
+		 [4,1,9,3,8,10],[9,2,6,7,3,5],         
+		 [10,1,6,4,8,5,7],[2,6,3,8,2,10,1],         
+		 [7,3,10,5,7,8,4,9],[6,9,3,2,1,7,10,5],         
+		 [5,8,4,10,7,3,1,9,6],[8,2,6,1,10,3,7,4,9] ]
+
+ return x
+}
+
+define PCSBackward()
+{
+   x <- Transpose(FoldList(PCSForward(),2))
+   xx <- Transpose([Second(x),First(x)])
+   
+   return FlattenN(xx,1)
 }
 
 

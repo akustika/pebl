@@ -80,8 +80,8 @@ define Start(p)
  
   InitPoles()
 
-  FilePrint(gFileOut,"sub trial size current end step abstime trialtime clicktime done")
-  FilePrint(gFileOutSum,"sub trial size shortest startlab endlab startconf endconf steps time")
+  FilePrint(gFileOut,"sub,trial,size,current,end,step,abstime,trialtime,clicktime,done")
+  FilePrint(gFileOutSum,"sub,trial,size,shortest,startlab,endlab,startconf,endconf,steps,time")
 
   gInstructions.width <- 220
   gInstructions.height <- 520
@@ -134,10 +134,10 @@ define TrialTOH(pair)
     startTime <- GetTime()
     lasttime <- GetTime()
     time <- GetTime()
-    FilePrint(gfileout, gSubNum + " " + gTrial + " " + numdisks + " " +
-                  MakeStateString(config) + " " +
-                  MakeStateString(config1) + " 0 " + starttime + " 0 "+
-                  (time - lasttime)  + " 0")
+    FilePrint(gfileout, gSubNum + "," + gTrial + "," + numdisks + "," +
+                  MakeStateString(config) + "," +
+                  MakeStateString(config1) + ",0," + starttime + ",0,"+
+                  (time - lasttime)  + ",0")
     #Allow disk moves until the two have identical configurations.
     continue <- 1
     step <- 1 
@@ -167,9 +167,9 @@ define TrialTOH(pair)
     {
       config <- MoveDisk(config)
       time <- GetTime()
-      FilePrint_(gfileout, gSubNum + " " + gTrial + " " + numdisks + " " +
-                 step + " " + time +
-                  " " + (time - starttime) +" " + (time-lasttime))
+      FilePrint_(gfileout, gSubNum + "," + gTrial + "," + numdisks + "," +
+                 step + "," + time +
+                  "," + (time - starttime) +"," + (time-lasttime))
 
       lasttime <- time
 
@@ -177,9 +177,9 @@ define TrialTOH(pair)
        {
          success <- 1
          continue <- 0
-         FilePrint(gfileout, " 1")
+         FilePrint(gfileout, ",1")
        } else {
-         FilePrint(gfileout, " 0")
+         FilePrint(gfileout, ",0")
        }
     ##only update the graph if we have a good measure of
     ## shortest path, and if the global flag specifies it.
@@ -218,10 +218,10 @@ define TrialTOH(pair)
    }
  
     Wait(100)
-   FilePrint(gFileOutSum, gSubNum + " " + gTrial + " " + numdisks + 
-       " "+ shortest + " "  +   startlab+ " "+ endlab + " " +
-       origstring  + " " +  MakeStateString(config1) + " " + success + " "+
-      (step-1) + " " + (time-starttime))
+   FilePrint(gFileOutSum, gSubNum + "," + gTrial + "," + numdisks + 
+       ","+ shortest + ","  +   startlab+ ","+ endlab + "," +
+       origstring  + "," +  MakeStateString(config1) + "," + success + ","+
+      (step-1) + "," + (time-starttime))
 
    if(success)
     {
@@ -341,8 +341,8 @@ define InitPoles()
   gRect <- Rectangle(325,80,460,140,MakeColor("white"),1)
   AddObject(gRect,gWin)
 
-  gFileOut <- FileOpenAppend("toh-"+gsubnum+".txt")
-  gFileOutSum <- FileOpenAppend("toh-summary-"+gsubnum+".txt")
+  gFileOut <- FileOpenAppend("toh-"+gsubnum+".csv")
+  gFileOutSum <- FileOpenAppend("toh-summary-"+gsubnum+".csv")
 
  }
 

@@ -8,7 +8,7 @@
 ##  2006-02 Released into Public Domain
 ##  by Shane T. Mueller, Ph.D. (smueller at obereed dot net)
 ##
-##  Version 0.4
+##  Version 0.5  2/2011
 ##
 ##
 ##  Continuous performance task modeled after Conners Continuous 
@@ -27,6 +27,12 @@
 ##  For version 0.4, block length was changed from 18 to 20, to match
 ##  the number of trials reported by Conners.
 ##
+##  For version 0.5, the pauses between blocks were made optional,
+##  and the option was set to off.  This seems to match more to what 
+##  people report wanting their CPT to behave like.  Also, the
+##  proportion of 'X' trials was fixed at 10% in each block, rather than
+##  having the probability of generating an 'X' fixed.
+##
 ##  References:
 ##  C. Keith Conners,  Jeffery N. Epstein,  Adrian Angold,  
 ##      John Klaric (2003) Continuous performance test performance 
@@ -42,10 +48,10 @@ define Start(lPar)
  
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
-  Print(TimeStamp())
+
 
    cycles   <-  6          ## Number of times the 3-ISI cycle is repeated
-   blockSize <- 20         ## Number of trials per block
+   blockSize <- 20         ## Number of trials per block 
    presTime  <- 250        ## Presentation time in ms.
    isiVals   <- [1000, 2000, 4000]
    probX     <- 0.1
@@ -54,7 +60,11 @@ define Start(lPar)
    numBlocks <- cycles * Length(isiVals)
  
    giveFeedback <- 0
-   
+   pauseBetweenBlocks <- 0
+
+   proportionalFoil <- 1   #if set to 1, will use exactly 90% foils; 
+   					   	   #if set to 0, will generate a foil with 90% probability on each trial
+
 
    ################################################
    ##  Create the randomized block structure stimuli.
@@ -86,9 +96,12 @@ define Start(lPar)
   ## Set up the basic  environment 
   ##
 
-   datafile   <- FileOpenWrite("pcpt-"+ gSubNum + ".txt")
+   datafile   <- FileOpenWrite("pcpt-"+ gSubNum + ".csv")
+   masterdatafile <- FileOpenAppend("pooled-pcpt.csv")
    reportfile <- FileOpenWrite("pcpt-report-" + gSubNum + ".txt")
-
+   
+   log <- FileOpenAppend("pcpt-log.txt")
+   FilePrint(log,"PCPT Started:  " + gSubNum + " " + TimeStamp())
 
 
    ## data structures which save data for analysis and
@@ -118,7 +131,7 @@ define Start(lPar)
    corF4000 <- 0
 
 
-   FilePrint(datafile,"sub block trial cond targ responded corr time rt")
+   FilePrint(datafile,"sub,block,trial,cond,targ,responded,corr,time,rt")
 
 
 
@@ -130,17 +143,25 @@ define Start(lPar)
 
       block <- block + 1
       blocktrial <- 1
-      while(blocktrial <= blocksize)
+
+	  ## Pick out the stimuli that will be presented during the present
+	  ## block of trials.
+	  targnum <- Round(blocksize*.9)
+      blockstim <-  Shuffle(Merge(SampleN(letters,targnum),Repeat("X",blocksize-targnum)))
+
+     while(blocktrial <= blocksize)
       {
 
-      trialNum <- trialNum + 1
-      blocktrial<- blocktrial + 1
-      Hide(gFeedback)
+       trialNum <- trialNum + 1
+       blocktrial<- blocktrial + 1
+       Hide(gFeedback)
 
       ## See if we should stop at the end of the block.
       ## 
-      if(Mod(trialNum, blocksize) == 1 and trialNum > 1)
-      { 
+	   if(pausebetweenblocks)
+       {
+       if(Mod(trialNum, blocksize) == 1 and trialNum > 1)
+        { 
           Show(gInstructions)
 	      Draw()
 	      Wait(500)
@@ -148,14 +169,26 @@ define Start(lPar)
           Hide(gInstructions)
           Draw()
           Wait(1000)
-      } 
+        } 
+	  }
 
 
-      stim  <-First(SampleN(letters,1))
-      if(Random() < probX)
+      ##Determine whether to use 90% targets, or each pick a target with 90% probability
+	  if(proportionalFoil==1)
       {
-       stim <- "X"
-      }
+    	  ##Pick the first stimulus off and rotate the stimulus pool.
+          stim  <-First(blockstim)
+     	  blockstim <- Rotate(blockstim,1)
+
+      } else{
+
+    	  stim <- First(SampleN(letters,1))
+          if(Random() < probX)
+          {
+            stim <- "X"
+          }
+
+      } 
 
       gStim.text <- stim
 
@@ -315,46 +348,100 @@ define Start(lPar)
 	}
 
 
-     FilePrint(datafile,gSubNum + " " + block + "  " + trialnum + " " + isi + "  " + stim + "  "+  responded + " " + corr + " "  + timeStart + " " + rt)
+     ## Print data to both the subject file and the master file.
+     FilePrint(datafile,gSubNum + "," + block + "," + trialnum + "," +
+     isi + "," + stim + ","+  responded + "," + corr + ","  +
+     timeStart + "," + rt)
+	 
+     FilePrint(masterdatafile,gSubNum + "," + block + "," + trialnum + "," +
+     isi + "," + stim + ","+  responded + "," + corr + ","  +
+     timeStart + "," + rt)
+
      }
     }
 
+   ##Study is complet are complete
+   FilePrint(log,"PCPT Finished: " + gSubNum + " " + TimeStamp())
+   FileClose(log)
+
    trialspercond <- blockSize * cycles
+
+   ##compute foils
    foil1000 <- trialspercond-targ1000 
    foil2000 <- trialspercond-targ2000
    foil4000 <- trialspercond-targ4000
+
+   ##Compute SDT beta and dprime for each delay condition.
+   dp1000 <- Rnd(SDTDPrime(corT1000/targ1000,1-corF1000/Max([1,foil1000])),3)
+   dp2000 <-Rnd(SDTDPrime(corT2000/targ2000,1-corF2000/Max([1,foil2000])),3)
+   dp4000 <-Rnd(SDTDPrime(corT4000/targ4000,1-corF4000/Max([1,foil4000])),3)
+   dpall  <- Rnd(SDTDPrime((corT1000+corT2000+corT4000)/(targ1000+targ2000+targ4000),
+                       1-(corF1000+corF2000+corF4000)/Max([1,(foil1000+foil2000+foil4000)])),3)
+
+   beta1000 <- Rnd(SDTBeta(corT1000/targ1000,1-corF1000/Max([1,foil1000])),3)
+   beta2000 <- Rnd(SDTBeta(corT2000/targ2000,1-corF2000/Max([1,foil2000])),3)
+   beta4000 <- Rnd(SDTBeta(corT4000/targ4000,1-corF4000/Max([1,foil4000])),3)
+   betaall  <- Rnd(SDTBeta((corT1000+corT2000+corT4000)/(targ1000+targ2000+targ4000),
+                       1-(corF1000+corF2000+corF4000)/Max([1,(foil1000+foil2000+foil4000)])),3)
 
 
 ##Print out report
    PrintMe(reportfile,"--------------------------------------------------------")
    PrintMe(reportfile," Report for PEBL Continuous Performance Task (PCPT)")
-   PrintMe(reportfile, " Version 0.3")
+   PrintMe(reportfile, " Version 0.5")
    PrintMe(reportfile, " http://pebl.sf.net")
-   PrintMe(reportfile, " (c) 2006 Shane T. Mueller, Ph.D.")
+   PrintMe(reportfile, " (c) 2011 Shane T. Mueller, Ph.D.")
    PrintMe(reportfile, " "+GetPEBLVersion())
    PrintMe(reportfile, " "+TimeStamp())
    PrintMe(reportfile, " Participant Code: " + gSubNum)
-   PrintMe(reportfile,"--------------------------------------------------------")
-   PrintMe(reportfile,"Statistic        ISI:   1000" + Tab(1) +"2000" + Tab(1) + "4000")
-   PrintMe(reportfile,"--------------------------------------------------------")
-   PrintMe(reportfile,"Correct Trials   " +Tab(1)+ (corT1000 + corF1000) + "/" + trialspercond+ Tab(1) + (corT2000 + corF2000)+ "/" + trialspercond + Tab(1) + (corT4000 + corF4000) + "/" + trialspercond )
-   PrintMe(reportfile,"Correct Targets  " +Tab(1)+ corT1000 + "/" + targ1000 + Tab(1) + corT2000 + "/" + targ2000 + Tab(1) + corT4000 + "/" + targ4000)
-   PrintMe(reportfile,"Correct Foils    " +Tab(1)+ corF1000 + "/" + foil1000 + Tab(1) + corF2000 + "/" + foil2000 + Tab(1) + corF4000 + "/" + foil4000)
-   PrintMe(reportfile,"Target Acc Rate  " +Tab(1)+ Rnd(corT1000/targ1000,3) + Tab(1) + Rnd(corT2000/targ2000,3) + Tab(1) + Rnd(corT4000/targ4000,3))
-   PrintMe(reportfile,"Foil Acc Rate    " +Tab(1)+ Rnd(corF1000/Max([1,foil1000]),3) + Tab(1) + Rnd(corF2000/Max([1,foil2000]),3) + Tab(1) + Rnd(corF4000/Max([1,foil4000]),3))
+   PrintMe(reportfile, " Pause between blocks: " + pausebetweenblocks)
+   PrintMe(reportfile,"--------------------------------------------------------")   
+   PrintMe(reportfile,"Statistic        ISI:   1000" + Tab(1) +"2000"  + Tab(1) + "4000" + Tab(1) + "Pooled")
+   PrintMe(reportfile,"--------------------------------------------------------")   
+   PrintMe(reportfile,"Correct Trials   " +Tab(1)+ (corT1000 + corF1000) + "/" + trialspercond+ Tab(1) + (corT2000 + corF2000)+
+                      "/" + trialspercond + Tab(1) + (corT4000 + corF4000) + "/" +  trialspercond  +
+                      Tab(1)+ (corT1000+corT2000+corT4000+corF1000+corF2000+corF4000) +"/"+ (trialspercond*3))
+
+   PrintMe(reportfile,"Correct Targets  " +Tab(1)+ corT1000 + "/" +  targ1000 + Tab(1) + corT2000 + "/" + targ2000 + Tab(1) + corT4000 +   "/" + targ4000 +Tab(1)+
+                       (corT1000 +  corT2000 + corT4000)+ "/" + (targ1000+targ2000+targ4000   ))
+   PrintMe(reportfile,"Correct Foils    " +Tab(1)+ corF1000 + "/" + foil1000 + Tab(1) + corF2000 + "/" + foil2000 + Tab(1) + corF4000 + "/" + foil4000+Tab(1)+
+                        (corF1000 +  corF2000 + corF4000)+ "/" + (foil1000+foil2000+foil4000   ))
+   PrintMe(reportfile,"Target Acc Rate  " +Tab(1)+ Rnd(corT1000/targ1000,3) + Tab(1) + Rnd(corT2000/targ2000,3) + Tab(1) + Rnd(corT4000/targ4000,3)+Tab(1)+
+                      Rnd((corT1000+corT2000+corT4000)/(targ1000+targ2000+targ4000),3))
 
 
-   PrintMe(reportfile,"Commission Errors" +Tab(1)+ co1000 + Tab(1) + co2000 + Tab(1) + co4000)
-   PrintMe(reportfile,"Ommission Errors " +Tab(1)+ om1000 + Tab(1) + om2000 + Tab(1) + om4000)
-   PrintMe(reportfile,"Correct RT Mean  " +Tab(1)+ MeanX(rtCorr1000) + Tab(1) + MeanX(rtCorr2000) + Tab(1) + MeanX(rtCorr4000))
-   PrintMe(reportfile,"Correct RT SD    " +Tab(1)+ SD(rtCorr1000) + Tab(1) +SD(rtCorr2000) + Tab(1) + SD(rtCorr4000))
-   PrintMe(reportfile,"Error RT Mean    " +Tab(1)+ MeanX(rtInc1000) + Tab(1) + MeanX(rtInc2000) + Tab(1) + MeanX(rtInc4000))
-   PrintMe(reportfile,"Error RT SD      " +Tab(1)+ SD(rtInc1000) + Tab(1) + SD(rtInc2000) + Tab(1) + SD(rtInc4000))
-##  Add d' and beta here?
-##
+   PrintMe(reportfile,"Foil Acc Rate    " +Tab(1)+ Rnd(corF1000/Max([1,foil1000]),3) + Tab(1) +
+                                                   Rnd(corF2000/Max([1,foil2000]),3) + Tab(1) + 
+                                                   Rnd(corF4000/Max([1,foil4000]),3) + Tab(1) + 
+                                                   Rnd((corF1000+corF2000+corF4000)/Max([1,(foil1000+foil2000+foil4000)]),3))
+
+
+
+
+   PrintMe(reportfile,"Commission Errors" +Tab(1)+ co1000 + Tab(1) + co2000 + Tab(1) + co4000 + Tab(1) + (co1000+co2000+co4000))
+   PrintMe(reportfile,"Ommission Errors " +Tab(1)+ om1000 + Tab(1) + om2000 + Tab(1) + om4000 + Tab(1)+ (om1000+om2000+om4000))
+   PrintMe(reportfile,"Correct RT Mean  " +Tab(1)+ MeanX(rtCorr1000) + Tab(1) + MeanX(rtCorr2000) + Tab(1) + MeanX(rtCorr4000)+
+                       Tab(1) + MeanX(Flatten([rtCorr1000,rtCorr2000,rtCorr4000])))
+   PrintMe(reportfile,"Correct RT SD    " +Tab(1)+ SD(rtCorr1000) + Tab(1) +SD(rtCorr2000) + Tab(1) + SD(rtCorr4000) + 
+    				   Tab(1) + SD(Flatten([rtCorr1000,rtCorr2000,rtCorr4000])))
+   PrintMe(reportfile,"Error RT Mean    " +Tab(1)+ MeanX(rtInc1000) + Tab(1) + MeanX(rtInc2000) + Tab(1) + MeanX(rtInc4000)+
+                       Tab(1) + MeanX(Flatten([rtInc1000,rtInc2000,rtInc4000])))
+   PrintMe(reportfile,"Error RT SD      " +Tab(1)+ SD(rtInc1000) + Tab(1) + SD(rtInc2000) + Tab(1) + SD(rtInc4000)+
+                       Tab(1) + SD(Flatten([rtInc1000,rtInc2000,rtInc4000])))
+
+   PrintMe(reportfile,"Sensitivity (d') " +Tab(1)+ dp1000 + Tab(1) + dp2000 + Tab(1) + dp4000+Tab(1)+dpAll)
+   PrintMe(reportfile,"Bias (beta)      " +Tab(1)+ beta1000 + Tab(1) + beta2000 + Tab(1) + beta4000+Tab(1)+betaAll)
+
 ##
    PrintMe(reportfile,"--------------------------------------------------------")   
 
+   mastersum <- FileOpenAppend("pcpt-master-summary.csv")
+   ##Print out basic statistics into a master summary file.
+   FilePrint(mastersum,gSubNum + "," + TimeStamp()+"," +
+   Rnd(corT1000/targ1000,4) + "," +  Rnd(corT2000/targ2000,4) + "," +
+   Rnd(corT4000/targ4000,4) +"," +    Rnd(corF1000/Max([1,foil1000]),3)+ "," +
+   Rnd(corF2000/Max([1,foil2000]),3) + ","+ Rnd(corF4000/Max([1,foil4000]),3) +
+    ","+ MeanX(rtCorr1000) + "," + MeanX(rtCorr2000) + "," + MeanX(rtCorr4000))
 
    ##Now, show debriefing info.
    SetText(gInstructions, "Thank you for participating in the experiment.  You may now leave.

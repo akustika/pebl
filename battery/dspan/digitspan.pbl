@@ -36,7 +36,7 @@ define Start(lPar)
   ## presentation.
   gUseAudio <- 1
 
-  gDirection <- "backward"  #change "forward" to "backward" to do
+  gDirection <- "forward"  #change "forward" to "backward" to do
                             #backward scoring
 						   
   gAllowBackspace <- 1     ##Allow users to backspace over responses?

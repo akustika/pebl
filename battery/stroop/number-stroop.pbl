@@ -51,8 +51,23 @@ define Start(p)
    ##  Set gResponseType to either "keyboard" or "audio" to change the
    ## response method
    ##
-   gResponseType <- "keyboard"
-   #gResponseType <- "audio"
+   ## gResponseType <- "keyboard"
+   ## gResponseType <- "audio"
+   ## gResponseType <- "keypad"
+
+   Initialize()
+
+   gResponseType <- GetEasyChoice("Select input type ",
+                               ["1-2-3 Number Line on keyboard",
+                                "1-2-3 numbers on keypad",
+	 						   "Vocal input from microphone"],
+							   ["keyboard","keypad","audio"], gWin)
+
+
+   ##for audio, set this to 1 to score real-time with keyboard.  
+   ##otherwise, you need to go back through and code responses afterward.
+   gScoreRealtime <- 0
+
 
 
    ## The voice key will trip when 55% of the last 
@@ -82,9 +97,6 @@ define Start(p)
     gLanguage <- "ES"
 
    GetStrings(gLanguage)
-   Print("initializing")
-   Initialize()
-   Print("Numerical stroop initialized")
 
    ##Enter the subject code here if one wasn't already provided.
    if(gSubNum == 0)
@@ -117,9 +129,12 @@ define Start(p)
    FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+",NUMERICAL STROOP,"+gResponseType+",STARTED") 
 
    ##Create a vocal buffer if we have one
+
    if(gResponseType == "audio")
     {
-      gResponseBuffer <- MakeAudioInputBuffer(3500)
+	  Print("Making audio input buffer")
+	  ##3000/3500 doesn't seem to work in linux:???
+      gResponseBuffer <- MakeAudioInputBuffer(5000)
     }
 
 
@@ -294,7 +309,7 @@ define DoTrial(stim,cond,code)
 
 
    gFooter2.text <- gFooter2Text
-if(cond == "keyboard")
+if(cond == "keyboard" or cond=="keypad")
   {
 
    gFooter1.text <- gFooter1textManual
@@ -317,13 +332,13 @@ if(cond == "keyboard")
    Draw()
 
    time1 <- GetTime()
-   if(cond == "keyboard")
+   if(cond == "keyboard" or cond == "keypad")
     {
 
 
-	    resp <-WaitForListKeyPressWithTimeout([1,2,3],2000,1)
+	    resp <-WaitForListKeyPressWithTimeout(gKeys,2000,1)
         time2 <- GetTime()
-         if(resp == "<timeout>")
+         if(IsList(resp))   ##Check to see if there was a time-out.
            {
              gStimLabel.text <- "Too Slow"
           	 Draw()
@@ -342,8 +357,10 @@ if(cond == "keyboard")
 
     }elseif(cond=="audio")
     {
-
+		Print("time1")
 	    resp0 <-  GetVocalResponseTime(gResponseBuffer,gVoiceKeyThreshold, gVoiceKeyDuration)
+#        Wait(300)
+#		resp0 <- [0,0,0,0,0]
         time2 <- GetTime()
 		Print(resp0)
         if(Third(resp0)==0)
@@ -356,12 +373,24 @@ if(cond == "keyboard")
         rt <- First(resp0)
         endtime  <- Second(resp0)
 		responded <- Third(resp0)
+
+
+     if( gScoreRealtime )
+      {
         gFooter1.text <- gFooter1textManual2
 		Hide(gStimLabel)
         Draw()
-        resp <-WaitForListKeyPress([1,2,3,4])
 
+
+       ##use the following for keypad entry:
+       ## resp <-WaitForListKeyPress(["<KP_1>","<KP_2>","<KP_3>","<KP_4>"])
+        resp <-WaitForListKeyPress([1,2,3,4])
 		corr <- ToNumber(resp)==length
+      } else {
+         #Use -1 as the non-score indicator.
+	     resp <- -1
+		 corr <- -1
+      }
 
     	out <- gSubNum + "," + cond + "," + code + "," + gBlock +","+ gTrial + "," +
             Second(stim)+","+First(stim)+"," +responded+","+ resp + ","+corr+"," + time1 + ","+
@@ -529,10 +558,10 @@ define Initialize()
   ## Uncomment to eliminate busy-wait (mostly for older machines or
   ## laptops that might overheat.)
   gSleepEasy <- 1
-
-
   ##Initialize Window, etc.
   gWin <- MakeWindow("grey40")   
+
+
   ShowCursor(0)
   ##Initialize Font and colors
 
@@ -596,14 +625,23 @@ if (Uppercase(language) == "ES")
    gNeutralStim    <- ["Z","ZZ","ZZZ","M","MM","MMM","G","GG","GGG"]
    gIncongruentStim <- ["11","111","2","222","3","33"]
    gCongruentStim  <- ["1","22","333"]
-
-   gKeys <- ["1","2","3"]
-   keystring <-  First(gKeys) +", "+ Second(gKeys)+ ", or " +Third(gKeys)
-
+   if(gResponseType=="keyboard")
+   {
+     gKeys <- [1,2,3]
+     keystring <-  "1, 2, or 3 key"
+   } elseif(gResponseType=="keypad")
+   {
+     gKeys <- ["<KP_1>","<KP_2>","<KP_3>"]
+     keystring <-  "1, 2, or 3 key"
+   }else{
+    
+	 gKeys <- [1,2,3]
+     keystring <- "uno, dos, o tres"
+   }
 
     gInstructionsBase<- "You are about to take part in an study in which you will be asked to determine how many characters are displayed on the computer screen.  There will either be one, two, or three characters.  Sometimes the characters will be letters, and other times they will be numbers. "
 
-	gKeyManual <- "You will need to respond with the 1-2-3 keys on the keyboard:
+	gKeyManual <- "You will need to respond with the 1-2-3 keys on the "+gResponseType+"
       Z       1     2      3        (respond by pressing '1')
      MM    11   22    33       (respond by pressing '2')
     GGG  111  222  333     (respond by pressing '3').  
@@ -617,12 +655,13 @@ Remember to ignore the actual identity of the character.  Press any key to try a
 
 Remember to ignore the actual identity of the character.  Press any key to try a practice round."
 
-if(gResponseType=="keyboard")
+if(gResponseType=="keyboard" or gResponseType=="keypad")
   {
     gInstructionsText <- gInstructionsBase+gKeyManual
   }else{
     gInstructionsText <- gInstructionsBase+gKeyVocal
   }
+
 
     gBreak1Text <- "Practice is complete.  Now you will be tested for real.  Remember to answer as quickly and accurately as possible.  Press any key to begin."
     gBreak2Text <- "You may now take a short break.  When you resume, remember to  answer as quickly and accurately as possible.  Press any key to continue."
@@ -630,14 +669,16 @@ if(gResponseType=="keyboard")
     gPracticeHeaderText <- "PRACTICE"
 	gTestHeaderText    <-  "TEST"
 
-    gFooter1TextManual <- "Please press "+keystring+" for the number of characters that appear on the screen"
-    gFooter1TextManual2 <- "Please press "+keystring+" or '4' for other error."
-    gFooter1TextVocal <- "Please say '"+keystring+"' for the number of characters that appear on the screen"
+    gFooter1TextManual <- "Press "+keystring+" for the number of characters that appear on the screen"
+    gFooter1TextManual2 <- "Press "+keystring+" or '4' for other error."
+    gFooter1TextVocal <- "Say '"+keystring+"' for the number of characters that appear on the screen"
 	gFooter2Text <-"Respond as quickly and accurately as possible."
 
     gExitText <-"You are now finished. Thank you for participating."
   } else  {
 
+
+   ###############################################################
    ##Default to english
 
 
@@ -645,13 +686,22 @@ if(gResponseType=="keyboard")
    gIncongruentStim <- ["11","111","2","222","3","33"]
    gCongruentStim  <- ["1","22","333"]
 
-   gKeys <- ["1","2","3"]
-   keystring <-  First(gKeys) +", "+ Second(gKeys)+ ", or " +Third(gKeys)
-
+   if(gResponseType=="keyboard")
+   {
+     gKeys <- [1,2,3]
+     keystring <-  "1, 2, or 3 key"
+   } elseif(gResponseType=="keypad")
+   {
+     gKeys <- ["<KP_1>","<KP_2>","<KP_3>"]
+     keystring <-  "1, 2, or 3 key"
+   }else{
+	 gKeys <- [1,2,3]
+     keystring <- "one, two, or three"
+   }
 
     gInstructionsBase<- "You are about to take part in an study in which you will be asked to determine how many characters are displayed on the computer screen.  There will either be one, two, or three characters.  Sometimes the characters will be letters, and other times they will be numbers. "
 
-	gKeyManual <- "You will need to respond with the 1-2-3 keys on the keyboard:
+	gKeyManual <- "You will need to respond with the 1-2-3 keys on the "+gResponsetype+":
       Z       1     2      3        (respond by pressing '1')
      MM    11   22    33       (respond by pressing '2')
     GGG  111  222  333     (respond by pressing '3').  
@@ -665,7 +715,7 @@ Remember to ignore the actual identity of the character.  Press any key to try a
 
 Remember to ignore the actual identity of the character.  Press any key to try a practice round."
 
-if(gResponseType=="keyboard")
+if(gResponseType=="keyboard" or gResponseType=="keypad")
   {
     gInstructionsText <- gInstructionsBase+gKeyManual
   }else{
@@ -678,9 +728,9 @@ if(gResponseType=="keyboard")
     gPracticeHeaderText <- "PRACTICE"
 	gTestHeaderText    <-  "TEST"
 
-    gFooter1TextManual <- "Please press "+keystring+" for the number of characters that appear on the screen"
-    gFooter1TextManual2 <- "Please press "+keystring+" or '4' for other error."
-    gFooter1TextVocal <- "Please say '"+keystring+"' in response to the number of characters you see appear on the screen"
+    gFooter1TextManual <- "Press "+keystring+" for the number of characters that appear on the screen"
+    gFooter1TextManual2 <- "Press "+keystring+" or '4' for other error."
+    gFooter1TextVocal <- "Say '"+keystring+"' in response to the number of characters you see appear on the screen"
 	gFooter2Text <-"Respond as quickly and accurately as possible."
 
     gExitText <-"You are now finished. Thank you for participating."
@@ -703,3 +753,54 @@ define RepeatEnough(list,length)
    return SubList(tmp,1,length)
 }
 
+
+
+define GetEasyChoice(text,choices,output,win)
+{
+
+ ShowCursor(1)
+ if(not IsWindow(win))
+  { 
+    SignalFatalError("GetEasyChoice(win) needs a window to be specified, not [" + win + "]")
+  }
+   bgcol <- win.BGCOLOR
+
+   bg  <- MakeCanvas(gVideoWidth,gVideoHeight,bgcol)
+   Move(bg,gVideoWidth/2,gVideoHeight/2)
+   AddObject(bg,win)
+
+   box <- EasyTextBox(text+CR(1)+"Click box to select option.",100,100, win,20,gVideoWidth-200,gVideoHeight-200)
+   
+
+   tmp <- []
+   clickon <- []
+   y <- 200
+   skip <- 80
+
+   loop(i, choices)
+    {
+      bg <- Square(180,y,40,MakeColor("grey"),1)
+	  AddObject(bg,win)
+      lab <- EasyLabel(i,80, y,win,25)
+	  Move(lab, 220+ lab.width/2,y)
+      tmp <- Append(tmp,lab)
+      clickon <- Append(clickon,bg)
+     y <- y + 60
+    }
+
+   Draw()
+
+	x <-   WaitForClickOnTarget(clickon,output )
+
+   RemoveObject(bg,win)
+
+   loop(i,Transpose([tmp,clickon]))
+    {
+      RemoveObject(First(i),win)
+  	  RemoveObject(Second(i),win)
+    }
+
+   Draw()
+
+  return x
+}

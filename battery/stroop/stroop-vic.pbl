@@ -62,7 +62,7 @@ define Start(p)
   gSumFileOut <- FileOpenWrite("vstroop-summary-"+gSubNum+".txt")
 
 
-  FilePrint(FileOut,"subnum,block,trial,word,color,part,xpos,ypos,resp,rname,correct,intrusion,numresponses,time0,timea,timeend,trialtime,responsetime")
+  FilePrint(gFileOut,"subnum,block,trial,word,color,part,xpos,ypos,resp,rname,correct,intrusion,numresponses,time0,timea,timeend,trialtime,responsetime")
 
   gTrial <- 0
   gBlock <- 0

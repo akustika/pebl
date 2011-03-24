@@ -50,6 +50,8 @@ define Start(p)
   GetStrings(gLanguage)
 
   gShowHand     <- 1  #Show the hand graphic?
+  gUseReverse <- 0    ## reverse the stacks. Some of the subtests do
+                      ## this automatically.
   Init()
 
 

@@ -41,12 +41,14 @@ define Start(p)
 
 
   gWin <- MakeWindow()
+  gSubNum <- GetSubNum(gWin)
+
   gStimColor <- MakeColor("darkblue")
   gAccentColor <- MakeColor("yellow")
   gstimFont <-  MakeFont(gPEBLBaseFontMono,0,18,gAccentColor,gStimColor,1)
   gclickedFont <- MakeFont(gPEBLBaseFontMono,1,18,MakeColor("grey35"),gStimColor,1)
-  gFileOut <- FileOpenWrite("ptrails-"+gSubNum+".txt")
-  gSumFile <- FileOpenWrite("ptrails-summary-"+gSubNum+".txt")
+  gFileOut <- FileOpenAppend("ptrails-"+gSubNum+".txt")
+  gSumFile <- FileOpenAppend("ptrails-summary-"+gSubNum+".txt")
 
 
     inst <- "In this experiment, your goal is to click on each circle, in sequence, as quickly as you can.  When you click on the correct circle, its number will change to boldface, and a line will be drawn from the previous circle to the new circle.  On some trials, the circles will be numbered from 1 to 25, and you should click on them in numerical order (1-2-3-4, and so on).   On other trials, the circles will have both numbers (1 to 13) and letters (A through L), and you should click on them in an alternating order (1-A-2-B-3-C and so on).  If you click the wrong circle, no line will be drawn.  The trial will continue until you have successfully clicked on all of the circles in the correct order. 

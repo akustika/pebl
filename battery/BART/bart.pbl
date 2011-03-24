@@ -1,16 +1,58 @@
+##################################################################
+ ## PEBL Balloon Analog Risk Task (BART)
+ ##  
+ ## 
+ ##
+ ##  Part of the PEBL Test Battery
+ ## (c) 2011 Shane T. Mueller
+ ## smueller at obereed dot net
+ ## 
+ ##
+ ##
+ ##  Version of original task by XXXX, available for
+ ##   free download from XXXX.
+ ##
+ ##
+ ##
+ ##
+ ##
+ ##
+ ##
+ ##
+ ##
+ ##
+ ##
+ ##
+ ##
+ ##
+ ## For use with PEBL 0.12 or later
+ ## http://pebl.sf.net
+ ## Part of  The PEBL Psychological Testing Battery
+ ##
+ ##
+ ##
+ ##
+###############################################################
+
 define Start(p)
 {
 
-      gStartBalloonSize <- 10
+ 
+     gAllowAutoPump <- 1    ##Does the balloon continue to pump up while holding the button down?
+     gStartBalloonSize <- 10
 
+	  ##Get the translation text
   	  GetStrings(gLanguage)
- 	  gSleepEasy <- 1
+
+
       gWin <- MakeWindow("black")
+
+	  if(gSubNum==0)
+	  {
+         gSubNum <- GetSubNum(gWin)
+      }
+
 	  Init()
-
-
-	  
-	  
 
       Draw()
 
@@ -22,18 +64,19 @@ define Start(p)
 	  btypes <- [1,2,3]
 	  lifes <- [8,16,128]
 	  cols <- [MakeColor("darkorange"),Makecolor("gold"),MakeColor("darkslateblue")]
+	  gFileOut <- FileOpenAppend("bart-"+gSubNum+".csv")
 
 
 	  ##Each one of these can take a few seconds
-	  set1 <- Transpose([SampleBreakPointSet(8,10),Repeat(First(cols),10)])
-	  set2 <- Transpose([SampleBreakPointSet(16,10),Repeat(Second(cols),10)])
-	  set3 <- Transpose([SampleBreakPointSet(128,10),Repeat(Third(cols),10)])
-	  set4 <- Transpose([SampleBreakPointSet(8,10),Repeat(First(cols),10)])
-	  set5 <- Transpose([SampleBreakPointSet(8,10),Repeat(First(cols),10)])
-	  set6 <- Transpose([SampleBreakPointSet(16,10),Repeat(Second(cols),10)])
-	  set7 <- Transpose([SampleBreakPointSet(16,10),Repeat(Second(cols),10)])
-	  set8 <- Transpose([SampleBreakPointSet(128,10),Repeat(Third(cols),10)])
-	  set9 <- Transpose([SampleBreakPointSet(128,10),Repeat(Third(cols),10)])
+	  set1 <- Transpose([SampleBreakPointSet(8,10),Repeat(First(cols),10),Repeat(1,10)])
+	  set2 <- Transpose([SampleBreakPointSet(16,10),Repeat(Second(cols),10),Repeat(2,10)])
+	  set3 <- Transpose([SampleBreakPointSet(128,10),Repeat(Third(cols),10),Repeat(3,10)])
+	  set4 <- Transpose([SampleBreakPointSet(8,10),Repeat(First(cols),10),Repeat(1,10)])
+	  set5 <- Transpose([SampleBreakPointSet(8,10),Repeat(First(cols),10),Repeat(1,10)])
+	  set6 <- Transpose([SampleBreakPointSet(16,10),Repeat(Second(cols),10),Repeat(2,10)])
+	  set7 <- Transpose([SampleBreakPointSet(16,10),Repeat(Second(cols),10),Repeat(2,10)])
+	  set8 <- Transpose([SampleBreakPointSet(128,10),Repeat(Third(cols),10),Repeat(3,10)])
+	  set9 <- Transpose([SampleBreakPointSet(128,10),Repeat(Third(cols),10),Repeat(3,10)])
 
 	  group1 <- Shuffle(FlattenN([set1,set2,set3],1))
 	  group2 <- Merge(set4,set5)
@@ -42,11 +85,143 @@ define Start(p)
 
 	  trials <- FlattenN([group1,group2,group3,group4],1)
 
+
+
+      ##  Set up some global data here.
+      ##
+      gTimes <- []
+	  gClicks <- []
+	  gBursts <- []
+
+	  trial <- 1
 	  loop(i,trials)
       {
-          Trial(First(i),Second(i))
+		  FilePrint_(gFileOut,gSubNum+","+trial+","+Third(i)+",")
+                  Trial(First(i),Second(i))
+		  trial <- trial + 1
       }
 }
+
+
+
+##life describes the actual breakpoint of the balloon--not the maximum.
+define Trial(life,color)
+{
+
+
+	  radius <- gStartBalloonSize
+	  gBalloon	  <-Circle(gVideoWidth/2,GetY(radius),radius,color,1)
+	  AddObject(gBalloon,gWin)
+	  temp <- 0
+   	  UpdateScreen(radius)
+	  Hide(gCollectLab)   ##Don't show the hide message on the
+	  Hide(gCollectBox)       ##	  first click
+	  Draw()
+          cont <- 1
+	  pumps <- 0
+
+	  startTime <- GetTime()
+
+	  burst <- 0
+
+      while(cont)
+	   {
+		   ##Accept a click or a pump
+
+		   if(pumps == 0)
+           {
+             clickon <- [gpumpbox]
+           }else{
+             clickon <- [gpumpbox,gcollectbox]
+           }
+
+	          if(gAllowAutoPump) 
+                   {
+                     time1 <- GetTime()
+					 mousestate <- GetMouseState()
+					 if(Inside(mousestate,gPumpBox) and   Third(mousestate))
+					 {
+						resp <- 1
+                        Wait(150)
+  					 } else
+                     {
+          	            resp <- WaitForClickOnTarget(clickon, Sequence(1,Length(clickon),1))
+                     }
+   		             time2 <- GetTime()
+                               
+     
+                   } else {
+	          	   time1 <- GetTime()
+     	           resp <- WaitForClickOnTarget(clickon, Sequence(1,Length(clickon),1))
+        		   time2 <- GetTime()
+                   }
+	
+           	   pumps <- pumps + 1
+
+		   #Determine which one it is.
+        	  if(resp==1)
+	        		  {
+
+                        PlayBackground(gBlow)
+
+						##pump up the balloon
+						if(pumps == life)
+						{
+
+							##BURST
+							
+	 				    	PlayBackground(gPop)
+							AnimateBalloon(170,6)
+							cont <- 0
+							temp <- 0
+							radius <- gStartBalloonSize
+							gLast <- 0
+							UpdateCash(radius)
+							burst <- 1
+
+						}else{
+						
+ 				        temp <- temp +.05
+						radius <- radius + 2
+
+						}
+            		   } else {
+					    ##Response == 2
+		   	 		    ##Keep the money
+						PlayBackground(gKaching)
+
+
+
+						gTotal <- gTotal + temp
+						gLast <- temp
+						UpdateCash(radius)
+						#AnimateBalloon(gStartBalloonSize,10)
+						temp <- 0
+						radius <- gStartBalloonSize
+			  			cont <- 0
+
+						
+              		   }
+## This could print out to a by-move log
+#		   	    Print(gTotal + " " +gLast + " " +pumps +" " + life)
+	  		    Show(gCollectLab)   ##Don't show the hide message on the
+  			    Show(gCollectBox)       ##	  first click
+
+				UpdateScreen(radius)
+				Draw()
+	          }
+
+		  donetime <- GetTime()
+	      FilePrint(gFileOut,life+","+pumps+","+gTotal + "," +gLast + "," +
+                  	         burst + "," + (donetime-starttime))
+		  RemoveObject(gBalloon,gWin)
+		  Draw()
+		  Wait(150)
+
+}
+
+
+
 
 
 ##this creates a set of sampled breakpoints
@@ -92,80 +267,6 @@ define SampleBreakpoint(life)
   return life
 }
 
-##life describes the actual breakpoint of the balloon--not the maximum.
-define Trial(life,color)
-{
-
-
-	  radius <- gStartBalloonSize
-	  gBalloon	  <-Circle(gVideoWidth/2,GetY(radius),radius,color,1)
-	  AddObject(gBalloon,gWin)
-	  temp <- 0
-   	  UpdateScreen(radius)
-	  Draw()
-      cont <- 1
-	  pumps <- 0
-      while(cont)
-		{
-		   ##Accept a click or a pump
-		   time1 <- GetTime()
-	       resp <- WaitForClickOnTarget([gpumpbox,gcollectbox],[1,2])
-		   time2 <- GetTime()
-		   pumps <- pumps + 1
-
-		   #Determine which one it is.
-        	  if(resp==1)
-	        		  {
-
-	                    PlayBackground(gBlow)
-
-						##pump up the balloon
-						if(pumps == life)
-						{
-
-							##BURST
-							
-	 				    	PlayBackground(gPop)
-							AnimateBalloon(170,6)
-							cont <- 0
-							temp <- 0
-							radius <- gStartBalloonSize
-							gLast <- 0
-							UpdateCash(radius)
-						}else{
-						
- 				        temp <- temp +.05
-						radius <- radius + 2
-
-						}
-            		   } else {
-					    ##Response == 2
-		   	 		    ##Keep the money
-						PlayBackground(gKaching)
-
-
-
-						gTotal <- gTotal + temp
-						gLast <- temp
-						UpdateCash(radius)
-						#AnimateBalloon(gStartBalloonSize,10)
-						temp <- 0
-						radius <- gStartBalloonSize
-			  			cont <- 0
-
-						
-              		   }
-		   	    Print(gTotal + " " +gLast + " " +pumps +" " + life)
-
-				UpdateScreen(radius)
-				Draw()
-	          }
-		  RemoveObject(gBalloon,gWin)
-		  Draw()
-		  Wait(150)
-
-	   }	  
-
 
 define AnimateBalloon(newsize, steps)
 {
@@ -191,7 +292,9 @@ define AnimateBalloon(newsize, steps)
 
 }
 define Init()
-{
+{ 
+
+	  gSleepEasy <- 1
 
 	  gXB <- gVideoWidth/2
 	  gYB <- gVideoHeight-100
@@ -236,6 +339,8 @@ define Init()
   	  AddObject(glastLab2,gWin)
 
 
+      Hide(gCollectBox)
+	  Hide(gCollectLab)
       gBlow <-LoadSound("sounds/blow2.wav")
       gPop <- LoadSound("sounds/pop.wav")
       gKaching <- LoadSound("sounds/kaching.wav")

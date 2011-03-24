@@ -1,6 +1,31 @@
+
+##  PEBL Clock Task
+##  An implementation of the so-called "Mackworth Clock" test.
+##  (C) 2011 Shane T. Mueller
+##  smueller@obereed.net
+##
+##  To cite:  Mueller, S. T. (2011). PEBL's Clock Test.  Computer
+##  software retrieved from http://pebl.sf.net/battery.html
+##
+##
+##
+##  http://en.wikipedia.org/wiki/Mackworth_Clock
+### Mackworth, N. H. (1948). The breakdown of vigilance during
+##  prolonged visual search. Quarterly Journal of Experimental
+##  Psychology, vol. 1, pp.6-21
+##
+##
+##  Shackel, B. (1999). How I broke the Mackworth clock test (and what
+##  I learned). In Hanson, M., Lovesey, E. J., and Robertson,
+##  S. A. Contemporary Ergonomics 1999. Taylor & Francis. (pp. 193-197)
+##
+##  Lichstein, K. L., Riedel, B. W., & Richman, S. L. (2000). The
+##    Mackworth clock test: A computerized version (statistical data
+##    included). The Journal of Psychology. 
+##    http://www.encyclopedia.com/doc/1G1-62024427.html
+
 define Start(p)
 {
-
   pskip <- .4  #proportion of trials that jump
   gRad <- 240  #radius, in pixels, of clock circle
   gSize <- 9   #size of target
@@ -39,8 +64,9 @@ define Start(p)
   WaitForAnyKeyPress()
 
   tb.text <-  "Watch the red target. "+CR(2)+"Hit space bar when red circle skips a position."
-  fileOut <- FileOpenAppend("clock-"+gSubNum+".txt")
-  FilePrint(fileout,"subnum trial ticker sec skip resp corr starttime rt curtime")  
+ 
+ fileOut <- FileOpenAppend("clock-"+gSubNum+".csv")
+  FilePrint(fileout,"subnum,trial,ticker,sec,skip,resp,corr,starttime,rt,curtime")  
   trials <- 60
   trial <- 1
   ticker <- 1
@@ -83,8 +109,8 @@ define Start(p)
   
     corr <- resp == doskip
 
-    FilePrint(fileout,gSubNum + " " + trial + " " + ticker + " " + second + " " + doskip+
-	       " " + resp +" " + corr + " " + rtime + " " + (rtime - curtime) + " " + GetTime())
+    FilePrint(fileout,gSubNum + "," + trial + "," + ticker + "," + second + "," + doskip+
+	       "," + resp +"," + corr + "," + rtime + "," + (rtime - curtime) + "," + GetTime())
     lastend <- GetTime()
     ##Determine if we should skip on this trial.
     if(Random() < pskip)

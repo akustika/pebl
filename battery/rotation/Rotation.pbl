@@ -2,7 +2,9 @@
 #################################################################
 ##  PEBL Mental Rotation Task
 ## 
-##  For use with PEBL 0.09 or later
+##  Version 0.2 (enables translations, fixes response error)
+##
+##  For use with PEBL 0.11 or later
 ##  http://pebl.sf.net
 ##  Part of  The PEBL Psychological Test Battery
 ##  2008 Released into Public Domain
@@ -12,6 +14,7 @@
 ##  It currently has no instructions, and little instrumentation.
 ##  It is not yet meant for direct use in laboratories.
 ##
+##  Thanks to Fatih ÖZDİNÇ for Turkish translation.
 ##
 #################################################################
 
@@ -19,11 +22,18 @@ define Start(par)
 {
 
 
+  ##gLanguage defaults to 'en', but can be set at command line.  
+  ##using the --language flag.
+  ## uncomment to hard-code a language extension here:
+  ##gLanguage <- "EN"
+
+   GetStrings(gLanguage)
+
    ## Number of times through the design.
    numRepeats <- 2
 
 
-  ##Test another new feature: change video dimensions within script.
+  ##Set default video resolution.
   gVideoWidth <- 800
   gVideoHeight <- 600
 
@@ -32,13 +42,13 @@ define Start(par)
 
   win <- MakeWindow("grey")
 
-   inst <- "In this task you will need to decide whether or not the two objects you see are identical.  They will be rotated with respect to one another, but some will be the same, and others will be mirror images. Press any key to begin."
-   tb <-  EasyTextBox(inst,20,20,win,16, 500,200)
+   inst <- gInstructions
+   tb <-  EasyTextBox(inst,100,20,win,22, gVideoWidth-200,300)
   
   Draw()
   WaitForAnyKeyPress()
   Hide(tb)
-  head <- EasyLabel("Press 'S' for same and 'D' for different",gVideoWidth/2,gVideoHeight/2+200,win,22)
+  head <- EasyLabel(gHeader,gVideoWidth/2,gVideoHeight/2+200,win,22)
   Draw()
   
   red <- MakeColor("red4")
@@ -105,7 +115,7 @@ define Start(par)
 
 
      resp <-  UpperCase(WaitForListKeyPress(["S","D"]))
-     resp <- Sample(["S","D"])
+#     resp <- Sample(["S","D"])  #this is a dummy-response
 
     t2 <- GetTime()
 
@@ -241,3 +251,18 @@ define Rnd(num,sig)
    return x 
 }
 
+
+define GetStrings(language)
+{
+	lang <- Uppercase(language)
+	if(lang == "TR") 
+     {
+       gInstructions <-  "Bu deneyde  iki nesnenin ayný olup olmadýðýna karar vereceksiniz. Bu nesneler diðerine göre faklý açýlarda döndürülecektir. Dödürülen nesnelerden bazýlarý ayný olurken bazýlarý ayna görüntüsü olacaktýr. Ayný olanlar için  'S';  farklý olanlar içi  'D' tuþuna basýnýz. "
+	   gHeader <- "Ayný olanlar için  'S';  farklý olanlar içi  'D' tuþuna basýnýz. "
+
+     } else{ 
+	 ##default to english
+       gInstructions <-  "In this task you will need to decide whether or not the two objects you see are identical.  They will be rotated with respect to one another, but some will be the same, and others will be mirror images. Press any key to begin."
+	   gHeader <- "Press 'S' for same and 'D' for different"
+     }
+}

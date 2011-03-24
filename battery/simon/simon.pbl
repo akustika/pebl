@@ -12,7 +12,7 @@ Practice now by hitting the shift keys to see which stimulus the map onto.  Hit 
    ShowCursor(0)
    gSleepEasy <- 1
    
-   gFileout <-FileOpenAppend("simon-"+gSubNum+".txt")
+   gFileout <-FileOpenAppend("simon-"+gSubNum+".csv")
    reps <- 10
    leftcol <- MakeColor("red")
    rightcol <- MakeColor("blue")
@@ -117,7 +117,7 @@ Practice now by hitting the shift keys to see which stimulus the map onto.  Hit 
       }
      Draw()
 
-     FilePrint(gFileOut,trial + " " + type + " " + pos + " " + resp + " " +corr + " " + time0 +  " "  + (time2-time0))
+     FilePrint(gFileOut,trial + "," + type + "," + pos + "," + resp + "," +corr + "," + time0 +  ","  + (time2-time0))
 
      rts <- Append(rts,(time2-time0))
      corrs <- Append(corrs,corr)

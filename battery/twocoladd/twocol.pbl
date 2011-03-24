@@ -1,15 +1,25 @@
-define Start(p)
-{
  ## Two-column addition task, as found in UTC-PAB Test No. 4
  ##
-  gSleepEasy <- 1
+ ##
+ ##  Part of the PEBL Test Battery
+ ##  Shane T. Mueller, Ph.D. 
+ ##   smueller@ obereed.net
+ ##
+ ##
+ ## To cite: Mueller, S. T. (2011). The PEBL Two-column addition test.  Computer software retrieved from http://pebl.sf.net.
+ ##
+ ## 
+
+define Start(p)
+{
+ gSleepEasy <- 1
   numPracticeTrials <- 10
   numTrials         <- 45
   isi <- 5
   gTimeout <- 15000
 
 
-  gFileOut <- FileOpenWrite("twocol-"+gsubnum+".txt")
+  gFileOut <- FileOpenWrite("twocol-"+gsubnum+".csv")
   gSummaryFile <- FileOpenWrite("twocol-summary-"+gsubnum+".txt")
 
   win <- MakeWindow()
@@ -50,7 +60,7 @@ Press any key to begin."
 
 
   ##label output file
-  FilePrint(gFileOut,"sub cond trial num1 num2 num3 sum resp corr toolong clicks starttime firstclick completetime")
+  FilePrint(gFileOut,"sub,cond,trial,num1,num2,num3,sum,resp,corr,toolong,clicks,starttime,firstclick,completetime")
 
   ####################################
   #Do practice trials
@@ -58,7 +68,7 @@ Press any key to begin."
   while(trial <= numPracticeTrials)
   {
 
-    FilePrint_(gFileOut,gSubNum + " 0 " + trial + " ")
+    FilePrint_(gFileOut,gSubNum + ",0," + trial + ",")
     Trial(1)
     trial <- trial + 1
     Wait(isi)
@@ -85,7 +95,7 @@ Press any key to begin."
   trial <- 1
   while(trial <= numTrials)
   {
-    FilePrint_(gFileOut,gSubNum + " 1 " + trial + " ")
+    FilePrint_(gFileOut,gSubNum + ",1," + trial + ",")
 
     result <-  Trial(0)
 
@@ -203,7 +213,7 @@ define Trial(feedback)
      corr <- 1
    } 
 
-   FilePrintList(gFileOut, [num1, num2, num3, (num1+num2+num3), resp, corr, toolong, clicks, starttime, firstclick, completetime])
+   FilePrintCSVList(gFileOut, [num1, num2, num3, (num1+num2+num3), resp, corr, toolong, clicks, starttime, firstclick, completetime])
 
 
    if(feedback)
@@ -253,4 +263,16 @@ define GetNumberResponse(timeleft)
               timeleft,1)
 
  return x
+}
+
+
+define  FilePrintCSVList(file,list)
+{
+  sep <- ""
+  
+  loop(i,list)
+  { 
+     FilePrint(file,sep+i)
+     sep <- ","
+  }
 }

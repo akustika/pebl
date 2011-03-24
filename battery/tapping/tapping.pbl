@@ -41,8 +41,8 @@ define Start(p)
   gWin <- MakeWindow("black")
 
   gSubNum <- GetSubNum(gWin)
-  gFileOut <-FileOpenAppend("tapping-"+gSubNum+".txt")
-   FilePrint(gFileOut,"sub trial domhand hand tap sumtime trialtime rt")
+  gFileOut <-FileOpenAppend("tapping-"+gSubNum+".csv")
+  FilePrint(gFileOut,"sub,trial,domhand,hand,tap,sumtime,trialtime,rt")
   font <-  MakeFont(gPEBLBaseFontMono,0,24,MakeColor("white"),MakeColor("black"),1)
   
   inst <- "In this task, you are asked to tap the keyboard as quickly as possible for a maximum of "+ maxtrials +" trials of " +
@@ -185,7 +185,7 @@ define Start(p)
            sumXX <- sumXX + (rt)^2
          }
 
-       FilePrint(gFileOut,gSubNum + " " + trial + " " + domname + " " + hand + " " + hits + " " +  sumX + " " +( time-timestart) + " " + rt )
+       FilePrint(gFileOut,gSubNum + "," + trial + "," + domname + "," + hand + "," + hits + "," +  sumX + "," +( time-timestart) + "," + rt )
      }
 
 
