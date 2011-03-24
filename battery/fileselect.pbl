@@ -9,9 +9,8 @@ define Start(p)
 
 
   ## todo: 
-  ##       open directory.
-  ##       concatenate data files???
-
+  ## concatenate data files
+  ## open battery.txt file
 
   ##This allows you to open up the description file directly.
   gEditDescription <- 1
@@ -25,8 +24,9 @@ define Start(p)
     gPEBLName      <- "pebl"
     gOpenManual    <- "acroread /usr/local/share/pebl/doc/PEBLManual0.12.pdf&"
 	gOpenURL        <- "firefox"
+	gManualLoc      <- "/usr/local/share/pebl/doc/PEBLManual0.12.pdf"
 
-	
+		
    }elseif(systemType=="WINDOWS")   {
      
      gViewerCommand <- "c:\windows\notepad.exe"
@@ -34,9 +34,7 @@ define Start(p)
      gOpenManual    <- ""
      gManualLoc     <- "C:\PEBL.pdf"
      gOpenURL       <- ""
-    Print(gPEBLName)
-    Print(gOpenManual)
-    Print(gOpenURL)
+
 
    }elseif(systemType == "OSX")
    {
@@ -123,7 +121,7 @@ define Start(p)
 
 
 
-   fontsize <- 15
+   fontsize <- 11
    font <- MakeFont(gPEBLBaseFont,0,fontsize,MakeColor("black"),MakeColor("white"),1)
 
    filelist <- FilterDir(GetDirectoryListing(DirlistToText(dirchain)),dirchain)
@@ -136,7 +134,7 @@ define Start(p)
 
 
    run        <- MakeButton(xbase+100,ybase-30,200,win,"Run selected script")
-   edit       <- MakeButton(xbase+55,ybase+height+20,120,win,"Edit script")
+   edit       <- MakeButton(xbase+55,ybase+height+20,120,win,"Open")
    exit       <- MakeButton(xbase+55,ybase+height+50,120,win,"EXIT")
    viewoutput <- MakeButton(xbase+200,ybase+height+20,150,win,"View debug output")
    viewerror  <- MakeButton(xbase+200,ybase+height+50,150,win,"View error output")
@@ -246,7 +244,7 @@ define Start(p)
    demobox    <-EasyTextBox(demotext,             xbase+width+130,ybase+120,win,fontsize,yheight,yheight)
    demolabel  <- EasyLabel("Collect demographics", xbase+width+230,ybase+120+yheight/2,win,fontsize)
 
-
+   PrintProperties(demobox)
 
 
    AddObject(slidebin,win) 
@@ -304,8 +302,9 @@ define Start(p)
 
 		 AddObject(screenshot,win)
  		 ##scale to 400x300
-		 scale <- 400/screenshot.width  
-
+		 scalew <- 400/screenshot.width  
+		 scaleh <- 300/screenshot.width
+		 scale <- Min([scalew,scaleh])
 		 screenshot.zoomX <- scale
 		 screenshot.zoomY <- scale
 
@@ -421,17 +420,29 @@ define Start(p)
 		  
       }elseif(tmp == 5) ##click on the slider bin
       {
+	    
+		filelen <- Length(flatfilelist)
+		if(filelen <= portalnum)
+         {
+           offset <- 0
+
+         } else {
 
          clicky  <- Second(gClick)
+		 
 		 proportion <- ((clicky - portal.y)/portal.height)
 
-		 offset  <- Floor(proportion * (Length(flatfilelist) - portalnum))
-		 if(selected < offset or selected > offset+portalnum)
+		 offset  <- Floor(proportion * (filelen - portalnum))
+		 if(selected < offset)
           {
              selected <- offset+1
           }
+		  if(selected>offset+portalnum)
+		  {
+		     selected > offset+portalnum
+   		  }
 
-  
+         }
       }elseif(tmp ==4) ##Exit
       {
 
@@ -487,6 +498,7 @@ define Start(p)
 	   
        ##subject box
 	   Show(subboxhighlight)
+	   subjectbox.cursorpos <- StringLength(subjectbox.text)
 	   Draw()
 	   subcode <- GetInput(subjectbox,"<return>")
 	   Hide(subboxhighlight)
@@ -504,6 +516,7 @@ define Start(p)
       {
        ##experimenter box
 	   Show(expboxhighlight)
+	   expbox.cursorpos <- StringLength(expbox.text)
 	   Draw()
 	   experimenter <- GetInput(expbox,"<return>")
 	   Hide(expboxhighlight)
@@ -512,6 +525,7 @@ define Start(p)
       {
        ##languagebox
 	   Show(langboxhighlight)
+	   langbox.cursorpos <- StringLength(langbox.text)
 	   Draw()
 	   language <- GetInput(langbox,"<return>")
 	   Hide(langboxhighlight)
@@ -568,16 +582,19 @@ define Start(p)
 	      if(IsPEBLFile(Nth(flatfilelist,selected)))
             {
               LaunchFile(DirListToText(dirchain)+Nth(flatfilelist,selected))
+            } else {
+
+              LaunchFile(DirListToText(dirchain)+Nth(flatfilelist,selected))
             }
       }elseif(tmp==17)  ##Open Manual
       {
 	     PushButton(openmanual)
          #SystemCall(gManualLoc,"")	  
- 	    LaunchFile(gManualLoc)
+        LaunchFile(gManualLoc)
       }elseif(tmp==18)  ##Request Feature
       {
 	     PushButton(requestfeature)
-         SystemCall("https://fundry.com/project/69-pebl","")
+         LaunchFile("https://fundry.com/project/69-pebl")
 
 
       }elseif(tmp==19)  ##Visit web
@@ -602,8 +619,8 @@ This launcher is written in PEBL itself, allowing a fairly uniform launcher on a
       {
         if(gEditDescription)
          {
-            LaunchFile(DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt")
-         	#SystemCall(gViewerCommand,  DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt")
+           # LaunchFile(DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt")
+         	SystemCall(gViewerCommand + " " + DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt")
          }
       }elseif(tmp==22)
       {
@@ -669,6 +686,7 @@ define DirToText(dirlist,filelist,offset,path)
   }
 
   ##this crashes here sometimes
+
   list <- SubList(tmp,offset+1,Length(tmp))
 
  return ListToString(list)
@@ -785,7 +803,7 @@ define Filter(list,match)
 define RunScript(dirchain,filename,fullscreen,language,logfile,subcode,experimenter)
 {
 
-		 callstring <- "cd " + DirListToText(dirchain) + "&" +gPEBLName + " "  +filename + " -s " + subcode
+		 callstring <- "cd " + DirListToText(dirchain) + " ; " +gPEBLName + " "  +filename + " -s " + subcode
 		 if(fullscreen)
 		 {
 		   callstring <- callstring + " --fullscreen "
@@ -797,7 +815,8 @@ define RunScript(dirchain,filename,fullscreen,language,logfile,subcode,experimen
          FilePrint(logfile,TimeStamp() + "," + DirListToText(dirchain)+ filename+","+GetPEBLVersion() + "," + experimenter + "," + subcode + "," +"fullscreen:["+fullscreen+"],"+ language + "," + callstring+ ","+"STARTED")
 
          #### Run the experiment!!!!
-		 SystemCall(callstring," &pause")
+         Print(callstring)
+		 SystemCall(callstring,"")
 
 
          FilePrint(logfile,TimeStamp() + "," + DirListToText(dirchain)+filename+","+GetPEBLVersion() +
