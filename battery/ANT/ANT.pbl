@@ -9,7 +9,6 @@
 ##
 ##  Version 1.0, Released 2011 Shane T Mueller, Ph.D.
 ##  http://pebl.sf.net
-##
 ##  smueller@obereed.net
 ##  
 #################################################
@@ -33,7 +32,7 @@ define Start(p)
    gPooledFileOut <- FileOpenAppend("data/ANT-pooled.csv")
    gSumFileOut <- FileOpenWrite("data/ANT-summary-"+ gSubNum+".txt")
    gLog <- FileOpenAppend("data/ANT-log.csv")
-
+   gPooledSummary <- FileOpenAppend("data/ANT-all.csv")
 
    ##Add headers onto files.
    flen <- Length(FileReadList("data/ANT-pooled.csv"))
@@ -151,10 +150,13 @@ define Start(p)
    FilePrint(gSumFileOut,"Total Errors:           "+(Length(gCorr)-Sum(gCorr)))
    FilePrint(gSumFileOut,"Mean Accuracy:          "+Mean(gCorr))
    FilePrint(gSumFileOut,"Mean response time:     "+Mean(gRTs))
-
-   FilePrint(gSumFileOut,"Alerting:    "+ (Fourth(First(aggRTCue)) - Fourth(Third(aggRTCue))))
-   FilePrint(gSumFileOut,"Orienting:   "+ (Fourth(Second(aggRTCue)) - Fourth(Fourth(aggRTCue))))
-   FilePrint(gSumFileOut,"Conflict:    "+ (Fourth(First(aggRTCong)) - Fourth(Third(aggRTCong))))
+   
+   alerting  <-  (Fourth(First(aggRTCue)) - Fourth(Third(aggRTCue)))
+   orienting <-  (Fourth(Second(aggRTCue)) - Fourth(Fourth(aggRTCue)))
+   conflict  <- (Fourth(First(aggRTCong)) - Fourth(Third(aggRTCong)))
+   FilePrint(gSumFileOut,"Alerting:    "+ alerting)
+   FilePrint(gSumFileOut,"Orienting:   "+ orienting)
+   FilePrint(gSumFileOut,"Conflict:    "+ conflict)
 
    FilePrint(gSumFileOut,CR(2)+"Cue types:")
    FilePrint(gSumFileOut,"   1:  Uncued")
@@ -231,6 +233,17 @@ define Start(p)
 
 
    Draw()
+
+
+   datalist <- Flatten([[Mean(gCorr),Mean(gRTS),alerting,orienting,conflict],
+                Fourth(Transpose(aggRTCue)),
+                Fourth(Transpose(aggRTCong)),
+      			Fourth(Transpose(aggAccCue)),		
+	        	Fourth(Transpose(aggAccCong))])
+   
+              
+   FilePrint(gPooledSummary,gSubNum+","+TimeStamp()+datalist)
+
    FilePrint(gLog, gSubNum + "," + gLanguage + "," +  TimeStamp()+",ANT,"+gResponseType+",EXPERIMENT COMPLETE") 
 
   MessageKeyBox(gDebrief)
