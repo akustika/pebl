@@ -101,6 +101,8 @@ PlatformAudioIn::~PlatformAudioIn()
 //be played.  It actually opens the audio device for playing.
 bool PlatformAudioIn::Initialize(int type)
 {	
+
+    //std::cout <<"Initializing audioout["<<type<<"]\n";
 	if(SDL_InitAudioIn()<0)
         {
             PError::SignalWarning("Cannot initialize audio input subsystem"+Variant(SDL_GetError()));
@@ -368,6 +370,7 @@ Variant PlatformAudioIn::VoiceKey(double threshold, unsigned int sustain)
 
             //process another bin as long as the recording position is greater than
             //one bin ahead.  Transform into samples first.
+            //cout << gAudioBuffer->recordpos/mBytesPerSample << ":" << (chunksize+sampleID) << endl;
             while((gAudioBuffer->recordpos/mBytesPerSample) > chunksize+sampleID)
                 {
                     //cout <<"    buffering "<< sampleID <<":"<< gAudioBuffer->recordpos <<" " << (gAudioBuffer->recordpos - sampleID)  << "  " << samples << endl;
@@ -539,6 +542,8 @@ void PlatformAudioIn::SaveBufferToWave(Variant filename)
 
 void AudioInCallbackFill(void * udata, Uint8 * stream, int len)
 {
+
+    
 
     //len is in bytes.
     

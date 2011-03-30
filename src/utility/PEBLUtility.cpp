@@ -1035,9 +1035,12 @@ Variant PEBLUtility::LaunchFile(std::string file)
                                    0,                           // Default directory
                                    SW_SHOW);
 
-#elif defined(PEBL_LINUX)
-    std::string call2 = "xdg-open " + file;
-     int x = system(call2.c_str());  //do a system call with the argument string.
+#elif defined(PEBL_UNIX)
+
+
+    std::string call2 = "gnome-open " + file;
+    int x = system(call2.c_str());  //do a system call with the argument string.
+
 
 #elif defined(PEBL_OSX)
      std::string call2 = "open " + file;

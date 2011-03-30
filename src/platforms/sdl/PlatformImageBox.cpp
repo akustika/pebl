@@ -130,7 +130,8 @@ bool PlatformImageBox::LoadImage(const std::string &  imagefilename)
         {
             PWidget::SetProperty("WIDTH", 0);
             PWidget::SetProperty("HEIGHT", 0);
-            
+
+            PError::SignalFatalError(string("Unable to find load file [")  + imagefilename + string("]."));
             return false;
         }
 }
