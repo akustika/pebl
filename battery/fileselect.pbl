@@ -8,6 +8,19 @@ define Start(p)
 {
 
 
+
+  if(Length(p) >0)
+   {
+     Print(p)
+       gConfigName <- First(p)
+	   if(gConfigName==0)
+        {
+		  gConfigName <- "default"
+        }
+   }else{
+       gConfigName <- "default"
+   }
+
   ## todo: 
   ## concatenate data files
   ## open battery.txt file
@@ -50,54 +63,21 @@ define Start(p)
    gVideoheight <- 700
    win <- MakeWindow()
 
+   ReadConfigFile(gConfigname)
 
-   if(FileExists(".config"))
-      {
-       config <- (ReadCSV(".config"))
-	   
-	   ##read in the keys--first characters.
-	   keys <- []
-	   loop(i,config)
-	   {
-	     keys<- Append(keys,First(i))
-       }
-
-	   fullscreen <- ToNumber(Second(Lookup("fullscreen",keys,config)))
-	   nimhdemographics <- ToNumber(Second(Lookup("nimhdemo",keys,config)))       
-	   subcode    <- Second(Lookup("subcode",keys,config))
-	   experimenter <-Second(Lookup("experimenter",keys,config))
-	   language <-Second(Lookup("language",keys,config))
-
-   	   expchain <- []         ##sequence of experiments to run
-   	   ##Get all config entries named 'expchain'
-	   chains <- Filter(config,Match("EXPCHAIN",keys))
-	   loop(i,chains)
-        {
-		   expchain <- Append(expchain,  [SubList(i,3,Length(i)),Second(i)])
-        }  
-
-      } else {
- 
-        fullscreen <- 0
-        subcode <- "1"
-        experimenter <- "default"
-        language <- "en"
-        expchain <- []         ##sequence of experiments to run
-		nimhdemographics <- 0
-      }
-
-  if(fullscreen)
+  if(gFullscreen)
     {
       fstext  <- "X"
     } else { 
       fstext <- ""
     }
-  if(nimhdemographics)
+  if(gNimhdemographics)
     {
 	  demotext <- "X"
     }else{
 	  demotext <- ""
     }
+
 
    ##keep track of the offset/select pairs when you move to new directories.
    selectStack <- []
@@ -138,8 +118,11 @@ define Start(p)
    exit       <- MakeButton(xbase+55,ybase+height+50,120,win,"EXIT")
    viewoutput <- MakeButton(xbase+200,ybase+height+20,150,win,"View debug output")
    viewerror  <- MakeButton(xbase+200,ybase+height+50,150,win,"View error output")
-   addtochain <- MakeButton(xbase+340,ybase+height+20,120,win,"Add to chain")
-   clearchain <- MakeButton(xbase+340,ybase+height+50,120,win,"Clear chain")
+
+   addtochain <- MakeButton(xbase+300,ybase+height+20-100,120,win,"Add to chain")
+   clearchain <- MakeButton(xbase+300,ybase+height+50-100,120,win,"Clear chain")
+   savechain <- MakeButton(xbase+430,ybase+height+50-100,120,win,"Save chain")
+   loadchain <- MakeButton(xbase+430,ybase+height+20-100,120,win,"Load chain")
 
 
 
@@ -154,10 +137,10 @@ define Start(p)
    ##  graphical widgets related to the chain launcher.
 
    ##chain-launcher
-   chaintitle <- EasyLabel("Experiment Chain:",xbase+210+150,290,win,18)
-   chainlist <- EasyTextBox("",xbase+210,300,win,fontsize,300,300)
+   chaintitle <- EasyLabel("Experiment Chain:"+gConfigName,xbase+210+150,290,win,18)
+   chainlist <- EasyTextBox("",xbase+210,300,win,fontsize,300,200)
    chainlist.linewrap <- 0
-   chainlist.text <- MakeExpChainText(expchain)
+   chainlist.text <- MakeExpChainText(gexpchain)
 
 
    launchchain <- MakeButton(chaintitle.x,chaintitle.y-20,200,win,"Launch Chain")
@@ -170,8 +153,7 @@ define Start(p)
    AddObject(bg,win)
    MoveCorner(bg,xbase,ybase)
 
- 
-  
+   
    path <- EasyLabel(DirListToText(dirchain),(xbase+width/2), ybase-10, win,fontsize)
    yheight <- path.height
 
@@ -211,7 +193,7 @@ define Start(p)
    slidebin <- Rectangle(xBase+width-gutter,portal.y+portal.height/2,10,portal.height,MakeColor("grey70"),1)
 
 
-   subjectbox <- EasyTextBox(subcode,xbase+width+150,ybase,win,fontsize,60,yheight)
+   subjectbox <- EasyTextBox(gsubcode,xbase+width+150,ybase,win,fontsize,60,yheight)
    sublabel   <- EasyLabel("Participant code:", xbase+width+70,subjectbox.y+subjectbox.height/2,win,fontsize)
    MoveCorner(sublabel,subjectbox.x-sublabel.width-10,subjectbox.y)
    subboxhighlight <- Rectangle(subjectbox.x+subjectbox.width/2,subjectbox.y+subjectbox.height/2,subjectbox.width,subjectbox.height,MakeColor("red"),0)
@@ -219,14 +201,14 @@ define Start(p)
    Hide(subboxhighlight)
 
 
-   expbox <- EasyTextBox(experimenter,xbase+width+150,ybase+40,win,fontsize,60,yheight)
+   expbox <- EasyTextBox(gexperimenter,xbase+width+150,ybase+40,win,fontsize,60,yheight)
    explabel   <- EasyLabel("Experimenter:", expbox.x,expbox.y,win,fontsize)
    MoveCorner(explabel,expbox.x-explabel.width-10,expbox.y)
    expboxhighlight <- Rectangle(expbox.x+expbox.width/2,expbox.y+expbox.height/2,expbox.width,expbox.height,MakeColor("red"),0)
    AddObject(expboxhighlight,win)
    Hide(expboxhighlight)
 
-   langbox <- EasyTextBox(language,xbase+width+150,ybase+80,win,fontsize,60,yheight)
+   langbox <- EasyTextBox(glanguage,xbase+width+150,ybase+80,win,fontsize,60,yheight)
    langlabel   <- EasyLabel("Language:", langbox.x,langbox.y,win,fontsize)
    MoveCorner(langlabel,langbox.x-langlabel.width-10,langbox.y)
    langboxhighlight <- Rectangle(langbox.x+langbox.width/2,langbox.y+langbox.height/2,langbox.width,langbox.height,MakeColor("red"),0)
@@ -240,7 +222,7 @@ define Start(p)
    fullscreenlabel  <- EasyLabel("Fullscreen", xbase+width+70,ybase+120+yheight/2,win,fontsize)
 
 
-   ##Fullscreen checkbox:
+   ##Demographics checkbox:
    demobox    <-EasyTextBox(demotext,             xbase+width+130,ybase+120,win,fontsize,yheight,yheight)
    demolabel  <- EasyLabel("Collect demographics", xbase+width+230,ybase+120+yheight/2,win,fontsize)
 
@@ -301,10 +283,14 @@ define Start(p)
 	     screenshot <- MakeImage(screenname)
 
 		 AddObject(screenshot,win)
+
  		 ##scale to 400x300
 		 scalew <- 400/screenshot.width  
-		 scaleh <- 300/screenshot.width
+		 scaleh <- 300/screenshot.height
 		 scale <- Min([scalew,scaleh])
+
+
+
 		 screenshot.zoomX <- scale
 		 screenshot.zoomY <- scale
 
@@ -332,12 +318,12 @@ define Start(p)
 						run,subjectbox,fullscreenbox,expbox,langbox,
     				   addtochain,clearchain,launchchain,viewoutput,viewerror,
 					   edit,openmanual,requestfeature,visitweb,about,
-					   description,demobox],
+					   description,demobox,savechain,loadchain],
 				   [1,2,3,4,5,
 				   6,7,8,9,10,
 				   11,12,13,14,15,
 				   16,17,18,19,20,
-				   21,22])
+				   21,22,23,24])
 
 	 if(tmp==2)  ## up arrow
       {
@@ -446,21 +432,9 @@ define Start(p)
       }elseif(tmp ==4) ##Exit
       {
 
-      PushButton(exit)
-	  ##save settings on exit.
-	  out <- [["fullscreen",fullscreen],
-	          ["subcode",subcode],
-			  ["experimenter",experimenter],
-			  ["language",language],
-			  ["nimhdemo",nimhdemographics]]
 
-	  loop(i,expchain)
-       {
-	     ilist <- Merge([Second(i)],First(i))
-	     out <- Append(out,["EXPCHAIN",ilist])
-       }
-      FileSaveTable(out,".config")
-
+       PushButton(exit)
+       ##Saveconfig(gconfigname)
 
 	     cont <- 0
       }elseif(tmp==6) ##hit 'run'
@@ -485,12 +459,12 @@ define Start(p)
 
          } else {
 
-       	  if(nimhdemographics)
+       	  if(gnimhdemographics)
     	  {
-	      	  GetNIMHDemographics(subcode,win,"demographics-log.csv")
+	      	  GetNIMHDemographics(gsubcode,win,"demographics-log.csv")
           }
 
-             RunScript(dirchain,Nth(flatfilelist,selected),fullscreen,language,logfile,subcode,experimenter)
+             RunScript(dirchain,Nth(flatfilelist,selected),gfullscreen,glanguage,logfile,gsubcode,gexperimenter)
 
           }
       }elseif(tmp==7)  ##Change subject code
@@ -505,8 +479,8 @@ define Start(p)
 	   
       }elseif(tmp==8)
       {
-	     fullscreen <- 1-fullscreen
-		 if(fullscreen)
+	     gfullscreen <- 1-gfullscreen
+		 if(gfullscreen)
 		 {
 		   fullscreenbox.text <- "X"
          }else{
@@ -538,8 +512,8 @@ define Start(p)
 		 fname <- Nth(flatfilelist,selected)
 		 if(IsPEBLFile(fname))
          {
-		   expchain <- Append(expchain,[dirchain,fname])
-		   chainlist.text <- MakeExpChainText(expchain)
+		   gexpchain <- Append(gexpchain,[dirchain,fname])
+		   chainlist.text <- MakeExpChainText(gexpchain)
 
          }
 
@@ -547,21 +521,21 @@ define Start(p)
       }elseif(tmp==12)  ##clear chain
       {
 	    PushButton(clearchain)
-        expchain <- []        
-		chainlist.text <- MakeExpChainText(expchain)
+        gexpchain <- []        
+		chainlist.text <- MakeExpChainText(gexpchain)
 	   
       }elseif(tmp==13)  ##launch chain
       {
       PushButton(launchchain)
-	  if(nimhdemographics)
+	  if(gnimhdemographics)
 	  {
 	  	  GetNIMHDemographics(subcode,win,"demographics-log.csv")
       }
- 	  loop(i,expchain)
+ 	  loop(i,gexpchain)
        {
 	      dc <- First(i)
 		  fname <- Second(i)
-          RunScript(dc,fname,fullscreen,language,logfile,subcode,experimenter)
+          RunScript(dc,fname,gfullscreen,glanguage,logfile,gsubcode,gxperimenter)
        }
    
       }elseif(tmp==14)  ##View debug output
@@ -619,20 +593,60 @@ This launcher is written in PEBL itself, allowing a fairly uniform launcher on a
       {
         if(gEditDescription)
          {
-           # LaunchFile(DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt")
-         	SystemCall(gViewerCommand + " " + DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt")
+           #
+
+	     if(GetSystemType()=="LINUX")
+          {
+         	SystemCall(gViewerCommand + " " + DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt&")
+          } else {
+            LaunchFile(DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt")
+          }
          }
       }elseif(tmp==22)
       {
-	     nimhdemographics <- 1-nimhdemographics
-		 if(nimhdemographics)
+	     gnimhdemographics <- 1-gnimhdemographics
+		 if(gnimhdemographics)
 		 {
 		   demobox.text <- "X"
          }else{
 		   demobox.text <- ""
          }
-      }
 
+      }elseif(tmp==23)  ##sAVE CHAIN
+      {
+	     PushButton(savechain)
+         Saveconfig(gconfigname)
+
+
+      }elseif(tmp==24)  ##loadchain
+      {
+
+	     PushButton(loadchain)
+	     gConfigname <- GetEasyInput("Config name?",win)
+		 ReadConfigFile(gConfigName)
+
+
+
+		 if(gfullscreen)
+		 {
+		   fullscreenbox.text <- "X"
+         }else{
+		   fullscreenbox.text <- ""
+         }
+
+		 if(gnimhdemographics)
+		 {
+		   demobox.text <- "X"
+         }else{
+		   demobox.text <- ""
+        }
+        chaintitle.text  <- "Experiment Chain:"+gConfigName
+        chainlist.text <- MakeExpChainText(gexpchain)
+
+
+
+
+      }
      Draw()
    }
 
@@ -730,7 +744,7 @@ define DirlistToText(list)
 define  FileSaveTable(table,filename)
 {
 
-  outfile <- FileOpenWrite(".config")  
+  outfile <- FileOpenWrite(gconfigName+".config")  
   loop(i,table)
     {
        FilePrint_(outfile, First(i) + ",")
@@ -811,6 +825,10 @@ define RunScript(dirchain,filename,fullscreen,language,logfile,subcode,experimen
 
 		 callstring <- callstring + " --language " + language 
   
+          if(GetSystemtype()=="LINUX")
+           {
+                callstring <- callstring + " > stdout.txt 2> stderr.txt"
+           }
 
          FilePrint(logfile,TimeStamp() + "," + DirListToText(dirchain)+ filename+","+GetPEBLVersion() + "," + experimenter + "," + subcode + "," +"fullscreen:["+fullscreen+"],"+ language + "," + callstring+ ","+"STARTED")
 
@@ -878,12 +896,70 @@ define MakeButton(x,y,width,win,label)
 
 define PushButton(tmp)
 {
-
-
 	     Move(tmp,tmp.x+2,tmp.y+2)
 		 Draw()
 		 Wait(100)
 		 Move(tmp,tmp.x-2,tmp.y-2)
 		 Draw()
-		 
+}
+
+define ReadConfigFile(configname)
+{
+
+   if(FileExists(configName+".config"))
+      {
+       config <- (ReadCSV(gConfigName+".config"))
+	   
+	   ##read in the keys--first characters.
+	   keys <- []
+	   loop(i,config)
+	   {
+	     keys<- Append(keys,First(i))
+       }
+
+	   gfullscreen <- ToNumber(Second(Lookup("fullscreen",keys,config)))
+	   gnimhdemographics <- ToNumber(Second(Lookup("nimhdemo",keys,config)))       
+	   gsubcode    <- Second(Lookup("subcode",keys,config))
+	   gexperimenter <-Second(Lookup("experimenter",keys,config))
+	   glanguage <-Second(Lookup("language",keys,config))
+
+   	   gexpchain <- []         ##sequence of experiments to run
+   	   ##Get all config entries named 'expchain'
+	   chains <- Filter(config,Match("EXPCHAIN",keys))
+	   loop(i,chains)
+        {
+		   gexpchain <- Append(gexpchain,  [SubList(i,3,Length(i)),Second(i)])
+        }  
+
+      } else {
+
+ 
+        gfullscreen <- 0
+        gsubcode <- "1"
+        gexperimenter <- "default"
+        glanguage <- "en"
+        gexpchain <- []         ##sequence of experiments to run
+		gnimhdemographics <- 0
+      }
+
+
+
+}
+
+define Saveconfig(configname)
+{
+
+	  ##save settings on exit.
+	  out <- [["fullscreen",gfullscreen],
+	          ["subcode",gsubcode],
+			  ["experimenter",gexperimenter],
+			  ["language",glanguage],
+			  ["nimhdemo",gnimhdemographics]]
+
+	  loop(i,gexpchain)
+       {
+	     ilist <- Merge([Second(i)],First(i))
+	     out <- Append(out,["EXPCHAIN",ilist])
+       }
+      FileSaveTable(out,configname+".config")
 }

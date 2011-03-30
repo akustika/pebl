@@ -419,7 +419,7 @@ define MakeStim(dirs)
 {
 
     ##Make a canvas to attach the arrows to:
-    skip <- 62
+    skip <- 42
     xsize <- skip*5
 	color <- MakeColor("black")  ##dummy color; we later blank it.
 
@@ -448,22 +448,23 @@ define MakeStim(dirs)
 define Arrow(direction,fg)
 {
 
-    xsize <- 60
+    xsize <- 40
     xmid <- xsize/2
 	color <- MakeColor("black")
 	color.alpha <- 0
 
     canv <- MakeCanvas(xsize,20,color)
 	
-    line <- Rectangle(xmid,10,xsize-10,3,fg,1)
-	AddObject(line,canv)
-	Draw(line)
-	
 	if(not direction==0)
     {
+	
+        line <- Rectangle(xmid,10,xsize-10,2,fg,1)
+    	AddObject(line,canv)
+    	Draw(line)
+
         trix <- [direction*5,-direction*5,-direction*5]
     	triy <- [0,5,-5]
-        head <- Polygon(xmid+direction*25,10,trix,triy,fg,1)
+        head <- Polygon(xmid+direction*(xsize/2-5),10,trix,triy,fg,1)
     	AddObject(head,canv)
     	Draw(head)
     }
