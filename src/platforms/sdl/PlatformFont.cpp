@@ -260,8 +260,10 @@ int PlatformFont::GetPosition(const std::string & text, unsigned int x)
         {
 
             //If the width of the rendered text is larger than the x argument, 
-            if(GetTextWidth(text.substr(0,cutoff)) > x)
+            int width = GetTextWidth(text.substr(0,cutoff));
+            if(width > x)
                 return cutoff-1;
+            cout << "***"<<width<< "<" << x << ":" << cutoff <<endl;
             cutoff++;
         }
 

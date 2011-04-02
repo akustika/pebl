@@ -68,7 +68,7 @@ public:
     virtual bool Draw();
     virtual void HandleKeyPress(int keycode, int modkey);
     virtual std::string ObjectName()const{return "PlatformTextBox";} ;
-
+    virtual int FindCursorPosition(int x, int y);
 protected:
 
     virtual std::ostream & SendToStream(std::ostream& out) const;
@@ -79,7 +79,7 @@ private:
     
     void FindBreaks();
     int FindNextLineBreak(unsigned int curposition);
-    int FindCursorPosition(int x, int y);
+
     void DrawCursor();
     
     counted_ptr<PEBLObjectBase> mFontObject;

@@ -269,9 +269,9 @@ define Start(p)
       {
 
 	     text <- FileReadText(descname)
-		 description.text <- "Description: " + text 
+		 description.text <-  text 
       } else {
-         description.text <- "Description: No description found." 
+         description.text <- "No description found." 
       }
 
      screenname <-DirListToText(dirchain)+Nth(flatfilelist,selected)+".png"
@@ -472,7 +472,10 @@ define Start(p)
 	   
        ##subject box
 	   Show(subboxhighlight)
-	   subjectbox.cursorpos <- StringLength(subjectbox.text)
+	   relx <- First(gClick) - (subjectbox.x )
+	   rely <- Second(gClick) - (subjectbox.y )
+
+	   subjectbox.cursorpos <- SetTextBoxCursorFromClick(expbox,relx,rely)
 	   Draw()
 	   subcode <- GetInput(subjectbox,"<return>")
 	   Hide(subboxhighlight)
@@ -490,16 +493,23 @@ define Start(p)
       {
        ##experimenter box
 	   Show(expboxhighlight)
-	   expbox.cursorpos <- StringLength(expbox.text)
+	   relx <- First(gClick) - (expbox.x )
+	   rely <- Second(gClick) - (expbox.y )
+	   cursorpos <- SetTextBoxCursorFromClick(expbox,relx,rely)
+	   expbox.cursorpos<-cursorpos
 	   Draw()
 	   experimenter <- GetInput(expbox,"<return>")
 	   Hide(expboxhighlight)
 	   
       }elseif(tmp==10)  ##Change language code
       {
+
        ##languagebox
 	   Show(langboxhighlight)
-	   langbox.cursorpos <- StringLength(langbox.text)
+	   relx <- First(gClick) - (langbox.x )
+	   rely <- Second(gClick) - (langbox.y )
+	   cursorpos <-  SetTextBoxCursorFromClick(langbox,relx,rely)
+	   langbox.cursorpos <- cursorpos 
 	   Draw()
 	   language <- GetInput(langbox,"<return>")
 	   Hide(langboxhighlight)
@@ -597,7 +607,18 @@ This launcher is written in PEBL itself, allowing a fairly uniform launcher on a
 
 	     if(GetSystemType()=="LINUX")
           {
-         	SystemCall(gViewerCommand + " " + DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt&")
+    	   relx <- First(gClick) - (description.x )
+	       rely <- Second(gClick) - (description.y )
+    	   cursorpos <-  SetTextBoxCursorFromClick(description,relx,rely)
+	       description.cursorpos <- cursorpos 
+     	   Draw()
+		   desctext <- GetInput(description,"<return>")
+           descname <- DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt"
+           outfile <- FileOpenWrite(descname)
+           FilePrint(outfile,desctext)
+		   FileClose(outfile)
+
+         	#SystemCall(gViewerCommand + " " + DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt&")
           } else {
             LaunchFile(DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt")
           }

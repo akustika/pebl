@@ -1,10 +1,15 @@
 todo:
 
+- we seem to get unknown feedback if you use a variable that hasn't
+  been defined????
 
-
+-allow if() statements to be empty.
 
 - itemorder test uses Z/Zed; change to length 7???
 
+-  line wrapping: when the last token in a string is too long to fit
+   on a line and it is wrapped to the next line, it takes the previous
+   token along with it.
 
  - add reporting for TOL of additional statistics.
  - Add a FileExists() function???
@@ -15,18 +20,25 @@ todo:
  - Make a function that unloads the window but keeps running the PEBL.
 
 
-
+-syntax _should_ handle, shouldn't it?:
+}
+else
+{
 
 - Print("") a message in test batteries about where data is saved.  Maybe link that to FileClose()?
 
 
 - file concatenation function (appendfile?).
 
-- streams of experiments
+- streams of experiments  **done
 
-- FileExists() to test whether a file is there
+- FileExists() to test whether a file is there**node
 
 - WaitForAnyKeyPressForTimeout doesn't work.
 
  - save clock test to file + instructions (it may already exist?)
 
+-EasyLabel crashes silently without feedback if window is given as the
+ second argument??? ***fixed
+
+- makeImage will load a non-graphics file happily, but segfault

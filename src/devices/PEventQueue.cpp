@@ -67,6 +67,11 @@ void PEventQueue::PopEvent()
 }
 
 
+void PEventQueue::PushEvent(PEvent & evt)
+{
+    mEventQueue.push(evt);
+}
+
 
 PEvent PEventQueue::GetFirstEvent()
 {

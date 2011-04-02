@@ -37,14 +37,84 @@ obsolete.
 
 Version 0.12
 
+  -A new launcher, written entirely in PEBL. It provides previews of experiments and brief
+   descriptions (see manual for instructions on how to enable launcher previews for your
+    own scripts).  Because it is written in PEBL, it
+   is cross-platform (giving OSX and linux users a real launcher), and has
+   a number of improvements over the old VB launcher.  If you liked the old one,		
+   it is still available, but you have to set it up yourself.
+   Importantly, it will:
+     - Save your settings and reload them on the next load
+     - Save a line to a logfile every time you run a study.
+	 - direct link to editing the script
+	 - allows you to create and save 'experiment chains', sets of experiments
+	   that get run in sequence
 
- Updated manual dexterity test
+
+  -Added GetMouseState(), which returns a 5-list including the state of each of three buttons.
+
+  - Added .LineWrap property to textboxes, which defaults to 1 (the previous behavior).  If set to 0,
+    it will ONLY wrap lines at hard/soft returns.
+
+  -fixed grammer to allow empty code blocks. (may not have worked)
+
  Added AppendFile function
 
--------------------------------------------------
+  -kinezasquare and kineszapolygon functions
+
+  -Reworked GetNIHMDemographics() so it now uses mouse input
+
+ - Round can now take either one or two parameters, the second one being a precision value, so you get.
+   Round(3.14159)   #=3, an integer
+   Round(3.14159,0) #= 3.0, a float
+   Round(3.14159,1) #= 3.1, a float
+
+
+ - Fixed Recursion facilities (only for round right now???)
+
+ - Fallback screen resolutions
+ - Initial support (linux only?) for controlling parallel port devices
+ 
+ - Much improved audio playback
+
+ - Audio recording/saving and a simple software audio voicekey to collect response time.
+
+
+
+
+- RegisterEvent(), StartEventLoop()
+
+LayoutGrid
+LayoutGrid2
+NonOverlapLayout 
+
+
+  GetEasyChoice function
+
+  Add GetDirectoryListing(), FileExists(), and IsDirectory()
+  ??Is MakeDirectory there?
+
+
+  Test Battery:
+ - Fix bug in Mental Rotation task (reported randomly-generated response instead of actual response)
+
+ -update PCPT to remove pauses between blocks, to compute more
+  statistics, and to do more reporting in more files.
+
+   Added ANT test
+   Updated manual dexterity test
+  - Number stroop (with vocal input)
+  - Many tasks data were changed to save in .csv format.
+
+ -Digit span task now allows backward recall, and allows experimenter
+  to specify whether backspace and the skip character are allowed.
+
+  -corsi blocks update
+  -BART task
+ - Fixed bug in TOL; added TOL-DX problem set.
+
 
 Version 0.11
-
 
 Major changes:
 -Fixed a number of insidious and nasty memory leaks. These caused the
@@ -71,11 +141,11 @@ Major changes:
 - Also, made MakeGabor() function which uses SetPixel and canvases to
   create parametric gabor patches.
 
-- After several versions without an OSX release, I am once again
-  distributing a version that runs on OSX.  There may
-  be some bugs here, and there are a few functions that don't work.
-  It is not as polished as most Mac users expect, but seems to work
-  fairly well.
+- After several versions without an OSX release, I once again
+  have a version of PEBL that runs on OSX.   It is not as polished as
+   most Mac users expect, but seems to work fairly well.  I'm not releasing an
+  OSX version of 0.11 right away as there are a lot of issues needed to handle to distribute on OSX,
+  but can give help compiling it, and will work toward a precompiled version.
 
 - One sort of important change in how parent/children are handled.
   Previously, you could add a child to a parent and it would stay

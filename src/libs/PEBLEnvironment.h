@@ -94,7 +94,9 @@ namespace PEBLEnvironment
     Variant ClearEventLoop(Variant v);
 
     //Misc
-    Variant GetInput(Variant v); //currently undocumented
+    Variant GetInput(Variant v); 
+    Variant SetTextBoxCursorFromClick(Variant v);
+
 
     Variant SignalFatalError(Variant v);
     Variant TranslateKeyCode(Variant v);

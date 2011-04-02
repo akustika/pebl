@@ -46,7 +46,7 @@ class PEventQueue: virtual public PDevice
         
     //This 'pops' the event at the front of the queue off, destroying it.
     virtual void PopEvent(); 
-
+    virtual void PushEvent(PEvent & evt);
     //This 'peeks' at the event at the front of the queue
 	virtual PEvent GetFirstEvent();
 

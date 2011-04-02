@@ -133,7 +133,8 @@ define Max(list)
 
 ##Median
 ## Returns the median value, or the average of the
-## medians if tied.  It is not very efficient
+## medians if tied.  It is not very efficient.  Does not behave well
+## if list is empty.
 define Median(list)
 {
 	##Ensure that all arguments are actually lists
@@ -142,22 +143,23 @@ define Median(list)
 	SignalFatalError("Argument of function [Median(<list>)] is not a list")
 	}
 
-        if(Length(list) == 0)
-        {
-      	SignalFatalError("Cannot determine Median of empty list.")
+    if(Length(list) == 0)
+      {
+      	Print("Cannot determine Median of empty list.")
+		val <- "NA"
+      } else {
 
-        }
-
-  sorted <- Sort(list)
+	    sorted <- Sort(list)
   
-  l <- Length(sorted)
-  if(Mod(l,2) == 0)
-   {
-     valList <- ExtractListItems(sorted, [Round(l/2), Round(l/2+1)])
-     val <- (First(valList) + Nth(valList,2)) / 2
-   } else {
-     val <- Nth(sorted, Round(l/2))
-  }
+    l <- Length(sorted)
+ 	 if(Mod(l,2) == 0)
+ 	   {
+           valList <- ExtractListItems(sorted, [Round(l/2), Round(l/2+1)])
+  		   val <- (First(valList) + Nth(valList,2)) / 2
+   	    } else {
+          val <- Nth(sorted, Round(l/2))
+        }
+     }
  return val
 }
 
@@ -372,10 +374,15 @@ define SummaryStats(data, cond)
    {
       icond <- Nth(i,1)
       ival <- Nth(i,2)
+      if(Length(ival)==0)
+       {
+	      tmp <- [icond,0,"NA","NA","NA"]  
+       } else {
+ 	      tmp <- [icond, Length(ival),
+				  Median(ival), Mean(ival), StdDev(ival)]
 
-     stats <- Append(stats,
-                [icond, Length(ival),
-                 Median(ival), Mean(ival), StdDev(ival)])
+       }
+     stats <- Append(stats,tmp)
    }
 
  return stats

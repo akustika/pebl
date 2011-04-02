@@ -419,13 +419,14 @@ int PlatformTextBox::FindCursorPosition(int x, int y)
     //The line will just be y / height, rounded down
     unsigned int linenum = y / height;
 
+    cout << "1:"<<linenum << endl;
     //Change the line number to the last one if it is too large.
     //The last element of mBreaks is the 'end' of the text; not really a break for
     //our purposes.
 
     if(linenum >= mBreaks.size())
         linenum = mBreaks.size()-1;
-
+    cout << "1:"<<linenum << endl;
     int startchar;
     if(linenum==0)
         startchar = 0;
@@ -434,8 +435,9 @@ int PlatformTextBox::FindCursorPosition(int x, int y)
 
 
     int length = mBreaks[linenum] - startchar;
+    cout << "substring: "<<mText.substr(startchar, length) << endl;
     int charnum = mFont->GetPosition(mText.substr(startchar, length), x);
-    
+    cout << "charnum: " << charnum << endl;
 
     //finally, if the current cursor position is a non-printing character (i.e. a carriage return)
     //back up one
@@ -445,6 +447,8 @@ int PlatformTextBox::FindCursorPosition(int x, int y)
         if(charnum + startchar > 0)
             charnum--;
     }
+ 
+    std::cout << "finding: " <<x<< ","<<y<< ":"<< (charnum + startchar) << endl;
     return charnum + startchar;
 }
 

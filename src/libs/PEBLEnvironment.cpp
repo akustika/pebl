@@ -707,19 +707,35 @@ Variant PEBLEnvironment::GetInput(Variant v)
     Evaluator::mEventLoop.Clear();
     Evaluator::mEventLoop.RegisterEvent(keypressstate, funcname, Variant(NULL));
 
+    //add a mouse click as an exit too.
+    ValueState  * state2 = new ValueState(PEBL_PRESSED, DT_TRUE, 1, gEventQueue, PDT_MOUSE_BUTTON);
+    Evaluator::mEventLoop.RegisterEvent(state2,funcname, Variant(NULL));
+    bool ignore = false;
 
     PEvent keypress =  Evaluator::mEventLoop.Loop();  
+    if(keypress.GetType()==PDT_MOUSE_BUTTON )
+        {
+            if(keypress.GetMouseButtonEvent().state==PEBL_PRESSED)
+                {
+                    Evaluator::mEventLoop.Clear();
+                    textbox->SetEditable(false);
+                    gEventQueue->PushEvent(keypress);
+                    return Variant(textbox->GetText());
+                } else {
+                //We just ignore the keypress in this case.
+                ignore = true;
+            }
+        }
+    
     PEBL_KeyboardEvent pke = keypress.GetKeyboardEvent();
-
-
-
     //match on lowercase matches to trigger character.  
     //    while(pke.key != PEBLUtility::TranslateString(myString))
     while(PEBLUtility::TranslateKeyCode(pke.key, pke.modkeys) != PEBLUtility::ToLower(myString))
         {
             //std::cout << pke.key << "|" << pke.modkeys << std::endl;
             //Process the input and redraw the textbox.
-            textbox->HandleKeyPress(pke.key, pke.modkeys);
+            if(!ignore)
+                textbox->HandleKeyPress(pke.key, pke.modkeys);
 
             if(myEnv)
                 {
@@ -728,7 +744,25 @@ Variant PEBLEnvironment::GetInput(Variant v)
             
             //Wait for the next keystroke..
             keypress =  Evaluator::mEventLoop.Loop();
-            pke = keypress.GetKeyboardEvent();
+            ignore=false;
+            
+            if(keypress.GetType()==PDT_MOUSE_BUTTON)
+                {
+
+                    if(keypress.GetMouseButtonEvent().state==PEBL_PRESSED)
+                        {
+
+                            Evaluator::mEventLoop.Clear();
+                            textbox->SetEditable(false);
+                            //We should probably recycle keypress.
+                            gEventQueue->PushEvent(keypress);
+                            return Variant(textbox->GetText());
+                        }else{
+                        ignore=true;
+                    }
+                }
+            
+            pke = keypress.GetKeyboardEvent();            
         }
     
     
@@ -737,6 +771,32 @@ Variant PEBLEnvironment::GetInput(Variant v)
     return Variant(textbox->GetText());
 }
 
+
+
+Variant PEBLEnvironment::SetTextBoxCursorFromClick(Variant v)
+{
+
+    PList * plist = v.GetComplexData()->GetList();
+    //The first argument should be a textbox.
+    PError::AssertType(plist->First(), PEAT_TEXTBOX, "Argument error in function [SetTextBoxCursorFromClick(<textbox>,<x>,<y>)]: "); 
+    PlatformTextBox * textbox = dynamic_cast<PlatformTextBox*>(plist->First().GetComplexData()->GetObject().get());
+    plist->PopFront();    
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first argument of function [SetTextBoxCursorFromClick(<textbox>,<x>,<y>)]: "); 
+    int x = plist->First();
+    plist->PopFront();    
+
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in second argumeent of function [SetTextBoxCursorFromClick(<textbox>,<x>,<y>)]: "); 
+
+    int y = plist->First();
+    plist->PopFront();    
+
+    //    int relx <- x - (textbox->GetX() - textbox->GetWidth()/2)
+    //    int rely <- y - (textbox->GetY() - textbox->GetHeight()/2)
+    
+    return textbox->FindCursorPosition(x,y);
+    
+}
 
 
 /// This function uses the event loop to schedule a single
@@ -877,6 +937,8 @@ Variant PEBLEnvironment::GetCursorPosition(Variant v)
 {
     return myEnv->GetCursorPosition();
 }
+
+
 
 
 /// This sets the mouse to a new position.

@@ -417,8 +417,10 @@ install: uninstall
 	install -d $(PREFIX)share/pebl
 	install -d $(PREFIX)share/pebl/media
 	install -d $(PREFIX)share/pebl/pebl-lib
+	install -d $(PREFIX)share/pebl/doc
 	cp -R media/* $(PREFIX)share/pebl/media/
 	cp  pebl-lib/*.pbl $(PREFIX)share/pebl/pebl-lib/
+	cp doc/pman/PEBLManual0.12.pdf $(PREFIX)/share/pebl/doc
 	rm -Rf $(PREFIX)share/pebl/media/CVS
 	rm -Rf $(PREFIX)share/pebl/media/images/CVS
 	rm -Rf $(PREFIX)share/pebl/media/sounds/CVS
