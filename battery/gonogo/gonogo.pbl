@@ -56,7 +56,7 @@ define Start(p)
   gBlock <- 0
   MessageKeyBox(gInst1)
   CountDown()
-   FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+",GONOGO",ROUND1 Start") 
+  FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+",GONOGO,ROUND1 Start") 
   DoBlock(practice,"P","practice")
 
   #The stimuli are the same for both blocks of trials.
@@ -68,7 +68,7 @@ define Start(p)
   gBlock <- 1
   MessageKeyBox(gInst2)
   CountDown()
-   FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+",GONOGO",ROUND2 Start") 
+   FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+",GONOGO,ROUND2 Start") 
   DoBlock(stim,"P","test") 
   stim <- Shuffle(stim)
 
@@ -78,7 +78,7 @@ define Start(p)
  gBlock <- 2
  MessageKeyBox(gInst3)
  CountDown()
-   FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+",GONOGO",ROUND3 Start") 
+   FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+",GONOGO,ROUND3 Start") 
  DoBlock(practice,"R","practice") 
 
 
@@ -86,11 +86,11 @@ define Start(p)
  gBlock <- 3
  MessageKeyBox(gInst2)
  CountDown()
-   FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+",GONOGO",ROUND4 Start") 
+   FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+",GONOGO,ROUND4 Start") 
  DoBlock(stim,"R","test") 
 
 
-   FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+",GONOGO",DONE") 
+   FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+",GONOGO,DONE") 
   ##We want to report:
   ##P-go errors (round 1)
   ##R-go errors (round 2) 
