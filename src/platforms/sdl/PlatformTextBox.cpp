@@ -107,8 +107,6 @@ ostream & PlatformTextBox::SendToStream(ostream& out) const
 /// It will make the mSurface pointer hold the appropriate image.
 bool  PlatformTextBox::RenderText()
 {
-
-
     //free the memory if it is currently pointing at something.
     if(mSurface)  SDL_FreeSurface(mSurface);
 
@@ -302,28 +300,35 @@ int PlatformTextBox::FindNextLineBreak(unsigned int curposition)
     unsigned int sep      = 0;
     std::string tmpstring;
 
-
     //loop through the entire text from curposition on.
     while (curposition + sublength < mText.size()+1)
         {
-
-            //Test to see if curposition is a '10' or a '0'.  If so, this is a line break.
+            
+            //Test to see if curposition is a '10' or a '0' (a hard/explicit line break).  If so, this is a line break.
             if(mText[curposition + sublength] == 10  
                || mText[curposition+sublength]==0)
+                //|| curposition + sublength == mText.size())
                 {
 
                     tmpstring = mText.substr(curposition,sublength);
-
                     //If the width of the current line is too big, break at the last separator.
                     if(mFont->GetTextWidth(tmpstring) > (unsigned int)mWidth)
                         {
+
                             //if we are now too long, we should back up to the previous
                             //break; unless that break was the beginning of the line.  If
                             //that is the case, back up one character, and crudely break
                             //within a text line.
+
+                            //we need to return the best linebreak here.  
+                            if(sep >0)
+                                {
+                                    
+                                    return sep+1;
+                                }
                             if(lastsep>0)
                                 {
-
+                                    
                                     return lastsep+1;
                                 }
                             else
@@ -336,8 +341,10 @@ int PlatformTextBox::FindNextLineBreak(unsigned int curposition)
                                             //and the current line is too long.
                                             while(mFont->GetTextWidth(tmpstring) >(unsigned int)mWidth)
                                                 {
+
                                                     sublength--;
                                                     tmpstring = mText.substr(curposition,sublength);
+
                                                 }
                                             
                                             return sublength;
@@ -361,11 +368,10 @@ int PlatformTextBox::FindNextLineBreak(unsigned int curposition)
                 {
      
                     if(mText[curposition + sublength] == ' '
-                       || mText[curposition + sublength] == '-')
-                        //               || curposition + sublength == mText.size())
+                       || mText[curposition + sublength] == '-'
+                       || curposition + sublength == mText.size())
                         {  
                             //either of these are word breaks; potential line breaks.  
-                            
                             //Increment word separator holders
                             lastsep = sep;
                             sep = sublength ;
@@ -419,14 +425,14 @@ int PlatformTextBox::FindCursorPosition(int x, int y)
     //The line will just be y / height, rounded down
     unsigned int linenum = y / height;
 
-    cout << "1:"<<linenum << endl;
+
     //Change the line number to the last one if it is too large.
     //The last element of mBreaks is the 'end' of the text; not really a break for
     //our purposes.
 
     if(linenum >= mBreaks.size())
         linenum = mBreaks.size()-1;
-    cout << "1:"<<linenum << endl;
+
     int startchar;
     if(linenum==0)
         startchar = 0;
@@ -435,9 +441,7 @@ int PlatformTextBox::FindCursorPosition(int x, int y)
 
 
     int length = mBreaks[linenum] - startchar;
-    cout << "substring: "<<mText.substr(startchar, length) << endl;
     int charnum = mFont->GetPosition(mText.substr(startchar, length), x);
-    cout << "charnum: " << charnum << endl;
 
     //finally, if the current cursor position is a non-printing character (i.e. a carriage return)
     //back up one
@@ -448,7 +452,6 @@ int PlatformTextBox::FindCursorPosition(int x, int y)
             charnum--;
     }
  
-    std::cout << "finding: " <<x<< ","<<y<< ":"<< (charnum + startchar) << endl;
     return charnum + startchar;
 }
 
