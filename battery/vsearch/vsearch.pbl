@@ -44,6 +44,9 @@ define Start(p)
    sizebycolor <- DesignFullCounterbalance(sizes,bytargs)
    design <- Shuffle(RepeatList(sizebycolor,reps))
   
+   numtrials <- Length(design)
+   triallab <- EasyLabel("Trial [1] of ["+numtrials+"]",gVideoWidth-100,50,gWin,12)
+
   ##Move through each trial of the design.
   trial <- 1
   ##loop through each trial.
@@ -64,6 +67,15 @@ define Start(p)
       }
     FilePrint(gFileOut,"")
     trial <- trial + 1
+
+    if(Mod(trial,30)==0)
+     {
+	    Messagebox("You may take a short break.",gWin)
+		Draw()
+		Wait(1000)
+		Draw()
+     }
+   triallab.text<- "Trial ["+trial+"] of ["+numtrials+"]"
    }
   MessageBox("Thank you for taking part in the study.",gWin)
 }

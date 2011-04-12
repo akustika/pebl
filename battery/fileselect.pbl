@@ -8,7 +8,12 @@ define Start(p)
 {
 
 
+ ##Set this from 1 to 0 to turn off automatic subject code incrementation
+ ##it increments the previous code by one, to avoid overwriting
+ gAutoSubCode <- 1
+ gLastUpdate <- GetTime() ##keep track of updates
 
+###set the configuration/chain name: use 'default' as default.
   if(Length(p) >0)
    {
      Print(p)
@@ -81,7 +86,7 @@ define Start(p)
 
    ##keep track of the offset/select pairs when you move to new directories.
    selectStack <- []
-   selected <-1     #Which item is selected in the fileview
+   gselected <-1     #Which item is selected in the fileview
    offset <- 0      #offset in the fileview
 
 
@@ -95,8 +100,8 @@ define Start(p)
 
    xbase <- 10
    ybase <- 100
-
-   dirchain <- ["."]  ##this is a history of the directories you have 
+   gYbase <- ybase
+   gDirchain <- ["."]  ##this is a history of the directories you have 
                       ##navigated to.
 
 
@@ -104,8 +109,8 @@ define Start(p)
    fontsize <- 11
    font <- MakeFont(gPEBLBaseFont,0,fontsize,MakeColor("black"),MakeColor("white"),1)
 
-   filelist <- FilterDir(GetDirectoryListing(DirlistToText(dirchain)),dirchain)
-   flatfilelist <- Flatten(filelist)
+   gfilelist <- FilterDir(GetDirectoryListing(DirlistToText(gDirChain)),gDirChain)
+   gFlatfilelist <- Flatten(gfilelist)
    
  
  
@@ -127,10 +132,11 @@ define Start(p)
 
 
    ##upper right buttons
-   openmanual <- MakeButton(690,50,130,win,"Open Manual")
-   about      <- MakeButton(850,50,130,win,"About")
-   requestfeature <- MakeButton(690,75,130,win,"Request Feature")
-   visitweb <- MakeButton(850,75,130,win,"Visit Website")
+   openmanual <- MakeButton(630,50,130,win,"Open Manual")
+   about      <- MakeButton(770,50,130,win,"About")
+   requestfeature <- MakeButton(630,75,130,win,"Request Feature")
+   visitweb <- MakeButton(770,75,130,win,"Visit Website")
+   wiki     <- MakeButton(900,50,100,win,"Wiki")
 
    ##################################################
    ##  
@@ -154,18 +160,18 @@ define Start(p)
    MoveCorner(bg,xbase,ybase)
 
    
-   path <- EasyLabel(DirListToText(dirchain),(xbase+width/2), ybase-10, win,fontsize)
+   path <- EasyLabel(DirListToText(gDirChain),(xbase+width/2), ybase-10, win,fontsize)
    yheight <- path.height
+   gYHeight <- yHeight
 
+   gPortalnum <- Floor((bg.height-gutter*4)/yheight)
+   portalheight <- yheight*gPortalNum
 
-   portalnum <- Floor((bg.height-gutter*4)/yheight)
-   portalheight <- yheight*portalnum
+   gPortal <- MakeTextBox("",font,width-gutter*3,portalheight)
 
-   portal <- MakeTextBox("",font,width-gutter*3,portalheight)
-
-   portal.linewrap <-0
-   AddObject(portal,win)
-   Move(portal,xbase+gutter,ybase+gutter*2)
+   gPortal.linewrap <-0
+   AddObject(gPortal,win)
+   Move(gPortal,xbase+gutter,ybase+gutter*2)
 
 
    description <- MakeTextBox("Description: No description found.",font,420,250)
@@ -180,17 +186,17 @@ define Start(p)
    AddObject(screenshotdummy,win)
    screenshot <- screenshotdummy
 
-   selection <- Rectangle(portal.x+portal.width/2,0,portal.width,yheight,MakeColor("black"),0)
+   gSelection <- Rectangle(gPortal.x+gPortal.width/2,0,gPortal.width,yheight,MakeColor("black"),0)
    
    up <- Polygon(xbase+width-gutter,ybase+gutter,[-5,5,0],[5,5,-5],MakeColor("grey"),1)
-   down <- Polygon(xbase+width-gutter,portal.y+portal.height+gutter,[-5,5,0],[-5,-5,5],MakeColor("grey"),1)
+   down <- Polygon(xbase+width-gutter,gPortal.y+gPortal.height+gutter,[-5,5,0],[-5,-5,5],MakeColor("grey"),1)
    
    upbg <- Square(xbase+width-gutter, ybase+gutter,  10,MakeColor("grey"),0)
-   downbg <- Square(xbase+width-gutter, portal.y+portal.height+gutter, 10,MakeColor("grey"),0)
+   downbg <- Square(xbase+width-gutter, gPortal.y+gPortal.height+gutter, 10,MakeColor("grey"),0)
 
 
-   bug <- Rectangle(xBase+width-gutter,ybase+gutter+20,10,20,MakeColor("grey40"),1)
-   slidebin <- Rectangle(xBase+width-gutter,portal.y+portal.height/2,10,portal.height,MakeColor("grey70"),1)
+   gThumb <- Rectangle(xBase+width-gutter,ybase+gutter+20,10,20,MakeColor("grey40"),1)
+   slidebin <- Rectangle(xBase+width-gutter,gPortal.y+gPortal.height/2,10,gPortal.height,MakeColor("grey70"),1)
 
 
    subjectbox <- EasyTextBox(gsubcode,xbase+width+150,ybase,win,fontsize,60,yheight)
@@ -234,8 +240,8 @@ define Start(p)
    AddObject(up,win)
    AddObject(downbg,win)
    AddObject(down,win)
-   AddObject(bug,win)
-   AddObject(selection,win)
+   AddObject(gThumb,win)
+   AddObject(gSelection,win)
 
 
 
@@ -245,9 +251,9 @@ define Start(p)
 
 
 
-   portal.text <- DirToText(First(filelist),Second(filelist),offset,dirchain)
+   gPortal.text <- DirToText(First(gfilelist),Second(gfilelist),offset,gDirChain)
 
-   selection.y <- portal.y+yheight*(selected-.5)
+   gSelection.y <- gPortal.y+yheight*(gselected-.5)
    Draw()
    cont <- 1
    while(cont)
@@ -255,14 +261,14 @@ define Start(p)
 
 
 
-     selection.y <- portal.y+yheight*(selected-.5-offset)
-	 bugy <- (offset / (Length(flatfilelist)-portalnum-1))*(portalHeight-gutter*2)
-     portal.text <- DirToText(First(filelist),Second(filelist),offset,dirchain)
+     gSelection.y <- gPortal.y+yheight*(gselected-.5-offset)
+	 thumby <- (offset / (Length(gflatfilelist)-gPortalNum-1))*(portalHeight-gutter*2)
+     gPortal.text <- DirToText(First(gfilelist),Second(gfilelist),offset,gDirChain)
 
      ##find out if there is a text description of the selected text.
 
-	 descname <- DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt"
-	 path.text <- DirListToText(dirchain)
+	 descname <- DirListToText(gDirChain)+Nth(gflatfilelist,gselected)+".about.txt"
+	 path.text <- DirListToText(gDirChain)
   	 MoveCorner(path,xbase+2,ybase-18)
 
 	 if(FileExists(descname))
@@ -274,7 +280,7 @@ define Start(p)
          description.text <- "No description found." 
       }
 
-     screenname <-DirListToText(dirchain)+Nth(flatfilelist,selected)+".png"
+     screenname <-DirListToText(gDirChain)+Nth(gFlatFileList,gselected)+".png"
 
 	 if(FileExists(screenname))
       {
@@ -309,65 +315,47 @@ define Start(p)
       }
 	  
 
-	 #make sure bug fits inside its channel.
-	 bug.y <- Max([Min([bugY+ybase+gutter*2,slidebin.y+slidebin.height/2-gutter]),portal.y+gutter])
+	 #make sure thumb fits inside its channel.
+	 gThumb.y <- Max([Min([thumbY+ybase+gutter*2,slidebin.y+slidebin.height/2-gutter]),gPortal.y+gutter])
 
      Draw()
 
-     tmp <-	 WaitForClickOnTarget([portal,upbg,downbg,exit,slidebin,
+     tmp <-	 WaitForClickOnTarget([gPortal,upbg,downbg,exit,slidebin,
 						run,subjectbox,fullscreenbox,expbox,langbox,
     				   addtochain,clearchain,launchchain,viewoutput,viewerror,
 					   edit,openmanual,requestfeature,visitweb,about,
-					   description,demobox,savechain,loadchain],
+					   description,demobox,savechain,loadchain,wiki],
 				   [1,2,3,4,5,
 				   6,7,8,9,10,
 				   11,12,13,14,15,
 				   16,17,18,19,20,
-				   21,22,23,24])
+				   21,22,23,24,25])
 
-	 if(tmp==2)  ## up arrow
-      {
-	    offset <- Max([offset - 1,0])
-
-        if(selected<=offset)
-          {
-		    selected <- offset + 1
-          }
-        if(selected > offset+portalnum)
-          {
-		    selected <- offset+portalnum
-          }
-
-      }elseif(tmp==3) ## down arrow
-      {
-	    offset <- Min([offset+1, Length(flatfilelist)-portalnum])
-		selected <- Max([offset+1,selected])
-
-      }elseif(tmp==1)  #Click was on the portal.
+	 if(tmp==1)  #Click was on the portal.
       {
 
 	      ##update selection rectangle here
 	      clicky <- Second(gClick)
-		  newselected <- Floor((clicky-portal.y)/yheight)+1 + offset
+		  newselected <- Floor((clicky-gPortal.y)/yheight)+1 + offset
 
 		  ##if we click past the last entry, don't adjust selection
-		  if(newselected > Length(flatfilelist))
+		  if(newselected > Length(gFlatFileList))
           {
-		      selected <- selected ##do nothing
-          }elseif(selected == newselected)
+		      gselected <- gselected ##do nothing
+          }elseif(gselected == newselected)
  		   {
 
-     	     if(IsDirectory(DirListTotext(dirchain)+Nth(flatfilelist,selected)))
+     	     if(IsDirectory(DirListTotext(gDirChain)+Nth(gFlatFileList,gselected)))
               {		
 
 
-               dirchain <- AppendDirlist(dirchain,Nth(flatfilelist,selected))
-			   if(Length(dirchain)<(Length(selectstack)+1))
+               gDirChain <- AppendDirlist(gDirChain,Nth(gFlatFileList,gselected))
+			   if(Length(gDirChain)<(Length(selectstack)+1))
                {	
 
 			      ##we are backing up.
 				  last <- Nth(selectstack,Length(selectstack))
-				  selected <- 	First(last)
+				  gselected <- 	First(last)
 			      offset <- Second(last)
 
 
@@ -379,36 +367,56 @@ define Start(p)
     
     			      selectStack <-SubList(selectstack,1,Length(selectstack)-1)
 				  }
-       		     filelist <- FilterDir(GetDirectoryListing(DirlistToText(dirchain)),dirchain)
-         		 flatfilelist <- Flatten(filelist)
+       		     gfilelist <- FilterDir(GetDirectoryListing(DirlistToText(gDirChain)),gDirChain)
+         		 gFlatFileList <- Flatten(gfilelist)
 
- 			   }elseif(Length(dirchain)>Length(selectstack))
+ 			   }elseif(Length(gDirChain)>Length(selectstack))
                {
 			     #We opened a new subdirectory.
-                 selectStack <- Append(selectstack,[selected, offset])
+                 selectStack <- Append(selectstack,[gselected, offset])
        		     offset <- 0
 			
-        		   filelist <- FilterDir(GetDirectoryListing(DirlistToText(dirchain)),dirchain)
-         		   flatfilelist <- Flatten(filelist)
+        		   gfilelist <- FilterDir(GetDirectoryListing(DirlistToText(gDirChain)),gDirChain)
+         		   gFlatFileList <- Flatten(gfilelist)
 
-     		   selected <- Length(First(filelist)) + 1
-      		   if(selected > Length(flatfilelist) or 
-    		      selected > portalnum)
+     		   gselected <- Length(First(gfilelist)) + 1
+      		   if(gselected > Length(gFlatFileList) or 
+    		      gselected > gPortalNum)
                     {
-                      selected <- 1 
+                      gselected <- 1 
                     }
                }
 
               }            
             } else {
-		      selected <- newselected
+		      gselected <- newselected
            }
-		  
+      }elseif(tmp==2)  ## up arrow
+      {
+	    offset <- Max([offset - 1,0])
+
+        if(gselected<=offset)
+          {
+		    gselected <- offset + 1
+          }
+        if(gselected > offset+gPortalNum)
+          {
+		    gselected <- offset+gPortalNum
+          }
+
+      }elseif(tmp==3) ## down arrow
+      {
+	    offset <- Min([offset+1, Length(gFlatFileList)-gPortalNum])
+		gselected <- Max([offset+1,gselected])
+
+
       }elseif(tmp == 5) ##click on the slider bin
       {
 	    
-		filelen <- Length(flatfilelist)
-		if(filelen <= portalnum)
+
+
+		filelen <- Length(gFlatFileList)
+		if(filelen <= gPortalNum)
          {
            offset <- 0
 
@@ -416,17 +424,30 @@ define Start(p)
 
          clicky  <- Second(gClick)
 		 
-		 proportion <- ((clicky - portal.y)/portal.height)
+		 proportion <- ((clicky - gPortal.y)/gPortal.height)
 
-		 offset  <- Floor(proportion * (filelen - portalnum))
-		 if(selected < offset)
+		 offset  <- Floor(proportion * (filelen - gPortalNum))
+		 if(gselected < offset)
           {
-             selected <- offset+1
+             gselected <- offset+1
           }
-		  if(selected>offset+portalnum)
+		  if(gselected>offset+gPortalNum)
 		  {
-		     selected > offset+portalnum
+		     gselected > offset+gPortalNum
    		  }
+
+		  ##
+		  ##now, 'capture the thumb' until you upclick
+		  ##
+ 		  RegisterEvent("<MOUSE_MOVEMENT>",1,1 ,"<TRUE>","UPDATECAPTUREDTHUMB", [1])
+		  RegisterEvent("<MOUSE_BUTTON>",1,1,"<TRUE>","CLEARTHUMBCAPTURE", [1])
+		  
+		  out <-  StartEventLoop()
+		  Print("event loop done")
+		  Print(out)
+
+		  ClearEventLoop()
+
 
          }
       }elseif(tmp ==4) ##Exit
@@ -434,25 +455,25 @@ define Start(p)
 
 
        PushButton(exit)
-       ##Saveconfig(gconfigname)
+	   Saveconfig(gconfigname)
 
 	     cont <- 0
       }elseif(tmp==6) ##hit 'run'
       {
          PushButton(run)
 
-	     if(IsDirectory(DirListTotext(dirchain)+Nth(flatfilelist,selected)))
+	     if(IsDirectory(DirListTotext(gDirChain)+Nth(gFlatFileList,gselected)))
          {		
 
 
-           dirchain <- AppendDirlist(dirchain,Nth(flatfilelist,selected))
-		   filelist <- FilterDir(GetDirectoryListing(DirlistToText(dirchain)),dirchain)
-		   flatfilelist <- Flatten(filelist)
- 		   selected <- Length(First(filelist)) + 1
-		   if(selected > Length(flatfilelist) or 
-		      selected > portalnum)
+           gDirChain <- AppendDirlist(gDirChain,Nth(gFlatFileList,gselected))
+		   gfilelist <- FilterDir(GetDirectoryListing(DirlistToText(gDirChain)),gDirChain)
+		   gFlatFileList <- Flatten(gfilelist)
+ 		   gselected <- Length(First(gfilelist)) + 1
+		   if(gselected > Length(gFlatFileList) or 
+		      gselected > gPortalNum)
             {
-              selected <- 1 
+              gselected <- 1 
             }
 		   offset <- 0
 
@@ -464,7 +485,7 @@ define Start(p)
 	      	  GetNIMHDemographics(gsubcode,win,"demographics-log.csv")
           }
 
-             RunScript(dirchain,Nth(flatfilelist,selected),gfullscreen,glanguage,logfile,gsubcode,gexperimenter)
+             RunScript(gDirChain,Nth(gFlatFileList,gselected),gfullscreen,glanguage,logfile,gsubcode,gexperimenter)
 
           }
       }elseif(tmp==7)  ##Change subject code
@@ -475,9 +496,10 @@ define Start(p)
 	   relx <- First(gClick) - (subjectbox.x )
 	   rely <- Second(gClick) - (subjectbox.y )
 
-	   subjectbox.cursorpos <- SetTextBoxCursorFromClick(expbox,relx,rely)
+	   subjectbox.cursorpos <-    (GetTextBoxCursorFromClick(subjectbox,relx,rely))
+
 	   Draw()
-	   subcode <- GetInput(subjectbox,"<return>")
+	   gsubcode <- GetInput(subjectbox,"<return>",1)
 	   Hide(subboxhighlight)
 	   
       }elseif(tmp==8)
@@ -495,10 +517,10 @@ define Start(p)
 	   Show(expboxhighlight)
 	   relx <- First(gClick) - (expbox.x )
 	   rely <- Second(gClick) - (expbox.y )
-	   cursorpos <- SetTextBoxCursorFromClick(expbox,relx,rely)
+	   cursorpos <- GetTextBoxCursorFromClick(expbox,relx,rely)
 	   expbox.cursorpos<-cursorpos
 	   Draw()
-	   experimenter <- GetInput(expbox,"<return>")
+	   experimenter <- GetInput(expbox,"<return>",1)
 	   Hide(expboxhighlight)
 	   
       }elseif(tmp==10)  ##Change language code
@@ -508,10 +530,10 @@ define Start(p)
 	   Show(langboxhighlight)
 	   relx <- First(gClick) - (langbox.x )
 	   rely <- Second(gClick) - (langbox.y )
-	   cursorpos <-  SetTextBoxCursorFromClick(langbox,relx,rely)
+	   cursorpos <-  GetTextBoxCursorFromClick(langbox,relx,rely)
 	   langbox.cursorpos <- cursorpos 
 	   Draw()
-	   language <- GetInput(langbox,"<return>")
+	   language <- GetInput(langbox,"<return>",1)
 	   Hide(langboxhighlight)
 	   
       }elseif(tmp==11)  ##Add to chain
@@ -519,10 +541,10 @@ define Start(p)
 
 	     PushButton(addtochain)
 
-		 fname <- Nth(flatfilelist,selected)
+		 fname <- Nth(gFlatFileList,gselected)
 		 if(IsPEBLFile(fname))
          {
-		   gexpchain <- Append(gexpchain,[dirchain,fname])
+		   gexpchain <- Append(gexpchain,[gDirChain,fname])
 		   chainlist.text <- MakeExpChainText(gexpchain)
 
          }
@@ -545,30 +567,30 @@ define Start(p)
        {
 	      dc <- First(i)
 		  fname <- Second(i)
-          RunScript(dc,fname,gfullscreen,glanguage,logfile,gsubcode,gxperimenter)
+          RunScript(dc,fname,gfullscreen,glanguage,logfile,gsubcode,gexperimenter)
        }
    
       }elseif(tmp==14)  ##View debug output
       {
 	     PushButton(viewoutput)  
- 	     LaunchFile(DirListToText(dirchain)+"stdout.txt")
+ 	     LaunchFile(DirListToText(gDirChain)+"stdout.txt")
   
-#	     SystemCall(gViewerCommand,  DirListToText(dirchain)+"stdout.txt &")
+#	     SystemCall(gViewerCommand,  DirListToText(gDirChain)+"stdout.txt &")
       
       }elseif(tmp==15)  ##View error output
       {
 	     PushButton(viewerror)
-         LaunchFile(DirListToText(dirchain)+"stderr.txt")
-         #SystemCall(gViewerCommand, DirListToText(dirchain)+"stderr.txt &")
+         LaunchFile(DirListToText(gDirChain)+"stderr.txt")
+         #SystemCall(gViewerCommand, DirListToText(gDirChain)+"stderr.txt &")
       }elseif(tmp==16)  ##Edit script
       {
 		  PushButton(edit)
-	      if(IsPEBLFile(Nth(flatfilelist,selected)))
+	      if(IsPEBLFile(Nth(gFlatFileList,gselected)))
             {
-              LaunchFile(DirListToText(dirchain)+Nth(flatfilelist,selected))
+              LaunchFile(DirListToText(gDirChain)+Nth(gFlatFileList,gselected))
             } else {
 
-              LaunchFile(DirListToText(dirchain)+Nth(flatfilelist,selected))
+              LaunchFile(DirListToText(gDirChain)+Nth(gFlatFileList,gselected))
             }
       }elseif(tmp==17)  ##Open Manual
       {
@@ -609,18 +631,18 @@ This launcher is written in PEBL itself, allowing a fairly uniform launcher on a
           {
     	   relx <- First(gClick) - (description.x )
 	       rely <- Second(gClick) - (description.y )
-    	   cursorpos <-  SetTextBoxCursorFromClick(description,relx,rely)
+    	   cursorpos <-  GetTextBoxCursorFromClick(description,relx,rely)
 	       description.cursorpos <- cursorpos 
      	   Draw()
-		   desctext <- GetInput(description,"<return>")
-           descname <- DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt"
+		   desctext <- GetInput(description,"<return>",1)
+           descname <- DirListToText(gDirChain)+Nth(gFlatFileList,gselected)+".about.txt"
            outfile <- FileOpenWrite(descname)
            FilePrint(outfile,desctext)
 		   FileClose(outfile)
 
-         	#SystemCall(gViewerCommand + " " + DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt&")
+         	#SystemCall(gViewerCommand + " " + DirListToText(gDirChain)+Nth(gFlatFileList,gselected)+".about.txt&")
           } else {
-            LaunchFile(DirListToText(dirchain)+Nth(flatfilelist,selected)+".about.txt")
+            LaunchFile(DirListToText(gDirChain)+Nth(gFlatFileList,gselected)+".about.txt")
           }
          }
       }elseif(tmp==22)
@@ -667,7 +689,28 @@ This launcher is written in PEBL itself, allowing a fairly uniform launcher on a
 
 
 
+      }elseif(tmp==25)  ##Visit wiki
+      {
+	     PushButton(wiki)
+         #SystemCall("http://pebl.sourceforge.net","")	  
+
+       if(Length(gDirChain)>1)
+       {
+         root <- Nth(gDirChain,Length(gDirChain))+"/"
+       }  else {
+	     root <- ""
+       }
+       wikipagename <- root+Nth(gFlatFileList,gselected)
+	   if(wikipagename=="." or wikipagename=="..")
+        {
+         wikipagename <- "Main_Page"
+        }
+	   Launchfile("http://sourceforge.net/apps/mediawiki/pebl/index.php?title="+wikipagename)
+      
       }
+
+
+
      Draw()
    }
 
@@ -835,10 +878,10 @@ define Filter(list,match)
 }
 
 
-define RunScript(dirchain,filename,fullscreen,language,logfile,subcode,experimenter)
+define RunScript(gDirChain,filename,fullscreen,language,logfile,subcode,experimenter)
 {
 
-		 callstring <- "cd " + DirListToText(dirchain) + " ; " +gPEBLName + " "  +filename + " -s " + subcode
+		 callstring <- "cd " + DirListToText(gDirChain) + " ; " +gPEBLName + " "  +filename + " -s " + subcode
 		 if(fullscreen)
 		 {
 		   callstring <- callstring + " --fullscreen "
@@ -851,14 +894,14 @@ define RunScript(dirchain,filename,fullscreen,language,logfile,subcode,experimen
                 callstring <- callstring + " > stdout.txt 2> stderr.txt"
            }
 
-         FilePrint(logfile,TimeStamp() + "," + DirListToText(dirchain)+ filename+","+GetPEBLVersion() + "," + experimenter + "," + subcode + "," +"fullscreen:["+fullscreen+"],"+ language + "," + callstring+ ","+"STARTED")
+         FilePrint(logfile,TimeStamp() + "," + DirListToText(gDirChain)+ filename+","+GetPEBLVersion() + "," + experimenter + "," + subcode + "," +"fullscreen:["+fullscreen+"],"+ language + "," + callstring+ ","+"STARTED")
 
          #### Run the experiment!!!!
          Print(callstring)
 		 SystemCall(callstring,"")
 
 
-         FilePrint(logfile,TimeStamp() + "," + DirListToText(dirchain)+filename+","+GetPEBLVersion() +
+         FilePrint(logfile,TimeStamp() + "," + DirListToText(gDirChain)+filename+","+GetPEBLVersion() +
 		 "," + experimenter + "," + subcode + "," +"fullscreen:["+fullscreen+"],"+ language + "," + callstring+ ","+"FINISHED")
 
 }
@@ -941,6 +984,11 @@ define ReadConfigFile(configname)
 	   gfullscreen <- ToNumber(Second(Lookup("fullscreen",keys,config)))
 	   gnimhdemographics <- ToNumber(Second(Lookup("nimhdemo",keys,config)))       
 	   gsubcode    <- Second(Lookup("subcode",keys,config))
+	   if(gAutoSubCode)
+       {
+	     gSubCode <- (ToNumber(gSubCode)+1)+""
+       }
+
 	   gexperimenter <-Second(Lookup("experimenter",keys,config))
 	   glanguage <-Second(Lookup("language",keys,config))
 
@@ -983,4 +1031,66 @@ define Saveconfig(configname)
 	     out <- Append(out,["EXPCHAIN",ilist])
        }
       FileSaveTable(out,configname+".config")
+}
+
+
+
+define UpdateCapturedThumb(p)
+{
+   time<- GetTime()
+ 
+   if(time-gLastUpdate > 5)
+    {
+     mousexy <- GetMouseCursorPosition()
+     Print(mousexy + " "  + time)
+     UpdatePortal(mousexy)
+    }
+
+   gLastUpdate <- time
+#   Draw()
+}
+
+##this should update the file list given mouse position
+define UpdatePortal(mousexy)
+{
+		Print(GetTime())
+		mousey <- Second(mousexy)
+		filelen <- Length(gFlatFileList)
+
+
+		##compute the offset needed for the file window:
+		if(filelen <= gPortalNum)
+         {
+           offset <- 0
+         } else {
+
+		 proportion <- ((mousey - gPortal.y)/gPortal.height)
+		 offset  <- Floor(proportion * (filelen - gPortalNum))
+		 if(gselected < offset)
+          {
+             gselected <- offset+1
+          }
+		  if(gselected>offset+gPortalNum)
+		  {
+		     gselected > offset+gPortalNum
+   		  }
+
+		}
+
+	 gThumb.y <-  Max([Min([mousey, gPortal.y+gPortal.height/2-gutter*2]),gPortal.y+gutter])
+     gSelection.y <- gPortal.y+gyheight*(gselected-.5-offset)
+     gPortal.text <- DirToText(First(gfilelist),Second(gfilelist),offset,gDirChain)
+
+
+}
+
+
+define CLEARTHUMBCAPTURE(p)
+{
+		Print("**********************Clearing thumb capture")
+		##you should update the thumb here!
+        mousexy <- GetMouseCursorPosition()
+		UpdatePortal(mousexy)
+		gKeepLooping <- 0
+		Draw()
 }

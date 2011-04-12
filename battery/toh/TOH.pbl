@@ -900,7 +900,7 @@ define GetStrings(language)
     gHeaderLab <- "Target Stacks"
     gFooterLab <- "Click on pile to pick up and drop disk"
 
-    gInstText1 <- "You are about to perform a task called the 'Tower of London'.  Your goal is to move a pile of disks from their original configuration to the configuration shown on the top of the screen.  You can only move one disk at a time, and you cannot move a disk onto a pile that has no more room (indicated by the size of the grey rectangle).  To move a disk, click on the pile you want to move a disk off of, and it will move up above the piles.  Then, click on another pile, and the disk will move down to that pile."
+    gInstText1 <- "You are about to perform a task called the 'Tower of Hanoi'.  Your goal is to move a pile of disks from their original configuration to the configuration shown on the top of the screen.  You can only move one disk at a time, and you cannot move a disk onto a pile that has no more room (indicated by the size of the grey rectangle).  To move a disk, click on the pile you want to move a disk off of, and it will move up above the piles.  Then, click on another pile, and the disk will move down to that pile."
     gInstText2 <- " You will have a time limit to finish each problem.  Attempt to finish each problem within the allotted time."
     gInstText3 <- " You will have only a limited number of moves to solve each problem. Before you make your first move, think about the problem to make sure you can solve it within your move limit.  If you do not finish the problem within the limit, the turn will end and you will move on to the next problem."
     gBegin <-  "Click the mouse to begin."
@@ -916,7 +916,7 @@ define GetStrings(language)
 
      ## Note, this is not a proper Spanish translation.
      ##
-    gSelect <-  "Edit TOL.pbl directly to specify a test configuration automatically."
+    gSelect <-  "Edit TOH.pbl directly to specify a test configuration automatically."
 
     gHeaderLab <- "Objetivo montóns:"
     gFooterLab <- "Haga clic en pila para recoger y llevar a disco"

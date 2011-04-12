@@ -403,37 +403,3 @@ define HideMe(stim,star)
 	 Draw()
   }}
  
-
-
-define Match(list,item)
-{
-   out <- []
-   loop(i,list)
-   {
-     out  <- Append(out, item==i)
-   }
-   return out
-}
-
-##This filters based on 0/1
-define Filter(list,match)
-{
-  if(not Length(list)==Length(match))
-  {
-     SignalFatalError("List and match list much be of equal length in Filter(<list>,<match>)")
-  }
-  tmp <- []
-  list2 <- Transpose([list,match])
-
-  
-  loop(i,list2)
-  {
-
-    if(Second(i))
-    {
-      tmp<- Append(tmp,First(i))
-    }
-  }
-  return tmp
-}
-

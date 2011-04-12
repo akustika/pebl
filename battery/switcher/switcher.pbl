@@ -202,7 +202,6 @@ define Trial(setup,cues)
 {
 
 
-
   cue <- EasyLabel("Click here to begin",gVideoWidth/2,20,gWin,44)
 
   circs <- []
