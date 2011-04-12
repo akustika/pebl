@@ -70,6 +70,7 @@ public:
     virtual int ShowCursor(int val);
     virtual int SetCursorPosition(int x, int y);
     virtual Variant GetCursorPosition();
+    virtual void SetKeyRepeat(bool onoff);
     virtual Variant  GetMouseState();  //gets the buttons too!!!
     virtual bool GetUnicode(){return mUnicode;};
 

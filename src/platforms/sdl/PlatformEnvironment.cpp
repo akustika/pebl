@@ -190,7 +190,13 @@ Variant  PlatformEnvironment::GetCursorPosition()
     PComplexData *   pcd = new PComplexData(newlist2); 
     return Variant(pcd);
 }
-
+void PlatformEnvironment::SetKeyRepeat(bool onoff)
+{
+    if(onoff)
+        SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,SDL_DEFAULT_REPEAT_INTERVAL);
+    else
+        SDL_EnableKeyRepeat(0,0);
+}
 
 Variant  PlatformEnvironment::GetMouseState()
 {

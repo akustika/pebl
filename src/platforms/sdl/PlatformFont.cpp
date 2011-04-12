@@ -263,7 +263,7 @@ int PlatformFont::GetPosition(const std::string & text, unsigned int x)
             int width = GetTextWidth(text.substr(0,cutoff));
             if(width > x)
                 return cutoff-1;
-            cout << "***"<<width<< "<" << x << ":" << cutoff <<endl;
+            //cout << "***"<<width<< "<" << x << ":" << cutoff <<endl;
             cutoff++;
         }
 

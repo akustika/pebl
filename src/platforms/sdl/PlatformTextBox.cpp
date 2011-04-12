@@ -451,7 +451,6 @@ int PlatformTextBox::FindCursorPosition(int x, int y)
         if(charnum + startchar > 0)
             charnum--;
     }
- 
     return charnum + startchar;
 }
 
