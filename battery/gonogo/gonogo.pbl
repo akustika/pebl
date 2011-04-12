@@ -2,9 +2,9 @@
 ##  Designed after method described in:
 ##  Bezdjian, S. Baker, L. A., Lozano, D. I & Raine, A. (2009).
 ##    Assessing inattention and impulsivity in children during the Go/NoGo task
-##    Br J Dev Psychol. 2009 June 1; 27(2): 365–383. doi: 10.1348/026151008X314919.
+##    Br J Dev Psychol. 2009 June 1; 27(2): 365–383. 
+##    doi: 10.1348/026151008X314919.
 ##    http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2757760/
-##
 ##
 
 define Start(p)
