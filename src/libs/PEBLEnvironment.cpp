@@ -673,6 +673,8 @@ Variant PEBLEnvironment::WaitForListKeyPress(Variant v)
 /// Once executed, it will allow all keyboard entry to show up
 /// in the text box.  Once the escape key is hit, the function
 /// will return the text inside the box.
+/// If it has a third argument that is non-zero, it will also use any mouse click as an 
+/// escape key.
 Variant PEBLEnvironment::GetInput(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
@@ -690,6 +692,7 @@ Variant PEBLEnvironment::GetInput(Variant v)
     string  myString = plist->First(); plist->PopFront();
 
 
+
     //Create a keyboard test correspending to escape keydown. 
     //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
 
@@ -702,14 +705,27 @@ Variant PEBLEnvironment::GetInput(Variant v)
 
     //Make the textbox editable.
     textbox->SetEditable(true);
+    myEnv->SetKeyRepeat(true);
     myEnv->Draw();    
+    
+
 
     Evaluator::mEventLoop.Clear();
     Evaluator::mEventLoop.RegisterEvent(keypressstate, funcname, Variant(NULL));
 
-    //add a mouse click as an exit too.
-    ValueState  * state2 = new ValueState(PEBL_PRESSED, DT_TRUE, 1, gEventQueue, PDT_MOUSE_BUTTON);
-    Evaluator::mEventLoop.RegisterEvent(state2,funcname, Variant(NULL));
+    //Evaluate the last list item, if it exists
+    if(!plist->IsEmpty())
+        {
+            Variant tmp = plist->First();
+            if(tmp)
+                {
+
+                    //add a mouse click as an exit too.
+                    ValueState  * state2 = new ValueState(PEBL_PRESSED, DT_TRUE, 1, gEventQueue, PDT_MOUSE_BUTTON);
+                    Evaluator::mEventLoop.RegisterEvent(state2,funcname, Variant(NULL));
+                }
+        }
+
     bool ignore = false;
 
     PEvent keypress =  Evaluator::mEventLoop.Loop();  
@@ -768,12 +784,13 @@ Variant PEBLEnvironment::GetInput(Variant v)
     
     Evaluator::mEventLoop.Clear();
     textbox->SetEditable(false);
+    myEnv->SetKeyRepeat(false);
     return Variant(textbox->GetText());
 }
 
 
 
-Variant PEBLEnvironment::SetTextBoxCursorFromClick(Variant v)
+Variant PEBLEnvironment::GetTextBoxCursorFromClick(Variant v)
 {
 
     PList * plist = v.GetComplexData()->GetList();
@@ -1148,7 +1165,7 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
         {
             device = gEventQueue;
             devicetype = PDT_MOUSE_MOVEMENT;
-        }else if(mystring == "MOUSE_BUTTON")
+        }else if(mystring == "<MOUSE_BUTTON>")
         {
             device = gEventQueue;
             devicetype = PDT_MOUSE_BUTTON;

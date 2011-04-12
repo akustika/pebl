@@ -280,8 +280,8 @@ namespace PEBLEnvironment
 
 
             {"CLEAREVENTLOOP",                  ClearEventLoop,     0, 0},
-            {"GETINPUT",                        GetInput,           2, 2},
-            {"SETTEXTBOXCURSORFROMCLICK",       SetTextBoxCursorFromClick, 3,3},
+            {"GETINPUT",                        GetInput,           2, 3},
+            {"GETTEXTBOXCURSORFROMCLICK",       GetTextBoxCursorFromClick, 3,3},
             {"REGISTEREVENT",                   RegisterEvent,      5,6},
             {"STARTEVENTLOOP",                  StartEventLoop,      0,0},          
             {"CLEAREVENTLOOP",                  ClearEventLoop,      0,0},

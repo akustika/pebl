@@ -95,7 +95,7 @@ namespace PEBLEnvironment
 
     //Misc
     Variant GetInput(Variant v); 
-    Variant SetTextBoxCursorFromClick(Variant v);
+    Variant GetTextBoxCursorFromClick(Variant v);
 
 
     Variant SignalFatalError(Variant v);
