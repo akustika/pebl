@@ -51,10 +51,12 @@ Version 0.12
 	   that get run in sequence
 
 
+  -key repeats are now enabled during text box text  entry.
   -Added GetMouseState(), which returns a 5-list including the state of each of three buttons.
 
   - Added .LineWrap property to textboxes, which defaults to 1 (the previous behavior).  If set to 0,
-    it will ONLY wrap lines at hard/soft returns.
+    it will ONLY wrap lines at hard/soft returns, and cut off the rest
+    of each line.
 
   -fixed grammer to allow empty code blocks. (may not have worked)
 
@@ -81,6 +83,12 @@ Version 0.12
 
 
 
+ -text input function GetInput now sends repeated events when you
+  hold a key down.
+  -It also now takes a third parameter, which if non-zero will accept
+  a mouse click as an exit condition.  see fileselect for an example
+  of how to use this.
+
 
 - RegisterEvent(), StartEventLoop()
 
@@ -101,16 +109,20 @@ NonOverlapLayout
  -update PCPT to remove pauses between blocks, to compute more
   statistics, and to do more reporting in more files.
 
-   Added ANT test
+
    Updated manual dexterity test
-  - Number stroop (with vocal input)
+
   - Many tasks data were changed to save in .csv format.
 
  -Digit span task now allows backward recall, and allows experimenter
   to specify whether backspace and the skip character are allowed.
 
-  -corsi blocks update
-  -BART task
+  - corsi blocks update
+  - BART task
+  - New Eriksen Flanker task
+  - New 'Oddball' task
+  - Added ANT test
+  - Number stroop (with vocal input)
  - Fixed bug in TOL; added TOL-DX problem set.
 
 

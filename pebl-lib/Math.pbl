@@ -388,9 +388,85 @@ define SummaryStats(data, cond)
  return stats
 }
 
+
+
 ## New in PEBL 0.11??? maybe not
 ##
 define Dist(a,b)
 {
   return Sqrt((First(a)- First(b))^2 + (Nth(a,2) - Nth(b,2))^2)
 }
+
+
+
+## This returns a sorted list with one copy of each token in the list
+
+define Levels(list)
+{
+   if(not IsList(list))
+     {
+	   SignalFatalError("Argument of 'Levels(list)' is not a list")
+     }
+
+   tmp <- Sort(list)
+   last <- First(tmp)
+   out <- [last]
+   loop(i,tmp)
+   {
+     if(not( i==last))
+      {
+	    out <- Append(out,i)
+		last <- i
+      }
+   }
+   return out
+}
+
+##This returns a list of 0/1, for each element of list that matches item.
+define Match(list,item)
+{
+  if(not IsList(list))
+  {
+     SignalFatalError("First argument of [Match(list,item)] must be a list.")
+  }
+
+   out <- []
+   loop(i,list)
+   {
+     out  <- Append(out, item==i)
+   }
+   return out
+}
+
+##This filters based on 0/1, returning a subset of the list.
+define Filter(list,match)
+{
+  if(not IsList(list))
+  {
+     SignalFatalError("First argument of [Filter(list,match)] must be a list.")
+  }
+  if(not IsList(match))
+  {
+     SignalFatalError("Second argument of [Filter(list,match)] must be a list.")
+  }
+
+  if(not Length(list)==Length(match))
+  {
+     SignalFatalError("List and match list much be of equal length in Filter(<list>,<match>)")
+  }
+
+  tmp <- []
+  list2 <- Transpose([list,match])
+
+  loop(i,list2)
+  {
+
+    if(Second(i))
+    {
+      tmp<- Append(tmp,First(i))
+    }
+  }
+  return tmp
+}
+
+
