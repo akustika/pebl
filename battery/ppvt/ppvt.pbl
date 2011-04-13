@@ -297,6 +297,11 @@ define Initialize()
             
   ##Initialize Font and colors
 
+  if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
+
 
    black <- MakeColor("black")
    white <- MakeColor("white")

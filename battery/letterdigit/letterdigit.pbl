@@ -17,6 +17,13 @@ define Start(p)
 
   gSleepEasy <- 1
   gWin <- MakeWindow()
+
+   ##Get subject code if we need to:    
+    if(gSubNum==0)
+    {
+	  gSubNum <- GetSubNum(gWin)
+    }
+
   gstimFont <- MakeFont(gPEBLBaseFontMono,0,24,MakeColor("black"),MakeColor("grey"),1)
   gProbeFont <-MakeFont(gPEBLBaseFontMono,0,80,MakeColor("black"),MakeColor("grey"),1)
 

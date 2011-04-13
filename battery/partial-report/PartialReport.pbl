@@ -187,6 +187,12 @@ define Initialize()
   ##Initialize Window, etc.
   gWin <- MakeWindow("grey")   
 
+  if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
+
+
   ##Hide the cursor here.            
   ShowCursor(0)
 

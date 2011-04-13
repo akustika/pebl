@@ -19,6 +19,14 @@ define Start(p)
 
 
   gWin <- MakeWindow()
+
+
+   if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
+
+
   gFileOut <- FileOpenWrite("timetap-"+gsubnum+".dat")
   tb <- EasyTextBox("In this task, you are asked to tap the keyboard
   at the specified rate for "+ numtrials +" trials of " +

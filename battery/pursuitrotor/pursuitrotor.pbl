@@ -186,7 +186,13 @@ define Init()
   gWin <- MakeWindow()
 
   gSleepEasy <- 1  
-  
+  if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
+
+
+
   ##if (a3)^2+(a4)^2 = 17^2, then 
   ##    9a^2 + 16a^2 = 17^2
   ##    25 a^2 = 17^2

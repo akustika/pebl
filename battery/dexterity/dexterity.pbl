@@ -19,6 +19,13 @@ define Start(par)
     gTimeOut <-  10000  #maximum time allowed to hit target
     
 	gWin <- MakeWindow()
+
+    ##Get subject code if we need to:    
+    if(gSubNum==0)
+    {
+	  gSubNum <- GetSubNum(gWin)
+    }
+
     gHomeX <- Round(gVideoWidth/2)   # center position
     gHomeY <- Round(gVideoHeight/2)  #
 

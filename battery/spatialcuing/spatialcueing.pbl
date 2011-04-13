@@ -26,6 +26,13 @@
 define Start(par)
 {
 
+    gWin <- MakeWindow("grey")
+    if(gSubNum==0)
+    {
+      gSubNum <- GetSubNum(gWin)
+    }
+
+
     gFileOut <-FileOpenAppend("spatialcueing-" +gSubNum+ ".txt")
 
 
@@ -65,13 +72,13 @@ define Start(par)
 
 
 #################################################################
-## Define gLabel and gWin globally so that Trial can use them.
+## Define gLabel globally so that Trial can use them.
 #################################################################
 
 
     gLabel <- MakeLabel("", font)
     gStimLabel <-MakeLabel("X",font)
-    gWin <- MakeWindow("grey")
+
     ShowCursor(0)
     gHomeX <- gVideoWidth/2
     gHomeY <- gVideoHeight/2

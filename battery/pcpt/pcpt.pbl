@@ -463,6 +463,10 @@ define Initialize()
   gWin <- MakeWindow("black")   
             
   ##Initialize Font and colors
+  if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
 
 
    black <- MakeColor("black")

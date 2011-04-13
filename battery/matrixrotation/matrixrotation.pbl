@@ -40,6 +40,13 @@
   gSleepEasy <- 1
 
   gWin <- MakeWindow()
+
+  ##Get subject code if we need to:    
+   if(gSubNum==0)
+    {
+	  gSubNum <- GetSubNum(gWin)
+    }
+
   gLinecolor <- MakeColor("Black")
   gCellempty <- MakeColor("grey20")
   gCellFull  <-  MakeColor("orange")

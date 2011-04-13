@@ -42,6 +42,12 @@ define Start(par)
 
   win <- MakeWindow("grey")
 
+  if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(win)
+   }
+
+
    inst <- gInstructions
    tb <-  EasyTextBox(inst,100,20,win,22, gVideoWidth-200,300)
   

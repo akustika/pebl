@@ -72,9 +72,9 @@ define Start(lPar)
 
    gSubNum <- First(lPar)
    if(gSubNum==0)
-      {
-       gSubNum <- GetSubNum(gWin)	
-       }
+    {
+      gSubNum <- GetSubNum(gWin)	
+    }
   ## results are stored in tmpresults.dat
  
  

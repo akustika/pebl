@@ -18,11 +18,17 @@ define Start(p)
   isi <- 5
   gTimeout <- 15000
 
+  win <- MakeWindow()
+
+   if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(win)
+   }
 
   gFileOut <- FileOpenWrite("twocol-"+gsubnum+".csv")
   gSummaryFile <- FileOpenWrite("twocol-summary-"+gsubnum+".txt")
 
-  win <- MakeWindow()
+
   Draw()
 
   ####################################

@@ -13,7 +13,11 @@ define Start(p)
    Init()
    GetStrings(gLanguage)
 
-   gSubNum <- GetSubNum(gWin)
+  if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
+
    gLogFile <- FileOpenAppend("data/satest-log.txt")
    gFileOut <- FileOpenAppend("data/satest-"+gSubNum+".txt")
    FilePrint(gLogFile,"SATEST start " +GetTime() + " " + TimeStamp() + "  " + gSubNum )

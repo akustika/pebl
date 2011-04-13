@@ -35,7 +35,14 @@ define Start(p)
   gTargcol <- MakeColor("red")
   gHomeX <- gVideoWidth/2
   gHomeY <- gVideoHeight/2
-  gSubNum <-GetSubNum(gWin)
+
+   ##Get subject code if we need to:    
+   if(gSubNum==0)
+    {
+	  gSubNum <- GetSubNum(gWin)
+    }
+
+
 
   #Get starting position and put red target there.
   xy <- GetXY(1)

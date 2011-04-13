@@ -1,7 +1,13 @@
 define Start(p)
 {
    gWin <- MakeWindow("BLACK")
-   gSubNum <- GetSubNum(gWin)
+  if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
+
+
+
 
    gInstructions <-EasyTextBox("",50,20,gWin,18,gVideoWidth-100,200)
    gInstructions.text <- "You are about to take part in a study in which you will see one of two stimuli: a red or blue circle seen below.  The circle will appear at a different left-right location, but the location it appears in is irrelevant.  When you see the stimulus, respond as quickly as possible: when you see a red circle, press the left shift key; when you see the blue circle, press the right shift key.  

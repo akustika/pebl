@@ -245,8 +245,14 @@ define Start(lPar)
 define Initialize()
 {
   ##Initialize Window, etc.
+  gSleepEasy <- 1
   gWin <- MakeWindow("grey")   
    ShowCursor(0)
+
+   if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
           
   ##Initialize Font and colors
    fg <- MakeColor("black")

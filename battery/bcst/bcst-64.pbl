@@ -585,6 +585,13 @@ define Initialize()
             
   ##Initialize Font and colors
   gSleepEasy <- 1
+  
+   ##Get subject code if we need to:    
+   if(gSubNum==0)
+    {
+	  gSubNum <- GetSubNum(gWin)
+    }
+
    bg <- MakeColor("black")
    fg <- MakeColor("white")
    bg2 <- MakeColor("black")

@@ -278,7 +278,11 @@ define Init()
 #  ShowCursor(0)
   gWin <- MakeWindow("black")
  
-  gSubNum <- GetSubNum(gWin)
+   if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
+
   ##  gPEBLBaseFont <- "Vera.ttf"  ##uncomment for version 0.10
   ##These may need to be changed for a particular language.
   gFont <- MakeFont(gPEBLBaseFont,0,15,MakeColor("white"),MakeColor("black"),1)

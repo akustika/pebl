@@ -33,6 +33,12 @@
   ShowCursor(0)
 
   gWin <- MakeWindow()
+
+  if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
+
   gbackground  <-  MakeColor("darkblue")
   gDotColor    <-  MakeColor("white")
   gFileOut <- FileOpenWrite("patcomp-"+gSubNum+".txt")

@@ -6,9 +6,18 @@ define Start(p)
   targsize <- [10,20,40]
   reps     <- 10       ##Number of times through list
 
+  gWin <- MakeWindow()
+
+  ##Get subject code if we need to:    
+    if(gSubNum==0)
+    {
+	  gSubNum <- GetSubNum(gWin)
+    }
+
+
   gFileOut <- FileOpenWrite("fitts-"+gSubNum+".txt")
   gPointFile <- FileOpenWrite("fittspoints-"+gSubNum+".txt")
-  gWin <- MakeWindow()
+
   ShowCursor(0)
   gTargCol  <- MakeColor("red")
   gStartx <- 50

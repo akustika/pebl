@@ -41,7 +41,11 @@ define Start(p)
 
 
   gWin <- MakeWindow()
-  gSubNum <- GetSubNum(gWin)
+  if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
+
 
   gStimColor <- MakeColor("darkblue")
   gAccentColor <- MakeColor("yellow")

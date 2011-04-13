@@ -7,6 +7,10 @@ define Start(p)
   gTriallength <- 300 * 1000     ## max length of trial (longer than in UTC)
 
   gWin <- MakeWindow()
+  if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
 
   gSleepEasy <- 0
   ShowCursor(0)

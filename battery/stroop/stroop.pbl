@@ -43,6 +43,10 @@ define Start(p)
    ## laptops that might overheat.)
    gSleepEasy <- 1
 
+  if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
 
   ##############
   ## Create the basic stimuli

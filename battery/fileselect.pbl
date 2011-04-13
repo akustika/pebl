@@ -882,7 +882,14 @@ define Filter(list,match)
 define RunScript(dirChain,filename,fullscreen,language,logfile,subcode,experimenter)
 {
 
-		 callstring <- "cd " + DirListToText(dirChain) + " & " +gPEBLName + " "  +filename + " -s " + subcode
+   type <- GetSystemType()
+   if(type== "LINUX" or type=="OSX")
+   {
+     sep <- " ; "
+   } else {
+     sep <- " & "
+   }
+		 callstring <- "cd " + DirListToText(dirChain) + sep  +gPEBLName + " "  +filename + " -s " + subcode
 		 if(fullscreen)
 		 {
 		   callstring <- callstring + " --fullscreen "
@@ -890,7 +897,7 @@ define RunScript(dirChain,filename,fullscreen,language,logfile,subcode,experimen
 
 		 callstring <- callstring + " --language " + language 
   
-          if(GetSystemtype()=="LINUX")
+          if(type =="LINUX" or type == "OSX")
            {
                 callstring <- callstring + " > stdout.txt 2> stderr.txt"
            }

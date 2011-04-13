@@ -22,8 +22,15 @@ define Start(p)
   gUseSound <- 1
   gNumTrials <- 50
   isi <- 200
-  gFileOut <- FileOpenWrite("fourchoice-"+gSubNum+".txt")
   gWin <- MakeWindow("black")
+  ##Get subject code if we need to:    
+    if(gSubNum==0)
+    {
+	  gSubNum <- GetSubNum(gWin)
+    }
+
+  gFileOut <- FileOpenWrite("fourchoice-"+gSubNum+".txt")
+
   gBeep <- LoadSound("tone.wav")
 
   ##response type defaults to keypad

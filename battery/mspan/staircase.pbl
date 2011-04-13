@@ -1,7 +1,7 @@
 define Start(p)
 {
 
-  ## Select the condition based on command-line argument
+  ## Select the condition (practice or normal) based on command-line argument
   if(First(p)==0)
    { 
      cond <- "1"

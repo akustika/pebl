@@ -29,10 +29,13 @@
 define Start(lPar)
 {
 
+
+
   ## results are stored in tmpresults.dat
   gFileOut <-FileOpenAppend("donkey-" + gSubNum +".txt")
 
   gSleepEasy <- 1 
+
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
   ShowCursor(0) 
@@ -224,9 +227,15 @@ define Initialize()
   ##Initialize Window, etc.
   gWin <- MakeWindow("grey")   
             
+   ##Get subject code if we need to:    
+    if(gSubNum==0)
+    {
+	  gSubNum <- GetSubNum(gWin)
+    }
+
    Print(gVideoWidth)
    Print(gVideoHeight)
-  ##Initialize Font and colors
+   ##Initialize Font and colors
 
 
    bg <- MakeColor("grey")

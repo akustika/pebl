@@ -48,6 +48,11 @@ define Start(lPar)
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
   gSleepEasy <- 1
+  if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
+
   ShowCursor(0)
  
    if(IsAnyKeyDown())

@@ -64,7 +64,11 @@ define Start(lPar)
   ##
 
   Initialize()
-  gSubNum <- GetSubNum(gWin)
+  if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
+
   ShowCursor(0)
   ## The delays are pre-generated to make it easier to control things, 
   ## like sequential dependencies, distributions, fixed delays, etc.

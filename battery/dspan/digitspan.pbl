@@ -26,11 +26,15 @@ define Start(lPar)
 {
 
   ## results are stored in tmpresults.dat
-  Print("Data are saved in ["+"dspan-" + gSubNum +".csv]")
-  gFileOut <-FileOpenAppend("dspan-" + gSubNum +".csv")
+
+
  
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
+
+  Print("Data are saved in ["+"dspan-" + gSubNum +".csv]")
+  gFileOut <-FileOpenAppend("dspan-" + gSubNum +".csv")
+
   ShowCursor(0)
   ## This determines whether audio accompanies the visual 
   ## presentation.
@@ -473,6 +477,13 @@ define Initialize()
   ##Initialize Window, etc.
   gWin <- MakeWindow("grey")   
             
+   ##Get subject code if we need to:    
+    if(gSubNum==0)
+    {
+	  gSubNum <- GetSubNum(gWin)
+    }
+
+
   ##Initialize Font and colors
 
    bg <- MakeColor("grey")

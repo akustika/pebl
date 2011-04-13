@@ -2,8 +2,12 @@ define Start(p)
 {
   gSleepEasy <- 1
   gWin <- MakeWindow()
-  gSubNum <- GetSubNum(gWin) 
- 
+
+  if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
+
   comf     <- ( Comfort(gWin))
   hotcold  <- ( HotCold(gWin))
   wetdry   <- ( WetDry(gWin))

@@ -8,9 +8,17 @@ define Start(p)
   sums <-[1,2,3,4,6,7,8,9]
   gFeedback <- 1
   gSleepEasy <- 1
-  gFileOut <- FileOpenWrite("mathproc-"+gSubNum+".txt")
+
 
   gWin <- MakeWindow()
+
+   ##Get subject code if we need to:    
+    if(gSubNum==0)
+    {
+	  gSubNum <- GetSubNum(gWin)
+    }
+
+  gFileOut <- FileOpenWrite("mathproc-"+gSubNum+".txt")
 
   footer1 <- EasyLabel("Left Shift                                 Right Shift",gVideoWidth/2,gVideoHeight-80,gWin,30)
   footer2 <- EasyLabel("Sum less than 5                        Sum greater than 5",gVideoWidth/2,gVideoHeight-30,gWin,30)

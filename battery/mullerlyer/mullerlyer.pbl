@@ -5,7 +5,12 @@ define Start(p)
   trials <- 50             ##Number of trials
 
   gWin <- MakeWindow("black")
-  gSubNum <- GetSubNum(gWin)
+
+  if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
+
   gSleepEasy <- 1
   ShowCursor(0)
 

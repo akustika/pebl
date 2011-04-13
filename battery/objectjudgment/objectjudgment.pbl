@@ -27,7 +27,12 @@ define Start(p)
 
   gWin <- MakeWindow("black")
   ShowCursor(0)
-  gSubNum <- GetSubNum(gWin)
+
+  if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
+
   gFileOut <- FileOpenAppend("objjudge-"+gSubNum+".txt")
   gStimColor <- MakeColor("blue")
   gstimFont <-  MakeFont(gPEBLBaseFontMono,0,18,MakeColor("yellow"),gStimColor,1)

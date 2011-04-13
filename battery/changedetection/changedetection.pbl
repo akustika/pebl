@@ -43,10 +43,18 @@ define Start(par)
 
     condsize <- 5        ##Number of trials per condition
 
+    gWin <- MakeWindow("Black")
+    gSleepEasy <- 1
+   ##Get subject code if we need to:    
+   if(gSubNum==0)
+    {
+	  gSubNum <- GetSubNum(gWin)
+    }
+
 
     gFileOut <- FileOpenWrite("change-"+gSubNum+".txt")
-    gSleepEasy <- 1
-    gWin <- MakeWindow("Black")
+
+
 
     if(guseBackground)
     {
