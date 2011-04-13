@@ -562,11 +562,12 @@ define Start(p)
 	  if(gnimhdemographics)
 	  {
 	  	  GetNIMHDemographics(subcode,win,"demographics-log.csv")
-      }
+        }
+        Print(gExpChain)
  	  loop(i,gexpchain)
        {
 	      dc <- First(i)
-		  fname <- Second(i)
+		fname <- Second(i)
           RunScript(dc,fname,gfullscreen,glanguage,logfile,gsubcode,gexperimenter)
        }
    
@@ -878,10 +879,10 @@ define Filter(list,match)
 }
 
 
-define RunScript(gDirChain,filename,fullscreen,language,logfile,subcode,experimenter)
+define RunScript(dirChain,filename,fullscreen,language,logfile,subcode,experimenter)
 {
 
-		 callstring <- "cd " + DirListToText(gDirChain) + " ; " +gPEBLName + " "  +filename + " -s " + subcode
+		 callstring <- "cd " + DirListToText(dirChain) + " & " +gPEBLName + " "  +filename + " -s " + subcode
 		 if(fullscreen)
 		 {
 		   callstring <- callstring + " --fullscreen "
@@ -894,7 +895,7 @@ define RunScript(gDirChain,filename,fullscreen,language,logfile,subcode,experime
                 callstring <- callstring + " > stdout.txt 2> stderr.txt"
            }
 
-         FilePrint(logfile,TimeStamp() + "," + DirListToText(gDirChain)+ filename+","+GetPEBLVersion() + "," + experimenter + "," + subcode + "," +"fullscreen:["+fullscreen+"],"+ language + "," + callstring+ ","+"STARTED")
+         FilePrint(logfile,TimeStamp() + "," + DirListToText(dirChain)+ filename+","+GetPEBLVersion() + "," + experimenter + "," + subcode + "," +"fullscreen:["+fullscreen+"],"+ language + "," + callstring+ ","+"STARTED")
 
          #### Run the experiment!!!!
          Print(callstring)
