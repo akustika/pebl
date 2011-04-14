@@ -5,9 +5,9 @@ CPP  = g++.exe
 CC   = gcc.exe
 WINDRES = windres.exe
 RES  = obj/pebl_private.res
-OBJ  = obj/Variant.o obj/PComplexData.o obj/PList.o obj/PlatformEnvironment.o obj/PlatformFont.o obj/PlatformImageBox.o obj/PlatformKeyboard.o obj/PlatformTimer.o obj/PlatformWidget.o obj/PlatformWindow.o obj/SDLUtility.o obj/PColor.o obj/PEnvironment.o obj/PFont.o obj/PImageBox.o obj/PWidget.o obj/PWindow.o obj/PEBLUtility.o obj/PDevice.o obj/PKeyboard.o obj/PTimer.o obj/DeviceState.o obj/PEventLoop.o obj/PEBL.o obj/Evaluator.o obj/FunctionMap.o obj/grammar.tab.o obj/lex.yy.o obj/Loader.o obj/PNode.o obj/VariableMap.o obj/PEBLEnvironment.o obj/PEBLList.o obj/PEBLMath.o obj/PEBLObjects.o obj/PEBLStream.o obj/PStream.o obj/PEBLPath.o obj/PError.o obj/PAudioOut.o obj/PlatformAudioOut.o obj/PlatformLabel.o obj/PLabel.o obj/PTextObject.o obj/PlatformTextBox.o obj/PTextBox.o obj/PEventQueue.o obj/PEvent.o obj/PlatformEventQueue.o obj/PEBLString.o obj/PEBLObject.o obj/PDrawObject.o obj/PlatformDrawObject.o obj/PNetwork.o obj/PlatformNetwork.o obj/SDL_win32_main.o obj/BinReloc.o obj/PlatformCanvas.o obj/PCanvas.o $(RES)
-LINKOBJ  = obj/Variant.o obj/PComplexData.o obj/PList.o obj/PlatformEnvironment.o obj/PlatformFont.o obj/PlatformImageBox.o obj/PlatformKeyboard.o obj/PlatformTimer.o obj/PlatformWidget.o obj/PlatformWindow.o obj/SDLUtility.o obj/PColor.o obj/PEnvironment.o obj/PFont.o obj/PImageBox.o obj/PWidget.o obj/PWindow.o obj/PEBLUtility.o obj/PDevice.o obj/PKeyboard.o obj/PTimer.o obj/DeviceState.o obj/PEventLoop.o obj/PEBL.o obj/Evaluator.o obj/FunctionMap.o obj/grammar.tab.o obj/lex.yy.o obj/Loader.o obj/PNode.o obj/VariableMap.o obj/PEBLEnvironment.o obj/PEBLList.o obj/PEBLMath.o obj/PEBLObjects.o obj/PEBLStream.o obj/PStream.o obj/PEBLPath.o obj/PError.o obj/PAudioOut.o obj/PlatformAudioOut.o obj/PlatformLabel.o obj/PLabel.o obj/PTextObject.o obj/PlatformTextBox.o obj/PTextBox.o obj/PEventQueue.o obj/PEvent.o obj/PlatformEventQueue.o obj/PEBLString.o obj/PEBLObject.o obj/PDrawObject.o obj/PlatformDrawObject.o obj/PNetwork.o obj/PlatformNetwork.o obj/SDL_win32_main.o obj/BinReloc.o obj/PlatformCanvas.o obj/PCanvas.o $(RES)
-LIBS =  -L"C:/Dev-Cpp/lib" -lmingw32 -lSDLmain -lSDL -mwindows -lSDL_image -lSDL_ttf -lSDL_net -lSDL_gfx -lpng  -mwindows -s 
+OBJ  = obj/Variant.o obj/PComplexData.o obj/PList.o obj/PlatformEnvironment.o obj/PlatformFont.o obj/PlatformImageBox.o obj/PlatformKeyboard.o obj/PlatformTimer.o obj/PlatformWidget.o obj/PlatformWindow.o obj/SDLUtility.o obj/PColor.o obj/PEnvironment.o obj/PFont.o obj/PImageBox.o obj/PWidget.o obj/PWindow.o obj/PEBLUtility.o obj/PDevice.o obj/PKeyboard.o obj/PTimer.o obj/DeviceState.o obj/PEventLoop.o obj/PEBL.o obj/Evaluator.o obj/FunctionMap.o obj/grammar.tab.o obj/lex.yy.o obj/Loader.o obj/PNode.o obj/VariableMap.o obj/PEBLEnvironment.o obj/PEBLList.o obj/PEBLMath.o obj/PEBLObjects.o obj/PEBLStream.o obj/PStream.o obj/PEBLPath.o obj/PError.o obj/PAudioOut.o obj/PlatformAudioOut.o obj/PlatformLabel.o obj/PLabel.o obj/PTextObject.o obj/PlatformTextBox.o obj/PTextBox.o obj/PEventQueue.o obj/PEvent.o obj/PlatformEventQueue.o obj/PEBLString.o obj/PEBLObject.o obj/PDrawObject.o obj/PlatformDrawObject.o obj/PNetwork.o obj/PlatformNetwork.o obj/SDL_win32_main.o obj/BinReloc.o obj/PlatformCanvas.o obj/PCanvas.o obj/PParallelPort.o obj/PJoystick.o obj/PlatformJoystick.o obj/PlatformAudioIn.o obj/PComPort.o obj/rs232.o $(RES)
+LINKOBJ  = obj/Variant.o obj/PComplexData.o obj/PList.o obj/PlatformEnvironment.o obj/PlatformFont.o obj/PlatformImageBox.o obj/PlatformKeyboard.o obj/PlatformTimer.o obj/PlatformWidget.o obj/PlatformWindow.o obj/SDLUtility.o obj/PColor.o obj/PEnvironment.o obj/PFont.o obj/PImageBox.o obj/PWidget.o obj/PWindow.o obj/PEBLUtility.o obj/PDevice.o obj/PKeyboard.o obj/PTimer.o obj/DeviceState.o obj/PEventLoop.o obj/PEBL.o obj/Evaluator.o obj/FunctionMap.o obj/grammar.tab.o obj/lex.yy.o obj/Loader.o obj/PNode.o obj/VariableMap.o obj/PEBLEnvironment.o obj/PEBLList.o obj/PEBLMath.o obj/PEBLObjects.o obj/PEBLStream.o obj/PStream.o obj/PEBLPath.o obj/PError.o obj/PAudioOut.o obj/PlatformAudioOut.o obj/PlatformLabel.o obj/PLabel.o obj/PTextObject.o obj/PlatformTextBox.o obj/PTextBox.o obj/PEventQueue.o obj/PEvent.o obj/PlatformEventQueue.o obj/PEBLString.o obj/PEBLObject.o obj/PDrawObject.o obj/PlatformDrawObject.o obj/PNetwork.o obj/PlatformNetwork.o obj/SDL_win32_main.o obj/BinReloc.o obj/PlatformCanvas.o obj/PCanvas.o obj/PParallelPort.o obj/PJoystick.o obj/PlatformJoystick.o obj/PlatformAudioIn.o obj/PComPort.o obj/rs232.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib" -lmingw32 -lSDLmain -lSDL -mwindows -lSDL_image -lSDL_ttf -lSDL_net -lSDL_gfx -lSDL_audioin -lpng  -mwindows -s 
 INCS =  -I"C:/Dev-Cpp/include" 
 CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include" 
 BIN  = ../bin/pebl.exe
@@ -202,6 +202,24 @@ obj/PlatformCanvas.o: ../src/platforms/sdl/PlatformCanvas.cpp
 
 obj/PCanvas.o: ../src/objects/PCanvas.cpp
 	$(CPP) -c ../src/objects/PCanvas.cpp -o obj/PCanvas.o $(CXXFLAGS)
+
+obj/PParallelPort.o: ../src/devices/PParallelPort.cpp
+	$(CPP) -c ../src/devices/PParallelPort.cpp -o obj/PParallelPort.o $(CXXFLAGS)
+
+obj/PJoystick.o: ../src/devices/PJoystick.cpp
+	$(CPP) -c ../src/devices/PJoystick.cpp -o obj/PJoystick.o $(CXXFLAGS)
+
+obj/PlatformJoystick.o: ../src/platforms/sdl/PlatformJoystick.cpp
+	$(CPP) -c ../src/platforms/sdl/PlatformJoystick.cpp -o obj/PlatformJoystick.o $(CXXFLAGS)
+
+obj/PlatformAudioIn.o: ../src/platforms/sdl/PlatformAudioIn.cpp
+	$(CPP) -c ../src/platforms/sdl/PlatformAudioIn.cpp -o obj/PlatformAudioIn.o $(CXXFLAGS)
+
+obj/PComPort.o: ../src/devices/PComPort.cpp
+	$(CPP) -c ../src/devices/PComPort.cpp -o obj/PComPort.o $(CXXFLAGS)
+
+obj/rs232.o: ../src/utility/rs232.c
+	$(CPP) -c ../src/utility/rs232.c -o obj/rs232.o $(CXXFLAGS)
 
 obj/pebl_private.res: pebl_private.rc 
 	$(WINDRES) -i pebl_private.rc --input-format=rc -o obj/pebl_private.res -O coff 
