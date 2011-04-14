@@ -8,9 +8,14 @@ define Start(p)
 {
 
 
+  ##Additional command-line parameters that should be hardcoded:
+  ## put --driver  --video, etc. here. 
+  gCommandLineAdd <- ""
+
  ##Set this from 1 to 0 to turn off automatic subject code incrementation
  ##it increments the previous code by one, to avoid overwriting
  gAutoSubCode <- 1
+
  gLastUpdate <- GetTime() ##keep track of updates
 
 ###set the configuration/chain name: use 'default' as default.
@@ -895,7 +900,7 @@ define RunScript(dirChain,filename,fullscreen,language,logfile,subcode,experimen
 		   callstring <- callstring + " --fullscreen "
                  }
 
-		 callstring <- callstring + " --language " + language 
+		 callstring <- callstring + " --language " + language  + " " + gCommandLineAdd
   
           if(type =="LINUX" or type == "OSX")
            {
