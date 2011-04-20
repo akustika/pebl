@@ -231,7 +231,7 @@ define WetDry(win)
 
 define HotCold(win)
 {
-   label <- EasyTextBox("How hot or cold do you feel right now? (click   on the line below to indicate your feeling of hot/cold)" ,100,20,win,16,600,50)
+   label <- EasyTextBox("How hot or cold do you feel right now? (click on the line below to indicate your feeling of hot/cold)" ,100,20,win,16,600,50)
    black <- MakeColor("black")
    font <-   MakeFont(gPEBLBaseFont,0,18,black,MakeColor("grey"),1)
    labels <- ["VERY COLD","COLD","COOL","SLIGHTLY COOL","NEUTRAL","SLIGHTLY WARM","WARM","HOT","VERY HOT"]
@@ -334,7 +334,7 @@ define HotCold(win)
 
 define TempChange(win)
 {
-   label <- EasyTextBox("How would you prefer the temperature in the room to be right now? (click on the line below to indicate your feeling of wet/dry)" ,100,20,win,16,600,50)
+   label <- EasyTextBox("How would you prefer the temperature in the room to be right now? (click on the line below to indicate your preference)" ,100,20,win,16,600,50)
    black <- MakeColor("black")
    font <-   MakeFont(gPEBLBaseFont,0,18,black,MakeColor("grey"),1)
    labels <- ["COOLER","NO CHANGE","WARMER"]
