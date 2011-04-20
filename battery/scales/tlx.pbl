@@ -104,7 +104,15 @@ define Start(p)
     }
 
    Draw()
+   outline <- TimeStamp()+","+gSubNum+ ","+taskname
+   loop(i,ratings)
+    {
+	  outline <- outline +","+i 
+    }
+   outline <- outline + ","+GetTime()
 
+   out <- FileOpenAppend("tlx-data.csv")
+   FilePrint(out,outline)
 }
 
 
