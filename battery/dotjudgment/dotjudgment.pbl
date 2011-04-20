@@ -1,0 +1,407 @@
+#################################################
+## The PEBL Dot Judgment Task
+##
+##
+##  designed after one described in 
+##
+##  
+## 
+##
+##
+##Damos, D. L. (1986). Development of a Computer-Based Naval Aviation
+##   Selection Test Battery. NAVAL AEROSPACE MEDICAL RESEARCH LAB PENSACOLA
+##   FL.
+##
+##
+##
+##  As described by Damos, the task is not very interesting.  Once you 
+##  get beyond 10-15 points, you are essentially guessing.  So, we should
+##  will modify it and determine JND thresholds for 10,20,30,40 points,
+##  using and interleaved staircase procedure.
+##
+##
+##  Version 1.0, Released 2011 Shane T Mueller, Ph.D.
+##  http://pebl.sf.net
+##  smueller@obereed.net
+##  
+#################################################
+
+define Start(p)
+{
+
+
+   numReps <- 50  ##
+
+   gWin <- MakeWindow("black")
+
+   Initialize()
+
+   ##Get subject code if we need to:    
+   if(gSubNum==0)
+    {
+	  gSubNum <- GetSubNum(gWin)
+    }
+
+   ##Make data files   
+
+
+   gFileOut <- FileOpenAppend("data/dots-"+gSubNum+".csv")
+   gPooledFileOut <- FileOpenAppend("data/dots-pooled.csv")
+   gSumFileOut <- FileOpenWrite("data/dots-summary-"+ gSubNum+".txt")
+   gLog <- FileOpenAppend("data/dots-log.csv")
+   gPooledSummary <- FileOpenAppend("data/dots-all.csv")
+
+   ##Add headers onto files.
+   flen <- Length(FileReadList("data/dots-pooled.csv"))
+   header <- "subnum,block,trial,practice,standard,thresh,side,corr,abstime,rt"
+
+   if(flen==0)
+    { 
+      Print("empty pooled data file.  Adding header")
+      FilePrint(gPooledFileOut, header)
+    }
+
+   FilePrint(gFileOut,header)
+
+	
+   FilePrint(gLog, gSubNum + "," + gLanguage + "," +  TimeStamp()+",DOTS TASK,"+gResponseType+",INITIATED") 
+   DoInstructions()
+   FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+",DOTS TASK,"+gResponseType+",PRACTICE BEGIN") 
+
+
+
+
+     
+    trials <- Sequence(2,60,1)  
+
+    ##Set up some data holders
+    gBlocknum <-   []
+    gRTs        <- []
+	gCorr <- []
+    gRunningCorr <- []
+	gCorr10     <- []
+    gCorr20     <- []
+    gCorr30     <- []
+    gCorr40     <- []
+
+	base <- [10,20,40,80]
+	thresholds <- [3,3,3,3]
+	gTrial <- 1
+    gBlock <- 0
+
+
+	design <- Shuffle(RepeatList([1,2,3,4],numReps))
+    loop(type,design)
+    {
+
+      thresh <- Nth(thresholds,type)	  
+      newthresh <- Trial(Nth(base,type),thresh,1)
+      thresholds <- SpliceList(thresholds,newthresh,type)		
+	  gTrial <- gTrial + 1
+
+    }    
+
+
+
+
+   FilePrint(gSumFileOut,"-----------------------------------------------")
+   FilePrint(gSumFileOut,"PEBL Dots Task, Version 1.0")
+   FilePrint(gSumFileOut,"http://pebl.sf.net")
+   FilePrint(gSumFileOut,"Shane T. Mueller")
+   FilePrint(gSumFileOut, GetPEBLVersion())
+   FilePrint(gSumFileOut, GetSystemType())
+   FilePrint(gSumFileOut,"-----------------------------------------------")
+   FilePrint(gSumFileOut,"Screen width x height: " +gVideoWidth+ "x"+gVideoHeight)
+   FilePrint(gSumFileOut,"Offset used: "+gOffset)
+   FilePrint(gSumFileOut, "Subject code: "+gSubNum)
+   FilePrint(gSumFileOut, "Time:         "+TimeStamp())
+   FilePrint(gSumFileOut,"-----------------------------------------------")
+
+
+   datalist <- Flatten([Mean(gCorr),Mean(gRTS)])
+              
+   FilePrint(gPooledSummary,gSubNum+","+TimeStamp()+datalist)
+   FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+",dots ,"+gResponseType+",EXPERIMENT COMPLETE") 
+
+  MessageKeyBox(gDebrief)
+
+}
+
+define Trial (stim,thresh,practice)
+{
+   time0 <- GetTime()
+   ##add the fixation right away.
+   header <- EasyLabel("Which field has more dots?",gVideoWidth/2,22,gWin,30)
+   footer <- EasyLabel(gFooterL+"          "+gFooterR,gVideoWidth/2,gVideoHeight-40,gWin,40)
+
+   order <- Sample([1,-1])
+
+   border <- 45
+   tol <- 3
+   if(order==1)
+     {  ##higher on right
+	   layoutl <- NonOverlapLayout(border,gVideoWidth/2-border,border,gVideoHeight-100,tol,stim+thresh)
+       layoutr <- NonOverlapLayout(gVideoWidth/2+border,gVideoWidth-border,border,gVideoHeight-100,tol,stim)
+
+
+     } else {
+
+	   layoutl <- NonOverlapLayout(border,gVideoWidth/2-border,border,gVideoHeight-100,tol,stim)
+       layoutr <- NonOverlapLayout(gVideoWidth/2+border,gVideoWidth-border,border,gVideoHeight-100,tol,stim+thresh)
+
+     }
+
+	 back1 <-Rectangle(gVideoWidth/2/2,(gVideoHeight-100)/2+border/2,(gVideoWidth-border)/2+15,(gVideoheight-100-border)+15,MakeColor("darkgrey"),1)
+	 back2 <-Rectangle(gVideoWidth*3/4,(gVideoHeight-100)/2+border/2,(gVideoWidth-border)/2+15,(gVideoheight-100-border)+15,MakeColor("darkgrey"),1)
+
+	 AddObject(back1,gWin)
+	 AddObject(back2,gWin)
+	 dots <- []
+	 loop(i,Merge(layoutl,layoutr))
+      {
+
+	     dot <-  Circle(First(i),Second(i),8,MakeColor("red"),1)
+		 AddObject(dot,gWin)
+		 dots <- Append(dots,dot)
+      }
+
+	Draw()
+    time2 <- GetTime()
+    gStimOn <- 1
+    RegisterEvent("<TIMER>", 1, time2+1500,"<GEQ>","HIDEME", [dots])
+	resp <- WaitForListKeyPress(["<lshift>","<rshift>"])
+	time3 <- GetTime()
+	
+    corr <- ((order ==-1) and (resp == "<rshift>")) or 
+            ((order ==1) and (resp == "<lshift>")) 
+    rt <- time3-time2
+
+   gRunningCorr <- Append(gRunningCorr,corr)
+   if(Length(gRunningcorr)>10)
+   {
+     gRunningcorr <- SubList(gRunningCorr,2,11)
+   }
+
+
+    if(practice)
+     {
+         if(corr)
+		    {  
+              header.text  <- "Correct   ["+rt+"] "+ thresh
+            } else {
+              header.text  <- "Incorrect ["+rt+"] "+ thresh
+            }
+			Show(header)
+			Draw()
+			Wait(400)
+
+     } 
+   Draw()
+   dataline <- gSubNum + ","+ gBlock + "," +gTrial+","+practice + ","+  stim +","+thresh+","+order+","+
+   corr + ","+time2+","+rt
+               
+   FilePrint(gFileOut,dataline)
+   FilePrint(gPooledFileOut,dataline)
+
+
+   gBlocknum   <- Append(gBlockNum,gBlock)
+   gRTs        <- Append(gRTS,rt)
+   gCorr       <- Append(gCorr,corr)
+
+  RemoveObjects(dots,gWin)
+
+
+  if(corr)
+   {
+    newthresh <- Max([1,(thresh -1)])
+   } else {
+    newthresh <- thresh+2
+   }
+  return newthresh
+}
+
+
+
+define RemoveObjects(list,win)
+{
+	loop(i,list)
+    {
+	   if(IsList(i)  )
+ 	     {
+		   RemoveObjects(i,win)
+         }else{
+           RemoveObject(i,win)
+         }
+    }
+}
+
+
+define ShowAll(list,hideshow)
+{
+   loop(i,list)
+   {
+     i.visible <- hideshow
+   }
+}
+
+
+##This creates a full factorial design with each sublist of list 
+##as a factor.
+define CrossFactors(list)
+{
+     
+  factors <- First(list)
+  size <- 2
+  loop(factor,SubList(list,2,Length(list)))
+  {
+     tmp <-DesignFullCounterbalance(factors,factor)
+	 factors <- FoldList(Flatten(tmp),size)
+	 size <- size + 1
+  }
+  return factors
+}
+
+
+
+
+
+
+define GetStrings(language)
+{
+   if(Uppercase(language)=="EN")
+    {
+       gInst1text <- "This study will test how you both use and ignore information in order to make a decision.  In this task, you will be asked to determine the direction of the center arrow, in a set of five.  If it is pointing left, press the left shift key.  If it is to the right, press the right shift key.  The heads of the arrows surrounding the center arrow will either be in same direction, the opposite direction, will be absent, and only appear as lines.  You will always ignore the surrounding symbols, and respond only to the central arrow.  Some example stimuli are shown below.  Press any key to continue."
+
+       gInst3text  <- "You will start with a short block of practice trials.  After each trial, you will be told whether you are correct, and told how long you took to make the response (in thousandths of a second).  To to respond as quickly and accurately as possible.  Remember, use the left and right shift keys to respond.  Press any key to begin."
+
+       gFooterl <- "left-shift"
+	   gFooterr <- "right-shift"
+       gInterblock <- "Take a short break.  Hit any key to begin the next block."
+       gDebrief <- "Thank you for participating in the study.  Alert the researcher that you are done."
+         
+    } else {
+       ##Fallback to english
+       GetStrings("EN")
+    }
+
+}
+
+
+
+define Initialize()
+{
+
+
+  gResponseType <-"shiftkeys"  ##currently, changing this has no effect.
+  gSleepEasy <- 1
+  GetStrings(gLanguage) 
+  ShowCursor(0)
+
+  ##  The screen re
+  ##
+  gVideoWidth <- 800
+  gVideoheight <- 600
+
+  ## the yoffset is supposed to be 1.06 degrees above offset.
+  ##
+  ##-\                                       X
+  ##  \                                      |
+  ##  #|          tan(1.06) = rise/distance  |
+  ##  #|-------------------------------------X
+  ##  #|
+  ##  /           rise = tan(1.06)*distance
+  ##_/
+  ##
+   
+  ##default to 17" 3x4 screen.  Adjust to suit.
+  screenheight <- 10.2   ## 10.2 inches high
+  eyedistance  <- 30     ##assume 30" from screen.
+  pixelsperunit <- gVideoHeight/screenheight
+  eyepixeldistance <- eyedistance * pixelsperunit
+
+  ##this is the vertical offset
+  gOffset <-  Round(Tan(DegToRad(1.06)) * eyepixeldistance)
+  Print("using offset of "+gOffset)
+   
+   if(not FileExists("data"))
+    {
+       MakeDirectory("data")
+
+    } elseif(not IsDirectory("data"))
+    {
+       SignalFatalError("File named 'data' exists.  Remove so data directory can be created.")    
+    }
+
+   
+
+}
+
+
+define CountDown()
+{
+
+    label <- EasyLabel("",gVideoWidth/2,gVideoHeight/2,gWin,100)
+    labs <- [3,2,1]
+    loop(i,labs)
+     {
+    	label.text <- i
+        Draw()
+		Wait(500)
+     }
+   RemoveObject(label,gWin)
+}
+
+
+define MessageKeyBox(message)
+{
+
+  tb <- EasyTextBox(message,100,100,gWin,28,gVideoWidth-200,gVideoHeight-200)
+  Draw()
+  WaitForAnyKeyPress()
+  RemoveObject(tb,gWin)
+
+}
+
+define DoInstructions()
+{
+
+  Print("no insturcions")   
+}
+
+
+
+define WaitUntil(time)
+{
+    
+     RegisterEvent("<TIMER>", 1, time,"<GEQ>","", [])
+     StartEventLoop()  #Start the timer
+     ClearEventLoop()  #clear it out when done.
+   
+}
+
+define HideMe(stim)
+{
+  if(gStimOn)
+  {
+     ShowAll(stim,0)
+	 gStimOn <- 0
+	 Draw()
+  }
+}
+
+##puts item into position on list
+define SpliceList(list,item,pos)
+{
+  i <- 1
+  tmp <- []
+  loop(itm,list)
+  {
+     if(i==pos)
+	  {
+	    itm <- item
+      }
+    tmp <- Append(tmp,itm)
+   i <- i + 1
+  }
+  return tmp
+}
