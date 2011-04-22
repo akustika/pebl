@@ -46,6 +46,14 @@ define Start(lPar)
   ## Note: modified card sort also may use shorter runlength.
   useReduced <- 0
 
+  ###########################################
+  ## The variable gRuleFeedback gives a cue when the rule changes.
+  ## set from 0 to 1 to turn this feedback ON.
+  ## The exact feedback may need to be translated into your own
+  ## language.
+  gRuleFeedback <- 0
+
+
   gUseMouse <- 1   #0 for keyboard 1-4, 1 for mouse entry.
 
   if(gUseMouse)
@@ -92,6 +100,7 @@ define Start(lPar)
    gColors <-  ["Red", "Green","Yellow","Blue"]
    gShapes <-  ["Triangle","Star","Cross","Circle"]
    gNumbers <- ["1","2","3","4"]
+
    ##Does this really work?
    rules <- ShuffleWithoutAdjacents([[1,1,1],[2,2,2],[3,3,3]])
 
@@ -408,6 +417,18 @@ define Start(lPar)
         #Update conceptual responses when a category is complete
         conceptual <- conceptual + run
 
+### This gives rule-change feedback: 
+##  It is not yet properly translated.
+  if(gRuleFeedback)
+  {
+    tmp <- gPrompt.text
+    gPrompt.text <- "Now the rule has changed"
+    Draw()
+    Wait(500)
+    gPrompt.text <- tmp
+    Draw()
+  }
+
 
         run <- 0
         numCats <- numCats + 1
@@ -651,7 +672,7 @@ define Initialize()
    #Create the insturctions cue
    gPrompt <- MakeLabel(gPromptText,gStimFont)
    AddObject(gPrompt,gWin)
-   Move(gPrompt,350,340)
+   Move(gPrompt,200,300)
    Hide(gPrompt)
 
 
