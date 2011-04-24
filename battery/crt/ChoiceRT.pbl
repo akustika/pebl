@@ -1,36 +1,58 @@
-#!/usr/local/bin/pebl
+## Simple choice reaction time task
+## type the letter displayed on the screen.
+##
+
 define Start(lPar)
-{ #Initialize Window
-  gWindow <- MakeWindow("RED") 
-  
+{
+
+  reps <- 5
+  gSoa <- 2000
+  basestim <- ["a", "d", "c", "e", "o", "n"]
+  gSleepEasy <- 1
+  #Initialize Window
+  gWindow <- MakeWindow("black") 
+  ShowCursor(0)
   #Initialize Font and colors
-  fg <- MakeColor("GREY")
+  fg <- MakeColor("white")
   bg <- MakeColor("RED")
-  gFont <- MakeFont(gPEBLBaseFont,0,22,fg,bg,1)
+  gFont <- MakeFont(gPEBLBaseFont,0,44,fg,bg,0)
   gFixation <- MakeLabel("+",gFont)
   AddObject(gFixation,gWindow)		
-  Move(gFixation, 300,200)
+  Move(gFixation, gVideoWidth/2,gVideoHeight/2)
+  gFooter <- EasyLabel("Choose response with left and right shift key", 
+                        gVideoWidth/2,gVideoHeight-50,gWindow,25)
   Draw()
-  stimuli <- Shuffle(["a", "d", "c", "e", "d", "o", "n"])
+
+  stimuli <- Shuffle(RepeatList(CrossFactorWithoutDuplicates(basestim),reps))
+  fileout <- FileOpenAppend("CRT-"+gSubNum+".csv")
+  FilePrint(fileout,"subnum,targ,foil,time,delay,resp,corr,mask,presstart,respend,prestime,rt")
 
   loop(i, stimuli)
   {
-    Wait(200)
-    Print_(i + "   ")
-    Print( Trial(i))	
+    time <- GetTime()
+    out <- Trial(i)
+    FilePrint_(fileout,gSubNum+","+First(i)+","+Second(i)+","+time)
+     loop(tmp,out)
+      {	
+         FilePrint_(fileout,","+tmp)
+      }   
+    FilePrint(fileout,"")
+    WaitUntil(time+gSOA)
   }
 }
 
 
 define Trial(lStim)
 {
+  targ <- First(lstim)
+  foil <- Second(lstim)
 
-  lText <- MakeLabel(lStim,gFont)  ##Make stimulus label
+  lText <- MakeLabel(First(lStim),gFont)  ##Make stimulus label
   ##Add label to window
   AddObject(lText,gWindow)	
 
   ##Move text to center
-  Move(lText, 300,200)
+  Move(lText, gVideoWidth/2,gVideoHeight/2)
   ##Hide the text; show the fixation
   Hide(lText)
   Show(gFixation)
@@ -38,25 +60,52 @@ define Trial(lStim)
 
   #Wait 1250 msecs and hide the fixation
   Hide(gFixation)
-  Wait(100)
-  Draw()
+  Wait(200)
 
-  #Wait up to 800 msecs and show the text.
+
+  delay <- RandomDiscrete(200)+100
+  t0 <-GetTime()
+  Draw()
+  Wait(delay)
   Show(lText)
-  Wait(100 + RandomDiscrete(100))
   Draw()
-
-  #Get start time.
-  start <- GetTime()
-  #Wait for response, hiding stimulus as soon as it occurs.
+  t1 <-GetTime()
+  Wait(100)
   Hide(lText)
-  lResponse <- WaitForKeyPress(lStim)
+  Draw()
+  #Get start time.
 
+  #Wait for response, hiding stimulus as soon as it occurs.
+  order <- Sample([-1,1])
+  mask <- ListtoString(SampleN(["&","#","@","$","%","*","|","?","/","\"],3))
+  if(order==1)
+   {  
+     ltext.text <- targ + "         "+mask+"          " + foil
+   }else{
+     ltext.text <- foil + "         "+mask+"          " + targ
+   }
+  Show(lText)
+  Draw()
+  start <- GetTime()
+  ##This turns off the stimulus after 00 ms
+  resp <- WaitForListKeyPressWithTimeOut(["<lshift>","<rshift>"],1500,1)
   #Get the response time.
   end <- GetTime()
+  
   Draw()
 
+  corr <- (resp =="<lshift>" and order == 1) or  (resp =="<rshift>" and order == -1) 
   RemoveObject(lText, gWindow)
-  return (end - start)
+  Draw()
+  return [delay,resp, corr , mask,t0,end,(t1-t0),(end - start)]
 }
 
+
+define WaitUntil(time)
+{
+    
+     RegisterEvent("<TIMER>", 1, time,"<GEQ>","", [])
+     StartEventLoop()  #Start the timer
+     ClearEventLoop()  #clear it out when done.
+   
+}

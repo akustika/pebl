@@ -1,8 +1,22 @@
+##  PEBL Test Battery: Muller-Lyer illusion
+##  
+##  This test uses an adaptive design to find a point of 
+##  ambivalence between the two figures in a Muller-Lyer 
+##  illusion.
+## 
+##  Released 2011 Shane T. Mueller, Ph.D smueller@obereed.net
+##  To cite:
+##  Mueller, S. T. (2011).  The PEBL Muller-Lyer Illusion Test. 
+##      Computer Software downloaded from http://pebl.sf.net.
+##
+## 
+
 define Start(p)
 {
 
-  prestime <- 250           ##how long to do the presentation
-  trials <- 50             ##Number of trials
+  prestime <- 500         ##how long to do the presentation, in ms
+  trials <- 50            ##Number of trials
+  spread <- 125           ##How many pixels left and right of the centerline will the stimuli be
 
   gWin <- MakeWindow("black")
 
@@ -14,6 +28,19 @@ define Start(p)
   gSleepEasy <- 1
   ShowCursor(0)
 
+  inst <- EasyTextBox("In this study, you will see pairs of figure, like are shown on the bottom.  You will be asked which side has the longer line.  You should ignore the arrows on the ends, and look just at the line.  In the example below, the lines are actually the same length. There will be a total of "+trials+ " comparisons to make.  Make your decision as quickly and and accurately as possible.  You will make your response by hitting the left and right shift keys.  Press any key to begin.", 10,10,gWin,15,gVideoWidth-20,120)
+  
+ 
+    line1 <- MakeMLStim(gVideoWidth/2-spread,gVideoHeight/2+30,120,50,100)
+    line2 <- MakeMLStim(gVideoWidth/2+spread,gVideoHeight/2+30,120,50,80)
+   
+     AddComplex(line1,gWin)
+     AddComplex(line2,gWin)
+     Draw()
+     WaitForAnyKEyPress() 
+     RemoveComplex(line1,gWin)
+     RemoveComplex(line2,gWin)
+	 Hide(inst,gWin)
   fileout <- FileOpenAppend("mullerlyer-"+gSubNum+".csv")
   header <- EasyLabel("which is longer?",gVideoWidth/2,20,gWin,22)
   footer <- EasyLabel("<lshift>                 <rshift>",gVideoWidth/2,gVideoHeight-40,gWin,22)
@@ -32,7 +59,7 @@ define Start(p)
      l2 <- l1 + diff
 
      line1 <- MakeMLStim(250,gVideoHeight/2,l1,50,100)
-     line2 <-MakeMLStim(gVideoWidth-250,gVideoHeight/2,l2,50,80)
+     line2 <- MakeMLStim(gVideoWidth-250,gVideoHeight/2,l2,50,80)
      AddComplex(line1,gWin)
      AddComplex(line2,gWin)
      Draw()
@@ -67,7 +94,10 @@ define Start(p)
     trial <- trial + 1
   }
 
-
+  inst.text <- "Thank you for participating in the study."
+  Show(inst)
+  Draw()
+  WaitForAnyKeyPress()
 
 }
 

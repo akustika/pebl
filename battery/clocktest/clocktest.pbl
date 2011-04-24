@@ -29,6 +29,7 @@ define Start(p)
   pskip <- .4  #proportion of trials that jump
   gRad <- 240  #radius, in pixels, of clock circle
   gSize <- 9   #size of target
+  trials <- 60 #Number of 1-second trials
 
   gWin <- MakeWindow("black")
   gBasecolor <- MakeColor("white")
@@ -74,14 +75,14 @@ define Start(p)
  
  fileOut <- FileOpenAppend("clock-"+gSubNum+".csv")
   FilePrint(fileout,"subnum,trial,ticker,sec,skip,resp,corr,starttime,rt,curtime")  
-  trials <- 60
+
   trial <- 1
   ticker <- 1
   second <- 1
   doskip <- 0
   lastend <- GetTime()
 
-  while(trial < trials)
+  while(trial <= trials)
   {
    ##compute seconds/clock position, and move there.
     second <- Mod(ticker,60)
