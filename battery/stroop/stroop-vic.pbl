@@ -5,6 +5,11 @@ define Start(p)
 ##
 ##
 ##
+##  Translations: 
+##  Chinese by Ron Ye
+##  Portuguese (Brazilian)
+##
+##
 
  ##The number of trials per block (and condition)
 
@@ -19,10 +24,6 @@ define Start(p)
    {
      gSubNum <- GetSubNum(gWin)
    }
-
-
-
-
 
 
 
@@ -571,8 +572,6 @@ define Initialize()
    Move(gFeedback, gVideoWidth/2, gVideoHeight/2+70)
    Hide(gFeedback)
 
-
-
    
    if(Uppercase(gLanguage)=="PT") {
 
@@ -627,6 +626,34 @@ define Initialize()
    gHeadBegin <-"Press any key to begin"
    gHeadBlock <- "Press key to indicate color."
    gExitText <-"You are now finished. Thank you for participating."
+ 
+   }elseif(Uppercase(gLanguage)=="CN")  {
+   ##Chinese here:
+   gKeys <- ["a","f","j",";"]
+   keystring <-  First(gKeys) +", "+ Second(gKeys)+ ", " +Third(gKeys)+ ", 和 "+ Fourth(gkeys)
+   gColorBaseNames <- ["红","绿","蓝","黄"]
+   gWords   <- ["英","问","走","生"]
+   gPracticeText <- "在我们开始之前, 请花些时间来学习颜色和键位的关系.  分别使用 ["+ keystring +
+                    "] 来进行练习, 按空格键开始测试." 
+   gInst1 <- "你将要进行的测试是用来测查你阅读字和颜色的水平. 在第一部分, 你必须尽快对屏幕中圆点的颜色进行命名. 请跟着灰色的方框并使用对应的按键进行反应 ["+keystring+"].
+
+
+   按任意键开始."
+ 
+   gInst2 <-  "这一次, 请对屏幕中字的颜色尽快的命名. 请跟着灰色的方框并使用对应的按键进行反应 ["+keystring+"].
+
+
+   按任意键开始."
+ 
+
+   gInst3 <- "再一次, 请对屏幕中字的颜色尽快的命名. 不要把字读出来! 你需要对字体的颜色进行命名.
+
+
+   按任意键开始."
+ 
+   gHeadBegin <-"按任意键开始"
+   gHeadBlock <- "按键判断颜色."
+   gExitText <-"你已完成测试. 感谢你的参与."
 
     }elseif(Uppercase(gLanguage)=="SK")
   {
