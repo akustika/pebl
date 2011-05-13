@@ -3,8 +3,8 @@
 ##
 ##   PEBL's Tower of London Test
 ##
-##   Version 0.5
-##   Released August 2010
+##   Version 0.6
+##   Released July 2011
 ##
 ##
 ##
@@ -520,6 +520,12 @@ define InitPoles()
 
    footerfont <-   MakeFont(gPEBLBaseFont,0,20,MakeColor("grey"),MakeColor("black"),1)
 
+
+   gFooter <- MakeLabel(gFooterLab,footerfont)
+   AddObject(gFooter,gWin)
+   Move(gFooter,300,490)
+
+
    height <- First(gPoleHeights)*30+15
    y <- 470-height/2
    r1 <-  Rectangle(220,y,110,height,MakeColor("grey20"),1)
@@ -534,14 +540,16 @@ define InitPoles()
    AddObject(r2,gWin)
    AddObject(r3,gWin)
 
+
+
    ##if we have a 'reset' button, add one.
    if(gAllowReset)
      {
-        r0 <- Rectangle(340,y+110,300,40,MakeColor("grey20"),0)
+        r0 <- Rectangle(340,gFooter.y+50,300,40,MakeColor("grey20"),0)
         AddObject(r0,gWin)
         gZones <- [r0,r1,r2,r3]
         gResetLabel <- MakeLabel(gResetText,footerfont)
-        Move(gResetLabel,340,y+110)
+        Move(gResetLabel,340,gFooter.y+50)
         AddObject(gResetLabel,gWin)
      } else {
         gZones <- [r1,r2,r3]
@@ -565,10 +573,6 @@ define InitPoles()
 
 
 
-
-   gFooter <- MakeLabel(gFooterLab,footerfont)
-   AddObject(gFooter,gWin)
-   Move(gFooter,300,490)
 
    gHeader <- MakeTextBox(gHeaderLab,footerfont,105,95)
    AddObject(gHeader,gWin)
@@ -1568,11 +1572,11 @@ define WaitForClickOnTargetWithTimeout(targetlist,keylist,time)
 
 		 if(Length(pos)==4)
           {
-         if(Nth(pos,4)=="<pressed>")
-          {
-            wait2 <- 0
-            gClick <- pos
-          }
+           if(Nth(pos,4)=="<pressed>" and Nth(pos,3)==1)
+            {
+              wait2 <- 0
+              gClick <- pos
+            }
          } else {
             wait2 <- 0
 			wait1 <- 0
