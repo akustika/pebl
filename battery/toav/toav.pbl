@@ -342,11 +342,11 @@ define Start(lPar)
            rtInc2 <- Append(rtInc2, rt)
          }
          commissions2 <- commissions2 + (1-corr)
-         multiples2   <- multiples1 + mult
-         antic2       <- antic1 + toofast
+         multiples2   <- multiples2 + mult
+         antic2       <- antic2 + toofast
        } else {
 
-         ommissions1 <- ommissions1 + (1-corr)
+         ommissions2 <- ommissions2 + (1-corr)
        }
    }
 
