@@ -2,10 +2,7 @@
 ## The PEBL Dot Judgment Task
 ##
 ##
-##  designed after one described in 
-##
-##  
-## 
+##  designed, loosely, after one described by:
 ##
 ##
 ##Damos, D. L. (1986). Development of a Computer-Based Naval Aviation
@@ -15,8 +12,8 @@
 ##
 ##
 ##  As described by Damos, the task is not very interesting.  Once you 
-##  get beyond 10-15 points, you are essentially guessing.  So, we should
-##  will modify it and determine JND thresholds for 10,20,30,40 points,
+##  get beyond 10-15 points, you are essentially guessing. Thus, it
+##  is modified in order to determine JND thresholds for 10,20,30,40 points,
 ##  using and interleaved staircase procedure.
 ##
 ##
@@ -44,7 +41,7 @@ define Start(p)
 
    ##Make data files   
 
-
+   MakeDirectory("data")
    gFileOut <- FileOpenAppend("data/dots-"+gSubNum+".csv")
    gPooledFileOut <- FileOpenAppend("data/dots-pooled.csv")
    gSumFileOut <- FileOpenWrite("data/dots-summary-"+ gSubNum+".txt")
