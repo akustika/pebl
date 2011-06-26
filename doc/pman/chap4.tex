@@ -1,6 +1,6 @@
 
 \chapter
-{Overview  of  Object Subsystems}
+{Overview of Object Subsystems}
 
 In PEBL, complex objects are stored and automatically self-managed.
 These objects include lists, graphical display widgets like images and
@@ -211,7 +211,7 @@ should work out fine.
 \sect{Colors} 
 
 Colors are PEBL objects.  A color can be created by specifying its name 
-using the \texttt{MakeColor()} function, or by specifying its RGB values using the \texttt{MakeColorRGB()} function. A list of colors and their respective RGB values can be found in the \texttt{Colors.txt} file in the documentation directory. There are nearly 800 from which to choose, so you can create 
+using the \texttt{MakeColor()} function, or by specifying its RGB values using the \texttt{MakeColorRGB()} function. A list of colors and their respective RGB values can be found in the \texttt{Colors.txt} file in the documentation directory, or in the final chapter of the manual. There are nearly 800 from which to choose, so you can create 
 just about anything you can imagine.
 
 Accessible color properties:
@@ -232,9 +232,9 @@ specify a color.  Currently, an experiment can have only one window.
 
 \sect{Graphical Widgets}
 
-Graphical widgets are the building blocks of experimental stimuli. 
-Currently, three widgets are available: images, labels, and textboxes.  
-More complicated widgets are in progress or planned.
+Graphical ``widgets'' are the building blocks of experimental stimuli. 
+Currently, four widgets are available: images, labels, canvasses, and textboxes.  
+More complicated widgets are in progress or planned.  There are also a number of shapes that in some ways behave like widgets, but are technically not.
 
 To be used, a widget must be created and added to a parent window, and
 then the parent window must be drawn.  You can hide widgets with the
@@ -558,9 +558,9 @@ their letter name; others have special names:
 
  "<insert>","<delete>", "<home>", "<end>","<pageup>","<pagedown>" for other
 special keys.
-\end{verbatim}
 
-Function keys <F1> through <F15>.
+Function keys "<F1>" through "<F15>".
+\end{verbatim}
 
 Also, the traditional "modifier" keys can serve as normal keys:
 
@@ -570,6 +570,63 @@ Also, the traditional "modifier" keys can serve as normal keys:
 <rctrl>, <lctrl>, <ralt>,<lalt>,<rmeta>,<lmeta>,<lsuper>,
 <rsuper>,<mode>,<compose>
 
+\end{verbatim}
+
+
+\sect{Joystick Input}
+PEBL supports input with a joystick. In order to use a joystick, you first need to poll the computer to determine whether a joystick is attached, and create a joystick object.  The file joysticktest.pbl in the demo\ directory creates a simple visual depiction of a fairly standard gamepad.
+
+
+A joystick will have up to four types of inputs on it: buttons, axes, hats, and balls.  But different joysticks are different, and so you may need to do some checking and testing for your particular setup.  PEBL currently does not support force-feedback or rumble functions available on some joysticks.
+
+\subsubsection{Axes:} Each axis takes on a value between 1 and 32768. For a  normal hand-grasp joystick , the first two axis will be determined by the relative x and y positions of the joystick.  Gamepads often have triggers that are additional axis, or sometimes there are throttles (or gas/brake pedals in driving devices) that are mapped to axes.
+Find out how many axes exist with \texttt{GetNumJoystickAxes()}.  Get the state of a particula axis with \texttt{GetJoystickAxisState()}.  
+
+
+\subsubsection{Hats:}.  Hats are the little 8-way buttons that control direction on many game pads.  They are sort of a digital axis, because each state is absolute.  The entire hat state takes on a single integer number between 0 and 15.  It is binary coded to specify whether each of the four major axes buttons are depressed:
+\begin{itemize}
+\item left: 8
+\item bottom: 4
+\item right: 2
+\item top: 1
+\end{itemize}
+The mechanics of the hat allows two buttons to be pressed simultaneously, indicating, for example, southeast or northwest.  An example of how to extract the bitwise button states is found in the joysticktest.pbl file.
+\subsubsection{Buttons:}.  Usually, the state of each of the buttons on the joystick can be identified.  Button state is coded so that 0=unpressed, 1=pressed.  There  can easily be a dozen or more buttons on a joystick, enabling some pretty elaborate response modes for experiments.
+
+\subsubsection{Balls:} Balls are very rare; you may have seen them in old-style arcade games like Arkenoid.   No consumer joysticks available today have balls, and they have not been tested in PEBL.
+
+A number of functions are available for creating a joystick object and polling the joystick's current state:
+
+
+Summary of joystick functions:
+\begin{verbatim}
+GetNumJoysticks()
+OpenJoystick()
+GetNumJoystickAxes()
+GetNumjJoystickBalls()
+GetNumJoystickButtons()
+GetNumJoystickHats()
+GetJoystickAxisState()
+GetJoystickHatState()
+GetJoystickButtonState()
+\end{verbatim}
+
+Currently, the joystick state is not integrated into PEBL's event loop.  Consequently, there are no functions such as WaitForJoystickButton(), and no way to create or monitor events.  To use the joystick, you need to monitor the state of the device manually, and create a polling loop yourself, like:
+
+
+\begin{verbatim}
+  ##This will keep looping until you press the first button
+  js < OpenJoystick(1)  ##open the first joystick connected to the system  
+  gCont <- 1
+  while (gCont)
+    {
+      state <- GetJoystickAxisState(js,1)
+      Print(state)
+      ##Do something with the axis1 here
+      
+      
+      gCont <- GetJoystickButtonState(1)
+    }
 \end{verbatim}
 
 
@@ -671,6 +728,39 @@ avoid any extra overhead.
 
 A simple example of an experiment that uses TCP/IP to communicate is
 the NIM game in  demo/nim.pbl.
+
+
+
+\sect{Parallel Port}
+Starting with Version 0.12, PEBL can send and receive information via a standard parallel (printer) port.    These don't appear on many computers anymore, but you can still get them, and they are still important ways to interface with hardware devices such as EEG and MRI machines and homebrew button boxes.  Currently, parallel port access is fairly limited to setting and getting the state of the 8 data bits.  Parallel ports have a number of bits you can play with, but currently PEBL only supports the basic 8 data bits.  Basically, you can set the state of the bits or read the state of the bits, which can either control things like LEDs, or be impacted by making connections between the ground and the data bit.
+
+
+If you have a parallel port, it is mapped to one of three ports: LPT1, LPT2, or LPTX.  To initialize access to a port, you must call OpenPPort with the name of your port:
+\begin{verbatim}
+  port <- OpenPPort("LPT1")
+\end{verbatim}
+
+Parallel ports have two modes, input and output.  To read data in, it needs to be in input mode; to change the state of the bits, it needs to be in output mode.  Set the state with SetPPortMode(port,"<input>") or SetPPortMode(port,"<output>").
+
+To access the state of a port, use GetPPortState(port).  It will return a string of "|" separated 1s and 0s, which specify the state of each of the 8 bits.
+
+To set the state of the port, use SetPPortState(port,state).  state should be a list of 8 0s or 1s:
+
+SetPPortState(port, [0,0,0,0,0,0,0,1])
+
+The internal c++ parallel port classes have substantially more flexibility, and can be adapted to do more complex access of parallel ports.
+
+
+
+
+\sect{Serial Port}
+
+            {"OPENCOMPORT",      OpenComPort,          1,1},
+            {"COMPORTSENDBYTE",  ComPortSendByte,      2,2},
+            {"COMPORTGETBYTE",   ComPortGetByte,       1,1},
+
+
+
 
 \sect{The Event Loop}
 

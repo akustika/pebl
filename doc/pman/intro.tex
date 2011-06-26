@@ -8,12 +8,14 @@ suit your needs as long as you follow the terms of the GPL, under
 which the source code is licensed. PEBL is written primarily in
 \texttt{C++}, but requires a few other tools (\texttt{flex},
 \texttt{yacc}) and libraries (\texttt{SDL}, \texttt{SDL\_image},
-\texttt{SDL\_gfx}, and \texttt{SDL\_ttf}) to use. It currently
+\texttt{SDL\_gfx}, and \texttt{SDL\_ttf}) to use. 
+
+
+It currently
 compiles and runs on Linux (using \texttt{g++}), Mac OSX (also using
 \texttt{g++}), and Microsoft Windows (using \texttt{Dev-cpp} and
 \texttt{mingw}) platforms using free tools. It has been developed
-primarily by Shane T.~Mueller,
-Ph.D. (\href{mailto:smueller@obereed.net}{smueller@obereed.net}). This
+primarily by Shane T.~Mueller, Ph.D. (\href{mailto:smueller@obereed.net}{smueller@obereed.net}). This
 document was prepared with editorial and formatting help from Gulab
 Parab and Samuele Carcagno. Contributions are welcome and encouraged.
 
@@ -25,7 +27,8 @@ their own version, however.  The next section describes how to do this.
 \sect{How to Compile}
 
 Currently, there is no automated compile procedure.  PEBL requires the
-\texttt{SDL}, \texttt{SDL-image}, \texttt{SDL-gfx} and
+\texttt{SDL}, \texttt{SDL-image}, \texttt{SDL-gfx} \texttt{SDL\_net},
+ \texttt{SDL\_audioin} and
 \texttt{SDL-ttf} libraries and development headers.  It also uses
 \texttt{flex} and \texttt{bison}, but you can compile without these
 tools. PEBL compiles on both Linux and Windows using the free
@@ -87,13 +90,15 @@ reside there to be run.
 
 \subsection{Macintosh OSX}
 
-For the MAC, we provide a \texttt{.pkg} installer that installs all the
+For OSX, we provide a \texttt{.pkg} installer that installs all the
 necessary files and libraries in \texttt{/usr/local/share/pebl}.  PEBL can be
 run from the command line by invoking \texttt{/usr/local/bin/pebl}.
 
 
 \sect{How to Run a PEBL Program}
 
+
+The simplest way to run any PEBL script is via the launcher, which is available on all platforms. The launcher is covered in detail in Chapter 6. But, you can also launch experiments individually on each platform.
 
 \subsection{Linux}
 
@@ -144,58 +149,11 @@ Another way is to write and launch a batch file, which is especially
 useful if you wish to enter configuration data before loading the
 script.
 
-\subsubsection{ Win32 Launcher}
-PEBL comes with a launcher program that launches PEBL scripts in
-Microsoft Windows (tm).  It will allows you to specify variables to
-pass into PEBL on execution, select multiple source files to load, and
-configure with a text file.
-
-The launcher is written in Visual Basic, and so you might need some
-\texttt{.dll} files in order for it to run.
-\newpage
-When the launcher is run, it first looks for a file called
-\texttt{pebl-init.txt}. This file should have the following format:
-
-\begin{verbatim}
----------------Beginning of file----------------------
-"Quoted_Path_To_PEBL_Executable"
-"Quoted_Path_To_Directory_To_Load_Files_From"
-"File1.pbl" "File2.pbl"
-1st Variable Label|Initial_Value
-2nd Variable Label|Initial_Value
-3rd Variable Label|Initial_Value
-.
-.
-.
-------------------End of file-------------------------
-\end{verbatim}
-My actual pebl-init looks like this:
-\begin{verbatim}
--------------
-"c:\Documents and Settings\smueller\My Documents\pebl\bin\pebl.exe"
-"c:\Documents and Settings\smueller\My Documents\pebl\demo\"
-"hello.pbl"
-Subject Number|1
-Condition|fast
--------------
-\end{verbatim}
-
-
-The Launcher will select the specified files in the listed directory
-(this can be changed by selecting other files).  After the third line,
-every pair separated with a `\texttt{|}' will appear as a text-entry
-box with the pre-specified default value. This can be used to specify
-subject numbers, conditions, and such, which are then fed into the
-PEBL script.
-
-As of version 0.06, the launcher is improved so that it will open the
-\verb+stdout.txt+ and \verb+stderr.txt+ files after a script has been run and
-display them in a tabbed interface at the bottom of the launcher
-window.
 
 \subsection{ Macintosh OSX}
 
-The latest version of PEBL packaged for OSX is 0.11. Currently, PEBL requires a 64-bit computer OS, but it could conceivably be complied on 32 OSX.
+The latest version of PEBL packaged for OSX is 0.12. It is compiled as an application bundle with both 32-bit and 64-bit architectures available. We do not support PPC architecture.
+
 
 On OSX, PEBL can be run as a command-line tool, just as in linux.
 Also, you can make a .command file (see instructions in the

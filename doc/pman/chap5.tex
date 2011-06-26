@@ -46,7 +46,7 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+ACos+ &\verb+<num>+ &Inverse Cosine of \verb+<num>+, in degrees\\ 
 \verb+DegToRad+ &\verb+<deg>+ &Converts degrees to radians\\ 
 \verb+RadToDeg+ &\verb+<rad>+ &Converts radians to degrees\\ 
-\verb+Round+ &\verb+<num>+ &Rounds \verb+<num>+ to nearest integer\\ 
+\verb+Round+ &\verb+<num>+, (optional) \verb+<precision>+ &Rounds \verb+<num>+ to nearest integer, or optionally power of 1/ten precision.\\ 
 \verb+Floor+ &\verb+<num>+ &Rounds \verb+<num>+ down to the next integer\\ 
 \verb+Ceiling+ &\verb+<num>+ &Rounds \verb+<num>+ up to the next integer\\ 
 \verb+AbsFloor+ &\verb+<num>+ &Rounds \verb+<num>+ toward 0 to an integer\\ 
@@ -94,6 +94,12 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+SegmentsIntersect+&\verb+<ax,ay,bx,by,cx,cy,dx,dy>+\\
 & &Determines whether line segment ax intersects cd.\\
 
+\verb+NonOverlapLayout&\verb+<xmin,xmax,ymin,ymax,tol,num>+ &Creates a set of num points that don't overlap, but fails gracefully\\
+%% these are not released yet:
+%% \verb+LayoutGrid&\verb++&Creates [x,y] pairs in a grid for graphical layout \\
+%%  \verb+LayoutGrid2&\verb++&Creates [x,y] pairs in a grid for graphical layout \\
+
+
 \addlinespace[0.2cm] 
 
 \cmidrule(l{.5cm}r{.5cm}){1-3} 
@@ -121,6 +127,11 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+FileReadText+ &\verb+<filename>+ &Reads all of the text in the file into a variable\\ 
 \verb+EndOfLine+ &\verb+<filestream>+&Returns true if at end of line \\ 
 \verb+EndOfFile+ &\verb+<filestream>+&Returns true if at the end of a file\\ 
+\verb+GetDirectoryListing+&\verb+<path>+&Returns a list of all the files/subdirectories in a path\\
+\verb+FileExists+&\verb+<path>+&Checks whether a file exists\\
+\verb+IsDirectory+&\verb+<path>+&Checks whether a file is a directory\\
+\verb+MakeDirectory+&\verb+<path>+,\verb+<dirname>+&\\Creates a directory in path\\
+
 \verb+ConnectToIP+ &\verb+<ip>+ \verb+<port>+&Connects to a port on another computer, returning network object.   \\
 \verb+ConnectToHost+&\verb+<hostname>+ \verb+<port>+&Connects to a port on another computer, returning network object.\\
 \verb+WaitForNetworkConnection+& & \\ 
@@ -132,6 +143,24 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+ConvertIPString+&\verb+<ip-as-string>+&Converts an
 ip-number-as-string to usable address \\
 \verb+WritePNG+&\verb+<filename>+, \verb+<object>+ &Makes a .png from a window or object\\
+
+\verb+GetNumJoysticks+& no argument&Determines how many joysticks are available\\
+\verb+OpenJoystick+& \verb+joystick_id+& Gets a joystick object\\
+\verb+GetNumJoystickAxes+&\verb+joystick_object+&Counts how many axes on a joystick\\
+\verb+GetNumJoystickBalls+\\
+ &\verb+joystick_object+&Counts how many balls on a joystick\\
+\verb+GetNumJoystickButtons+\\
+&\verb+joystick_object+&Counts how many buttons on a joystick\\
+\verb+GetNumJoystickHats+\\
+&\verb+joystick_object+&Counts how many hats on a joystick\\
+\verb+GetJoystickAxisState+\\
+&\verb+joystick_object+, \verb+axis_id+&Gets the state of a joystick axis\\
+\verb+GetJoystickHatState+\\
+&\verb+joystick_object+, \verb+hat_id+&Gets the state of a joystick hat\\
+\verb+GetJoystickButtonState+\\
+&\verb+joystick_object+, \verb+button_id+&Gets the state of a joystick button\\
+\verb+GetJoystickBallState+\\
+&\verb+joystick_object+, \verb+ball_id+&Gets the state of a joystick ball\\
 
 \addlinespace[0.2cm] 
 
@@ -172,11 +201,11 @@ erasing anything drawn on the canvas\\
 \verb+Hide+ &\verb+<object>+ &Hides an object\\ 
 \verb+ShowCursor+ &\verb+<object>+ &Hides or show mouse cursor.\\
 \verb+GetMouseCursorPosition+ & &Gets [x,y] position of mouse\\
+\verb+GetMouseState+&&Gets [x,y,b1,b2,b3] list of mouse state, including button states\\
 \verb+SetMouseCursorPosition+ \\
 &\verb+<x>+,\verb+<y>+ &Sets x,y position of mouse\\
-\verb+ShowCursor+ &\verb+<object>+ &Hides or show mouse cursor.\\
 
-\verb+Draw+ &\verb+<object>+ &Redraws a widget and its children\\ 
+\verb+Draw+ &\verb+<object>+ or no argument &Redraws a widget and its children\\ 
 \verb+DrawFor+ &\verb+<object>+ \verb+<cycles>+ &Draws for exactly \verb+<cycles>+ cycles, then returns\\ 
 \verb+Circle+ &\verb+<x>+ \verb+<y>+ \verb+<r>+  \verb+<color>+ \verb+<filled>+&Creates circle with radius r centered at position x,y\\ 
 \verb+Ellipse+ &\verb+<x>+ \verb+<y>+ \verb+<rx>+ \verb+<ry>+\verb+<color>+ \verb+<filled>+&Creates ellipse with radii rx and ry centered at position x,y\\ 
@@ -210,7 +239,12 @@ points for a set\\
 \verb+PlayForeground+ &\verb+<sound>+ &Plays the sound `in the foreground', not returning until the sound is complete\\ 
 \verb+PlayBackground+ &\verb+<sound>+ &Plays the sound 'in the background', returning immediately\\ 
 \verb+Stop+ &\verb+<sound>+ &Stops a sound playing in the background from playing\\ 
-%\verb+MakeSineWave+ & & NOT IMPLEMENTED\\ 
+\verb+MakeSineWave+ & \verb+freq+,\verb+duration+,\verb+amplitude+& Creates a pure sine wave.\\ 
+
+\verb+MakeAudioInputBuffer+ & \verb+<time-in-ms>+& Creates a buffer to record audio input\\
+\verb+SaveAudioToWaveFile+ &\verb+<filename>+,\verb+<buffer>+ & Saves buffer to a .wav file format\\
+\verb+GetVocalResponseTime+ &\verb+<buffer>+,\verb+<threshold>+,\verb+<duration>+ & A simple voice key\\
+
 %\verb+MakeSquareWave+ & & NOT IMPLEMENTED\\ 
 %\verb+MakeSawtoothWave+ & & NOT IMPLEMENTED\\ 
 %\verb+MakeChirp+ & & NOT IMPLEMENTED\\ 
@@ -249,9 +283,9 @@ points for a set\\
 \verb+WaitForClickOnTarget+ & &Waits until any of a set of target objects are clicked.\\ 
 \verb+WaitForDownClick+ & &Waits for mouse button to be clicked \\ 
 
-\verb+RegisterEvent+ &\verb+<>+ & NOT IMPLEMENTED\\ 
-\verb+StartEventLoop+ &\verb+<>+ & NOT IMPLEMENTED\\ 
-\verb+ClearEventLoop+ &\verb+<>+ & NOT IMPLEMENTED\\ 
+\verb+RegisterEvent+ &\verb+<>+ &Registers events to trigger based on particular conditions\\ 
+\verb+StartEventLoop+ &\verb+<>+ &Starts the event loop\\ 
+\verb+ClearEventLoop+ &\verb+<>+ &Clears all trigger events from event loop\\ 
 \verb+SignalFatalError+ &\verb+<message>+ & Halts execution, printing out message \\ 
 \verb+TranslateKeyCode+ &\verb+<>+ &Converts a keycode to a key name\\ 
 \verb+TimeStamp+ & &Returns a string containing the current date and time\\ 
