@@ -767,8 +767,18 @@ The internal c++ parallel port classes have substantially more flexibility, and 
 To assist in testing for multiple input events simultaneously, 
 PEBL implements an event loop that will quickly scan multiple conditions
 and execute proper results whenever any one condition is met.  
-This is currently primarily a back-end system 
-which will be developed more in the future.
+
+The event loop works by maintaining a list of triggers that can be satisfied by various conditions. The conditions typically specify a device or other data source to examine, such as the timer.  On each cycle of the loop, all events are examined, and when any of them are satisfied, either a specified function will be executed, or the event loop will exit.  Most of the timing and input functions use the event loop behind the scenes.
+
+As of Version  0.12, simple means to program the event loop are available.  Three functions include:
+\begin{itemize}
+\item RegisterEvent().  This allows you to specify a condition and a function name which executes whenever the condition is true.      
+\item StartEventLoop().  This starts the event loop, with all available events.     
+\item ClearEventLoop().  This clears out the event loop so other events can be used.     
+\end{itemize}
+Note that because other functions, such as Wait(), use the event loop, you can pre-load extra events and start the event loop with one of these functions.
+
+These are used in a number of test battery tasks.  However, their use is currently somewhat experimental, and their names and arguments may change in the future, and so we will not provide a detailed description of their use here.
 
 
 \sect{Errors and Warnings}
@@ -778,7 +788,7 @@ will run.  If you crash with a segmentation fault, this is an error
 and you should report it.  When a fatal error or non-fatal warning
 occurs, PEBL attempts to identify the location in your input file that
 led to the warning.  On Linux, the warning and this location are
-printed to the command-line upon exit; on MS Windows, they are printed
+printed to the command-line upon exit; on MS Windows or if you are using the launcher on any platform, they are printed
 to the file \texttt{stderr.txt}.
 
 You can do error checking  in your own scripts with the
