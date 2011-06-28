@@ -225,6 +225,10 @@ erasing anything drawn on the canvas\\
 & &Makes a complex ``Attneave'' polygon\\
 \verb+ConvexHull+&\verb+<list-of-pts>+Returns a convex subset of
 points for a set\\
+\verb+KaneszaSquare+& \verb+squaresize+, \verb+circleradius+,\verb+fg+,\verb+bg+ & Creates a 'Kanesza Square' stimulus.\\
+\verb+KaneszaPolygon+&\verb+points+,\verb+circTF+, \verb+circleradius+,\verb+fg+,\verb+bg+,\verb+show+& Create generic Kanesza polygon.\\
+ 
+
 \verb+Inside+  & \verb+<[x,y]>+ \verb+<object>+ & Determines whether a point is inside a graphical object\\ 
 \verb+SetPixel+&\verb+x,y,color+&Sets the color of a pixel on an image or canvas to \verb+color+\\
 \verb+SetPoint+&\verb+x,y,color+&Sets the color of a pixel on an image or canvas to \verb+color+\\
@@ -296,6 +300,8 @@ points for a set\\
 \verb+GetSubNum+ & \verb+<window>+ & Asks user to enter subject number\\
 \verb+MessageBox+ &\verb+<text>+ \verb+<win>+&Pops up a message, overtop the entire screen, and waits for a click to continue.\\
 \verb+GetEasyInput+&\verb+<text>+ \verb+<win>+&Gets typed input based on a prompt.\\
+\verb+GetEasyChoice+&\verb+<text>+, \verb+<choices>+, &\\
+                   &\verb+<output>+, \verb+<window>+ &\\
 \verb+IsAudioOut+ & \verb+<variant>+ & Tests whether \verb+<variant>+ is a AudioOut stream\\ 
 \verb+IsCanvas+ & \verb+<variant>+ & Tests whether \verb+<variant>+ is a Canvas\\ 
 \verb+IsColor+ & \verb+<variant>+ & Tests whether \verb+<variant>+ is a Color\\ 
