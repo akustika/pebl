@@ -90,11 +90,11 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+GetAngle+&\verb+<x>+,\verb+<y>+&Returns the angle in degrees of a vector.\\
 \verb+Dist+&\verb+<x1,y1>+,\verb+<[x2,y2]>+&Returns distance between two points.\\
 \verb+ToRight+&\verb+<p1,p2,p3>+&Determines whether p3 is te the right of line p1p2\\
-\verb+GetAngle3+&\verb+<a,b,c>+&Gets angle abc.\\
-\verb+SegmentsIntersect+&\verb+<ax,ay,bx,by,cx,cy,dx,dy>+\\
+\verb+GetAngle3+&\verb+<a,b,c>+ & Gets angle abc.\\
+\verb+SegmentsIntersect+ & \verb+<ax,ay,bx,by,cx,cy,dx,dy>+ \\
 & &Determines whether line segment ax intersects cd.\\
-
-\verb+NonOverlapLayout&\verb+<xmin,xmax,ymin,ymax,tol,num>+ &Creates a set of num points that don't overlap, but fails gracefully\\
+\verb+NonOverlapLayout+&\verb+<xmin,xmax,ymin,ymax,tol,num>+\\
+&  &Creates a set of num points that don't overlap, but fails gracefully\\
 %% these are not released yet:
 %% \verb+LayoutGrid&\verb++&Creates [x,y] pairs in a grid for graphical layout \\
 %%  \verb+LayoutGrid2&\verb++&Creates [x,y] pairs in a grid for graphical layout \\
@@ -103,7 +103,7 @@ contribute to the PEBL project by implementing the function yourself.
 \addlinespace[0.2cm] 
 
 \cmidrule(l{.5cm}r{.5cm}){1-3} 
-\multicolumn{3}{c}{\textbf{File/NetworkStream Functions}}\\ 
+\multicolumn{3}{c}{\textbf{File/Network/Device Functions}}\\ 
 \cmidrule(l{.5cm}r{.5cm}){1-3} 
 
 \verb+Print+ &\verb+<value>+ &Prints \verb+<value>+ to \texttt{stdout}, appending a new line afterwards. \texttt{stdout} is the console (in Linux) or the file \texttt{stdout.txt} (in Windows)\\ 
@@ -127,11 +127,12 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+FileReadText+ &\verb+<filename>+ &Reads all of the text in the file into a variable\\ 
 \verb+EndOfLine+ &\verb+<filestream>+&Returns true if at end of line \\ 
 \verb+EndOfFile+ &\verb+<filestream>+&Returns true if at the end of a file\\ 
-\verb+GetDirectoryListing+&\verb+<path>+&Returns a list of all the files/subdirectories in a path\\
+\verb+GetDirectoryListing+\\
+                  &\verb+<path>+&Returns a list of all the files/subdirectories in a path\\
 \verb+FileExists+&\verb+<path>+&Checks whether a file exists\\
 \verb+IsDirectory+&\verb+<path>+&Checks whether a file is a directory\\
-\verb+MakeDirectory+&\verb+<path>+,\verb+<dirname>+&\\Creates a directory in path\\
-
+\verb+MakeDirectory+&\verb+<path>+,\verb+<dirname>+&Creates a directory in path\\
+\verb+AppendFile+& \verb+<file1>+ ,\verb+<file2>+ & Appends a file2 to file1\\
 \verb+ConnectToIP+ &\verb+<ip>+ \verb+<port>+&Connects to a port on another computer, returning network object.   \\
 \verb+ConnectToHost+&\verb+<hostname>+ \verb+<port>+&Connects to a port on another computer, returning network object.\\
 \verb+WaitForNetworkConnection+& & \\ 
@@ -162,6 +163,16 @@ ip-number-as-string to usable address \\
 \verb+GetJoystickBallState+\\
 &\verb+joystick_object+, \verb+ball_id+&Gets the state of a joystick ball\\
 
+\verb+OpenCOMPort+    & \verb+<portnum>+, \verb+<baud>+ & Opens a serial (com) port\\
+\verb+COMPortGetByte+ &\verb+<port>+                    & Gets a byte from the comport\\
+\verb+COMPortSendByte+  &\verb+<port>+,\verb+<byte>+   & Sends a character to the comport\\
+
+
+\verb+OpenPPort+     & \verb+<portname>+ & Opens parallel port\\
+\verb+SetPPortMode+  & \verb+<port>+ \verb+<mode>+& Sets parallel port mode (input/output)\\
+\verb+SetPPortState+ & \verb+<port>+ \verb+<state>+& Sets parallel port state\\
+\verb+GetPPortState+ & \verb+<port>+ & Gets state of parallel port data bits\\
+
 \addlinespace[0.2cm] 
 
 \cmidrule(l{.5cm}r{.5cm}){1-3} 
@@ -188,6 +199,8 @@ erasing anything drawn on the canvas\\
 \verb+GetCursorPosition+\\
    &\verb+<textbox>+ &Gets the position of the editing cursor\\ 
 \verb+SetEditable+ &\verb+ <textbox>+ \verb+<status>+& Turns on or off the editing cursor\\ 
+\verb+GetTextBoxCursorFromClick+&\\
+\\ & \verb+<relx>,<rely>+ & Gets a cursor position (in characters) from a mouse click.\\
 \verb+GetText+ &\verb+<textobject>+ &Returns the text in a textbox or label\\ 
 \verb+GetInput+ &\verb+<textbox>+ \verb+<escape-key>+& Allows a textbox to be edited by user, returning its text when \verb+<escape-key>+ is pressed.\\ 
 \verb+SetText+ &\verb+<textobject>+, \verb+<text>+ &Sets the text in a textbox or label\\ 
@@ -243,12 +256,18 @@ points for a set\\
 \verb+PlayForeground+ &\verb+<sound>+ &Plays the sound `in the foreground', not returning until the sound is complete\\ 
 \verb+PlayBackground+ &\verb+<sound>+ &Plays the sound 'in the background', returning immediately\\ 
 \verb+Stop+ &\verb+<sound>+ &Stops a sound playing in the background from playing\\ 
-\verb+MakeSineWave+ & \verb+freq+,\verb+duration+,\verb+amplitude+& Creates a pure sine wave.\\ 
 
-\verb+MakeAudioInputBuffer+ & \verb+<time-in-ms>+& Creates a buffer to record audio input\\
-\verb+SaveAudioToWaveFile+ &\verb+<filename>+,\verb+<buffer>+ & Saves buffer to a .wav file format\\
-\verb+GetVocalResponseTime+ &\verb+<buffer>+,\verb+<threshold>+,\verb+<duration>+ & A simple voice key\\
+\verb+MakeSineWave+ & \verb+freq+,\verb+duration+,\verb+amplitude+\\
+&& Creates a pure sine wave.\\ 
 
+\verb+MakeAudioInputBuffer+ \\
+& \verb+<time-in-ms>+ &Creates a buffer to record audio input\\
+
+\verb+SaveAudioToWaveFile+ \\
+& \verb+<filename>+,\verb+<buffer>+  & Saves buffer to a .wav file format\\
+
+\verb+GetVocalResponseTime+ & &A simple voice key\\
+ &\verb+<buffer>+,\verb+<threshold>+,\verb+<duration>+ \\
 %\verb+MakeSquareWave+ & & NOT IMPLEMENTED\\ 
 %\verb+MakeSawtoothWave+ & & NOT IMPLEMENTED\\ 
 %\verb+MakeChirp+ & & NOT IMPLEMENTED\\ 
@@ -295,7 +314,9 @@ points for a set\\
 \verb+TimeStamp+ & &Returns a string containing the current date and time\\ 
 \verb+GetPEBLVersion+ &\verb+<>+ &Returns a string indicating which version of PEBL you are using\\ 
 \verb+GetSystemType+ &\verb+<>+ &Identifies the type of operating system being used.\\ 
-\verb+SystemCall+ &\verb+<text>+ &Executes command in operating system\\ 
+\verb+GetVideoModes+&\verb+<>+& Gets list of available screen resolutions\\
+\verb+SystemCall+ &\verb+<command>+ \verb+<optional-args>+ &Executes command in operating system\\ 
+\verb+LaunchFile+ & \verb+<file>+&Launches a file using platform-specific handlers\\
 \verb+GetNIMHDemographics+ & \hspace{0.7cm}\verb+<code>+ \verb+<window>+ \verb+<file>+ & Asks NIMH-related questions\\ 
 \verb+GetSubNum+ & \verb+<window>+ & Asks user to enter subject number\\
 \verb+MessageBox+ &\verb+<text>+ \verb+<win>+&Pops up a message, overtop the entire screen, and waits for a click to continue.\\
@@ -365,6 +386,13 @@ list, in the order they appear in the original list\\
 \verb+SortBy+ &\verb+<list>+ \verb+<key>+ & Sorts list by the values in \verb+<key>+ \\ 
 \verb+Nth+ &\verb+<list>+ \verb+<n>+ &Returns the nth item in a list.\\ 
 \verb+Subset+ &\verb+<list>+ \verb+<list-of-indices>+ & returns a subset of items from a list\\ 
+
+\verb+Match+&\verb+[list]+,\verb+<item>+&Returns a list of 0/1s, indicating which elements of list match item.\\
+
+\verb+Filter+&\verb+[list]+,\verb+<indicators>+& Filters a list based on a 0/1 list produced by Match.\\
+
+\verb+Levels+&\verb+[list]+&Returns a sorted list of unique elements in list.\\
+
 \verb+Rest+ & \verb+<list>+& Returns a list minus its first element\\
 \verb+ExtractListItems+ &\verb+<list>+ \verb+<list-of-indices>+ & \\ 
 \verb+IsMember+ &\verb+<item>+ \verb+<list>+ & Checks whether \verb+<item>+ is a member of \verb+<list>+ \\ 
@@ -372,8 +400,8 @@ list, in the order they appear in the original list\\
 \verb+Lookup+& \verb+<key>+ \verb+<keylist>+ \verb+<database>+&returns
 element in \verb+<database>+ corresponding to element of
 \verb+<keylist>+ that matches \verb+<key>+.\\
-\verb+RemoveDuplicates+ & & NOT IMPLEMENTED\\ 
-\verb+MakeMap+ & & NOT IMPLEMENTED\\ 
+%\verb+RemoveDuplicates+ & & NOT IMPLEMENTED\\ 
+%\verb+MakeMap+ & & NOT IMPLEMENTED\\ 
 \verb+Transpose+ &\verb+<list-of-lists>+ &Transposes a list of equal-length lists.\\ 
 \verb+SubList+ &\verb+<list>+ \verb+<start>+ \verb+<finish>+ & Returns a sublist of a list.\\ 
 \verb+RemoveSubset+ &\verb+<list>+ \verb+<list-of-pos>+ & Removes items at positions \verb+<list-of-pos>+ from a list.\\ 

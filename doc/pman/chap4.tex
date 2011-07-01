@@ -579,11 +579,13 @@ PEBL supports input with a joystick. In order to use a joystick, you first need 
 
 A joystick will have up to four types of inputs on it: buttons, axes, hats, and balls.  But different joysticks are different, and so you may need to do some checking and testing for your particular setup.  PEBL currently does not support force-feedback or rumble functions available on some joysticks.
 
-\subsubsection{Axes:} Each axis takes on a value between 1 and 32768. For a  normal hand-grasp joystick , the first two axis will be determined by the relative x and y positions of the joystick.  Gamepads often have triggers that are additional axis, or sometimes there are throttles (or gas/brake pedals in driving devices) that are mapped to axes.
+\subsubsection{Axes:} 
+Each axis takes on a value between 1 and 32768. For a  normal hand-grasp joystick , the first two axis will be determined by the relative x and y positions of the joystick.  Gamepads often have triggers that are additional axis, or sometimes there are throttles (or gas/brake pedals in driving devices) that are mapped to axes.
 Find out how many axes exist with \texttt{GetNumJoystickAxes()}.  Get the state of a particula axis with \texttt{GetJoystickAxisState()}.  
 
 
-\subsubsection{Hats:}.  Hats are the little 8-way buttons that control direction on many game pads.  They are sort of a digital axis, because each state is absolute.  The entire hat state takes on a single integer number between 0 and 15.  It is binary coded to specify whether each of the four major axes buttons are depressed:
+\subsubsection{Hats:}
+  Hats are the little 8-way buttons that control direction on many game pads.  They are sort of a digital axis, because each state is absolute.  The entire hat state takes on a single integer number between 0 and 15.  It is binary coded to specify whether each of the four major axes buttons are depressed:
 \begin{itemize}
 \item left: 8
 \item bottom: 4
@@ -591,9 +593,12 @@ Find out how many axes exist with \texttt{GetNumJoystickAxes()}.  Get the state 
 \item top: 1
 \end{itemize}
 The mechanics of the hat allows two buttons to be pressed simultaneously, indicating, for example, southeast or northwest.  An example of how to extract the bitwise button states is found in the joysticktest.pbl file.
-\subsubsection{Buttons:}.  Usually, the state of each of the buttons on the joystick can be identified.  Button state is coded so that 0=unpressed, 1=pressed.  There  can easily be a dozen or more buttons on a joystick, enabling some pretty elaborate response modes for experiments.
 
-\subsubsection{Balls:} Balls are very rare; you may have seen them in old-style arcade games like Arkenoid.   No consumer joysticks available today have balls, and they have not been tested in PEBL.
+\subsubsection{Buttons:}
+  Usually, the state of each of the buttons on the joystick can be identified.  Button state is coded so that 0=unpressed, 1=pressed.  There  can easily be a dozen or more buttons on a joystick, enabling some pretty elaborate response modes for experiments.
+
+\subsubsection{Balls:} 
+Balls are very rare; you may have seen them in old-style arcade games like Arkenoid.   No consumer joysticks available today appear to have balls that operate this way, and they have not been tested in PEBL.  If you want to support trackballs, there are plenty of trackball mice that work as normal joystick controllers.
 
 A number of functions are available for creating a joystick object and polling the joystick's current state:
 
@@ -629,6 +634,8 @@ Currently, the joystick state is not integrated into PEBL's event loop.  Consequ
     }
 \end{verbatim}
 
+
+The file demo/joysticktest.pbl uses most of the available joystick functions to display a virtual gamepad on the screen as it captures input.
 
 \sect{Files}
 
@@ -831,6 +838,8 @@ media/text
 \end{itemize}
   
 You can also specify other paths to be searched by specifying them on the command line.  Be sure to end the directory with whatever is appropriate for your platform, e.g.~ `\textbackslash' on Microsoft Windows or `/' on Linux.
+
+On OSX, as of version 0.12, the media/ directory is located within the Resources/ subdirectory of the application package.
 
 \sect{Provided Media Files}
 \label{sec:media}
