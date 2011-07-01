@@ -1,53 +1,109 @@
-todo:
+========================================
+To Do for 0.12:
+
+
+- WaitForAnyKeyPressForTimeout doesn't work.
+
+-Solve CJK font issue (replace firefly and the other one??)
+
+ -Document Parallel port functions
+   -consider changing getstate function to return list of 0/1
+
+ -Document serial port functions
+
+ -Krystal's bug in TOH
+
+- document Match(), Filter(), and Levels()
+--------------------------------------------
+##Completed for 0.12
+
+- File selector: 
+                 Add a +1 button to subject code? ***Done
 
 - we seem to get unknown feedback if you use a variable that hasn't
   been defined???? (probably the stderr problem) ***
 
 
-- itemorder test uses Z/Zed; change to length 7???
 
 -  line wrapping: when the last token in a string is too long to fit
    on a line and it is wrapped to the next line, it takes the previous
-   token along with it.  --fixed
+   token along with it.  --***done
 
- - add reporting for TOL of additional statistics.
  - Add a FileExists() function??? ***done
+
  - Add a Dir() functions???  ***done (GetDirectoryListing()
 
- -Krystal's bug in TOH
+ - Document Joystick Functions **Done
 
 
  -fix problem where clicking outside box will lose focus and finish
-  input (should be an option)
+  input (should be an option) ***done
 
  -automatic subject code/experiment name logging? **Done in fileselect
 
- - Make/document various layout functions
-     
- - Make a function that unloads the window but keeps running the PEBL.
+ - Make/document various layout functions **Done
 
--document GetMinDist
 
--allow if() statements to be empty.
--syntax _should_ handle, shouldn't it?:
-}
-else
-{
 
-- Print("") a message in test batteries about where data is saved.  Maybe link that to FileClose()?
-
-- document match(), filter(), and Levels()
-- file concatenation function (appendfile?).
+- file concatenation function (appendfile?).  **Done
 
 - streams of experiments  **done
 
 - FileExists() to test whether a file is there**done
 
-- WaitForAnyKeyPressForTimeout doesn't work.
 
- - save clock test to file + instructions (it may already exist?)
+ - save clock test to file + instructions (it may already exist?) **Done
 
 -EasyLabel crashes silently without feedback if window is given as the
  second argument??? ***fixed
 
+
+- allow the strings to be translated in the launcher (and possibly
+  elsewhere?) ***done
+
+
+=============================================
+Push to 0.13 or Later
+
+
+ - Let lists be defined with more whitespace options.  Currently,
+    things like this seems to fail:
+  a <- [[1]
+       ]
+     
+ - Make a function that unloads the window but keeps running the PEBL.
+
+- Launcher: randomize experiment chain
+    -save chain to a .bat file?
+    -data compiler?
+
+ - document GetMinDist (But this is just a helper function)
+
+- Print("") a message in test batteries about where data is saved.  Maybe link that to FileClose()?
+
+ - add reporting for TOL of additional statistics. 
+ - make a report for trails test.
+
+
+- Colorblind issues in TOL, Others?
+
 - makeImage will load a non-graphics file happily, but segfault
+
+- seteditable() works, but .editable doesn't
+
+-allow if() statements to be empty.  *Maybe works
+-syntax _should_ handle, shouldn't it?:
+}
+else
+{
+
+
+
+- itemorder test uses Z/Zed; change to length 7???
+
+
+
+
+- BCST: report median RTs for different response conditions
+- BCST: try the Piper alternative scoring method.
+

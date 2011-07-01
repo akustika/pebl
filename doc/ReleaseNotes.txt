@@ -26,106 +26,224 @@ obsolete.
 
 
 
-
-
-
-
-
                  RELEASE NOTES
 
 -------------------------------------------------
 
 Version 0.12
 
-  -A new launcher, written entirely in PEBL. It provides previews of experiments and brief
-   descriptions (see manual for instructions on how to enable launcher previews for your
-    own scripts).  Because it is written in PEBL, it
-   is cross-platform (giving OSX and linux users a real launcher), and has
-   a number of improvements over the old VB launcher.  If you liked the old one,		
-   it is still available, but you have to set it up yourself.
-   Importantly, it will:
-     - Save your settings and reload them on the next load
-     - Save a line to a logfile every time you run a study.
-	 - direct link to editing the script
-	 - allows you to create and save 'experiment chains', sets of experiments
-	   that get run in sequence
+  The latest public release of PEBL brings with it a lot of new
+  features and capabilities.  Highlights include support for a number
+  of hardware interface devices, a new launcher, over 250 total
+  functions, audio input, and a number of new tests in the PEBL Test
+  Battery, and many bug fixes and improvements. Details include:
 
 
-  -key repeats are now enabled during text box text  entry.
-  -Added GetMouseState(), which returns a 5-list including the state of each of three buttons.
 
-  - Added .LineWrap property to textboxes, which defaults to 1 (the previous behavior).  If set to 0,
-    it will ONLY wrap lines at hard/soft returns, and cut off the rest
-    of each line.
+  * A new launcher, written entirely in PEBL. It provides previews of
+   experiments and brief descriptions (see the manual for instruction on
+   how to enable launcher previews for your own scripts).  Because it
+   is written in PEBL, it is cross-platform (giving OSX and linux
+   users a real launcher), and has a number of improvements over the
+   old VB launcher.  If you liked the old one, it is still available,
+   but you have to set it up yourself.  Importantly, it will: 
 
-  -fixed grammer to allow empty code blocks. (may not have worked)
-
- Added AppendFile function
-
-  -kinezasquare and kineszapolygon functions
-
-  -Reworked GetNIHMDemographics() so it now uses mouse input
-
- - Round can now take either one or two parameters, the second one being a precision value, so you get.
-   Round(3.14159)   #=3, an integer
-   Round(3.14159,0) #= 3.0, a float
-   Round(3.14159,1) #= 3.1, a float
+   	   - Save  your settings and reload them on the next load 
+	   - Save a line to a logfile every time you run a study.  
+	   - Provide a direct link to editing the script 
+	   - allows you to create and save 'experiment chains',	sets of
+	     experiments that get run in sequence
 
 
- - Fixed Recursion facilities (only for round right now???)
 
- - Fallback screen resolutions
- - Initial support (linux only?) for controlling parallel port devices
+
+  * A number of improvements to the Textbox object and Textbox entry:
+    -key repeats are now enabled during text box text  entry using GetInput().
+    -GetInput also now takes a third parameter, which if non-zero will accept
+      a mouse click as an exit condition.  see fileselect.pbl for an example
+      of how to use this.
+    - Added .LineWrap property to textboxes, which defaults to 1 (the
+      previous behavior).  If set to 0, it will ONLY wrap lines at
+	  hard/soft returns, and cut off the rest of each line.  This is
+	  used in the new launcher, to allow file listings to behave better.
+
+
+
+ * You can now use a joystick or gamepad for input.  There is a simple
+   demo called joysticktest.pbl which will open a gamepad and visually
+   display the state of all the buttons. This brings with it a bunch
+   of new functions:
+     - GetNumJoysticks()
+     - OpenJoystick()
+     - GetNumJoystickAxes()
+     - GetNumJoystickBalls()
+     - GetNumJoystickButtons()
+     - GetNumJoystickHats()
+     - GetJoystickAxisState()
+     - GetJoystickHatState()
+     - GetJoystickButtonState()
+
+ * Fallback screen resolutions.  PEBL now takes the screen resolution
+   as a request, not a requirement.  If the system cannot support the
+   requested resolution, it falls back to another one.  Currently, the
+   fallback is likely to be the current resolution, or one recommended
+   by the driver.  In the future, this may change to be one as close
+   as possible to the requested resolution.  Because of this, the
+   values of the variables gVideoWidth
+   and gVideoHeight can therefore change once MakeWindow() is called.
+
+
+ * On OSX, we now release an real OSX application, which should work
+   on both 32-bit and 64-bit platforms (sorry, no PPC).  The executable
+   can still be launched from the command line using (assuming the
+   bundle is in /Applications/:
+   > /Applications/PEBL_OSX.app/MacOS/PEBL_OSX script.pbl
+
+
+
+ * Initial support for controlling parallel port devices. This is
+   enabled by four new functions:
+  
+    - ??OpenPPort()
+    - ??SetPPortState()
+    - ??SetPPortMode()
+    - ??GetPPortState()
+
+ * Initial support for controlling serial port devices.  This is a
+    window into accessing FTDI USB chips, which masquerade as serial
+    devices. This is enabled by three new functions:
+
+     - ??OpenCOMPort()
+     - ??COMPortSendByte()
+     - ??COMPortGetByte()
+
+    The internal COM port system supports more than this, and some of
+    these functions will be built up over future released of PEBL.  I
+    have read that several standard USB button-boxes are based on FTDI
+    chipset, and so this should open up the capabilities to use those
+    response boxes.
+   
+ * Audio Input/Output
+
+   - Better Audio playback.  Previous playback was very laggy and
+     only acceptable for very limited feedback purposes.  These issues
+     have been addressed, and now playback should be acceptable for most
+     research purposes.
+
+   - Audio recording/saving and a simple software audio voicekey was
+     added to collect response time.  Unfortunately, this only works
+     on Windows and Linux platforms.  This adds the following
+     functions:
+     - MakeAudioInputBuffer
+     - SaveAudioToWaveFile
+     - GetVocalResponseTime
+
+* Improved filesystem access, supporting the new launcher. These include:
+     -GetDirectoryListing(): Gets a list of files
+     -FileExists():          Tests whether a file exists
+     -IsDirectory():         Checks whether something is a subdirectory        
+     -MakeDirectory():       Creates a direcotry      
+     -AppendFile():          Appends two files
+     -LaunchFile():          Opens a file using platform-specific handler
+     -SystemCall():          New systemcall function on Windows will
+                         	 run without opening a terminal window.
+
+ * Smaller fixes and improvements:
+   -fixed grammer to allow empty code blocks. (may not have worked)
+
+   -Reworked GetNIHMDemographics() so it now uses mouse input
+
+   - Round can now take either one or two parameters, the second one being a precision value, so you get.
+     Round(3.14159)     #=3, an integer
+     Round(3.14159,0)   #= 3.0, a float
+     Round(3.14159,1)   #= 3.1, a float
+     Round(13.14159,-1) #= 10, a float
+
+
+   - Improved Recursion facilities (only for round right now???).
+
+   - A virtual keyboard functions are now available in
+     demo/vkeyboard.pbl.  Use it to get text entry on touch screens and
+     the like. I haven't yet included this in the standard libraries.  
+     To use, copy the function into your experiment.
+
+??????? - We now include just one CKJ Font, replacing UnBatang.ttf and
+ukai.ttf, called "wqy-zenhei.ttf".  When PEBL is started with an
+appropriate language code, gPEBLBaseFont and its related default fonts
+will default to wqy-zenhei.ttf.
  
- - Much improved audio playback
+ *Other New functions:
 
- - Audio recording/saving and a simple software audio voicekey to collect response time.
-
-
-
- -text input function GetInput now sends repeated events when you
-  hold a key down.
-  -It also now takes a third parameter, which if non-zero will accept
-  a mouse click as an exit condition.  see fileselect for an example
-  of how to use this.
-
-
-- RegisterEvent(), StartEventLoop()
-
-LayoutGrid
-LayoutGrid2
-NonOverlapLayout 
-
-
-  GetEasyChoice function
-
-  Add GetDirectoryListing(), FileExists(), and IsDirectory()
-  ??Is MakeDirectory there?
+     -RegisterEvent(). Add an event to the event loop
+     -StartEventLoop(). Start the event loop.
+     -ClearEventLoop(). Clear the event loop.
+     -GetEasyChoice(). Easy multiple-choice screen.
+     -Match().  Finds which items match a target.
+     -Filter().  Filters a list by another list.
+     -Levels().  Finds unique values in a list
+     -GetVideoModes().  Returns a list of video modes. 
+     -NonOverlapLayout().  Creates a set of points in an x,y
+      space that have a minimum overlap tolerance.  Very useful 
+      for stimulus design, visual search tasks, and general 
+      layout.   
+     -MakeSineWave().  Creates a sine wave.
+     -KaniszaSquare(squaresize, circleradius,fg,bg)
+     -KaniszaPolygon(points, circTF, circleradius,fg,bg,show) 
+     -GetMouseState(), which returns a 5-list including the state of
+	   each of three buttons.
+     -GetTextBoxCursorFromClick(), returns the character position you
+       are clicking on.
+	 -MakeGabor(). Create a gabor patch stimulus.
 
 
-  Test Battery:
- - Fix bug in Mental Rotation task (reported randomly-generated response instead of actual response)
+ *Many improvements and additions to the test battery:
+
+ - A number of new translations of tasks, supplied by users around
+    the world (Including, but not limited to Ron Ye, Vladimir
+    Bogdanov, and Alena Esposito)
+
+ - Fixed a bug in Mental Rotation task (reported randomly-generated
+  response instead of actual response)
+
 
  -update PCPT to remove pauses between blocks, to compute more
   statistics, and to do more reporting in more files.
 
+ -Fixed TOAV test so that a few of the summary stats in for the second
+  half were computed correctly (Thanks Chadi Maghaizel!)
 
-   Updated manual dexterity test
+ - Many tasks data were changed to save in .csv format.
 
-  - Many tasks data were changed to save in .csv format.
+ - Updated manual dexterity test
 
  -Digit span task now allows backward recall, and allows experimenter
   to specify whether backspace and the skip character are allowed.
 
-  - corsi blocks update
-  - BART task
-  - New Eriksen Flanker task
-  - New 'Oddball' task
-  - Added ANT test
-  - Number stroop (with vocal input)
+ - corsi blocks update: We now support both forward and backward, do
+   much more instrumentation/data saving, and allow for beeps when
+   you click on a target. (Thanks Reid Olsen for many fixes)
  - Fixed bug in TOL; added TOL-DX problem set.
 
+ - BCST: you can turn on inter-set feedback (telling you when the rule shifts)
 
+ *New Tasks in the Test Battery (Now, version 0.7):
+
+
+  - BART task (Balloon Analog Risk Task). Supposedly measures risk-seeking.
+  - The Eriksen Flanker task.  Requires attentional filtering
+  - The ANT test (Attentional Network Test). A souped-up flanker
+    task + Posner Cueing Task
+  - The 'Oddball' task
+  - Number Stroop Task (with vocal input)
+  - New PCARDS 'PEBL CARD SORTING TEST' test. An adaptation of a
+    number of card-sorting tests, but it has only two responses and
+    ten possible categories.
+
+
+
+
+
+================================================================================
 Version 0.11
 
 Major changes:
