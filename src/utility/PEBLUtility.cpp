@@ -52,14 +52,18 @@
 #elif defined(PEBL_LINUX)
 #include <sys/stat.h>
 #endif
+
 #include <sys/stat.h>
+
+#include <bits/types.h>
+#include <stdio.h>
 
 //Some math libraries contain this, but let's not take any chances.
 #define PI 3.141592653589793238462643383279502884197169399375
 
 
 using std::cout;
-
+using std::endl;
 
 std::string PEBLUtility::ToUpper(const std::string & text)
 {
@@ -212,6 +216,7 @@ long int PEBLUtility::Round(long double val)
 long double PEBLUtility::Round(long double val, long int prec)
 {
     double off = pow(10,prec);
+    //cout << "Rounding " << val <<" to : " << off << endl;
 #if defined(roundl)
 
     return (long double)roundl(val*off)/off;
@@ -1026,7 +1031,7 @@ Variant PEBLUtility::LaunchFile(std::string file)
 {
         
 
-   cout << "Running launchfile\n";   
+    //cout << "Running launchfile\n";   
 #if defined(PEBL_WIN32) 
     HINSTANCE hInst = ShellExecute(0,                           
                                    "open",                      // Operation to perform
@@ -1040,20 +1045,20 @@ Variant PEBLUtility::LaunchFile(std::string file)
 
     std::string call2 = "gnome-open " + file;
     int x = system(call2.c_str());  //do a system call with the argument string.
-
+    
 
 #elif defined(PEBL_OSX)
      std::string call2 = "open " + file;
      int x = system(call2.c_str());  //do a system call with the argument string.
    
  #endif
-return Variant(0);
+return Variant(x);
 }
 
 
 Variant PEBLUtility::SystemCall(std::string call, std::string args)
 {
-   cout << "Systemcalling inner\n";   
+    //   cout << "Systemcalling inner\n";   
 
 
 #if defined( PEBL_UNIX )   
@@ -1065,23 +1070,133 @@ Variant PEBLUtility::SystemCall(std::string call, std::string args)
 
 #elif defined (PEBL_WIN32)
     std::string tmp = call + " " + args;
-
-   cout << "["<<tmp <<"]"<< std::endl;
-  STARTUPINFO info={sizeof(info)};
-  PROCESS_INFORMATION processInfo;
-   char* callstring = const_cast<char *>(tmp.c_str());
-   if (CreateProcess(NULL,callstring, NULL, NULL, TRUE, 0, NULL, NULL, &info, &processInfo))
-{
-    ::WaitForSingleObject(processInfo.hProcess, INFINITE);
-    CloseHandle(processInfo.hProcess);
-    CloseHandle(processInfo.hThread);
-} else {
-        cout << "createprocess failed\n";
+    
+    //   cout << "["<<tmp <<"]"<< std::endl;
+    STARTUPINFO info={sizeof(info)};
+    PROCESS_INFORMATION processInfo;
+    char* callstring = const_cast<char *>(tmp.c_str());
+    if (CreateProcess(NULL,callstring, NULL, NULL, TRUE, 0, NULL, NULL, &info, &processInfo))
+        {
+            ::WaitForSingleObject(processInfo.hProcess, INFINITE);
+            CloseHandle(processInfo.hProcess);
+            CloseHandle(processInfo.hThread);
+        } else {
+        //        cout << "createprocess failed\n";
         cout << GetLastError() << std::endl;
-       }
-
+    }
+    int x=0;
 #endif
 
+    return Variant(x);
+
+}
 
 
+// unicode revers functions adapted from
+// http://stackoverflow.com/questions/198199/how-do-you-reverse-a-string-in-place-in-c-or-c
+//
+
+#define SWP(x,y) (x^=y, y^=x, x^=y)
+
+void PEBLUtility::strrev(char *p)
+{
+  char *q = p;
+  while(q && *q) ++q; /* find eos */
+  for(--q; p < q; ++p, --q) SWP(*p, *q);
+}
+
+
+void PEBLUtility::strrev_utf8(char *p)
+{
+  char *q = p;
+  strrev(p); /* call base case */
+
+  /* Ok, now fix bass-ackwards UTF chars. */
+  while(q && *q) ++q; /* find eos */
+  while(p < --q)
+    switch( (*q & 0xF0) >> 4 ) {
+    case 0xF: /* U+010000-U+10FFFF: four bytes. */
+      SWP(*(q-0), *(q-3));
+      SWP(*(q-1), *(q-2));
+      q -= 3;
+      break;
+    case 0xE: /* U+000800-U+00FFFF: three bytes. */
+      SWP(*(q-0), *(q-2));
+      q -= 2;
+      break;
+    case 0xC: /* fall-through */
+    case 0xD: /* U+000080-U+0007FF: two bytes. */
+      SWP(*(q-0), *(q-1));
+      q--;
+      break;
+    }
+}
+std::string PEBLUtility::strrev(std::string p)
+{
+    
+    std::string q = std::string(p);
+    std::reverse(q.begin(),q.end());
+    return q;
+}
+
+std::string PEBLUtility::strrev_utf8(std::string p)
+{
+
+
+    std::wstring q(p.length(), L' '); // Make room for characters
+    // Copy string to wstring.
+    std::copy(p.begin(), p.end(), q.begin());
+    
+    // reverse:
+    std::reverse(q.begin(),q.end());
+
+    cout << "[";
+    std::wstring::iterator i;
+
+    for(i = q.begin();i<=q.end();i++)
+        {
+            cout << *i << "|";
+        }
+    cout << "]\n";
+
+    std::string ns(q.begin(), q.end());
+    cout << ns << std::endl;
+    return ns;
+
+
+//     std::string::iterator qq = q.end();
+
+//   /* Ok, now fix backwards UTF chars. */
+
+//         while(qq >= q.begin())
+//             {
+
+//                 switch( (*qq & 0xF0) >> 4 ) 
+//                     {
+                        
+//                     case 0xF: /* U+010000-U+10FFFF: four bytes. */
+//                         std::swap(*qq,*(qq-3));
+//                         std::swap(*(qq-1),*(qq-2));
+//                         //q.replace(qq,qq-3,q,1);
+//                         //q.replace(qq-1,qq-2,q,1);
+//                         qq -= 3;
+//                         break;
+                    
+//                     case 0xE: /* U+000800-U+00FFFF: three bytes. */
+//                         std::swap(*qq,*(qq-2));
+//                         //q.replace(qq,qq-2,q,1);
+//                         qq -= 2;
+//                         break;
+                        
+//                     case 0xC: /* fall-through */
+//                     case 0xD: /* U+000080-U+0007FF: two bytes. */
+//                         std::swap(*qq,*(qq-1));
+//                         //q.replace(qq,qq-1,q,1);
+//                         qq--;
+//                         break;
+//                     default:
+//                         qq--;
+//                     }
+//             }
+//     return q;
 }

@@ -1019,7 +1019,7 @@ define LandoltRing(outer,inner, angle, lgap, color, bgcolor)
 }
 
 
-define KaneszaSquare(squaresize, circleradius,fg,bg)
+define KaniszaSquare(squaresize, circleradius,fg,bg)
 {
 
      #The proper size of the whole thing is depends on both the square and the circles
@@ -1057,7 +1057,7 @@ define KaneszaSquare(squaresize, circleradius,fg,bg)
 
 
 
-define KaneszaPolygon(points, circTF, circleradius,fg,bg,show)
+define KaniszaPolygon(points, circTF, circleradius,fg,bg,show)
 {
 
      #The proper size of the whole thing is depends on both the square and the circles

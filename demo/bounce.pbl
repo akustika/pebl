@@ -1,5 +1,8 @@
 #!/usr/bin/pebl
 
+## This is a simple demo that animates a bouncing ball.
+##
+##
  define Start(par)
  {
 	p <- First(par)
@@ -8,10 +11,17 @@
 
  	white <- MakeColor("white")
 
-   
+    title <- EasyLabel("Bouncing ball demo. Press any key to exit.", gVideowidth/2,20,gWindow,22)
  	Draw()
-	WaitForAnyKeyPress()
-
+    
+    resp <- IsAnyKeydown()
+	while(resp <> 0)
+     {
+       title.text <- "Make sure numlock capslock and scrollock are not pressed"
+	   Draw()
+       resp <- IsAnyKeydown()
+     }
+	 title.text <-"Bouncing ball demo. Press any key to exit."
 
 	sprite <- Circle(100,100,50,white,1)
 	white.red <- 200
@@ -35,9 +45,7 @@
 	while(i < 1000)
 	{
 
-
 	  white.red <- i/4
-
 	  Move(sprite,x,y)
       Draw()
 	  x <- x + dx
@@ -53,13 +61,14 @@
   	  {
 	    dx <- -dx 
 	  }
-	 if(y < 0 or y > gVideoHeight)
+	  if(y < 0 or y > gVideoHeight)
 	  {
 	    dy <- -dy 
 	  }
  	  i <-  i + 1
 
-     resp <- IsAnyKeyDown()
+
+      resp <- IsAnyKeyDown()
 
      if(resp != 0)
 	  {

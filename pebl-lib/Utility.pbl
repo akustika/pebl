@@ -352,11 +352,12 @@ define ReplaceChar(word,char, char2)
 
 ## Returns the element of database corresponding to the first match of
 ## key to items in keylist.  If nothing is found, it returns an empty list.
+
 define Lookup(key, keylist, database)
 {
   found <- []
   table <- Transpose([keylist, database])
-  loop(i, table)
+   loop(i, table)
   {
 
      if(key == First(i))
@@ -548,6 +549,20 @@ define GetEasyChoice(text,choices,output,win)
    Move(bg,gVideoWidth/2,gVideoHeight/2)
    AddObject(bg,win)
 
+
+
+
+  ##HSV val is the max of RGB
+  val <- Max([bgcol.RED, bgcol.GREEN, bgcol.BLUE])
+
+  ##Make it white if the background is too dark.
+  if(val <=	100)
+    { 
+      fgcol <- MakeColor("white")
+    } else {
+      fgcol <- MakeColor("black")
+    }
+
    box <- EasyTextBox(text+CR(1)+"Click box to select option.",50,50, win,20,gVideoWidth-100,100)
    
 
@@ -561,13 +576,17 @@ define GetEasyChoice(text,choices,output,win)
 
    loop(i, choices)
     {
-      bg <- Square(180,y,squaresize,MakeColor("grey"),1)
-	  AddObject(bg,win)
+      bg1 <- Square(180,y,squaresize,fgcol,0)
+	  AddObject(bg1,win)
+
       lab <- EasyLabel(i,80, y,win,25)
 	  Move(lab, 220+ lab.width/2,y)
+
+      clickon <- Append(clickon,bg1)
+      y <- y + skip
+
       tmp <- Append(tmp,lab)
-      clickon <- Append(clickon,bg)
-     y <- y + skip
+	  
     }
 
    Draw()
@@ -600,22 +619,24 @@ define ZeroPad(num, size)
     SignalFatalError("First argument of ZeroPad(num,size) must be a	number")
   }
 
-  if((not IsInteger(size)) or (size > 10) or (size < 1))
+  if((not IsInteger(size)) or (size >= 20) or (size < 1))
   { 
-    SignalFatalError("Second argument of ZeroPad(num,size) must be a positive integer less than 10")
+    SignalFatalError("Second argument of ZeroPad(num,size) must be a positive integer 20 or less")
   }
  
-  base <- Round(10^(size))
-  if(num>base)
-   {
-     ret <- num+""
-   }else{
-      
-     x <- (base + num)+""
-     ret <- SubString(x,2,size)
-     
-   }
-  return ret
+
+  tmp <- Floor(num)+""
+  tmplen <- StringLength(tmp)
+
+  padlen <- Max([0,size-tmplen])
+
+  pad <- ""
+  if(padlen>0)
+  {
+      pad <- ListToString(Repeat("0",padlen))
+  }
+
+  return pad+num
 }
 
 

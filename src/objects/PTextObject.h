@@ -3,7 +3,7 @@
 //    Name:       src/objects/PWord.h
 //    Purpose:    Contains generic specs for all objects containing text
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -52,6 +52,7 @@ public:
     virtual ObjectValidationError ValidateProperty(std::string)const;
 
     virtual void SetText(const std::string & text);
+    virtual void SetDirection(int i);
     virtual std::string GetText()const {return mText;}
 
     virtual int GetNumCharacters(){return mText.length();}
@@ -68,6 +69,8 @@ protected:
     bool mTextChanged;     //Determines whether the object should be re-rendered.
     std::string mText;
     virtual std::string ObjectName() const{return "PTextObject";};
+    int mDirection;   //1 for ltr, -1 for rtl
+
 };
 
 

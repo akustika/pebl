@@ -56,7 +56,7 @@ void PlatformNetwork::Init()
 
   if(!val)
 	{
-	  std::cerr << "Network System Initialized\n";
+        //std::cerr << "Network System Initialized\n";
 	}else{
 
 	  PError::SignalFatalError("Network System Failed to Initialize.");
@@ -98,22 +98,71 @@ void PlatformNetwork::SetHostName(std::string hostname)
 }
 
 
-
+// This opens a connection to some host that is listening for it.
+//
 void PlatformNetwork::Open()
 {
  
-  if(mAddress->host == 0)
-	PError::SignalFatalError("Trying to open connection to unspecified host");
+    if(mAddress->host == 0)
+        PError::SignalFatalError("Trying to open connection to unspecified host");
 
-  mSocket = SDLNet_TCP_Open(mAddress);
- 
-
+    mSocket = SDLNet_TCP_Open(mAddress);
+    
+    
     if(!mSocket)
-	PError::SignalFatalError("Unable to establish connection to " + mHostName);
-
-  mIsOpen = true;
+        {
+            // PError::SignalWarning("Unable to establish connection to " + mHostName);
+            mIsOpen = false;
+        }
+    else
+        {
+            mIsOpen = true;
+        }
 }
 
+// This listens for a connection.
+//
+bool PlatformNetwork::CheckForConnection()
+{
+
+  //First, create the socket to listen on:
+
+  IPaddress * tmpAddress = new IPaddress;
+  tmpAddress->host = INADDR_ANY;
+  tmpAddress->port = mPort;
+
+
+  //std::cout << "unable"  << tmpAddress->port << endl;
+  TCPsocket listener = SDLNet_TCP_Open(tmpAddress);
+
+
+
+  if(!listener)
+	PError::SignalFatalError("Unable to listen for connection 1." );
+    
+  //If we haven't opened the socket yet,  do so now:
+
+  if(mSocket == NULL)
+      mSocket = SDLNet_TCP_Accept(listener);
+
+  if(mSocket)
+      mIsOpen = true;
+
+
+  //  if(!mIsOpen)
+  //Close the listener, because we won't need it again the way we operate.
+  SDLNet_TCP_Close(listener);
+  
+
+
+  delete tmpAddress;
+  return mIsOpen;
+}
+
+
+// This is an all-on-one open-socket-listen-connect.
+// One might prefer a two-step process giving a bit more
+// control.
 
 void PlatformNetwork::Accept()
 {
@@ -124,24 +173,28 @@ void PlatformNetwork::Accept()
   tmpAddress->host = INADDR_ANY;
   tmpAddress->port = mPort;
 
-  std::cout << "unable"  << tmpAddress->port << endl;
+  //std::cout << "unable"  << tmpAddress->port << endl;
   TCPsocket listener = SDLNet_TCP_Open(tmpAddress);
-
   if(!listener)
-	PError::SignalFatalError("Unable to listen for connection." );
-    
+      PError::SignalFatalError("Unable to listen for connection 2." );
+  
+  //This doesn't work too well.
   while(mSocket == NULL)
-	mSocket = SDLNet_TCP_Accept(listener);
+      mSocket = SDLNet_TCP_Accept(listener);
+  
+
+  SDLNet_TCP_Close(listener);
+  delete tmpAddress;
   mIsOpen = true;
 }
 
 
 void PlatformNetwork::Close()
 {
-  if(mSocket)
-	SDLNet_TCP_Close(mSocket);
-  mSocket = NULL;
-  mIsOpen = false;
+    if(mSocket)
+        SDLNet_TCP_Close(mSocket);
+    mSocket = NULL;
+    mIsOpen = false;
 }
 
 

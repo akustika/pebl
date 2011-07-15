@@ -404,20 +404,13 @@ int PEBLInterpret( int argc, char *argv[] )
 
     //Add a the default 'base font' names
     //gPEBLBaseFont defaults to a sans serif font
-    if(tmps == "CN")
+    if((tmps == "CN") | (tmps== "KO") |(tmps == "JP"))
         {
             //ukai handles chinese
-            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFont",Variant("fireflysung.ttf"));
-            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontMono",Variant("fireflysung.ttf"));
-            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontSerif",Variant("fireflysung.ttf"));
+            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFont",Variant("wqy-zenhei.ttc"));
+            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontMono",Variant("wqy-zenhei.ttf"));
+            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontSerif",Variant("wqy-zenhei.ttf"));
 
-        }else if((tmps == "KO") | (tmps == "JP"))
-        {
-            //UnBatang handles korean, japanese
-            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFont",Variant("UnBatang.ttf"));
-            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontMono",Variant("UnBatang.ttf"));
-            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontSerif",Variant("UnBatang.ttf"));
-    
         } else
         {
             //DejaVu handles most western fonts.

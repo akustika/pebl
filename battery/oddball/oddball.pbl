@@ -37,7 +37,7 @@ define Start(p)
 
    ##Make data files   
 
-
+   MakeDirectory("data")
    gFileOut <- FileOpenAppend("data/oddball-"+gSubNum+".csv")
    gPooledFileOut <- FileOpenAppend("data/oddball-pooled.csv")
    gSumFileOut <- FileOpenWrite("data/oddball-summary-"+ gSubNum+".txt")

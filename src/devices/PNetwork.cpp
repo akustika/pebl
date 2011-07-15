@@ -3,7 +3,7 @@
 //    Name:       src/devices/PNetwork.cpp
 //    Purpose:    Class for handling network communication
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2006- Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2006-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -54,4 +54,5 @@ ostream & PNetwork::SendToStream(ostream & out) const
     out << "<Generic Network Object>" << flush;
     return out;
 }
+
 

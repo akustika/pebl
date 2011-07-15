@@ -227,7 +227,7 @@ define DistortPoints(points,num,perturb,minangle,maxangle,minlength)
         }
     }
 
-      good <- ValidateShape(newpts,minAngle,maxAngle,minlength)
+      good <- ValidateAttneaveShape(newpts,minAngle,maxAngle,minlength)
     }  
   return newpts
 }

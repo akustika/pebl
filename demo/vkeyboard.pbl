@@ -2,13 +2,14 @@ define Start(p)
 {
    gSleepEasy <- 1
    win <- MakeWindow()
+   resp <- VKeyboardInput(win,"Enter participant code","keyboard")
    resp <- VKeyboardInput(win,"Enter participant code","NUMBER")
    resp <- VKeyboardInput(win,"Enter experimenter name","keyboard")
 
 }
 
 
-define VKeyboardInput(win,label,type)
+define VKeyboardInput(win,labeltext,type)
 {
 
    backing <- Rectangle(gVideoWidth/2,gVideoHeight/2,gVideoWidth,gVideoheight,MakeColor("black"),1)
@@ -52,6 +53,10 @@ if(Lowercase(type)=="number")
 	AddObject(label,win)
 	Move(label,xbase + gap*(width+1)/2,ybase)
 	Draw(label)
+
+	inst <- MakeLabel(labeltext,font)
+	AddObject(inst,win)
+	Move(inst,xbase+gap*(width+1)/2,ybase+ gap*(height+1))
 
     rownum <- 1
     clicks <- []

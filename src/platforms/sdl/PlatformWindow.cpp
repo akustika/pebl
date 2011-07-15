@@ -199,8 +199,8 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
     
     bool success = 0;
     //INitialize the SDL surface with the appropriate flags.
-    mSurface=SDL_SetVideoMode(width,height,depth,vflags);
-    
+     mSurface=SDL_SetVideoMode(width,height,depth,vflags);
+   // mSurface = SDL_SetVideoMode(width,height,depth,SDL_HWACCEL | SDL_FULLSCREEN | SDL_DOUBLEBUF); 
     if ( mSurface == NULL )
         {          
             //If we fail, try to do our best.

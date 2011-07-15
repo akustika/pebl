@@ -3,7 +3,10 @@
 define Start(p)
 {
 
+  GetStrings("EN")
+
   ##Conditions
+  gISI <- 1000   ##Presentation rate
   ascending <- 1
   lengths <- [2,2,3,3,4,4,5,5,6,6]
 
@@ -14,12 +17,27 @@ define Start(p)
    lengths <- Shuffle(lengths)
   }
 
-  stim <- Stim()
-  probs <- Problems()
+  gInst.text <- gInst1
+  Draw()
+  WaitForDownClick()
 
-  x <-   MakeResponseScreen()
-   Draw()
-   WaitForAnyKeyPress()
+  gInst.text <- gInst2
+  Draw()
+  WaitForDownClick()
+  
+  gInst.text <- gInst3
+  Draw()
+  WaitForDownClick()
+
+  Hide(gInst)
+
+  stimpool <- ["A","B","C","D","E","F","G","H","I","J","K","L"]
+
+
+
+  Trial(["","",""],["a","b","c"],stimpool,1)
+  Draw()
+  WaitForAnyKeyPress()
 
 #  loop(i, lengths)
 #    {
@@ -27,34 +45,100 @@ define Start(p)
 #       stimi <- SampleN(stim,i)
 #       Trial(probsi,stimi)
 #    }
-
+#  x <-   MakeResponseScreen()
 }
 
 
-define Trial(problems,stim)
+## type==1: just the memory task
+## type==2: memory+operations
+
+define Trial(problems,stim, stimpool,type)
 {
 
+
+   ##Present the stimuli
    sequence <- Transpose([problems,stim])
+
+   CountDown()
+   Show(gStim)
+
    loop(i,sequence)
    {
-      prob <- First(i)
-      proba <- First(prob)
-      sol <- Second(prob)
 
+      
       stim <- Second(i)
-      #Problem:
-      gStim.text <-  proba + " = ? " + stim
-      gFooter.text <- "Encode Stimulus" 
-      Draw()
-      Wait(1000)
-      gFooter.text <- "When you have solved the math problem, click the mouse to continue"
-      gStim.text <- proba
-      Draw()
-      WaitForAnyKeyPress()
+      Print(stim)
+
+      if(type>1)
+      {
+        prob <- First(i)
+        proba <- First(prob)
+        sol <- Second(prob)
+
+
+        #Problem:
+        gStim.text <-  proba + " = ? " + stim
+        gFooter.text <- gRespondHead
+        Draw()
+        Wait(1000)
+        gFooter.text <- gFootMath
+        gStim.text <- proba
+        Draw()
+      }
+ 
+	  ##Now, present the stimulus
+     
+	  gStim.text <- stim
+      Show(gStim)
+	  Draw()
+	  Wait(gISI)
+	  Hide(gStim)
+	  Draw()
       
    }
- 
 
+   objs <- MakeResponseScreen(stimpool)
+   Print(objs) 
+   cont <- 1
+   counter <- 1
+   resplist <- []
+
+   while(cont==1)
+   {
+       resp <- WaitForClickOnTarget(objs,objs)
+       tb <- First(resp)
+	   label <- Second(resp)
+
+	   text <- label.text
+       if(text == gBlankText)
+       {
+            resplist <- Append(resplist, " ")
+		    tb.text <- counter 	
+			counter <-counter+1
+       } elseif(text== gClearText)
+       {
+	        counter <- 1
+            resplist <- []
+			loop(i,objs)
+            {
+              tb <- First(i)
+			  if(IsTextBox(tb))
+                   {
+				      tb.text <- ""
+                   }
+            }
+       }elseif(text==gDoneText)
+       {
+          cont <- 0
+       }else{
+          resplist <- Append(resplist,text)
+		  tb.text <- counter
+		  counter<-counter+1
+       }
+	  display <- ListToSTring(resplist)
+      gResponse.text <- display  
+      Draw()
+   }
 
 }
 
@@ -66,7 +150,7 @@ define RegisterClickOnEvent(rectangle)
 }
 
 
-define MakeResponseScreen()
+define MakeResponseScreen(stim)
 {
   gridpoints <-  LayoutGrid(4,3,gHomeX,gHomeY-100,
                   gVideoWidth-200,
@@ -75,9 +159,6 @@ define MakeResponseScreen()
    
 
    ##Put the gridpoints and the stimuli together
-   stim <- Stim()
-   Print(stim)
-   Print(gridpoints)
    seq <- Transpose([gridpoints,stim])
 
    objs <- []
@@ -88,12 +169,12 @@ define MakeResponseScreen()
       objs <- Append(objs,tmp)
     }
     
-     blank <- EasyTextBox("blank",gHomeX-50, gVideoHeight-200,gWin,25,100,40)
-     clear <- EasyTextBox("clear",gHomeX-300, gVideoHeight-50,gWin,25,100,40)
-     exit  <- EasyTextBox("Exit", gHomeX+200, gVideoHeight-50,gWin,25,100,40)
+     blank <- EasyTextBox(gBlankText,gHomeX-50, gVideoHeight-200,gWin,25,100,40)
+     clear <- EasyTextBox(gClearText,gHomeX-300, gVideoHeight-50,gWin,25,100,40)
+     done  <- EasyTextBox(gDoneText, gHomeX+200, gVideoHeight-50,gWin,25,100,40)
 
    Draw()
-   objs <- Append(objs,[blank,clear,exit])
+   objs <- Merge(objs,[["",blank],["",clear],["",done]])
    return objs   
 }
 
@@ -113,8 +194,10 @@ define Init()
     gHomeY <- gVideoHeight/2
     gSleepEasy <- 1
     
-    gStim <- EasyLabel("",gHomeX,gHomeY,gWin,25)
-    gFooter<- EasyLabel("",gHomeX,gVideoHeight-50,gWin,20)
+    gStim   <- EasyLabel("",gHomeX,gHomeY,gWin,55)
+    gFooter <- EasyLabel("",gHomeX,gVideoHeight-50,gWin,20)
+    gInst   <- EasyTextBox("",50,50,gWin,22,gVideoWidth-100,gVideoHeight-100)
+    gResponse <- EasyLabel("",gHomeX,gHomeY+100,gWin,20)
 }
 
 define Problems()
@@ -140,7 +223,7 @@ define Problems()
 
 define Stim()
 {
-    x<-["F","H","J","K","L","N","P","Q","R","S","T","Y"]
+    x<-["A","F","G","H"]
     return x 
 }
 
@@ -172,4 +255,102 @@ define LayoutGrid(high,across,centerx,centery,width,height)
    
 
   return points
+}
+
+
+
+define GetStrings(lang)
+{
+
+   if(Uppercase(lang)=="EN")
+    {
+   gInst1 <- "In this study, you will try to memorize the letters you see on the screen while you also solve simple math problems.  In the next few minutes, you will be able to practice to become familiar with how the study works.
+You will begin by practicing the letter part of the experiment.
+
+Press the mouse button to continue."
+  
+   gInst2 <- "For this practice set, letters will appear on the screen one at a time.  Try to remember each letter in the order presented.  After 2-3 letters have been shown, you will see a screen listing 12 possible letters with a box beside each one.  Your job is to select each letter in the order presented.  To do this, use the mouse to select the box beside each letter.  The letters you select will appear at the bottom of the screen. 
+
+Press the mouse button to continue."
+
+   gInst3 <-"When you have selected all the letters, and they are in the correct order, click the DONE button at the bottom right of the screen.  If you make a mistake,  click the CLEAR button to start over.  If you forget one of the letters, click the BLANK button to mark the position.  
+When you are ready, press the mouse button to begin letter practice."
+
+
+   gInstMath1 <- "Now you will practice doing the math part of the experiment.  A math problem will appear on the screen, like this:
+
+                       (2 * 1) + 1 = ?
+As soon as you see the math problem, you should compute the correct answer.  In the above problem, 3 is the correct answer.  When you know the correct answer, press the mouse button.
+
+Press the mouse button to continue."
+
+   gInstMath2 <- "You will see a number displayed on the next screen, along with a button marked TRUE  and a button marked FALSE.  If the number on the screen is the corrcet answer to the math problem, click on the TRUE button with the mouse.  If the number is not the correct answer, click on the FALSE button.
+
+   For example, if you see the problem:
+       (2 * 2) + 1 = ?
+and the number on the following screen is 5, click the TRUE button, because that answer is correct.
+
+   However, if you see the problem:
+       (2 * 2) + 1 = ?
+and the number on the next screen is 6, because the correct answer is 5, not 6.
+
+After you click on one of the boxes, the computer will tell you if you made the right choice.
+
+Press the mouse button to continue."
+
+
+gInstMath3 <- "It is VERY important that you get the math problems correct.  Is is also very important that you try and solve the problem as quickly as you can.
+
+Do you have any questions?  When you are ready, click the mouse button to try some practice problems."
+
+
+  gBoth1 <- "Now you will practice doing both parts of the study at the same time. 
+In the next practice set, you will be given one of the math problems. Once you make your decision about the math problem, a letter will appear on the screen.  Try to remember the letter.
+
+In the previous test where you only solved math problems, the computer computed your average time to solve the problems.  If you take longer than your average time, the computer will automatically move you onto the letter part, thus skipping the TRUE/FALSE response and it will count that problem as a math error.  
+
+Therefore, it is VERY important to solve the problems as quickly and accurately as possible. 
+
+Press the mouse button to continue."
+
+
+  gBoth2 <- "During the feedback, you will see a number in red on the top right of the screen.  This indicates your percent correct for the math problems for the entire experiment.  It is VERY important for you to keep this at least at 85%.
+
+For our purposes, we can only use your scores when you are at least 85% accurate on the math problems. Therefore, do your best at the math problems WHILE also recalling as many letters as possible.
+
+Press the mouse button to try some practice problems."
+
+
+  gBothEnd <- "That is the end of practice. The real trilas will look the practice trials you just completed.  
+
+First you will get a math problem to solve, then a letter to remember.
+
+When you see the recall screen, select the letters in the order presented.  If you forget a letter, click the BLANK box to mark where it should go.
+
+ Some sets will have more math problems and letters than others.  It is important that you do your best on both the math problems and the letter recall parts of this experiment.  Remember on the math you must work as QUICKLY and ACCURATELY as possible.  Also remember to keep you math accuracy at 85% or above.  
+
+You may begin when you are ready. Press the mouse button to continue on to the test."
+
+   gFootMath <- "When you have solved the math problem, click the mouse to continue"
+   gRespondHead<- "Select the letters in the order presented.  Use the BLANK button to fill in forgotten letters." 
+
+   gblankText <- "BLANK"
+   gClearText <- "CLEAR"
+   gDoneText  <- "DONE"
+  }
+}
+
+
+define CountDown()
+{
+
+    label <- EasyLabel("",gVideoWidth/2,gVideoHeight/2,gWin,100)
+    labs <- [3,2,1]
+    loop(i,labs)
+     {
+    	label.text <- i
+        Draw()
+		Wait(500)
+     }
+   RemoveObject(label,gWin)
 }

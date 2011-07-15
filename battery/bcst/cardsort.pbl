@@ -161,6 +161,7 @@ define Start(lPar)
     images <- Append(images,x)
 
   }
+
   Draw()
   stim <-	Shuffle(Transpose(Append( Transpose(stimcat),images)))
 
@@ -243,7 +244,9 @@ define Start(lPar)
   ##Loop through each stimulus card
    loop(s,stim)
    {
+
       trialsoncat <- trialsoncat+1
+     Print(s)
 
       #Display the card
       card <- Nth(s,4)

@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformLabel.cpp
 //    Purpose:    Contains SDL-specific visual representation of a word
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -30,10 +30,11 @@
 #include "../../utility/rc_ptrs.h"
 #include "../../utility/PError.h"
 #include "../../base/PComplexData.h"
-
+#include "../../utility/PEBLUtility.h"
 #include "SDL/SDL.h"
 #include "SDL/SDL_ttf.h"
 #include <stdio.h>
+#include <algorithm>
 
 using std::cout;
 using std::cerr;
@@ -120,8 +121,22 @@ bool  PlatformLabel::RenderText()
     if(mSurface)  SDL_FreeSurface(mSurface);
 
 
-    //Re-render the text using the associated font.
-    mSurface = mFont->RenderText(mText.c_str());
+    if(mDirection == 1)
+        {
+
+            //Re-render the text using the associated font.
+            mSurface = mFont->RenderText(mText.c_str());
+        }
+    else 
+        {
+         
+
+            std::string rtext = PEBLUtility::strrev_utf8(mText);
+
+            //Re-render the text using the associated font.
+            mSurface = mFont->RenderText(rtext.c_str());
+
+        }
     
     //If mSurface is null, then rendering failed.
     if( mSurface)

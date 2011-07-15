@@ -1,5 +1,5 @@
 //* -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*- */
-/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 //    Name:       libs/PEBLStream.cpp
 //    Purpose:    Built-in stream functions for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
@@ -547,23 +547,97 @@ Variant PEBLStream::ConnectToHost(Variant v)
     mynet->Init();
     mynet->SetHostName(v1);
     mynet->SetPort((int)v2);
+
+
     mynet->Open();
+
+    if(mynet->IsOpen())
+        {
+            
+
+            PComplexData * pcd = new PComplexData(tmp2);
+            Variant tmp3 = Variant(pcd);
+            delete pcd;
+            pcd=NULL;
+            return tmp3;
+            
+        }else{
+
+        return Variant(0);
+    }
+    
+
+}
+
+
+
+
+
+Variant PEBLStream::SetNetworkPort(Variant v)
+{
+    //v[1] should have the port number
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+
+    PError::AssertType(v1, PEAT_INTEGER, "Argument error in first parameter of function [WaitForNetworkConnection(<port>)]: ");
+
+    
+    counted_ptr<PEBLObjectBase> tmp2 = counted_ptr<PEBLObjectBase>(new PlatformNetwork());
+    PlatformNetwork * mynet = dynamic_cast<PlatformNetwork*>(tmp2.get());
+    mynet->Init();
+    mynet->SetHostName("");
+    mynet->SetPort((int)v1);
+    //    mynet->Accept();
 
     PComplexData * pcd = new PComplexData(tmp2);
     Variant tmp3 = Variant(pcd);
     delete pcd;
     pcd=NULL;
     return tmp3;
+}
 
 
 
+Variant PEBLStream::CheckForNetworkConnection(Variant v)
+{
+    //v[1] should have the network object which should have been opened but not yet
+    //accepted a connection
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_NETWORKCONNECTION, "Argument error in first parameter of function [CheckFroNetworkConnection(<network>)]: ");   
+    counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
+    PlatformNetwork * mynet = dynamic_cast<PlatformNetwork*>(tmp2.get());
+
+    
+
+    bool result ;    //
+
+
+    mynet->Init();
+
+    mynet->SetHostName("");
+
+
+    //mynet->SetPort((int)v1);
+
+
+    result = mynet->CheckForConnection();
+
+    //    mynet->Accept();
+    
+    //PComplexData * pcd = new PComplexData(tmp2);
+    //    Variant tmp3 = Variant(pcd);
+    //    delete pcd;
+    //    pcd=NULL;
+    //    return tmp3;
+    return Variant(result);
 }
 
 
 
 Variant PEBLStream::WaitForNetworkConnection(Variant v)
 {
-    //v[1] should have the port number
+
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); plist->PopFront();
 
@@ -759,6 +833,30 @@ Variant PEBLStream::SetPPortState(Variant v)
     return Variant(true);
 }
 
+Variant ConvertByteToList(int x)
+{
+    int d = 8;
+    //	Variant buffer="";
+
+    PList *list = new PList();
+	for (;d>0;d--)
+		{
+            list->PushBack(Variant((int)(x & 1)));
+            //buffer = buffer + Variant("|") + Variant((int)(x & 1));
+            x >>= 1;
+
+		}
+
+    //buffer = buffer + Variant("|");
+
+    counted_ptr<PEBLObjectBase> tmplist = counted_ptr<PEBLObjectBase>(list);
+    PComplexData * tmpPCD= (new PComplexData(tmplist));
+    Variant tmp = Variant(tmpPCD);
+    delete tmpPCD;
+    tmpPCD=NULL;
+    return tmp;
+
+}
 
 Variant PrintByte(int x)
 {
@@ -793,9 +891,9 @@ Variant PEBLStream::GetPPortState(Variant v)
 
     char x1 = mypport->GetDataState();
 
-    Variant byte = PrintByte(x1);
+    Variant bytelist = ConvertByteToList(x1);
 
-    return byte;
+    return bytelist;
 }
 
 

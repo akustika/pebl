@@ -122,7 +122,12 @@ Version 0.12
     have read that several standard USB button-boxes are based on FTDI
     chipset, and so this should open up the capabilities to use those
     response boxes.
-   
+
+
+???	SetNetworkPort
+???	CheckForNetworkConnection
+
+
  * Audio Input/Output
 
    - Better Audio playback.  Previous playback was very laggy and

@@ -118,7 +118,9 @@ bool PlatformWidget::Draw()
                             //We need to reset the sizes.
                             mWidth = tmp->w;
                             mHeight = tmp->h;
-
+                            //cout << mRotation << ":" << mZoomX<< ":" << mZoomY << endl;
+                            //cout << mSurface->w << "," << mSurface->h << " : "  << tmp->w << "," << tmp->h << endl;
+                                
                             PWidget::SetProperty("WIDTH",mWidth);
                             PWidget::SetProperty("HEIGHT",mHeight);
                             PWidget::SetProperty("ZOOMX",mZoomX);

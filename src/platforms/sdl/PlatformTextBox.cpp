@@ -30,6 +30,7 @@
 #include "PlatformFont.h"
 #include "SDLUtility.h"
 
+
 #include "../../base/PComplexData.h"
 #include "../../devices/PKeyboard.h"
 
@@ -41,6 +42,7 @@
 #include "SDL/SDL_ttf.h"
 #include <stdio.h>
 #include <string>
+#include <algorithm>
 
 using std::cout;
 using std::cerr;
@@ -165,12 +167,44 @@ bool  PlatformTextBox::RenderText()
             linelength = *i - linestart;
             if(linelength>0)
                 {
-                    tmpSurface = mFont->RenderText(mText.substr(linestart, linelength).c_str());
+
+
+                    //cout << "direction in ptb: " << mDirection << endl;
+                    SDL_Rect to;
+                    if(mDirection == 1)
+                        {
+                            
+                            tmpSurface = mFont->RenderText(mText.substr(linestart, linelength).c_str());
+                            to = {0,totalheight,tmpSurface->w, tmpSurface->h};
+                        }
+                    else
+                        {
+                            
+
+
+                            std::string tmp = mText.substr(linestart,linelength);
+
+                            //
+                            std::string rtext = PEBLUtility::strrev_utf8(tmp);
+
+
+
+                            //Re-render the text using the associated font.
+                            tmpSurface = mFont->RenderText(rtext.c_str());
+                            // don't forget to free the string after finished using it
+                            
+                            //delete[] rtext;
+                            //rtext = NULL;
+
+
+                            to = {(mSurface->w-tmpSurface->w),totalheight,tmpSurface->w, tmpSurface->h};
+                        }
+
                     
-                    SDL_Rect to = {0,totalheight,tmpSurface->w, tmpSurface->h};
                     SDL_BlitSurface(tmpSurface, NULL, mSurface,&to);
                     SDL_FreeSurface(tmpSurface);
                 }
+            
             totalheight += height;
             linestart = *i;
             i++;
@@ -415,6 +449,11 @@ int PlatformTextBox::FindNextLineBreak(unsigned int curposition)
 /// the character in mText before which the cursor should be drawn. 
 int PlatformTextBox::FindCursorPosition(int x, int y)
 {
+
+    if(mText.length()==0)
+        {
+            return 0;
+        }
 
     //Find the height of a line.
     int height = mFont->GetTextHeight(mText);

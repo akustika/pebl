@@ -142,8 +142,15 @@ namespace PEBLStream
             {"ENDOFFILE",            EndOfFile,        1, 1},
             {"APPENDFILE",           AppendFile,       2, 2},
 
+
+
             {"CONNECTTOIP", ConnectToIP,               2, 2},
             {"CONNECTTOHOST", ConnectToHost,           2, 2},
+
+            {"SETNETWORKPORT",           SetNetworkPort,               1, 1},
+            {"CHECKFORNETWORKCONNECTION", CheckForNetworkConnection,   1, 1},
+
+            
             {"WAITFORNETWORKCONNECTION", WaitForNetworkConnection, 1,1},
             {"CLOSENETWORKCONNECTION", CloseNetworkConnection,    1,1},
                 
@@ -280,7 +287,7 @@ namespace PEBLEnvironment
 
 
             {"CLEAREVENTLOOP",                  ClearEventLoop,     0, 0},
-            {"GETINPUT",                        GetInput,           2, 3},
+            {"GETINPUT",                        GetInput,           2, 4},
             {"GETTEXTBOXCURSORFROMCLICK",       GetTextBoxCursorFromClick, 3,3},
             {"REGISTEREVENT",                   RegisterEvent,      5,6},
             {"STARTEVENTLOOP",                  StartEventLoop,      0,0},          

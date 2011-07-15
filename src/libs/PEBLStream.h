@@ -90,6 +90,10 @@ namespace PEBLStream
 
     Variant ConnectToIP(Variant v);
     Variant ConnectToHost(Variant v);
+
+
+    Variant SetNetworkPort(Variant v);//
+    Variant CheckForNetworkConnection(Variant v);//
     Variant WaitForNetworkConnection(Variant v);
     Variant CloseNetworkConnection(Variant v);
 

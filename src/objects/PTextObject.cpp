@@ -3,7 +3,7 @@
 //    Name:       src/objects/PTextObject.cpp
 //    Purpose:     Contains generic specs for all objects containing text
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -27,6 +27,7 @@
 #include "PWidget.h"
 #include "PTextObject.h"
 #include "PFont.h"
+#include "../utility/PError.h"
 
 #include <string>
 #include <iostream>
@@ -36,10 +37,37 @@ using std::endl;
 PTextObject::PTextObject():
     PWidget(0,0,0,0,false),
     mTextChanged(true),
-    mText("")
+    mText(""),
+    mDirection(1)
 {
     InitializeProperty("TEXT","");
+    InitializeProperty("DIRECTION",1);
 
+}
+
+
+
+PTextObject::PTextObject(const std::string & text):
+    PWidget(0,0,0,0,false),
+    mTextChanged(true),
+    mText(std::string(text)),
+    mDirection(1)
+{
+
+    InitializeProperty("TEXT",Variant(mText));
+    InitializeProperty("DIRECTION",1);
+}
+
+
+PTextObject::PTextObject( PTextObject &object):
+    PWidget(0,0,0,0,false),
+    mTextChanged(true),
+    mText(object.GetText()),
+    mDirection(1)
+ 
+{
+    InitializeProperty("TEXT",Variant(mText));
+    InitializeProperty("DIRECTION",1);
 }
 
 
@@ -50,26 +78,19 @@ void PTextObject::SetText(const std::string & text)
     mTextChanged = true;
 }
 
-PTextObject::PTextObject(const std::string & text):
-    PWidget(0,0,0,0,false),
-    mTextChanged(true),
-    mText(std::string(text))
+
+void PTextObject::SetDirection(int dir)
 {
-    InitializeProperty("TEXT",Variant(mText));
+    if(dir ==1 | dir == -1)
+        {
+            PEBLObjectBase::SetProperty("DIRECTION",Variant(dir));
+            mDirection = dir;
+            mTextChanged = true;
+        } else 
+        {
+            PError::SignalFatalError("Improper value for direction");
+        }
 }
-
-
-PTextObject::PTextObject( PTextObject &object):
-    PWidget(0,0,0,0,false),
-    mTextChanged(true),
-    mText(object.GetText())
- 
-{
-    InitializeProperty("TEXT",Variant(mText));
-}
-
-
-
 
 bool PTextObject::SetProperty(std::string name, Variant v)
 {
@@ -86,6 +107,10 @@ bool PTextObject::SetProperty(std::string name, Variant v)
                 {
                     SetText(v);
                     return true;
+                }
+            else if(name == "DIRECTION")
+                {
+                    SetDirection(v);
                 }
             return PWidget::SetProperty(name,v);
         }
@@ -114,7 +139,8 @@ ObjectValidationError PTextObject::ValidateProperty(std::string name)const
     else if(name == "TEXT" || 
             name == "WIDTH" ||
             name == "HEIGHT" ||
-            name == "FONT" )
+            name == "FONT" ||
+            name == "DIRECTION")
 
         return OVE_VALID;
     else

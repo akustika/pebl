@@ -710,7 +710,7 @@ Variant PEBLEnvironment::GetInput(Variant v)
     
 
 
-    Evaluator::mEventLoop.Clear();
+    //Evaluator::mEventLoop.Clear();
     Evaluator::mEventLoop.RegisterEvent(keypressstate, funcname, Variant(NULL));
 
     //Evaluate the last list item, if it exists
@@ -1558,18 +1558,23 @@ Variant PEBLEnvironment::SystemCall(Variant v)
     PList * plist = v.GetComplexData()->GetList();
     std::string call  = plist->First().GetString(); plist->PopFront();
     
-    const char* call2 = call.c_str();
-    int x = system(call2);  //do a system call with the argument string.
-#if defined( PEBL_UNIXX )   
 
-#elif defined (PEBL_WIN32X)
-   cout << "syscall 2\n";
-    std::string  args = plist->First().GetString(); plist->PopFront();
-    const char* call2 = call.c_str();
-    PEBLUtility::SystemCall(call.c_str(),args.c_str());
+    std::string args;
 
-#endif
-    return Variant(1);
+    if(plist->Length()>0)
+        {
+            args = plist->First().GetString(); plist->PopFront();
+        }
+    else
+        {
+            args = "";
+        }
+
+
+    Variant x =PEBLUtility::SystemCall(call.c_str(),args.c_str());
+
+
+    return x;
 
 }
 
@@ -1617,7 +1622,7 @@ Variant PEBLEnvironment::MakeDirectory(Variant v)
     PList * plist = v.GetComplexData()->GetList();
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [MakeDirectory(<dirname>)]:  ");    
-    cout << "Making directory in penviremnt" << plist->First()<<std::endl;
+    //cout << "Making directory in penviremnt" << plist->First()<<std::endl;
     Variant out = PEBLUtility::MakeDirectory((std::string)(plist->First()));
     return out;
 }

@@ -79,6 +79,12 @@ namespace PEBLUtility
 
     Variant LaunchFile(std::string file);
     Variant SystemCall(std::string path, std::string args);
+
+    void strrev(char*p);
+    void strrev_utf8(char*p);
+    std::string strrev(std::string p);
+    std::string strrev_utf8(std::string p);
+    
 }
 
 

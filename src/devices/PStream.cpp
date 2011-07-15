@@ -71,12 +71,12 @@ PStream::PStream(const string & filename, StreamDirection dir, StreamType type):
 
             // Attempt to get the file attributes
             intStat = stat(mStreamFileName.c_str(),&stFileInfo);
+#if 0
             cout << "file attributes: " << intStat << endl;
             cout << "st_mode: "<< stFileInfo.st_mode << endl;
             cout << "st_gid: "<< stFileInfo.st_gid << endl;
             cout << "st_uid: "<< stFileInfo.st_uid << endl;
-
-   
+#endif   
             mFileStream = new fstream(mStreamFileName.c_str(),  ios_base::out);
             if(!mFileStream->is_open())
                 {

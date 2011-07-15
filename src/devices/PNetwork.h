@@ -3,7 +3,7 @@
 //    Name:       src/devices/PNetwork.h
 //    Purpose:    Class for handling network communication (tcpip)
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2006- Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2006-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -60,7 +60,8 @@ public:
 
     virtual void SetPort(unsigned int port){mPort = port;};
     virtual unsigned int GetPort(){return mPort;};
-
+    
+    virtual bool IsOpen(){return mIsOpen;};
 
 protected:
 

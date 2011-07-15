@@ -27,6 +27,7 @@ define Start(p)
   gITI <- 1000                ## inter-trial interval.
   gWait <- 500                ## How long to 'go to each room'
 
+  gUseBeep <- 1               ##should a beep play?
 
   gStimColor <- MakeColor("navy")
   gHighlightColor <- MakeColor("khaki")
@@ -40,14 +41,22 @@ define Start(p)
   gHomeX <- gVideoWidth/2
   gHomeY <- gVideoHeight/2
 
-  gBeep <- LoadSound("beep.wav")
 
+  if(gUseBeep)
+   {
+##    gBeep <- LoadSound("beep.wav")
+	  gBeep <- MakeSineWave(400,200,.8)
+   }
 
   if(gSubNum==0)
    {
      gSubNum <- GetSubNum(gWin)
    }
 
+  if(not FileExists("data"))
+   {
+      MakeDirectory("data")
+    }
   gFileOut <- FileOpenWrite("data/corsi-" + gSubNum + ".txt")
 #  gLogFile <- FileOpenAppend("data/corsi-log.txt")
 #  ShowCursor(0)
@@ -259,12 +268,10 @@ define Trial(xy,stimseq)
         Show(targ)
         Draw()
 
-
-#       call <- "echo -e " + gQuote + "\a"+gQuote
-#		SystemCall(call)
-#   	    PlayBackground(gBeep)
-#		Wait(50)
-#		Stop(gBeep)
+       if(gUseBeep)
+       {
+  	    PlayBackground(gBeep)
+       }
 
         Wait(200)
         Hide(targ)

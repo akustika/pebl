@@ -3,7 +3,7 @@
 //    Name:       src/devices/PNetwork.h
 //    Purpose:    Class for handling network communication (tcpip)
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2006-2010  Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2006-2011  Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -37,27 +37,29 @@ public:
 
 
     ///The Standard constructor.  
-  PlatformNetwork();
+    PlatformNetwork();
     
     ///The Standard destructor.  
-  virtual ~PlatformNetwork();
-  
+    virtual ~PlatformNetwork();
+    
+    
+    virtual void Init();
+    
+    virtual void SetHostIP(unsigned int);
+    virtual void SetPort(unsigned int);
+    virtual void SetHostName(std::string hostname);
 
-  virtual void Init();
-  
-  virtual void SetHostIP(unsigned int);
-  virtual void SetPort(unsigned int);
-  virtual void SetHostName(std::string hostname);
-
-  virtual void Open();
-  virtual void Accept();
-  virtual void Close();
+    virtual void Open();
+    virtual bool CheckForConnection();
+    virtual void Accept();
+    virtual void Close();
 
 
-  virtual void SendString(std::string message);
-  virtual void SendByte(int byte);
+    virtual void SendString(std::string message);
+    virtual void SendByte(int byte);
+    
+    virtual std::string Receive(int length);
 
-  virtual std::string Receive(int length);
 
 protected:
 

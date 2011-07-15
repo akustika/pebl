@@ -1,6 +1,4 @@
-define Start(lPar)
-{
- ## (c) 2006-2009 Shane T. Mueller
+ ## (c) 2006-2011 Shane T. Mueller
  ## smueller at obereed dot net
  ## PEBL Bechara's Gambling Task, Version 0.6
  ##  (a version of the so-called Iowa Gambling Task (tm))
@@ -36,9 +34,16 @@ define Start(lPar)
  ##
  ##
  ## Polish translation contributed by  Artur Pilacinski
- ## Chinese translation contributed by y 
+ ## Chinese translation contributed by Ron Ye 
+ ## French translation contributed by Vladimir Bogdanov
  ##
-  
+
+
+
+
+define Start(lPar)
+{
+
   ##How many trials?
   numtrials <- 100
 
@@ -59,9 +64,10 @@ define Start(lPar)
    textlist <- FileReadList(Lowercase("translations/labels-"+gLanguage+tag+".txt"))
 
 
-   gFontNameMono <- gPEBLBaseFontMono  #defaults to "VeraMono.ttf"
+   gFontNameMono <- gPEBLBaseFont     #defaults to "VeraMono.ttf"
    gFontNameBase <- gPEBLBaseFont      #defaults to "Vera.ttf" 
 
+   
    gSleepEasy <- 1
    Initialize()
 
@@ -139,6 +145,13 @@ define Start(lPar)
    inst2 <- Nth(textlist, 2)
    inst3 <- Nth(textlist, 3)
 
+
+   if(gLanguage == "he")
+   {
+   
+     gInstructions.direction <- (-1)
+	 gFooter.direction <- (-1) 
+  }
 
    SetText(gInstructions,inst1)
 
@@ -455,6 +468,7 @@ define Initialize()
    gColGreen <- MakeColor("darkgreen")
    gColRed   <- MakeColor("red")
  
+
    gStimFont         <- MakeFont(gFontNameMono, 0, 24,gfg,bg1,1)       
    gCorrFont         <- MakeFont(gFontNameMono, 0, 24,gcolGreen, bg1,1)
    gIncorrFont       <- MakeFont(gFontNameMono, 0, 24,gcolRed,   bg1,1)
@@ -466,6 +480,16 @@ define Initialize()
  
    ## Make and place the instruction box, then hide it  
    gInstructions <- MakeTextBox("", gInstructionsFont, 600,300)
+
+   Print("--------------------------------")
+   
+   PrintPRoperties(gInstructions)
+
+   if(gLanguage=="he")
+   {
+     gInstructions.direction <- (-1)
+   }
+
    AddObject(gInstructions, gWin)
    Move(gInstructions, gVideoWidth/2-300, gVideoHeight/2-150)
    Hide(gInstructions)

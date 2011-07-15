@@ -34,6 +34,8 @@ define Start(p)
      rt <- GetVocalResponseTime(buffer,.25,200)
      time2 <- GetTime()
 
+	 Print("======================")
+	 Print(rt)
 
 	 wavebase <- "output/"+gSubNum+"-"+trial+"-" + word +".wav"
 	 Print(wavebase)
