@@ -382,8 +382,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 48
-#define YY_END_OF_BUFFER 49
+#define YY_NUM_RULES 49
+#define YY_END_OF_BUFFER 50
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -393,16 +393,16 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[147] =
     {   0,
-        0,    0,   49,   47,    2,   45,   47,   47,   47,   47,
+        0,    0,   50,   48,    2,   45,   46,   48,   48,   48,
        15,   26,   20,    6,    8,   27,   11,    9,    4,   28,
-       19,   47,   14,   42,   42,   42,   42,   42,   42,   42,
+       19,   48,   14,   42,   42,   42,   42,   42,   42,   42,
        42,   42,   42,   42,   17,   25,   10,   40,   40,   40,
        40,   40,   41,   40,   40,   40,   40,   40,   40,   16,
-       24,   47,   47,   47,    2,   44,   22,    0,   43,   43,
+       24,   48,   48,   48,    2,   44,   22,    0,   43,   43,
         0,    3,    5,    0,    4,    7,   18,   21,   12,   13,
        42,   42,   42,   42,   42,   29,   42,   42,   37,   42,
        42,    0,   40,   40,   40,   40,   40,    0,   41,   29,
-       40,   40,   37,   40,   40,   23,    0,   46,   36,   42,
+       40,   40,   37,   40,   40,   23,    0,   47,   36,   42,
 
        42,   42,   42,   38,   42,   42,   40,   36,   40,   40,
        40,   41,   40,   38,   40,   40,    1,   42,   42,   32,
@@ -583,11 +583,11 @@ static yyconst flex_int16_t yy_chk[356] =
     } ;
 
 /* Table of booleans, true if rule could match eol. */
-static yyconst flex_int32_t yy_rule_can_match_eol[49] =
+static yyconst flex_int32_t yy_rule_can_match_eol[50] =
     {   0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 1, 1, 1, 0, 0, 0,     };
+    0, 0, 0, 1, 1, 1, 0, 0, 0, 0,     };
 
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
@@ -1185,26 +1185,31 @@ YY_RULE_SETUP
 case 46:
 YY_RULE_SETUP
 #line 146 "src/base/Pebl.l"
+{ return PEBL_NEWLINE;}
+	YY_BREAK
+case 47:
+YY_RULE_SETUP
+#line 147 "src/base/Pebl.l"
 {
             char message[151];
             snprintf(message,150,"\n  File appears to be in UTF-16 Unicode format.\n  PEBL can only read UTF-8 or ASCII formats. Resave file as UTF-8 or ASCII and try again.");
             yyerror(message);
            }
 	YY_BREAK
-case 47:
+case 48:
 YY_RULE_SETUP
-#line 152 "src/base/Pebl.l"
+#line 153 "src/base/Pebl.l"
 { char message[100];
                  snprintf(message,99,"\nUnknown characters in line %d: [%s]\n",yylineno,yytext);
                  yyerror(message);
                }
 	YY_BREAK
-case 48:
+case 49:
 YY_RULE_SETUP
-#line 156 "src/base/Pebl.l"
+#line 157 "src/base/Pebl.l"
 ECHO;
 	YY_BREAK
-#line 1208 "src/base/lex.yy.c"
+#line 1213 "src/base/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2214,7 +2219,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 156 "src/base/Pebl.l"
+#line 157 "src/base/Pebl.l"
 
 
 int yywrap(void) {

@@ -2022,7 +2022,7 @@ yyreduce:
     {
 		PNode * tmpNode = new DataNode(Variant((yyvsp[(1) - (2)].function), P_DATA_FUNCTION), sourcefilename, yylineno);
 		(yyval.exp) = new OpNode(PEBL_FUNCTION, tmpNode, (yyvsp[(2) - (2)].exp), sourcefilename, yylineno);
-        free((yyvsp[(1) - (2)].function));
+		free((yyvsp[(1) - (2)].function));
 		;}
     break;
 
