@@ -143,6 +143,7 @@ if(yylval.strValue[yyleng-2] != '"')     /*"*/
 
 \r\n      { return PEBL_NEWLINE;}
 \n        { return PEBL_NEWLINE;}
+\r        { return PEBL_NEWLINE;}
 {bomF}     {
             char message[151];
             snprintf(message,150,"\n  File appears to be in UTF-16 Unicode format.\n  PEBL can only read UTF-8 or ASCII formats. Resave file as UTF-8 or ASCII and try again.");
