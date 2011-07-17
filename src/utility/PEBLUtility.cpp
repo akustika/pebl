@@ -51,11 +51,10 @@
 #include <windows.h>
 #elif defined(PEBL_LINUX)
 #include <sys/stat.h>
+#include <bits/types.h>
 #endif
 
 #include <sys/stat.h>
-
-#include <bits/types.h>
 #include <stdio.h>
 
 //Some math libraries contain this, but let's not take any chances.
@@ -1039,7 +1038,7 @@ Variant PEBLUtility::LaunchFile(std::string file)
                                    NULL,                        // Additional parameters
                                    0,                           // Default directory
                                    SW_SHOW);
-
+    int x = ((int)hInst > 32);  //hInst returns an error code > 32 on success.
 #elif defined(PEBL_UNIX)
 
 
@@ -1052,7 +1051,7 @@ Variant PEBLUtility::LaunchFile(std::string file)
      int x = system(call2.c_str());  //do a system call with the argument string.
    
  #endif
-return Variant(x);
+ return Variant(x);
 }
 
 
