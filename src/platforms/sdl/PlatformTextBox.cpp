@@ -175,7 +175,8 @@ bool  PlatformTextBox::RenderText()
                         {
                             
                             tmpSurface = mFont->RenderText(mText.substr(linestart, linelength).c_str());
-                            to = {0,totalheight,tmpSurface->w, tmpSurface->h};
+                            SDL_Rect tmprect = {0,totalheight,tmpSurface->w, tmpSurface->h};
+                            to = tmprect;
                         }
                     else
                         {
@@ -197,7 +198,9 @@ bool  PlatformTextBox::RenderText()
                             //rtext = NULL;
 
 
-                            to = {(mSurface->w-tmpSurface->w),totalheight,tmpSurface->w, tmpSurface->h};
+                            SDL_Rect tmprect = {(mSurface->w-tmpSurface->w),totalheight,tmpSurface->w, tmpSurface->h};
+                            to = tmprect;
+
                         }
 
                     
