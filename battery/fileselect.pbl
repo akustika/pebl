@@ -10,6 +10,9 @@ define Start(p)
 
 
 
+  gUseReloc <-  1  ##Set this from 0 to 1 if you want to run on windows NOT from an installation in Program Files, but from
+                   ##A PEBL subdirectory of the current working directory.
+ 
  ##Set this from 1 to 0 to turn off automatic subject code incrementation
  ##it increments the previous code by one, to avoid overwriting
  gAutoSubCode <- 1
@@ -1052,7 +1055,19 @@ define RunScript(dirChain,filename,fullscreen,language,logfile,subcode,experimen
    } else {
      sep <- " & "
    }
-		 callstring <- "cd " + DirListToText(dirChain) + sep  +gPEBLName + " "  +filename + " -s " + subcode
+   
+  ##On windows, should the launcher run from a PEBL subdirectory rather than C:\Program Files\pebl
+   if(gUseReloc)
+     {
+           sep <- CR(1)
+            gPEBLName <- "\PEBL\bin\pebl.exe"
+		 callstring <- "set ABSPATH=%CD%"+sep+"cd " + DirListToText(dirchain) + sep + gQuote+"%ABSPATH%" +gPEBLName +gQuote+ " " +filename + " -s " + subcode
+    		 ##callstring <- "set ABSPATH=%CD%"+gPEBLname+ CR(1)+ " cd "+DirListToText(dirchain)+CR(1)+gQuote+"%ABSPATH%"+gquote + " " + filename +" "  
+
+     }else {
+ 		 callstring <- "cd " + DirListToText(dirChain) + sep  + gPEBLName + " "  +filename + " -s " + subcode
+     }
+
 		 if(fullscreen)
 		 {
 		   callstring <- callstring + " --fullscreen "
@@ -1069,8 +1084,17 @@ define RunScript(dirChain,filename,fullscreen,language,logfile,subcode,experimen
 
          #### Run the experiment!!!!
          Print(callstring)
-		 SystemCall(callstring,"")
 
+  if(gUseReloc)
+      {
+          runfile <- FileOpenWrite("tmp.bat")
+     ##     FilePrint(runfile,callstring+sep+"pause") ##Use for debugging purposes.
+          FilePrint(runfile,callstring)
+          FileClose(runfile)
+          SystemCall("tmp.bat","")
+      }else{
+         SystemCall(callstring,"")
+      }
 
          FilePrint(logfile,TimeStamp() + "," + DirListToText(gDirChain)+filename+","+GetPEBLVersion() +
 		 "," + experimenter + "," + subcode + "," +"fullscreen:["+fullscreen+"],"+ language + "," + callstring+ ","+"FINISHED")
