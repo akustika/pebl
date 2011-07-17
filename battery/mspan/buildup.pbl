@@ -29,7 +29,7 @@ define Start(p)
     gSubNum <- GetSubNum(gWin)
    }
 
-
+   MakeDirectory("data")
   gFileOut <- FileOpenWrite("data/buildup-" + gSubNum + ".txt")
   gLogFile <- FileOpenAppend("data/buildup-log.txt")
   FilePrint(gLogFile,"BUILDUP start " +GetTime() + " " + TimeStamp() +  " " + gSubNum )
