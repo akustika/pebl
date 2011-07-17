@@ -42,6 +42,7 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
    }
 
+  MakeDirectory("data")
   gFileOut <- FileOpenWrite("data/instruc-" + gSubNum + ".txt")
   gLogFile <- FileOpenAppend("data/instruc-log.txt")
   FilePrint(gLogFile,"INSTRUC start " +GetTime() + " " + TimeStamp() +  " " + gSubNum + " " + cond)
