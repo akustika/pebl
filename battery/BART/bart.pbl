@@ -7,20 +7,17 @@
  ## (c) 2011 Shane T. Mueller
  ## smueller at obereed dot net
  ## 
+ ##  Version of original task by Lejuez, available for
+ ##  free download from 
+ ##  http://www.addiction.umd.edu/CAPERWebSite/downloads.html
+ ##
+ ##  See: 
  ##
  ##
- ##  Version of original task by XXXX, available for
- ##   free download from XXXX.
- ##
- ##
- ##
- ##
- ##
- ##
- ##
- ##
- ##
- ##
+ ## Lejuez, C. W., Read, J. P., Kahler, C. W., Richards, J. B., Ramsey,
+ ## S. E., Stuart, G. L., Strong, D. R., & Brown, R. A. (2002). Evaluation
+ ## of a behavioral measure of risk-taking: The Balloon Analogue Risk Task
+ ## (BART). Journal of Experimental Psychology: Applied, 8, 75-84.
  ##
  ##
  ##
@@ -38,8 +35,11 @@ define Start(p)
 {
 
  
-     gAllowAutoPump <- 1    ##Does the balloon continue to pump up while holding the button down?
-     gStartBalloonSize <- 10
+      gAllowAutoPump <- 0   ##Does the balloon continue to pump up while holding the button down?
+
+      gStartBalloonSize <- 10
+ 
+	  gMoneyPerPump <- .05
 
 	  ##Get the translation text
   	  GetStrings(gLanguage)
@@ -67,6 +67,14 @@ define Start(p)
 	  gFileOut <- FileOpenAppend("bart-"+gSubNum+".csv")
 
 
+	  ##Do the instructions
+      inst <- EasyTextBox(gInstructions, 10,10,gWin,18,gVideoWidth-20,gVideoHeight-20)
+
+	  Draw() 
+	  WaitForAnyKeyPress()
+	  Hide(inst)
+	  Draw()
+
 	  ##Each one of these can take a few seconds
 	  set1 <- Transpose([SampleBreakPointSet(8,10),Repeat(First(cols),10),Repeat(1,10)])
 	  set2 <- Transpose([SampleBreakPointSet(16,10),Repeat(Second(cols),10),Repeat(2,10)])
@@ -85,7 +93,8 @@ define Start(p)
 
 	  trials <- FlattenN([group1,group2,group3,group4],1)
 
-
+	  Print(trials)
+	  FilePrint(gFileOut,"subnum,trial,type,life,pumps,total,collected,burst,time")
 
       ##  Set up some global data here.
       ##
@@ -97,9 +106,14 @@ define Start(p)
 	  loop(i,trials)
       {
 		  FilePrint_(gFileOut,gSubNum+","+trial+","+Third(i)+",")
-                  Trial(First(i),Second(i))
+          Trial(First(i),Second(i))
 		  trial <- trial + 1
       }
+      Show(inst)
+	  inst.text <- gDebrief	
+	  Draw()
+	  WaitForAnyKeyPress()
+
 }
 
 
@@ -117,7 +131,7 @@ define Trial(life,color)
 	  Hide(gCollectLab)   ##Don't show the hide message on the
 	  Hide(gCollectBox)       ##	  first click
 	  Draw()
-          cont <- 1
+      cont <- 1
 	  pumps <- 0
 
 	  startTime <- GetTime()
@@ -142,7 +156,7 @@ define Trial(life,color)
 					 if(Inside(mousestate,gPumpBox) and   Third(mousestate))
 					 {
 						resp <- 1
-                        Wait(150)
+                        Wait(250)
   					 } else
                      {
           	            resp <- WaitForClickOnTarget(clickon, Sequence(1,Length(clickon),1))
@@ -156,12 +170,13 @@ define Trial(life,color)
         		   time2 <- GetTime()
                    }
 	
-           	   pumps <- pumps + 1
+
 
 		   #Determine which one it is.
-        	  if(resp==1)
+        	  if(resp==1)  #click on pump
 	        		  {
 
+                   	   pumps <- pumps + 1
                         PlayBackground(gBlow)
 
 						##pump up the balloon
@@ -181,7 +196,7 @@ define Trial(life,color)
 
 						}else{
 						
- 				        temp <- temp +.05
+ 				        temp <- temp + gMoneyPerPump
 						radius <- radius + 2
 
 						}
@@ -189,7 +204,6 @@ define Trial(life,color)
 					    ##Response == 2
 		   	 		    ##Keep the money
 						PlayBackground(gKaching)
-
 
 
 						gTotal <- gTotal + temp
@@ -359,7 +373,7 @@ define UpdateCash(radius)
 
 
 
-    step <- .05
+    step <- .05  #animate the cash update in steps of this size.
 	if(gLast >1)
 	{
 	    step <- .1
@@ -423,8 +437,8 @@ define GetStrings(lang)
    if(lang=="EN")
    {
 
-      gInstructions <- "Throughout the task, you will be presented with 90 balloons, one at a time. For each balloon you can click on the button labeled âPress This Button to Pump Up the Balloonâ to increase the size of the balloon. You will accumulate 5 cents in a temporary bank for each pump. You will not be shown the amount you have accumulated in your temporary bank. At any point, you can stop pumping up the balloon and click on the button labeled 'Collect $$$'. Clicking this button will start you on the next balloon and will transfer the accumulated money from your temporary bank to your permanent bank labeled 'Total Earned'. The amount you earned on the previous balloon is shown in the box labeled 'Last Balloon'. It is your choice to determine how much to pump up the balloon, but be aware that at some point the balloon will explode. The explosion point varies across balloons ranging from the first pump to enough pumps to make the balloon fill
-the entire computer screen. If the balloon explodes before you click on 'Collect $$$', then you move on to the next balloon and all money in your temporary bank is lost. Exploded balloons do not affect the money accumulated in your permanent bank. At the end of the task, you will receive gift certificates in the amount earned in your permanent bank."
+      gInstructions <- "Throughout the task, you will be presented with 90 balloons, one at a time. For each balloon you can click on the button labeled 'Press This Button to Pump Up the Balloon' to increase the size of the balloon. You will accumulate 5 cents in a temporary bank for each pump. You will not be shown the amount you have accumulated in your temporary bank. At any point, you can stop pumping up the balloon and click on the button labeled 'Collect $$$'. Clicking this button will start you on the next balloon and will transfer the accumulated money from your temporary bank to your permanent bank labeled 'Total Earned'. The amount you earned on the previous balloon is shown in the box labeled 'Last Balloon'. It is your choice to determine how much to pump up the balloon, but be aware that at some point the balloon will explode. The explosion point varies across balloons ranging from the first pump to enough pumps to make the balloon fill
+the entire computer screen. If the balloon explodes before you click on 'Collect $$$', then you move on to the next balloon and all money in your temporary bank is lost. Exploded balloons do not affect the money accumulated in your permanent bank. At the end of the task, you will receive gift certificates in the amount earned in your permanent bank.  Press any key to begin."
 
 	  gMoney          <- "$"
       gCollectMessage <- "       Press to "+CR(1)+"     Collect $$$"
@@ -432,7 +446,7 @@ the entire computer screen. If the balloon explodes before you click on 'Collect
 	  gTotalMessage   <- " Total "+CR(1)+" Earned"
 	  gLastMessage    <- " Last  "+CR(1)+" Balloon"
 
-
+      gDebrief       <- "Thank you for participating in the task.  Alert the experimenter that you are done."
    }
 
 }
