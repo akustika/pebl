@@ -1,0 +1,254 @@
+define Start(p)
+{
+
+
+  ##For cedrus box, 
+  ##  1-2 are up for RB mode
+  ##  3 is baud rate 19200=down, 9600=up
+  
+  ## 1-2 are down for XID mode
+  ##  3 is baud; down = 115K, up = 9600
+
+ 
+  ## 1-down 2-up is ASCII, 
+  ## 3 is baud,  down = 19200, up = 9600 
+  ## It will just give you keydown events.
+
+
+  ## 1-up 2-down is PST mode (probably not useful in PEBL)
+
+ 
+
+
+   ##xid mode:
+
+
+##  Basic 6-byte protocol:
+##  byte 1: k
+##  byte 2: bits 0-3 stor port number
+##  byte 2: bits 4: action flag.  If set, the button has been pressed;
+##  if clear, it has been released.
+##  byte 2: bits 5-7 indicate which button was pressed.
+##  bytes 3-6: reaction time timer.
+
+## Set XID Protocol:
+##text commands the cedrus supposedly recognizes:
+
+## c10    Sets the device protocol to XID mode
+
+## Set RB Series Protocol
+## c11    Sets the device protocol to RB Series mode
+
+## Set PST Protocol
+## c12    Sets the device protocol to PST mode.
+## Note: This protocol does not work in SV-1.
+
+## Set ASCII Protocol
+## c13    Sets the device protocol to ASCII mode
+
+
+## Get Protocol
+## _c1    The XID device sends back _xid followed
+##        by a byte between 0 and 3 that
+##        indicates the current protocol
+
+   ## _d1 get product name
+   ## _d2 get product id
+   ## _d3 reports model number
+   ## _d4  major firmware revision
+   ## _d5 minor firmware
+   ## 
+
+
+   ## e1 reset base timer
+   ## e3 gets value of device base timer???
+   ## e5  reset RT timer
+
+
+   ## 
+   ## a10 (???)
+
+
+
+
+
+
+   out <- OpenComPort(16,9600)
+   GetCedrusString(out) ##flush whatever is in the queue. 
+
+  ##Setting x mode
+   
+   ##Get protocol:
+   Print(SendCedrus(out,"_c1"))
+   Print("Protocol:         ["+GetCedrusString(out)+"]")
+#  SendCedrus(out,"c10")    
+  SendCedrus(out,"_d1")
+  Print("Product name:      ["+GetCedrusString(out)+"]")
+
+  SendCedrus(out,"_d2")
+  Print("Product id:        ["+GetCedrusList(out,1)+"]")
+
+  SendCedrus(out,"_d3")
+  Print("Model number:      ["+GetCedrusList(out,1)+"]")
+  SendCedrus(out,"_d4")
+  Print("Major firmware:    ["+GetCedrusList(out,1)+"]")
+  SendCedrus(out,"_d5")
+  Print("Minor firmware:    ["+GetCedrusList(out,1)+"]")
+
+
+  GetCedrusString(out) ##flush whatever is in the queue.
+  Print("Resetting base timer value: ")
+  SendCedrus(out,"e1")
+  gBaseTime <- GetTime()
+  SendCedrus(out,"e5")
+  result <-   GetCedrusString(out) ##flush whatever is in the queue.
+  Print("-----:"+result)
+
+  SendCedrus(out,"e3")  ##Get current time
+  basetime <- GetCedrusList(out,6)
+  basetime2 <-  BitsToTimer(SubList(basetime,3,6))
+  Print("base timer value: "+ basetime2)
+
+
+   Print("**************************************")
+   Print("starting to monitor keypad")
+   MonitorCedrus(out,5000)
+
+   Print("resetting timer")
+   gBaseTime <- GetTime()
+   SendCedrus(out,"e5")
+   result <-   GetCedrusString(out) ##flush whatever is in the queue.
+   Print("-----:"+result)
+
+   Print("**************************************")
+   Print("starting to monitor keypad")
+
+   MonitorCedrus(out,5000)
+}
+
+
+
+##This sends a command to cedrus, 
+##and gets back a string until it only sees 0s.
+define SendCedrus(port, string)
+{
+   list <- SplitString(string,"")
+
+   loop(i,list)
+   {
+      ComPortSendByte(port,i)
+   }
+
+   ##Now, get whatever iscoming.
+}
+
+
+define GetCedrusString(port)
+{
+   tmp <- ""
+ 
+  
+   ii <- 0
+   while(ii<100)
+   {
+     out <- ComPortGetByte(port)
+     if(out <> 0)
+	 {
+        tmp <- tmp + NumToASCII(out)
+      }
+	
+      Wait(5) 
+	  ii <- ii + 1
+   }
+
+  return tmp
+}
+
+
+## Specify how many bits you want, 
+## starting now, including possibly 0s
+##
+define GetCedrusList(port,length)
+{
+   tmp <- []
+   ii <- 0
+   Wait(50)
+   while(ii<length)
+   {
+     out <- ComPortGetByte(port)
+     tmp <- Append(tmp,out)
+     Wait(5)
+	 ii <- ii + 1
+   }
+
+  return tmp
+}
+
+
+
+
+define MonitorCedrus(port,time)
+{
+
+  done <- GetTime()+time
+##This will wait for keypresses plain and simple.
+
+   tmp <- []
+
+   while(GetTime() < done)
+   {   
+     val <-ComPortGetByte(port) 
+     if(NumToASCII(val)=="k")
+	  {
+        tmp <- [val]
+        ##Get five more.
+ 
+	 	tmp <- Merge(tmp,GetCedrusList(port,5))
+
+		 timertime <- BitsToTimer(SubList(tmp,3,6))
+		 Print(timertime)
+		 Print(GetTime()-gBaseTime)
+         
+	  } else {
+          if(val <> 0)
+          {
+        	  Print(val)
+		  }
+	  }
+
+    }
+
+}
+
+
+##Extracts bits from the timer.
+define BitsToTimer(list)
+{
+ return  Nth(list,1) + 256*Nth(list,2) + 65536*Nth(list,3) +    16777216 * Nth(list,4)
+
+}
+
+define NumToASCII(num)
+{
+
+letters <- [" ","!",gQuote,"#","$","%","&","'","(",")","*","+",",","-",
+            ".","/","0","1","2","3","4","5","6","7","8","9",":",";",
+            "<","=",">","?","@","A","B","C","D","E","F","G","H","I",
+            "J","K","L","M","N","O","P","Q","R","S","T","U","V","W",
+            "X","Y","Z","[","\","]","^","_","`","a","b","c","d","e",
+            "f","g","h","i","j","k","l","m","n","o","p","q","r","s",
+            "t","u","v","w","x","y","z","{","|","}","~"]
+
+
+   if(num==13)
+   {
+      val <-CR(1)
+   }elseif(num>=32 and num<=122)
+   {
+     val <- Nth(letters,num-31)
+   } else {
+     val <- "["+num+"]"
+   }
+   
+   return val
+}

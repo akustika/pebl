@@ -77,6 +77,20 @@ Variant PEBLString::Lowercase(Variant v)
 }
 
 
+Variant PEBLString::ToASCII (Variant v)
+{
+
+    PList * plist = v.GetComplexData()->GetList();
+    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in function ToASCII(<integer>)]: ");  
+
+    std::string s = "";
+    s[0] = (plist->First()).GetInteger();    
+    
+    return Variant((std::string(s)));
+
+}
+
+
 Variant PEBLString::StringLength(Variant v)
 {
 

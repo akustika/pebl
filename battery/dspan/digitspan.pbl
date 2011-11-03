@@ -19,8 +19,13 @@
 ## response times, etc.
 ##
 ##  Version 0.2 enables both forward and backward digit span;
-##   saves as .csv
+##   saves as .csv.  With encouragement and help from Reid Olsen.
 ###########################################################
+
+##  todo: better instrumentation and pooled data saving
+##  based on OHSU version.
+##
+
 
 define Start(lPar)
 {
@@ -32,8 +37,10 @@ define Start(lPar)
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
 
-  Print("Data are saved in ["+"dspan-" + gSubNum +".csv]")
-  gFileOut <-FileOpenAppend("dspan-" + gSubNum +".csv")
+
+  MakeDirectory("data") ##make the data directory if it doesn't exist.
+  Print("Data are saved in [data/"+"dspan-" + gSubNum +".csv]")
+  gFileOut <-FileOpenAppend("data/dspan-" + gSubNum +".csv")
 
   ShowCursor(0)
   ## This determines whether audio accompanies the visual 
@@ -86,6 +93,9 @@ define Start(lPar)
 
   ## gStim <- FileReadList("DigitNames.txt")
   gStim <- FileReadList("Digits.txt")
+
+
+
 
   gSounds <- []
   loop(i,gStim)
@@ -290,6 +300,8 @@ three lists at a specific length completely correctly."
 
    ##Now, show debriefing info.
    feedback <-  "Thank you for participating in the experiment. "
+
+
 
    if(gVersion == 1) { 
         feedback <- feedback + "Your memory span was " + (length-1) + ". "

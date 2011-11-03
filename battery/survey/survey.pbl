@@ -37,6 +37,7 @@ define Start(p)
 
   ##Change questions.csv to your survey data file:
   dat <- ReadCSV("questions.csv")
+  MakeDirectory("output")
   fileout <- FileOpenAppend("output/results-"+gSubNum+".csv")
   gClickLog <- FileOpenAppend("output/clicklog-"+gSubNum+".csv")
 
@@ -243,6 +244,7 @@ define Init()
   gMed <- MakeColor("orange")
   gLow <- MakeColor("yellow")
   
+
 
 }
 

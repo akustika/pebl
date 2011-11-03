@@ -516,6 +516,13 @@ define Start(p)
 
              RunScript(gDirChain,Nth(gFlatFileList,gselected),gfullscreen,glanguage,logfile,gsubcode,gexperimenter)
 
+
+	      if(gAutoSubCode)
+           {
+	         gSubCode <- (ToNumber(gSubCode)+1)+""
+			 subjectbox.text <- gSubCode
+           }
+
           }
       }elseif(tmp==7)  ##Change subject code
       {
@@ -601,6 +608,13 @@ define Start(p)
           RunScript(dc,fname,gfullscreen,glanguage,logfile,gsubcode,gexperimenter)
        }
    
+      ##Increment subject code after you run
+      if(gAutoSubCode)
+         {
+           gSubCode <- (ToNumber(gSubCode)+1)+""
+	       subjectbox.text <- gSubCode
+         }
+
       }elseif(tmp==14)  ##View debug output
       {
 	     PushButton(viewoutput)  

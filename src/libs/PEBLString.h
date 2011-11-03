@@ -34,6 +34,8 @@ namespace PEBLString
 {
     Variant Uppercase (Variant v);
     Variant Lowercase (Variant v);
+    Variant ToASCII (Variant v);
+
     Variant StringLength(Variant v);
     Variant SubString(Variant v);
     Variant FindInString(Variant v);

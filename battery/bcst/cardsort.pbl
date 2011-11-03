@@ -74,6 +74,9 @@ define Start(lPar)
   ## results are stored in this file
 
 
+  ## Initialize global objects for use later. Defined at end of file
+  Initialize()
+
   gFileOut <-FileOpenWrite("bcst-" + gSubNum +".txt")
 
   gSleepEasy <- 1
@@ -86,8 +89,6 @@ define Start(lPar)
   persrun <- []  ##computes length of 'perseverative runs'
   persrunflag <- 1
 
-  ## Initialize global objects for use later. Defined at end of file
-  Initialize()
 
 #  Print(gPEBLBaseFont)
 #  Print(gPEBLBaseFontMono)
@@ -241,12 +242,15 @@ define Start(lPar)
   numCats <- 0
   numCatsExp <- 1
 
+  ##These keep track of some statistics ala the PAR-task.
+
+
   ##Loop through each stimulus card
    loop(s,stim)
    {
 
       trialsoncat <- trialsoncat+1
-     Print(s)
+      Print(s)
 
       #Display the card
       card <- Nth(s,4)
@@ -318,8 +322,8 @@ define Start(lPar)
 		    failuretomaintain<- failuretomaintain+1
          }
 
-        erroroncat <- erroroncat + 1  ##  increment category-specific
-                                      ##  error 
+         erroroncat <- erroroncat + 1  ##  increment category-specific
+                                       ##  error 
 
         ##Increment conceptual responses here, when the run ends on an error
         if(run>=3)  

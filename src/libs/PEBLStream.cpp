@@ -1040,14 +1040,27 @@ Variant PEBLStream::ComPortSendByte(Variant v)
     PError::AssertType(v1, PEAT_COMPORT, "Argument error in first parameter of function [ComPortSendByte(<port>,<int>)]: ");   
 
     Variant v2 = plist->First();
-    PError::AssertType(v2,PEAT_INTEGER,"Argument error in second parameter of function [ComPortSendByte(<port>,<int>)]: ");
+    //Second argumentcould be a bypte or a character.
+    //    PError::AssertType(v2,PEAT_INTEGER,"Argument error in second parameter of function [ComPortSendByte(<port>,<int>)]: ");
         
 
     counted_ptr<PEBLObjectBase> tmp1 = (v1.GetComplexData())->GetObject();
     PComPort * cport = dynamic_cast<PComPort*>(tmp1.get());
-    unsigned char send = v2.GetInteger();    
-     
-    cport->PSendByte(send);
 
+    unsigned char send = 0;
+    if(v2.IsInteger())
+        {
+            send = v2.GetInteger();    
+        } else if(v2.IsString())
+        {
+
+            std::string tmp = (v2.GetString());
+            send = tmp[0];
+        }
+    
+    cport->PSendByte(send);
+    
     return Variant(0);
 }
+
+

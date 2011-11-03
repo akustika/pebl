@@ -120,6 +120,7 @@ namespace PEBLStream
     Variant OpenComPort(Variant v);
     Variant ComPortSendByte(Variant v);
     Variant ComPortGetByte(Variant v);
+    Variant ComPortGetBytes(Variant v);
 
 
 }

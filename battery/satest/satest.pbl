@@ -18,6 +18,7 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
    }
 
+   MakeDirectory("data")
    gLogFile <- FileOpenAppend("data/satest-log.txt")
    gFileOut <- FileOpenAppend("data/satest-"+gSubNum+".txt")
    FilePrint(gLogFile,"SATEST start " +GetTime() + " " + TimeStamp() + "  " + gSubNum )

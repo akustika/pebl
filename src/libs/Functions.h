@@ -163,7 +163,7 @@ namespace PEBLStream
             {"GETPPORTSTATE",GetPPortState,           1,1},
             {"SETPPORTMODE", SetPPortMode,           2,2},
 
-            {"OPENCOMPORT",      OpenComPort,          1,1},
+            {"OPENCOMPORT",      OpenComPort,          2,2},
             {"COMPORTSENDBYTE",  ComPortSendByte,      2,2},
             {"COMPORTGETBYTE",   ComPortGetByte,       1,1},
 
@@ -379,6 +379,7 @@ namespace PEBLString
             
             {"UPPERCASE",                 Uppercase, 1, 1},
             {"LOWERCASE",                 Lowercase, 1, 1},
+            {"TOASCII",                   ToASCII,   1,1},
             {"STRINGLENGTH",              StringLength, 1, 1},
             {"SUBSTRING",                 SubString, 3, 3},
             {"FINDINSTRING",              FindInString, 3, 3},

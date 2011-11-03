@@ -65,6 +65,7 @@ To Do for 0.12:
 =============================================
 Push to 0.13 or Later
 
+getText seems not to work on labels
 
  - Let lists be defined with more whitespace options.  Currently,
     things like this seems to fail:
