@@ -69,7 +69,7 @@ void PComPort::Init()
             int out = OpenComport(mPort,mBaud);
 
             mIsOpen = true;
-            std::cerr << "Initiating comport port.  Return value :["<<out<<"]\n";
+            std::cerr << "Initiating comport ["<< mPortName<<"]  Return value :["<<out<<"]\n";
 
 
             if(out)
@@ -122,6 +122,17 @@ void PComPort::PSendByte(unsigned char byte)
 
     //if check == 1, nothing was sent
 }
+
+
+int PComPort::GetByte(unsigned char& out)
+{
+
+    int check = PollComport(mPort,&out,1);
+    return check;
+
+}
+
+
 
 unsigned char PComPort::GetByte()
 {

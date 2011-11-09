@@ -1025,10 +1025,12 @@ Variant PEBLStream::ComPortGetByte(Variant v)
     counted_ptr<PEBLObjectBase> tmp1 = (v1.GetComplexData())->GetObject();
     PComPort * cport = dynamic_cast<PComPort*>(tmp1.get());
     
-    unsigned char out = cport->GetByte();
-
-
-    return Variant((int)out);
+    unsigned char out;
+    int retval= cport->GetByte(out);
+    if(retval==0)
+        return Variant(-1);
+    else
+        return Variant((int)out);
 }
 
 // 

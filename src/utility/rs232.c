@@ -333,6 +333,7 @@ int PollComport(int comport_number, unsigned char *buf, int size)
 }
 
 
+
 int SendByte(int comport_number, unsigned char byte)
 {
   int n;

@@ -115,6 +115,7 @@ public:
     
     virtual void PSendByte(unsigned char);
     virtual unsigned char GetByte();
+    virtual int GetByte(unsigned char& x);
     virtual Variant GetBytes(int n);
     virtual Variant GetPortName();
 
