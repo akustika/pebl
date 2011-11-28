@@ -61,7 +61,7 @@ PTextBox::PTextBox(std::string text, int width, int height):
     mCursorPos(0),
     mCursorChanged(true),
     mLineWrap(true)
-{ 
+{
     InitializeProperty("TEXT",Variant(text));
     InitializeProperty("WIDTH",Variant(width));
     InitializeProperty("HEIGHT",Variant(height));
@@ -87,7 +87,7 @@ PTextBox::PTextBox( PTextBox & text)
 PTextBox::~PTextBox()
 {
 }
- 
+
 
 
 
@@ -110,7 +110,7 @@ bool PTextBox::SetProperty(std::string name, Variant v)
     else if(name == "CURSORPOS") SetCursorPosition(v);
     else if(name == "LINEWRAP") SetLineWrap(v);
     else return false;
-    
+
     return true;
 }
 
@@ -206,12 +206,12 @@ int PTextBox::IncrementCursor()
         {
             mCursorPos += 1;
         }
-    
+
             if(mCursorPos > (int)(mText.length()))
                 mCursorPos = mText.length();
-            
+
             mCursorChanged = true;
-         
+
 
    return mCursorPos;
 }
@@ -262,7 +262,7 @@ void PTextBox::HandleKeyPress(int keycode, int modkeys)
             //mCursorPos++;
             if(mCursorPos > (int) (mText.length()))
                 mCursorPos = mText.length();
-            
+
             break;
         case PEBLKEY_DELETE:
             DeleteText(1);
@@ -283,77 +283,77 @@ void PTextBox::HandleKeyPress(int keycode, int modkeys)
             IncrementCursor();
             break;
 
-        case PEBLKEY_BACKSLASH:  
+        case PEBLKEY_BACKSLASH:
             InsertText("\\");
             break;
 
-        case PEBLKEY_SPACE:     
-        case PEBLKEY_EXCLAIM:   
-        case PEBLKEY_QUOTEDBL:  
-        case PEBLKEY_HASH:      
-        case PEBLKEY_DOLLAR:    
-        case PEBLKEY_AMPERSAND: 
-        case PEBLKEY_QUOTE:     
-        case PEBLKEY_LEFTPAREN: 
+        case PEBLKEY_SPACE:
+        case PEBLKEY_EXCLAIM:
+        case PEBLKEY_QUOTEDBL:
+        case PEBLKEY_HASH:
+        case PEBLKEY_DOLLAR:
+        case PEBLKEY_AMPERSAND:
+        case PEBLKEY_QUOTE:
+        case PEBLKEY_LEFTPAREN:
         case PEBLKEY_RIGHTPAREN:
-        case PEBLKEY_ASTERISK:  
-        case PEBLKEY_PLUS:      
-        case PEBLKEY_COMMA:     
-        case PEBLKEY_MINUS:     
-        case PEBLKEY_PERIOD:    
-        case PEBLKEY_SLASH:     
-        case PEBLKEY_0:       
-        case PEBLKEY_1:       
-        case PEBLKEY_2:       
-        case PEBLKEY_3:       
-        case PEBLKEY_4:       
-        case PEBLKEY_5:       
-        case PEBLKEY_6:       
-        case PEBLKEY_7:       
-        case PEBLKEY_8:       
-        case PEBLKEY_9:       
-        case PEBLKEY_COLON:   
+        case PEBLKEY_ASTERISK:
+        case PEBLKEY_PLUS:
+        case PEBLKEY_COMMA:
+        case PEBLKEY_MINUS:
+        case PEBLKEY_PERIOD:
+        case PEBLKEY_SLASH:
+        case PEBLKEY_0:
+        case PEBLKEY_1:
+        case PEBLKEY_2:
+        case PEBLKEY_3:
+        case PEBLKEY_4:
+        case PEBLKEY_5:
+        case PEBLKEY_6:
+        case PEBLKEY_7:
+        case PEBLKEY_8:
+        case PEBLKEY_9:
+        case PEBLKEY_COLON:
         case PEBLKEY_SEMICOLON:
-        case PEBLKEY_LESS:     
-        case PEBLKEY_EQUALS:   
-        case PEBLKEY_GREATER:  
-        case PEBLKEY_QUESTION: 
-        case PEBLKEY_AT:       
-        /* 
+        case PEBLKEY_LESS:
+        case PEBLKEY_EQUALS:
+        case PEBLKEY_GREATER:
+        case PEBLKEY_QUESTION:
+        case PEBLKEY_AT:
+        /*
            Skip uppercase letters
         */
         case PEBLKEY_LEFTBRACKET:
 
         case PEBLKEY_RIGHTBRACKET:
-        case PEBLKEY_CARET:       
-        case PEBLKEY_UNDERSCORE:  
-        case PEBLKEY_BACKQUOTE:   
-        case PEBLKEY_a:  
-        case PEBLKEY_b:  
-        case PEBLKEY_c:  
-        case PEBLKEY_d:  
-        case PEBLKEY_e:  
-        case PEBLKEY_f:  
-        case PEBLKEY_g:  
-        case PEBLKEY_h:  
-        case PEBLKEY_i:  
-        case PEBLKEY_j:  
-        case PEBLKEY_k:  
-        case PEBLKEY_l:  
-        case PEBLKEY_m:  
-        case PEBLKEY_n:  
-        case PEBLKEY_o:  
-        case PEBLKEY_p:  
-        case PEBLKEY_q:  
-        case PEBLKEY_r:  
-        case PEBLKEY_s:  
-        case PEBLKEY_t:  
-        case PEBLKEY_u:  
-        case PEBLKEY_v:  
-        case PEBLKEY_w:  
-        case PEBLKEY_x:  
-        case PEBLKEY_y:  
-        case PEBLKEY_z:  
+        case PEBLKEY_CARET:
+        case PEBLKEY_UNDERSCORE:
+        case PEBLKEY_BACKQUOTE:
+        case PEBLKEY_a:
+        case PEBLKEY_b:
+        case PEBLKEY_c:
+        case PEBLKEY_d:
+        case PEBLKEY_e:
+        case PEBLKEY_f:
+        case PEBLKEY_g:
+        case PEBLKEY_h:
+        case PEBLKEY_i:
+        case PEBLKEY_j:
+        case PEBLKEY_k:
+        case PEBLKEY_l:
+        case PEBLKEY_m:
+        case PEBLKEY_n:
+        case PEBLKEY_o:
+        case PEBLKEY_p:
+        case PEBLKEY_q:
+        case PEBLKEY_r:
+        case PEBLKEY_s:
+        case PEBLKEY_t:
+        case PEBLKEY_u:
+        case PEBLKEY_v:
+        case PEBLKEY_w:
+        case PEBLKEY_x:
+        case PEBLKEY_y:
+        case PEBLKEY_z:
         /* Numeric keypad */
         case PEBLKEY_KP0:
         case PEBLKEY_KP1:
@@ -368,9 +368,9 @@ void PTextBox::HandleKeyPress(int keycode, int modkeys)
         case PEBLKEY_KP_PERIOD:
         case PEBLKEY_KP_DIVIDE:
         case PEBLKEY_KP_MULTIPLY:
-        case PEBLKEY_KP_MINUS:   
-        case PEBLKEY_KP_PLUS:    
-        case PEBLKEY_KP_EQUALS:  
+        case PEBLKEY_KP_MINUS:
+        case PEBLKEY_KP_PLUS:
+        case PEBLKEY_KP_EQUALS:
             InsertText(PEBLUtility::TranslateKeyCode(PEBLKey(keycode), modkeys));
             break;
             /* Key state modifier keys */
@@ -384,15 +384,19 @@ void PTextBox::HandleKeyPress(int keycode, int modkeys)
         case PEBLKEY_RALT:
         case PEBLKEY_LALT:
         case PEBLKEY_RMETA:
-        case PEBLKEY_LMETA:		
-        case PEBLKEY_LSUPER:		
-        case PEBLKEY_RSUPER:		
-        case PEBLKEY_MODE:		
+        case PEBLKEY_LMETA:
+        case PEBLKEY_LSUPER:
+        case PEBLKEY_RSUPER:
+        case PEBLKEY_MODE:
         case PEBLKEY_COMPOSE:
             break;
         default:
+            cout << "----------------------\n" << keycode << endl;
+            cout << "["<< (PEBLUtility::TranslateKeyCode(PEBLKey(keycode), modkeys))<<"]"<<endl;
+            cout << "----------------------\n";
+
             InsertText(PEBLUtility::TranslateKeyCode(PEBLKey(keycode), modkeys));
-            
+
             break;
         }
     mCursorChanged=true;
@@ -405,9 +409,9 @@ bool PTextBox::AtPrintableCharacter(unsigned int x)
 
     if(x<0) pos = 0;
     if(x> mText.length() )pos = mText.length();
-    
+
     if (mText[pos] == 10
-        || mText[pos] == 13        
+        || mText[pos] == 13
         || mText[pos] == 18
         )
         return false;

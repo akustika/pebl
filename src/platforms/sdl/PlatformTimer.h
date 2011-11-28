@@ -40,17 +40,19 @@
 
 class PlatformTimer: public PTimer
 {
-    
-   
+
+
 public:
-    ///The Standard constructor.  
+    ///The Standard constructor.
     PlatformTimer();
-    
-    ///The Standard destructor.  
+
+    ///The Standard destructor.
     virtual ~PlatformTimer();
 
     virtual void Wait(unsigned long int msecs);
     virtual unsigned long int GetTime() const;
+    virtual void GetTimeOfDay(unsigned long & secs, unsigned long & msecs);
+
     virtual int GetState(int iface) const;
     //    virtual int TestDevice(const DeviceState & state)const;
 

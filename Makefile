@@ -47,7 +47,7 @@ CXXFLAGS =  -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  -DENABLE_BINRELOC 
 SDL_CONFIG = /usr/bin/sdl-config
 
 SDL_FLAGS = -I/usr/include/SDL -D_REENTRANT
-SDL_LIBS = -L/usr/lib -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lSDL -lpthread 
+SDL_LIBS = -L/usr/lib -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lSDL -lpthread -lSDLmain
 
 
 #Comment/uncomment below on OSX
@@ -55,7 +55,7 @@ SDL_LIBS = -L/usr/lib -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lSDL -lpthread
 OSX_FLAGS =
 
 SDLIMG_FLAGS =  -L/usr/lib -L/usr/local/lib -Wl,-rpath,/usr/lib
-SDLIMG_LIBS =   -lSDL -lpthread -lSDL_image -lSDL_net -lSDL_audioin
+SDLIMG_LIBS =   -lSDL -lSDLmain -lpthread -lSDL_image -lSDL_net -lSDL_audioin
 
 
 SHELL = /bin/bash
@@ -300,11 +300,11 @@ DIRS = \
 ##############################
 # Dependencies
 #
+##	   -L$(PREFIX)/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  -lSDL_net -lpng -lSDL_audioin\
 
 main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
-
 	$(CXX) $(CXXFLAGS)   -o $(BIN_DIR)/pebl -I$(PREFIX)include/SDL -D_REENTRANT \
-	   -L$(PREFIX)/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  -lSDL_net -lpng -lSDL_audioin\
+	-L$(PREFIX)/lib -lSDL -lSDLmain -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  -lSDL_net -lpng \
        $(OSX_FLAGS) $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, \
        $(PEBLMAIN_OBJ))
 

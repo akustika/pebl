@@ -6,7 +6,7 @@
 //    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
-//   
+//
 //
 //     This file is part of the PEBL project.
 //
@@ -35,11 +35,11 @@
 #include "PEBLString.h"
 
 //A little data structure that holds lcase PEBL function names, the actual names of the functions,
-//and the number of arguments to the function.  
-struct PEBL_Function_Type {    
+//and the number of arguments to the function.
+struct PEBL_Function_Type {
     char    *name;
     Variant  (*funcname)(Variant);
-    int     minNumArgs; 
+    int     minNumArgs;
     int     maxNumArgs;
 };
 
@@ -47,9 +47,9 @@ struct PEBL_Function_Type {
 
 namespace PEBLMath
 {
-  
+
     PEBL_Function_Type  FunctionTable[] =
-        { 
+        {
             {"LOG10",         Log10,    1, 1},
             {"LOG2",          Log2,     1, 1},
             {"LN",            Ln,       1, 1},
@@ -58,7 +58,7 @@ namespace PEBLMath
             {"POW",           Pow,      2, 2},
             {"SQRT",          Sqrt,     1, 1},
             {"NTHROOT",       NthRoot,  2, 2},
-            
+
             //Trigonometry
             {"TAN",           Tan,      1, 1},
             {"SIN",           Sin,      1, 1},
@@ -68,29 +68,29 @@ namespace PEBLMath
             {"ACOS",          ACos,     1, 1},
             {"DEGTORAD",      DegToRad, 1, 1},
             {"RADTODEG",      RadToDeg, 1, 1},
-        
+
             //Rounding
             {"ROUND",         Round,    1, 2},
             {"FLOOR",         Floor,    1, 1},
             {"CEILING",       Ceiling,  1, 1},
-        
+
             {"ABSFLOOR",      AbsFloor, 1, 1},
-         
+
             //Modular Arithmetic
             {"MOD",           Mod,      2, 2},
             {"DIV",           Div,      2, 2},
-        
+
             //Coercion
             {"TOINTEGER",     ToInt,    1, 1},
             {"TOFLOAT",       ToFloat,  1, 1},
             {"TONUMBER",      ToNumber, 1, 1},
             {"TOSTRING",      ToString, 1, 1},
 
-        
+
             //Other
             {"SIGN",          Sign,     1, 1},
             {"ABS",           Abs,      1, 1},
-             
+
             //Statistical (operates on a list; ignores non-numeric elements.)
 //             {"MEAN",          Mean,     1, 1},
 //             {"MIN",           Min,      1, 9999},
@@ -102,13 +102,13 @@ namespace PEBLMath
             {"RANDOMIZETIMER",     RandomizeTimer,    0, 0},
             {"SEEDRNG",            SeedRNG,           1, 1},
             {"RANDOM",             Random,            0, 0},
-            {"RANDOMDISCRETE",     RandomDiscrete,    1, 1},           
+            {"RANDOMDISCRETE",     RandomDiscrete,    1, 1},
             {"RANDOMUNIFORM",      RandomUniform,     1, 1},
             {"RANDOMNORMAL",       RandomNormal,      2, 2},
             {"RANDOMEXPONENTIAL",  RandomExponential, 1, 1},
             {"RANDOMLOGISTIC",     RandomLogistic,    1, 1},
             {"RANDOMLOGNORMAL",    RandomLogNormal,   2, 2},
-            {"RANDOMBINOMIAL",     RandomBinomial,    2, 2},           
+            {"RANDOMBINOMIAL",     RandomBinomial,    2, 2},
             {"RANDOMBERNOULLI",    RandomBernoulli,   1, 1},
 
             {0,            0,  0, 0}
@@ -119,9 +119,9 @@ namespace PEBLMath
 
 namespace PEBLStream
 {
-    
+
     PEBL_Function_Type  FunctionTable[] =
-        { 
+        {
             {"PRINT",                Print,            1, 1},
             {"PRINT_",               Print_,           1, 1},
             {"FORMAT",               Format,           1, 1},
@@ -150,10 +150,10 @@ namespace PEBLStream
             {"SETNETWORKPORT",           SetNetworkPort,               1, 1},
             {"CHECKFORNETWORKCONNECTION", CheckForNetworkConnection,   1, 1},
 
-            
+
             {"WAITFORNETWORKCONNECTION", WaitForNetworkConnection, 1,1},
             {"CLOSENETWORKCONNECTION", CloseNetworkConnection,    1,1},
-                
+
             {"SENDDATA", SendData,                     2,2},
             {"GETDATA", GetData,                       2,2},
             {"WRITEPNG", WritePNG,                     2,2},
@@ -176,15 +176,15 @@ namespace PEBLStream
 
 namespace PEBLObjects
 {
-    
+
     PEBL_Function_Type  FunctionTable[] =
-        { 
- 
+        {
+
             {"MAKEWINDOW",        MakeWindow, 0, 1},
             {"MAKEIMAGE",         MakeImage,  1, 1},
             {"MAKELABEL",         MakeLabel,  2, 2},
-            {"MAKETEXTBOX",       MakeTextBox, 4, 4},            
-            {"MAKECANVAS",        MakeCanvas, 3,3},            
+            {"MAKETEXTBOX",       MakeTextBox, 4, 4},
+            {"MAKECANVAS",        MakeCanvas, 3,3},
             {"MAKECOLOR",         MakeColor,  1, 1},
             {"MAKECOLORRGB",      MakeColorRGB, 3, 3},
             {"MAKEFONT",          MakeFont,   6, 6},
@@ -240,10 +240,11 @@ namespace PEBLObjects
 namespace PEBLEnvironment
 {
 
-  
+
     PEBL_Function_Type  FunctionTable[] =
-        { 
+        {
             {"GETTIME",                         GetTime,           0, 0},
+            {"GETTIMEOFDAY",                    GetTimeOfDay,      0, 0},
             {"WAIT",                            Wait,              1, 1},
 
             {"SHOWCURSOR",                      ShowCursor,        1, 1},
@@ -290,7 +291,7 @@ namespace PEBLEnvironment
             {"GETINPUT",                        GetInput,           2, 4},
             {"GETTEXTBOXCURSORFROMCLICK",       GetTextBoxCursorFromClick, 3,3},
             {"REGISTEREVENT",                   RegisterEvent,      5,6},
-            {"STARTEVENTLOOP",                  StartEventLoop,      0,0},          
+            {"STARTEVENTLOOP",                  StartEventLoop,      0,0},
             {"CLEAREVENTLOOP",                  ClearEventLoop,      0,0},
 
 
@@ -299,7 +300,7 @@ namespace PEBLEnvironment
             {"TIMESTAMP",                       TimeStamp,         0, 0},
 
             {"GETVIDEOMODES",                  GetVideoModes,    0, 0},
-            {"GETPEBLVERSION",                  GetPEBLVersion,    0, 0},       
+            {"GETPEBLVERSION",                  GetPEBLVersion,    0, 0},
 
             {"GETSYSTEMTYPE",                   GetSystemType,     0, 0},
             {"LAUNCHFILE",                      LaunchFile,        1,1},
@@ -328,7 +329,7 @@ namespace PEBLEnvironment
             {"ISWIDGET",                        IsWidget,           1,1},
             {"ISWINDOW",                        IsWindow,           1,1},
             {"ISSHAPE",                         IsShape,            1,1},
-    
+
             {0,            0,  0, 0}
         };
 }
@@ -336,13 +337,13 @@ namespace PEBLEnvironment
 
 namespace PEBLList
 {
-    
+
     PEBL_Function_Type  FunctionTable[] =
-        { 
-            
+        {
+
             {"SHUFFLE",                   Shuffle, 1, 1},
-            {"REPEAT",                    Repeat,    2, 2},            
-            {"REPEATLIST",                RepeatList,2, 2},            
+            {"REPEAT",                    Repeat,    2, 2},
+            {"REPEATLIST",                RepeatList,2, 2},
             {"SEQUENCE",                  Sequence,  3, 3},
             {"DESIGNFULLCOUNTERBALANCE",   DesignFullCounterbalance, 2, 2},
             {"CROSSFACTORWITHOUTDUPLICATES", CrossFactorWithoutDuplicates, 1, 1},
@@ -363,7 +364,7 @@ namespace PEBLList
             {"ISMEMBER",                  IsMember, 2, 2},
             {"REMOVEDUPLICATES",          RemoveDuplicates, 1, 1},
             {"MAKEMAP",                   MakeMap, 2, 2},
-            {"TRANSPOSE",                 Transpose,  1, 1},         
+            {"TRANSPOSE",                 Transpose,  1, 1},
             {"SUBLIST",                   SubList, 3, 3},
 
             {"REMOVE",                    Remove, 2, 2},
@@ -373,10 +374,10 @@ namespace PEBLList
 
 namespace PEBLString
 {
-    
+
     PEBL_Function_Type  FunctionTable[] =
-        { 
-            
+        {
+
             {"UPPERCASE",                 Uppercase, 1, 1},
             {"LOWERCASE",                 Lowercase, 1, 1},
             {"TOASCII",                   ToASCII,   1,1},

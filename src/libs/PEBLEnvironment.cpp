@@ -6,7 +6,7 @@
 //    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
-//   
+//
 //
 //     This file is part of the PEBL project.
 //
@@ -44,7 +44,7 @@
 
 #include "../platforms/sdl/PlatformTimer.h"
 #include "../platforms/sdl/PlatformKeyboard.h"
-#include "../platforms/sdl/PlatformTextBox.h" 
+#include "../platforms/sdl/PlatformTextBox.h"
 #include "../platforms/sdl/PlatformEventQueue.h"
 
 #include <ctime>
@@ -77,6 +77,24 @@ Variant PEBLEnvironment::GetTime(Variant v)
 }
 
 
+//gettimeofday() gives you microsecond resolution...the comment about not
+//being able to work in units smaller than 10 milliseconds is bunk, and
+//has to do with the Linux 2.4 scheduler not letting you sleep less than
+//10ms...but even there, within your timeslice, you can get microsecond
+//timing. Linux 2.6 fixed the scheduler resolution, too.
+
+Variant PEBLEnvironment::GetTimeOfDay(Variant v)
+{
+    long unsigned int secs;
+    long unsigned int msecs;
+    myTimer.GetTimeOfDay(secs,msecs);
+
+  return Variant(secs);
+}
+
+
+
+
 Variant  PEBLEnvironment::Wait(Variant v)
 {
 
@@ -100,7 +118,7 @@ Variant  PEBLEnvironment::Wait(Variant v)
     //Now, clear the event loop tests
     Evaluator::mEventLoop.Clear();
     delete device;
-    
+
     return Variant(returnval.GetDummyEvent().value);
 }
 
@@ -109,7 +127,7 @@ Variant PEBLEnvironment::IsKeyDown(Variant v)
 {
     //v[1] should have the parameter-a letter
      PList * plist = v.GetComplexData()->GetList();
-    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [IsKeyDown(<string>)]: ");    
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [IsKeyDown(<string>)]: ");
 
     std::string mystring = plist->First(); plist->PopFront();
     PEBLKey key = PEBLUtility::TranslateString(mystring);
@@ -125,7 +143,7 @@ Variant PEBLEnvironment::IsKeyUp(Variant v)
     PList * plist = v.GetComplexData()->GetList();
    //v[1] should have the parameter-a letter
 
-    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [IsKeyUp(<string>)]:  ");    
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [IsKeyUp(<string>)]:  ");
 
     string mystring = plist->First(); plist->PopFront();
     PEBLKey key = PEBLUtility::TranslateString(mystring);
@@ -137,7 +155,7 @@ Variant PEBLEnvironment::IsKeyUp(Variant v)
 
 Variant PEBLEnvironment::IsAnyKeyDown(Variant v)
 {
-    //This shouldn't receive any arguments    
+    //This shouldn't receive any arguments
 
     return Variant(myKeyboard.IsKeyDown(PEBLKEY_ANYKEY));
 }
@@ -158,12 +176,12 @@ Variant PEBLEnvironment::ShowCursor(Variant v)
 //     //v[1-4] should specify a rectangle
 //     PList * plist = v.GetComplexData()->GetList();
 
-//     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyPress(<string>)]:  ");    
+//     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyPress(<string>)]:  ");
 
 //     string mystring = plist->First(); plist->PopFront();
 //     PEBLKey key = PEBLUtility::TranslateString(mystring);
-    
- 
+
+
 
 //     RegionState  * state = new RegionState(10,100,10,100, DT_INSIDE, , gEventQueue, PDT_MOUSEMOTION);
 
@@ -189,14 +207,14 @@ Variant PEBLEnvironment::WaitForKeyDown(Variant v)
     //v[1] should have the parameter-a letter
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyDown(<string>)]:  ");    
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyDown(<string>)]:  ");
 
     string mystring = plist->First(); plist->PopFront();
     PEBLKey key = PEBLUtility::TranslateString(mystring);
-    
- 
-    //Create a keyboard test correspending to keydown. 
-    //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
+
+
+    //Create a keyboard test correspending to keydown.
+    //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key)
     PDevice * device = new PlatformKeyboard(myKeyboard);
     ValueState  * state = new ValueState(1, DT_EQUAL, key, device, PDT_KEYBOARD);
 
@@ -221,14 +239,14 @@ Variant PEBLEnvironment::WaitForKeyUp(Variant v)
     //v[1] should have the parameter-a letter
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyUp(<string>)]:  ");    
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyUp(<string>)]:  ");
 
     string mystring = plist->First(); plist->PopFront();
     PEBLKey key = PEBLUtility::TranslateString(mystring);
-    
 
-    //Create a keyboard test correspending to keydown. 
-    //1 is the value (down), DT_NOT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
+
+    //Create a keyboard test correspending to keydown.
+    //1 is the value (down), DT_NOT_EQUAL is the test, key is the interface (e.g., the 'A' key)
     PDevice * device = new PlatformKeyboard(myKeyboard);
     ValueState  * state = new ValueState(1, DT_NOT_EQUAL, key, device, PDT_KEYBOARD);
 
@@ -253,8 +271,8 @@ Variant PEBLEnvironment::WaitForAnyKeyDown(Variant v)
 {
 
     PEBLKey key = PEBLKEY_ANYKEY;
-    
-    //Create a keyboard test correspending to keydown. 
+
+    //Create a keyboard test correspending to keydown.
     //1 is the value (down), DT_EQUAL is the test, key is the interface (normally an actual key, here the "ANYKEY")
     PDevice * device = new PlatformKeyboard(myKeyboard);
     ValueState  * state = new ValueState(1, DT_EQUAL, key, device,PDT_KEYBOARD);
@@ -281,14 +299,14 @@ Variant PEBLEnvironment::WaitForKeyPress(Variant v)
     //v[1] should have the parameter-a letter
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyPress(<string>)]:  ");    
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyPress(<string>)]:  ");
 
     string mystring = plist->First(); plist->PopFront();
     PEBLKey key = PEBLUtility::TranslateString(mystring);
-    
- 
-    //Create a keyboard test correspending to keydown. 
-    //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
+
+
+    //Create a keyboard test correspending to keydown.
+    //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key)
 
     ValueState  * state = new ValueState(PEBL_PRESSED, DT_EQUAL, key, gEventQueue, PDT_KEYBOARD);
 
@@ -312,14 +330,14 @@ Variant PEBLEnvironment::WaitForKeyRelease(Variant v)
     //v[1] should have the parameter-a letter
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyRelease(<string>)]:  ");    
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyRelease(<string>)]:  ");
 
     string mystring = plist->First(); plist->PopFront();
     PEBLKey key = PEBLUtility::TranslateString(mystring);
-    
 
-    //Create a keyboard test correspending to keydown. 
-    //1 is the value (down), DT_NOT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
+
+    //Create a keyboard test correspending to keydown.
+    //1 is the value (down), DT_NOT_EQUAL is the test, key is the interface (e.g., the 'A' key)
 
     ValueState  * state = new ValueState(PEBL_RELEASED, DT_EQUAL, key, gEventQueue, PDT_KEYBOARD);
 
@@ -346,8 +364,8 @@ Variant PEBLEnvironment::WaitForAnyKeyPress(Variant v)
 {
 
     PEBLKey key = PEBLKEY_ANYKEY;
-    
-    //Create a keyboard test correspending to keydown. 
+
+    //Create a keyboard test correspending to keydown.
     ValueState  * state = new ValueState(PEBL_PRESSED, DT_EQUAL, key, gEventQueue, PDT_KEYBOARD);
 
     //NULL,NULL will terminate the looping
@@ -370,13 +388,13 @@ Variant PEBLEnvironment::WaitForAllKeysUp(Variant v)
 {
 
     PEBLKey key = PEBLKEY_ANYKEY;
-    
-    
-    //Create a keyboard test correspending to keydown. 
-    //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
-    PDevice * device = new PlatformKeyboard(myKeyboard);    
+
+
+    //Create a keyboard test correspending to keydown.
+    //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key)
+    PDevice * device = new PlatformKeyboard(myKeyboard);
     ValueState  * state = new ValueState(1, DT_NOT_EQUAL, key, device, PDT_KEYBOARD);
-    
+
     //NULL,NULL will terminate the looping
     string  funcname = "";
     Evaluator::mEventLoop.RegisterState(state,funcname, Variant(0));
@@ -396,11 +414,11 @@ Variant PEBLEnvironment::WaitForAnyKeyDownWithTimeout(Variant v)
    //v[1] should have the parameter: a time to wait.
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in function [WaitForAnyKeyDownWithTimeout(<number>)]:  ");    
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in function [WaitForAnyKeyDownWithTimeout(<number>)]:  ");
 
     int delay = plist->First(); plist->PopFront();
     delay += myTimer.GetTime();
-                                                                                                                   
+
     //Create a timer test correspending to keydown.
     //1 is the value (down), DT_GREATERTHAN is the test, key is the interface (e.g., the 'A' key)
     PDevice * timer = new PlatformTimer(myTimer);
@@ -408,8 +426,8 @@ Variant PEBLEnvironment::WaitForAnyKeyDownWithTimeout(Variant v)
 
 
     PEBLKey key = PEBLKEY_ANYKEY;
-    //Create a keyboard test correspending to keydown. 
-    //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
+    //Create a keyboard test correspending to keydown.
+    //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key)
 
     //PDevice * device = new PlatformKeyboard(myKeyboard);
     ValueState  * state = new ValueState(PEBL_PRESSED, DT_EQUAL, key, gEventQueue, PDT_KEYBOARD);
@@ -437,11 +455,11 @@ Variant PEBLEnvironment::WaitForAnyKeyPressWithTimeout(Variant v)
    //v[1] should have the parameter: a time to wait.
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in function [WaitForAnyKeyPressWithTimeout(<number>)]:  ");    
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in function [WaitForAnyKeyPressWithTimeout(<number>)]:  ");
 
     int delay = plist->First(); plist->PopFront();
     delay += myTimer.GetTime();
-                                                                                                                   
+
     //Create a timer test correspending to keydown.
     //1 is the value (down), DT_GREATERTHAN is the test, key is
     // the interface (e.g., the 'A' key)
@@ -450,8 +468,8 @@ Variant PEBLEnvironment::WaitForAnyKeyPressWithTimeout(Variant v)
 
 
     PEBLKey key = PEBLKEY_ANYKEY;
-    //Create a keyboard test correspending to keydown. 
-    //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
+    //Create a keyboard test correspending to keydown.
+    //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key)
 
     PDevice * device = new PlatformKeyboard(myKeyboard);
     ValueState  * state = new ValueState(1, DT_EQUAL, key, device, PDT_KEYBOARD);
@@ -473,32 +491,32 @@ Variant PEBLEnvironment::WaitForAnyKeyPressWithTimeout(Variant v)
 
 
 // This takes a list of keys, a timeout duration, and an integer specifying
-// the style: 
+// the style:
 //  1 == return after whichever happens first
 //  2 == return only after timeout occurs
 //  3 == return after both occur (response and min duration necessary)
-//  In all cases, the key pressed is returned.  If a key has not been pressed, 
+//  In all cases, the key pressed is returned.  If a key has not been pressed,
 //  the empty string "" is returned.
 
 Variant PEBLEnvironment::WaitForListKeyPressWithTimeout(Variant v)
 {
-  
+
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); plist->PopFront();
-    PError::AssertType(v1, PEAT_LIST, "Argument error in first parameter of function [WaitForListKeyPressWithTimeout(<list-of-keys>,<timeout>,<style>)]:  ");    
+    PError::AssertType(v1, PEAT_LIST, "Argument error in first parameter of function [WaitForListKeyPressWithTimeout(<list-of-keys>,<timeout>,<style>)]:  ");
 
 
     //Use plist to get the actual list of items.
     PList * keylist = (PList*)((v1.GetComplexData())->GetObject().get());
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in second parameter of function [WaitForListKeyPressWithTimeout(<list-of-keys>,<timeout>,<style>)]:  ");    
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in second parameter of function [WaitForListKeyPressWithTimeout(<list-of-keys>,<timeout>,<style>)]:  ");
     int delay  = plist->First(); plist->PopFront();
     delay += myTimer.GetTime();
 
-    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in third parameter of function [WaitForListKeyPressWithTimeout(<list-of-keys>,<timeout>,<style>)]:  ");    
+    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in third parameter of function [WaitForListKeyPressWithTimeout(<list-of-keys>,<timeout>,<style>)]:  ");
     Variant v3 = plist->First(); plist->PopFront();
 
-    
+
 
 
 
@@ -512,8 +530,8 @@ Variant PEBLEnvironment::WaitForListKeyPressWithTimeout(Variant v)
 
     while(p != end)
         {
-            //Create a keyboard tests correspending to each item in v1. 
-            //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
+            //Create a keyboard tests correspending to each item in v1.
+            //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key)
             key = PEBLUtility::TranslateString(*p);
             state = new ValueState(PEBL_PRESSED, DT_EQUAL, key, gEventQueue, PDT_KEYBOARD);
             //NULL,NULL will terminate the looping
@@ -522,7 +540,7 @@ Variant PEBLEnvironment::WaitForListKeyPressWithTimeout(Variant v)
         }
 
 
-                                                                                                                   
+
     //Create a timer test correspending to keydown.
     //1 is the value (down), DT_GREATERTHAN is the test, key is the interface (e.g., the 'A' key)
     PDevice * timer = new PlatformTimer(myTimer);
@@ -546,21 +564,21 @@ Variant PEBLEnvironment::WaitForListKeyPressWithTimeout(Variant v)
         }
     else
         {
-            
+
             PList *newlist = new PList();
             newlist->PushBack(Variant("<timeout>"));
             counted_ptr<PEBLObjectBase>newlist2 = counted_ptr<PEBLObjectBase>(newlist);
-            PComplexData *   pcd = new PComplexData(newlist2); 
+            PComplexData *   pcd = new PComplexData(newlist2);
 
             ret = Variant(pcd);
         }
-    
+
     return ret;
 
 }
 
 
-//This function will block until one of the keys listed in the argument is depressed, 
+//This function will block until one of the keys listed in the argument is depressed,
 //and then return the value of the key that was hit.
 Variant PEBLEnvironment::WaitForKeyListDown(Variant v)
 {
@@ -568,11 +586,11 @@ Variant PEBLEnvironment::WaitForKeyListDown(Variant v)
    //v[1] should have the parameter: a list of keys to wait for.
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); plist->PopFront();
-    PError::AssertType(v1, PEAT_LIST, "Argument error in function [WaitForKeyListDown(<list>)]:  ");    
-    
+    PError::AssertType(v1, PEAT_LIST, "Argument error in function [WaitForKeyListDown(<list>)]:  ");
+
     //Use plist to get the actual list of items.
     PList * keylist = (PList*)((v1.GetComplexData())->GetObject().get());
-                                                   
+
     std::list<Variant>::iterator p = keylist->Begin();
     std::list<Variant>::iterator end = keylist->End();
 
@@ -585,8 +603,8 @@ Variant PEBLEnvironment::WaitForKeyListDown(Variant v)
 
     while(p != end)
         {
-            //Create a keyboard tests correspending to each item in v1. 
-            //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
+            //Create a keyboard tests correspending to each item in v1.
+            //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key)
             key = PEBLUtility::TranslateString(*p);
             state = new ValueState(1, DT_EQUAL, key, device, PDT_KEYBOARD);
             //NULL,NULL will terminate the looping
@@ -609,21 +627,21 @@ Variant PEBLEnvironment::WaitForKeyListDown(Variant v)
     else
         {
             //            cout <<"======="<< returnval.GetDummyEvent().value << std::endl;
-            
+
             PList *newlist = new PList();
             newlist->PushBack(Variant("<timeout>"));
             counted_ptr<PEBLObjectBase>newlist2 = counted_ptr<PEBLObjectBase>(newlist);
-            PComplexData *   pcd = new PComplexData(newlist2); 
+            PComplexData *   pcd = new PComplexData(newlist2);
 
             ret = Variant(pcd);
         }
-    
+
     return ret;
 }
 
 
 //This function will block until one of the keys listed in
-// the argument is depressed, 
+// the argument is depressed,
 //and then return the value of the key that was hit.
 Variant PEBLEnvironment::WaitForListKeyPress(Variant v)
 {
@@ -632,8 +650,8 @@ Variant PEBLEnvironment::WaitForListKeyPress(Variant v)
     PList * plist = v.GetComplexData()->GetList();
 
     Variant v1 = plist->First(); plist->PopFront();
-    PError::AssertType(v1, PEAT_LIST, "Argument error in function [WaitForKeyListPress(<list>)]:  ");    
-    
+    PError::AssertType(v1, PEAT_LIST, "Argument error in function [WaitForKeyListPress(<list>)]:  ");
+
     //Use plist to get the actual list of items.
     PList * keylist = (PList*)((v1.GetComplexData())->GetObject().get());
 
@@ -647,8 +665,8 @@ Variant PEBLEnvironment::WaitForListKeyPress(Variant v)
 
     while(p != end)
         {
-            //Create a keyboard tests correspending to each item in v1. 
-            //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
+            //Create a keyboard tests correspending to each item in v1.
+            //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key)
 
 
             key = PEBLUtility::TranslateString(*p);
@@ -673,28 +691,28 @@ Variant PEBLEnvironment::WaitForListKeyPress(Variant v)
 /// Once executed, it will allow all keyboard entry to show up
 /// in the text box.  Once the escape key is hit, the function
 /// will return the text inside the box.
-/// If it has a third argument that is non-zero, it will also use any mouse click as an 
+/// If it has a third argument that is non-zero, it will also use any mouse click as an
 /// escape key.
 Variant PEBLEnvironment::GetInput(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
     //The first argument should be a textbox.
-    PError::AssertType(plist->First(), PEAT_TEXTBOX, "Argument error in function [GetInput(<textbox>,<key-string>)]: "); 
+    PError::AssertType(plist->First(), PEAT_TEXTBOX, "Argument error in function [GetInput(<textbox>,<key-string>)]: ");
     PlatformTextBox * textbox = dynamic_cast<PlatformTextBox*>(plist->First().GetComplexData()->GetObject().get());
-    plist->PopFront();    
+    plist->PopFront();
 
 
     //The next argument should be the 'escape' key, or a list of 'escape' keys.
     // l.GetType() << std::endl;
     //type = plist->First()->GetType();
 
-    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [GetInput(<textbox>,<key-string>)]: ");    
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [GetInput(<textbox>,<key-string>)]: ");
     string  myString = plist->First(); plist->PopFront();
 
 
 
-    //Create a keyboard test correspending to escape keydown. 
-    //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
+    //Create a keyboard test correspending to escape keydown.
+    //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key)
 
 
     ValueState  * keypressstate = new ValueState(PEBL_PRESSED, DT_EQUAL, PEBLKEY_ANYKEY,gEventQueue, PDT_KEYBOARD);
@@ -706,8 +724,8 @@ Variant PEBLEnvironment::GetInput(Variant v)
     //Make the textbox editable.
     textbox->SetEditable(true);
     myEnv->SetKeyRepeat(true);
-    myEnv->Draw();    
-    
+    myEnv->Draw();
+
 
 
     //Evaluator::mEventLoop.Clear();
@@ -728,7 +746,9 @@ Variant PEBLEnvironment::GetInput(Variant v)
 
     bool ignore = false;
 
-    PEvent keypress =  Evaluator::mEventLoop.Loop();  
+
+    //This handles mouseclick events
+    PEvent keypress =  Evaluator::mEventLoop.Loop();
     if(keypress.GetType()==PDT_MOUSE_BUTTON )
         {
             if(keypress.GetMouseButtonEvent().state==PEBL_PRESSED)
@@ -742,9 +762,14 @@ Variant PEBLEnvironment::GetInput(Variant v)
                 ignore = true;
             }
         }
-    
+
+
+    //This handles regular keyboard events.
+    //To do so, we get a keyboard event, we make sure
+    //it is not the escape string, then we pass it on to the textbox.
+
     PEBL_KeyboardEvent pke = keypress.GetKeyboardEvent();
-    //match on lowercase matches to trigger character.  
+    //match on lowercase matches to trigger character.
     //    while(pke.key != PEBLUtility::TranslateString(myString))
     while(PEBLUtility::TranslateKeyCode(pke.key, pke.modkeys) != PEBLUtility::ToLower(myString))
         {
@@ -757,11 +782,11 @@ Variant PEBLEnvironment::GetInput(Variant v)
                 {
                     myEnv->Draw();
                 }
-            
+
             //Wait for the next keystroke..
             keypress =  Evaluator::mEventLoop.Loop();
             ignore=false;
-            
+
             if(keypress.GetType()==PDT_MOUSE_BUTTON)
                 {
 
@@ -777,11 +802,11 @@ Variant PEBLEnvironment::GetInput(Variant v)
                         ignore=true;
                     }
                 }
-            
-            pke = keypress.GetKeyboardEvent();            
+
+            pke = keypress.GetKeyboardEvent();
         }
-    
-    
+
+
     Evaluator::mEventLoop.Clear();
     textbox->SetEditable(false);
     myEnv->SetKeyRepeat(false);
@@ -795,24 +820,24 @@ Variant PEBLEnvironment::GetTextBoxCursorFromClick(Variant v)
 
     PList * plist = v.GetComplexData()->GetList();
     //The first argument should be a textbox.
-    PError::AssertType(plist->First(), PEAT_TEXTBOX, "Argument error in function [SetTextBoxCursorFromClick(<textbox>,<x>,<y>)]: "); 
+    PError::AssertType(plist->First(), PEAT_TEXTBOX, "Argument error in function [SetTextBoxCursorFromClick(<textbox>,<x>,<y>)]: ");
     PlatformTextBox * textbox = dynamic_cast<PlatformTextBox*>(plist->First().GetComplexData()->GetObject().get());
-    plist->PopFront();    
+    plist->PopFront();
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first argument of function [SetTextBoxCursorFromClick(<textbox>,<x>,<y>)]: "); 
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first argument of function [SetTextBoxCursorFromClick(<textbox>,<x>,<y>)]: ");
     int x = plist->First();
-    plist->PopFront();    
+    plist->PopFront();
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in second argumeent of function [SetTextBoxCursorFromClick(<textbox>,<x>,<y>)]: "); 
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in second argumeent of function [SetTextBoxCursorFromClick(<textbox>,<x>,<y>)]: ");
 
     int y = plist->First();
-    plist->PopFront();    
+    plist->PopFront();
 
     //    int relx <- x - (textbox->GetX() - textbox->GetWidth()/2)
     //    int rely <- y - (textbox->GetY() - textbox->GetHeight()/2)
-    
+
     return textbox->FindCursorPosition(x,y);
-    
+
 }
 
 
@@ -822,7 +847,7 @@ Variant PEBLEnvironment::GetTextBoxCursorFromClick(Variant v)
 Variant PEBLEnvironment::WaitForMouseButton(Variant v)
 {
      //Create a mouse test
-    //1 is the value (down), DT_EQUAL is the test, 1 is the interface (e.g., the 'A' key) 
+    //1 is the value (down), DT_EQUAL is the test, 1 is the interface (e.g., the 'A' key)
 
     ValueState  * state = new ValueState(PEBL_PRESSED, DT_TRUE, 1, gEventQueue, PDT_MOUSE_BUTTON);
 
@@ -853,10 +878,10 @@ Variant PEBLEnvironment::WaitForMouseButton(Variant v)
             buttonstate = Variant("<released>");
         }
     newlist->PushBack(buttonstate);
-    
- 
+
+
     counted_ptr<PEBLObjectBase> newlist2 = counted_ptr<PEBLObjectBase>(newlist);
-    PComplexData *   pcd = new PComplexData(newlist2); 
+    PComplexData *   pcd = new PComplexData(newlist2);
 
     return Variant(pcd);
 }
@@ -872,14 +897,14 @@ Variant PEBLEnvironment::WaitForMouseButtonWithTimeout(Variant v)
    //v[1] should have the parameter: a time to wait.
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in function [WaitForMouseButtonWithTimeout(<number>)]:  ");    
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in function [WaitForMouseButtonWithTimeout(<number>)]:  ");
 
     //set the timeout
     int delay = plist->First(); plist->PopFront();
     delay += myTimer.GetTime();
-    
-                                                                                                                   
-    //Create a timer test 
+
+
+    //Create a timer test
     //1 is the value (down), DT_GREATERTHAN is the test, key is
     // the interface (e.g., the 'A' key)
     PDevice * timer = new PlatformTimer(myTimer);
@@ -889,7 +914,7 @@ Variant PEBLEnvironment::WaitForMouseButtonWithTimeout(Variant v)
 
     ///////////////////////////////////////
      //Create a mouse test
-    //1 is the value (down), DT_EQUAL is the test, 1 is the interface (e.g., the 'A' key) 
+    //1 is the value (down), DT_EQUAL is the test, 1 is the interface (e.g., the 'A' key)
 
     ValueState  * state = new ValueState(PEBL_PRESSED, DT_TRUE, 1, gEventQueue, PDT_MOUSE_BUTTON);
 
@@ -911,7 +936,7 @@ Variant PEBLEnvironment::WaitForMouseButtonWithTimeout(Variant v)
     if(returnval.GetType()== PDT_MOUSE_BUTTON)
         {
 
-           
+
             int x =returnval.GetMouseButtonEvent().x;
             int y =returnval.GetMouseButtonEvent().y;
             newlist->PushFront(Variant(x));
@@ -919,7 +944,7 @@ Variant PEBLEnvironment::WaitForMouseButtonWithTimeout(Variant v)
             int btn = returnval.GetMouseButtonEvent().button;
             Variant button = Variant(btn);
             newlist ->PushBack(button);
-            
+
             Variant buttonstate = "";
             int upstate = returnval.GetMouseButtonEvent().state;
             if(upstate == PEBL_PRESSED)
@@ -929,7 +954,7 @@ Variant PEBLEnvironment::WaitForMouseButtonWithTimeout(Variant v)
                 buttonstate = Variant("<released>");
             }
             newlist->PushBack(buttonstate);
-            
+
         }    else  //PCD_TIMER
         {
 
@@ -937,11 +962,11 @@ Variant PEBLEnvironment::WaitForMouseButtonWithTimeout(Variant v)
             newlist->PushBack(Variant("<timeout>"));
 
 
-            
+
         }
 
     counted_ptr<PEBLObjectBase>newlist2 = counted_ptr<PEBLObjectBase>(newlist);
-    PComplexData *   pcd = new PComplexData(newlist2); 
+    PComplexData *   pcd = new PComplexData(newlist2);
     return Variant(pcd);
 }
 
@@ -963,15 +988,15 @@ Variant PEBLEnvironment::SetCursorPosition(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
     //The first argument should be a textbox.
-    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in first argument of function [SetCursorPosition(<x>,<y>)]: "); 
+    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in first argument of function [SetCursorPosition(<x>,<y>)]: ");
     int x = plist->First();
-    plist->PopFront();    
+    plist->PopFront();
 
-    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in second argumeent of function [SetCursorPosition(<x>,<y>)]: "); 
+    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in second argumeent of function [SetCursorPosition(<x>,<y>)]: ");
 
     int y = plist->First();
-    plist->PopFront();    
-    
+    plist->PopFront();
+
     myEnv->SetCursorPosition(x,y);
      return Variant(1);
 }
@@ -979,7 +1004,7 @@ Variant PEBLEnvironment::SetCursorPosition(Variant v)
 Variant PEBLEnvironment::GetMouseState(Variant v)
 {
    return myEnv->GetMouseState();
-    
+
 }
 
     //basic joystick stuff
@@ -994,7 +1019,7 @@ Variant  PEBLEnvironment::GetJoystick(Variant v)
 
     PList * plist = v.GetComplexData()->GetList();
     //The first argument should be an integer specifying the joystick index
-    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in argument of function [GetJoystick(<int>)]: "); 
+    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in argument of function [GetJoystick(<int>)]: ");
     int id = plist->First();
     plist->PopFront();
 
@@ -1012,9 +1037,9 @@ Variant  PEBLEnvironment::GetNumJoystickAxes(Variant v)
     PList * plist = v.GetComplexData()->GetList();
     //The first argument should be a joystick
     PError::AssertType(plist->First(), PEAT_JOYSTICK, "Argument error in argument of function [GetNumJoystickAxes(<joystick>)]: ");
-    
+
     PlatformJoystick * joystick = dynamic_cast<PlatformJoystick*>(plist->First().GetComplexData()->GetObject().get());
-    
+
     return Variant(joystick->GetNumAxes());
 }
 
@@ -1024,10 +1049,10 @@ Variant  PEBLEnvironment::GetNumJoystickBalls(Variant v)
     PList * plist = v.GetComplexData()->GetList();
     //The first argument should be a joystick
     PError::AssertType(plist->First(), PEAT_JOYSTICK, "Argument error in argument of function [GetNumJoystickBalls(<joystick>)]: ");
-    
+
     PlatformJoystick * joystick = dynamic_cast<PlatformJoystick*>(plist->First().GetComplexData()->GetObject().get());
 
-    
+
     return Variant(joystick->GetNumBalls());
 
 }
@@ -1039,7 +1064,7 @@ Variant PEBLEnvironment::GetNumJoystickButtons(Variant v)
     PlatformJoystick * joystick = dynamic_cast<PlatformJoystick*>(plist->First().GetComplexData()->GetObject().get());
 
 
-    
+
     return Variant(joystick->GetNumButtons());
 
 }
@@ -1050,7 +1075,7 @@ Variant  PEBLEnvironment::GetNumJoystickHats(Variant v)
     PError::AssertType(plist->First(), PEAT_JOYSTICK, "Argument error in argument of function [GetNumJoystickHats(<joystick>)]: ");
     PlatformJoystick * joystick = dynamic_cast<PlatformJoystick*>(plist->First().GetComplexData()->GetObject().get());
 
-    
+
     return Variant(joystick->GetNumHats());
 
 }
@@ -1103,7 +1128,7 @@ Variant  PEBLEnvironment::GetJoystickHatState(Variant v)
     unsigned int hat  = (unsigned int)(int)(plist->First());
 
     return joystick->GetHatState(hat);
-    
+
 }
 
 
@@ -1120,21 +1145,21 @@ Variant  PEBLEnvironment::GetJoystickBallState(Variant v)
 
 
     return joystick->GetBallState(button);
-    
+
 
 }
 
 
-// This takes an event definition, and function, 
-// 
+// This takes an event definition, and function,
 //
-// First parameter is device as a <string> should take Device as a 
+//
+// First parameter is device as a <string> should take Device as a
 //Complex eventloop construction.
 //  arguments are:
 //
 //  device
 //  intface
-//  comparison  
+//  comparison
 //  function name
 //  parameters???
 //
@@ -1148,15 +1173,15 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
     PList * plist = v.GetComplexData()->GetList();
 
 
-    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [RegisterEvent(<string>)]:  ");    
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [RegisterEvent(<string>)]:  ");
     string mystring = PEBLUtility::ToUpper(plist->First()); plist->PopFront();
 
     PDevice*device;
-    
+
     enum PEBL_DEVICE_TYPE devicetype = PDT_DUMMY;
 
 
-    
+
     if(mystring== "<KEYBOARD>")
         {
             device = new PlatformKeyboard(myKeyboard);
@@ -1171,14 +1196,14 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
             devicetype = PDT_MOUSE_BUTTON;
         }else if(mystring==  "<TIMER>")
         {
-        
+
             //This has the potential to leak:
             device = new PlatformTimer(myTimer);
             devicetype = PDT_TIMER;
 
             //this will be a state, not an event.
 
-            
+
         }else if (mystring == "<JOYSTICK_BUTTON>")
         {
 
@@ -1207,7 +1232,7 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
         {
             //Note: PDT_stream, PDTevent_queue, and PDT_audio_out
             //not handled.
-            
+
             PError::SignalFatalError("Unknown Device\n");
         }
 
@@ -1229,9 +1254,9 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
         {
 
             testtype =DTT_VALUESTATE;
-            PError::AssertType(p, PEAT_INTEGER, "In RegisterEvent, test bounds not a number:");    
+            PError::AssertType(p, PEAT_INTEGER, "In RegisterEvent, test bounds not a number:");
             //valuestate
-            
+
             // this will crash!!!       }else if (p.IsList())
         }else
         {
@@ -1241,14 +1266,14 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
             // This will be either intervalstate or regionstate
             // if it is an intervalstate, the list well have two numbers inside it
             // for a regionstate, the list will have two sublists.
-            
+
              v1 = myList->First();myList->PopFront();
              v2 = myList->First();myList->PopFront();
-            
+
              if(0)//v1.IsList())
                 {
 
-                    
+
 
                     //regionstate;
                     testtype =DTT_REGIONSTATE;
@@ -1258,21 +1283,21 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
 
                     //Could this end up destroying a global list???
                     v11 = sublist1->First(); sublist1->PopFront();
-                    v12 = sublist1->First(); 
+                    v12 = sublist1->First();
                     v21 = sublist2->First(); sublist1->PopFront();
-                    v22 = sublist2->First(); 
+                    v22 = sublist2->First();
 
                 }
             else
                 {
 
                     testtype = DTT_INTERVALSTATE;
-                    PError::AssertType(v1, PEAT_NUMBER, "In RegisterEvent, test bounds not a number:");    
-                    PError::AssertType(v2, PEAT_NUMBER, "In RegisterEvent, test bounds not a number:");    
+                    PError::AssertType(v1, PEAT_NUMBER, "In RegisterEvent, test bounds not a number:");
+                    PError::AssertType(v2, PEAT_NUMBER, "In RegisterEvent, test bounds not a number:");
                     //intervalstate
                     //ValueState  * state = new ValueState(1, DT_EQUAL, key, device, PDT_KEYBOARD);
-                    
-                   
+
+
                 }
 
 
@@ -1281,13 +1306,13 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
     //        {
     //
     //            std::cerr << "h\n";
-    //            PError::SignalFatalError(" argument of function [RegisterEvent() must be a number or a list: ");    
+    //            PError::SignalFatalError(" argument of function [RegisterEvent() must be a number or a list: ");
     //        }
-    
 
 
-    //Create a keyboard test correspending to keydown. 
-    //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key) 
+
+    //Create a keyboard test correspending to keydown.
+    //1 is the value (down), DT_EQUAL is the test, key is the interface (e.g., the 'A' key)
 
     //   intervalstate or
     //   regionstate:
@@ -1302,10 +1327,10 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
     //   FALSE
 
 
-    PError::AssertType(plist->First(), PEAT_STRING, 
-                       "Error in  of function [RegisterEvent(<device>,<interface>,<function>)]: ");    
+    PError::AssertType(plist->First(), PEAT_STRING,
+                       "Error in  of function [RegisterEvent(<device>,<interface>,<function>)]: ");
 
-    
+
     std::string test = PEBLUtility::ToUpper(plist->First()); plist->PopFront();
 
 
@@ -1314,7 +1339,7 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
     switch(testtype)
         {
         case DTT_VALUESTATE:
-    
+
 
             if(test == "<NOTEQUAL>")
                 {
@@ -1351,7 +1376,7 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
 
                 PError::SignalFatalError("test type not available for value comparisons");
             }
-            
+
             break;
 
             //The same test types are available
@@ -1405,7 +1430,7 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
 
 
     DeviceState * state  = NULL;
-    
+
     switch(testtype)
         {
         case DTT_VALUESTATE:
@@ -1483,10 +1508,10 @@ Variant PEBLEnvironment::TranslateKeyCode(Variant v)
    //v[1] should have the key
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in function [TranslateKeyCode(<integer>)]:  ");    
+    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in function [TranslateKeyCode(<integer>)]:  ");
 
     int key = (int)(plist->First()); plist->PopFront();
-    
+
     std::string retval = PEBLUtility::TranslateKeyCode((PEBLKey)key, PEBLMOD_NONE);
     return Variant(retval);
 
@@ -1499,10 +1524,10 @@ Variant PEBLEnvironment::TimeStamp(Variant v)
     time_t  rawtime;
     rawtime = time(NULL);
     char* timestring = ctime(&rawtime);
-   
-    
+
+
     //timestring now ends with a carriage return.  So fix it.
-    
+
     int pos =0;
     while( timestring[pos] != '\n' && timestring[pos] != '\0')
         {
@@ -1523,7 +1548,7 @@ Variant PEBLEnvironment::GetVideoModes(Variant v)
 
 Variant  PEBLEnvironment::GetPEBLVersion(Variant v)
 {
-   
+
     return Variant("PEBL Version 0.12");
 }
 
@@ -1546,18 +1571,18 @@ Variant PEBLEnvironment::LaunchFile(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
     std::string file  = plist->First().GetString(); plist->PopFront();
-    
 
-    PEBLUtility::LaunchFile(file.c_str());        
+
+    PEBLUtility::LaunchFile(file.c_str());
   return Variant(0);
-}           
+}
 
 Variant PEBLEnvironment::SystemCall(Variant v)
 {
-        
+
     PList * plist = v.GetComplexData()->GetList();
     std::string call  = plist->First().GetString(); plist->PopFront();
-    
+
 
     std::string args;
 
@@ -1586,7 +1611,7 @@ Variant PEBLEnvironment::IsDirectory(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [IsDirectory(<pathname>)]:  ");    
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [IsDirectory(<pathname>)]:  ");
 
     Variant out = PEBLUtility::IsDirectory(plist->First());
     return out;
@@ -1597,7 +1622,7 @@ Variant PEBLEnvironment::GetDirectoryListing(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [GetDirectoryListing(<pathname>)]:  ");    
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [GetDirectoryListing(<pathname>)]:  ");
 
     Variant out = PEBLUtility::GetDirectoryListing(plist->First());
     return out;
@@ -1609,7 +1634,7 @@ Variant PEBLEnvironment::FileExists(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [FileExists(<filename>)]:  ");    
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [FileExists(<filename>)]:  ");
 
     Variant out = PEBLUtility::FileExists(plist->First());
     return out;
@@ -1621,7 +1646,7 @@ Variant PEBLEnvironment::MakeDirectory(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [MakeDirectory(<dirname>)]:  ");    
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [MakeDirectory(<dirname>)]:  ");
     //cout << "Making directory in penviremnt" << plist->First()<<std::endl;
     Variant out = PEBLUtility::MakeDirectory((std::string)(plist->First()));
     return out;

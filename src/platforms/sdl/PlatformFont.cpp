@@ -56,9 +56,9 @@ PlatformFont::PlatformFont(const std::string & filename, int style, int size, PC
     if(fontname == "")
         PError::SignalFatalError(string("Unable to find font file [")  + mFontFileName + string("]."));
 
-    //These convert above properties to sdl-specific font 	   
+    //These convert above properties to sdl-specific font
     //Open the font.  Should do error checking here.
-    mTTF_Font = TTF_OpenFont(fontname.c_str(), mFontSize); 	
+    mTTF_Font = TTF_OpenFont(fontname.c_str(), mFontSize);
     TTF_SetFontStyle(mTTF_Font, mFontStyle);
 
    //Translate PColor to SDLcolor for direct use in rendering.
@@ -81,11 +81,11 @@ PlatformFont::PlatformFont(const PlatformFont & font)
     mAntiAliased     = font.GetAntiAliased();
 
 
-    //These convert above properties to sdl-specific font 	 
+    //These convert above properties to sdl-specific font
     //Open the font.  Should do error checking here.
     mTTF_Font  = TTF_OpenFont(mFontFileName.c_str(), mFontSize);
     TTF_SetFontStyle(mTTF_Font, mFontStyle);
- 
+
     //Translate PColor to SDLcolor for direct use in rendering.
     mSDL_FGColor = SDLUtility::PColorToSDLColor(mFontColor);
     mSDL_BGColor = SDLUtility::PColorToSDLColor(mBackgroundColor);
@@ -98,7 +98,7 @@ PlatformFont::PlatformFont(const PlatformFont & font)
 PlatformFont::~PlatformFont()
 {
 
-    
+
     TTF_CloseFont(mTTF_Font);
     mTTF_Font = NULL;
 
@@ -131,16 +131,25 @@ void PlatformFont::SetBackgroundColor(PColor color)
 
 
 SDL_Surface * PlatformFont::RenderText(const std::string & text)
-{    
-    //cout << "ABout to render text [" << text  << "] with font " << *this << endl;
+{
+    cout << "About to render text [" << text  << "] with font " << *this << endl;
 
-    
+    int i  = 0;
+    while(i < text.length())
+    {
+
+        cout << "[" << text[i] << "|" << (unsigned int)(text[i]) << "]";
+        i++;
+    }
+
+    cout << endl;
+
     //If there is no text, return a null surface.
     if(text=="") return NULL;
 
 
 
- 
+
     //Get a temporary pointer that we return
     std::string toBeRendered = StripText(text);
     SDL_Surface * tmpSurface = NULL;
@@ -148,17 +157,25 @@ SDL_Surface * PlatformFont::RenderText(const std::string & text)
     //The text renderer doesn't like to render empty text.
     if(toBeRendered.length() == 0) toBeRendered = " ";
 
+    //Using the RenderUTF8 stuff below has a hard time with 'foreign' characters; possibly because
+    //the toberendered needs to be converted to UTF-8????
+
+
     if(mAntiAliased)
         {
-            tmpSurface = TTF_RenderUTF8_Shaded(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor, mSDL_BGColor);
+//            tmpSurface = TTF_RenderUTF8_Shaded(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor, mSDL_BGColor);
+            tmpSurface = TTF_RenderText_Shaded(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor, mSDL_BGColor);
+
         }
     else
         {
+            tmpSurface = TTF_RenderText_Blended(mTTF_Font,toBeRendered.c_str(), mSDL_FGColor);
+
             tmpSurface = TTF_RenderUTF8_Blended(mTTF_Font,toBeRendered.c_str(), mSDL_FGColor);
             //tmpSurface =  TTF_RenderUTF8_Solid(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor);
         }
 
-    //   
+    //
     //TTF_RenderText_Blended(
     //TTF_Font *font, // This is the TTF_Font to use.
     //char *cstr, // This is the text to render.
@@ -174,11 +191,11 @@ SDL_Surface * PlatformFont::RenderText(const std::string & text)
         }
     else
         {
-            
+
             string message =   "Unable to render text  [" +  toBeRendered + "] in PlatformFont::RenderText";
             PError::SignalFatalError(message);
         }
-    
+
     return NULL;
 }
 
@@ -186,29 +203,29 @@ SDL_Surface * PlatformFont::RenderText(const std::string & text)
 //This transforms an escape-filled text string into its displayable version.
 std::string PlatformFont::StripText(const std::string & text)
 {
-    //First, transform text into the to-be-rendered text.  I.E., replace 
+    //First, transform text into the to-be-rendered text.  I.E., replace
     //escape characters etc.
 
     std::string toBeRendered;
-    
+
     for(unsigned int i = 0; i < text.size(); i++)
         {
-            
+
 
             if(text[i] == 10 ||
                text[i] == 13 ||
                text[i] == 18)
                 {
                     //Do nothing.;
-                    
+
                 }
             else if(text[i] == 9)
                 {
-                    //This is a tab character. First, figure out 
-                    //what absolute position it should be in: round 
+                    //This is a tab character. First, figure out
+                    //what absolute position it should be in: round
                     //the length eof toBeRendered up to the next value
                     //i mod 4.
-                    
+
                     int x = 8*((toBeRendered.length()+1) /8 + 1 );
                     int diff = x-toBeRendered.length();
                     string tmp = " ";
@@ -232,7 +249,7 @@ std::string PlatformFont::StripText(const std::string & text)
 unsigned int PlatformFont::GetTextWidth(const std::string & text)
 {
     int height, width;
-    std::string toBeRendered = StripText(text.c_str()); 
+    std::string toBeRendered = StripText(text.c_str());
     TTF_SizeText(mTTF_Font,toBeRendered.c_str(),&width,&height);
     unsigned int uwidth = (unsigned int)width;
     return uwidth;
@@ -246,20 +263,20 @@ unsigned int PlatformFont::GetTextHeight(const std::string & text)
     unsigned int uheight = (unsigned int)height;
     return uheight;
 }
-  
+
 
 //This returns the nearest character to the pixel column specified by x
 int PlatformFont::GetPosition(const std::string & text, unsigned int x)
 {
-    
+
     //Start at 0 and check until the width of the rendered text is bigger than x
-    
+
     unsigned int cutoff = 1;
-    
+
     while(cutoff < text.size())
         {
 
-            //If the width of the rendered text is larger than the x argument, 
+            //If the width of the rendered text is larger than the x argument,
             int width = GetTextWidth(text.substr(0,cutoff));
             if(width > x)
                 return cutoff-1;
@@ -268,8 +285,8 @@ int PlatformFont::GetPosition(const std::string & text, unsigned int x)
         }
 
     //If we make it this far, we have run out of letters, so return the last character.
-    
-    return text.size();   
+
+    return text.size();
 }
 
 

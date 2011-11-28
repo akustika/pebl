@@ -26,7 +26,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef __PLATFORMAUDIOIN_H__
 #define __PLATFORMAUDIOIN_H__
-
+#ifdef PEBL_AUDIOIN
 //#include "../../devices/PAudioIn.h"
 #include "../../base/Variant.h"
 #include "../../base/PEBLObject.h"
@@ -95,4 +95,5 @@ private:
 };
 
 
+#endif
 #endif

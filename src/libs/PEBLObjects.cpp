@@ -848,6 +848,8 @@ Variant PEBLObjects::MakeSineWave(Variant v)
 Variant PEBLObjects::MakeAudioInputBuffer(Variant v)
 {
 
+
+#ifdef PEBL_AUDIOIN
     //
      PList * plist = v.GetComplexData()->GetList();
 
@@ -873,6 +875,10 @@ Variant PEBLObjects::MakeAudioInputBuffer(Variant v)
      //     delete pcd;
      pcd=NULL;
      return tmpv;
+#else
+     PError::SignalFatalError("Audio Input not available on this version of PEBL.");
+#endif
+
 }
 
 
@@ -901,7 +907,7 @@ Variant PEBLObjects::SaveAudioToWaveFile(Variant v)
 
 Variant PEBLObjects::GetVocalResponseTime(Variant v)
 {
-
+#ifdef PEBL_AUDIOIN
     //
      PList * plist = v.GetComplexData()->GetList();
 
@@ -934,6 +940,10 @@ Variant PEBLObjects::GetVocalResponseTime(Variant v)
      Variant out = myAudio->VoiceKey((long double)v2,(int)v3);
      
      return out;
+
+#else
+     PError::SignalFatalError("Audio Input not available on this version of PEBL.");
+#endif
 }
 
 Variant PEBLObjects::MakeSquareWave(Variant v)

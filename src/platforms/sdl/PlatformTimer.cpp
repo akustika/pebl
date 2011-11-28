@@ -6,7 +6,7 @@
 //    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
-//   
+//
 //
 //     This file is part of the PEBL project.
 //
@@ -28,6 +28,20 @@
 #include "SDL/SDL.h"
 #include <iostream>
 #include "../../devices/DeviceState.h"
+
+
+
+#ifdef PEBL_UNIX
+
+ #include <sys/time.h>
+
+#else
+
+ #include <windows.h>
+ #include <iostream>
+ #include <iomanip>
+
+#endif
 
 #undef PEBL_CHECKTIMER
 
@@ -55,20 +69,20 @@ void PlatformTimer::Wait(unsigned long int msecs)
 #ifdef PEBL_CHECKTIMER
 {
     ///This should only run when PEBL_CHECKTIMER is defined.
-    
+
     //This should check for wrapping at ~49 days.
 
     unsigned long int timeX = SDL_GetTicks() + msecs;
     unsigned long int missedticks = 0;
     unsigned long int missedms = 0;
     unsigned long int lasttime = 0;
-  
+
     unsigned long int time=SDL_GetTicks();
 
     while(true)
         {
-            lasttime = time;           
-            
+            lasttime = time;
+
             time = SDL_GetTicks();
             if((time-lasttime) > 1)
                 {
@@ -80,7 +94,7 @@ void PlatformTimer::Wait(unsigned long int msecs)
             if(time > timeX)
                 {
 
-                    cerr << "Timer missed [" << missedticks << "] ticks, for a total of [" << missedms << "] ms, on a wait of [" << msecs <<"] ms.\n";                  
+                    cerr << "Timer missed [" << missedticks << "] ticks, for a total of [" << missedms << "] ms, on a wait of [" << msecs <<"] ms.\n";
                     break;
                 }
         }
@@ -92,13 +106,13 @@ void PlatformTimer::Wait(unsigned long int msecs)
 
     unsigned long int timeX = SDL_GetTicks() + msecs;
     unsigned long int time;
-    
+
     while(true)
         {
-            time = SDL_GetTicks();            
+            time = SDL_GetTicks();
             if(time > timeX)
                 break;
-            
+
         }
 }
 
@@ -124,6 +138,31 @@ int PlatformTimer::GetState(int iface) const
 //     return result;
 // }
 
+void PlatformTimer::GetTimeOfDay(unsigned long & secs, unsigned long & msecs)
+{
+#ifdef PEBL_UNIX
+      struct timeval * tp=NULL;
+       gettimeofday(tp,NULL);
+
+       time_t        secs1 = tp->tv_sec;
+       suseconds_t usecs  = tp->tv_usec;
+
+    secs = secs1;
+    msecs = usecs/100;
+#else
+ SYSTEMTIME st;
+
+    ::GetSystemTime(&st);
+
+
+    std::cout << std::setw(2) << st.wHour << ':'
+              << std::setw(2) << st.wMinute << ':'
+              << std::setw(2) << st.wSecond << '.'
+              << std::setw(3) << st.wMilliseconds << '\n';
+
+//    return timeGetTime();
+#endif
+}
 
 
 ostream & PlatformTimer::SendToStream(ostream & out) const

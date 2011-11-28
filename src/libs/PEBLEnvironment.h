@@ -6,7 +6,7 @@
 //    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
-//   
+//
 //
 //     This file is part of the PEBL project.
 //
@@ -34,21 +34,22 @@ class Variant;
 namespace PEBLEnvironment
 {
 
-    
+
     //Simple time access
     Variant GetTime(Variant v);
     Variant Wait(Variant v);
-    
+    Variant GetTimeOfDay(Variant v);
+
     //Simple key state querying
     Variant IsKeyDown(Variant v);
     Variant IsKeyUp(Variant v);
     Variant IsAnyKeyDown(Variant v);
-    
+
     Variant ShowCursor(Variant v);
     Variant GetCursorPosition(Variant v);
     Variant SetCursorPosition(Variant v);
 
-    
+
     //Simple eventloop construction
     Variant WaitForKeyDown(Variant v);
     Variant WaitForKeyUp(Variant v);
@@ -84,7 +85,7 @@ namespace PEBLEnvironment
     Variant GetJoystickHatState(Variant v);
     Variant GetJoystickBallState(Variant v);
 
-    
+
 
 
 
@@ -94,7 +95,7 @@ namespace PEBLEnvironment
     Variant ClearEventLoop(Variant v);
 
     //Misc
-    Variant GetInput(Variant v); 
+    Variant GetInput(Variant v);
     Variant GetTextBoxCursorFromClick(Variant v);
 
 
@@ -104,7 +105,7 @@ namespace PEBLEnvironment
     Variant GetVideoModes(Variant v);
     Variant GetPEBLVersion(Variant v);
     Variant GetSystemType(Variant v);
-    
+
     Variant LaunchFile(Variant v);
     Variant SystemCall(Variant v);
 

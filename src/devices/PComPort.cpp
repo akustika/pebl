@@ -6,7 +6,7 @@
 //    Copyright:  (c) 2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
-//   
+//
 //
 //     This file is part of the PEBL project.
 //
@@ -92,13 +92,13 @@ void PComPort::SetPort(unsigned int portnum,unsigned int baud)
         {
             mPortName = Variant("ttyS")+Variant((int)portnum);
         }
-    elseif(portnum < 22)
+    else if(portnum < 22)
         {
             mPortName = Variant("ttyUSB")+Variant((int)(portnum-16));
         }
     else
         {
-            PError::SignalFatalError(Variant("Attempted to set improper port number:")+(int)portnum);
+            PError::SignalFatalError(Variant("Attempted to set improper port number:")+Variant((int)portnum));
         }
 
 
@@ -112,7 +112,7 @@ void PComPort::SetPort(unsigned int portnum,unsigned int baud)
 #endif
     //baud rate should be checked against legal bauds on each platform.
     mBaud = baud;
-    mPort = portnum;    
+    mPort = portnum;
 }
 
 
@@ -143,7 +143,7 @@ unsigned char PComPort::GetByte()
             return 0;
         } else
         {
-            
+
             return out;
         }
 }
@@ -154,7 +154,7 @@ unsigned char PComPort::GetByte()
 Variant PComPort::GetBytes(int n)
 {
 
-    
+
     unsigned char *out;
     out = new unsigned char[n];
 
@@ -165,7 +165,7 @@ Variant PComPort::GetBytes(int n)
     //    while(get > 0)
     //        {
     //            int x = get>100?100:get;
-    //            
+    //
     //            int check = PollComport(mPort,&out,get);
     //            got = got + Variant(out[]);
     //            get -= check;

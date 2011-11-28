@@ -6,7 +6,7 @@
 //    Copyright:  (c) 2003 Shane T. Mueller <smueller@umich.edu>
 //    License:    GPL 2
 //
-//   
+//
 //
 //     This file is part of the PEBL project.
 //
@@ -39,17 +39,17 @@
 
 class PTimer: public PDevice
 {
-    
-   
+
 public:
-    ///The Standard constructor.  
+    ///The Standard constructor.
     PTimer();
-    
-    ///The Standard destructor.  
+
+    ///The Standard destructor.
     virtual ~PTimer();
 
     virtual void Wait(unsigned long int msecs) = 0;
     virtual unsigned long int GetTime() const =0;
+    virtual void GetTimeOfDay(unsigned long & secs, unsigned long & msecs)=0;
     virtual int GetState(int iface) const=0;
     virtual PEBL_DEVICE_TYPE GetDeviceType(){return PDT_TIMER;};
 private:

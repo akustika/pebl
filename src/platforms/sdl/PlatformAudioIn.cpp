@@ -38,7 +38,7 @@
 
 
 #include "SDL/SDL.h"
-
+#ifdef PEBL_AUDIOIN
 #include "SDL/SDL_audioin.h"
 
 #include <cmath>
@@ -683,4 +683,4 @@ void PlatformAudioIn::ComputeStats (Sint16 * data, int length,
    
 }
 
-
+#endif
