@@ -1,7 +1,18 @@
 define Start(p)
 {
 
+
+
+  gDoPractice <- 1           ##Turn on/off practice trials (useful for multi-session
+  gDirection <- -1            ##Change 1 to -1 to set forward to backward.
   
+  if(gDirection == -1)
+   {
+     dirlabel <- "backward"
+   } else {
+     dirlabel <- "forward"
+   }
+
   gUseCorsiPoints <- 1        ## Use standard locations or regenerate
                               ## on each trial?
 
@@ -11,13 +22,13 @@ define Start(p)
   ##continue to the next length whenever at least one was recalled
   ##correctly.
  
-  gUseKessel      <- 1        ## Use Kessel trials? (Should be used
+  gUseKessels      <- 1        ## Use Kessel trials? (Should be used
                               ## with corsi points)
 
 
   ##alternately, you can generate the trials at random.
 
-  gStartLength    <- 2        ## If gUseKessel <- 0, it creates a
+  gStartLength    <- 2        ## If gUseKessels <- 0, it creates a
                               ## random stimulus sequence with these parameters
   gEndLength      <- 9
   gTimesPerLength <- 2        ##
@@ -35,12 +46,21 @@ define Start(p)
 
   gScale <- 3                 ##scale between mm and pixels.
   gTargetSize <- 30 * gScale
-  gSleepEasy <- 0
+  gSleepEasy <- 1
   gWin <- MakeWindow("black")
 
   gHomeX <- gVideoWidth/2
   gHomeY <- gVideoHeight/2
 
+
+
+
+
+  if(gSubNum==0)
+   {
+     gSubNum <- GetSubNum(gWin)
+
+   }
 
   if(gUseBeep)
    {
@@ -48,28 +68,65 @@ define Start(p)
 	  gBeep <- MakeSineWave(400,200,.8)
    }
 
-  if(gSubNum==0)
+
+  MakeDirectory("data")  ##Make sure data exists
+  root <- "data/"+gSubNum
+  MakeDirectory(root)
+  MakeDirectory("data/summary")
+
+  gFileOutClick <- FileOpenAppend(root+"/corsi-"+dirlabel+"-detail"+ gSubNum + ".csv") ##individual subject data, each line is a click
+  gFileOutTrial <- FileOpenAppend(root+"/corsi-"+dirlabel+"-trial"+ gSubNum + ".csv") ##individual subject data,each line is a trial
+  gSumFile <- FileOpenAppend(root+"/corsi-"+dirlabel+"-data-summary_"+ gSubNum + ".txt") ##Individual summary
+  gLogFile <- FileOpenAppend("data/corsi-log.txt")             ##Basic start/end log
+
+
+  gPooled <- FileOpenAppend("data/summary/corsi-"+dirlabel+"-pooled.csv")              ##all data, pooled across subjects (one line per trial)
+  gPooledSummary <- FileOpenAppend("data/summary/corsi-"+dirlabel+"-pooled-sum.csv")   ##pooled summary, one line per subject run.
+
+
+  head1 <- "subnum,direction,type,trialnum,order,trialstart,itemstart,itemend,abstime,rt,posx,posy"
+  head2 <- "subnum,direction,type,trialnum,trialstart,length,stim,resp,numcorr,nummiss,allcorr,time"
+
+
+  FilePrint(gFileOutClick,head1)
+  FilePrint(gFileOutTrial,head2)
+
+   ##Add header to pooled file if we are blank
+  if(Length(FileReadList("data/summary/corsi-"+dirlabel+"-pooled-sum.csv"))==0)
    {
-     gSubNum <- GetSubNum(gWin)
+     FilePrint(gPooled,head2)
+     FilePrint(gPooledSummary,"subcode,timedate,direction,numtrials,bsp,score,correct,msp")
    }
 
-  if(not FileExists("data"))
-   {
-      MakeDirectory("data")
-    }
-  gFileOut <- FileOpenWrite("data/corsi-" + gSubNum + ".txt")
-#  gLogFile <- FileOpenAppend("data/corsi-log.txt")
-#  ShowCursor(0)
+   FilePrint(gLogFile, gSubNum + "," + gLanguage + "," + TimeStamp()+",CORSI,"+dirlabel+",INITIATED") 
+
   Draw()
   
   inst <- EasyTextBox("",50,50,gWin,20,700,500) 
-  inst.text <- "You are about to take part in a test that measures your ability to remember a sequence of locations on the screen. You will see nine blue squares on the screen. On each trial, the squares will be lit up one at a time in sequence.  Remember the sequence.  When the sequence is finished, you need to click on each square IN THE SAME ORDER THEY WERE GIVEN.  When you are done, click the button labeled DONE.  If you cannot remember the order of squares, click them in as close the the original order as you can. 
+
+
+  instfor  <- "You are about to take part in a test that measures your ability to remember a sequence of locations on the screen. You will see nine blue squares on the screen. On each trial, the squares will be lit up one at a time in sequence.  Remember the sequence.  When the sequence is finished, you need to click on each square IN THE SAME ORDER THEY WERE GIVEN.  When you are done, click the button labeled DONE.  If you cannot remember the order of squares, click them in as close the the original order as you can. 
 
 You will start with a sequence of two squares, and you will get two tries for each sequence length.  The sequence will increase by one whenever you get at least one of the two sequences correct.
-If you are correct, your next list will be one longer; otherwise it will be one word shorter.
+If you are correct, your next list will be one longer; 
   Click the mouse button when you are ready to begin."
+
+  instback <-"You are about to take part in a test that measures your ability to remember a sequence of locations on the screen. You will see nine blue squares on the screen. On each trial, the squares will be lit up one at a time in sequence.  Remember the sequence.  When the sequence is finished, you need to click on each square in the sequence.  However, you must do so IN THE OPPOSITE ORDER THAT THEY WERE GIVEN.  That is, click on the last square you saw first, then the next-to-last, and so on until you click on the first square last.  When you are done, click the button labeled DONE.  If you cannot remember the order of squares, click them in as close the the original order as you can. 
+
+You will start with a sequence of two squares, and you will get two tries for each sequence length.  The sequence will increase by one whenever you get at least one of the two sequences correct.
+If you are correct, your next list will be one longer; 
+  Click the mouse button when you are ready to begin."
+
+
+  if(gDirection == 1)
+   {
+     inst.text <- instfor
+   } else {
+     inst.text <- instback
+   }
+   
   Draw()
-   WaitForDownClick()
+  WaitForDownClick()
 
   gFont <- MakeFont(gPEBLBaseFont,1,25,MakeColor("black"),MakeColor("white"),1)
   gFont2 <- MakeFont(gPEBLBaseFont,0,20,MakeColor("black"),MakeColor("white"),1)
@@ -91,22 +148,48 @@ If you are correct, your next list will be one longer; otherwise it will be one 
 
    ## create the trial sequence, either from Kessels or 
    ## randomly.
-   if(gUseKessel)
+   if(gUseKessels)
     {   
-       trials <- KesselsTrials()
+       trials <- KesselsTrials(gDirection)
     } else {
 
        trials <- RandomTrials(gStartLength, gEndLength, gTimesPerLength)
     }
 
 
- ## Do three practice trials
-#   Trial(targxy,[1,3,5])
-#   Trial(targxy,[2,4,8])
-#   Trial(targxy,[6,7,9])
- ##
+   gType <- "P" ##practice trials
+  #Do practice trials, if necessary
 
- 
+  Print("about to practice.")
+ if(gDoPractice)
+    {
+    Show(inst)
+    inst.text <- "You will first perform three practice trials to become familiar with the test. They will not affect your score."
+    Draw()
+     FilePrint(gLogFile, gSubNum + "," + gLanguage + "," + TimeStamp()+",CORSI,"+dirlabel+",PRACTICETRIALS STARTED") 
+     ## Do three practice trials
+
+    WaitForDownClick()
+
+    Hide(inst)
+    Draw()
+     gTrialNum <- -1
+     Trial(targxy,[1,3,5],gDirection)
+     gTrialNum <- -2
+     Trial(targxy,[2,4,8],gDirection)
+     gTrialNum <- -3
+     Trial(targxy,[6,7,9],gDirection)
+    ##
+    inst.text <- "Now, you will see perform the normal trials.  These will count toward your score.  Click the mouse to begin."
+    Show(inst)
+    Draw()
+    WaitForDownClick()
+    Hide(inst)
+    Draw()
+   }
+   gTrialNum <- 1
+
+    gType <- "T"  ##Test trials
    ##Go through the trial sequence
    dat <- []
    lastlength <- 0
@@ -114,6 +197,8 @@ If you are correct, your next list will be one longer; otherwise it will be one 
    totalcorrect <- 0
    totalrecalled <- 0
 
+
+   FilePrint(gLogFile, gSubNum + "," + gLanguage + "," + TimeStamp()+",CORSI,"+dirlabel+",TRIALS STARTED") 
    loop(stim,trials)
    {
     
@@ -141,8 +226,8 @@ If you are correct, your next list will be one longer; otherwise it will be one 
       }
 
 
-     out  <-  Trial(targxy,stim)
-#     Print(out)
+     out  <-  Trial(targxy,stim,gDirection)
+
      corr <- First(out)
      scoreCI <- Second(out)
      inp <- Third(out)
@@ -156,11 +241,11 @@ If you are correct, your next list will be one longer; otherwise it will be one 
         totalcorrect <- totalcorrect+1
         totalrecalled <- totalrecalled + curlength
       }
-
-     out <- gSubNum + "," +curlength + ","
      lastlength <-curlength
-
+     gTrialNum <- gTrialNum +1 
    }
+
+   FilePrint(gLogFile, gSubNum + "," + gLanguage + "," + TimeStamp()+",CORSI,"+dirlabel+",TRIALS ENDED") 
 
 
   if(curlength==9)
@@ -175,23 +260,38 @@ If you are correct, your next list will be one longer; otherwise it will be one 
 #   totcor <- Sum(Second(Transpose(dat)))
    totalscore <- msp * totalcorrect
 
-
+  
 
   Show(inst)
   inst.text <- "Thank you for participating.  Alert the Experimenter that you are done." +   CR(1)+
 "Block Span:    "+msp +CR(1) + 
 "Total Score:   "+totalscore+ CR(1) +
 "Total Correct Trials: "+totalcorrect +CR(1)+
-"Memory Span:   "+Round((2+totalcorrect)/2,2)
- 
-  Draw()
+"Memory Span:   "+Round((2+totalcorrect)/2,2)+CR(3)
+
+   Draw()
+
+
+  FilePrint(gSumFile,"The PEBL Corsi Blocks Test, Version 0.2
+http://pebl.sourceforge.net/battery.html.
+============================================")
+  FilePrint(gSumFile,inst.text)
+
+
+FilePrint(gPooledSummary,gSubNum+","+TimeStamp()+","+dirlabel+","+
+      gTrialNum+","+msp+","+totalscore+","+totalcorrect+","+
+     Round((2+totalcorrect)/2,2))
+
+
+
+
 
   WaitForAnyKeyPress()
 
 }
 
 
-define Trial(xy,stimseq)
+define Trial(xy,stimseq, direction)
 {
 
 
@@ -207,6 +307,7 @@ define Trial(xy,stimseq)
   
 
    squares <- []
+  ####################################
   ##First, display the stimuli blocks
    loop(i, xy)
    {
@@ -226,7 +327,6 @@ define Trial(xy,stimseq)
   xy1 <- First(seqxy)
   targ <- Square(First(xy1),Second(xy1),gTargetSize+3,gHighlightColor,1)
   Addobject(targ,gWin)
-
   loop(i,seqxy)
      {
        Move(targ,First(i),Second(i))
@@ -238,29 +338,27 @@ define Trial(xy,stimseq)
   Draw()
 
 
-
-##Now, collect responses.
+  ####################################
+  ##Now, collect responses.
    done <- EasyLabel("DONE",gVideoWidth/2,gVideoHeight-20,gWin,33)
    doneback <-   Rectangle(gVideoWidth/2,gVideoHeight-20,120,30,MakeColor("white"),0)
    AddObject(doneback,gWin)
    SetMouseCursorPosition(Round(gVideoWidth/2),Round(gVideoHeight/2))
    ShowCursor(1)
    Draw()
-
+   time0 <- GetTime()
    resps <- []
    rts <- []
 
    clickon <-  Merge([doneback],squares)
    ids <- Sequence(0,9,1)
-
+   i <- 1
    resp <- -1 
    while(resp != 0)
    {
       time1 <- GetTime()
       resp <-  WaitForClickOnTarget(clickon,ids)
       time2 <- GetTime()
-
-	  
       if(resp > 0)
       {
         pos <- Nth(clickon,resp+1)
@@ -272,26 +370,41 @@ define Trial(xy,stimseq)
        {
   	    PlayBackground(gBeep)
        }
-
-        Wait(200)
+        Wait(250)
         Hide(targ)
         Draw()
-
         resps <- Append(resps,resp)
         rts <- Append(rts,(time2-time1))
+
+       FilePrint(gFileOutClick,gSubNum+","+gDirection+","+gType+","+gTrialNum+","+i +","+time0+","+time2+","+(time2-time0)+","+(time2-time1)+","+resp+","+pos.x+","+pos.y)
+       i <- i +1 
       }
    }
 
 
-  score <- ScoreResponse(stimseq,resps) 
+  if(direction == -1)
+   {
+     standard <- Reverse(stimseq)
+   } else {
+     standard <- stimseq
+   }
+
+  score <- ScoreResponse(standard,resps)
   ##Compute and give feedback
-  corr <- ListEqual(stimseq,resps)
+  corr <- ListEqual(standard,resps)
+
   if(corr)
    {
       warn.text <- "Correct"
    }else{   
       warn.text <- "Incorrect"
    }
+
+  outline <-  gSubNum+","+gDirection+","+gType+","+gTrialNum+","+time0+","+
+     len +","+ListToString(stimseq)+","+ListToString(resps)+","+First(score)+","+Second(score)+","+ corr+","+(GetTime()-time0)
+ FilePrint(gFileOutTrial, outline)
+ FilePrint(gPooled,outline)
+
 
   RemoveObjects(squares,gWin)
   RemoveObject(done,gWin)
@@ -659,10 +772,30 @@ define VecTimes(a,b)
 # Neuropsychology, 7(4), 252-258.
 ##scale: 30-mm blocks
 
-define KesselsTrials()
+define KesselsTrials(direction)
 {
 
-  x <- [[8,5],
+##  These trials are likely the ones used by Piper:
+##
+##   x <- [[1,9],
+##    [6,9],
+##    [2,9,6],
+##    [6,2,8],
+##    [6,2,4,5],
+##    [2,9,8,6],
+##    [2,4,5,1,6],
+##    [1,5,9,4,5],     ##Is this right?  5 is repeated!!!
+##    [1,5,6,9,4,3],
+##    [4,3,6,5,9,8],
+##    [4,8,3,7,5,2,6],
+##    [7,2,5,6,3,4,1],
+##    [9,8,7,6,5,2,1,4],
+##    [2,1,9,8,6,3,5,7,4],
+##    [6,4,5,8,9,1,3,7,2]]
+
+if(direction == 1)
+ {
+ x <- [[8,5],
    [6,4],
    [4,7,2],
    [8,1,5],
@@ -678,31 +811,33 @@ define KesselsTrials()
    [5,9,3,6,7,2,4,3],
    [5,3,8,7,1,2,4,6,9],
    [4,2,6,8,1,7,9,3,5]]
- 
+  } else{
+
+   ## Backward sequences:
+   ## From Kessels et al, 2008, in Assessment.
+ x <- [[4,7],
+    [2,9],
+    [9,3,4],
+    [6,3,7],
+    [1,5,2,8],
+    [7,4,3,9],
+    [3,1,8,6,5],
+    [9,3,1,4,7],
+    [2,8,3,5,6,4],
+    [5,3,1,2,8,9],
+    [7,3,2,9,1,8,6],
+    [4,3,7,6,2,5,9],
+    [1,9,6,3,5,4,2,8],
+    [2,9,4,6,1,7,3,5],
+    [8,6,5,7,1,2,3,4,9],  ## Length-9 was not provided by Kessels
+    [8,1,4,7,9,2,3,6,5]]  ##
+
+}
   return x
 }
 
-define PCSForward()
-{
-   x <- [[3,10],[7,4],
-         [1,9,3],[8,7,2],
-         [4,9,1,6],[10,6,2,7],
-		 [6,5,1,4,8],[5,7,9,8,2],         
-		 [4,1,9,3,8,10],[9,2,6,7,3,5],         
-		 [10,1,6,4,8,5,7],[2,6,3,8,2,10,1],         
-		 [7,3,10,5,7,8,4,9],[6,9,3,2,1,7,10,5],         
-		 [5,8,4,10,7,3,1,9,6],[8,2,6,1,10,3,7,4,9] ]
 
- return x
-}
 
-define PCSBackward()
-{
-   x <- Transpose(FoldList(PCSForward(),2))
-   xx <- Transpose([Second(x),First(x)])
-   
-   return FlattenN(xx,1)
-}
 
 
 ##This creates an increasing random sequence akin to Kessel
