@@ -4,7 +4,8 @@
 ##  performance task modeled after a set of classic paradigms.
 ##
 ##   Type 1:   Conner's CPT.
-##   Type 2:   X-CPT
+##   The following are planned, but not implemented:
+##   Type 2:   X-CPT    
 ##   Type 3:   AX-CPT (classic)
 ##   Type 4:   AX-CPT (Cohen's version)
 ##   Type 5:   XX-CPT
@@ -17,7 +18,7 @@
 ##  2006-02 Released into Public Domain
 ##  by Shane T. Mueller, Ph.D. (smueller at obereed dot net)
 ##
-##  Version 0.5  2/2011
+##  Version 0.6  12/2011
 ##
 ##
 ##  Continuous performance task modeled after Conners Continuous 
@@ -58,6 +59,8 @@ define Start(lPar)
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
 
+
+  ##Note that test types other than 1 are not implemented.
   testType <- 1    ##Set test type here
 
 
@@ -87,25 +90,11 @@ define Start(lPar)
      ##Determine whether to use 90% targets, or each pick a target with 90% probability
      ## Pick out the stimuli that will be presented during the present
      ## block of trials.
+
+
      targnum <- Round(blocksize*.9)
-     blockstim <-  Shuffle(Merge(SampleN(letters,targnum),Repeat("X",blocksize-targnum)))
 
-	 if(proportionalFoil==1)
-      {
-    	  ##Pick the first stimulus off and rotate the stimulus pool.
-          stim  <-First(blockstim)
-     	  blockstim <- Rotate(blockstim,1)
 
-      } else{
-
-    	  stim <- First(SampleN(letters,1))
-          if(Random() < probX)
-          {
-            stim <- "X"
-          }
-
-      } 
-       
 
    }
 
@@ -188,34 +177,70 @@ define Start(lPar)
       block <- block + 1
       blocktrial <- 1
 
+     ##Create a new blockstim for each round
+     blockstim <-  Shuffle(Merge(SampleN(letters,targnum),Repeat("X",blocksize-targnum)))
 
-     while(blocktrial <= blocksize)
+     while(blocktrial <= blocksize)   
+     {
+
+
+     if(proportionalFoil==1)  ##exactly 90% should be foils
       {
+   
+	  ##Pick the first stimulus off and rotate the stimulus pool.
+          stim  <-First(blockstim)
+     	  blockstim <- Rotate(blockstim,1)
+
+      } else{
+
+    	  stim <- First(SampleN(letters,1))
+
+      } 
+       
+
+  
 
        trialNum <- trialNum + 1
        blocktrial<- blocktrial + 1
        Hide(gFeedback)
 
+
+      if(proportionalFoil==1)  ##exactly 90% should be foils
+      {
+   
+	  ##Pick the first stimulus off and rotate the stimulus pool.
+          stim  <-First(blockstim)
+     	  blockstim <- Rotate(blockstim,1)
+
+      } else{
+
+    	  stim <- First(SampleN(letters,1))
+
+      } 
+       
+
+
+
       ## See if we should stop at the end of the block.
       ## 
-	   if(pausebetweenblocks)
+      if(pausebetweenblocks)
        {
        if(Mod(trialNum, blocksize) == 1 and trialNum > 1)
         { 
           Show(gInstructions)
-	      Draw()
-	      Wait(500)
+          Draw()
+          Wait(500)
           WaitForKeyPress(" ")
           Hide(gInstructions)
           Draw()
           Wait(1000)
         } 
-	  }
-
+       }
 
 
       gStim.text <- stim
 
+      ##Pre-set the feedback:
       if(giveFeedback)
       {
         if(stim == "X")
@@ -229,19 +254,21 @@ define Start(lPar)
       }
 
       timeStart <- GetTime()
-	  endTime   <- timeStart + isi
+      endTime   <- timeStart + isi
+
+
+
 
       ########################
       ### Present Stimulus.
       ###
 
- 
       rt <- -1
       responded <- 0
       Show(gStim)
       Draw()
       time1 <- GetTime()
-	  r1 <- WaitForListKeyPressWithTimeout([" "],presTime,1)
+      r1 <- WaitForListKeyPressWithTimeout([" "],presTime,1)
 
       time2 <- GetTime()
       Hide(gStim)       
