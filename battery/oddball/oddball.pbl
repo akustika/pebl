@@ -230,9 +230,9 @@ define Trial (stim,practice,trialend)
      {
          if(corr)
 		    {
-              fixation.text  <- "Correct   ["+rt+"]"
+              fixation.text  <- gCorrect + " ["+rt+"]"
             } else {
-              fixation.text  <- "Incorrect ["+rt+"]"
+              fixation.text  <- gIncorrect+ " ["+rt+"]"
             }
 			Show(fixation)
 			Draw()
@@ -316,8 +316,15 @@ define CrossFactors(list)
 define GetStrings(language)
 {
    lang <- Uppercase(language)
+
+   ##Portuguese translation by Marco Moniz
    if(lang == "PT")
    {
+
+       gCorrect <- "Correcto"
+	   gIncorrect <- "Incorrecto"
+
+
        gInst1text <- "Neste teste é-lhe pedido que categorize formas.  Ser-lhe-á mostrado um círculo ou um quadrado (como mostrado em baixo) um de cada vez.  Em cada tentativa, terá apenas de decidir que forma surge no ecrã, e carregar numa de duas teclas.  Quando surgir um círculo, carregue na tecla esquerda de SHIFT.  Quando surgir um quadrado, carregue na tecla direita de SHIFT.   A maioria das vezes, o círculo aparece na parte esquerda do ecrã e o quadrado na direita.  (Carregue em qualquer tecla para continuar.)"
 
       gInst2text <- "Por vezes, o círculo aparece à direita e o quadrado à esquerda, tal como mostrado em baixo.  Ignore o lado em que aparece a figura, responda sempre com as mesmas teclas, independentemente do lado em que as figuras surgem.  (Carregue em qualquer tecla para continuar.)"
@@ -329,7 +336,13 @@ define GetStrings(language)
        gInterblock <- "As tentativas de prática terminaram. Carregue qualquer tecla para iniciar a próxima série."
        gDebrief <- "Final. Obrigado por participar."
    } else  { 
+
+
+
   ##Fall back to english
+       gCorrect <- "Correct"
+	   gIncorrect <- "Incorrect"
+
        gInst1text <- "In this study you will be asked to categorize shapes.  You will be shown either a circle or square (like shown below) one at a time.  On each trial, you will simply need to decide what shape is shown, and hit one of two keys. When you see a circle, press the left shift key.  When you see a square, press the right shift key.   Most of the time, the square will appear on the left, and the circle will appear on the right.  Press any key to continue."
 
       gInst2text <- "Sometimes, the circle will be on the left, or the square will be on the right, like shown below.  Ignore which side the shape appears on, respond the same regardless which side it is on. Press any key to continue."
