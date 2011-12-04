@@ -315,8 +315,21 @@ define CrossFactors(list)
 
 define GetStrings(language)
 {
-   if(Uppercase(language)=="EN")
-    {
+   lang <- Uppercase(language)
+   if(lang == "PT")
+   {
+       gInst1text <- "Neste teste é-lhe pedido que categorize formas.  Ser-lhe-á mostrado um círculo ou um quadrado (como mostrado em baixo) um de cada vez.  Em cada tentativa, terá apenas de decidir que forma surge no ecrã, e carregar numa de duas teclas.  Quando surgir um círculo, carregue na tecla esquerda de SHIFT.  Quando surgir um quadrado, carregue na tecla direita de SHIFT.   A maioria das vezes, o círculo aparece na parte esquerda do ecrã e o quadrado na direita.  (Carregue em qualquer tecla para continuar.)"
+
+      gInst2text <- "Por vezes, o círculo aparece à direita e o quadrado à esquerda, tal como mostrado em baixo.  Ignore o lado em que aparece a figura, responda sempre com as mesmas teclas, independentemente do lado em que as figuras surgem.  (Carregue em qualquer tecla para continuar.)"
+
+       gInst3text  <- "Vai começar com uma série de tentativas para praticar.  Nesta fase de treino, depois de cada tentativa, ser-lhe-á dito se a resposta é correcta ou incorrecta, responda tão rapidamente quanto possível mas também o mais correctamente possível.  Lembre-se, use as teclas esquerda e direita de SHIFT para responder.  (Carregue em qualquer tecla para começar.)"
+
+       gFooterl <- "shift-esq: CÍRCULO"
+	   gFooterr <- "shift-dir: QUADRADO"
+       gInterblock <- "As tentativas de prática terminaram. Carregue qualquer tecla para iniciar a próxima série."
+       gDebrief <- "Final. Obrigado por participar."
+   } else  { 
+  ##Fall back to english
        gInst1text <- "In this study you will be asked to categorize shapes.  You will be shown either a circle or square (like shown below) one at a time.  On each trial, you will simply need to decide what shape is shown, and hit one of two keys. When you see a circle, press the left shift key.  When you see a square, press the right shift key.   Most of the time, the square will appear on the left, and the circle will appear on the right.  Press any key to continue."
 
       gInst2text <- "Sometimes, the circle will be on the left, or the square will be on the right, like shown below.  Ignore which side the shape appears on, respond the same regardless which side it is on. Press any key to continue."
@@ -328,9 +341,6 @@ define GetStrings(language)
        gInterblock <- "The practice trials are complete.  You may take a short break.  Press any key to begin the next block."
        gDebrief <- "Thank you for participating in the study.  Alert the researcher that you are done."
          
-    } else {
-       ##Fallback to english
-       GetStrings("EN")
     }
 
 }
