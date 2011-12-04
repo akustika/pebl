@@ -1,5 +1,3 @@
-define Start(p)
-{
   #############################################################
   ## This is a simple keyboard tapping task. It has been
   ## used to test low-level motor ability, and may be impacted
@@ -11,27 +9,35 @@ define Start(p)
   ## not apply to the results of the current test.
   ##
   ## (c) 2010 Shane T. Mueller (smueller obereed net)
+  ## Portuguese translation by Marco Moniz
   #############################################################
+
+
+define Start(p)
+{
 
   ## The time of each trial
   trialtime <- 10*1000   #number of seconds * 1000 = ms
   maxTrials <- 8
 
-
   #Change useKeyPad from 0 to 1 to use the keyboard number pad.
   useKeypad <- 0
+
+  
+  GetStrings(gLanguage,trialtime, maxTrials,usekeypad)
+
   if(useKeyPad == 1)
    {
     usekey <- "<KP_0>"
-    keylabel <- "Keypad 0"
+    keylabel <- gKeylab0
     contkey <- "<return>"
-    contkeylabel <- "Enter"
+    contkeylabel <- gContKeyLab
 
    } else {
     usekey <- "A"
-    keylabel <- "A"
+    keylabel <- gKeyLabA
     contkey <- "<return>"
-    contkeylabel <- "Enter"
+    contkeylabel <- gContKeyLab
    }
 
   ShowCursor(0)
@@ -49,16 +55,9 @@ define Start(p)
   FilePrint(gFileOut,"sub,trial,domhand,hand,tap,sumtime,trialtime,rt")
   font <-  MakeFont(gPEBLBaseFontMono,0,24,MakeColor("white"),MakeColor("black"),1)
   
-  inst <- "In this task, you are asked to tap the keyboard as quickly as possible for a maximum of "+ maxtrials +" trials of " +
-  trialtime/1000 + " seconds.  Use  the "+keylabel+" key.  Begin tapping when you see 'GO'."
+  inst <-  gInst1
 
-
-   startinst <- "Choose testing options:
-
-[1] Dominant hand only
-[2] Dominant and non-dominant hand
-[3] Nondominant hand only"
-
+   startinst <- gStartInst
    tb <- MakeTextBox(startinst,font,700,500)
    AddObject(tb,gWin)
    Move(tb,50,50)
@@ -66,10 +65,9 @@ define Start(p)
 
    type <- WaitForListKeyPress(["1","2","3"])
    
-   tb.text <- "Dominant hand:
-[1] Left                       [2] Right"
-    Draw()
-    dom <-  WaitForListKeyPress(["1","2"])
+   tb.text <- gLeftRight
+   Draw()
+   dom <-  WaitForListKeyPress(["1","2"])
 
    Draw()
 
@@ -78,7 +76,7 @@ define Start(p)
   Hide(lab)
 
 
-  domname <- Nth(["Left","Right"],ToNumber(dom))
+  domname <- Nth([gLeft,gRight],ToNumber(dom))
 
   gProgressSize <- 300
   progressoutline <- Rectangle(gVideoWidth/2,gVideoHeight/2-100,gProgressSize,30,MakeColor("darkgrey"),1)
@@ -91,23 +89,24 @@ define Start(p)
 
    if(type == "1")
     {
-      rounds <- [Nth(["left","right"], ToNumber(dom))]
+      rounds <- [Nth([gLeft,gRight], ToNumber(dom))]
     } elseif(type=="2") {
-      rounds <- SortBy(["left","right"],[ToNumber(dom),3-ToNumber(dom)])
+      rounds <- SortBy([gLeft,gRight],[ToNumber(dom),3-ToNumber(dom)])
     }else{
-      rounds <- [Nth(["right","left"], ToNumber(dom))]
+      rounds <- [Nth([gRight,gLeft], ToNumber(dom))]
     }
 
 
 
    reportfile <-  FileOpenAppend("tapping-summary-"+gSubNum+".txt")
    FilePrint(reportfile,"--------------------------------------------------------")
-   FilePrint(reportfile," Report for PEBL Tapping Test, Version 0.1")
+   FilePrint(reportfile, gSummaryFile1)
    FilePrint(reportfile, " http://pebl.sf.net")
    FilePrint(reportfile, " (c) 2010 Shane T. Mueller, Ph.D.")
+   FilePrint(reportfile, gSummaryFile2)
    FilePrint(reportfile, " "+GetPEBLVersion())
    FilePrint(reportfile, " "+TimeStamp())
-   FilePrint(reportfile, " Participant Code: " + gSubNum)
+   FilePrint(reportfile, gSummaryFile3 + gSubNum)
    FilePrint(reportfile,"--------------------------------------------------------")
 
   FilePrint(reportfile,"Dominant hand: " + domname)
@@ -120,8 +119,8 @@ define Start(p)
   data <- []
   trial <- 1
 
-  tb.text <-inst + CR(2) + "On this round, you will use your " +
-  hand + " hand.  "+ CR(2) + "Press the '"+keylabel+"' Key to begin"
+  tb.text <- inst + CR(2) + gRoundDom1  + hand + gRoundDom2 + CR(2) + gContString
+
   Draw()
   WaitForKeyPress(usekey)
 
@@ -137,7 +136,7 @@ define Start(p)
      sumx  <- 0.0
      sumxx <- 0.0
      ##On the trial, gate the beginning with the "+keylabel+" press
-     lab.text <- "Press '"+keylabel+"' to begin"
+     lab.text <- gContString
      Show(lab)
      DrawProgress(progressbar,0)
      Show(progressoutline)
@@ -149,7 +148,7 @@ define Start(p)
      Draw()
      Wait(1000)    #Give 1 seconds before trial begins
 
-     lab.text <- "GO:[ ]"
+     lab.text <- gGo + "[ ]"
      Show(lab)
      Draw()
 
@@ -173,7 +172,7 @@ define Start(p)
      	   x <-  WaitForListKeyPressWithTimeout([usekey],50,1)
            time <- GetTime()
            remaining <- Ceiling((finaltime - time)/1000)
-     	   lab.text <- "GO: [" + remaining + "]"
+     	   lab.text <- gGo+"[" + remaining + "]"
     	   DrawProgress(progressbar,  1.0-(finaltime-time)/trialtime)
            Draw()   
 
@@ -205,11 +204,11 @@ define Start(p)
    Hide(progressoutline)
    Hide(lab)
    Show(tb)
-   tb.text <-  "Trial "+trial+" ("+hand+") results: "+CR(2)+
-               "Hits:       " + n + " keypresses" + CR(1) +
-               "Mean RT:    "+ Round(mean) + " ms/tap" + CR(1) +
-               "SD RT:      "+ Round(sd) + " ms" + CR(1) +
-               "Total Time: " + (time-timestart) + CR(2) +"Press "+contkeylabel+" to continue."
+   tb.text <-  gResults1 +trial+" ("+hand+" " + gResults2 +")"+CR(2)+
+               gResults3 + n + gResults4  + CR(1) +
+               gResults5 + Round(mean) + gResults6 + CR(1) +
+               gResults7 + Round(sd) + gResults8 + CR(1) +
+               gResults9 + (time-timestart) + CR(2) + gContString2
    Draw()
 
 
@@ -233,8 +232,8 @@ define Start(p)
   }
 
 
-  tb.text <- "Summary data ("+hand+"):"+CR(1) + 
-          "Trial   Hits  RT   SD  Time"+
+  tb.text <- gSummary1 + " ("+hand+"):"+CR(1) + 
+             gSummary2 +
   CR(1)+ "------------------------------" 
 
    t <- 1
@@ -253,12 +252,10 @@ define Start(p)
    FilePrint(reportfile, tb.text)
 
 
-  tb.text <- tb.text + CR(2) + "Round complete. Press "+contkeylabel+" to continue."
+  tb.text <- tb.text + CR(2) + gRoundComplete + gContString2
   Show(tb)
   Draw()
   WaitForKeyPress(contkey)
-
-
 
 
    if(complete)
@@ -278,7 +275,7 @@ define Start(p)
    }
 
 
-  tb.text <-  "Study complete. Press "+contkeylabel+" to exit."
+  tb.text <-  gStudyComplete
   Show(tb)
   Draw()
   WaitForKeyPress(contkey)
@@ -292,4 +289,129 @@ define DrawProgress(bar,percent)
 
 	bar.x <- gVideoWidth/2-gProgressSize/2 + gProgressSize/2*percent
 	bar.width <- gProgressSize *percent
+}
+
+
+
+define GetStrings(lang,trialtime,maxtrials,usekeypad)
+{
+
+  if(lang == "PT")
+   {
+       gKeyLab0 <- "Keypad 0"
+       gKeyLabA <- "A"
+       gContKeyLab <-  "Enter"
+
+       if(usekeypad)
+        {
+            keylabel <- gKeylab0
+        } else {
+            keylabel <- gKeyLabA
+        }
+    gInst1 <-  "Nesta tarefa, é-lhe pedido que carregue no teclado o mais rápido que conseguir num total de "+ 
+            maxtrials +" tentativas de " + trialtime/1000 + " segundos.  Utilize a "+
+            "tecla "+keylabel+".  Comece a carregar quando surguir 'GO'."
+
+
+
+    gStartInst <- "Opções do teste:
+
+[1] Apenas mão dominante
+[2] Mão dominante e não-dominante
+[3] Apenas mão não-dominante"
+
+    gLeftRight <- "Mao Dominante:
+[1] Esquerda                   [2] Direita"
+
+
+    gLeft <- "Esquerda"
+	gRight <- "Direita"
+ 
+    gRoundDom1 <- "Nesta ronda vai uilizar a sua mão " 
+	gRoundDom2 <- " hand.  "
+
+    gContString <- "Carregue na tecla '"+keylabel+"' para começar"
+
+    gContString2 <- "Carregue "+gContkeylab+" para continuar."
+	gGo <- "GO: "
+
+    gResults1 <-  "Trial "
+    gResults2 <- "results: "
+    gResults3 <- "Hits:       "
+    gResults4 <- " keypresses" 
+    gResults5 <- "Mean RT:    "
+    gResults6 <- " ms/tap" 
+    gResults7 <- "SD RT:      "
+    gResults8 <- " ms" 
+    gResults9 <- "Total Time: " 
+
+
+    gSummary1 <- "Summary data" 
+    gSummary2 <- "Trial   Hits  RT   SD  Time"
+
+    gRoundComplete <- "Ronda completa. "
+    gStudyComplete <- "Final. Carregue "+gContkeyLab+" para sair."
+
+
+     gSummaryFile1 <- " Report for PEBL Tapping Test, Version 0.1"
+     gSummaryFile2 <- " Tradução Marco Moniz - DPSM-HF"
+     gSummaryFile3 <- "Código Participante: "
+
+   }  else {
+       gKeyLab0 <- "Keypad 0"
+       gKeyLabA <- "A"
+       gContKeyLab <-  "Enter"
+
+       if(usekeypad)
+        {
+            keylabel <- gKeylab0
+        } else {
+            keylabel <- gKeyLabA
+        }
+    gInst1 <- "In this task, you are asked to tap the keyboard as quickly as possible for a maximum of "  + 
+              maxtrials + " trials of " +  trialtime/1000 + " seconds.  Use  the " +
+            keylabel+" key.  Begin tapping when you see 'GO'."
+
+
+
+    gStartInst <- "Choose testing options:
+
+[1] Dominant hand only
+[2] Dominant and non-dominant hand
+[3] Nondominant hand only"
+
+    gLeftRight <- "Dominant hand:"+CR(1)+ "[1] Left                       [2] Right"
+
+    gLeft <- "Left"
+	gRight <- "Right"
+ 
+    gRoundDom1 <- "On this round, you will use your " 
+	gRoundDom2 <- " hand.  "
+
+    gContString <- "Press the '"+keylabel+"' Key to begin."
+
+    gContString2 <- "Press "+gContKeyLab+" to continue."
+	gGo <- "GO: "
+
+    gResults1 <-  "Trial "
+    gResults2 <- "results: "
+    gResults3 <- "Hits:       "
+    gResults4 <- " keypresses" 
+    gResults5 <- "Mean RT:    "
+    gResults6 <- " ms/tap" 
+    gResults7 <- "SD RT:      "
+    gResults8 <- " ms" 
+    gResults9 <- "Total Time: " 
+
+
+    gSummary1 <- "Summary data" 
+    gSummary2 <- "Trial   Hits  RT   SD  Time"
+    gRoundComplete <- "Round complete. "
+    gStudyComplete <- "Study Complete. Press "+ gContKeyLab + " to exit."
+
+     gSummaryFile1 <- " Report for PEBL Tapping Test, Version 0.1"
+     gSummaryFile2 <- " " ##Provide translated by credit here
+     gSummaryFile3 <- "Participant Code: "
+
+   }
 }
