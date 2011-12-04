@@ -59,6 +59,7 @@ define Start(lPar)
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
 
+  GetStrings(gLanguage)
 
   ##Note that test types other than 1 are not implemented.
   testType <- 1    ##Set test type here
@@ -108,12 +109,8 @@ define Start(lPar)
   ## Begin presenting and collecting data
   ####################################################
    ## Give instructions; wait for them to hit a key, 
-   SetText(gInstructions,"You are about to take part in an experiment that " +
-           "involves attending to stimuli on a screen.  It will take " +
-           "approximately 14 minutes.  You will see letters presented on "+
-           "a screen briefly. Your goal is to press the spacebar as quickly " +
-           "as possible after each letter, except if the letter is an 'X'. " + 
-           "DO NOT RESPOND to X stimuli.  To begin, press the spacebar.")
+   SetText(gInstructions,gInst1)
+
 
    Show(gInstructions)
    Draw()  
@@ -121,7 +118,7 @@ define Start(lPar)
    Hide(gInstructions)
    Draw()
     
-   gInstructions.text <- "You may now take a short break.  Press the spacebar to continue on to the next block.  Remember, use the spacebar to respond to all stimuli EXCEPT the X"
+   gInstructions.text <- gInst2
 
   ##############################################
   ##############################################
@@ -495,10 +492,7 @@ define Start(lPar)
     ","+ MeanX(rtCorr1000) + "," + MeanX(rtCorr2000) + "," + MeanX(rtCorr4000))
 
    ##Now, show debriefing info.
-   SetText(gInstructions, "Thank you for participating in the experiment.  You may now leave.
-  Report found in file: [pcpt-report-" +gSubNum  + ".dat]
-  Data found in file:   [pcpt-"  + gSubNum + ".dat] 
-  (Press 'X' to finish experiment)")
+   SetText(gInstructions, gInstFinal)
    Show(gInstructions)
    Draw()
    WaitForKeyPress("X")
@@ -583,4 +577,40 @@ define Rnd(num,sig)
 {
    x <-    Round( num *(10 ^ sig))/(10^sig)
   return x 
+}
+
+
+
+define GetStrings(lang)
+{
+ lang <- Uppercase(lang)
+
+ if(lang=="PT")
+  {
+   gInst1 <- "Está prestes a iniciar um teste em que terá de " +
+           "prestar atenção a um estímulo que surgirá no ecrã. O teste demorará " +
+           "aproximadamente 14 minutos.  Irá ver no ecrã, de uma forma breve, "+
+           "várias letras. A tarefa consiste em carregar tão rapidamente quanto possível " +
+           "na tecla de espaço para todas as letras excepto para a letra 'X'. " + 
+           "ATENÇÃO, NÃO RESPONDA à letra X .  Para começar carregue na tecla de espaço."
+
+   gInst2 <- "Para continuar carregue na tecla de espaço.  Lembre-se, responda a todas as letras EXCEPTO O X"
+
+   gInstFinal <- "Obrigado por participar.  (Carregue 'X' para terminar)"
+   
+  } else {
+  ##Fall back to EN
+
+   gInst1 <- "You are about to take part in an experiment that " +
+           "involves attending to stimuli on a screen.  It will take " +
+           "approximately 14 minutes.  You will see letters presented on "+
+           "a screen briefly. Your goal is to press the spacebar as quickly " +
+           "as possible after each letter, except if the letter is an 'X'. " + 
+           "DO NOT RESPOND to X stimuli.  To begin, press the spacebar."
+  gInst2 <- "You may now take a short break.  Press the spacebar to continue on to the next block.  Remember, use the spacebar to respond to all stimuli EXCEPT the X"
+
+  gInstFinal <- "Thank you for participating in the experiment.Press 'X' to exit."
+
+
+  }
 }
