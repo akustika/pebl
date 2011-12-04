@@ -54,6 +54,9 @@ define Start(lPar)
 #   gVideoWidth <- 1152
 #   gVideoHeight <- 864
 
+   ##Set glanguage here to hard-code a language:
+   ## gLanguage <- "EN"
+   GetStrings(gLanguage)
 
    ##Type: 1 indicates a total time limit   (time is in totalTime);
    ##Type: 2 indicates a block-number limit (Number is in numBlocks);
@@ -98,9 +101,7 @@ define Start(lPar)
   ## Begin presenting and collecting data
   ####################################################
    ## Give instructions; wait for them to hit a key, 
-   SetText(gInstructions,"You are about to take part in an experiment that involves attending to stimuli on a screen.  
-Your task is simple to press the spacebar whenever you see the red circle.  Do not respond to the fixation cross: '+'.  To begin, press the spacebar.")
-
+   SetText(gInstructions,gInst1)
    Show(gInstructions)
    Draw()  
    WaitForKeyPress(" ")
@@ -183,7 +184,7 @@ Your task is simple to press the spacebar whenever you see the red circle.  Do n
            ##Compute the time since fixation cross of response; code it as negative though.
            rt <- time0-time1  #code it as negative
            type <- 1
-           gFeedback.text <- "TOO FAST! Wait for the stimulus."
+           gFeedback.text <- gTooFastText
           
         } else {
 
@@ -277,10 +278,7 @@ Your task is simple to press the spacebar whenever you see the red circle.  Do n
 
 
    ##Now, show debriefing info.
-   SetText(gInstructions, "Thank you for participating in the experiment.  You may now leave.
-  Report found in file: [pcpt-report-" +gSubNum  + ".dat]
-  Data found in file:   [pcpt-"  + gSubNum + ".dat] 
-  (Press 'X' to finish experiment)")
+   SetText(gInstructions, gFinalInst)
    Show(gInstructions)
    Draw()
    WaitForKeyPress("X")
@@ -471,3 +469,30 @@ define Rnd(num,sig)
    return x 
 }
 
+
+define GetStrings(lang)
+{
+  lang <- Uppercase(lang)
+  
+  if(lang == "PT")
+   {
+
+ gInst1 <- "Está prestes a iniciar um teste em que terá de prestar atenção a um estímulo que surgirá no ecrã.  
+A sua tarefa é simples, carregue na tecla de espaço sempre que surguir um círculo vermelho.  Não reaga ao sinal de mais: '+'.  Para começar carregue na tecla de espaço."
+
+  gTooFastText <-"MUITO RÁPIDO! Aguarde pelo estímulo."
+
+  gFinalInst <-  "Obrigado por participar.  (Carregue 'X' para terminar)"
+
+
+   }else {
+   ##default to english
+ gInst1 <- "You are about to take part in an experiment that involves attending to stimuli on a screen.  
+Your task is simple to press the spacebar whenever you see the red circle.  Do not respond to the fixation cross: '+'.  To begin, press the spacebar."
+
+  gTooFastText <- "TOO FAST! Wait for the stimulus."
+
+  gFinalInst <- "Thank you for participating in the experiment.  You may now leave. Press 'X' to finish experiment"
+
+  }
+}
