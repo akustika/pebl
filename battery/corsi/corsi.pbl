@@ -1,10 +1,39 @@
+## PEBL's implementation of the Corsi Block Test
+##
+## A standard spatial working memory task.
+## 
+## See:
+## Corsi, P. M. (1972). Human memory and the medial temporal region of
+##   the brain. Dissertation Abstracts International, 34, 819B. 
+##
+## Kessels, R. P. C., van Zandvoort, M. J. E., Postma, A., Kappelle,
+## L. J., & de Haan, E. H. F. (2000). The Corsi Block-Tapping Task:
+## Standardization and Normative Data. Applied Neuropsychology, 7(4),
+## 252-258.
+##
+##
+##  Kessels, R. P. C., van den Berg, E., Ruis, C., & Brands,
+## A. M. A. (2008). The Backward Span of the Corsi Block-Tapping Task
+## and Its Association With the WAIS-III Digit Span. Assessment,
+## 15(4), 426 -434. doi:10.1177/1073191108315611
+##
+##  Version history
+##  Version 0.1   Released into the public domain 2010 by Shane T Mueller
+##  smueller@obereed.net
+##
+##  Version 0.2, Released 12/2011 with improvements inspired by Reid Olsen
+##  Portuguese translation by Marco Moniz
+##
+##
+
+
 define Start(p)
 {
 
 
 
   gDoPractice <- 1           ##Turn on/off practice trials (useful for multi-session
-  gDirection <- -1            ##Change 1 to -1 to set forward to backward.
+  gDirection <- 1            ##Change 1 to -1 to set forward to backward.
   
   if(gDirection == -1)
    {
@@ -105,24 +134,17 @@ define Start(p)
   inst <- EasyTextBox("",50,50,gWin,20,700,500) 
 
 
-  instfor  <- "You are about to take part in a test that measures your ability to remember a sequence of locations on the screen. You will see nine blue squares on the screen. On each trial, the squares will be lit up one at a time in sequence.  Remember the sequence.  When the sequence is finished, you need to click on each square IN THE SAME ORDER THEY WERE GIVEN.  When you are done, click the button labeled DONE.  If you cannot remember the order of squares, click them in as close the the original order as you can. 
 
-You will start with a sequence of two squares, and you will get two tries for each sequence length.  The sequence will increase by one whenever you get at least one of the two sequences correct.
-If you are correct, your next list will be one longer; 
-  Click the mouse button when you are ready to begin."
 
-  instback <-"You are about to take part in a test that measures your ability to remember a sequence of locations on the screen. You will see nine blue squares on the screen. On each trial, the squares will be lit up one at a time in sequence.  Remember the sequence.  When the sequence is finished, you need to click on each square in the sequence.  However, you must do so IN THE OPPOSITE ORDER THAT THEY WERE GIVEN.  That is, click on the last square you saw first, then the next-to-last, and so on until you click on the first square last.  When you are done, click the button labeled DONE.  If you cannot remember the order of squares, click them in as close the the original order as you can. 
-
-You will start with a sequence of two squares, and you will get two tries for each sequence length.  The sequence will increase by one whenever you get at least one of the two sequences correct.
-If you are correct, your next list will be one longer; 
-  Click the mouse button when you are ready to begin."
+##Set instructions, by language
+   GetStrings(gLanguage)
 
 
   if(gDirection == 1)
    {
-     inst.text <- instfor
+     inst.text <- gInstfor
    } else {
-     inst.text <- instback
+     inst.text <- gInstback
    }
    
   Draw()
@@ -164,7 +186,8 @@ If you are correct, your next list will be one longer;
  if(gDoPractice)
     {
     Show(inst)
-    inst.text <- "You will first perform three practice trials to become familiar with the test. They will not affect your score."
+	
+    inst.text <- gPrompt1 
     Draw()
      FilePrint(gLogFile, gSubNum + "," + gLanguage + "," + TimeStamp()+",CORSI,"+dirlabel+",PRACTICETRIALS STARTED") 
      ## Do three practice trials
@@ -180,7 +203,7 @@ If you are correct, your next list will be one longer;
      gTrialNum <- -3
      Trial(targxy,[6,7,9],gDirection)
     ##
-    inst.text <- "Now, you will see perform the normal trials.  These will count toward your score.  Click the mouse to begin."
+    inst.text <- gPrompt2 
     Show(inst)
     Draw()
     WaitForDownClick()
@@ -263,11 +286,11 @@ If you are correct, your next list will be one longer;
   
 
   Show(inst)
-  inst.text <- "Thank you for participating.  Alert the Experimenter that you are done." +   CR(1)+
-"Block Span:    "+msp +CR(1) + 
-"Total Score:   "+totalscore+ CR(1) +
-"Total Correct Trials: "+totalcorrect +CR(1)+
-"Memory Span:   "+Round((2+totalcorrect)/2,2)+CR(3)
+  inst.text <- gPromptFinal1  +   CR(1)+
+               gPromptFinal2 + msp +CR(1) + 
+               gPromptFinal3 + totalscore+ CR(1) +
+               gPromptFinal4 + totalcorrect +CR(1)+
+			   gPromptFinal5 +Round((2+totalcorrect)/2,2)+CR(3)
 
    Draw()
 
@@ -298,7 +321,7 @@ define Trial(xy,stimseq, direction)
   len <- Length(stimseq)
 
   ##Make a ready signal.
-  warn <- EasyLabel("READY",gHomeX,gHomeY,gWin,30)
+  warn <- EasyLabel(gReady,gHomeX,gHomeY,gWin,30)
   Draw()
   Wait(gITI)
   Hide(warn)
@@ -340,7 +363,7 @@ define Trial(xy,stimseq, direction)
 
   ####################################
   ##Now, collect responses.
-   done <- EasyLabel("DONE",gVideoWidth/2,gVideoHeight-20,gWin,33)
+   done <- EasyLabel(gDone,gVideoWidth/2,gVideoHeight-20,gWin,33)
    doneback <-   Rectangle(gVideoWidth/2,gVideoHeight-20,120,30,MakeColor("white"),0)
    AddObject(doneback,gWin)
    SetMouseCursorPosition(Round(gVideoWidth/2),Round(gVideoHeight/2))
@@ -395,9 +418,9 @@ define Trial(xy,stimseq, direction)
 
   if(corr)
    {
-      warn.text <- "Correct"
+      warn.text <- gCorrect
    }else{   
-      warn.text <- "Incorrect"
+      warn.text <- gCorrect
    }
 
   outline <-  gSubNum+","+gDirection+","+gType+","+gTrialNum+","+time0+","+
@@ -856,3 +879,79 @@ define RandomTrials(least, most, times)
       }
     return trials
   }
+
+
+
+define GetSTrings(language)
+{
+
+  lang <- Uppercase(language)
+  if(lang=="PT")
+  {
+   Print("Using Portuguese Translation")
+  ginstfor  <- "Está prestes a iniciar um teste que vai medir a sua capacidade de memorizar uma sequência visual. Vai ver nove quadrados azuis no ecrã. Em cada tentativa, os quadrados vão mudar de côr, um de cada vez e em sequência. Quando terminar a sequência,  terá de clicar em cada quadrado na ORDEM EXACTA EM QUE ESTES MUDARAM DE CÔR.
+  
+Quando terminar, clique no botão em baixo com o nome FINAL.  Se não conseguir se lembrar da ordem correcta, clique o mais próximo que conseguir do original. 
+
+Vai iniciar com uma sequência de dois quadrados, e terá duas tentativas por sequência.  As sequências vão aumentando de dificuldade, e o teste só termina quando errar em duas sequências consecutivas. 
+  
+(Clique no botão do rato quando estiver preparado para começar.)"
+
+  ginstback <-"Está prestes a iniciar um teste que vai medir a sua capacidade de memorizar uma sequência visual. Vai ver nove quadrados azuis no ecrã. Em cada tentativa, os quadrados vão mudar de côr, um de cada vez e em sequência. Quando terminar a sequência,  terá de clicar em cada quadrado na ORDEM INVERSA EM QUE ESTES MUDARAM DE CÔR.  Isto é, clique inicialmente no último quadrado que mudou de côr, e assim sucessivamente, do último para o primeiro. 
+
+Quando terminar, clique no botão em baixo com o nome FINAL.  Se não conseguir se lembrar da ordem correcta, clique o mais próximo que conseguir do original. 
+
+Vai iniciar com uma sequência de dois quadrados, e terá duas tentativas por sequência.  As sequências vão aumentando de dificuldade, e o teste só termina quando errar em duas sequências consecutivas. 
+  
+(Clique no botão do rato quando estiver preparado para começar.)"
+
+
+    gPrompt1 <- "Primeiro vai começar com três tentativas de prática para se familiarizar com o teste. Estas tentativas não vão afectar o resultado final.  (Carregue no botão do rato para continuar.)"
+
+    gPrompt2 <-  "Terminou a prática, vai iniciar agora as tentativas de teste.  (Carregue no botão do rato para INICIAR.)"
+    
+    gPromptFinal1 <- "Final do teste. Obrigado por participar. (Carregue em qualquer tecla para terminar.) "
+    gPromptFinal2 <- "Último Item com tentativa Completa:  "
+    gPromptFinal3 <- "Total Score:          "
+    gPromptFinal4 <- "Total Tentativas Correctas:               "
+    gPromptFinal5 <- "Memory Span:          "
+
+    gReady <- "PREPARADO"
+	gCorrect <- "Correcto"
+	gIncorrect <- "Incorrecto"
+    gDone <- "Final"
+  } else {
+
+
+    gInstfor  <- "You are about to take part in a test that measures your ability to remember a sequence of locations on the screen. You will see nine blue squares on the screen. On each trial, the squares will be lit up one at a time in sequence.  Remember the sequence.  When the sequence is finished, you need to click on each square IN THE SAME ORDER THEY WERE GIVEN.  When you are done, click the button labeled DONE.  If you cannot remember the order of squares, click them in as close the the original order as you can. 
+
+You will start with a sequence of two squares, and you will get two tries for each sequence length.  The sequence will increase by one whenever you get at least one of the two sequences correct.
+If you are correct, your next list will be one longer; 
+  Click the mouse button when you are ready to begin."
+
+  gInstback <-"You are about to take part in a test that measures your ability to remember a sequence of locations on the screen. You will see nine blue squares on the screen. On each trial, the squares will be lit up one at a time in sequence.  Remember the sequence.  When the sequence is finished, you need to click on each square in the sequence.  However, you must do so IN THE OPPOSITE ORDER THAT THEY WERE GIVEN.  That is, click on the last square you saw first, then the next-to-last, and so on until you click on the first square last.  When you are done, click the button labeled DONE.  If you cannot remember the order of squares, click them in as close the the original order as you can. 
+
+You will start with a sequence of two squares, and you will get two tries for each sequence length.  The sequence will increase by one whenever you get at least one of the two sequences correct.
+If you are correct, your next list will be one longer; 
+  Click the mouse button when you are ready to begin."
+
+
+  gPrompt1 <- "You will first perform three practice trials to become familiar with the test. They will not affect your score."
+
+  gPrompt2 <- "Now, you will see perform the normal trials.  These will count toward your score.  Click the mouse to begin."
+
+
+  gPromptFinal1 <- "Thank you for participating.  Alert the Experimenter that you are done." 
+  gPromptFinal2 <- "Block Span:           "
+  gPromptFinal3 <- "Total Score:          "
+  gPromptFinal4 <- "Total Correct Trials: "
+  gPromptFinal5 <- "Memory Span:          "
+
+
+    gReady <- "READY"
+	gCorrect <- "Correct"
+	gIncorrect <- "Incorrect"
+    gDone<- "Done"
+
+  }
+}
