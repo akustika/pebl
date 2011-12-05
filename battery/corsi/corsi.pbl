@@ -420,7 +420,7 @@ define Trial(xy,stimseq, direction)
    {
       warn.text <- gCorrect
    }else{   
-      warn.text <- gCorrect
+      warn.text <- gInCorrect
    }
 
   outline <-  gSubNum+","+gDirection+","+gType+","+gTrialNum+","+time0+","+
