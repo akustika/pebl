@@ -43,6 +43,85 @@ using std::cout;
 using std::endl;
 
 
+bool is_utf8(std::string str)
+{
+    if(str.length()==0)
+        return false;
+
+    const unsigned char * bytes = (const unsigned char *)(str.c_str());
+    while(*bytes)
+    {
+        if(     (// ASCII
+                        bytes[0] == 0x09 ||
+                        bytes[0] == 0x0A ||
+                        bytes[0] == 0x0D ||
+                        (0x20 <= bytes[0] && bytes[0] <= 0x7E)
+                )
+        ) {
+                bytes += 1;
+                continue;
+        }
+
+        if(     (// non-overlong 2-byte
+                        (0xC2 <= bytes[0] && bytes[0] <= 0xDF) &&
+                        (0x80 <= bytes[1] && bytes[1] <= 0xBF)
+                )
+        ) {
+                bytes += 2;
+                continue;
+        }
+
+        if(     (// excluding overlongs
+                        bytes[0] == 0xE0 &&
+                        (0xA0 <= bytes[1] && bytes[1] <= 0xBF) &&
+                        (0x80 <= bytes[2] && bytes[2] <= 0xBF)
+                ) ||
+                (// straight 3-byte
+                        ((0xE1 <= bytes[0] && bytes[0] <= 0xEC) ||
+                                bytes[0] == 0xEE ||
+                                bytes[0] == 0xEF) &&
+                        (0x80 <= bytes[1] && bytes[1] <= 0xBF) &&
+                        (0x80 <= bytes[2] && bytes[2] <= 0xBF)
+                ) ||
+                (// excluding surrogates
+                        bytes[0] == 0xED &&
+                        (0x80 <= bytes[1] && bytes[1] <= 0x9F) &&
+                        (0x80 <= bytes[2] && bytes[2] <= 0xBF)
+                )
+        ) {
+                bytes += 3;
+                continue;
+        }
+
+        if(     (// planes 1-3
+                        bytes[0] == 0xF0 &&
+                        (0x90 <= bytes[1] && bytes[1] <= 0xBF) &&
+                        (0x80 <= bytes[2] && bytes[2] <= 0xBF) &&
+                        (0x80 <= bytes[3] && bytes[3] <= 0xBF)
+                ) ||
+                (// planes 4-15
+                        (0xF1 <= bytes[0] && bytes[0] <= 0xF3) &&
+                        (0x80 <= bytes[1] && bytes[1] <= 0xBF) &&
+                        (0x80 <= bytes[2] && bytes[2] <= 0xBF) &&
+                        (0x80 <= bytes[3] && bytes[3] <= 0xBF)
+                ) ||
+                (// plane 16
+                        bytes[0] == 0xF4 &&
+                        (0x80 <= bytes[1] && bytes[1] <= 0x8F) &&
+                        (0x80 <= bytes[2] && bytes[2] <= 0xBF) &&
+                        (0x80 <= bytes[3] && bytes[3] <= 0xBF)
+                )
+        ) {
+                bytes += 4;
+                continue;
+        }
+
+        return false;
+    }
+
+    return true;
+}
+
 
 
 ///Convenience constructor of PlatformFont:
@@ -132,6 +211,8 @@ void PlatformFont::SetBackgroundColor(PColor color)
 
 SDL_Surface * PlatformFont::RenderText(const std::string & text)
 {
+
+    #if 0
     cout << "About to render text [" << text  << "] with font " << *this << endl;
 
     int i  = 0;
@@ -143,7 +224,7 @@ SDL_Surface * PlatformFont::RenderText(const std::string & text)
     }
 
     cout << endl;
-
+#endif
     //If there is no text, return a null surface.
     if(text=="") return NULL;
 
@@ -163,16 +244,27 @@ SDL_Surface * PlatformFont::RenderText(const std::string & text)
 
     if(mAntiAliased)
         {
-//            tmpSurface = TTF_RenderUTF8_Shaded(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor, mSDL_BGColor);
-            tmpSurface = TTF_RenderText_Shaded(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor, mSDL_BGColor);
+
+            // toBeRendered might need to be converted to UTF8
+             if(is_utf8(toBeRendered))
+              {
+                  tmpSurface = TTF_RenderUTF8_Shaded(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor, mSDL_BGColor);
+              } else {
+                  tmpSurface = TTF_RenderText_Shaded(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor, mSDL_BGColor);
+              }
 
         }
     else
         {
-            tmpSurface = TTF_RenderText_Blended(mTTF_Font,toBeRendered.c_str(), mSDL_FGColor);
-
-            tmpSurface = TTF_RenderUTF8_Blended(mTTF_Font,toBeRendered.c_str(), mSDL_FGColor);
-            //tmpSurface =  TTF_RenderUTF8_Solid(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor);
+           // tmpSurface = TTF_RenderText_Blended(mTTF_Font,toBeRendered.c_str(), mSDL_FGColor);
+            if(is_utf8(toBeRendered) & 0)
+             {
+               tmpSurface = TTF_RenderUTF8_Blended(mTTF_Font,toBeRendered.c_str(), mSDL_FGColor);
+             }
+            else
+             {
+                tmpSurface =  TTF_RenderText_Blended(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor);
+             }
         }
 
     //
@@ -295,3 +387,6 @@ int PlatformFont::GetPosition(const std::string & text, unsigned int x)
     out << "<SDL-Specific Font>" << std::flush;
     return out;
 }
+
+
+
