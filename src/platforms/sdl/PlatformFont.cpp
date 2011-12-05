@@ -42,6 +42,9 @@ using std::string;
 using std::cout;
 using std::endl;
 
+// The following is adapted from code put on
+// http://stackoverflow.com/questions/1031645/how-to-detect-utf-8-in-plain-c
+// It has an implied public domain license
 
 bool is_utf8(std::string str)
 {
