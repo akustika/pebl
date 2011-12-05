@@ -446,7 +446,34 @@ define GetSubNum(win)
    bg    <- MakeCanvas(450,100,MakeColor("grey20"))
    Move(bg,gVideoWidth/2,90)
    AddObject(bg,win)
-   query <- EasyLabel("Enter Participant Identifier",225,20,bg,20)
+
+    if(gLanguage == "PT" or gLanguage == "BR")
+    {
+     ##Thanks Marco Moniz
+     text <- "Código Participante"
+
+    } elseif(gLanguage == "DE")
+    {
+     ##Thanks Sven Blankenberger and Katrin Bittrich
+     text <- "Bitte den Versuchspersonen-Code eingeben"
+
+    }elseif(gLanguage == "HU")
+    {
+    
+    ##Thanks Péter Juhász
+    text <- "Adja meg a résztvevő kódját"
+
+    }elseif(gLanguage == "ES")
+    {
+    ##Thanks Ernesto Reyes Zamorano
+    text <- "Ingrese el código del participante"
+
+    }   else {
+   ##Default to English
+    text <- "Enter Participant Identifier"
+    }
+
+   query <- EasyLabel(text,225,20,bg,20)
 
 
    box <- EasyTextBox("",gVideoWidth/2-50,100, win,20,160,25)
