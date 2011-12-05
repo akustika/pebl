@@ -1349,7 +1349,6 @@ define GetStrings(lang)
 
      gHead1 <-  "Bütün kertenkele ve böceklerin bulundukları yerleri tıklayınız."
 
-
      gHead2a <- "Ortalama olarak ıskalama: ["
 
      gHead2b <- " inches].   Devam etmek için fareye basınız."
