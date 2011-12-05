@@ -91,6 +91,7 @@ void PlatformEventQueue::Prime()
 
                         PEvent evt(PDT_KEYBOARD, time);
                         PEBL_KeyboardEvent pke;
+                        cout <<  "PRESSED->[" << SDL_GetKeyName(test_event.key.keysym.sym)<<"]\n";
                         pke.key = (PEBLKey)(test_event.key.keysym.sym);
                         pke.state = PEBL_PRESSED;
                         pke.modkeys = test_event.key.keysym.mod;

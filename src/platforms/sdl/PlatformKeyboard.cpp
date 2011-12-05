@@ -154,7 +154,7 @@ PEBLKey PlatformKeyboard::IsAnyKeyDown() const
         }
  
   
-   //International letters (out of order, but of low priority)
+   //International letters (out of order, but of lower priority)
     for(int i = 160; i<=255; i++)
         {
             if(mKeyboardState[i]) return PEBLKey(i);
