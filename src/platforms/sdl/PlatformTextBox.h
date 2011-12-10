@@ -39,7 +39,7 @@
 
 ///
 /// This class defines an SDL-specific text box.
-/// 
+///
 
 
 class PlatformTextBox: virtual  public PlatformWidget, virtual public PTextBox
@@ -63,10 +63,10 @@ public:
 
     //This needs to be overridden so that it returns a PlatformFont.
     virtual counted_ptr<PEBLObjectBase> GetFont()const{return mFontObject;}
-    
+
 
     virtual bool Draw();
-    virtual void HandleKeyPress(int keycode, int modkey);
+    virtual void HandleKeyPress(int keycode, int modkey,Uint16 unicode);
     virtual std::string ObjectName()const{return "PlatformTextBox";} ;
     virtual int FindCursorPosition(int x, int y);
 protected:
@@ -76,12 +76,12 @@ protected:
     std::vector<int> mBreaks;  ///This stores linebreaks
 
 private:
-    
+
     void FindBreaks();
     int FindNextLineBreak(unsigned int curposition);
 
     void DrawCursor();
-    
+
     counted_ptr<PEBLObjectBase> mFontObject;
     PlatformFont * mFont;
 

@@ -32,6 +32,7 @@
 #include "../devices/PKeyboard.h"
 #include "../libs/PEBLEnvironment.h"
 
+#include "SDL/SDL.h"   //For Uint16 only
 #include <iostream>
 
 using std::cout;
@@ -249,7 +250,7 @@ void PTextBox::SetLineWrap(bool state)
     mLineWrap = state;
 }
 
-void PTextBox::HandleKeyPress(int keycode, int modkeys)
+void PTextBox::HandleKeyPress(int keycode, int modkeys, Uint16 unicode)
 {
 
     //First, handle special keys
@@ -371,7 +372,16 @@ void PTextBox::HandleKeyPress(int keycode, int modkeys)
         case PEBLKEY_KP_MINUS:
         case PEBLKEY_KP_PLUS:
         case PEBLKEY_KP_EQUALS:
-            InsertText(PEBLUtility::TranslateKeyCode(PEBLKey(keycode), modkeys));
+
+           if (( unicode & 0xFF80) == 0 ) {
+                   InsertText(PEBLUtility::TranslateKeyCode(PEBLKey(keycode), modkeys));
+                //cout << "((normal))\n";
+
+               } else {
+
+                  InsertText(PEBLUtility::TranslateKeyCode(PEBLKey(unicode),modkeys));
+//                   cout << "((International))))\n";
+               }
             break;
             /* Key state modifier keys */
         case PEBLKEY_NUMLOCK:

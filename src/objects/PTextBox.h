@@ -27,7 +27,7 @@
 #ifndef __PTEXTBOX_H__
 #define __PTEXTBOX_H__
 
-
+#include "SDL/SDL.h"  //For Uint16 definition
 #include "PTextObject.h"
 #include "PFont.h"
 #include "../utility/rc_ptrs.h"
@@ -50,11 +50,11 @@ public:
     virtual Variant GetProperty(std::string)const;
     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
     virtual ObjectValidationError ValidateProperty(std::string)const;
-    
+
 
     virtual void SetHeight(int h);
     virtual void SetWidth(int w);
-    
+
     virtual void InsertText(std::string character);
     virtual void InsertText(char character);
 
@@ -62,16 +62,16 @@ public:
 
     virtual void SetEditable(bool val){mEditable = val; mCursorChanged=true;};
     virtual bool GetEditable(){return mEditable;};
-    
+
     virtual void SetCursorPosition(int pos){mCursorChanged = true; mCursorPos = pos;};
     virtual int GetCursorPosition(){return mCursorPos;};
 
     virtual int IncrementCursor();
     virtual int DecrementCursor();
-    
+
     virtual void SetLineWrap(bool state);
 
-    virtual void HandleKeyPress(int keycode, int modkeys);
+    virtual void HandleKeyPress(int keycode, int modkeys,Uint16 unicode);
 
 
     virtual bool AtPrintableCharacter(unsigned int x);
@@ -83,7 +83,7 @@ private:
 
 protected:
 
-    
+
     virtual std::ostream & SendToStream(std::ostream& out) const{return out;};
 
 
@@ -91,7 +91,7 @@ protected:
     int  mCursorPos;      //The character position of the cursor.
     bool mCursorChanged;  //True if cursor has moved.
     bool mLineWrap;       //Should lines get wrapped, or just truncated?
-    
+
 };
 
 

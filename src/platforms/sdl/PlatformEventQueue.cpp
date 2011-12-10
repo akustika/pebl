@@ -6,7 +6,7 @@
 //    Copyright:  (c) 2004-2008 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
-//   
+//
 //
 //     This file is part of the PEBL project.
 //
@@ -55,11 +55,11 @@ void PlatformEventQueue::Prime()
 	SDL_Event test_event;
     unsigned long int time = SDL_GetTicks();
 
-	//Get the next event in the queue. SDL_PollEvent returns 0 
+	//Get the next event in the queue. SDL_PollEvent returns 0
     //when there are no pending events available.
     while(SDL_PollEvent(&test_event))
         {
-            
+
             //cout << "Event [" << (int)(test_event.type) << "]\n";
 
             //first, check to see if the event is the 'magic' abort event: ctrl-alt-shift-X.
@@ -79,29 +79,44 @@ void PlatformEventQueue::Prime()
                 }
 
             //Create a PEBL event from the SDL event, if possible.
-            
-            switch(test_event.type) 
+
+            switch(test_event.type)
                 {
-                    
+
                 case SDL_KEYDOWN:
                     {
 
-                        
+
                         //Determine which key is being used.
 
                         PEvent evt(PDT_KEYBOARD, time);
                         PEBL_KeyboardEvent pke;
                         cout <<  "PRESSED->[" << SDL_GetKeyName(test_event.key.keysym.sym)<<"]\n";
+
+
                         pke.key = (PEBLKey)(test_event.key.keysym.sym);
                         pke.state = PEBL_PRESSED;
                         pke.modkeys = test_event.key.keysym.mod;
-
+                        pke.unicode = test_event.key.keysym.unicode;
                         evt.SetKeyboardEvent(pke);
                         mEventQueue.push(evt);
-                       
+
+
+                        char ch;
+                        if ( (pke.unicode & 0xFF80) == 0 ) {
+                            ch = pke.unicode & 0x7F;
+                            cout << "[["<<ch<<"]]\n";
+                        }
+
+                        else {
+
+                            cout << "[[International]]\n";
+                        }
+
+
                     }
                     break;
- 
+
                 case SDL_KEYUP:
                     {
                         //create a new event to add to the queue.
@@ -118,7 +133,7 @@ void PlatformEventQueue::Prime()
 
                     }
                     break;
-                    
+
                 case SDL_QUIT:
                     PError::SignalFatalError("Stopping execution because of quit signal.\n");
                     break;
@@ -139,7 +154,7 @@ void PlatformEventQueue::Prime()
                         evt.SetMouseButtonEvent(pme);
                         mEventQueue.push(evt);
                         //cout << "mouse down ["<< pme.x << " " << pme.y << "]\n";
-                        
+
 
                     }
                     break;
@@ -166,7 +181,7 @@ void PlatformEventQueue::Prime()
                     {
                         PEvent evt(PDT_MOUSE_MOVEMENT, time);
                         PEBL_MouseMovementEvent pme;
-                        
+
                         pme.x= test_event.motion.x;
                         pme.y= test_event.motion.y;
                         pme.relx =test_event.motion.xrel;
@@ -183,6 +198,6 @@ void PlatformEventQueue::Prime()
                 }
 
             time =  SDL_GetTicks();
-            
+
         }
 }

@@ -6,7 +6,7 @@
 //    Copyright:  (c) 2004-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
-//   
+//
 //
 //     This file is part of the PEBL project.
 //
@@ -28,6 +28,7 @@
 #define __PEVENT_H__
 
 #include "PKeyboard.h"
+#include   "SDL/SDL.h"
 
 //These are some super-lightweight structs for
 //representing different events.
@@ -56,6 +57,7 @@ typedef struct
 	PEBLKey key;
 	unsigned int state; //PEBL_PRESSED or PEBL_RELEASED
     int modkeys;   //or'ed set of mod keys.
+    Uint16 unicode;
 } PEBL_KeyboardEvent;
 
 
@@ -64,7 +66,7 @@ typedef struct
 {
 	unsigned int x, y;
 	int relx, rely;
-		
+
 } PEBL_MouseMovementEvent;
 
 //Mouse Button event
@@ -86,8 +88,8 @@ typedef struct
 
 typedef struct
 {
-    int value; 
-    
+    int value;
+
 } PEBL_DummyEvent;
 
 
@@ -100,17 +102,17 @@ class PEvent
 	~PEvent();
 
 	PEBL_DEVICE_TYPE GetType() const {return mType;};
-    
+
     void SetKeyboardEvent(const PEBL_KeyboardEvent & evt);
     void SetMouseMovementEvent(const PEBL_MouseMovementEvent & evt);
     void SetMouseButtonEvent(const PEBL_MouseButtonEvent & evt);
     void SetPortEvent(const PEBL_PortEvent & evt);
     void SetDummyEvent(const PEBL_DummyEvent & evt);
-    
+
     int GetState(int iface) const;
-    
+
     unsigned long int GetEventTime(){return mEventTime;};
-    
+
     PEBL_KeyboardEvent GetKeyboardEvent() const;
     PEBL_MouseMovementEvent GetMouseMovementEvent() const;
     PEBL_MouseButtonEvent GetMouseButtonEvent() const;
@@ -124,13 +126,13 @@ class PEvent
     union
 	{
 		PEBL_KeyboardEvent      keyboardEvent;
-		PEBL_MouseMovementEvent mouseMovementEvent;	
+		PEBL_MouseMovementEvent mouseMovementEvent;
         PEBL_MouseButtonEvent   mouseButtonEvent;
         PEBL_PortEvent          portEvent;
         PEBL_DummyEvent         dummyEvent;
 	} mEvent;
 
-    //This keeps track of the time the event was 
+    //This keeps track of the time the event was
     //first processed at.
     unsigned long int mEventTime;
 };

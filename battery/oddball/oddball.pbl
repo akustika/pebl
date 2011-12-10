@@ -22,7 +22,7 @@
 define Start(p)
 {
 
-   numreps <- 2      ##this many reps of the 20-trial design
+   numreps <- 1      ##this many reps of the 20-trial design
    soa <- 3000    ##Fix the stimulus-onset asynchrony.
 
    gWin <- MakeWindow("black")
@@ -120,7 +120,10 @@ define Start(p)
    aggOddballRT <-SummaryStats(gRTs,gOddball)
    aggOddballAcc <-SummaryStats(gCorr,gOddball)
 
-   oddballcost<- Nth(Second(oddballRT),4)-Nth(First(oddballRT))
+   Print(aggOddballRT)
+   Print(aggOddballAcc)
+
+   oddballcost<- Nth(Second(aggoddballRT),4)-Nth(First(aggoddballRT),4)
 
    FilePrint(gSumFileOut,"-----------------------------------------------")
    FilePrint(gSumFileOut,"PEBL Oddball Task, Version 1.0")

@@ -776,7 +776,7 @@ Variant PEBLEnvironment::GetInput(Variant v)
             //std::cout << pke.key << "|" << pke.modkeys << std::endl;
             //Process the input and redraw the textbox.
             if(!ignore)
-                textbox->HandleKeyPress(pke.key, pke.modkeys);
+                textbox->HandleKeyPress(pke.key, pke.modkeys,pke.unicode);
 
             if(myEnv)
                 {

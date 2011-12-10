@@ -28,6 +28,9 @@ obsolete.
 
                  RELEASE NOTES
 
+
+Rename files that collide with FileOpen
+
 -------------------------------------------------
 
 Version 0.12
