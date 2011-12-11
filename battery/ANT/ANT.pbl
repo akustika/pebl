@@ -17,6 +17,8 @@ define Start(p)
 {
 
    gWin <- MakeWindow("black")
+   gCueChar <- "-|-"
+   gCueChar <- "✶"  ##This might not work well because of unicode stuff.
    Initialize()
 
    ##Get subject code if we need to:    
@@ -286,25 +288,25 @@ define Trial (stim,practice,endtime)
    #       3: double-cue
    #       4: spatial cue
 
-   if(cue == 1)
+   if(cue == 1)  ##No cue
     {	  
 	   cueset <- []
     } elseif(cue==2) 
     {
        back <-  Square(gVideoWidth/2,gVideoHeight/2,40,MakeColor("black"),1)
        AddObject(back,gWin)
-	   tmp<- EasyLabel("✶",gVideoWidth/2,gVideoHeight/2,gWin,40)
+	   tmp<- EasyLabel(gCueChar,gVideoWidth/2,gVideoHeight/2,gWin,40)
        cueset <- [tmp,back]
 
     }elseif(cue==3)  ##double-cue
     {
-	   tmp1<- EasyLabel("✶",gVideoWidth/2,gVideoHeight/2+yoffset,gWin,40)
-	   tmp2<- EasyLabel("✶",gVideoWidth/2,gVideoHeight/2-yoffset,gWin,40)
+	   tmp1<- EasyLabel(gCueChar,gVideoWidth/2,gVideoHeight/2+yoffset,gWin,40)
+	   tmp2<- EasyLabel(gCueChar,gVideoWidth/2,gVideoHeight/2-yoffset,gWin,40)
        cueset <- [tmp1,tmp2]
 
     } else{
        
-       tmp <- EasyLabel("✶",gVideoWidth/2,ypos,gWin,40)
+       tmp <- EasyLabel(gCueChar,gVideoWidth/2,ypos,gWin,40)
        cueset <- [tmp]
     }
 
@@ -484,7 +486,7 @@ define GetStrings(language)
     {
        gInst1text <- "This study will test how you both use and ignore information in order to make a decision.  In this task, you will be asked to determine the direction of the center arrow, in a set of five.  If it is pointing left, press the left shift key.  If it is to the right, press the right shift key.  The heads of the arrows surrounding the center arrow will either be in same direction, the opposite direction, will be absent, and only appear as lines.  You will always ignore the surrounding symbols, and respond only to the central arrow.  Some example stimuli are shown below:"
 
-       gInst2text <- "In addition, the arrow stimuli will either occur slightly above the center of the screen, or slightly below the center of the screen.  Prior to each stimulus, a '✶' symbol will sometimes cue you regarding the possible location of the new target. If a single ✶ appears above or below the center of the screen, the stimulus will always happen at the location.  Other times the cue will happen in the center, or two cues will happen (one on top and one on the bottom), or no cue will occur.  In these cases, you will not know whether the stimulus will be on the top or bottom.  Press any key to see the sequence of stimuli."
+       gInst2text <- "In addition, the arrow stimuli will either occur slightly above the center of the screen, or slightly below the center of the screen.  Prior to each stimulus, a '"+gCueChar+"' symbol will sometimes cue you regarding the possible location of the new target. If a single "+gCueChar+" appears above or below the center of the screen, the stimulus will always happen at the location.  Other times the cue will happen in the center, or two cues will happen (one on top and one on the bottom), or no cue will occur.  In these cases, you will not know whether the stimulus will be on the top or bottom.  Press any key to see the sequence of stimuli."
 	   gInst2Addon <- CR(1)+"  Press the spacebar to continue when you have seen enough examples."
        gInst3text  <- "You will start with a short block of practice trials.  After each trial, you will be told whether you are correct, and told how long you took to make the response (in thousandths of a second).  To to respond as quickly and accurately as possible.  Remember, use the left and right shift keys to respond.  Press any key to begin."
 
