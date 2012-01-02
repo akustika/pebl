@@ -252,7 +252,7 @@ void PTextBox::SetLineWrap(bool state)
 
 void PTextBox::HandleKeyPress(int keycode, int modkeys, Uint16 unicode)
 {
-
+ //   cout << "handlekeypressing "<< keycode << "|" << modkeys << "|" << unicode << endl;
     //First, handle special keys
     switch(keycode)
         {
@@ -270,8 +270,7 @@ void PTextBox::HandleKeyPress(int keycode, int modkeys, Uint16 unicode)
             break;
         case PEBLKEY_BACKSPACE:
             DeleteText(-1);
-            break;
-        case PEBLKEY_UP:
+            break;case PEBLKEY_UP:
             //Do nothing.  This must be handled by platform.
             break;
         case PEBLKEY_DOWN:
@@ -373,15 +372,38 @@ void PTextBox::HandleKeyPress(int keycode, int modkeys, Uint16 unicode)
         case PEBLKEY_KP_PLUS:
         case PEBLKEY_KP_EQUALS:
 
-           if (( unicode & 0xFF80) == 0 ) {
-                   InsertText(PEBLUtility::TranslateKeyCode(PEBLKey(keycode), modkeys));
-                //cout << "((normal))\n";
+
+    //           if (( unicode & 0xFF80) == 0 ) {
+      if(1){
+                InsertText(PEBLUtility::TranslateKeyCode(PEBLKey(keycode), modkeys));
+   //             cout << "((normal))\n";
+
+
 
                } else {
 
-                  InsertText(PEBLUtility::TranslateKeyCode(PEBLKey(unicode),modkeys));
-//                   cout << "((International))))\n";
-               }
+              wchar_t wc = unicode;
+
+               char buf[4] = {0};
+  if (wc < 0x80)
+  {
+    buf[0] = wc;
+  }
+  else if (wc < 0x800)
+  {
+    buf[0] = (0xC0 | wc>>6);
+    buf[1] = (0x80 | wc & 0x3F);
+  }
+  else
+  {
+    buf[0] = (0xE0 | wc>>12);
+    buf[1] = (0x80 | wc>>6 & 0x3F);
+    buf[2] = (0x80 | wc & 0x3F);
+  }
+                   cout << "[" << buf[0] << "][" << buf[1] << "]" << endl;
+                 InsertText(std::string(buf));
+                  cout << "((International ))))"<< buf<< endl;
+                  }
             break;
             /* Key state modifier keys */
         case PEBLKEY_NUMLOCK:

@@ -1652,6 +1652,19 @@ Variant PEBLEnvironment::MakeDirectory(Variant v)
     return out;
 }
 
+Variant PEBLEnvironment::DeleteFile(Variant v)
+{
+        
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [DeleteFile(<filename>)]:  ");
+    //cout << "Making directory in penviremnt" << plist->First()<<std::endl;
+    Variant out = PEBLUtility::DeleteMyFile((std::string)(plist->First()));
+    return out;
+        
+        
+}
+
 
 
 //  This does not currently work.

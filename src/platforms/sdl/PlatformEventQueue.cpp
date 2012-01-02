@@ -85,33 +85,24 @@ void PlatformEventQueue::Prime()
 
                 case SDL_KEYDOWN:
                     {
-
-
                         //Determine which key is being used.
 
                         PEvent evt(PDT_KEYBOARD, time);
                         PEBL_KeyboardEvent pke;
-                        cout <<  "PRESSED->[" << SDL_GetKeyName(test_event.key.keysym.sym)<<"]\n";
+  //                         cout <<  "PRESSED->[" << SDL_GetKeyName(test_event.key.keysym.sym)<<"] ";
+  //                          cout << test_event.key.keysym.unicode << "=|=" << (test_event.key.keysym.unicode & 0x7F)
+  //                         << "||" << test_event.key.keysym.scancode << "|\n";  
+          
+                 //       cout << SDL_GetScancodeName(test_event.key.keysym.scancode) <<"\n";
 
 
                         pke.key = (PEBLKey)(test_event.key.keysym.sym);
                         pke.state = PEBL_PRESSED;
                         pke.modkeys = test_event.key.keysym.mod;
-                        pke.unicode = test_event.key.keysym.unicode;
+                        pke.unicode = (Uint16)(test_event.key.keysym.unicode);
                         evt.SetKeyboardEvent(pke);
                         mEventQueue.push(evt);
 
-
-                        char ch;
-                        if ( (pke.unicode & 0xFF80) == 0 ) {
-                            ch = pke.unicode & 0x7F;
-                            cout << "[["<<ch<<"]]\n";
-                        }
-
-                        else {
-
-                            cout << "[[International]]\n";
-                        }
 
 
                     }
@@ -127,6 +118,7 @@ void PlatformEventQueue::Prime()
                         pke.key = (PEBLKey)(test_event.key.keysym.sym);
                         pke.state = PEBL_RELEASED;
                         pke.modkeys = test_event.key.keysym.mod;
+                        pke.unicode = 0;//test_event.key.keysym.unicode;
 
                         evt.SetKeyboardEvent(pke);
                         mEventQueue.push(evt);

@@ -78,6 +78,7 @@ namespace PEBLUtility
     Variant IsDirectory(std::string path);
     Variant FileExists(std::string path);
     Variant MakeDirectory(std::string path);
+    Variant DeleteMyFile(std::string path);
 
     Variant LaunchFile(std::string file);
     Variant SystemCall(std::string path, std::string args);

@@ -3,7 +3,7 @@
 //    Name:       src/libs/Functions.h
 //    Purpose:    Defines function tables
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -127,6 +127,7 @@ namespace PEBLStream
             {"FORMAT",               Format,           1, 1},
             {"FILEOPENREAD",         FileOpenRead,     1, 1},
             {"FILEOPENWRITE",        FileOpenWrite,    1, 1},
+            {"FILEOPENOVERWRITE",    FileOpenOverwrite, 1,1},
             {"FILEOPENAPPEND",       FileOpenAppend,   1, 1},
             {"FILECLOSE",            FileClose,        1, 1},
             {"FILEPRINT",            FilePrint,        2, 2},
@@ -311,6 +312,8 @@ namespace PEBLEnvironment
             {"FILEEXISTS",                      FileExists,        1,1},
             {"GETDIRECTORYLISTING",             GetDirectoryListing,1,1},
             {"MAKEDIRECTORY",                   MakeDirectory,      1,1},
+            {"DELETEFILE",                      DeleteFile,      1,1},
+
 
             {"ISTEXT",                          IsText,          1,1},
             {"ISNUMBER",                        IsNumber,          1,1},

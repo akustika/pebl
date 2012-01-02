@@ -172,6 +172,36 @@ Variant PEBLStream::FileOpenWrite(Variant v)
 
 }
 
+
+
+
+///This opens a filestream for writing, replacing current file, without making a backup
+Variant PEBLStream::FileOpenOverwrite(Variant v)
+{
+
+
+    // should be able to create the directory if it doesn't exist.
+    //    char sysText[256];
+    //    sprintf( systext, "mkdir -p %s", path ); // path is a char * to the string representing the directory you want to create
+    //    system( systext );
+
+
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); plist->PopFront();
+    PError::AssertType(v1, PEAT_STRING, "Argument error in function FileOpenOverWrite(<string>)]: ");
+
+
+    ///v1 contains the name of a file to open.
+    counted_ptr<PEBLObjectBase> mystream = counted_ptr<PEBLObjectBase>(new PStream(v1,sdWrite, stASCII));
+    PComplexData * pcd = new PComplexData(mystream);
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
+
+}
+
+
 ///This opens a filestream for writing, appending to end of file.
 Variant PEBLStream::FileOpenAppend(Variant v)
 {

@@ -358,6 +358,8 @@ PEBLKey PEBLUtility::TranslateString(const std::string & let)
 //This returns a text-valued description of the key pressed.
 std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
 {
+            
+//            cout << "translating [" << key << "]\n";
 
     //These are tailored to US keyboard.    
     switch(key)
@@ -901,7 +903,7 @@ PEBLVideoMode PEBLUtility::GetVideoMode(std::string modeline)
 	else if (modeline ==	"1024x768")	mode =	PVM_1024_768;
 	else if (modeline ==	"1152x864")	mode =	PVM_1152_864;
 	else if (modeline ==	"1280x1024")	mode =	PVM_1280_1024;
-	else mode  = PVM_640_480;
+	else mode  = PVM_800_600;
 	return mode;
 }
 
@@ -1026,6 +1028,20 @@ Variant PEBLUtility::MakeDirectory(std::string path)
     return Variant(1);
 }
 
+Variant PEBLUtility::DeleteMyFile(std::string path)
+{
+   if(FileExists(path))
+    {
+     if( remove( path.c_str() ) != 0 )
+          return Variant(0);
+     else
+          return Variant(1);
+    }
+
+}
+
+
+
 Variant PEBLUtility::LaunchFile(std::string file)
 {
         
@@ -1068,7 +1084,7 @@ Variant PEBLUtility::SystemCall(std::string call, std::string args)
     int x = system(call2);  //do a system call with the argument string.
 
 #elif defined (PEBL_WIN32)
-    std::string tmp = call + " " + args;
+    std::string tmp = "cmd.exe /c " + call + " " + args;
     
     //   cout << "["<<tmp <<"]"<< std::endl;
     STARTUPINFO info={sizeof(info)};

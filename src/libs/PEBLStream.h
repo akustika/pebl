@@ -49,6 +49,8 @@ namespace PEBLStream
     ///This opens a filestream for writing
     Variant FileOpenWrite(Variant v);
 
+    Variant FileOpenOverwrite(Variant v);
+    
     Variant FileOpenAppend(Variant v);
 
     ///This Closes a filestream

@@ -109,6 +109,7 @@ void PlatformEnvironment::Initialize()
         {
             //SDL_EnableUNICODE(mUnicode);
             SDL_EnableUNICODE(1);
+            cerr << "Successfully UNICODED" << endl;
             cerr << "Successfully initialized SDL Graphics" << endl;
             char name[32];
             //I get a bad text here and essentially crash cerr???
