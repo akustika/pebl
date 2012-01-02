@@ -10,7 +10,8 @@ define Start(p)
 
 
 
-  gUseReloc <-  0  ##Set this from 0 to 1 if you want to run on windows NOT from an installation in Program Files, but from
+  gUseReloc <-  0  ##Set this from 0 to 1 if you want to run on windows NOT from an 
+                   ## installation in Program Files, but from
                    ##A PEBL subdirectory of the current working directory.
  
  ##Set this from 1 to 0 to turn off automatic subject code incrementation
@@ -48,16 +49,19 @@ define Start(p)
     gViewerCommand <- "gedit"
     gPEBLName      <- "pebl"
     gOpenManual    <- "acroread /usr/local/share/pebl/doc/PEBLManual0.12.pdf&"
-	gOpenURL        <- "firefox"
-	gManualLoc      <- "/usr/local/share/pebl/doc/PEBLManual0.12.pdf"
+  	gOpenURL        <- "firefox"
+	  gManualLoc      <- "/usr/local/share/pebl/doc/PEBLManual0.12.pdf"
 
 		
    }elseif(systemType=="WINDOWS")   {
      
-     gViewerCommand <- "c:\windows\notepad.exe"
-     gPEBLName      <- "c:\Progra~1\PEBL\bin\pebl.exe"
+     gViewerCommand <- "c:\windows\notepad.exe"  ##Not used
+#     gPEBLName      <- "c:\Progra~1\PEBL\bin\pebl.exe "
+     gPEBLName     <- gQuote+"%ProgramFiles%\PEBL\bin\pebl.exe"+gQuote+ " "
      gOpenManual    <- ""
-     gManualLoc     <- "C:\PEBL.pdf"
+#     gManualLoc     <-  gQuote+"%ProgramFiles%\PEBL\doc\PEBLManual0.12.pdf"+gQuote
+     ##This shouldn't be hard-coded; but for now, change to localize.
+     gManualLoc    <- "C:\Program Files\PEBL\doc\PEBLManual0.12.pdf"
      gOpenURL       <- ""
 
 
@@ -641,7 +645,9 @@ define Start(p)
       {
 	     PushButton(openmanual)
          #SystemCall(gManualLoc,"")	  
+        Print(gManualLoc)
         LaunchFile(gManualLoc)
+        
       }elseif(tmp==18)  ##Request Feature
       {
 	     PushButton(requestfeature)
@@ -672,11 +678,11 @@ define Start(p)
     	   cursorpos <-  GetTextBoxCursorFromClick(description,relx,rely)
 	       description.cursorpos <- cursorpos 
      	   Draw()
-		   desctext <- GetInput(description,"<return>",1)
-           descname <- DirListToText(gDirChain)+Nth(gFlatFileList,gselected)+".about.txt"
-           outfile <- FileOpenWrite(descname)
-           FilePrint(outfile,desctext)
-		   FileClose(outfile)
+  		   desctext <- GetInput(description,"<return>",1)
+         descname <- DirListToText(gDirChain)+Nth(gFlatFileList,gselected)+".about.txt"
+         outfile <- FileOpenOverWrite(descname)
+         FilePrint(outfile,desctext)
+		     FileClose(outfile)
 
          	#SystemCall(gViewerCommand + " " + DirListToText(gDirChain)+Nth(gFlatFileList,gselected)+".about.txt&")
           } else {
@@ -985,9 +991,10 @@ define DirlistToText(list)
 
 define  FileSaveTable(table,filename)
 {
-
-  outfile <- FileOpenWrite(gconfigName+".config")  
-  loop(i,table)
+   ##Not clear why we are using global here rather than the passed-in value.
+   ##filename <- gconfigName+".config"
+   outfile <- FileOpenOverwrite(filename)  ##Overwrite whatever we ave, without checking for it.
+   loop(i,table)
     {
        FilePrint_(outfile, First(i) + ",")
 
@@ -1073,14 +1080,19 @@ define RunScript(dirChain,filename,fullscreen,language,logfile,subcode,experimen
   ##On windows, should the launcher run from a PEBL subdirectory rather than C:\Program Files\pebl
    if(gUseReloc)
      {
-           sep <- CR(1)
-            gPEBLName <- "\PEBL\bin\pebl.exe"
-		 callstring <- "set ABSPATH=%CD%"+sep+"cd " + DirListToText(dirchain) + sep + gQuote+"%ABSPATH%" +gPEBLName +gQuote+ " " +filename + " -s " + subcode
+         
+        sep <- CR(1)
+        gPEBLName <- "\bin\pebl.exe"  ##The relative location should be bin\pebl.exe
+		    callstring <- "set ABSPATH=%CD%"+sep+"cd " + DirListToText(dirchain) + sep + gQuote+"%ABSPATH%" +gPEBLName +gQuote+ " " +filename + " -s " + subcode
     		 ##callstring <- "set ABSPATH=%CD%"+gPEBLname+ CR(1)+ " cd "+DirListToText(dirchain)+CR(1)+gQuote+"%ABSPATH%"+gquote + " " + filename +" "  
 
      }else {
- 		 callstring <- "cd " + DirListToText(dirChain) + sep  + gPEBLName + " "  +filename + " -s " + subcode
-     }
+         
+    		 callstring <- "cd " + DirListToText(dirChain) + sep  + gPEBLName + " "  +filename + " -s " + subcode
+##    		 callstring <-  gPEBLName + " "  +filename + " -s " + subcode
+
+         Print("Executing : [" + callstring + "]")
+      }
 
 		 if(fullscreen)
 		 {
@@ -1101,13 +1113,14 @@ define RunScript(dirChain,filename,fullscreen,language,logfile,subcode,experimen
 
   if(gUseReloc)
       {
-          runfile <- FileOpenWrite("tmp.bat")
+
+          runfile <- FileOpenOverWrite("tmp.bat")
      ##     FilePrint(runfile,callstring+sep+"pause") ##Use for debugging purposes.
           FilePrint(runfile,callstring)
           FileClose(runfile)
           SystemCall("tmp.bat","")
       }else{
-         SystemCall(callstring,"")
+         Print(SystemCall(callstring,""))
       }
 
          FilePrint(logfile,TimeStamp() + "," + DirListToText(gDirChain)+filename+","+GetPEBLVersion() +

@@ -75,9 +75,7 @@ define Start(lPar)
 
 
   
-
-   gSubNum <- First(lPar)
-   if(gSubNum==0)
+   if(gSubNum+""=="0")
     {
       gSubNum <- GetSubNum(gWin)	
     }

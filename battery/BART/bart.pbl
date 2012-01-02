@@ -313,9 +313,9 @@ define Init()
 	  gXB <- gVideoWidth/2
 	  gYB <- gVideoHeight-100
 		
-      glabfont <- MakeFont(gPEBLBaseFont,0,18,MakeColor("white"),MakeColor("black"),0)	  
+    glabfont <- MakeFont(gPEBLBaseFont,0,18,MakeColor("white"),MakeColor("black"),0)	  
 	  gcollectLab <- MakeTextBox(gCollectMessage,glabfont,158,52)
-	  gpumpLab    <- MakeTextBox(gPumpMessage,glabfont, 198,52 )
+	  gpumpLab    <- MakeTextBox(gPumpMessage,glabfont, 200,52 )
 	  gtotalLab1 <- MakeTextBox(gTotalMessage,glabfont,158,52)
 	  gtotalLab2 <- MakeLabel(gMoney+" 00.00",glabfont)
 	  glastLab1 <- MakeTextBox(gLastMessage,glabfont,158,52)
@@ -328,7 +328,7 @@ define Init()
 	  Move(glastLab1, gXB+171, gYB+50-25)
 	  Move(glastLab2, gXB+281, gYB+50)
 	  
-      gpumpBox   <- Rectangle(gXB,gYB,200,64,MakeColor("white"),0)	  
+      gpumpBox   <- Rectangle(gXB,gYB,210,64,MakeColor("white"),0)	  
 	  gcollectBox <- Rectangle(gXB-250,gYB,160,64,MakeColor("white"),0)	  
 	  gtotalBox <- Rectangle(gXB+250,gYB-50,160,64,MakeColor("white"),0)
 	  glastBox <- Rectangle(gXB+250,gYB+50,160,64,MakeColor("white"),0)
@@ -441,7 +441,7 @@ define GetStrings(lang)
 the entire computer screen. If the balloon explodes before you click on 'Collect $$$', then you move on to the next balloon and all money in your temporary bank is lost. Exploded balloons do not affect the money accumulated in your permanent bank. At the end of the task, you will receive gift certificates in the amount earned in your permanent bank.  Press any key to begin."
 
 	  gMoney          <- "$"
-      gCollectMessage <- "       Press to "+CR(1)+"     Collect $$$"
+    gCollectMessage <- "       Press to "+CR(1)+"     Collect $$$"
 	  gPumpMessage    <- "  Press this button to" + CR(1)+" pump up the balloon"
 	  gTotalMessage   <- " Total "+CR(1)+" Earned"
 	  gLastMessage    <- " Last  "+CR(1)+" Balloon"

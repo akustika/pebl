@@ -408,8 +408,8 @@ int PEBLInterpret( int argc, char *argv[] )
         {
             //ukai handles chinese
             Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFont",Variant("wqy-zenhei.ttc"));
-            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontMono",Variant("wqy-zenhei.ttf"));
-            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontSerif",Variant("wqy-zenhei.ttf"));
+            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontMono",Variant("wqy-zenhei.ttc"));
+            Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontSerif",Variant("wqy-zenhei.ttc"));
 
         } else
         {
