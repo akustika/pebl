@@ -1174,18 +1174,18 @@ case 44:
 /* rule 44 can match eol */
 YY_RULE_SETUP
 #line 144 "src/base/Pebl.l"
-{ return PEBL_NEWLINE;}
+{return PEBL_NEWLINE;}
 	YY_BREAK
 case 45:
 /* rule 45 can match eol */
 YY_RULE_SETUP
 #line 145 "src/base/Pebl.l"
-{ return PEBL_NEWLINE;}
+{return PEBL_NEWLINE;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
 #line 146 "src/base/Pebl.l"
-{ return PEBL_NEWLINE;}
+{return PEBL_NEWLINE;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
