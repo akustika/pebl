@@ -260,7 +260,7 @@ SDL_Surface * PlatformFont::RenderText(const std::string & text)
     else
         {
            // tmpSurface = TTF_RenderText_Blended(mTTF_Font,toBeRendered.c_str(), mSDL_FGColor);
-            if(is_utf8(toBeRendered) & 0)
+            if(is_utf8(toBeRendered) )
              {
                tmpSurface = TTF_RenderUTF8_Blended(mTTF_Font,toBeRendered.c_str(), mSDL_FGColor);
              }
@@ -300,6 +300,7 @@ std::string PlatformFont::StripText(const std::string & text)
 {
     //First, transform text into the to-be-rendered text.  I.E., replace
     //escape characters etc.
+    //This might destroy UTF-formatting and stuff, so we have to be careful.
 
     std::string toBeRendered;
 
@@ -372,7 +373,7 @@ int PlatformFont::GetPosition(const std::string & text, unsigned int x)
         {
 
             //If the width of the rendered text is larger than the x argument,
-            int width = GetTextWidth(text.substr(0,cutoff));
+            unsigned int width = GetTextWidth(text.substr(0,cutoff));
             if(width > x)
                 return cutoff-1;
             //cout << "***"<<width<< "<" << x << ":" << cutoff <<endl;

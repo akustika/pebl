@@ -22,11 +22,6 @@
 ##   saves as .csv.  With encouragement and help from Reid Olsen.
 ###########################################################
 
-##  todo: better instrumentation and pooled data saving
-##  based on OHSU version.
-##
-
-
 define Start(lPar)
 {
 
@@ -38,17 +33,30 @@ define Start(lPar)
   Initialize()
 
 
-  MakeDirectory("data") ##make the data directory if it doesn't exist.
-  Print("Data are saved in [data/"+"dspan-" + gSubNum +".csv]")
-  gFileOut <-FileOpenAppend("data/dspan-" + gSubNum +".csv")
+  gDirection <- "forward"  #change "forward" to "backward" to do
+                            #backward scoring
 
-  ShowCursor(0)
+
+  ## currently, three devices are supported:
+  ## keyboard, which uses the top numbers for data entry
+  ## keypad, which uses the keypad numbers
+  ## mouse, which creates a screen ala virtualkeyboard.
+  gInputDevice <- "mouse"
+
+  MakeDirectory("data") ##make the data directory if it doesn't exist.
+
+
+  Print("Data are saved in [data/"+"dspan-"+gDirection+"-" + gSubNum +".csv]")
+
+  gFileOut <-FileOpenWrite("data/dspan-"+gDirection+"-" + gSubNum +".csv")
+  gReportFile <- FileOpenWrite("data/dspan-report"+gDirection+"-" + gSubNum +".txt")
+  gPooledFile <- FileOpenAppend("data/pooled-dspan-"+gDirection+"-" + gSubNum +".csv")
+
+  ShowCursor(1)
   ## This determines whether audio accompanies the visual 
   ## presentation.
   gUseAudio <- 1
 
-  gDirection <- "forward"  #change "forward" to "backward" to do
-                            #backward scoring
 						   
   gAllowBackspace <- 1     ##Allow users to backspace over responses?
   gAllowSkip      <- 1     ##Allow users to skip over cells?
@@ -56,7 +64,7 @@ define Start(lPar)
   ## Version can be hard-coded here, or entered with the -v command-line
   ## argument. 1 indicates traditional low-to-high; 2 indicates high-to-low;
   ## 3 indicates a staircase.
-  gVersion <- 3
+  gVersion <- 1
   
   ## End Early determines whether the number of trials at each length
   ## should continue only until the criterion, or if all the 
@@ -70,8 +78,8 @@ define Start(lPar)
 
   upperbound <- 10            ## The longest list length
   lowerbound <- 3             ## The shortest list length
-  perlength  <- 3             ## The number of trials at each length
-  criterion  <- 2             ## The number that must be correct to proceed
+  perlength  <- 2             ## The number of trials at each length
+  criterion  <- 1             ## The number that must be correct to proceed
   staircasestart  <- 4        ## starting point for staircasestart.
   staircasetrials <- 16       ## Number of staircase trials.
   gISI <- 1000                ## Inter-stimulus interval in ms
@@ -154,7 +162,7 @@ three lists at a specific length completely correctly."
    SetText(gInstructions,lthInst)
    Show(gInstructions)
    Draw()  
-   WaitForAnyKeyPress()
+   WaitForIt()
    Hide(gInstructions)
    Draw()
 
@@ -173,17 +181,17 @@ three lists at a specific length completely correctly."
    try <- 0
    length <- startLength 
    lengths <- []
-
+   sumCorrect <- 0
    while(continue)
     {
 
       Wait(iti)
-	  FilePrint_(gFileOut, gSubNum + "," + gVersion + "," + gDirection+"," + endearly + "," + trialnum + "," + length + "," + try + ",")
+      FilePrint_(gFileOut, gSubNum + "," + gVersion + "," + gDirection+"," + endearly + "," + trialnum + "," + length + "," + try + ",")
       stimuli <- SampleN(stim,length)
       corr <-  Trial(stimuli)
 
-
-	  #############################
+     sumCorrect <- sumcorrect + corr
+      #############################
       ##Standard Memory Span 
 
 
@@ -301,10 +309,20 @@ three lists at a specific length completely correctly."
    ##Now, show debriefing info.
    feedback <-  "Thank you for participating in the experiment. "
 
+   report <- "PEBL Digit Span Task" +CR(1)+
+   "Direction: " + gDirection + CR(1)+
+   Timestamp() + CR(1)+
+   "Memory Span:         "+ (length-1) + CR(1)+
+   "Total words correct: "+sumcorrect + CR(1)+
+   "Total time:          "+Round(GetTime()/1000/60,2)+" min"
 
+
+   FilePrint(gReportFile,report)
+   FilePrint(gPooledFile, gSubNum+","+TimeStamp()+","+ gDirection+","+
+             (length-1)+","+sumcorrect)
 
    if(gVersion == 1) { 
-        feedback <- feedback + "Your memory span was " + (length-1) + ". "
+        feedback <- feedback + "Your memory span was " + (length-1) + ". "+CR(2)+report
    } elseif(gVersion == 2) {
         feedback <- feedback + "Your memory span was " + (length+1) + ". "
 
@@ -317,7 +335,7 @@ three lists at a specific length completely correctly."
    SetText(gInstructions, feedback)
    Show(gInstructions)
    Draw()
-   WaitForKeyPress("X")
+   WaitForit()
    ShowCursor(1)  
  }
 
@@ -355,7 +373,7 @@ define Trial(stimpairs)
     gStimLabel.text <- digit
     Draw()
     t1 <- GetTime()
-	if(gUseAudio){PlayForeground(sound)}
+    if(gUseAudio){PlayForeground(sound)}
     t2 <- GetTime()
     Wait(gISI - (t2-t1))
   }
@@ -377,7 +395,77 @@ define Trial(stimpairs)
   Draw()
   corr <- 0
 
-  responses <- ["1","2","3","4","5","6","7","8","9","0","<return>"]
+  if(gInputDevice == "keyboard")
+  {
+     responses <- ["1","2","3","4","5","6","7","8","9","0","<return>"]
+
+
+  }elseif(gInputDevice == "keypad")
+  {
+     responses <- ["KP_1","KP_2","KP_3","KP_4","KP_5","KP_6","KP_7","KP_8","KP_9","KP_0","<kp_enter>","<return>"]
+  } elseif (gInputDevice == "mouse"){
+
+
+   gStimLabel.y <- 120
+    ##Make response screen here.
+
+    ##basic display parameters
+     ybase <- 150
+     xbase <- 250
+     gap <- 70
+     keysize <- 90
+
+   keys <- [["1","2","3"],
+            ["4","5","6"],
+            ["7","8","9"],
+            ["BACK","0","DONE"]]
+
+	##we should automatically determine length/height of keys here.
+	height <- 4
+	width <- 3
+
+
+    font <- MakeFont(gPEBLBaseFont,2,25,MakeColor("white"),MakeColor("white"),0)
+    wordfont<-MakeFont(gPEBLBaseFont,2,15,MakeColor("lightgrey"),MakeColor("white"),0)
+
+   rownum <- 1
+    clicks <- []
+	stuff <- []
+	loop(row,keys)
+    {
+	  colnum <- 1
+	  loop(col,row)
+      {
+        
+        back1 <- Square(xbase+colnum*gap,ybase+rownum*gap,keysize,MakeColor("grey"),1)
+        back2 <- Square(xbase+colnum*gap,ybase+rownum*gap,keysize-4,MakeColor("grey20"),1)
+		if(StringLength(col)>1) 
+         {
+	   lab <- MakeLabel(col,wordfont)
+         } else {
+ 
+           lab <- MakeLabel(col,font)
+         }
+		AddObject(back1,gwin)
+		AddObject(back2,gwin)
+		AddObject(lab,gwin)
+		Move(lab,xbase+colnum*gap,ybase+rownum*gap)
+
+
+        colnum <- colnum + 1
+	clicks <- Append(clicks,back1)
+        stuff <- Append(stuff,[lab,back1,back2])
+      }
+     rownum <- rownum + 1
+	  
+    }
+   ##End mouse keyboard setup.
+
+     responses <- clicks
+  }
+
+ if(gInputDevice=="keyboard")
+ {
   if(gAllowBackspace)
   {
     responses <- Append(responses,"<backspace>")
@@ -387,18 +475,27 @@ define Trial(stimpairs)
   {
     responses <- Append(responses,"-")
   }
-
+}
+  Draw()
 
   position <- 1
   resp <- ""
 
   time1 <- GetTime()
-  while(not resp == "<return>")
+  while(not (resp == "<return>" or resp== "<enter>"))
   {
+    if(gInputDevice=="keyboard" or gInputDevice == "keypad")
+    {
     resp <- WaitForListKeyPress(responses)
+    }elseif(gInputDevice == "mouse")
+    {
+      Print(responses)
+     
+      resp <- WaitForClickOnTarget(responses, ["1","2","3","4","5","6","7","8","9","<backspace>","0","<return>"] )
+    }
     if(resp == "<backspace>")
     {
-	    if(Length(responseList) == 1) 
+      if(Length(responseList) == 1) 
         {  
            responseList <- []
    	       position <- 1
@@ -473,7 +570,7 @@ define Trial(stimpairs)
    feedbacksound <- gIncorrect
   }
   Draw()
-  PlayForeground(feedbacksound)
+  if(gUseAudio){PlayForeground(feedbacksound)}
   Wait(1500)
 
   Hide(gFeedback)
@@ -536,3 +633,16 @@ define Initialize()
   
 
  }
+
+
+
+define WaitForIt()
+{
+  if(gInputDevice == "keyboard" or gInputDevice == "keypad")
+   {
+     WaitForAnyKeyPress()
+   } elseif(gInputDevice=="mouse")
+   {
+     WaitForDownClick()
+   }
+}

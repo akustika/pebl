@@ -1,6 +1,8 @@
 ========================================
 To Do for 0.12:
 
+ - Allow Shuffle to take multiple arguments, which are shuffled in parallel???
+ - Create a PushOn type function
 
 - WaitForAnyKeyPressForTimeout doesn't work.
 

@@ -16,10 +16,10 @@ define VKeyboardInput(win,labeltext,type)
    AddObject(backing,win)
    
     ##basic display parameters
-	ybase <- 50
-	xbase <- 50
-	gap <- 70
-    keysize <- 60
+     ybase <- 50
+     xbase <- 50
+     gap <- 70
+     keysize <- 60
 
 if(Lowercase(type)=="number")
    {
