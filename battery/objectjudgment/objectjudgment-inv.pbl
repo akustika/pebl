@@ -1,8 +1,19 @@
+##  This is the PEBL Object Judgment task, a part of the PEBL
+## Cognitive Decathlon, as described in:
 ##
-##   
-##  
+##   Mueller, S. T. (2010). A
+## partial implementation of the BICA cognitive decathlon using the
+## Psychology Experiment Building Language (PEBL). International
+## Journal of Machine Consciousness, 2, 273-288. For more information,
+## see the PEBL Cognitive Decathlon.
 ##
 ##
+## This is a basic object (polygon) memory task using "Attneave" shapes.
+## It is similar to Shepard-style mental rotation tasks, but it the 
+## comparison objects are not mirror images of the original; rather they
+## are slight distortions from the original.  The comparison objects is 
+## rotated, and either identical or distorted from the original, and the
+## participant must judge whether it is the same or different.
 ##
 
 
@@ -40,7 +51,7 @@ define Start(p)
 
   angle <- Random()*2*3.14159
 
-  shape <- Transpose(MakeAttneave(200,10,5,175,10))
+  shape <- Transpose(MakeAttneave(200,10,5,175))
   shape2 <- RotatePoints(ZoomPoints(shape,1.1,1.1),angle)
   rot1 <-  RotatePoints(shape,angle)
 
@@ -73,8 +84,10 @@ define Start(p)
 
  
   inst.text <- "Invariant Recognition
-In this task, you will attempt to determine whether a probe is
-identical to the learned object, regardless of orientation or size. 
+In this task, you will be shown a series of shapes.  Look at each shape and try to remember it as accurately as possible.  The shape will disappear, and shortly afterwards will be replaced by another similar shape.  Try to determine whether the new shape is the same or different from the original. 
+
+Decide if the new object is the same as the original one, regardless of its size or orientation.   In other words, the shapes can be the same even if they are different sizes, or are oriented at different angles.  You will be given feedback after each response.
+
 Press any key to begin"
  
   Draw()
@@ -105,7 +118,7 @@ Press any key to begin"
      size <- Random() +.5  #.50 to 1.5
 
      #First, create the shape
-     shape <- MakeAttneave(gTargRadius,minCorners,5,175,10)
+     shape <- MakeAttneave(gTargRadius,minCorners,5,175)
      pts <- Transpose(shape) ##This actually makes a copy of it.
 
      if(cond == 0)   #same
@@ -227,7 +240,7 @@ define DistortPoints(points,num,perturb,minangle,maxangle,minlength)
         }
     }
 
-      good <- ValidateAttneaveShape(newpts,minAngle,maxAngle,minlength)
+      good <- ValidateAttneaveShape(newpts,minAngle,maxAngle)
     }  
   return newpts
 }
