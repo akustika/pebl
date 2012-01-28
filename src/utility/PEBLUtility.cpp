@@ -33,6 +33,7 @@
 #include "../devices/PKeyboard.h"
 #include "../apps/Globals.h"
 
+#include <errno.h>
 #include <ctype.h>
 #include <string>
 #include <stdlib.h>
@@ -40,7 +41,9 @@
 #include <iostream>
 #include <strstream>
 #include <algorithm>
+#if !defined(PEBL_OSX)
 #include <png.h>
+#endif
 
 #include <dirent.h>
 //#include <errno.h>
@@ -49,12 +52,14 @@
 #ifdef PEBL_WIN32
 #include <direct.h>
 #include <windows.h>
+#include <bits/types.h>
 #elif defined(PEBL_LINUX)
 #include <sys/stat.h>
 #include <bits/types.h>
 #endif
 
 #include <sys/stat.h>
+
 #include <stdio.h>
 
 //Some math libraries contain this, but let's not take any chances.
@@ -943,10 +948,13 @@ Variant PEBLUtility::IsDirectory(std::string path)
 
     if(dirp)
         {
+			
+			closedir(dirp);
             return Variant(1);
         }
     else
         {
+				//closedir(dirp);
             //std::cerr << "Error type: " <<errno << std::endl;
             return Variant(0);
         }
@@ -988,7 +996,41 @@ Variant PEBLUtility::GetDirectoryListing(std::string path)
                 {
                     plist->PushBack(Variant(entry->d_name));
                 }
-        }
+        } else {
+//ERRNO CODES:
+//			EACCES
+
+//				EMFILE
+//				
+//				ENFILE
+//				The entire system, or perhaps the file system which contains the directory, cannot support any additional open files at the moment. (This problem cannot happen on the GNU system.)
+//				ENOMEM
+//				Not enough memory available. 
+				
+		    Variant codes = "";
+			switch (errno) {
+				case EACCES:
+						codes = "Read permission is denied for the directory named by dirname.(EACCES)";
+					break;
+
+			case EMFILE:
+					codes = "The process has too many files open (EMFILE).";
+					break;
+				case ENFILE:
+					codes = "The entire system, or perhaps the file system which contains the directory, cannot support any additional open files at the moment. (ENFILE)";
+					break;
+				case ENOMEM:
+					codes = "Not enough memory available. (ENOMEM)";
+					break;
+				default:
+					codes ="Unknown error" + Variant(errno);
+					break;
+			}
+			
+			PError::SignalFatalError(Variant("Unable to get Directory listing at ") + Variant(path) + codes);
+			
+		}
+
 
         closedir(dirp);
 
@@ -1037,6 +1079,7 @@ Variant PEBLUtility::DeleteMyFile(std::string path)
      else
           return Variant(1);
     }
+	return Variant(0);
 
 }
 
@@ -1055,12 +1098,14 @@ Variant PEBLUtility::LaunchFile(std::string file)
                                    0,                           // Default directory
                                    SW_SHOW);
     int x = ((int)hInst > 32);  //hInst returns an error code > 32 on success.
-#elif defined(PEBL_UNIX)
+#elif defined(PEBL_LINUX)
 
 
     std::string call2 = "gnome-open " + file;
     int x = system(call2.c_str());  //do a system call with the argument string.
     
+
+	
 
 #elif defined(PEBL_OSX)
      std::string call2 = "open " + file;
