@@ -67,6 +67,13 @@
 #include <time.h>
 #endif
 
+
+#ifdef PEBL_OSX
+#include <mach-o/dyld.h>	/* _NSGetExecutablePath */
+#include <CoreFoundation/CFBundle.h>
+#endif
+
+
 #include "../platforms/sdl/PlatformEnvironment.h"
 extern PlatformEnvironment * myEnv=NULL;
 
@@ -240,6 +247,7 @@ int PEBLInterpret( int argc, char *argv[] )
                strcmp(argv[j], "-V")==0)
                 {
                     Variant tmp = argv[++j];
+					cout <<"Content of passed-in variable " << j << ":" << tmp << endl;
                     arglist->PushBack(tmp);
                 }
 
@@ -480,7 +488,6 @@ void  CaptureSignal(int signal)
 
 int main(int argc,  char *argv[])
 {
-
     
     //  Set up some signals to capture  
 #ifdef SIGHUP
@@ -512,8 +519,69 @@ int main(int argc,  char *argv[])
 
     if(argc == 1)
         {
+#ifdef PEBL_OSX
+			
+			CFBundleRef mainBundle = CFBundleGetMainBundle();
+			CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
+			char resourcepath[PATH_MAX];
+			if (!CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)resourcepath, PATH_MAX))
+			{
+				PError::SignalFatalError("Unable to identify resource location.\n");// error!
+			}
+			CFRelease(resourcesURL);
+			
+			
+			//See if $HOME/Documents/ and $Home/Documents/filelauncher.pbl exist.  If so, run 
+			//with those arguments.
+			std::string script = "/launch.pbl";
+			std::string base = (std::string)resourcepath ;
+			cerr << "RESOURCES PATH: " << resourcepath << endl;
+			
+			
+			std::string launch = base + script;	
+			
+			
+			std::string home = "";
+			char* val = getenv("HOME");
+			if(val)
+			{
+				home = val;
+			}
+
+			std::string v = (std::string)"-v";
+			argc = 4;
+
+	
+			if(PEBLUtility::FileExists(home + "/Documents/pebl-exp.0.12/"))
+			   {
+				
+                  //Move to the right directory.
+				 
+				    script = (std::string)resourcepath + (std::string)"/fileselect.pbl";
+					base = home + "/Documents/pebl-exp.0.12/";
+				    chdir(base.c_str());
+				    launch = script;
+            
+				    v = "";
+				   argc = 2;
+			   }
+		
+			std::cerr << launch << endl;
+			
+			char** new_argv = new char*[3];
+			new_argv[0]=argv[0];
+			char* plaunch =(char*)(launch.c_str());
+			char* pv     = (char*)(v.c_str());
+			char* presources = (char*)resourcepath;
+								
+			new_argv[1]= plaunch;
+			new_argv[2]= pv;
+			new_argv[3]= presources;
+            argv = new_argv;
+#else
             PrintOptions();
             return 1;
+#endif
         }
 
     //This does'nt seem to have any impact.  Not sure why.
@@ -567,8 +635,8 @@ void PrintOptions()
 {
     cout << "-------------------------------------------------------------------------------\n";
     cout << "PEBL: The Psychology Experiment Building Language\n";
-    cout << "Version 0.11\n";
-    cout << "(c) 2003-2010 Shane T. Mueller, Ph.D.\n";
+    cout << "Version 0.12\n";
+    cout << "(c) 2003-2012 Shane T. Mueller, Ph.D.\n";
     cout << "smueller@obereed.net   http://pebl.sf.net\n";
     cout << "-------------------------------------------------------------------------------\n";
 

@@ -31,8 +31,14 @@
 #include "../../utility/PError.h"
 #include "../../base/PComplexData.h"
 #include "../../utility/PEBLUtility.h"
+#ifdef PEBL_OSX
+#include "SDL.h"
+#include "SDL_ttf.h"
+#else
 #include "SDL/SDL.h"
 #include "SDL/SDL_ttf.h"
+#endif
+
 #include <stdio.h>
 #include <algorithm>
 

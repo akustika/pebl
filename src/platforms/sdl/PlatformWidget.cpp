@@ -25,8 +25,15 @@
 //    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ////////////////////////////////////////////////////////////////////////////////
 #include "PlatformWidget.h"
+
+#ifdef PEBL_OSX
+#include "SDL.h"
+#include "SDL_rotozoom.h"
+#else
 #include "SDL/SDL.h"
 #include "SDL/SDL_rotozoom.h"
+#endif
+
 #include "SDLUtility.h"
 
 #include <iostream>

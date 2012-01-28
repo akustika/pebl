@@ -38,8 +38,16 @@
 #include "../../utility/PError.h"
 #include "../../utility/PEBLUtility.h"
 
+#ifdef PEBL_OSX
+#include "SDL.h"
+#include "SDL_ttf.h"
+#else
 #include "SDL/SDL.h"
 #include "SDL/SDL_ttf.h"
+#endif
+
+
+
 #include <stdio.h>
 #include <string>
 #include <algorithm>
@@ -173,7 +181,6 @@ bool  PlatformTextBox::RenderText()
                     SDL_Rect to;
                     if(mDirection == 1)
                         {
-
                             tmpSurface = mFont->RenderText(mText.substr(linestart, linelength).c_str());
                             SDL_Rect tmprect = {0,totalheight,tmpSurface->w, tmpSurface->h};
                             to = tmprect;
@@ -196,8 +203,6 @@ bool  PlatformTextBox::RenderText()
 
                             //delete[] rtext;
                             //rtext = NULL;
-
-
                             SDL_Rect tmprect = {(mSurface->w-tmpSurface->w),totalheight,tmpSurface->w, tmpSurface->h};
                             to = tmprect;
 

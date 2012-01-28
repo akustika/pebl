@@ -31,8 +31,15 @@
 #include "../../objects/PImageBox.h"
 #include "../../base/PEBLObject.h"
 
+
+#ifdef PEBL_OSX
+#include "SDL.h"
+#include "SDL_image.h"
+#else
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
+#endif
+
 
 #include <string>
 ///

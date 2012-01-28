@@ -30,8 +30,15 @@
 #include "PlatformWidget.h"
 #include "PlatformFont.h"
 #include "../../objects/PTextBox.h"
+
+#ifdef PEBL_OSX
+#include "SDL.h"
+#include "SDL_ttf.h"
+#else
 #include "SDL/SDL.h"
 #include "SDL/SDL_ttf.h"
+#endif
+
 #include "../../utility/rc_ptrs.h"
 #include "../../base/PEBLObject.h"
 

@@ -30,8 +30,13 @@
 //#include "../../devices/PAudioIn.h"
 #include "../../base/Variant.h"
 #include "../../base/PEBLObject.h"
+#ifdef PEBL_OSX
+
+#else
 #include "SDL/SDL.h"
 #include "SDL/SDL_audioin.h"
+#endif
+
 //#include "SDL/SDL_audio.h"
   
 #include "PlatformAudioOut.h"

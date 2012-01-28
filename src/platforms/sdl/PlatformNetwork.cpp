@@ -27,7 +27,16 @@
 #include "PlatformNetwork.h"
 #include "../../devices/PNetwork.h"
 #include "../../utility/PError.h"
+
+#ifdef PEBL_OSX
+#include "SDL.h"
+#include "SDL_net.h"
+#else
+#include "SDL/SDL.h"
 #include "SDL/SDL_net.h"
+#endif
+
+
 
 #include <string>
 using std::string;

@@ -37,9 +37,17 @@
 #include "../../base/PComplexData.h"
 
 
+#ifdef PEBL_OSX
+#include "SDL.h"
+#include "SDL_audioin.h"
+#else
 #include "SDL/SDL.h"
+<<<<<<< .mine
+=======
 #ifdef PEBL_AUDIOIN
+>>>>>>> .r646
 #include "SDL/SDL_audioin.h"
+#endif
 
 #include <cmath>
 #include <vector>

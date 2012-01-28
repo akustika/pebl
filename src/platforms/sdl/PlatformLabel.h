@@ -32,8 +32,14 @@
 #include "../../objects/PLabel.h"
 #include "../../utility/rc_ptrs.h"
 #include "../../base/PEBLObject.h"
+#ifdef PEBL_OSX
+#include "SDL.h"
+#include "SDL_ttf.h"
+#else
 #include "SDL/SDL.h"
 #include "SDL/SDL_ttf.h"
+#endif
+
 
 ///
 /// This class defines the SDL Platform-specific representation of a text label.

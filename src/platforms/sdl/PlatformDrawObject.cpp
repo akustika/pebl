@@ -28,8 +28,15 @@
 #include "PlatformDrawObject.h"
 #include "PlatformWidget.h"
 
+#ifdef PEBL_OSX
+#include "SDL.h"
+#include "SDL_gfxPrimitives.h"
+#else
 #include "SDL/SDL.h"
 #include "SDL/SDL_gfxPrimitives.h"
+#endif
+
+
 
 #include "../../base/PList.h"
 #include "../../base/Variant.h"

@@ -29,7 +29,7 @@
 #include "../utility/PError.h"
 
 
-#if defined (PEBL_UNIX)
+#if defined (PEBL_LINUX)
 #include <sys/io.h>
 #endif
 

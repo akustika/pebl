@@ -33,8 +33,14 @@
 #include "../../base/PEBLObject.h"
 
 #include "SDLUtility.h"
-#include "SDL/SDL_ttf.h"
+
+#ifdef PEBL_OSX
+#include "SDL.h"
+#include "SDL_ttf.h"
+#else
 #include "SDL/SDL.h"
+#include "SDL/SDL_ttf.h"
+#endif
 
 
 /// This is a platform-specific font class.  Much of the information is held

@@ -28,7 +28,13 @@
 #define __PLATFORM_NETWORK_H__
 
 #include "../../devices/PNetwork.h"
+#ifdef PEBL_OSX
+#include "SDL.h"
+#include "SDL_net.h"
+#else
+#include "SDL/SDL.h"
 #include "SDL/SDL_net.h"
+#endif
 
 class PlatformNetwork: public PNetwork
 {

@@ -30,7 +30,9 @@
 #include "../../utility/PError.h"
 #include "PlatformWindow.h"
 #include "SDL/SDL.h"
+#if !defined(PEBL_OSX)
 #include <png.h>
+#endif
 #include <math.h>
 #include <iostream>
 using std::cout;
@@ -180,7 +182,7 @@ Uint32 SDLUtility::GetPixel(SDL_Surface *surface, int x, int y)
 
 int SDLUtility::WritePNG(const Variant fname, PlatformWidget* wid)
 {
-    
+#if ! defined(PEBL_OSX)    
     SDL_Surface * surf = wid->GetSDL_Surface();
 
 
@@ -305,7 +307,7 @@ int SDLUtility::WritePNG(const Variant fname, PlatformWidget* wid)
                         }
                 }
         }
-
+#endif
     return 0;
 
 }
