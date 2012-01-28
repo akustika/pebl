@@ -35,8 +35,7 @@
 
 
 
-#ifdef __linux__   /* Linux */
-
+#if defined (PEBL_UNIX)
 
 int Cport[22],
     error;
@@ -98,6 +97,7 @@ int OpenComport(int comport_number, int baudrate)
                    break;
     case  230400 : baudr = B230400;
                    break;
+#ifdef PEBL_LINUX
     case  460800 : baudr = B460800;
                    break;
     case  500000 : baudr = B500000;
@@ -108,7 +108,8 @@ int OpenComport(int comport_number, int baudrate)
                    break;
     case 1000000 : baudr = B1000000;
                    break;
-    default      : printf("invalid baudrate\n");
+#endif
+	default      : printf("invalid baudrate\n");
                    return(1);
                    break;
   }

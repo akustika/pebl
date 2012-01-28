@@ -43,7 +43,7 @@ extern "C" {
 
 
 
-#ifdef __linux__
+#ifdef PEBL_UNIX
 
 #include <termios.h>
 #include <sys/ioctl.h>

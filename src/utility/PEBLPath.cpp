@@ -3,7 +3,7 @@
 //    Name:       src/utility/PEBLPath.cpp
 //    Purpose:    Utility class storing search path and searching for files there
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -40,6 +40,13 @@ using std::string;
 using std::ostream;
 using std::cout;
 
+
+#ifdef PEBL_OSX
+
+#include <mach-o/dyld.h>	/* _NSGetExecutablePath */
+#include <CoreFoundation/CFBundle.h>
+#endif
+
 PEBLPath::PEBLPath()
 {
 }
@@ -48,7 +55,7 @@ PEBLPath::PEBLPath()
 void PEBLPath::Initialize(std::list<std::string> files)
 {
 	//std::cout << "Initializing path\n";
-#if defined PEBL_UNIX
+#if defined PEBL_LINUX
     //On unix, add the following paths:
     //current working directory,
     AddToPathList("./");
@@ -103,6 +110,80 @@ void PEBLPath::Initialize(std::list<std::string> files)
     //library functions
     AddToPathList(MergePathAndFile(basedir, "pebl-lib/"));
 
+#elif defined PEBL_OSX
+
+	
+	
+	
+	
+	// ----------------------------------------------------------------------------
+	// This makes relative paths work in C++ in Xcode by changing directory to the
+	//  Resources folder inside the .app bundle
+    CFBundleRef mainBundle = CFBundleGetMainBundle();
+    CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
+    char path[PATH_MAX];
+    if (!CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX))
+    {
+		PError::SignalFatalError("Unable to identify resource location.\n");// error!
+    }
+    CFRelease(resourcesURL);
+	
+	std::string basedir = (std::string)path + "/";
+	
+	
+	
+	
+    //On OSX, we will keep the things in the Resources/ subdirectory inside the application bundle
+    //current working directory,
+    AddToPathList("./");
+    
+    //Look for absolute pathnames
+    AddToPathList("");
+    //The directories of each file on the command-line.
+    string tmp;
+    std::list<string>::iterator i=files.begin();
+    i++;  //skip over the command name in UNIX.
+    while(i != files.end())
+	{
+		//For each commandline argument, strip the filename and add it.
+		tmp = StripFile(*i);
+		if(tmp != "")
+		{
+			AddToPathList(tmp);
+		}
+		i++;
+	}
+	
+		
+		
+		
+//		_NSGetExecutablePath( pathbuf, (uint32_t*)(&bufsize));
+//		cout << "OSX name: " << pathbuf << endl;
+
+//		string prefix = br_find_prefix("");
+//		basedir = prefix + string("Resources/");
+
+	
+    //On OSX, we will keep the things in the Resources/ subdirectory inside the application bundle
+ 	
+    
+    //media subdirectories of execution directory.
+    //fonts
+    AddToPathList(MergePathAndFile(basedir, "media/fonts/"));
+    
+    //Sounds
+    AddToPathList(MergePathAndFile(basedir, "media/sounds/"));
+    
+    //images
+    AddToPathList(MergePathAndFile(basedir, "media/images/"));
+    
+    //text
+    AddToPathList(MergePathAndFile(basedir, "media/text/"));
+    
+    //library functions
+    AddToPathList(MergePathAndFile(basedir, "pebl-lib/"));
+
+	
 /*#elif defined(PEBL_WIN32) or defined(WIN32)*/
 #else
 	//On Windows add the following paths:
