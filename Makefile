@@ -2,7 +2,7 @@
 #//////////////////////////////////////////////////////////////////////////////
 #//////////////////////////////////////////////////////////////////////////////
 #//
-#//	Copyright (c) 2003-2011
+#//	Copyright (c) 2003-2012
 #//	Shane T. Mueller, Ph.D.  smueller at obereed dot net
 #//
 #//     This file is part of the PEBL project.
@@ -32,7 +32,6 @@ PREFIX = /usr/local/
 #PREFIX = /opt/local/
 
 
-
 C   = gcc
 CXX = g++ 
 DEBUGFLAGS = -lefence -DPEBL_DEBUG -g
@@ -40,21 +39,23 @@ DEBUGFLAGS = -lefence -DPEBL_DEBUG -g
 CFLAGS =   -O3 -std=c99 -DPREFIX=$(PREFIX) -g 
 
 
-CXXFLAGS =  -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  -DENABLE_BINRELOC -DPREFIX=$(PREFIX)  -g 
+#CXXFLAGS =  -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  -DENABLE_BINRELOC -DPREFIX=$(PREFIX)  -DPEBL_AUDIOIN
+CXXFLAGS =  -O3  -DPEBL_UNIX  -DENABLE_BINRELOC -DPREFIX=$(PREFIX)  -DPEBL_AUDIOIN
 
 
 
 SDL_CONFIG = /usr/bin/sdl-config
 
-SDL_FLAGS = -I/usr/include/SDL -D_REENTRANT
-SDL_LIBS = -L/usr/lib -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lSDL -lpthread -lSDLmain
+SDL_FLAGS = -I/usr/include/SDL -D_REENTRANT -L/usr/lib
+#SDL_LIBS = -L/usr/lib -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lSDL -lpthread -lSDLmain
 
 
 #Comment/uncomment below on OSX
 #OSX_FLAGS = -framework AppKit -lSDLmain -DPEBL_OSX
 OSX_FLAGS =
 
-SDLIMG_FLAGS =  -L/usr/lib -L/usr/local/lib -Wl,-rpath,/usr/lib
+#SDLIMG_FLAGS =  -L/usr/lib -L/usr/local/lib -Wl,-rpath,/usr/lib
+SDLIMG_FLAGS =  -L/usr/lib -Wl,-rpath,/usr/lib
 SDLIMG_LIBS =   -lSDL -lSDLmain -lpthread -lSDL_image -lSDL_net -lSDL_audioin
 
 
@@ -296,17 +297,17 @@ DIRS = \
 	$(OBJ_DIR)/$(UTIL_DIR) \
 	$(OBJ_DIR)/$(TEST_DIR)
 
-
 ##############################
 # Dependencies
 #
 ##	   -L$(PREFIX)/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  -lSDL_net -lpng -lSDL_audioin\
 
 main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
-	$(CXX) $(CXXFLAGS)   -o $(BIN_DIR)/pebl -I$(PREFIX)include/SDL -D_REENTRANT \
-	-L$(PREFIX)/lib -lSDL -lSDLmain -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  -lSDL_net -lpng \
-       $(OSX_FLAGS) $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, \
-       $(PEBLMAIN_OBJ))
+	$(CXX) $(CXXFLAGS)  -L/usr/lib  -L/usr/local/lib -o $(BIN_DIR)/pebl \
+	-I/usr/include/SDL -D_REENTRANT \
+	$(OSX_FLAGS) $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(PEBLMAIN_OBJ)) \
+	-lSDL -lSDLmain -lpthread -lSDL_image  -lSDL_ttf -lSDL_gfx  -lSDL_net -lsdl_audioin -lpng 
+## -Wl,-rpath,/usr/lib \
 
 deb:    main
 	epm -f deb pebl
