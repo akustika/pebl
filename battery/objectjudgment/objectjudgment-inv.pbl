@@ -254,7 +254,7 @@ define MakeHull(radius,numpoints)
   ##First, sample numpoints xy points
   pts <- []
   num <- 0
-  
+ 
 
  while( num < numpoints)
    {
@@ -280,7 +280,6 @@ define MakeHull(radius,numpoints)
 }
 
 
-
 define Insert(list, item, pos)
 { 
    if(pos == 0)
@@ -299,9 +298,6 @@ define Insert(list, item, pos)
 
   return new
 }
-
-
-
 
 
 
@@ -336,7 +332,6 @@ define DistMatrix(pts)
 
   return mat
 }
-
 
 
 define RemoveObjects(list,win)

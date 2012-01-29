@@ -1392,7 +1392,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1320869856 source:/home/smueller/Projects/pebl/src/apps/PEBL.cpp
+1327782177 source:/home/smueller/Projects/pebl/src/apps/PEBL.cpp
 	"../base/Evaluator.h"
 	"../base/grammar.tab.hpp"
 	"../base/PNode.h"
@@ -1418,6 +1418,8 @@
 	<sched.h>
 	<windows.h>
 	<time.h>
+	<mach-o/dyld.h>
+	<CoreFoundation/CFBundle.h>
 	"../platforms/sdl/PlatformEnvironment.h"
 
 1320869855 /home/smueller/Projects/pebl/src/base/Evaluator.h
@@ -1546,10 +1548,12 @@
 	"../base/PEBLObject.h"
 	"PWindow.h"
 
-1320869855 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformImageBox.h
+1327782177 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformImageBox.h
 	"PlatformWidget.h"
 	"../../objects/PImageBox.h"
 	"../../base/PEBLObject.h"
+	"SDL.h"
+	"SDL_image.h"
 	"SDL/SDL.h"
 	"SDL/SDL_image.h"
 	<string>
@@ -1558,14 +1562,16 @@
 	"PWidget.h"
 	<string>
 
-1320869855 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformFont.h
+1327782177 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformFont.h
 	"../../objects/PFont.h"
 	"../../objects/PColor.h"
 	"../../utility/rc_ptrs.h"
 	"../../base/PEBLObject.h"
 	"SDLUtility.h"
-	"SDL/SDL_ttf.h"
+	"SDL.h"
+	"SDL_ttf.h"
 	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
 
 1320869856 /home/smueller/Projects/pebl/src/objects/PFont.h
 	"PWidget.h"
@@ -1579,12 +1585,14 @@
 	"SDL/SDL.h"
 	"PlatformWindow.h"
 
-1320869855 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformLabel.h
+1327782177 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformLabel.h
 	"PlatformWidget.h"
 	"PlatformFont.h"
 	"../../objects/PLabel.h"
 	"../../utility/rc_ptrs.h"
 	"../../base/PEBLObject.h"
+	"SDL.h"
+	"SDL_ttf.h"
 	"SDL/SDL.h"
 	"SDL/SDL_ttf.h"
 
@@ -1602,10 +1610,12 @@
 	"../utility/rc_ptrs.h"
 	<string>
 
-1323474330 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformTextBox.h
+1327782177 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformTextBox.h
 	"PlatformWidget.h"
 	"PlatformFont.h"
 	"../../objects/PTextBox.h"
+	"SDL.h"
+	"SDL_ttf.h"
 	"SDL/SDL.h"
 	"SDL/SDL_ttf.h"
 	"../../utility/rc_ptrs.h"
@@ -1675,8 +1685,11 @@
 	"PDevice.h"
 	<string>
 
-1320869855 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformNetwork.h
+1327782177 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformNetwork.h
 	"../../devices/PNetwork.h"
+	"SDL.h"
+	"SDL_net.h"
+	"SDL/SDL.h"
 	"SDL/SDL_net.h"
 
 1320869856 /home/smueller/Projects/pebl/src/devices/PNetwork.h
@@ -1713,7 +1726,7 @@
 	"../platforms/sdl/PlatformEnvironment.h"
 	"../apps/Globals.h"
 
-1321649173 /home/smueller/Projects/pebl/src/utility/PEBLUtility.h
+1327782177 /home/smueller/Projects/pebl/src/utility/PEBLUtility.h
 	"../devices/PKeyboard.h"
 	"../apps/Globals.h"
 	<string>
@@ -1780,7 +1793,7 @@
 	<list>
 	<string>
 
-1322511615 /home/smueller/Projects/pebl/src/libs/Functions.h
+1327782177 /home/smueller/Projects/pebl/src/libs/Functions.h
 	"PEBLEnvironment.h"
 	"PEBLMath.h"
 	"PEBLStream.h"
@@ -1788,11 +1801,11 @@
 	"PEBLList.h"
 	"PEBLString.h"
 
-1322511629 /home/smueller/Projects/pebl/src/libs/PEBLEnvironment.h
+1327782177 /home/smueller/Projects/pebl/src/libs/PEBLEnvironment.h
 
 1320869856 /home/smueller/Projects/pebl/src/libs/PEBLMath.h
 
-1321649173 /home/smueller/Projects/pebl/src/libs/PEBLStream.h
+1327782177 /home/smueller/Projects/pebl/src/libs/PEBLStream.h
 
 1320869856 /home/smueller/Projects/pebl/src/libs/PEBLList.h
 
@@ -1845,7 +1858,7 @@
 	<string>
 	<stdlib.h>
 
-1327114505 source:/home/smueller/Projects/pebl/src/base/grammar.tab.cpp
+1327114940 source:/home/smueller/Projects/pebl/src/base/grammar.tab.cpp
 	"PNode.h"
 	<stdio.h>
 	<iostream>
@@ -1886,7 +1899,7 @@
 	<math.h>
 	<unistd.h>
 
-1327114229 source:/home/smueller/Projects/pebl/src/base/lex.yy.cpp
+1327114954 source:/home/smueller/Projects/pebl/src/base/lex.yy.cpp
 	<stdio.h>
 	<string.h>
 	<errno.h>
@@ -1907,13 +1920,13 @@
 
 1320869856 source:/home/smueller/Projects/pebl/src/devices/PAudioOut.cpp
 
-1321651971 source:/home/smueller/Projects/pebl/src/devices/PComPort.cpp
+1327782177 source:/home/smueller/Projects/pebl/src/devices/PComPort.cpp
 	"PComPort.h"
 	"../utility/rs232.h"
 	"../utility/PError.h"
 	<sys/io.h>
 
-1320869856 /home/smueller/Projects/pebl/src/utility/rs232.h
+1327782177 /home/smueller/Projects/pebl/src/utility/rs232.h
 	<stdio.h>
 	<string.h>
 	<termios.h>
@@ -2004,7 +2017,7 @@
 	"PDevice.h"
 	<iostream>
 
-1323474437 source:/home/smueller/Projects/pebl/src/libs/PEBLEnvironment.cpp
+1327782177 source:/home/smueller/Projects/pebl/src/libs/PEBLEnvironment.cpp
 	"PEBLEnvironment.h"
 	"PEBLObjects.h"
 	"../base/Variant.h"
@@ -2060,7 +2073,7 @@
 	<strstream>
 	<time.h>
 
-1321650196 source:/home/smueller/Projects/pebl/src/libs/PEBLObjects.cpp
+1327782177 source:/home/smueller/Projects/pebl/src/libs/PEBLObjects.cpp
 	"PEBLObjects.h"
 	"PEBLEnvironment.h"
 	"../base/Variant.h"
@@ -2086,7 +2099,7 @@
 	"PEBLList.h"
 	<string>
 
-1321649980 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformAudioIn.h
+1327782177 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformAudioIn.h
 	"../../base/Variant.h"
 	"../../base/PEBLObject.h"
 	"SDL/SDL.h"
@@ -2094,7 +2107,7 @@
 	"PlatformAudioOut.h"
 	<string>
 
-1323190529 source:/home/smueller/Projects/pebl/src/libs/PEBLStream.cpp
+1327782177 source:/home/smueller/Projects/pebl/src/libs/PEBLStream.cpp
 	"PEBLStream.h"
 	"../base/Variant.h"
 	"../base/PComplexData.h"
@@ -2175,7 +2188,7 @@
 
 1320869855 source:/home/smueller/Projects/pebl/src/objects/PObject.cpp
 
-1323475799 source:/home/smueller/Projects/pebl/src/objects/PTextBox.cpp
+1327782177 source:/home/smueller/Projects/pebl/src/objects/PTextBox.cpp
 	"PTextBox.h"
 	"PFont.h"
 	"../utility/rc_ptrs.h"
@@ -2920,4 +2933,22 @@
 	<bits/types.h>
 	<bits/posix1_lim.h>
 	<stddef.h>
+
+1310092103 /usr/include/SDL/SDL_image.h
+	"SDL.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1301737694 /usr/include/SDL/SDL_ttf.h
+	"SDL.h"
+	"begin_code.h"
+	"close_code.h"
+
+1193837800 /usr/include/SDL/SDL_net.h
+	"SDL.h"
+	"SDL_endian.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
 

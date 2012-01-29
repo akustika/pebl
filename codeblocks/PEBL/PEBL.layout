@@ -2,7 +2,7 @@
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
 	<File name="../../src/apps/PEBL.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="7848" topLine="370" />
+		<Cursor position="2352" topLine="99" />
 	</File>
 	<File name="../../src/base/VCG.h" open="0" top="0" tabpos="0">
 		<Cursor position="1798" topLine="11" />
@@ -36,6 +36,9 @@
 	</File>
 	<File name="../../src/objects/PTextBox.cpp" open="0" top="0" tabpos="2">
 		<Cursor position="3986" topLine="88" />
+	</File>
+	<File name="../../src/platforms/sdl/PlatformAudioIn.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="19599" topLine="676" />
 	</File>
 	<File name="../../src/platforms/sdl/PlatformDrawObject.cpp" open="0" top="0" tabpos="5">
 		<Cursor position="2726" topLine="40" />

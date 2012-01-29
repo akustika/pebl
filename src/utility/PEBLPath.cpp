@@ -3,7 +3,7 @@
 //    Name:       src/utility/PEBLPath.cpp
 //    Purpose:    Utility class storing search path and searching for files there
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -42,7 +42,6 @@ using std::cout;
 
 
 #ifdef PEBL_OSX
-
 #include <mach-o/dyld.h>	/* _NSGetExecutablePath */
 #include <CoreFoundation/CFBundle.h>
 #endif
@@ -54,7 +53,7 @@ PEBLPath::PEBLPath()
 
 void PEBLPath::Initialize(std::list<std::string> files)
 {
-	//std::cout << "Initializing path\n";
+    //	std::cout << "Initializing path\n";
 #if defined PEBL_LINUX
     //On unix, add the following paths:
     //current working directory,
@@ -89,6 +88,7 @@ void PEBLPath::Initialize(std::list<std::string> files)
             std::cerr << "Executable file located at: [" << br_find_exe("") << "].\n";
             string prefix = br_find_prefix("/usr/local/");
             basedir = prefix + string("/share/pebl/");
+            std::cerr << "Base resources found at: ["<< basedir <<"]\n";
             
         }
 
@@ -113,9 +113,6 @@ void PEBLPath::Initialize(std::list<std::string> files)
 #elif defined PEBL_OSX
 
 	
-	
-	
-	
 	// ----------------------------------------------------------------------------
 	// This makes relative paths work in C++ in Xcode by changing directory to the
 	//  Resources folder inside the .app bundle
@@ -129,8 +126,6 @@ void PEBLPath::Initialize(std::list<std::string> files)
     CFRelease(resourcesURL);
 	
 	std::string basedir = (std::string)path + "/";
-	
-	
 	
 	
     //On OSX, we will keep the things in the Resources/ subdirectory inside the application bundle
@@ -154,7 +149,7 @@ void PEBLPath::Initialize(std::list<std::string> files)
 		i++;
 	}
 	
-		
+
 		
 		
 //		_NSGetExecutablePath( pathbuf, (uint32_t*)(&bufsize));

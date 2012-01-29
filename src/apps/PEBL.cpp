@@ -3,7 +3,7 @@
 //    Name:       src/apps/PEBL.cpp
 //    Purpose:    The primary PEBL run-time interpreter.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -148,6 +148,7 @@ int PEBLInterpret( int argc, char *argv[] )
 
 	std::cout << "Loading filename:"      << *i << endl;
 	string inputfilename = Evaluator::gPath.FindFile(*i);
+
     head = NULL;
     if(inputfilename != "")
         {
@@ -166,8 +167,9 @@ int PEBLInterpret( int argc, char *argv[] )
     i++;
     while(i != files.end())
         {
-        	std::cerr << "Loading file name:"      << *i << endl;
+        	std::cerr << "Loading file name: ["      << *i <<"]"<< endl;
             inputfilename = Evaluator::gPath.FindFile(*i);
+            std::cerr << "Resolved as: [" <<inputfilename <<"]"<< endl;
             if(inputfilename != "")
                 {
                     cerr << "Processing PEBL Source File2: " <<  inputfilename << endl;
@@ -185,8 +187,7 @@ int PEBLInterpret( int argc, char *argv[] )
                 }
             else
                 {
-                    PError::SignalFatalError("Unable to find file: [" + inputfilename + "]");
-
+                    PError::SignalFatalError("Unable to find file: ["+*i+"] at [" + inputfilename + "]");
                 }
             i++;
        }

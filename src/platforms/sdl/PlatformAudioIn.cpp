@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformAudioIn.cpp
 //    Purpose:    Contains platform-specific audio recording routines
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2011-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -39,15 +39,13 @@
 
 #ifdef PEBL_OSX
 #include "SDL.h"
-#include "SDL_audioin.h"
 #else
 #include "SDL/SDL.h"
-<<<<<<< .mine
-=======
-#ifdef PEBL_AUDIOIN
->>>>>>> .r646
-#include "SDL/SDL_audioin.h"
 #endif
+
+#ifdef PEBL_AUDIOIN
+ #include "SDL/SDL_audioin.h"
+
 
 #include <cmath>
 #include <vector>
@@ -86,7 +84,7 @@ PlatformAudioIn::~PlatformAudioIn()
 
     //    SDL_FreeWAV(mWave.audio);
     if(mWave)
-        { 
+        {
             if(mWave == gAudioBuffer)
                 {
                     gAudioBuffer = NULL;
@@ -99,7 +97,7 @@ PlatformAudioIn::~PlatformAudioIn()
         }
 
     SDL_CloseAudioIn();
-        
+
 }
 
 
@@ -108,7 +106,7 @@ PlatformAudioIn::~PlatformAudioIn()
 //This must be called after the audio is initialized but before it can
 //be played.  It actually opens the audio device for playing.
 bool PlatformAudioIn::Initialize(int type)
-{	
+{
 
     //std::cout <<"Initializing audioout["<<type<<"]\n";
 	if(SDL_InitAudioIn()<0)
@@ -117,13 +115,13 @@ bool PlatformAudioIn::Initialize(int type)
         }
     else
         {
-            
+
             SDL_AudioSpec expected,result;
-            
+
             expected.format = mAudioFormat;
             expected.freq    = mSampleRate;
-            
-            
+
+
             //select which callback should be used.
             if(type==1)
                 {
@@ -133,11 +131,11 @@ bool PlatformAudioIn::Initialize(int type)
                 {
                     expected.callback=AudioInCallbackLoop;
                 }
-            
+
             expected.samples=mSamples;
             expected.channels=1;
             expected.userdata=&result;
-            
+
 
             if (SDL_OpenAudioIn(&expected,&result) < 0 )
                 {
@@ -145,14 +143,14 @@ bool PlatformAudioIn::Initialize(int type)
                     return false;
                 }
         }
-    
+
     return true;
 }
 
 
 AudioInfo * PlatformAudioIn::GetAudioOutBuffer()
 {
-    
+
     return mWave;
 
 }
@@ -164,7 +162,7 @@ AudioInfo * PlatformAudioIn::ReleaseAudioOutBuffer()
 {
     AudioInfo * tmp = mWave;
     mWave = NULL;
-    
+
     return tmp;
 
 }
@@ -182,7 +180,7 @@ bool PlatformAudioIn::UseBuffer( AudioInfo * buffer )
         }
     else
         {
-            mWave = buffer; 
+            mWave = buffer;
             gAudioBuffer = mWave;
 
             mSampleRate= mWave->spec.freq;
@@ -191,13 +189,13 @@ bool PlatformAudioIn::UseBuffer( AudioInfo * buffer )
                (buffer->spec.format == AUDIO_S8) )
                 {
                     mBytesPerSample = 1;
-                    
+
                 }else if((buffer->spec.format == AUDIO_S16 )|
                          (buffer->spec.format == AUDIO_U16))
                 {
 
                     mBytesPerSample=2;
-                    
+
                 }
             mWave->bytesPerSample = mBytesPerSample;
             mSamples = buffer->audiolen/mBytesPerSample;
@@ -221,11 +219,11 @@ bool PlatformAudioIn::CreateBuffer(int size)
 
 
 
-    mWave = new AudioInfo(); 
+    mWave = new AudioInfo();
 
     //Make a SDL_AudioSpec;
 
-    SDL_AudioSpec *spec = (SDL_AudioSpec *) malloc(sizeof(SDL_AudioSpec));       
+    SDL_AudioSpec *spec = (SDL_AudioSpec *) malloc(sizeof(SDL_AudioSpec));
     spec->freq =44100;
     spec->format=AUDIO_S16;
     spec->channels=1;
@@ -233,10 +231,10 @@ bool PlatformAudioIn::CreateBuffer(int size)
     spec->samples=256;  //4096
     spec->callback= NULL;  //Don't have a callback for playing here.
     spec->userdata=NULL;//&mWave;
-    
+
     Uint32 length = spec->freq * size/1000;
     mWave->spec = *spec;
-    
+
     //allocate the buffer:
     mWave->audio = (Uint8*)malloc(mBytesPerSample*length);
     if(mWave->audio)
@@ -291,7 +289,7 @@ bool PlatformAudioIn::Stop()
 // for 10-ms windows every 1 ms.  It will 'trip' when 95% of the 1-ms windows
 // have power greater than the threshold for sustain, and stop when
 // the power goes below the threshold for 95% of the time for sustain/2.
-// It then reprocesses the power stream to find the point at which the 
+// It then reprocesses the power stream to find the point at which the
 // power went above the threshold.
 
 Variant PlatformAudioIn::VoiceKey(double threshold, unsigned int sustain)
@@ -306,16 +304,16 @@ Variant PlatformAudioIn::VoiceKey(double threshold, unsigned int sustain)
     //this is the number of samples (not bytes) per chunk
     unsigned int chunksize = mSampleRate/binspersec;
     double msperchunk = (double)mSampleRate/chunksize/1000;
-    
+
     //number of samples needed for the sustain parameter.
     unsigned int sustainSamples = sustain/msperchunk;
-    
+
 
     //This should be conditional:
     //Initialize(1);
-    //    CreateBuffer(samples); 
+    //    CreateBuffer(samples);
 
-   
+
     //audio will immediately be filling up the buffer.  When full,
     //recording will stop, but we can potentially stop it any time
     //prior to that too.
@@ -335,7 +333,7 @@ Variant PlatformAudioIn::VoiceKey(double threshold, unsigned int sustain)
     int buffertime = double(mWave->audiolen)/mBytesPerSample/chunksize;
     //Make a power buffer equal to the number of ms in the sample buffer.
     std::vector<double> powerbins = std::vector<double>(buffertime);
-    
+
     bool trip = false;
     bool stop = 0;
     unsigned int triptime = 0;
@@ -364,7 +362,7 @@ Variant PlatformAudioIn::VoiceKey(double threshold, unsigned int sustain)
     int abovecount = 0;
 
     //This is not thread-safe.
-    
+
 
     double powr;
     double energy;
@@ -382,17 +380,17 @@ Variant PlatformAudioIn::VoiceKey(double threshold, unsigned int sustain)
             while((gAudioBuffer->recordpos/mBytesPerSample) > chunksize+sampleID)
                 {
                     //cout <<"    buffering "<< sampleID <<":"<< gAudioBuffer->recordpos <<" " << (gAudioBuffer->recordpos - sampleID)  << "  " << samples << endl;
-                    
+
                     //power[tickID] = ;
 
                     ComputeStats((Sint16*)(gAudioBuffer->audio+sampleID*mBytesPerSample),chunksize,
                           energy,power,signs,directions,rmssd);
                     powerbins[tickID] = energy;
                     //powr = Power((Sint16*)(gAudioBuffer->audio+sampleID*mBytesPerSample),chunksize);
-                    
+
                     //The following produces 'mini-scopes for each statistic we compute.
 #if 0
-     
+
                     cout << SDL_GetTicks();
                //power
                     cout << "[";
@@ -430,14 +428,14 @@ Variant PlatformAudioIn::VoiceKey(double threshold, unsigned int sustain)
 #endif
 
                     //                    cout << "X" << powr << " "  << energy << " " << power << " " << signs << " " << directions << " " << rmssd << endl;
-                    
+
                     //if(powerbins[tickID] > threshold)          cout << "********** " << abovecount <<endl;
 
-                
+
                     int incoming = (powerbins[tickID]>threshold);
                     int outgoing = (tickID < sustainSamples)? 0:powerbins[tickID-sustainSamples]>threshold;
                     abovecount += incoming - outgoing;
-                    //cout << ((double)abovecount)/sustainSamples ; 
+                    //cout << ((double)abovecount)/sustainSamples ;
                     if(((double)abovecount)/sustainSamples > .55  &trip==false)
                                             {
                                                 trip = true;
@@ -448,7 +446,7 @@ Variant PlatformAudioIn::VoiceKey(double threshold, unsigned int sustain)
                     if(trip)
                         {
                             //cout << "*****************";
-                            //If we have tripped, see if 50% or more of the 
+                            //If we have tripped, see if 50% or more of the
                             //samples are below the threshold.
                             if((double)abovecount/sustainSamples < .2)
                                 {
@@ -459,7 +457,7 @@ Variant PlatformAudioIn::VoiceKey(double threshold, unsigned int sustain)
                                     offtime = tickID- (sustainSamples*.8);
                                 }
 
-                    
+
                         }
                     //cout << endl;
 
@@ -467,8 +465,8 @@ Variant PlatformAudioIn::VoiceKey(double threshold, unsigned int sustain)
 
                     tickID++;
                     sampleID += chunksize;
-                    
-                    
+
+
                     if(sampleID+chunksize >= gAudioBuffer->audiolen/mBytesPerSample)
                         stop = true;
 
@@ -480,7 +478,7 @@ Variant PlatformAudioIn::VoiceKey(double threshold, unsigned int sustain)
         }
 
 
-    
+
     // triptime = triptime * msperchunk
     // tripped = trip
     // offtime = offtime * msperchunk
@@ -492,13 +490,13 @@ Variant PlatformAudioIn::VoiceKey(double threshold, unsigned int sustain)
     newlist->PushBack(Variant(trip));
     //    cout << "Returning: " << *newlist << endl;
 
-    counted_ptr<PEBLObjectBase> baselist = counted_ptr<PEBLObjectBase>(newlist);    
-    PComplexData * pcd = new PComplexData(baselist); 
-    
+    counted_ptr<PEBLObjectBase> baselist = counted_ptr<PEBLObjectBase>(newlist);
+    PComplexData * pcd = new PComplexData(baselist);
+
 
     //cout << "Saving to out.wav\n";
     //SaveBufferToWave("out.wav");
-    
+
     return Variant(pcd);
 }
 
@@ -527,7 +525,7 @@ void PlatformAudioIn::SaveBufferToWave(Variant filename)
     std::fstream myFile (filename.GetString().c_str(), ios::out | ios::binary);
 
 	// write the wav file per the wav file format
-	myFile.seekp (0, ios::beg); 
+	myFile.seekp (0, ios::beg);
 	myFile.write ("RIFF", 4);					// chunk id
 	myFile.write ((char*) &chunksize, 4);	    // chunk size (36 + SubChunk2Size))
 	myFile.write ("WAVE", 4);					// format
@@ -542,7 +540,7 @@ void PlatformAudioIn::SaveBufferToWave(Variant filename)
 
 	myFile.write ("data", 4);					// subchunk2ID
 	myFile.write ((char*) &subchunk2size, 4);			// subchunk2size (NumSamples * NumChannels * BitsPerSample/8)
-		
+
 	myFile.write ((char*)(mWave->audio), mWave->recordpos);	// data
 
 
@@ -551,43 +549,43 @@ void PlatformAudioIn::SaveBufferToWave(Variant filename)
 void AudioInCallbackFill(void * udata, Uint8 * stream, int len)
 {
 
-    
+
 
     //len is in bytes.
-    
+
     //SDL_AudioSpec *spec=(SDL_AudioSpec *)udata;
     //Sint16 *sData=(Sint16 *)stream;
     Uint8 * sData = stream;
 
     // int samples=(len/2);
-    
+
     if(gAudioBuffer)
         {
             //This gives the number of  left in the buffer.
             int remaininbuffer = (gAudioBuffer->audiolen - gAudioBuffer->recordpos);
 
-            
+
             //We want to copy up to len bytes.  But if only as many as remain in the buffer.
             //tocopy is how many bytes we can copy:
             int bytestocopy = (len< remaininbuffer ? len: remaininbuffer);
-            
-            //cout << SDL_GetTicks()<< "  " << len<<" "<<  gAudioBuffer->recordpos << " remains: " << 
+
+            //cout << SDL_GetTicks()<< "  " << len<<" "<<  gAudioBuffer->recordpos << " remains: " <<
             //remaininbuffer << " sum: " << (gAudioBuffer->recordpos + remaininbuffer)<<" tocopy: " << bytestocopy << endl;
-            //stop copying if the buffer is full.                
-                
+            //stop copying if the buffer is full.
+
             if(bytestocopy>0)
                 {
 
                     //copy to the buffer
                     memcpy(gAudioBuffer->audio+(gAudioBuffer->recordpos),
-                             sData,                           
+                             sData,
                              bytestocopy);
                     gAudioBuffer->recordpos += bytestocopy;
-                    
+
                 }
         }
-    
-    
+
+
 }
 
 
@@ -600,7 +598,7 @@ void AudioInCallbackLoop(void * udata, Uint8 * stream, int len)
 #if 0
 
 #endif
-    
+
 }
 
 
@@ -611,7 +609,7 @@ void AudioInCallbackLoop(void * udata, Uint8 * stream, int len)
 // Computes power for a specific range.
 double PlatformAudioIn::Power (Sint16 * data, int length)
 {
-    
+
     double sum = 0;
     for(int i=0;i <length; i+=mBytesPerSample)
         {
@@ -619,9 +617,9 @@ double PlatformAudioIn::Power (Sint16 * data, int length)
             sum += tmp;
             //cout << "     "  <<data[i] << " "<< tmp << endl;
         }
-    
+
     //cout << "Power sum on  "<<length << "bytes: " << sum << ": " ;
-    
+
     double power =(sum)/length;
     return power;
 }
@@ -638,20 +636,20 @@ void PlatformAudioIn::ComputeStats (Sint16 * data, int length,
                                     int & dchanges,
                                     double & rmssd )
 {
-    
-    //This computes several stats related to  detecting 
+
+    //This computes several stats related to  detecting
     //onsets of speech:
     //sign change,
-    //power 
+    //power
     //RMSSD
-    
-    
+
+
     double abssum = 0;
     double sqsum = 0;
     int signsum = 0;
     int dirsum = 0;
     double rmssdsum=0;
-    
+
     double prev=0;
     double scaled;
     double delta = 0;
@@ -659,8 +657,8 @@ void PlatformAudioIn::ComputeStats (Sint16 * data, int length,
 
      for(int i=0;i <length; i+=mBytesPerSample)
         {
-    
-            
+
+
             scaled = ((double)data[i])/32768;
             //cout << "-----"<< scaled << "|" << data[i]<<endl;
             abssum += abs(scaled);
@@ -669,18 +667,18 @@ void PlatformAudioIn::ComputeStats (Sint16 * data, int length,
 
             delta = scaled - prev;
             dirsum += (delta * prevdelta) < 0;
-            
-            rmssdsum += pow(delta - prevdelta,2);
-            
 
-            //update 
+            rmssdsum += pow(delta - prevdelta,2);
+
+
+            //update
             prev = scaled;
             prevdelta = delta;
 
         }
-    
+
     //cout << "Power sum on  "<<length << "bytes: " << sum << ": " ;
-    
+
     int samples = length/mBytesPerSample;
 
     energy = abssum/samples;
@@ -688,7 +686,7 @@ void PlatformAudioIn::ComputeStats (Sint16 * data, int length,
     rmssd  = sqrt(rmssdsum/samples);
     signchanges = signsum;
     dchanges=dirsum;
-   
+
 }
 
 #endif

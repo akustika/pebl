@@ -3,7 +3,7 @@
 //    Name:       utility/PEBLUtility.cpp
 //    Purpose:    Miscellaneous Utility Functions used in PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -1088,7 +1088,7 @@ Variant PEBLUtility::DeleteMyFile(std::string path)
 Variant PEBLUtility::LaunchFile(std::string file)
 {
         
-
+    int x;
     //cout << "Running launchfile\n";   
 #if defined(PEBL_WIN32) 
     HINSTANCE hInst = ShellExecute(0,                           
@@ -1097,21 +1097,22 @@ Variant PEBLUtility::LaunchFile(std::string file)
                                    NULL,                        // Additional parameters
                                    0,                           // Default directory
                                    SW_SHOW);
-    int x = ((int)hInst > 32);  //hInst returns an error code > 32 on success.
+    x = ((int)hInst > 32);  //hInst returns an error code > 32 on success.
 #elif defined(PEBL_LINUX)
 
 
     std::string call2 = "gnome-open " + file;
-    int x = system(call2.c_str());  //do a system call with the argument string.
+    x = system(call2.c_str());  //do a system call with the argument string.
     
 
 	
 
 #elif defined(PEBL_OSX)
      std::string call2 = "open " + file;
-     int x = system(call2.c_str());  //do a system call with the argument string.
+     x = system(call2.c_str());  //do a system call with the argument string.
    
- #endif
+#endif
+
  return Variant(x);
 }
 
