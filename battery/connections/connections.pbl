@@ -1,0 +1,847 @@
+## The PEBL Connections Task, An implementation of
+## the task described by Salthouse et al. (2000), originally
+## based on Zahlen Verbindsungs Test, which according to Salthouse was
+## introduced by Oswald and Roth (1978) and has been
+## described in Vernon (1993).\
+## Oswald, W. D,, & Roth, E. (1978). Der Zahlen-Verbindungs Test
+## (ZVT). Gottingen, Germany: Hogrefe.
+## Vernon, P. A. (1993). Der Zahlen-Verbindsungs Test and other
+## trail-making correlates of general intelligence. Personality and
+## Individual Differences, 14, 35-40
+##
+##
+##  
+
+
+define Start(p)
+{
+   gInputDevice <- "mouse"
+   gVideoWidth  <-  800
+   gVideoHeight <- 600
+
+   gWin <- MakeWindow("black")
+   gFont <- MakeFont(gPEBLBaseFontMono,3,18,MakeColor("white"),Makecolor("black"),0)
+   Draw()
+   gSleepEasy <- 1
+
+
+  if(gSubNum+""=="0")
+  {
+    gSubNum <- GetSubNum(gWin)
+  }
+  MakeDirectory("data")
+  fileout <- FileOpenAppend("data/connections-"+gSubNum+".csv")
+
+  wide <- 7
+  high <- 7
+
+
+   trial <- 1
+
+   ##Create 4 paths total
+   paths <-[MakePath(wide,high,0),MakePath(wide,high,0),
+   	   MakePath(wide,high,0),MakePath(wide,high,0)]
+
+
+  tpaths <- []
+  loop(i,paths)
+  {
+    tpaths <- Append(tPaths,TransposePath(i,wide,high))
+  }
+
+
+  types1 <- ["num","letter","numletter","letternum"]
+  types2 <- ["numletter","letternum","letter","num"]
+
+##Shuffle each set of 4 separately
+  p1 <- Shuffle(Transpose([types1,paths]))
+  p2 <- Shuffle(Transpose([types2,tpaths]))
+  trials <- Merge(p1,p2)
+
+
+  data <- []
+  conds <- []
+
+   loop(i, trials)
+    {
+
+
+       type <-First(i)
+       path <- Second(i)
+
+       time0 <- GetTime()
+       dat <-  CollectPath(path,type,wide,high) 
+       time1 <- GetTime()
+       ##Get some specific stats.
+       stats <- GetStats(path,wide,high)
+
+       datalist <- Flatten([gSubNum,i,wide,high,type, trial, stats,dat,(time1-time0),path])
+       FilePrint(fileout,PrintCSVList(datalist))
+       data <- Append(data,dat)
+       conds <- Append(conds,type)
+    }
+
+  Print(conds)
+  Print(data) 
+
+  numsdat <- Filter(data,Match(conds,"num"))
+  letsdat <- Filter(data,Match(conds,"letter"))
+  lndat <- Filter(data,Match(conds,"letternum"))
+  nldat <- Filter(data,Match(conds,"numletter"))
+
+  single <- Transpose(Merge(numsdat,letsdat))
+  switch <- Transpose(Merge(nldat,lndat))
+
+
+##These have clicks/time pairs
+   singleClicks <- Mean(First(single))
+   singleRTs <- Mean(Second(single))
+
+   switchClicks <- Mean(First(switch))
+   switchRTs <- Mean(Second(switch ))
+
+  Print("---------------------------------------")
+  Print("Mode:        Single   Switch   Ratio")
+  Print("---------------------------------------")
+  Print("Clicks:     "+singleClicks+"    " + switchClicks + "   " + switchClicks-singleClicks)
+  Print("RT:         "+singleRTS+"    " + switchRTS + "   " + switchRTS/singleRTS)
+  Print("--------------------------------------")
+  MessageBox("Thank you for participating",gWin)
+
+}
+
+
+##Computes the transpose path--same pattern but row-column instead of column-row.
+define TransposePath(path,w,h)
+{
+Print(path)
+
+  newpath <- []
+  loop(i,path)
+  {
+    nodegrid <- GetGrid(i,w,h)
+    newnode <- GetID([Second(nodegrid),First(nodegrid)],w,h)
+    newpath <- Append(newpath,newnode)
+  }
+
+   return newpath
+}
+
+
+define PrintCSVList(list)
+{
+   sep <- ""
+   text <- ""
+    loop(i,list)   
+    {
+      text <- text + sep + i
+      sep <- ","
+    }
+    Print(text)
+   return text
+}
+
+define SimPaths(wide,high,num)
+{
+ fileout <- FileOpenAppend("pathstats.txt")
+#  fileout <- FileOpenAppend("tmp.txt")
+
+#   FilePrint(fileout,"Seed Pathsize pathlength anglesum optionsum entropy")
+ ##This is a simulator that generates and prints out paths.
+  i <- 1
+
+  while(i <= num) 
+   { 
+
+    rand <- RandomDiscrete(10000000)
+#    rand <- (5535518)
+    Print(i + ": " + rand)
+    SeedRNG(rand)
+
+
+
+    path <- MakePath(wide,high,0)
+
+   stuff <-   DrawPath(path,wide,high,[100,700],[100,550])
+   Draw()
+   RemoveObjects(stuff,gWin)
+
+   stats <- GetStats(path,wide,high)
+   FilePrintList(fileout,Flatten([rand,stats,path]))
+
+
+     i <- i + 1
+   }
+
+
+}
+
+
+
+
+define CollectPath(path,style,w,h)
+{
+
+  if(style=="num")
+   {
+     vals <- SortBy(Sequence(1,Length(path),1),path)
+
+   }elseif(style=="letter")
+   {
+     ucase <- FileReadList("Uppercase.txt")
+     lcase <- FileReadList("Lowercase.txt")
+     stim <- ucase
+     loop(i,ucase)
+     {
+        stim <- Append(stim,"*"+i)
+     }
+     stim <- Merge(stim,lcase)
+     loop(i,lcase)
+     {
+        stim <- Append(stim,"*"+i)
+     }
+     
+     vals <- SortBy(SubList(stim,1,Length(path)),path)
+   }elseif(style=="letternum")
+   {
+
+     letters1 <- FileReadList("Uppercase.txt")
+
+     letters <- letters1
+     loop(i,letters1)
+     {
+        letters <- Append(letters,"*"+i)
+     }
+
+     nums <- Sequence(1,Length(letters),1)
+
+     stim <- Flatten(Transpose([letters,nums]))
+     
+     vals <- SortBy(SubList(stim,1,Length(path)),path)
+
+   }elseif(style=="numletter")
+   {
+
+     letters1 <- FileReadList("Uppercase.txt")
+
+     letters <- letters1
+     loop(i,letters1)
+     {
+        letters <- Append(letters,"*"+i)
+     }
+
+     nums <- Sequence(1,Length(letters),1)
+
+     stim <- Flatten(Transpose([nums,letters]))
+     
+     vals <- SortBy(SubList(stim,1,Length(path)),path)
+
+   }else{
+    SignalFatalError("Unknown test type: " + style)
+   }
+
+
+
+  bgstuff <-  DrawPathDetail(path,w,h, [100,700],[100,550],vals,Repeat(0,Length(path)))
+
+  lines <- First(bgstuff)
+  targets <- Second(bgstuff)
+  labs <- Third(bgstuff)
+
+  loop(i,labs)
+  {
+     Hide(i)
+  }
+
+
+
+  id <- 2
+  clicks <- 0
+  newlines <- SubList(lines,2,Length(lines))
+  newtargs <- SubList(targets,2,Length(targets))
+  clickedColor <- MakeColor("grey")
+
+  back <- First(targets)
+  back.color <- MakeColor("red")
+
+  ##This may differ for keyboard entry.
+  inst <- EasyLabel("Click on highlighted circle to start",gVideoWidth/2,25,gWin,25)
+  Show(First(labs))
+
+  Draw()
+  WaitForClickOnTarget([First(targets)],[1])
+  back.color <- clickedColor
+  loop(i,labs)
+  {
+     Show(i)
+  }
+
+  time1 <- GetTime()
+  
+
+  loop(i,Transpose([newlines,newtargs]))
+  {
+
+##  WaitForAnyKeyPress() 
+
+      
+      Draw()
+      if(gInputDevice == "mouse" or gINputDevice == "touch")
+      {
+         resp <- -1
+	 while(not resp == Nth(path,id))
+	 {
+             resp <- WaitForClickOnTarget(targets,path)
+	     clicks <- clicks + 1  
+	 }
+          
+          id <- id + 1
+      }
+      line <- First(i)
+      
+
+      Show(First(i)) #Show the line
+      bg <- Second(i)
+      bg.color <- clickedcolor  ##Change the color of the bg.
+      Draw()
+
+  }
+  time2 <- GetTime()
+
+  return [clicks,(time2-time1)]
+}
+
+define VecAbs(vec)
+{
+  tmp <- []
+  loop(i,vec)
+   {
+     tmp <- Append(tmp,Abs(i))
+   }
+ return tmp
+}
+
+
+define GetStats(path,w,h)
+{
+  length <- Length(path)
+  
+   ##Compute distance
+   pairs <-    Transpose([Append(path,-1),
+                          Merge([-1],path)])
+
+
+  sum <- 0
+  angleSum <- 0
+  prevangle <- [0,0]
+
+  loop(i, pairs)
+  {
+
+
+    ##don't use the first and last nodes.
+    if((First(i)>0) and (Second(i)>0))
+     {
+
+        grid1 <-GetGrid(First(i),w,h)
+	grid2 <- GetGrid(Second(i),w,h)
+
+	##Add to the running distance.
+	delt <- Sqrt((First(grid1)-First(grid2))^2 + 
+	            (Second(grid1)-Second(grid2))^2 )
+
+        sum <- sum + delt
+
+
+	##Compute the angle
+
+	angle <- GetGridAngle(grid1,grid2)
+	angledist <- VecMinus(angle,prevangle)
+#	Print(anglesum+"--"+ prevangle + " " + angle + " " +angledist+"  " +VecAbs(angledist) +" " + angledist + " -- " + Sum(VecAbs(angledist)))
+	anglesum <- anglesum + Sum(VecAbs(angledist))
+ 	prevAngle <- angle
+     }
+    
+  }
+ 
+  ##This is the total number of options across the path
+  sumoptions <- 4*(w-1)*(h-1) + (w-1)+(h-1)
+  entropy <- GetEntropy(path,w,h)
+
+  return [w,h,length,sum,anglesum,sumoptions,entropy]
+}
+
+
+define GetEntropy(list,w,h)
+{
+     ##Start from the beginning,
+    sumEntropy <- 0
+    remains <- Rest(list)
+    loop(i,list)
+    {
+        igrid <- GetGrid(i,w,h)
+
+	options <-  LogN(Length(GetNeighbors(iGrid,remains,w,h)),2)
+	if(options>0)
+	{
+ 	  p <- 1/options
+	  entr <- p * LogN(p,2)
+          sumEntropy <- sumEntropy -entr
+         }
+         remains <- Rest(remains)
+    }
+
+  return sumEntropy
+}
+
+
+define GetGridAngle(prevgrid,curgrid)
+{
+   ##First, compute dx and dy
+   dx <- First(prevGrid) - First(curgrid)
+   dy <- Second(prevgrid)-Second(curgrid)
+
+   return [dx,dy]
+}
+
+
+##This will return a list of gridpoint ids that are
+##adjacent to the given point
+
+define GetNeighbors(nodeGrid,path,w,h)
+{
+
+    ##First, get the candidate neighbor elements
+    dirs <- [[0,-1], [1,-1],
+             [1,0],[1,1],
+       	    [0,1],  [-1,1],
+            [-1,0],[-1,-1]]
+
+
+          neighbors <- []
+          loop(i,dirs)
+          {
+
+             tmp <- [First(i)+First(nodeGrid),Second(i)+Second(nodeGrid)]
+
+
+	     if(First(tmp)>0 and First(tmp)<=h and 
+	       Second(tmp)>0 and Second(tmp)<=w)               
+	       {
+
+	          ##It is a legal node (in the grid)
+                   id <- GetID(tmp,w,h)
+
+		   ##Is it on the path?
+		  if(IsMember(id, path))
+                    {
+                       neighbors <- Append(neighbors,id)
+                    }
+               }
+          }
+	  ##neighbors now contains all adjacents.
+  return neighbors
+}
+
+
+##This Creates a path, given the sizes you care about.
+##You can allow path crossings, but the algorithm is not well tested for 
+## this condition.
+define MakePath(w,h,crosses)
+{
+  
+   endID <- w * h
+   ids <- Sequence(1,endID,1)
+
+   ##specify directions clockwise from 12:00; using
+   ## matrix row/column notation
+   ## 1 is right and -1 is up.
+
+   ## create an initial path that goes from 1 to endID,
+   ## by randomly picking left, down, and diagonal left/down
+   ## directions.
+   posdir <-     [ [1,0],[1,1],[0,1]]
+  
+   nextID <- -1
+   current <- 1
+   path <- [current]
+   xys <- [[1,1]]
+
+
+   while(not current == endID)
+   {
+      point <- GetGrid(current,w,h)
+
+
+      ##Choose one direction
+      next <-[w+1,h+1]##Unsatisfactory next point
+
+      while(First(next)>h or Second(next)>w)
+       {
+                         
+             dir <- Sample(posdir)
+	     next <- VecPlus(point,dir)
+       }
+
+
+   
+    nextID <- GetID(next,w,h)
+
+    path <- Append(path,nextID)
+    xys <- Append(xys,next)
+    current <- nextID
+   }
+
+#  stuff <-   DrawPath(path,7,7,[100,700],[100,550])
+#  Draw()
+#   RemoveObjects(stuff,gWin)
+
+  ##Now we have an initial path.  Let's get a list of the nodes
+  ##not on the path. 
+  remains <- RemoveSubSet(ids,path)
+
+
+  while(Length(remains)>0)
+   {
+
+     touches <- []
+
+    tries <- 0
+ 
+    remains <- Shuffle(remains) 
+    ##Try out each member of remains to see if it touches something: 
+    while(Length(touches)==0)
+     {
+       remains <- Rotate(remains,1)
+       ##See if First(remains) touches the path
+       touches <- TouchesPath(First(remains),path,w,crosses)
+       tries <- tries + 1
+
+       ##If we have tried all members of remains and failed, we are stuck.
+       if(tries > Length(remains))
+       {
+
+
+           ##We've tried everything, but nothing works.
+
+	   ##If we are stuck, we need to find two elements that do
+	   ##touch, remove the inside chain, and add the current element.
+
+           ##Pick the first node in remains
+           node <-First(remains)
+       	   nodeGrid <- GetGrid(node,w,h) 
+
+          ##Gets neighbors on the path:
+          neighbors <- GetNeighbors(nodegrid,path,w,h)
+
+
+
+	  if(Length(neighbors)>=2)
+	  {
+            # Print("Remains:" + remains)
+	    # Print("Node: "+node)
+	    #  Print("Neighbors"+neighbors)
+            pair <- SampleN(neighbors,2)
+	      
+
+	      ##Get rid of everything on the path between these two elements.
+	      newpath <- []
+	      newrems <- Rest(remains)
+	      cut <- 0
+
+               ##Loop through the path, and cut out the 
+               ##subpath, splicing in the problem child.
+	      loop(el,path)
+               {
+	         if(IsMember(el,pair))
+		 {
+
+		   ##Add the node at the cut, then add
+		   ##the current node            
+                   cut <- 1-cut
+                   newpath <- Append(newpath,el)
+
+		   if(cut)
+		   {
+		     newpath <- Append(newpath,node)
+		   }
+		 }else {
+            
+		 if(cut==1)	
+		 {
+		   newrems <- Append(newrems,el)
+
+		 } else {
+		   newpath <- Append(newpath,el)
+  		 }
+                }
+               }
+
+	       path <- newpath
+	       remains <- newrems
+	       tries <- 0  ##try again
+          } else {
+	  ##
+ 	   Print("Possible Bad Path Created")
+	   # SignalFatalError("Cannot create path. We should recurse here.")
+	  }
+
+       }
+     }
+
+
+      ## We need to touch the graph at least once to move here; it may be multiple touches
+      ##we have a touch!!
+      splicepoint <- Sample(touches)
+
+      ##we should put the point at the splicepoint.
+
+
+      path <- Flatten([SubList(path,1,splicepoint),
+                       First(remains),
+		       SubList(path,splicepoint+1,Length(path))])
+
+
+
+#  stuff <-   DrawPath(path,w,h,[100,700],[100,550])
+#  Draw()
+#  RemoveObjects(stuff,gWin)
+    
+  remains <- Rest(remains)
+
+
+   }
+
+
+
+ return path
+}
+
+
+##THis deter
+define TouchesPath(testID, path,w,crosses)
+{
+
+   pathpairs <- SubList(Transpose([path,Rotate(path,1)]),1,Length(path)-1)
+   touches <- []
+   id <- 1
+   loop(i,pathpairs)
+   {
+      ##testID only touches if it touches both pairs.
+       if(Touchpairs(testID,First(i),Second(i),w))
+         {
+	    ##OK--we touch something.  But will adding this
+ 	    ##node lead to a cross in another link?
+            if(crosses==0)
+            {
+              cross <- 0
+            ##Crossing lines are not allowed.
+	     ##We are trying to add two lines
+##	     line1 <- [First(i),testID]
+##	     line2 <- [testID,Second(i)]
+             
+             ##Get the grid points of line 1
+	     xya <- Getgrid(First(i),w,0)
+	     xyb <- GetGrid(testID,w,0)
+	     xyc <- Getgrid(Second(i),w,0)
+
+            ##See if either ab or bc crosses something already in
+            ##the list.
+            checkit <- [] 
+	     ##Is AB a diagonal?
+	     if((Abs(First(xya)-First(xyb)) + 
+	        Abs(Second(xya)-Second(xyb)))==2)
+	     {
+
+	        ##check to see if their crossing pair is connected.
+		cross1 <- GetID([First(xya),Second(xyb)],w,0)
+		cross2 <- GetID( [First(xyb),Second(xya)],w,0)
+	        checkit <- [cross1,cross2]
+
+	     }
+
+	     ##Is BC a diagonal?
+	     if((Abs(First(xyc)-First(xyb)) + 
+	        Abs(Second(xyc)-Second(xyb)))==2)
+	     {
+
+	        ##check to see if their crossing pair is connected.
+		cross1 <- GetID([First(xyc),Second(xyb)],w,0)
+		cross2 <- GetID( [First(xyb),Second(xyc)],w,0)
+	        checkit <- [cross1,cross2]
+
+	     }
+
+             ##
+	     if(Length(checkit)==2)
+             {
+                   p1 <- Lookup(First(checkit),path,Sequence(1,Length(path),1))
+                   p2 <- Lookup(Second(checkit),path,Sequence(1,Length(path),1))
+
+		   if(Abs(p1-p2)==1)
+                    {
+                     cross <- 1
+                    }
+                 
+             }
+	     if(not cross)
+	     {
+                   touches <- Append(touches,id)
+             } else {
+                   0
+            }
+
+            }else{
+
+               touches <- Append(touches,id)
+	    }
+
+
+         }
+    id <- id + 1
+   }
+
+  return touches
+}
+
+
+##Does id1 touch both id1 and id3
+define TouchPairs(id1,id2,id3,w)
+{
+  return (Touches(id1,id2,w) and  Touches(id1,id3,w))
+}
+
+
+define Touches(id1,id2,w)
+  {
+    ##This assumes that that a point touches itself; may not 
+    ## be useful in some contexts to make this assumption.
+  
+    p1 <- GetGrid(id1,w,0)
+    p2 <- GetGrid(id2,w,0)
+    dH <-Abs(First(p1) - First(p2))
+    dW <- Abs(Second(p1)-Second(p2))
+   return (dH<2 and dW<2)
+  }
+
+
+define GetGrid(id,w,h)
+{
+   column <- Mod(id,w)
+   if(column==0)
+    {
+      column <- w
+    }
+    return [Ceiling(id/w),column]
+}
+
+define GetID(point,w,h)
+{
+    out <-  Second(point)+(First(point)-1)*w
+#    Print(point + " "+w+ " " + h + " " + out)
+  return out
+}
+
+define VecMinus(a,b)
+{
+  return  VecPlus(a, [-First(b),-Second(b)])
+}
+
+define VecPlus(a,b)
+{
+  sum <- []
+  loop(i,Transpose([a,b]))
+   {
+      sum <- Append(sum,First(i)+Second(i))
+   }
+ return sum
+}
+
+##This will draw a path with all the elements 
+define DrawPath(path,w,h,xrange,yrange)
+{
+  return DrawPathDetail(path,w,h,xrange,yrange,Sequence(1,w*h,1),Repeat(1,Length(path)))
+
+}
+
+define DrawPathDetail(path,w,h,xrange,yrange,labels,connected)
+{
+
+    fgcol <- MakeColor("Navy")
+    bgCol <- MakeColor("royalblue")
+
+    xdelt <- (Second(xrange)-First(xrange))/(w)
+    ydelt <- (Second(yrange)-First(yrange))/(h)
+    x0 <- First(xrange)
+    y0 <- First(yrange)
+
+    tmpbgs <- []
+    tmpfgs <-[]
+    tmplines <- []
+    tmplabs <- []
+
+    point <- [1,1]
+    prevXY<- [x0,y0]
+ 
+    ##Draw the path
+
+    path2<- Transpose([path,connected])
+    loop(i,path2)
+    {
+        
+        point <- GetGrid(First(i),w,h)
+        x <- First(xrange) + xdelt*(Second(point)-1)
+        y <- First(yrange) + ydelt*(First(point)-1)
+
+        circ <- Circle(x,y,24,fgcol,1)
+        AddObject(circ,gWin)
+	tmpBGs <- Append(tmpbgs,circ)
+
+        line <-ThickLine(First(prevXY),
+		Second(prevXY),x,y,8,bgcol)
+        AddObject(line,gWin)
+        tmpLines <- Append(tmpLines,line)        
+
+        if(not Second(i))
+         {
+             Hide(line)
+         }
+
+
+        prevXY <- [x,y]        
+    }
+
+
+     ##Draw the top circles and the labels.
+     id <- 1
+     loop(i,Sequence(1,h,1))
+      { 
+          loop(j,Sequence(1,w,1))
+          { 
+	     x <- x0+xdelt*(j-1)
+             y <- y0+ydelt*(i-1)
+             bg <- Circle(x,y,20,MakeColor("blue"),1)
+	     AddObject(bg,gWin)
+ 	     lab <- MakeLabel(Nth(labels,id)+"",gFont)
+	     Move(lab,x,y)
+	     AddObject(lab,gWin)
+	     tmpFGs <- Append(tmpFGs,bg)
+	     tmpLabs <- Append(tmpLabs, lab)
+             id <- id + 1
+          }
+      }
+
+
+
+   return [tmplines,tmpBGs,tmpLabs,tmpFGs]
+}
+
+
+define RemoveObjects(list,win)
+{ 
+ x <- Flatten(list)
+  loop(i, x)
+  {
+    RemoveObject(i,win)
+  }
+}
