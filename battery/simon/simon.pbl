@@ -19,7 +19,24 @@ Practice now by hitting the shift keys to see which stimulus the map onto.  Hit 
    gSleepEasy <- 1
    
    gFileout <-FileOpenAppend("simon-"+gSubNum+".csv")
+
+   ##This controls how many times through the 10-stimulus trial set we go
    reps <- 10
+
+   ##Create the stimulus sequence:
+
+   ##xpos is the irrelevant dimension, stim is red/blue
+   xpos <- [-200,-100,-50,0,50,100,200]
+   stim <- [1,2]
+   trialbase <- DesignFullCounterbalance(xpos,stim)
+
+   ##repeat the location/stimulus pairs and shuffle:
+   stim <- Shuffle(RepeatList(trialbase,reps))
+   length <- Length(stim)
+
+
+
+   ##Colors and shapes of the left/right stimuli:
    leftcol <- MakeColor("red")
    rightcol <- MakeColor("blue")
    stimA <- Circle(0,0,50,leftcol,1)
@@ -63,16 +80,6 @@ Practice now by hitting the shift keys to see which stimulus the map onto.  Hit 
    status <- EasyLabel("",gVideoWidth/2,20,gWin,15)
    fixation <- EasyLabel("+",gVideoWidth/2,gVideoHeight/2,gWin,80)
    Hide(fixation)
-##xpos is irrelevant
-   xpos <- [-200,-100,-50,0,50,100,200]
-   stim <- [1,2]
-
-   trialbase <- DesignFullCounterbalance(xpos,stim)
-
-   stim <- Shuffle(RepeatList(trialbase,reps))
-
-
-   length <- Length(stim)
 
 
   ##Loop through the stimuli.
