@@ -18,6 +18,7 @@
 ## Chinese translation contributed by Yu-Hsiang Wu 
 ## Portuguese translation contributed by Arthur Kummer
 ## Spanish translation contributed by Nuria Carriedo
+## French translation contributed by Elise Branchereau
 ###########################################################
 ##  Raw data file outputs:
 ##  subnum, trialnum, category count, color, shape, number, response, accuracy
@@ -187,19 +188,22 @@ define Start(lPar)
    AddObject(comp2,gWin)
    AddObject(comp3,gWin)
    AddObject(comp4,gWin)
-   Move(comp1, 28 + 125/2, 105)
-   Move(comp2, 28*2 + 125 + 125/2,105)
-   Move(comp3, 28*3 + 125*2 + 125/2,105)
-   Move(comp4, 28*4 + 125*3 + 125/2,105)
+
+   ##The complicated positioning here is just a dumb way
+   ##to center left-to-right
+   Move(comp1, gVideoWidth/2 - 400 +28 + 125/2, 105)
+   Move(comp2, gVideoWidth/2 - 400+ 28*2 + 125 + 125/2,105)
+   Move(comp3, gVideoWidth/2 - 400+ 28*3 + 125*2 + 125/2,105)
+   Move(comp4,  gVideoWidth/2 - 400+28*4 + 125*3 + 125/2,105)
 
    if(gUseMouse == 0)
    {
      gHeader.text <- "1           2            3            4"
    }
-   Move(gHeader,320,220)
+   Move(gHeader,gVideoWidth/2-80,220)
    Show(gHeader)
 
-	gInstructions.text <- Nth(textlist,2)
+   gInstructions.text <- Nth(textlist,2)
    Draw()
    WaitForIt()
 
@@ -256,8 +260,8 @@ define Start(lPar)
       #Display the card
       card <- Nth(s,4)
       AddObject(card,gWin)
-      Move(card,500,380)
- 	  Draw()
+      Move(card,gVideoWidth/2+100,380)
+      Draw()
       time0 <- GetTime()
 
 	  ## Get the response
@@ -275,7 +279,7 @@ define Start(lPar)
       corrBoth <- ScoreTrial(s,resp,rule,lastrule)
 
       
-	  corrLast <- First(corrBoth)
+      corrLast <- First(corrBoth)
       corr <- Nth(corrBoth,2)
 
 
@@ -287,7 +291,7 @@ define Start(lPar)
       ##animate the card location.
 
       #Get end location
-      x <- 125/2 + 28*ToNumber(resp) + 125*(ToNumber(resp)-1)
+      x <- gVideoWidth/2-400+125/2 + 28*ToNumber(resp) + 125*(ToNumber(resp)-1)
       y <- 105
      ##compute distance to travel to scale frames to distance.
       dist <- Sqrt((y-card.y)^2 + (x-card.x)^2)
@@ -295,7 +299,7 @@ define Start(lPar)
       stepsize <- 100
       frames <- Ceiling(dist/stepsize)+1  
 
-	  ydiff <- (y - card.y)/(frames)
+      ydiff <- (y - card.y)/(frames)
       xdiff <- (x - card.x)/(frames)
       steps <- Sequence(frames,0,-1)
       #move toward end location
@@ -304,6 +308,7 @@ define Start(lPar)
         card.x <- x - xdiff*i
         card.y <- y - ydiff*i
         Draw()
+	Wait(5)##Without waiting, this ca go too fast on OSX.
       }
 
       RemoveObject(card,gWin)
@@ -680,18 +685,18 @@ define Initialize()
    #Create the insturctions cue
    gPrompt <- MakeLabel(gPromptText,gStimFont)
    AddObject(gPrompt,gWin)
-   Move(gPrompt,200,300)
+   Move(gPrompt,gVideoWidth/2-200,300)
    Hide(gPrompt)
 
 
    gCorrect <- MakeLabel(gCorrectText,gCorrFont)
    AddObject(gCorrect,gWin)
-   Move(gCorrect,500,350)
+   Move(gCorrect,gVideoWidth/2+100,350)
    Hide(gCorrect)
   
    gIncorrect <- MakeLabel(gIncorrectText,gIncorrFont)
    AddObject(gIncorrect,gWin)
-   Move(gIncorrect,500,350)
+   Move(gIncorrect,gVideoWidth/2+100,350)
    Hide(gIncorrect)
 
  }
