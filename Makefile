@@ -28,6 +28,7 @@
 #This only affects install location.  The binary should be 
 #locatable anywhere
 PREFIX = /usr/local/
+
 #On mac, one might prefer the following:
 #PREFIX = /opt/local/
 
@@ -40,7 +41,7 @@ CFLAGS =   -O3 -std=c99 -DPREFIX=$(PREFIX) -g
 
 
 #CXXFLAGS =  -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  -DENABLE_BINRELOC -DPREFIX=$(PREFIX)  -DPEBL_AUDIOIN
-CXXFLAGS =  -O3  -DPEBL_UNIX  -DPEBL_LINUX -DENABLE_BINRELOC -DPREFIX=$(PREFIX)  -DPEBL_AUDIOIN
+CXXFLAGS =  -O3  -DPEBL_UNIX  -DPEBL_LINUX -DENABLE_BINRELOC -DPREFIX=$(PREFIX)  -DPEBL_AUDIOIN -g
 
 
 
