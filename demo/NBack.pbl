@@ -1,4 +1,3 @@
-#!/usr/local/bin/pebl
 ##This defines a simple 2-back task.
 
 define Start(lParameter)
