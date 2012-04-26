@@ -1,4 +1,3 @@
-#!/usr/local/bin/pebl
 define Start(lPar)
 {
 ## (c) 2004 Shane T. Mueller
