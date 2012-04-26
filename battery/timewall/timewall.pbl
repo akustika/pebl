@@ -76,7 +76,7 @@ Press any key to begin."
 
   FilePrint(gFileOut, "subnum,trial,targtime,resptime,acc,shortlong")
   trial <- 1
-  while(trial < numtrials)
+  while(trial <= numtrials)
    {
 
 

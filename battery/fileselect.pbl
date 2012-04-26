@@ -1,17 +1,14 @@
-#!/usr/local/bin/pebl
 ##  This is a PEBL script that acts as a cross-platform 
 ##  launcher for PEBL.
-##  Version 0.1: Initial release, to accompany PEBL 0.12.
-##  (c) 2011 Shane T. Mueller, Ph.D. smueller@obereed.net
+##  Version 0.2: Initial release, to accompany PEBL 0.13.
+##  (c) 2011-2012 Shane T. Mueller, Ph.D. smueller@obereed.net
 ##
 
 define Start(p)
 {
 
-
-
-  gUseReloc <-  0  ##Set this from 0 to 1 if you want to run on windows NOT from an 
-                   ## installation in Program Files, but from
+  gUseReloc <-  0  ##Set this from 0 to 1 if you want to run on windows 
+                   ## NOT from an installation in Program Files, but from
                    ##A PEBL subdirectory of the current working directory.
  
  ##Set this from 1 to 0 to turn off automatic subject code incrementation
@@ -19,6 +16,8 @@ define Start(p)
  gAutoSubCode <- 1
 
  gLastUpdate <- GetTime() ##keep track of updates
+
+
 
 ###set the configuration/chain name: use 'default' as default.
   if(Length(p) >0)
@@ -31,6 +30,9 @@ define Start(p)
    }else{
        gConfigName <- "default"
    }
+
+
+
 
   ## todo: 
   ## concatenate data files
@@ -49,8 +51,8 @@ define Start(p)
     gViewerCommand <- "gedit"
     gPEBLName      <- "pebl"
     gOpenManual    <- "acroread /usr/local/share/pebl/doc/PEBLManual0.12.pdf&"
-  	gOpenURL        <- "firefox"
-	  gManualLoc      <- "/usr/local/share/pebl/doc/PEBLManual0.12.pdf"
+    gOpenURL        <- "firefox"
+    gManualLoc      <- "/usr/local/share/pebl/doc/PEBLManual0.12.pdf"
 
 		
    }elseif(systemType=="WINDOWS")   {
@@ -70,16 +72,32 @@ define Start(p)
      gViewerCommand <- "open"
      gPEBLName      <- "/opt/local/bin/pebl"
      gOpenManual    <- "acroread /opt/local/share/pebl/doc/PEBLManual0.12.pdf"
-
-
    }
 
    gSleepEasy <- 1
-   gVideoWidth <- 1000
-   gVideoheight <- 700
-   win <- MakeWindow()
+
+  ##Get the current screen size.
+  screenres <- GetCurrentScreenResolution()
+  ##Make the test screen res slightly smaller than the current, but only use it
+  ## if we are not fullscreen.
+  gScreenResLine <- "--display " + (First(screenres) - 50) + "x" + (Second(screenres) - 50)
+
 
    ReadConfigFile(gConfigname)
+
+   if(gScreenSize =="large")
+   {
+     gVideoWidth <- 1000
+     gVideoheight <- 700
+   }elseif(gScreenSize=="small")
+   {
+     gVideoWidth <- 1000
+     gVideoheight <- 600
+   }
+
+   win <- MakeWindow()
+
+
    
 
   ##Now, determine the proper translation strings.
@@ -109,8 +127,15 @@ define Start(p)
    logFile <- FileOpenAppend("PEBLLaunch-log.txt")
 
 
+   ##This controls the size of the file window.
    width <- 200
-   height <- 500
+   if(gScreenSize=="small")
+   {
+     height <- 400
+   }else{
+     height <- 500
+   }
+
    gutter <- 10   
 
    xbase <- 10
@@ -127,6 +152,13 @@ define Start(p)
    gfilelist <- FilterDir(GetDirectoryListing(DirlistToText(gDirChain)),gDirChain,First(gFilters))
    gFlatfilelist <- Flatten(gfilelist)
    
+
+   if(gScreenSize=="small")
+   {
+     adjust <- 100
+   }else{
+     adjust <- 0
+   }
  
  
 
@@ -164,7 +196,7 @@ define Start(p)
 
    ##chain-launcher
    chaintitle <- EasyLabel(gExpChainText+gConfigName,xbase+210+150,290,win,18)
-   chainlist <- EasyTextBox("",xbase+210,300,win,fontsize,300,200)
+   chainlist <- EasyTextBox("",xbase+210,300,win,fontsize,300,200-adjust)
    chainlist.linewrap <- 0
    chainlist.text <- MakeExpChainText(gexpchain)
 
@@ -172,8 +204,7 @@ define Start(p)
    launchchain <- MakeButton(chaintitle.x,chaintitle.y-20,200,win,gLaunchChainText)
  
 
-   
-   bg <- MakeCanvas(200,500,MakeColor("grey20"))
+   bg <- MakeCanvas(200,500-adjust,MakeColor("grey20"))
    AddObject(bg,win)
    MoveCorner(bg,xbase,ybase)
 
@@ -189,17 +220,18 @@ define Start(p)
 
    gPortal.linewrap <-0
    AddObject(gPortal,win)
+
    Move(gPortal,xbase+gutter,ybase+gutter*2)
 
 
-   description <- MakeTextBox(gNoDesc,font,420,240)
+   description <- MakeTextBox(gNoDesc,font,420,240-adjust)
    AddObject(description,win)
    Move(description,570,115)
 
    title <- EasyLabel(gPEBLTitle+ GetPEBLVersion(),gVideoWidth/2,20,win,30)
 
-   screenshotbase <- Rectangle(780,530,420,320,MakeColor("black"),1)
-   screenshotdummy <- Rectangle(780,530,400,300,MakeColor("white"),1)
+   screenshotbase <- Rectangle(780,530-adjust,420,320,MakeColor("black"),1)
+   screenshotdummy <- Rectangle(780,530-adjust,400,300,MakeColor("white"),1)
    AddObject(screenshotbase,win)
    AddObject(screenshotdummy,win)
    screenshot <- screenshotdummy
@@ -296,7 +328,7 @@ define Start(p)
 
 
      gSelection.y <- gPortal.y+yheight*(gselected-.5-offset)
-	 thumby <- (offset / (Length(gflatfilelist)-gPortalNum-1))*(portalHeight-gutter*2)
+     thumby <- (offset / (Length(gflatfilelist)-gPortalNum-1))*(portalHeight-gutter*2)
      gPortal.text <- DirToText(First(gfilelist),Second(gfilelist),offset,gDirChain)
 
      ##find out if there is a text description of the selected text.
@@ -326,25 +358,23 @@ define Start(p)
 	     RemoveObject(screenshot,win)
 	     screenshot <- MakeImage(screenname)
 
-		 AddObject(screenshot,win)
+	     AddObject(screenshot,win)
 
- 		 ##scale to 400x300
-		 scalew <- 400/screenshot.width  
-		 scaleh <- 300/screenshot.height
-		 scale <- Min([scalew,scaleh])
+ 	     ##scale to 400x300
+	     scalew <- 400/screenshot.width  
+	     scaleh <- 300/screenshot.height
+	     scale <- Min([scalew,scaleh])
 
-		 screenshot.zoomX <- scale
-		 screenshot.zoomY <- scale
+	     screenshot.zoomX <- scale
+	     screenshot.zoomY <- scale
 
-		 Move(screenshot,780,530)
-
-		 		 
+	     Move(screenshot,780,530-adjust)
 
       } else {
 	  
 	     RemoveObject(screenshot,win)
-		 screenshot <- screenshotdummy
-		 AddObject(screenshot,win)
+	     screenshot <- screenshotdummy
+	     AddObject(screenshot,win)
 
 
       }
@@ -1094,12 +1124,18 @@ define RunScript(dirChain,filename,fullscreen,language,logfile,subcode,experimen
          Print("Executing : [" + callstring + "]")
       }
 
-		 if(fullscreen)
-		 {
-		   callstring <- callstring + " --fullscreen "
-                 }
+	  if(fullscreen)
+	   {
+	     callstring <- callstring + " --fullscreen "
+           }else{
+              ##If not fullscreen, use something sligtly smaller
+              ##to make way for toolbars etc.
+             callstring <- callstring + " " + gScreenResLine
+          }
 
-		 callstring <- callstring + " --language " + language  + " " + gCommandLineAdd
+
+
+	    callstring <- callstring + " --language " + language  + " " + gCommandLineAdd
   
           if(type =="LINUX" or type == "OSX")
            {
@@ -1110,6 +1146,8 @@ define RunScript(dirChain,filename,fullscreen,language,logfile,subcode,experimen
 
          #### Run the experiment!!!!
          Print(callstring)
+
+
 
   if(gUseReloc)
       {
@@ -1216,26 +1254,28 @@ define PushButton(tmp)
 define ReadConfigFile(configname)
 {
 
-
+##This reads in some configuration stuff from the current
+## config file.
 
    if(FileExists(configName+".config"))
       {
-       config <- (ReadCSV(gConfigName+".config"))
+           config <- (ReadCSV(gConfigName+".config"))
 	   
 	   ##read in the keys--first characters.
 	   keys <- []
 	   loop(i,config)
 	   {
 	     keys<- Append(keys,First(i))
-       }
+           }
 
+	   gScreenSize <- Second(Lookup("screensize",keys,config))
 	   gfullscreen <- ToNumber(Second(Lookup("fullscreen",keys,config)))
 	   gnimhdemographics <- ToNumber(Second(Lookup("nimhdemo",keys,config)))       
 	   gsubcode    <- Second(Lookup("subcode",keys,config))
 	   if(gAutoSubCode)
-       {
+            {
 	     gSubCode <- (ToNumber(gSubCode)+1)+""
-       }
+            }
 
 
 	   tmp <- Lookup("ipaddress",keys,config)
@@ -1244,16 +1284,16 @@ define ReadConfigFile(configname)
 	     gDefaultHostName <- Second(tmp)
 	   } else {
 	     gDefaultHostName <- "localhost"
-       }
+           }
 
 	   tmp <- Lookup("commandline",keys,config)
 
 	   if(Length(tmp)==2)
-         {
+           {
            gCommandLineText <- Second(tmp)
-         } else {
+           } else {
            gCommandLineText <- ""
-         }
+           }
 
 	   gexperimenter <-Second(Lookup("experimenter",keys,config))
 	   glanguage <-Second(Lookup("language",keys,config))
@@ -1262,12 +1302,12 @@ define ReadConfigFile(configname)
    	   ##Get all config entries named 'expchain'
 	   chains <- Filter(config,Match("EXPCHAIN",keys))
 	   loop(i,chains)
-        {
-		   gexpchain <- Append(gexpchain,  [SubList(i,3,Length(i)),Second(i)])
-        }  
+            {
+              gexpchain <- Append(gexpchain,  [SubList(i,3,Length(i)),Second(i)])
+            }  
 
       } else {
-
+      ##We don't have a config file.
         gDefaultHostName <- "localhost"
         gCommandLineText <- ""
         gfullscreen <- 0
@@ -1275,7 +1315,9 @@ define ReadConfigFile(configname)
         gexperimenter <- "default"
         glanguage <- "en"
         gexpchain <- []         ##sequence of experiments to run
-		gnimhdemographics <- 0
+	gnimhdemographics <- 0
+	gScreenSize <- "large"
+
       }
 
 
@@ -1288,19 +1330,20 @@ define Saveconfig(configname)
 
     ##save settings on exit.
 	out <- [["fullscreen",gfullscreen],
-	          ["subcode",gsubcode],
-			  ["experimenter",gexperimenter],
-			  ["language",glanguage],
-			  ["nimhdemo",gnimhdemographics],
-			  ["commandline",gCommandLineText],
-			  ["ipaddress",gDefaultHostName]]
+                ["subcode",gsubcode],
+                ["experimenter",gexperimenter],
+	        ["language",glanguage],
+	        ["nimhdemo",gnimhdemographics],
+	        ["commandline",gCommandLineText],
+	        ["ipaddress",gDefaultHostName],
+		["screensize",gScreenSize]]
             
 
 	  loop(i,gexpchain)
-       {
+          {
 	     ilist <- Merge([Second(i)],First(i))
 	     out <- Append(out,["EXPCHAIN",ilist])
-       }
+           }
       FileSaveTable(out,configname+".config")
 }
 

@@ -13,8 +13,8 @@ define Start(p)
   reps <- 32   ##number of repetitions of the PPPPR design
   gisi <- 1500  ##inter-stimulus interval
  
-  gVideoWidth <- 800
-  gVideoheight <- 600
+#  gVideoWidth <- 800
+#  gVideoheight <- 600
   GetStrings(gLanguage)
   gWin <- MakeWindow("black")
   gSleepEasy <- 1

@@ -131,7 +131,7 @@ define Start(p)
 
   Draw()
   
-  inst <- EasyTextBox("",50,50,gWin,20,700,500) 
+  inst <- EasyTextBox("",gHomeX-350,50,gWin,20,700,500) 
 
 
 
@@ -154,11 +154,23 @@ define Start(p)
   gFont2 <- MakeFont(gPEBLBaseFont,0,20,MakeColor("black"),MakeColor("white"),1)
 
 
+  ## Should we use the original corsi locations, or choose a random set?
+  ## It is probably best to use the original points unless you have a particular
+  ## reason to do otherwise.
   if(gUseCorsiPoints)
    { 
-      targxy <- CorsiPoints(75,30,gScale)
+
+      ##The actual points range from 15 to 195,
+      ##and we want them centered at gHomeX.
+      ##Lets compute the x offset to make it work.
+      ##
+       width <- (195-15)*gScale
+       targxy <- CorsiPoints(gHomeX-width/2,30,gScale)
+
    } else {
-      targxy <- MakePoints(100,gVideoWidth-100,70,gVideoHeight-100, gTargetSize*Sqrt(2),9)
+
+     
+      targxy <- MakePoints(gHomeX-300,gHomeX+300,30,gVideoHeight-100, gTargetSize*Sqrt(2),9)
    }
 
 
@@ -225,12 +237,23 @@ define Start(p)
    loop(stim,trials)
    {
     
-  if(gUseCorsiPoints)
-   { 
-      targxy <- CorsiPoints(75,30,gScale)
-   } else {
-      targxy <- MakePoints(100,gVideoWidth-100,70,gVideoHeight-100, gTargetSize*Sqrt(2),9)
-   }
+
+      if(gUseCorsiPoints)
+      { 
+
+      ##The actual points range from 15 to 195,
+      ##and we want them centered at gHomeX.
+      ##Lets compute the x offset to make it work.
+      ##
+       width <- (195-15)*gScale
+       targxy <- CorsiPoints(gHomeX-width/2,30,gScale)
+
+     } else {
+
+     
+      targxy <- MakePoints(gHomeX-300,gHomeX+300,30,gVideoHeight-100, gTargetSize*Sqrt(2),9)
+     }
+
 
      curlength <- Length(stim)
 
@@ -363,8 +386,8 @@ define Trial(xy,stimseq, direction)
 
   ####################################
   ##Now, collect responses.
-   done <- EasyLabel(gDone,gVideoWidth/2,gVideoHeight-20,gWin,33)
-   doneback <-   Rectangle(gVideoWidth/2,gVideoHeight-20,120,30,MakeColor("white"),0)
+   done <- EasyLabel(gDone,gVideoWidth/2,gVideoHeight/2+gScale*80,gWin,33)
+   doneback <-   Rectangle(gVideoWidth/2,gVideoHeight/2+gScale*80 ,120,30,MakeColor("white"),0)
    AddObject(doneback,gWin)
    SetMouseCursorPosition(Round(gVideoWidth/2),Round(gVideoHeight/2))
    ShowCursor(1)
@@ -677,7 +700,7 @@ define CorsiPoints(offx,offy,scale)
          [30,145],
          [180,120],
          [70,110],
-  	  	 [140,90],
+  	 [140,90],
          [195,60],
          [15,50],
          [75,20],

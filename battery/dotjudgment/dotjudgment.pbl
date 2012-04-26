@@ -81,13 +81,14 @@ define Start(p)
     gCorr30     <- []
     gCorr40     <- []
 
-	base <- [10,20,40,80]
-	thresholds <- [3,3,3,3]
-	gTrial <- 1
+
+    base <- [10,20,40,80]
+    thresholds <- [3,3,3,3]
+    gTrial <- 1
     gBlock <- 0
 
 
-	design <- Shuffle(RepeatList([1,2,3,4],numReps))
+    design <- Shuffle(RepeatList([1,2,3,4],numReps))
     loop(type,design)
     {
 
@@ -129,27 +130,27 @@ define Trial (stim,thresh,practice)
    time0 <- GetTime()
    ##add the fixation right away.
    header <- EasyLabel("Which field has more dots?",gVideoWidth/2,22,gWin,30)
-   footer <- EasyLabel(gFooterL+"          "+gFooterR,gVideoWidth/2,gVideoHeight-40,gWin,40)
+   footer <- EasyLabel(gFooterL+"          "+gFooterR,gVideoWidth/2,gVideoHeight-100,gWin,40)
 
    order <- Sample([1,-1])
 
    border <- 45
    tol <- 3
    if(order==1)
-     {  ##higher on right
-	   layoutl <- NonOverlapLayout(border,gVideoWidth/2-border,border,gVideoHeight-100,tol,stim+thresh)
-       layoutr <- NonOverlapLayout(gVideoWidth/2+border,gVideoWidth-border,border,gVideoHeight-100,tol,stim)
+      {  ##higher on right
+       layoutl <- NonOverlapLayout(border,gVideoWidth/2-border,border,gVideoHeight-150,tol,stim+thresh)
+       layoutr <- NonOverlapLayout(gVideoWidth/2+border,gVideoWidth-border,border,gVideoHeight-150,tol,stim)
 
 
      } else {
 
-	   layoutl <- NonOverlapLayout(border,gVideoWidth/2-border,border,gVideoHeight-100,tol,stim)
-       layoutr <- NonOverlapLayout(gVideoWidth/2+border,gVideoWidth-border,border,gVideoHeight-100,tol,stim+thresh)
+         layoutl <- NonOverlapLayout(border,gVideoWidth/2-border,border,gVideoHeight-150,tol,stim)
+         layoutr <- NonOverlapLayout(gVideoWidth/2+border,gVideoWidth-border,border,gVideoHeight-150,tol,stim+thresh)
 
      }
 
-	 back1 <-Rectangle(gVideoWidth/2/2,(gVideoHeight-100)/2+border/2,(gVideoWidth-border)/2+15,(gVideoheight-100-border)+15,MakeColor("darkgrey"),1)
-	 back2 <-Rectangle(gVideoWidth*3/4,(gVideoHeight-100)/2+border/2,(gVideoWidth-border)/2+15,(gVideoheight-100-border)+15,MakeColor("darkgrey"),1)
+	 back1 <-Rectangle(gVideoWidth/2/2,(gVideoHeight-150)/2+border/2,(gVideoWidth-border)/2+15,(gVideoheight-150-border)+15,MakeColor("darkgrey"),1)
+	 back2 <-Rectangle(gVideoWidth*3/4,(gVideoHeight-150)/2+border/2,(gVideoWidth-border)/2+15,(gVideoheight-150-border)+15,MakeColor("darkgrey"),1)
 
 	 AddObject(back1,gWin)
 	 AddObject(back2,gWin)
@@ -296,8 +297,6 @@ define Initialize()
 
   ##  The screen re
   ##
-  gVideoWidth <- 800
-  gVideoheight <- 600
 
   ## the yoffset is supposed to be 1.06 degrees above offset.
   ##

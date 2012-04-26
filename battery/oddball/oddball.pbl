@@ -25,8 +25,9 @@ define Start(p)
    numreps <- 1      ##this many reps of the 20-trial design
    soa <- 3000    ##Fix the stimulus-onset asynchrony.
 
+   Print(gVideoWidth+"x"+gVideoheight)
    gWin <- MakeWindow("black")
-
+   Print(gVideoWidth+"x"+gVideoheight)
    Initialize()
 
    ##Get subject code if we need to:    
@@ -374,8 +375,8 @@ define Initialize()
 
   ##  The screen re
   ##
-  gVideoWidth <- 800
-  gVideoheight <- 600
+  ##gVideoWidth <- 800
+  ##gVideoheight <- 600
 
   ## the yoffset is supposed to be 1.06 degrees above offset.
   ##

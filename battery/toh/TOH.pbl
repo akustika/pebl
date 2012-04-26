@@ -50,6 +50,7 @@ define Start(p)
                               ## with number of disks in
 							  ## order specified by first argument
 
+ #   stim <- MakeBishopProblems()
 
    gUseTimer <- 0  ##This hard-codes use of timer. Uncomment to
                    ##override the defaults built into each particular test function.
@@ -113,7 +114,7 @@ define TrialTOH(pair)
     config <- First(pair)
     config1 <- Second(pair)
 
-	startlab <- Third(pair)
+    startlab <- Third(pair)
     endlab <- Fourth(pair)
     shortest <- Fifth(pair)
 
@@ -131,6 +132,8 @@ define TrialTOH(pair)
       cGraph <- MakeGraph(shortest,shortest,650,400,gClickLab,shortest)
     }
 
+
+
     startTime <- GetTime()
     lasttime <- GetTime()
     time <- GetTime()
@@ -141,7 +144,7 @@ define TrialTOH(pair)
     #Allow disk moves until the two have identical configurations.
     continue <- 1
     step <- 1 
-	gEndTime <- time + gTimeLimit*1000
+    gEndTime <- time + gTimeLimit*1000
     if(gUseTimer)
     {
       ##Timegraph defaults to 120 sec.
@@ -160,6 +163,22 @@ define TrialTOH(pair)
 
       gTimeGraph <- MakeGraph(gTimeLimit,gTimeLimit,710,400,gTimeLab,numticks)
     }
+
+
+    disks2 <- SubList(gDisks,1,Length(config))
+    ##Add the disks to the window.
+    loop(disk,disks2)
+    {
+     AddObject(disk,gWin)
+    }
+
+    disks2 <- SubList(gDisks2,1,Length(config))
+    ##Add the disks to the window.
+    loop(disk,disks2)
+    {
+     AddObject(disk,gWin)
+    }
+
     Draw()
     
 
@@ -355,6 +374,11 @@ define InitPoles()
 define PlotDisksAnimate(config,ybase,disks,steps)
 {
 
+  Print(config)
+  Print(ybase)
+  Print(disks)
+  Print(steps)
+
   ydelta <- 20
   yheights <- Repeat(0,Length(disks))
   
@@ -390,12 +414,6 @@ define PlotDisksAnimate(config,ybase,disks,steps)
 
   }
 
-  ##Add the disks to the window.
-  loop(disk,disks2)
-   {
-
-     AddObject(disk,gWin)
-   }
 
   ##compute the xy vector that each disk must move on each step
   startend <- Transpose([startxy, endxy])
@@ -453,8 +471,6 @@ define AddToListItem(list,element,addend)
 define MoveDisk(config)
 {
 
-
-
    if(gUseTimer)
    {
     cont <- 1
@@ -497,7 +513,7 @@ define MoveDisk(config)
     {
       ##Remove the disk complex so it can be re-drawn
       RemoveComplex(gComplex)
-	  gComplex <- PlotDisksAnimate(config,440,gDisks,5)
+      gComplex <- PlotDisksAnimate(config,440,gDisks,5)
       Draw()
 
 
@@ -533,6 +549,7 @@ define MoveDisk(config)
       } else {
         ##No timer, so use just standard click.
         next <- WaitForClickOnTarget(gZones, [1,2,3])
+	Print(next)
         while(not CheckValid(config,next))
          {
            next <- WaitForClickOnTarget(gZones, [1,2,3])
@@ -689,6 +706,7 @@ define MakeProblems3(num)
   
      i <- i + 1
    }
+  Print(probs)
  
   return probs  
 }
@@ -989,3 +1007,25 @@ define TOH3Dists()
 
   return dist
 }
+
+## Problems defined by Bishop:
+##
+define MakeBishopProblems()
+{
+    probs <- [[[1,1], [3,3], 11, 33, 3],
+             [[1,2,2],[3,3,3],122,333,4],
+             [[1,1,1],[3,2,2],111,322,4],
+	         [[1,2,3],[3,3,3],123,333,5],
+	         [[1,1,1],[3,2,1],111,321,5],
+	         [[1,1,3],[3,3,3],113,333,6],
+	         [[1,1,1],[3,3,1],111,331,6],
+	         [[1,1,1],[3,3,3],111,333,7],
+	         [[1,1,1],[2,1,1],111,211,7],
+	         [[2,1,1,1],[3,3,3,3],2111,3333,8],	
+	         [[1,1,1,1],[2,3,3,3],1111,2333,8],
+	         [[2,1,1,3],[3,3,3,3],2113,3333,9],             
+             [[1,1,1,1],[2,3,3,1],1111,2331,9]      ]
+
+  return probs
+}
+
