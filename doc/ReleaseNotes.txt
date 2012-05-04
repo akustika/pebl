@@ -29,7 +29,7 @@ obsolete.
                  RELEASE NOTES
 
 
-Rename files that collide with FileOpen
+
 
 -------------------------------------------------
 
@@ -107,18 +107,18 @@ Version 0.12
  * Initial support for controlling parallel port devices. This is
    enabled by four new functions:
   
-    - ??OpenPPort()
-    - ??SetPPortState()
-    - ??SetPPortMode()
-    - ??GetPPortState()
+    - OpenPPort()
+    - SetPPortState()
+    - SetPPortMode()
+    - GetPPortState()
 
  * Initial support for controlling serial port devices.  This is a
     window into accessing FTDI USB chips, which masquerade as serial
     devices. This is enabled by three new functions:
 
-     - ??OpenCOMPort()
-     - ??COMPortSendByte()
-     - ??COMPortGetByte()
+     - OpenCOMPort()
+     - COMPortSendByte()
+     - COMPortGetByte()
 
     The internal COM port system supports more than this, and some of
     these functions will be built up over future released of PEBL.  I
@@ -127,8 +127,8 @@ Version 0.12
     response boxes.
 
 
-???	SetNetworkPort
-???	CheckForNetworkConnection
+	SetNetworkPort
+	CheckForNetworkConnection
 
 
  * Audio Input/Output
@@ -168,17 +168,25 @@ Version 0.12
      Round(13.14159,-1) #= 10, a float
 
 
-   - Improved Recursion facilities (only for round right now???).
+   - Improved Recursion facilities.
+
+   - FileOpenWrite will not overwite an existing file if you try to
+     reuse a file name (usually by accident).  Now, it will append a
+     -1, -2, etc. to the end of the main filename so it is harder to
+     lose your data.  To absolutely overwrite, use the new function
+     FileOpenOverwrite.
 
    - A virtual keyboard functions are now available in
      demo/vkeyboard.pbl.  Use it to get text entry on touch screens and
      the like. I haven't yet included this in the standard libraries.  
      To use, copy the function into your experiment.
 
-??????? - We now include just one CKJ Font, replacing UnBatang.ttf and
-ukai.ttf, called "wqy-zenhei.ttf".  When PEBL is started with an
+We now include just one CKJ Font, replacing UnBatang.ttf and
+ukai.ttf, called "wqy-zenhei.ttc".  When PEBL is started with an
 appropriate language code, gPEBLBaseFont and its related default fonts
 will default to wqy-zenhei.ttf.
+
+
  
  *Other New functions:
 

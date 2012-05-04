@@ -1,5 +1,5 @@
 ========================================
-To Do for 0.12:
+To Do for 0.13:
 
  - Allow Shuffle to take multiple arguments, which are shuffled in parallel???
  - Create a PushOn type function
@@ -16,6 +16,11 @@ To Do for 0.12:
  -Krystal's bug in TOH
 
 - document Match(), Filter(), and Levels()
+
+-document RemoveFile(), changes to FileOpenWrite()
+
+-improve  recursion stuff.
+
 --------------------------------------------
 ##Completed for 0.12
 
