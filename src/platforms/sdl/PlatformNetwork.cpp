@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformNetwork.cpp
 //    Purpose:    Class for handling network communication
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2006- Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2006-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -46,38 +46,43 @@ using std::endl;
 
 PlatformNetwork::PlatformNetwork()
 {
-  mAddress = new IPaddress;
-  mAddress->host=0;
-  mAddress->port=0;
-  mSocket = NULL;
+    //mAddress is SDL-specific, so it is 
+    //not exposed to users.
+
+    mAddress = new IPaddress;
+    mAddress->host=0;
+    mAddress->port=0;
+    mSocket = NULL;
+    mMyAddress = NULL;
+    mListener = NULL;
 }
 
 PlatformNetwork::~PlatformNetwork()
 {
-  delete mAddress;
-  SDLNet_Quit();
+    delete mAddress;
+    SDLNet_Quit();
 }
 
 
 void PlatformNetwork::Init()
 {
-  int val = SDLNet_Init();
-
-  if(!val)
-	{
-        //std::cerr << "Network System Initialized\n";
-	}else{
-
-	  PError::SignalFatalError("Network System Failed to Initialize.");
+    int val = SDLNet_Init();
+    
+    if(!val)
+        {
+            //std::cerr << "Network System Initialized\n";
+        }else{
+        
+        PError::SignalFatalError("Network System Failed to Initialize.");
 	}
-  
+    
 }
 
 void PlatformNetwork::SetHostIP(unsigned int ip)
 {
-  mHost = ip;
-  mAddress->host=ip;
 
+    PNetwork::SetHostIP(ip);    //mHost = ip;
+    mAddress->host=ip;
 }
 
 void PlatformNetwork::SetPort(unsigned int port)
@@ -86,8 +91,10 @@ void PlatformNetwork::SetPort(unsigned int port)
     //SDL swaps the byte order in the SDL_Net library for some reason.
     //So we need to pre-swap to ensure we get the right port.
 
-    mPort = SDL_SwapBE16(port);
-    mAddress->port = mPort;
+    //This should swap the byte order
+    //PNetwork::SetPort(SDL_SwapBE16(port));
+    PNetwork::SetPort((port));
+    mAddress->port = SDL_SwapBE16(mPort);
 
     //std::cout << "Port: " << port <<"|"<<mPort << "|"<<mAddress->port<< std::endl;
     //std::cout << "tmp: " <<tmp << std::endl;
@@ -95,17 +102,52 @@ void PlatformNetwork::SetPort(unsigned int port)
 }
 
 
-//This resolves the IP currently stored in 
+Variant PlatformNetwork::GetMyIPAddress()
+{
+    if(mMyAddress)
+        return ConvertAddress(mMyAddress);
+    else
+        {
+            mMyAddress = new IPaddress;
+            SDLNet_ResolveHost(mMyAddress,NULL,mAddress->port);
+            return ConvertAddress(mMyAddress);
+        }
+}
+
+Variant PlatformNetwork::GetIPAddress()
+{
+
+    //This will get the IP address that was connected to you,
+    //assuming you are a host.
+    if(mAddress==NULL)
+        return "<UNKNOWN ADDRESS>";//SetHostIP(SDLNet_TCP_GetPeerAddress(mSocket));
+    return ConvertAddress(mAddress);
+}
+
+//This resolves the IP currently stored in mAddress
 void PlatformNetwork::SetHostName(std::string hostname)
 {
 
-  mHostName = hostname;
-  SDLNet_ResolveHost(mAddress,mHostName.c_str(), mAddress->port);
-
-
+    PNetwork::SetHostName(hostname);
+    
+    //This will use hostname to obtain mAddress, an IPaddress.
+    SDLNet_ResolveHost(mAddress,
+                       mHostName.c_str(), 
+                       mAddress->port);
+    
   //std::cout<< "Host address from name ["  << mAddress->host << "]"<< std::endl;
 }
 
+
+//This gets the IP address of the other side of the connection.
+
+
+Variant PlatformNetwork::ConvertAddress(IPaddress* address)
+{
+    Uint32 host = address->host;
+    Variant v = PNetwork::ConvertAddress(host);
+    return v;
+}
 
 // This opens a connection to some host that is listening for it.
 //
@@ -121,11 +163,11 @@ void PlatformNetwork::Open()
     if(!mSocket)
         {
             // PError::SignalWarning("Unable to establish connection to " + mHostName);
-            mIsOpen = false;
+            PNetwork::SetOpen(false);
         }
     else
         {
-            mIsOpen = true;
+            PNetwork::SetOpen(true);
         }
 }
 
@@ -136,36 +178,92 @@ bool PlatformNetwork::CheckForConnection()
 
   //First, create the socket to listen on:
 
-  IPaddress * tmpAddress = new IPaddress;
-  tmpAddress->host = INADDR_ANY;
-  tmpAddress->port = mPort;
+    //  IPaddress * tmpAddress = new IPaddress;
+    //  tmpAddress->host = INADDR_ANY;
+    //  tmpAddress->port = SDL_SwapBE16(mPort);
 
 
   //std::cout << "unable"  << tmpAddress->port << endl;
-  TCPsocket listener = SDLNet_TCP_Open(tmpAddress);
+  //TCPsocket listener = SDLNet_TCP_Open(tmpAddress);
 
-
-
-  if(!listener)
-	PError::SignalFatalError("Unable to listen for connection 1." );
+  //an mListener socket already needs to have been opened.
+  if(!mListener)
+      PError::SignalFatalError(Variant("Unable to listen for connection in PlatformNetwork::CheckForConnection on port:") + Variant((int)mPort) );
     
   //If we haven't opened the socket yet,  do so now:
 
   if(mSocket == NULL)
-      mSocket = SDLNet_TCP_Accept(listener);
+      mSocket = SDLNet_TCP_Accept(mListener);
 
   if(mSocket)
-      mIsOpen = true;
+      PNetwork::SetOpen(true);
 
 
   //  if(!mIsOpen)
   //Close the listener, because we won't need it again the way we operate.
-  SDLNet_TCP_Close(listener);
+  //SDLNet_TCP_Close(mListener);
   
 
-
-  delete tmpAddress;
+  //  delete tmpAddress;
   return mIsOpen;
+}
+
+
+
+bool PlatformNetwork::CreateListener()
+{
+
+  //First, create the socket to listen on:
+
+  IPaddress * tmpAddress = new IPaddress;
+  tmpAddress->host = INADDR_ANY;
+  tmpAddress->port = SDL_SwapBE16(mPort);
+
+
+  //  std::cout << "unable"  << tmpAddress->port << endl;
+  mListener = SDLNet_TCP_Open(tmpAddress);
+  if(!mListener)
+      PError::SignalFatalError("Unable to create listener Socket." );
+  
+  return true;
+}
+
+// This requires a listener socket to have been opened.
+//
+bool PlatformNetwork::Accept(int mstimeout)
+{
+
+    if(mListener==NULL)
+        {
+            PError::SignalFatalError("Trying to accept a connection on a network port that has not been opened.");
+        }
+    int now = SDL_GetTicks();
+    int end = now + mstimeout;
+    //This doesn't work too well.  It should have a timeout.
+    while(mSocket == NULL & SDL_GetTicks()<end )
+        {
+            mSocket = SDLNet_TCP_Accept(mListener);
+            SDL_Delay(1);//Wait a little bit so we don't peg the CPU
+        }
+    
+    //cout << "opened socket\n";
+  
+  //  if(mAddress)
+  //      delete mAddress;
+  //mAddress = SDLNet_TCP_GetPeerAddress(mSocket);
+  
+  //Close the 'listening' socket.
+  SDLNet_TCP_Close(mListener);
+
+  if(mSocket==NULL)
+      {
+          PNetwork::SetOpen(false);
+      }
+  else
+      {
+          PNetwork::SetOpen(true);
+      }
+  return  mSocket!=NULL;
 }
 
 
@@ -173,28 +271,48 @@ bool PlatformNetwork::CheckForConnection()
 // One might prefer a two-step process giving a bit more
 // control.
 
-void PlatformNetwork::Accept()
+bool PlatformNetwork::Accept()
 {
 
   //First, create the socket to listen on:
 
   IPaddress * tmpAddress = new IPaddress;
   tmpAddress->host = INADDR_ANY;
-  tmpAddress->port = mPort;
+  tmpAddress->port = SDL_SwapBE16(mPort);
 
-  //std::cout << "unable"  << tmpAddress->port << endl;
+
+  //  std::cout << "unable"  << tmpAddress->port << endl;
   TCPsocket listener = SDLNet_TCP_Open(tmpAddress);
   if(!listener)
       PError::SignalFatalError("Unable to listen for connection 2." );
   
-  //This doesn't work too well.
-  while(mSocket == NULL)
-      mSocket = SDLNet_TCP_Accept(listener);
-  
 
+
+  //This doesn't work too well; maybe it should have an optional timeout?
+  while(mSocket == NULL)
+      {
+          mSocket = SDLNet_TCP_Accept(listener);
+          SDL_Delay(1);//Wait a little bit so we don't peg the CPU
+      }
+
+  //cout << "opened socket\n";
+  
+  //  if(mAddress)
+  //      delete mAddress;
+  //mAddress = SDLNet_TCP_GetPeerAddress(mSocket);
+  
+  //Close the 'listening' socket.
   SDLNet_TCP_Close(listener);
   delete tmpAddress;
-  mIsOpen = true;
+  if(mSocket==NULL)
+      {
+          PNetwork::SetOpen(false);
+      }
+  else
+      {
+          PNetwork::SetOpen(true);
+      }
+  return  mSocket!=NULL;
 }
 
 
@@ -203,32 +321,41 @@ void PlatformNetwork::Close()
     if(mSocket)
         SDLNet_TCP_Close(mSocket);
     mSocket = NULL;
-    mIsOpen = false;
+    PNetwork::SetOpen(false);
 }
 
 
-void PlatformNetwork::SendString(std::string data)
+bool PlatformNetwork::SendString(std::string data)
 {
 
+  char* buffer = NULL;
   if(mIsOpen)
 	{
-	  char* buffer = strdup(data.c_str());
 
+	  buffer = strdup(data.c_str());
 	  int sent = SDLNet_TCP_Send(mSocket, buffer,data.length());
-	  free(buffer);
+
 
 	  if(sent != (int)data.length())
 		{
-		  PError::SignalFatalError("Error sending data to " + mHostName + ". Entire Message Not Sent.");		  
+            std::cerr << "Tried to send: " << data.length() << std::endl;
+            std::cerr << "Succeeded at:  " << sent << std::endl;
+            PError::SignalWarning("Error sending data to " + mHostName + ". Not all data sent. Retry send");
+            free(buffer);
+            return false;
 		}
-	}else{
+  	}else{
 	  PError::SignalFatalError("Trying to send data without an open connection.");
+      return false;
 	}
 
+  free(buffer);
+  return true;
 }
 
 
-void PlatformNetwork::SendByte(int byte)
+
+bool PlatformNetwork::SendByte(int byte)
 {
 
   if(mIsOpen)
@@ -237,39 +364,47 @@ void PlatformNetwork::SendByte(int byte)
 	  int sent = SDLNet_TCP_Send(mSocket, &byte,1);
 	  if(sent != 1)
 		{
-		  PError::SignalFatalError("Error sending data to " + mHostName + ". Entire Message Not Sent.");		  
+		  PError::SignalWarning("Error sending data to " + mHostName + ". Entire Message Not Sent.");		  
+          return 0;
 		}
 	}else{
 	  PError::SignalFatalError("Trying to send data without an open connection.");
 	}
-
+  return true;
 }
 
 std::string PlatformNetwork::Receive(int length)
 {
-
   char * message = NULL;
   if(mIsOpen)
 	{
+        message = new char[length+1];
+        int pos = 0;
+        while(pos<length)
+            {
 
+                int result = SDLNet_TCP_Recv(mSocket,message+pos,length);
+                //cout << "length: " << length <<"|" << pos <<  " <<<< " << result << endl;
+                
+                if(result == -1)
+                    {
+                        PError::SignalFatalError("Error receiving  data from " + mHostName + ".");
+                    }
+                else if(result == 0)
+                    {
+                        PError::SignalFatalError("Error receiving data from " + mHostName + ". Connection Closed by peer.");
+                    }else{
 
-	  message = new char[length+1];
-	  
-	  int result = SDLNet_TCP_Recv(mSocket,message,length);
-	 
-	  message[length]  = '\0';
-	  if(result == -1)
-		{
-		  PError::SignalFatalError("Error receiving  data from " + mHostName + ".");
-		}
-	  else if(result == 0)
-		{
-		  PError::SignalFatalError("Error receiving data from " + mHostName + ". Connection Closed by peer.");
-		}
+                    pos = pos + result;
+                }
+            }
+        //Put a null char at the end.
+        message[length] = '\0';
 	}else{
 	  PError::SignalFatalError("Trying to receive data without an open connection.");
 	}
 
+  //Make a copy and return the message.
   std::string ret = std::string(message);
   free(message);
   return ret;

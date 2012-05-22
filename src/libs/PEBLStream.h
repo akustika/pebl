@@ -96,13 +96,17 @@ namespace PEBLStream
 
     Variant SetNetworkPort(Variant v);//
     Variant CheckForNetworkConnection(Variant v);//
+    Variant OpenNetworkListener(Variant v);
+
+    Variant AcceptNetworkConnection(Variant v);
     Variant WaitForNetworkConnection(Variant v);
     Variant CloseNetworkConnection(Variant v);
 
     Variant SendData(Variant v);
     Variant GetData(Variant v);
 
-
+    Variant GetIPAddress(Variant v);
+    Variant GetMyIPAddress(Variant v);
     //This writes a 'screenshot' to a png file.
     Variant WritePNG(Variant v);
 

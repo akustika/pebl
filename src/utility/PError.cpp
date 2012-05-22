@@ -316,8 +316,6 @@ void PError::AssertType(Variant v, int type, const string & outsideMessage)
 
       case PEAT_WIDGET:
           
-          //
-          //
           if(v.IsComplexData())
               {
                   if((v.GetComplexData())->IsWidget())
@@ -331,9 +329,20 @@ void PError::AssertType(Variant v, int type, const string & outsideMessage)
           SignalFatalError(message);
           
           break;
+
+
+      case PEAT_OBJECT:
+          if(v.IsComplexData())
+              {
+                  //Any complex data is a PEBLObject (except maybe a list?)
+                  return;
+              }
+          message = outsideMessage;
+          message +="Wanted Object but got " + GetTypeName(v) + ": "+ v.GetString();
+          SignalFatalError(message);
           
-
-
+          break;
+          
 
       case PEAT_WINDOW:
           

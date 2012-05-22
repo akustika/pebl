@@ -3,7 +3,7 @@
 //    Name:       src/base/PList.h
 //    Purpose:    Contains declaration for the list structure.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2006 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -31,7 +31,8 @@
 #include "../utility/rc_ptrs.h"
 #include "PEBLObject.h"
 
-#include <list>
+//#include <list>
+#include <vector>
 #include <iostream>
 
 
@@ -54,22 +55,22 @@ public:
     ///Makes and returns a deep copy
     virtual PList * Clone();
 
-    std::list<Variant>::const_iterator  Begin() const;
-    std::list<Variant>::const_iterator  End() const; 
+    std::vector<Variant>::const_iterator  Begin() const;
+    std::vector<Variant>::const_iterator  End() const; 
 
-    std::list<Variant>::iterator  Begin();
-    std::list<Variant>::iterator  End() ; 
+    std::vector<Variant>::iterator  Begin();
+    std::vector<Variant>::iterator  End() ; 
 
     //    std::list<Variant>::iterator  GetNext(std::list<Variant>::iterator i){return i->next(); }
     //    std::list<Variant>::iterator  GetPrev(std::list<Variant>::iterator i){return i->previous(); }
-    void PushFront(const Variant & v);
-    void PopFront();
+    //    void PushFront(const Variant & v);
+    //    void PopFront();
     void PushBack(const Variant & v);
     void PopBack();
 
 
     bool IsEmpty(){return mList.empty();};
-    void Remove(Variant v){mList.remove(v);};
+    //    void Remove(Variant v){mList.remove(v);};
     void Clear(){mList.clear();};
 
     Variant First();
@@ -82,8 +83,9 @@ public:
 
     bool IsMember(Variant v);
 
+    void SetElement(unsigned int n,Variant value);
 
-    std::list<Variant> * GetList();
+    std::vector<Variant> * GetList();
     
     //Overload of the << operator
     friend std::ostream & operator <<(std::ostream & out, const PList & pcd );
@@ -94,7 +96,7 @@ protected:
     std::ostream & SendToStream(std::ostream& out) const;
 
 private:
-    std::list<Variant> mList;
+    std::vector<Variant> mList;
 };
 
 

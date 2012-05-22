@@ -41,6 +41,7 @@
 #include <string>
 #include <strstream>
 #include <math.h>
+#include <algorithm>
 
 #undef PEBL_DEBUG_PRINT
 //#define PEBL_DEBUG_PRINT 1
@@ -48,8 +49,9 @@
 using std::cout;
 using std::endl;
 using std::flush;
-using std::list;
+//using std::list;
 using std::string;
+using std::vector;
 
 Evaluator::Evaluator():
     mStackMax(10000),
@@ -506,7 +508,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //iterate through the lists and assign values to variables.
                 PList * tmp = (PList*)(tmpList.get());
 
-                list<Variant>::iterator p = tmp->Begin();
+                vector <Variant>::iterator p = tmp->Begin();
                 
                 while(node1)
                     {
@@ -585,7 +587,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //All built-in functions take a single parameter: a Variant list.  
                 //This variant should be on the top of the stack right now. So get it.
                 Variant v2 = Pop();
-
+                //cout << "Parameter list:" << v2 << endl;
 
                 //Before we execute, check to see if v2 has a length  between min and max.
                 int numargs=0;
@@ -599,6 +601,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                                 {
                                     PList * tmp = (PList*)(v2.GetComplexData()->GetObject().get());
                                     numargs = tmp->Length();
+                                    //cout << "Examining : " << *tmp << endl;
                                 }
                             else
                                 {
@@ -714,8 +717,8 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //Retrieve an iterator to the items in the list.
                 //PComplexData * tmpPCD = v1.GetComplexData();
                 const PList * tmp = (PList*)(v1.GetComplexData()->GetObject().get());
-                list<Variant>::const_iterator p = tmp->Begin();
-                list<Variant>::const_iterator end = tmp->End();
+                vector<Variant>::const_iterator p = tmp->Begin();
+                vector<Variant>::const_iterator end = tmp->End();
                 Variant results=0;
                 
                 while(p != end)
@@ -883,30 +886,35 @@ bool Evaluator::Evaluate(const OpNode * node)
 
                         //Must make a new list, and create a variant out of it.
                         PList * tmpList = new PList();
-                        
+                        PList order;
+                        int ord = 0;
                         //Now, pop off items from the list until you get to a
                         //P_DATA_STACK_SIGNAL, then if it i
                         Variant v1 = Pop();
                         
+                        //we need to create the list from the items on the stack. 
+                        //But the top of the stack is the end of the list.
                         while(v1.GetDataType() != P_DATA_STACK_SIGNAL)
                             {
+
+                                //cout << "::::" << v1 << endl;
                                 //Add the item to the list.
-                                tmpList->PushFront(v1);
-                                
+                                tmpList->PushBack(v1);//This used to be PushFront
+                                order.PushBack(ord--);
                                 //Pop and repeat.
                                 v1 = Pop();
                             }
 
-                
-                        //Now, tmpList should be the entire list.
-                        //Make a Variant out of it, and put it on the stack. 
+                        //When tmpList had a list inside it, we could use PushFront to 
+                        //automatically reverse the list, which is now on the stack with 
+                        //the last element first.  
+                        //But now that it is a vector, it is inefficient to push onto the front
+                        //And involves recopying every element), so we will just reverse it now
+                        //that it is in a handy list format.
+                       
+                        std::reverse(tmpList->Begin(),tmpList->End());
+                       
                         counted_ptr<PEBLObjectBase> pl = counted_ptr<PEBLObjectBase>(tmpList);
-
-                        
-
-                        
-                        //There is a memory leak here, revealed by efence:
-
                         PComplexData  pcd =  PComplexData(pl);
                         Variant v2 = Variant(&pcd);
                         Push(v2);

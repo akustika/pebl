@@ -44,7 +44,8 @@
 
 #include <iostream>
 #include <list>
-using std::list;
+//using std::list;
+using std::vector;
 using std::cout;
 using std::endl;
 // PlatformDrawObject::PlatformDrawObject(PlatformWidget * widget)
@@ -368,8 +369,8 @@ bool PlatformPolygon::Draw()
     Sint16 *x = new Sint16[length];
     Sint16 *y = new Sint16[length];
 
-    list<Variant>::iterator p1 = pxlist->Begin();    
-    list<Variant>::iterator p2 = pylist->Begin();
+    vector<Variant>::iterator p1 = pxlist->Begin();    
+    vector<Variant>::iterator p2 = pylist->Begin();
 
     int i = 0;
     while(p1 != pxlist->End())
@@ -439,8 +440,8 @@ bool PlatformBezier::Draw()
     Sint16 *x = new Sint16[length];
     Sint16 *y = new Sint16[length];
 
-    list<Variant>::iterator p1 = pxlist->Begin();    
-    list<Variant>::iterator p2 = pylist->Begin();
+    vector<Variant>::iterator p1 = pxlist->Begin();    
+    vector<Variant>::iterator p2 = pylist->Begin();
 
     int i = 0;
     while(p1 != pxlist->End())

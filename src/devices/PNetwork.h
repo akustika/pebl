@@ -52,17 +52,19 @@ public:
     ///The Standard destructor.  
     virtual ~PNetwork();
     
-    virtual void SetHostIP(unsigned int host){mHost = host;};
-    virtual unsigned int GetHost(){return mHost;};
+    virtual void SetHostIP(unsigned int host);
+    virtual unsigned int GetHost();
     
-    virtual void SetHostName(std::string hostname){mHostName = hostname;};
-    virtual std::string GetHostName(){return mHostName;};
+    virtual void SetHostName(std::string hostname);
+    virtual std::string GetHostName();
 
-    virtual void SetPort(unsigned int port){mPort = port;};
-    virtual unsigned int GetPort(){return mPort;};
+    virtual void SetPort(unsigned int port);
+    virtual unsigned int GetPort();
     
-    virtual bool IsOpen(){return mIsOpen;};
+    virtual bool IsOpen();
+    virtual Variant ConvertAddress(unsigned long int address);
 
+    virtual void SetOpen(bool open);
 protected:
 
     //Inheritable printing Method.

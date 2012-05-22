@@ -485,7 +485,7 @@ Variant PlatformAudioIn::VoiceKey(double threshold, unsigned int sustain)
 
 
     PList * newlist = new PList();
-    newlist->PushFront(Variant(triptime * msperchunk));
+    newlist->PushBack(Variant(triptime * msperchunk));
     newlist->PushBack(Variant(offtime * msperchunk));
     newlist->PushBack(Variant(trip));
     //    cout << "Returning: " << *newlist << endl;

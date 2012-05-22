@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLList.h
 //    Purpose:    List Manipulation Library for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -63,7 +63,10 @@ namespace PEBLList
     Variant MakeMap (Variant v);
     Variant Transpose (Variant v);
     Variant SubList (Variant v);
-    Variant Remove (Variant);
+    Variant Remove (Variant v);
+
+    Variant PushOnEnd(Variant v);
+    Variant SetElement(Variant v);
 }
 
 

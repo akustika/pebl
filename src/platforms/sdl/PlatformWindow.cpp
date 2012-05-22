@@ -69,13 +69,15 @@ int PlatformWindow::GetVideoFlags()
 	int videoFlags;
 	const SDL_VideoInfo *videoInfo;
 
-
 	videoInfo = SDL_GetVideoInfo();
 	if (videoInfo == NULL) {
+
+        //This seems to have trouble with the dga driver on linux.
         std::cerr << "SDL Video Error in PEBL" << endl;
 	}
 
-
+    if(videoInfo)
+        {
 	// This checks to see if surfaces can be stored in memory
 	if (videoInfo->hw_available)
         {
@@ -92,14 +94,22 @@ int PlatformWindow::GetVideoFlags()
             //videoFlags |= SDL_RESIZABLE;       // Enable window resizing
             cerr << "Hardware surfaces NOT available.\n";
         }
-
+        
 	// This checks if hardware blits can be done
 	if (videoInfo->blit_hw)
         {
             cerr << "Hardware blits are possible.\n";
             videoFlags |= SDL_HWACCEL;
         }
-    
+        }else{
+        cerr << "Guessing hardward available";
+            videoFlags  = SDL_HWSURFACE;
+            videoFlags |= SDL_DOUBLEBUF; 
+            videoFlags |= SDL_HWPALETTE;
+            videoFlags |= SDL_FULLSCREEN;
+            videoFlags |= SDL_ANYFORMAT;      
+            videoFlags |= SDL_HWACCEL;
+    }
 	return videoFlags;
 }
 
@@ -136,7 +146,14 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
     int height = vHeight;
     int depth  = vDp;    
 
+    cout << width << "----" << height << " in platformwindow\n";
+
+
+    //As of Version 0.13, the PVM_ mode stuff is completely unused,
+    //and should re removed .
     //If either width or height are undefined, get the externally-set value.
+
+#if 0
     if(!( width>0 && height>0))
     switch(mode)
         {
@@ -181,6 +198,8 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
             height=480;
             break;
         }
+#endif 
+
 
     if(!(depth > 0))
         depth = (int)vdepth;
@@ -318,7 +337,9 @@ bool PlatformWindow::Draw()
     
     //Now, draw the subwidgets.
     PlatformWidget::Draw();
-    
+
+    ///maybe we could use this on windows:
+    ///IDirectDraw::WaitForVerticalBlank"    
     int result = SDL_Flip(mSurface);
     
     if(result == -2)

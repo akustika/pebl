@@ -150,13 +150,17 @@ namespace PEBLStream
 
             {(char*)"SETNETWORKPORT",           SetNetworkPort,               1, 1},
             {(char*)"CHECKFORNETWORKCONNECTION", CheckForNetworkConnection,   1, 1},
+            {(char*)"OPENNETWORKLISTENER", OpenNetworkListener,   1, 1},
 
-
+            {(char*)"ACCEPTNETWORKCONNECTION", AcceptNetworkConnection, 2,2},
             {(char*)"WAITFORNETWORKCONNECTION", WaitForNetworkConnection, 1,1},
             {(char*)"CLOSENETWORKCONNECTION", CloseNetworkConnection,    1,1},
 
             {(char*)"SENDDATA", SendData,                     2,2},
             {(char*)"GETDATA", GetData,                       2,2},
+            {(char*)"GETMYIPADDRESS", GetMyIPAddress,         1,1},
+
+
             {(char*)"WRITEPNG", WritePNG,                     2,2},
 
             {(char*)"OPENPPORT",OpenPPort,                   1,1},
@@ -300,7 +304,8 @@ namespace PEBLEnvironment
             {(char*)"TRANSLATEKEYCODE",                TranslateKeyCode,  1, 1},
             {(char*)"TIMESTAMP",                       TimeStamp,         0, 0},
 
-            {(char*)"GETVIDEOMODES",                  GetVideoModes,    0, 0},
+            {(char*)"GETCURRENTSCREENRESOLUTION",      GetCurrentScreenResolution,    0, 0},            
+            {(char*)"GETVIDEOMODES",                   GetVideoModes,    0, 0},
             {(char*)"GETPEBLVERSION",                  GetPEBLVersion,    0, 0},
 
             {(char*)"GETSYSTEMTYPE",                   GetSystemType,     0, 0},
@@ -360,6 +365,8 @@ namespace PEBLList
             {(char*)"MERGE",                     Merge, 2, 2},
             {(char*)"LIST",                      List,  1, 1000},
             {(char*)"APPEND",                    Append, 2, 2},
+            {(char*)"PUSHONEND",                 PushOnEnd, 2, 2},
+            {(char*)"SETELEMENT",                SetElement, 3, 3},
             {(char*)"SORT",                      Sort, 1, 1},
             {(char*)"SORTBY",                    SortBy, 2, 2},
             {(char*)"NTH",                       Nth, 2, 2},

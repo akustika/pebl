@@ -1,9 +1,9 @@
 //* -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*- */
 /////////////////////////////////////////////////////////////////////////////////
 //    Name:       src/base/PList.cpp
-//    Purpose:    Contains a simple list class, part of the Variant Class
+//    Purpose:    Contains a simple list class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -28,7 +28,8 @@
 #include "Variant.h"
 #include "../utility/PError.h"
 #include "PEBLObject.h"
-#include <list>
+//#include <list>
+#include <vector>
 #include <map>
 #include <stdio.h>
 
@@ -37,7 +38,8 @@ using std::cerr;
 using std::endl;
 using std::flush;
 //using std::list;
-using std::list;
+//using std::list;
+using std::vector;
 using std::multimap;
 using std::pair;
 using std::ostream;
@@ -56,7 +58,7 @@ PList::PList(PList & tmpList): PEBLObjectBase(CDT_LIST)
 
 
     //mCDT=CDT_LIST;
-    std::list<Variant> * tmp = tmpList.GetList();
+    std::vector<Variant> * tmp = tmpList.GetList();
 
     //Make an item-by-item copy of list into mList.
     //Couldn't figure out how to use the stl copy algorithm to 
@@ -64,7 +66,7 @@ PList::PList(PList & tmpList): PEBLObjectBase(CDT_LIST)
     ///Defunct code attempt: Using STL copy algorithm 
     //  std::copy(tmp->begin(), tmp->end(), mList.begin());  
 
-    std::list<Variant>::iterator p;
+    std::vector<Variant>::iterator p;
     for(p = tmp->begin(); p!=tmp->end(); p++)
         {
             mList.push_back(Variant(*p));
@@ -84,7 +86,7 @@ PList * PList::Clone()
     ///Defunct code attempt: Using STL copy algorithm 
     //  std::copy(tmp->begin(), tmp->end(), mList.begin());  
 
-    std::list<Variant>::iterator p;
+    std::vector<Variant>::iterator p;
     for(p = mList.begin(); p!=mList.end(); p++)
         {
             // This does not work.  Need to make the contained list and then embed it.  
@@ -101,39 +103,39 @@ PList::~PList()
 }
 
 
-std::list<Variant>::iterator  PList::Begin() 
+std::vector<Variant>::iterator  PList::Begin() 
 {
     return mList.begin();
 }
 
-std::list<Variant>::iterator  PList::End()
+std::vector<Variant>::iterator  PList::End()
 {
     return mList.end();
 }
 
 
 //const versions of above
-std::list<Variant>::const_iterator  PList::Begin() const
+std::vector<Variant>::const_iterator  PList::Begin() const
 {
     return mList.begin();
 }
 
-std::list<Variant>::const_iterator  PList::End() const
+std::vector<Variant>::const_iterator  PList::End() const
 {
     return mList.end();
 }
 
   
 
-void PList::PushFront(const Variant & v)
-{
-    mList.push_front(v);
-}
+//void PList::PushFront(const Variant & v)
+//{
+    //    mList.push_front(v);
+    //}
 
-void PList::PopFront()
-{
-    mList.pop_front();
-}
+//void PList::PopFront()
+//{
+//    mList.pop_front();
+//}
 
 void PList::PushBack(const Variant &  v)
 {
@@ -165,22 +167,40 @@ Variant PList::Nth(unsigned int n)
     //or error codes etc.
     if(mList.size() < n)
         PError::SignalFatalError("Attempting to get Nth element element of  too-short list.");
+    if(n==0)
+        PError::SignalFatalError("Attempting to get 0th element element of  too-short list.");
 
+    //std::vector<Variant>::iterator p = mList[n];
+    //.begin();
+    //    for(unsigned int i = 1; i< n; i++,p++);
+    //return *p;
+    
+    //Note: this is 1-indexed, so 1 is 0, etc.
+    return mList[n-1];
+}
 
-    std::list<Variant>::iterator p = mList.begin();
-    for(unsigned int i = 1; i< n; i++,p++);
-    return *p;
+void PList::SetElement(unsigned int n,Variant value)
+{
+
+    //This is messed up--need a NULL variant type
+    //or error codes etc.
+    if(mList.size() < n)
+        PError::SignalFatalError("Attempting to get Nth element element of  too-short list.");
+    if(n==0)
+        PError::SignalFatalError("Attempting to get 0th element element of  too-short list.");
+    mList[n-1] = value;
+   
 }
 
 Variant PList::Last()
-{
+{ 
     //This is messed up--need a NULL variant type
     //or error codes etc.
     if(mList.empty())
         PError::SignalFatalError("Attempting to get last element element of empty list.");
 
 
-    std::list<Variant>::iterator p = mList.end();
+    std::vector<Variant>::iterator p = mList.end();
     p--;
     return *p;
 }
@@ -197,8 +217,8 @@ counted_ptr<PEBLObjectBase> PList::SortBy(const PList & key)
     
     //Iterators for the key/data lists.  Woe to he who allows
     //these to be of different sizes.
-    std::list<Variant>::const_iterator keyIterator  = key.Begin();
-    std::list<Variant>::const_iterator dataIterator = Begin();
+    std::vector<Variant>::const_iterator keyIterator  = key.Begin();
+    std::vector<Variant>::const_iterator dataIterator = Begin();
     
     //Go through the entire data list, inserting pairs into the map.
     while(dataIterator != End())
@@ -224,7 +244,7 @@ counted_ptr<PEBLObjectBase> PList::SortBy(const PList & key)
 }
 
 
-std::list<Variant> * PList::GetList()
+std::vector<Variant> * PList::GetList()
 {
 
     return &mList;
@@ -244,7 +264,7 @@ ostream & operator <<(std::ostream & out, const PList & list )
 ///operator for variants.
 ostream & PList::SendToStream(ostream& out) const
 {
-    std::list<Variant>::const_iterator p;
+    std::vector<Variant>::const_iterator p;
     p = mList.begin();
   
     out << "[" ;

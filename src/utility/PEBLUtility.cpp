@@ -907,7 +907,7 @@ PEBLVideoMode PEBLUtility::GetVideoMode(std::string modeline)
 	else if (modeline ==	"960x720")	mode =	PVM_960_720;
 	else if (modeline ==	"1024x768")	mode =	PVM_1024_768;
 	else if (modeline ==	"1152x864")	mode =	PVM_1152_864;
-	else if (modeline ==	"1280x1024")	mode =	PVM_1280_1024;
+	else if (modeline ==	"1280x1024") mode =	PVM_1280_1024;
 	else mode  = PVM_800_600;
 	return mode;
 }

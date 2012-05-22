@@ -167,8 +167,8 @@ functionsequence:   returnstatement  nlornone          { $$ = $1;}
 block:		PEBL_LBRACE nlornone sequence nlornone PEBL_RBRACE   { $$ = $3;}
 |           PEBL_LBRACE nlornone endstatement {$$ = $3;}
 |           PEBL_LBRACE nlornone sequence nlornone  endstatement {
-                     $$  = new OpNode(PEBL_STATEMENTS, $3, $5, sourcefilename, yylineno);
-}
+  $$  = new OpNode(PEBL_STATEMENTS, $3, $5, sourcefilename, yylineno)}
+|       PEBL_LBRACE nlornone PEBL_RBRACE { $$ = new DataNode (Variant(0), sourcefilename, yylineno)}  //why can't we allow null expressions?
 ;
 
 
@@ -305,7 +305,7 @@ arglist:	/*=====================================================================
 		***/
 		/*============================================================================*/
 		/******************************************************************************/
-list:		PEBL_LBRACKET nlornone explist PEBL_RBRACKET {$$ = new OpNode(PEBL_LISTHEAD,$3, NULL, sourcefilename, yylineno);}
+list:		PEBL_LBRACKET nlornone explist nlornone PEBL_RBRACKET {$$ = new OpNode(PEBL_LISTHEAD,$3, NULL, sourcefilename, yylineno);}
 
 
          |        PEBL_LBRACKET nlornone PEBL_RBRACKET         {$$ = new OpNode(PEBL_LISTHEAD, NULL, NULL, sourcefilename, yylineno);}
@@ -430,13 +430,15 @@ datum:         	PEBL_INTEGER             { $$ = new DataNode ($1, sourcefilename
 variable:	PEBL_LOCALVAR              { 
 		Variant tmpV($1, P_DATA_LOCALVARIABLE);           /*create a new temporary variant*/;
 		$$ = new DataNode(tmpV, sourcefilename, yylineno);                        /*Make a new variable node here.*/
-        free($1);
-        };
+                free($1);
+                };
          |	PEBL_GLOBALVAR              { 
 		Variant tmpV($1, P_DATA_GLOBALVARIABLE);          /*create a new temporary variant*/;
 		$$ = new DataNode(tmpV, sourcefilename, yylineno);  /*Make a new variable node here.*/
 		free($1);
 		 };
+
+/*I think this is where access lists via [] operators would go.*/
 		;
 
 nlornone:	/**/   {/*nothing*/;}

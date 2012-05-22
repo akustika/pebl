@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/SDLUtility.h
 //    Purpose:    Contains miscellaneous utility functions.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -28,6 +28,8 @@
 #include "SDLUtility.h"
 #include "../../objects/PColor.h"
 #include "../../utility/PError.h"
+#include "../../base/PList.h"
+#include "../../base/PComplexData.h"
 #include "PlatformWindow.h"
 #include "SDL/SDL.h"
 #if !defined(PEBL_OSX)
@@ -309,5 +311,33 @@ int SDLUtility::WritePNG(const Variant fname, PlatformWidget* wid)
         }
 #endif
     return 0;
+
+}
+
+Variant SDLUtility::GetCurrentScreenResolution()
+{
+
+    const SDL_VideoInfo * info = SDL_GetVideoInfo();
+
+    int w,h;
+
+    if(info)
+        {
+            w = info->current_w;
+            h = info->current_h;
+            
+        }else
+        {
+            w = 0;
+            h = 0;
+        }
+
+    PList * newlist = new PList();
+    newlist->PushBack(Variant(w));
+    newlist->PushBack(Variant(h));
+    
+    counted_ptr<PEBLObjectBase> newlist2 = counted_ptr<PEBLObjectBase>(newlist);
+    PComplexData * pcd=new PComplexData(newlist2); 
+    return Variant(pcd);
 
 }

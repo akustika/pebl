@@ -3,7 +3,7 @@
 //    Name:       src/devices/PNetwork.h
 //    Purpose:    Class for handling network communication (tcpip)
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2006-2011  Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2006-2012  Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -55,19 +55,27 @@ public:
     virtual void SetPort(unsigned int);
     virtual void SetHostName(std::string hostname);
 
+    // virtual void RetrievePeerIPAddress();  
+    virtual Variant GetMyIPAddress();
+    virtual Variant GetIPAddress();
+
+
     virtual void Open();
     virtual bool CheckForConnection();
-    virtual void Accept();
+    virtual bool CreateListener();
+    virtual bool Accept(int mstimeout);
+    virtual bool Accept();
     virtual void Close();
 
 
-    virtual void SendString(std::string message);
-    virtual void SendByte(int byte);
+    virtual bool SendString(std::string message);
+    virtual bool SendByte(int byte);
     
     virtual std::string Receive(int length);
 
 
 protected:
+    virtual Variant ConvertAddress(IPaddress* address);
 
     //Inheritable printing Method.
     virtual std::ostream& SendToStream(std::ostream& out)const; 
@@ -75,9 +83,11 @@ protected:
 private:
 
 	//pointer to a TCPSocket object used by SDL_net.
-	IPaddress * mAddress;
+	IPaddress * mAddress;  //Address I'm connected to
+    IPaddress * mMyAddress; //My address (if known)
 	TCPsocket  mSocket;
-
+    TCPsocket mListener; //Listening socket
+    
 };
 
 

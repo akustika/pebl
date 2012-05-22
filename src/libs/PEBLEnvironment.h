@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLEnvironment.h
 //    Purpose:    General Environment Function Library for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -102,6 +102,7 @@ namespace PEBLEnvironment
     Variant SignalFatalError(Variant v);
     Variant TranslateKeyCode(Variant v);
     Variant TimeStamp(Variant v);
+    Variant GetCurrentScreenResolution(Variant v);
     Variant GetVideoModes(Variant v);
     Variant GetPEBLVersion(Variant v);
     Variant GetSystemType(Variant v);

@@ -60,6 +60,7 @@ enum PErrorAssertType
         PEAT_KEYBOARD,        
         PEAT_LIST,
         PEAT_NETWORKCONNECTION,
+        PEAT_OBJECT,
         PEAT_PARALLELPORT,
         PEAT_COMPORT,
         PEAT_TEXTOBJECT,

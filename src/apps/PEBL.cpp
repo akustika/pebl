@@ -73,7 +73,6 @@
 #include <CoreFoundation/CFBundle.h>
 #endif
 
-
 #include "../platforms/sdl/PlatformEnvironment.h"
 extern PlatformEnvironment * myEnv=NULL;
 
@@ -231,7 +230,16 @@ int PEBLInterpret( int argc, char *argv[] )
 
     PList *  pList =  new PList();
     PList *  arglist = new PList();
-    std::string displaySize="800x600";
+
+
+    //Use the current screen resolution as a startingp 
+
+    
+    //Initialize display size here with a non-interesting one.
+    //It may get set by a command-line argument later.
+    std::string displaySize="0x0";
+    
+
     std::string depth = "16";
     enum PEBLVideoMode displayMode;
     enum PEBLVideoDepth displayDepth;
@@ -362,11 +370,17 @@ int PEBLInterpret( int argc, char *argv[] )
     //setenv()
 #endif
 
-
+    // We can't use any SDL-related functions before this function is called.
+    // But we may want to know current screen resolution before we set displaymode
     PEBLObjects::MakeEnvironment(displayMode, displayDepth, windowed,unicode);
 
+
+    
+
+
+
+
     //Seed the random number generator with time of day.
-    //May not be cross-platform.
     srand(time(0));
 
     cerr << "---------Creating Evaluator-----" << endl;
@@ -379,12 +393,12 @@ int PEBLInterpret( int argc, char *argv[] )
         {
             arglist->PushBack(Variant(0));
             PComplexData * pcd = new PComplexData(counted_ptr<PEBLObjectBase>(arglist));
-            pList->PushFront(Variant(pcd));
+            pList->PushBack(Variant(pcd));
         }
     else
         {
             PComplexData * pcd = new PComplexData(counted_ptr<PEBLObjectBase>(arglist));
-            pList->PushFront(Variant(pcd));
+            pList->PushBack(Variant(pcd));
         }
         
     PComplexData * pcd = new PComplexData(counted_ptr<PEBLObjectBase>(pList));
@@ -394,6 +408,39 @@ int PEBLInterpret( int argc, char *argv[] )
     std::list<PNode> tmpcallstack;
     Evaluator * myEval = new Evaluator(v,"Start");
 
+
+    //Set the default screen resolution based on the current one.
+    Variant cursize = SDLUtility::GetCurrentScreenResolution();
+    PList * plist = cursize.GetComplexData()->GetList();
+    Variant width = plist->First(); //plist->PopFront();
+    Variant height = plist->Nth(2);//plist->PopFront();
+    myEval->gGlobalVariableMap.AddVariable("gVideoWidth", width);
+    myEval->gGlobalVariableMap.AddVariable("gVideoHeight", height);
+
+    //displaysize may have been set at the command line.  If so, we will need to 
+    //override it.  It is currently a string called displaysize.
+
+    
+    size_t found = displaySize.find("x");
+    if(found == string::npos)
+        {
+            //Nothing is found.  Use 0s to indicate an invalid displaysize
+            width = 0;
+            height = 0;
+        } else 
+        {
+            cerr <<"Size from command line argument: "  << displaySize.substr(0,found)<< "|"<< displaySize.substr(found+1) <<endl;
+            //something was found.
+            width =  atoi(displaySize.substr(0,found).c_str());
+            height = atoi(displaySize.substr(found+1).c_str());
+        }
+    
+
+    if((long int)width>0  & (long int)height>0)
+        {
+            Evaluator::gGlobalVariableMap.AddVariable("gVideoWidth",width);
+            Evaluator::gGlobalVariableMap.AddVariable("gVideoHeight",height);
+        }
 
 
     //Add the subject identifier.
@@ -520,6 +567,7 @@ int main(int argc,  char *argv[])
 
     if(argc == 1)
         {
+
 #ifdef PEBL_OSX
 			
 			CFBundleRef mainBundle = CFBundleGetMainBundle();
@@ -553,13 +601,13 @@ int main(int argc,  char *argv[])
 			argc = 4;
 
 	
-			if(PEBLUtility::FileExists(home + "/Documents/pebl-exp.0.12/"))
+			if(PEBLUtility::FileExists(home + "/Documents/pebl-exp.0.1/"))
 			   {
 				
                   //Move to the right directory.
 				 
 				    script = (std::string)resourcepath + (std::string)"/fileselect.pbl";
-					base = home + "/Documents/pebl-exp.0.12/";
+					base = home + "/Documents/pebl-exp.0.13/";
 				    chdir(base.c_str());
 				    launch = script;
             
@@ -636,7 +684,7 @@ void PrintOptions()
 {
     cout << "-------------------------------------------------------------------------------\n";
     cout << "PEBL: The Psychology Experiment Building Language\n";
-    cout << "Version 0.12\n";
+    cout << "Version 0.13\n";
     cout << "(c) 2003-2012 Shane T. Mueller, Ph.D.\n";
     cout << "smueller@obereed.net   http://pebl.sf.net\n";
     cout << "-------------------------------------------------------------------------------\n";
@@ -656,15 +704,9 @@ void PrintOptions()
     cout << "  dga, svgalib (from console).  Also controlled via environment variables.\n\n";
     cout << "  On Windows, use either windib or directx\n";
     cout << "--display  <widthxheight>\n";
-    cout << "  Controls the screen width and height (in pixels). Defaults to 800x600.\n";
-    cout << "  Currently, only the following screens are supported:\n";
-    cout << "  		512x384\n";
-    cout << "  		640x480\n";
-    cout << "  		800x600\n";
-    cout << "  		960x720\n";
-    cout << "  		1024x768\n";
-    cout << "  		1152x864\n";
-    cout << "  		1280x1024\n";
+    cout << "  Controls the screen width and height (in pixels). Screen resolution defaults\n";
+    cout << "  to the current screen resolution. In fullscreen mode, PEBL will check whether \n";
+    cout << "  the resolution is available for the video screen, and use the default mode if not\n";
     cout << "  Note: Custom screen dimensions can be controlled in-script.\n\n";
     cout << "--depth\n";
     cout << "  Controls the pixel depth.  Depends on your video card.  Currently,\n";

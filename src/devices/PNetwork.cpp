@@ -40,6 +40,11 @@ PNetwork::PNetwork():
     mPort(0),
     mIsOpen(false)
 {
+    InitializeProperty("NAME","<NETWORK>");
+    InitializeProperty("HOSTNAME",0);
+    InitializeProperty("HOSTIP",0);
+    InitializeProperty("PORT",0);
+    InitializeProperty("ISOPEN",0);
     mCDT = CDT_NETWORKCONNECTION;
 }
 
@@ -49,6 +54,22 @@ PNetwork::~PNetwork()
 }
 
 
+Variant PNetwork::ConvertAddress(unsigned long int address)
+{
+    //Uint32 address;
+
+    unsigned char octet[4] = {0,0,0,0};
+    for (int i=0; i<4; i++)
+    {
+    octet[i] = (address >> (i*8) ) & 0xFF;
+    }
+    Variant v = "";
+    v = v+Variant(octet[3])+
+        Variant(".")+Variant(octet[2])+
+        Variant(".")+ Variant(octet[1])+
+        Variant(".")+ Variant(octet[0]);
+    return v;
+}
 ostream & PNetwork::SendToStream(ostream & out) const
 {
     out << "<Generic Network Object>" << flush;
@@ -56,3 +77,45 @@ ostream & PNetwork::SendToStream(ostream & out) const
 }
 
 
+
+void PNetwork::SetHostIP(unsigned int host){
+    mHost = host;
+    PEBLObjectBase::SetProperty("HOSTIP",ConvertAddress(host));
+}
+
+unsigned int PNetwork::GetHost()
+{
+    return mHost;
+}
+
+void PNetwork::SetOpen(bool open)
+{
+    mIsOpen = open;
+    PEBLObjectBase::SetProperty("ISOPEN",open);
+}
+    
+void PNetwork::SetHostName(std::string hostname)
+{
+    PEBLObjectBase::SetProperty("HOSTNAME",hostname);
+    mHostName = hostname;
+}
+
+std::string PNetwork::GetHostName()
+{
+    return mHostName;
+}
+
+void PNetwork::SetPort(unsigned int port)
+{
+    mPort = port;
+    PEBLObjectBase::SetProperty("PORT",(int)mPort);
+}
+
+ unsigned int PNetwork::GetPort()
+ {
+     return mPort;
+ }
+    
+bool PNetwork::IsOpen(){
+    return mIsOpen;
+};

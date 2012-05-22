@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformEnvironment.cpp
 //    Purpose:    Contains SDL-specific interface for the main environment.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -192,7 +192,7 @@ Variant  PlatformEnvironment::GetCursorPosition()
     SDL_GetMouseState(&x,&y);
 
     PList * newlist = new PList();
-    newlist->PushFront(Variant(x));
+    newlist->PushBack(Variant(x));
     newlist->PushBack(Variant(y));
     counted_ptr<PEBLObjectBase> newlist2 = counted_ptr<PEBLObjectBase>(newlist);
     PComplexData *   pcd = new PComplexData(newlist2); 
@@ -217,7 +217,7 @@ Variant  PlatformEnvironment::GetMouseState()
     int b3 = button & SDL_BUTTON(3);
 
     PList * newlist = new PList();
-    newlist->PushFront(Variant(x));
+    newlist->PushBack(Variant(x));
     newlist->PushBack(Variant(y));
     newlist->PushBack(Variant(b1));
     newlist->PushBack(Variant(b2));
@@ -285,7 +285,7 @@ Variant PlatformEnvironment::GetScreenModes()
         {
 
              PList * newlist = new PList();
-             newlist->PushFront(Variant(modes[ii]->w));
+             newlist->PushBack(Variant(modes[ii]->w));
              newlist->PushBack(Variant(modes[ii]->h));
              counted_ptr<PEBLObjectBase> newlist2 = counted_ptr<PEBLObjectBase>(newlist);
              pcd = new PComplexData(newlist2); 

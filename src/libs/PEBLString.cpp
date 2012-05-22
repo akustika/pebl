@@ -124,13 +124,13 @@ Variant PEBLString::SubString(Variant v)
     PList * plist = v.GetComplexData()->GetList();
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in first parameter of function SubString(<string>, <index>, <length>)]: ");  
-    std::string string1 = plist->First(); plist->PopFront();
+    std::string string1 = plist->First(); //plist->PopFront();
 
-    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in first parameter of function SubString(<string>, <index>, <length>)]: ");  
-    int position = plist->First(); plist->PopFront();
+    PError::AssertType(plist->Nth(2), PEAT_INTEGER, "Argument error in Second parameter of function SubString(<string>, <index>, <length>)]: ");  
+    int position = plist->Nth(2);// plist->PopFront();
 
-    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in first parameter of function SubString(<string>, <index>, <length>)]: ");  
-    int length = plist->First(); plist->PopFront();
+    PError::AssertType(plist->Nth(3), PEAT_INTEGER, "Argument error in Third parameter of function SubString(<string>, <index>, <length>)]: ");  
+    int length = plist->Nth(3);// plist->PopFront();
 
     return Variant(string1.substr(position-1,length));
 }
@@ -145,14 +145,14 @@ Variant PEBLString::FindInString(Variant v)
     PList * plist = v.GetComplexData()->GetList();
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in first parameter of function FindInString(<string>,<substring>)]: ");  
-    std::string str1 = plist->First(); plist->PopFront();
+    std::string str1 = plist->First();// plist->PopFront();
     
     
-    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in second parameter of function FindInString(<string>,<substring>)]: ");  
-    std::string str2 = plist->First(); plist->PopFront();
+    PError::AssertType(plist->Nth(2), PEAT_STRING, "Argument error in second parameter of function FindInString(<string>,<substring>)]: ");  
+    std::string str2 = plist->Nth(2); //plist->PopFront();
 
-    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in second parameter of function FindInString(<string>,<substring>)]: ");  
-    int pos = plist->First(); plist->PopFront();
+    PError::AssertType(plist->Nth(3), PEAT_INTEGER, "Argument error in Third parameter of function FindInString(<string>,<substring>)]: ");  
+    int pos = plist->Nth(3); //plist->PopFront();
 
 
     string::size_type newpos = str1.find(str2,pos-1);

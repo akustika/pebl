@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/SDLUtility.h
 //    Purpose:    Contains miscellaneous utility functions.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -54,6 +54,8 @@ namespace SDLUtility
     Uint32 GetPixel(SDL_Surface *surface, int x, int y);
     
     int WritePNG(const Variant fname, PlatformWidget * wid);
+
+    Variant GetCurrentScreenResolution();
 
 
 }

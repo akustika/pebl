@@ -3,7 +3,7 @@
 //    Name:       libs/PEBLStream.cpp
 //    Purpose:    Built-in stream functions for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -98,7 +98,7 @@ Variant PEBLStream::Format(Variant v)
 Variant PEBLStream::FileOpenRead(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First();// plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in function FileOpenRead(<string>)]: ");
 
     ///v1 contains the name of a file to open.
@@ -122,7 +122,7 @@ Variant PEBLStream::FileOpenWrite(Variant v)
 
 
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in function FileOpenWrite(<string>)]: ");
 
     Variant out = PEBLUtility::FileExists(v1);
@@ -187,7 +187,7 @@ Variant PEBLStream::FileOpenOverwrite(Variant v)
 
 
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in function FileOpenOverWrite(<string>)]: ");
 
 
@@ -206,7 +206,7 @@ Variant PEBLStream::FileOpenOverwrite(Variant v)
 Variant PEBLStream::FileOpenAppend(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in function FileOpenAppend(<string>)]: ");
 
     ///v1 contains the name of a file to open.
@@ -226,7 +226,7 @@ Variant PEBLStream::FileClose(Variant v)
     //v[1] should have the file stream to close
     PList * plist = v.GetComplexData()->GetList();
 
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First();// plist->PopFront();
     PError::AssertType(v1, PEAT_FILESTREAM, "Argument error in function [FileClose(<file-stream>)]: ");
 
 
@@ -242,7 +242,7 @@ Variant PEBLStream::FilePrint(Variant v)
     //v[2] should have the variant to print
     PList * plist = v.GetComplexData()->GetList();
 
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
 
 
     PError::AssertType(v1, PEAT_FILESTREAM, "Argument error in first parameter of function [FilePrint(<file-stream>, <text>)]: ");
@@ -251,7 +251,7 @@ Variant PEBLStream::FilePrint(Variant v)
     PStream * mystream = dynamic_cast<PStream*>(tmp2.get());
 
 
-    Variant v2 = plist->First(); plist->PopFront();
+    Variant v2 = plist->Nth(2); //plist->PopFront();
     std::string s = v2.GetString();
 
     mystream->WriteString(s + "\n");
@@ -264,14 +264,14 @@ Variant PEBLStream::FilePrint_(Variant v)
     //v[2] should have the variant to print
     PList * plist = v.GetComplexData()->GetList();
 
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
 
     PError::AssertType(v1, PEAT_FILESTREAM, "Argument error in first parameter of function [FilePrint_(<file-stream>, <text>)]: ");
 
     counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
     PStream * mystream = dynamic_cast<PStream*>(tmp2.get());
 
-    Variant v2 = plist->First(); plist->PopFront();
+    Variant v2 = plist->Nth(2); //plist->PopFront();
     mystream->WriteString(v2);
     return v2;
 }
@@ -281,7 +281,7 @@ Variant PEBLStream::FileReadCharacter(Variant v)
     //v[1] should have the file stream
     PList * plist = v.GetComplexData()->GetList();
 
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
 
     PError::AssertType(v1, PEAT_FILESTREAM, "Argument error in function [FileReadCharacter(<file-stream>)]: ");
     counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
@@ -296,7 +296,7 @@ Variant PEBLStream::FileReadWord(Variant v)
     //v[1] should have the file stream
     PList * plist = v.GetComplexData()->GetList();
 
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
 
     PError::AssertType(v1, PEAT_FILESTREAM, "Argument error in function [FileReadWord(<file-stream>)]: ");
 
@@ -312,7 +312,7 @@ Variant PEBLStream::FileReadLine(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
     //v[1] should have the file stream
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First();// plist->PopFront();
 
     PError::AssertType(v1, PEAT_FILESTREAM, "Argument error in function [FileReadLine(<file-stream>)]: ");
     counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
@@ -333,7 +333,7 @@ Variant PEBLStream::FileReadList(Variant v)
    //v[1] should have the filename
     PList * plist = v.GetComplexData()->GetList();
 
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in function [FileReadList(<filename>)]:  ");
 
     //Search through the paths for the file, because it may be a 'special' file.
@@ -379,7 +379,7 @@ Variant PEBLStream::FileReadTable(Variant v)
 {
     //v[1] should have the file stream
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in first parameter of function [FileReadTable(<list>)]:  ");
 
     //Search through the paths for the file, because it may be a 'special' file.
@@ -393,15 +393,16 @@ Variant PEBLStream::FileReadTable(Variant v)
 
     char separator;
     //See if there is another parameter; if there is, it is the token separator.
-    if(plist->IsEmpty())
+    if(plist->Length()>1)
         {
-            separator = ' ';
+            PError::AssertType(plist->Nth(2), PEAT_STRING, "Argument error in second parameter of function [FileReadTable(<list>)]:  ");
+            std::string tmp = plist->Nth(2);
+            separator = tmp[0];
+
         }
     else
         {
-            PError::AssertType(plist->First(), PEAT_STRING, "Argument error in second parameter of function [FileReadTable(<list>)]:  ");
-            std::string tmp = plist->First(); plist->PopFront();
-            separator = tmp[0];
+            separator = ' ';
         }
 
     //Make an outer list to put everything in.
@@ -453,7 +454,7 @@ Variant PEBLStream::FileReadText(Variant v)
 
    //v[1] should have the filename
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in function [FileReadText(<filename>)]:  ");
 
     //Search through the paths for the file, because it may be a 'special' file.
@@ -492,7 +493,7 @@ Variant PEBLStream::EndOfLine(Variant v)
 {
    //v[1] should have the file stream
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
 
     PError::AssertType(v1, PEAT_FILESTREAM, "Argument error in function [EndOfLine(<file-stream>)]: ");
     counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
@@ -506,7 +507,7 @@ Variant PEBLStream::EndOfFile(Variant v)
 {
    //v[1] should have the file stream
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
 
     PError::AssertType(v1, PEAT_FILESTREAM, "Argument error in function [EndOfFile(<file-stream>)]: ");
     counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
@@ -520,13 +521,13 @@ Variant PEBLStream::AppendFile(Variant v)
 {
     //v[1] should have the filename
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in function [AppendFile(<file1>,<file2>)]:  ");
 
     string filename1 = v1.GetString();
 
 
-    Variant v2 = plist->First();
+    Variant v2 = plist->Nth(2);
     PError::AssertType(v2, PEAT_STRING, "Argument error in function [AppendFile(<file1>,<file2>)]:  ");
 
     //Search through the paths for the file, because it may be a 'special' file.
@@ -573,10 +574,10 @@ Variant PEBLStream::ConnectToIP(Variant v)
     //v[2] should have the port number
 
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First();// plist->PopFront();
     PError::AssertType(v1, PEAT_INTEGER, "Argument error in first parameter of function [ConnectToHost(<hostname>,<port>)]: ");
 
-    Variant v2 = plist->First();
+    Variant v2 = plist->Nth(2);
     PError::AssertType(v2, PEAT_INTEGER, "Argument error in second parameter of function [ConnectToHost(<hostname>,<port>)]: ");
 
 
@@ -601,10 +602,10 @@ Variant PEBLStream::ConnectToHost(Variant v)
     //v[1] should have the host name
     //v[2] should have the port number
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First();// plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in first parameter of function [ConnectToHost(<hostname>,<port>)]: ");
 
-    Variant v2 = plist->First();
+    Variant v2 = plist->Nth(2);
     PError::AssertType(v2, PEAT_INTEGER, "Argument error in second parameter of function [ConnectToHost(<hostname>,<port>)]: ");
 
 
@@ -644,9 +645,9 @@ Variant PEBLStream::SetNetworkPort(Variant v)
 {
     //v[1] should have the port number
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First();// plist->PopFront();
 
-    PError::AssertType(v1, PEAT_INTEGER, "Argument error in first parameter of function [WaitForNetworkConnection(<port>)]: ");
+    PError::AssertType(v1, PEAT_INTEGER, "Argument error in first parameter of function [SetNetworkPort(<port>)]: ");
 
 
     counted_ptr<PEBLObjectBase> tmp2 = counted_ptr<PEBLObjectBase>(new PlatformNetwork());
@@ -664,33 +665,33 @@ Variant PEBLStream::SetNetworkPort(Variant v)
 }
 
 
+// Once a listener has been opened, this will 
+//see if anyone is knocking on the door.
+//
 
 Variant PEBLStream::CheckForNetworkConnection(Variant v)
 {
     //v[1] should have the network object which should have been opened but not yet
     //accepted a connection
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First();// plist->PopFront();
     PError::AssertType(v1, PEAT_NETWORKCONNECTION, "Argument error in first parameter of function [CheckFroNetworkConnection(<network>)]: ");
     counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
     PlatformNetwork * mynet = dynamic_cast<PlatformNetwork*>(tmp2.get());
 
 
-
     bool result ;    //
 
-
-    mynet->Init();
-
-    mynet->SetHostName("");
-
-
+    //This should already be initialized with a port and hostname.
+    //mynet->Init();
+    //mynet->SetHostName("");
     //mynet->SetPort((int)v1);
-
 
     result = mynet->CheckForConnection();
 
-    //    mynet->Accept();
+    //Accept the connection if we have one:
+    if(result)
+        mynet->Accept(1000);
 
     //PComplexData * pcd = new PComplexData(tmp2);
     //    Variant tmp3 = Variant(pcd);
@@ -702,11 +703,55 @@ Variant PEBLStream::CheckForNetworkConnection(Variant v)
 
 
 
+Variant PEBLStream::OpenNetworkListener(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First();// plist->PopFront();
+
+    PError::AssertType(v1, PEAT_INTEGER, "Argument error in first parameter of function [OpenNetworkListener(<port>)]: ");
+
+
+    counted_ptr<PEBLObjectBase> tmp2 = counted_ptr<PEBLObjectBase>(new PlatformNetwork());
+    PlatformNetwork * mynet = dynamic_cast<PlatformNetwork*>(tmp2.get());
+    mynet->Init();
+    mynet->SetHostName("");
+    mynet->SetPort((int)v1);
+    mynet->CreateListener();
+
+    PComplexData * pcd = new PComplexData(tmp2);
+    Variant tmp3 = Variant(pcd);
+    //delete pcd;
+    //pcd=NULL;
+    return tmp3;
+}
+
+
+
+Variant PEBLStream::AcceptNetworkConnection(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); //plist->PopFront();
+    PError::AssertType(v1, PEAT_NETWORKCONNECTION, "Argument error in function [AcceptNetworkConnection(<network>,<timeout>)]: ");
+
+    counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
+    PlatformNetwork * mynet = dynamic_cast<PlatformNetwork*>(tmp2.get());
+    
+    Variant timeout = plist->Nth(2); //plist->PopFront();
+
+    PError::AssertType(timeout, PEAT_INTEGER, "Argument error in second argument of function [AcceptNetworkConnection(<port>,<timeout>)]: ");
+
+    mynet->Accept(timeout);
+
+}
+
+
+
+
 Variant PEBLStream::WaitForNetworkConnection(Variant v)
 {
 
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First();// plist->PopFront();
 
     PError::AssertType(v1, PEAT_INTEGER, "Argument error in first parameter of function [WaitForNetworkConnection(<port>)]: ");
 
@@ -716,7 +761,10 @@ Variant PEBLStream::WaitForNetworkConnection(Variant v)
     mynet->Init();
     mynet->SetHostName("");
     mynet->SetPort((int)v1);
-    mynet->Accept();
+
+    //The following waits forever, until a network connection 
+    //opens.  If you want more control, use Accept()
+    mynet->Accept(); 
 
     PComplexData * pcd = new PComplexData(tmp2);
     Variant tmp3 = Variant(pcd);
@@ -730,7 +778,7 @@ Variant PEBLStream::CloseNetworkConnection(Variant v)
 {
     //v[1] should have the network connection
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
     PError::AssertType(v1, PEAT_NETWORKCONNECTION, "Argument error in function [CloseNetworkConnection(<network>)]: ");
 
     counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
@@ -746,15 +794,28 @@ Variant PEBLStream::SendData(Variant v)
     //v[1] should have the Network connection object
     //v[2] should have the data
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
     PError::AssertType(v1, PEAT_NETWORKCONNECTION, "Argument error in first parameter of function [SendData(<network>,<data>)]: ");
     counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
     PlatformNetwork * mynet = dynamic_cast<PlatformNetwork*>(tmp2.get());
 
-    Variant v2 = plist->First();
+    Variant v2 = plist->Nth(2);
     PError::AssertType(v2, PEAT_STRING, "Argument error in second parameter of function [SendData(<network>,<data>)]: ");
-    mynet->SendString(v2);
-    return Variant(1);
+
+    int tries = 0;  //Try to send up to 10 times
+    bool success = mynet->SendString(v2);
+
+    //    struct timespec a,b;
+    //    a.tv_sec  = 0;
+    //    a.tv_nsec = 10000000; //100 ms
+    
+    //    while(!success | ++tries<10)
+    //        {
+    //            success = mynet->SendString(v2);
+    //            nanosleep(&a,&b);
+    //        }
+    
+    return Variant(success);
 }
 
 Variant PEBLStream::GetData(Variant v)
@@ -763,20 +824,50 @@ Variant PEBLStream::GetData(Variant v)
     //v[2] should have the max length of the data we are looking for.
 
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First();// plist->PopFront();
     PError::AssertType(v1, PEAT_NETWORKCONNECTION, "Argument error in first parameter of function [GetData(<network>,<size>)]: ");
     counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
     PlatformNetwork * mynet = dynamic_cast<PlatformNetwork*>(tmp2.get());
 
-    Variant v2 = plist->First();
+    Variant v2 = plist->Nth(2);
     PError::AssertType(v2, PEAT_INTEGER, "Argument error in second parameter of function [GetData(<network>,<size>)]: ");
-
+    
+    //cout << "Trying to receive " << v2 << " bytes\n";
     Variant ret = mynet->Receive(v2);
     return ret;
 
 }
 
+Variant PEBLStream::GetIPAddress(Variant v)
+{
 
+    //v[1] should have the network connection
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First();// plist->PopFront();
+    PError::AssertType(v1, PEAT_NETWORKCONNECTION, "Argument error in function [GetIPAddress(<network>)]: ");
+
+    counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
+    PlatformNetwork * mynet = dynamic_cast<PlatformNetwork*>(tmp2.get());
+    Variant add = mynet->GetIPAddress();
+
+    return add;
+}
+
+
+Variant PEBLStream::GetMyIPAddress(Variant v)
+{
+
+    //v[1] should have the network connection
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); //plist->PopFront();
+    PError::AssertType(v1, PEAT_NETWORKCONNECTION, "Argument error in function [GetIPAddress(<network>)]: ");
+
+    counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
+    PlatformNetwork * mynet = dynamic_cast<PlatformNetwork*>(tmp2.get());
+    Variant add = mynet->GetMyIPAddress();
+
+    return add;
+}
 
 
 Variant PEBLStream::WritePNG(Variant v)
@@ -785,11 +876,11 @@ Variant PEBLStream::WritePNG(Variant v)
     //v[2] should have a filename
 
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First();// plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in first parameter of function [WritePNG(<filename>,<object>)]: ");
 
 
-    Variant v2 = plist->First();
+    Variant v2 = plist->Nth(2);
     PError::AssertType(v2, PEAT_WIDGET, "Argument error in second parameter of function [WritePNG(<filename>,<object>)]: ");
     counted_ptr<PEBLObjectBase> tmp2 = (v2.GetComplexData())->GetObject();
     PlatformWidget * myobj = dynamic_cast<PlatformWidget*>(tmp2.get());
@@ -815,7 +906,7 @@ Variant PEBLStream::OpenPPort(Variant v)
 
 
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First();// plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in first parameter of function [OpenPPort(<port>)]: ");
 
     unsigned char data;       /* value of the data register */
@@ -883,14 +974,14 @@ Variant PEBLStream::SetPPortState(Variant v)
    //v[2] should have a list of bits 0/1
 
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First();// plist->PopFront();
     PError::AssertType(v1, PEAT_PARALLELPORT, "Argument error in first parameter of function [SetPPortState(<pport>,<integer>)]: ");
 
     counted_ptr<PEBLObjectBase> tmp1 = (v1.GetComplexData())->GetObject();
     PParallelPort * mypport = dynamic_cast<PParallelPort*>(tmp1.get());
 
 
-    Variant v2 = plist->First();
+    Variant v2 = plist->Nth(2);
     PError::AssertType(v2, PEAT_INTEGER, "Argument error in second parameter of function [SetPPortState(<pport>,<integer>)]: ");
 
     char x = (int)v2;
@@ -949,7 +1040,7 @@ Variant PEBLStream::GetPPortState(Variant v)
     //v[1] should have an pport
 
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First();// plist->PopFront();
     PError::AssertType(v1, PEAT_PARALLELPORT, "Argument error in first parameter of function [GetPPortState(<pport>]: ");
 
     counted_ptr<PEBLObjectBase> tmp1 = (v1.GetComplexData())->GetObject();
@@ -970,14 +1061,14 @@ Variant PEBLStream::GetPPortState(Variant v)
 Variant PEBLStream::SetPPortMode(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
     PError::AssertType(v1, PEAT_PARALLELPORT, "Argument error in first parameter of function [SetPPortMode(<pport>,<mode>)]: ");
 
     counted_ptr<PEBLObjectBase> tmp1 = (v1.GetComplexData())->GetObject();
     PParallelPort * mypport = dynamic_cast<PParallelPort*>(tmp1.get());
 
 
-    Variant v2 = plist->First();
+    Variant v2 = plist->Nth(2);
     PError::AssertType(v2, PEAT_STRING, "Argument error in second parameter of function [SetPPortState(<pport>,<mode>)]: ");
 
     if(v2 == "<input>")
@@ -997,7 +1088,7 @@ Variant PEBLStream::SetPPortMode(Variant v)
 Variant PEBLStream::WaitForPPortData(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First();// plist->PopFront();
     PError::AssertType(v1, PEAT_PARALLELPORT, "Argument error in first parameter of function [WaitForPPortData(<pport>)]: ");
 
     counted_ptr<PEBLObjectBase> tmp1 = (v1.GetComplexData())->GetObject();
@@ -1027,14 +1118,14 @@ Variant PEBLStream::WaitForPPortData(Variant v)
 Variant PEBLStream::WaitForPPortStatus(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
     PError::AssertType(v1, PEAT_PARALLELPORT, "Argument error in first parameter of function [SetPPortMode(<pport>,<mode>)]: ");
 
     counted_ptr<PEBLObjectBase> tmp1 = (v1.GetComplexData())->GetObject();
     PParallelPort * mypport = dynamic_cast<PParallelPort*>(tmp1.get());
 
 
-    Variant v2 = plist->First();
+    Variant v2 = plist->Nth(2);
     PError::AssertType(v2, PEAT_STRING, "Argument error in second parameter of function [SetPPortState(<pport>,<mode>)]: ");
 
     if(v2 == "<input>")
@@ -1056,12 +1147,12 @@ Variant PEBLStream::OpenComPort(Variant v)
 {
 
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First();// plist->PopFront();
     PError::AssertType(v1, PEAT_INTEGER, "Argument error in first parameter of function [OpenComPort(<portnumber>,<baud>)]: ");
 
 
 
-    Variant v2 = plist->First(); plist->PopFront();
+    Variant v2 = plist->Nth(2); //plist->PopFront();
     PError::AssertType(v1, PEAT_INTEGER, "Argument error in first parameter of function [OpenComPort(<portnumber>),<baud>]: ");
 
 
@@ -1086,7 +1177,7 @@ Variant PEBLStream::OpenComPort(Variant v)
 Variant PEBLStream::ComPortGetByte(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First();// plist->PopFront();
     PError::AssertType(v1, PEAT_COMPORT, "Argument error in first parameter of function [ComPortGetByte(<port>)]: ");
 
     counted_ptr<PEBLObjectBase> tmp1 = (v1.GetComplexData())->GetObject();
@@ -1105,10 +1196,10 @@ Variant PEBLStream::ComPortGetByte(Variant v)
 Variant PEBLStream::ComPortSendByte(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
     PError::AssertType(v1, PEAT_COMPORT, "Argument error in first parameter of function [ComPortSendByte(<port>,<int>)]: ");
 
-    Variant v2 = plist->First();
+    Variant v2 = plist->Nth(2);
     //Second argumentcould be a bypte or a character.
     //    PError::AssertType(v2,PEAT_INTEGER,"Argument error in second parameter of function [ComPortSendByte(<port>,<int>)]: ");
 

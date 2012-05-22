@@ -101,7 +101,7 @@ Variant PlatformJoystick::GetBallState(unsigned int ball)
    SDL_JoystickGetBall(mJoystick,ball-1,&dx,&dy);
    
    PList * newlist = new PList();
-   newlist->PushFront(Variant(dx));
+   newlist->PushBack(Variant(dx));
    newlist->PushBack(Variant(dy));
    counted_ptr<PEBLObjectBase> newlist2 = counted_ptr<PEBLObjectBase>(newlist);
    PComplexData *   pcd = new PComplexData(newlist2); 

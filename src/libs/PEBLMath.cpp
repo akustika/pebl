@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLMATH.cpp
 //    Purpose:    Built-in math functions for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -82,7 +82,7 @@ Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
             arglist = new PList();
 
             //Add the first element of plist to it
-            arglist->PushFront(plist->First());
+            arglist->PushBack(plist->First());
             
             //make it into a PCD
             tmpObj = counted_ptr<PEBLObjectBase>(arglist);
@@ -101,8 +101,9 @@ Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
             //Get rid of arglist so we can make a new one.
             delete arglist;
             arglist = NULL;
-            plist->PopFront();
-
+            //plist->PopFront();  We need to do something here to handle recursiion with vectors instead of lists
+            //e.g., an iterator.
+            PError::SignalFatalError("Recursive operation not supported.");
         }
 
     //Now, resultslist is a PList.  Put it into a PCD.
@@ -122,6 +123,7 @@ Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
 Variant PEBLMath::Recurse2(Variant v, Variant (*funcname)(Variant), Variant argument)
 {
 
+            PError::SignalFatalError("Recursion is broken.");
     //If this function is called, v is a list of elements.
     //We should call the function on each element of the list, creating 
     //a list of the results, turn this into a variant, and return it.
@@ -134,7 +136,7 @@ Variant PEBLMath::Recurse2(Variant v, Variant (*funcname)(Variant), Variant argu
     PList * resultslist = new PList();
    
 
-    std::list<Variant>::iterator p = plist->Begin();
+    std::vector<Variant>::iterator p = plist->Begin();
 
     //Add the argument onto arglist.  argument should be a list of variants.
     //Declare an temporary argument list.
@@ -143,7 +145,7 @@ Variant PEBLMath::Recurse2(Variant v, Variant (*funcname)(Variant), Variant argu
     PComplexData * pcd;
     while(p != plist->End())
         {
-            arglist->PushFront(*p);                          //Add the critical argument 
+            arglist->PushBack(*p);                          //Add the critical argument 
             counted_ptr<PEBLObjectBase> tmp3 = counted_ptr<PEBLObjectBase>(arglist);
 
             pcd = new PComplexData(tmp3);
@@ -152,7 +154,7 @@ Variant PEBLMath::Recurse2(Variant v, Variant (*funcname)(Variant), Variant argu
             //pcd=NULL;
 
             resultslist->PushBack(funcname(tmp));        //Execute
-            arglist->PopFront();                             //Pop of argument to move to next one.
+            //arglist->PopFront();                             //Pop of argument to move to next one.
             p++;
         }
 
@@ -246,14 +248,14 @@ Variant PEBLMath::LogN(Variant v)
     //This has two arguments; the number and the base.
     
     PList * plist = v.GetComplexData()->GetList();
-    Variant number = plist->First(); plist->PopFront();
+    Variant number = plist->First(); //plist->PopFront();
 
     //Don't get the second argument right away--if the first argument is
     //a list, we should just pass it along to the recurse2 function.
     
     if(number.IsNumber())
         {                  
-            Variant base = plist->First(); plist->PopFront();   //Get the base argument
+            Variant base = plist->Nth(2);// plist->PopFront();   //Get the base argument
             return Variant(logl(number.GetFloat())/ logl(base.GetFloat()));
         }
     else if(number.GetComplexData()->IsList())
@@ -303,14 +305,14 @@ Variant PEBLMath::Pow(Variant v)
     //This has two arguments; the number and the base.
     
     PList * plist = v.GetComplexData()->GetList();
-    Variant base = plist->First(); plist->PopFront();
+    Variant base = plist->First();// plist->PopFront();
 
     //Don't get the second argument right away--if the first argument is
     //a list, we should just pass it along to the recurse2 function.
     
     if(base.IsNumber())
         {                  
-            Variant power = plist->First(); plist->PopFront();   //Get the base argument
+            Variant power = plist->Nth(2); //plist->PopFront();   //Get the base argument
             return powl(base, power);
         }
     else if(base.GetComplexData()->IsList())
@@ -361,14 +363,14 @@ Variant PEBLMath::NthRoot(Variant v)
     //This has two arguments; the number and the root.
     
     PList * plist = v.GetComplexData()->GetList();
-    Variant number = plist->First(); plist->PopFront();
+    Variant number = plist->First(); //plist->PopFront();
 
     //Don't get the second argument right away--if the first argument is
     //a list, we should just pass it along to the recurse2 function.
     
     if(number.IsNumber())
         {                  
-            Variant root = plist->First(); plist->PopFront();   //Get the base argument
+            Variant root = plist->Nth(2);// plist->PopFront();   //Get the base argument
             return powl(number, 1 / root.GetFloat());
         }
     else if(number.GetComplexData()->IsList())
@@ -549,7 +551,7 @@ Variant PEBLMath::DegToRad(Variant v)
     PList * plist = v.GetComplexData()->GetList();
 
 
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
 
     if(v1.IsNumber())
         {
@@ -576,7 +578,7 @@ Variant PEBLMath::RadToDeg(Variant v)
     PList * plist = v.GetComplexData()->GetList();
     
 
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
 
     if(v1.IsNumber())
         {
@@ -606,14 +608,14 @@ Variant PEBLMath::Round(Variant v)
     if(v1.IsNumber())
         {
 
-            plist->PopFront();
+            //plist->PopFront();
 
-            if(plist->IsEmpty())
+            if(plist->Length()==1)
                 {
                     return Variant(PEBLUtility::Round(v1.GetFloat()));
                 }else{
 
-                Variant v2 =plist->First();
+                Variant v2 =plist->Nth(2);
 
                 PError::AssertType(v2, PEAT_INTEGER,"Second (optional) argument  in [Round(number, precision)] must be an integer: ");            
                 return Variant(PEBLUtility::Round(v1.GetFloat(),v2.GetInteger()));
@@ -708,11 +710,11 @@ Variant PEBLMath::Mod(Variant v)
 
     
     PError::AssertType( plist->First(), PEAT_NUMBER, "Argument error in first parameter of Mod(<number>,<number>)");
-    long int v1 = plist->First(); plist->PopFront(); 
+    long int v1 = plist->First(); //plist->PopFront(); 
 
 
-    PError::AssertType( plist->First(), PEAT_NUMBER, "Argument error in second parameter of Mod(<number>,<number>)");
-    long int v2 = plist->First(); plist->PopFront(); 
+    PError::AssertType( plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of Mod(<number>,<number>)");
+    long int v2 = plist->Nth(2); //plist->PopFront(); 
 
  
     double remainder =((double)v1/v2 - (v1/v2)); 
@@ -1015,7 +1017,7 @@ Variant  PEBLMath::RandomUniform(Variant v)
 
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in function [RandomUniform(<number>)]:  ");    
     
-    long double upperbound = plist->First(); plist->PopFront();
+    long double upperbound = plist->First(); //plist->PopFront();
     if(upperbound < 0)
         {
             std::ostrstream  message;
@@ -1042,10 +1044,10 @@ Variant  PEBLMath::RandomNormal(Variant v)
     //v[1] should be mean, v[2] should be standard deviation.
 
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [RandomNormal(<mean>, <stdev>)]:  ");    
-    long double mean = plist->First(); plist->PopFront();
+    long double mean = plist->First(); //plist->PopFront();
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in second parameter function [RandomNormal(<mean>, <stdev>)]:  ");    
-    long double stdev = plist->First(); plist->PopFront();
+    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter function [RandomNormal(<mean>, <stdev>)]:  ");    
+    long double stdev = plist->Nth(2);// plist->PopFront();
  
     if(stdev < 0)  PError::SignalFatalError("Standard Deviation parameter of function [RandomNormal(<mean>,<stdev>)] must be positive.");
 
@@ -1063,7 +1065,7 @@ Variant  PEBLMath::RandomExponential(Variant v)
 
 
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in function [RandomExponential(<number>)]:  ");    
-    long double lambda = plist->First(); plist->PopFront();
+    long double lambda = plist->First(); //plist->PopFront();
        
     //The value of lambda may not be able to vary freely--It may not be able to be negative.
     //This should be checked for.
@@ -1094,10 +1096,10 @@ Variant  PEBLMath::RandomLogNormal(Variant v)
 
     //v[1] should be median, v[2] should be the spread
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter function [RandomLogNormal(<median>, <spread>)]:  ");    
-    long double median = plist->First(); plist->PopFront();
+    long double median = plist->First(); //plist->PopFront();
     
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in second parameter function [RandomLogNormal(<median>, <spread>)]:  ");    
-    long double spread = plist->First(); plist->PopFront();
+    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter function [RandomLogNormal(<median>, <spread>)]:  ");    
+    long double spread = plist->Nth(2);// plist->PopFront();
     
     return Variant(median * exp(spread * PEBLUtility::RandomNormal()));
 }
@@ -1112,9 +1114,9 @@ Variant  PEBLMath::RandomBinomial(Variant v)
    //v[1] should have the parameter
 
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter function [RandomBinomial(<p>, <N>)]:  ");    
-    long double p = plist->First(); plist->PopFront();
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in second parameter function [RandomBinomial(<p>, <N>)]:  ");    
-    long int N = plist->First(); plist->PopFront();
+    long double p = plist->First();// plist->PopFront();
+    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter function [RandomBinomial(<p>, <N>)]:  ");    
+    long int N = plist->Nth(2); //plist->PopFront();
     
     long int count = 0;
     for(int i = 0; i < N; i++)
@@ -1137,7 +1139,7 @@ Variant  PEBLMath::RandomBernoulli(Variant v)
    //v[1] should have the parameter
 
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter function [RandomBinomial(<p>, <N>)]:  ");    
-    long double p = plist->First(); plist->PopFront();
+    long double p = plist->First();// plist->PopFront();
     
     if(PEBLUtility::RandomUniform() < p) 
         return Variant(1);

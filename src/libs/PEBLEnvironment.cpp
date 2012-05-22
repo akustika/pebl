@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLEnvironment.cpp
 //    Purpose:    General Environment Function Library for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -98,13 +98,11 @@ Variant PEBLEnvironment::GetTimeOfDay(Variant v)
 Variant  PEBLEnvironment::Wait(Variant v)
 {
 
-
     //v[1] should have the parameter
     PList * plist = v.GetComplexData()->GetList();
 
-
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in function [Wait(<number>)]: ");
-    int delay = plist->First(); plist->PopFront();
+    int delay = plist->First();// plist->PopFront();
     delay += myTimer.GetTime();
     //Create a timer test correspending to keydown.
     //1 is the value (down), DT_GREATER_THAN is the test, key is the interface (e.g., the 'A' key)
@@ -129,7 +127,7 @@ Variant PEBLEnvironment::IsKeyDown(Variant v)
      PList * plist = v.GetComplexData()->GetList();
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [IsKeyDown(<string>)]: ");
 
-    std::string mystring = plist->First(); plist->PopFront();
+    std::string mystring = plist->First();// plist->PopFront();
     PEBLKey key = PEBLUtility::TranslateString(mystring);
 
     return Variant(myKeyboard.IsKeyDown(key));
@@ -145,7 +143,7 @@ Variant PEBLEnvironment::IsKeyUp(Variant v)
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [IsKeyUp(<string>)]:  ");
 
-    string mystring = plist->First(); plist->PopFront();
+    string mystring = plist->First();// plist->PopFront();
     PEBLKey key = PEBLUtility::TranslateString(mystring);
 
     return Variant(myKeyboard.IsKeyUp(key));
@@ -209,7 +207,7 @@ Variant PEBLEnvironment::WaitForKeyDown(Variant v)
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyDown(<string>)]:  ");
 
-    string mystring = plist->First(); plist->PopFront();
+    string mystring = plist->First();// plist->PopFront();
     PEBLKey key = PEBLUtility::TranslateString(mystring);
 
 
@@ -241,7 +239,7 @@ Variant PEBLEnvironment::WaitForKeyUp(Variant v)
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyUp(<string>)]:  ");
 
-    string mystring = plist->First(); plist->PopFront();
+    string mystring = plist->First(); //plist->PopFront();
     PEBLKey key = PEBLUtility::TranslateString(mystring);
 
 
@@ -301,7 +299,7 @@ Variant PEBLEnvironment::WaitForKeyPress(Variant v)
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyPress(<string>)]:  ");
 
-    string mystring = plist->First(); plist->PopFront();
+    string mystring = plist->First();// plist->PopFront();
     PEBLKey key = PEBLUtility::TranslateString(mystring);
 
 
@@ -332,7 +330,7 @@ Variant PEBLEnvironment::WaitForKeyRelease(Variant v)
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [WaitForKeyRelease(<string>)]:  ");
 
-    string mystring = plist->First(); plist->PopFront();
+    string mystring = plist->First();// plist->PopFront();
     PEBLKey key = PEBLUtility::TranslateString(mystring);
 
 
@@ -416,7 +414,7 @@ Variant PEBLEnvironment::WaitForAnyKeyDownWithTimeout(Variant v)
 
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in function [WaitForAnyKeyDownWithTimeout(<number>)]:  ");
 
-    int delay = plist->First(); plist->PopFront();
+    int delay = plist->First(); //plist->PopFront();
     delay += myTimer.GetTime();
 
     //Create a timer test correspending to keydown.
@@ -457,7 +455,7 @@ Variant PEBLEnvironment::WaitForAnyKeyPressWithTimeout(Variant v)
 
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in function [WaitForAnyKeyPressWithTimeout(<number>)]:  ");
 
-    int delay = plist->First(); plist->PopFront();
+    int delay = plist->First(); //plist->PopFront();
     delay += myTimer.GetTime();
 
     //Create a timer test correspending to keydown.
@@ -502,26 +500,26 @@ Variant PEBLEnvironment::WaitForListKeyPressWithTimeout(Variant v)
 {
 
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
     PError::AssertType(v1, PEAT_LIST, "Argument error in first parameter of function [WaitForListKeyPressWithTimeout(<list-of-keys>,<timeout>,<style>)]:  ");
 
 
     //Use plist to get the actual list of items.
     PList * keylist = (PList*)((v1.GetComplexData())->GetObject().get());
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in second parameter of function [WaitForListKeyPressWithTimeout(<list-of-keys>,<timeout>,<style>)]:  ");
-    int delay  = plist->First(); plist->PopFront();
+    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function [WaitForListKeyPressWithTimeout(<list-of-keys>,<timeout>,<style>)]:  ");
+    int delay  = plist->Nth(2);// plist->PopFront();
     delay += myTimer.GetTime();
 
-    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in third parameter of function [WaitForListKeyPressWithTimeout(<list-of-keys>,<timeout>,<style>)]:  ");
-    Variant v3 = plist->First(); plist->PopFront();
+    PError::AssertType(plist->Nth(3), PEAT_INTEGER, "Argument error in third parameter of function [WaitForListKeyPressWithTimeout(<list-of-keys>,<timeout>,<style>)]:  ");
+    Variant v3 = plist->Nth(3);// plist->PopFront();
 
 
 
 
 
-    std::list<Variant>::iterator p = keylist->Begin();
-    std::list<Variant>::iterator end = keylist->End();
+    std::vector<Variant>::iterator p = keylist->Begin();
+    std::vector<Variant>::iterator end = keylist->End();
 
     ValueState * state;
     string funcname = "";
@@ -585,14 +583,14 @@ Variant PEBLEnvironment::WaitForKeyListDown(Variant v)
 
    //v[1] should have the parameter: a list of keys to wait for.
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
     PError::AssertType(v1, PEAT_LIST, "Argument error in function [WaitForKeyListDown(<list>)]:  ");
 
     //Use plist to get the actual list of items.
     PList * keylist = (PList*)((v1.GetComplexData())->GetObject().get());
 
-    std::list<Variant>::iterator p = keylist->Begin();
-    std::list<Variant>::iterator end = keylist->End();
+    std::vector<Variant>::iterator p = keylist->Begin();
+    std::vector<Variant>::iterator end = keylist->End();
 
     PDevice * device = new PlatformKeyboard(myKeyboard);
     ValueState * state;
@@ -649,14 +647,14 @@ Variant PEBLEnvironment::WaitForListKeyPress(Variant v)
    //v[1] should have the parameter: a list of keys to wait for.
     PList * plist = v.GetComplexData()->GetList();
 
-    Variant v1 = plist->First(); plist->PopFront();
+    Variant v1 = plist->First(); //plist->PopFront();
     PError::AssertType(v1, PEAT_LIST, "Argument error in function [WaitForKeyListPress(<list>)]:  ");
 
     //Use plist to get the actual list of items.
     PList * keylist = (PList*)((v1.GetComplexData())->GetObject().get());
 
-    std::list<Variant>::iterator p = keylist->Begin();
-    std::list<Variant>::iterator end = keylist->End();
+    std::vector<Variant>::iterator p = keylist->Begin();
+    std::vector<Variant>::iterator end = keylist->End();
 
     ValueState * state;
     string funcname = "";
@@ -699,16 +697,15 @@ Variant PEBLEnvironment::GetInput(Variant v)
     //The first argument should be a textbox.
     PError::AssertType(plist->First(), PEAT_TEXTBOX, "Argument error in function [GetInput(<textbox>,<key-string>)]: ");
     PlatformTextBox * textbox = dynamic_cast<PlatformTextBox*>(plist->First().GetComplexData()->GetObject().get());
-    plist->PopFront();
+    //    plist->PopFront();
 
 
     //The next argument should be the 'escape' key, or a list of 'escape' keys.
     // l.GetType() << std::endl;
     //type = plist->First()->GetType();
 
-    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [GetInput(<textbox>,<key-string>)]: ");
-    string  myString = plist->First(); plist->PopFront();
-
+    PError::AssertType(plist->Nth(2), PEAT_STRING, "Argument error in function [GetInput(<textbox>,<key-string>)]: ");
+    string  myString = plist->Nth(2); //plist->PopFront();
 
 
     //Create a keyboard test correspending to escape keydown.
@@ -822,16 +819,16 @@ Variant PEBLEnvironment::GetTextBoxCursorFromClick(Variant v)
     //The first argument should be a textbox.
     PError::AssertType(plist->First(), PEAT_TEXTBOX, "Argument error in function [SetTextBoxCursorFromClick(<textbox>,<x>,<y>)]: ");
     PlatformTextBox * textbox = dynamic_cast<PlatformTextBox*>(plist->First().GetComplexData()->GetObject().get());
-    plist->PopFront();
+    //    plist->PopFront();
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first argument of function [SetTextBoxCursorFromClick(<textbox>,<x>,<y>)]: ");
-    int x = plist->First();
-    plist->PopFront();
+    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in first argument of function [SetTextBoxCursorFromClick(<textbox>,<x>,<y>)]: ");
+    int x = plist->Nth(2);
+    //    plist->PopFront();
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in second argumeent of function [SetTextBoxCursorFromClick(<textbox>,<x>,<y>)]: ");
+    PError::AssertType(plist->Nth(3), PEAT_NUMBER, "Argument error in second argumeent of function [SetTextBoxCursorFromClick(<textbox>,<x>,<y>)]: ");
 
-    int y = plist->First();
-    plist->PopFront();
+    int y = plist->Nth(3);
+    //    plist->PopFront();
 
     //    int relx <- x - (textbox->GetX() - textbox->GetWidth()/2)
     //    int rely <- y - (textbox->GetY() - textbox->GetHeight()/2)
@@ -863,7 +860,7 @@ Variant PEBLEnvironment::WaitForMouseButton(Variant v)
 
     int x =returnval.GetMouseButtonEvent().x;
     int y =returnval.GetMouseButtonEvent().y;
-    newlist->PushFront(Variant(x));
+    newlist->PushBack(Variant(x));
     newlist->PushBack(Variant(y));
     int btn = returnval.GetMouseButtonEvent().button;
     Variant button = Variant(btn);
@@ -900,7 +897,7 @@ Variant PEBLEnvironment::WaitForMouseButtonWithTimeout(Variant v)
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in function [WaitForMouseButtonWithTimeout(<number>)]:  ");
 
     //set the timeout
-    int delay = plist->First(); plist->PopFront();
+    int delay = plist->First(); //plist->PopFront();
     delay += myTimer.GetTime();
 
 
@@ -939,7 +936,7 @@ Variant PEBLEnvironment::WaitForMouseButtonWithTimeout(Variant v)
 
             int x =returnval.GetMouseButtonEvent().x;
             int y =returnval.GetMouseButtonEvent().y;
-            newlist->PushFront(Variant(x));
+            newlist->PushBack(Variant(x));
             newlist->PushBack(Variant(y));
             int btn = returnval.GetMouseButtonEvent().button;
             Variant button = Variant(btn);
@@ -990,12 +987,12 @@ Variant PEBLEnvironment::SetCursorPosition(Variant v)
     //The first argument should be a textbox.
     PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in first argument of function [SetCursorPosition(<x>,<y>)]: ");
     int x = plist->First();
-    plist->PopFront();
+    //plist->PopFront();
 
-    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in second argumeent of function [SetCursorPosition(<x>,<y>)]: ");
+    PError::AssertType(plist->Nth(2), PEAT_INTEGER, "Argument error in second argumeent of function [SetCursorPosition(<x>,<y>)]: ");
 
-    int y = plist->First();
-    plist->PopFront();
+    int y = plist->Nth(2);
+    //    plist->PopFront();
 
     myEnv->SetCursorPosition(x,y);
      return Variant(1);
@@ -1021,7 +1018,7 @@ Variant  PEBLEnvironment::GetJoystick(Variant v)
     //The first argument should be an integer specifying the joystick index
     PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in argument of function [GetJoystick(<int>)]: ");
     int id = plist->First();
-    plist->PopFront();
+    //plist->PopFront();
 
 
     PlatformJoystick * js = new PlatformJoystick(id);
@@ -1087,10 +1084,10 @@ Variant  PEBLEnvironment::GetJoystickButtonState(Variant v)
     //The first argument should be a joystick
     PError::AssertType(plist->First(), PEAT_JOYSTICK, "Argument error in first argument of function [GetJoystickButtonState(<joystick>,<button>)]: ");
     PlatformJoystick * joystick = dynamic_cast<PlatformJoystick*>(plist->First().GetComplexData()->GetObject().get());
-    plist->PopFront();
+    //    plist->PopFront();
 
-    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in second argument of function [GetJoystickButtonState(<joystick>,<button>)]: ");
-    unsigned int button  = (unsigned int)(int)(plist->First());
+    PError::AssertType(plist->Nth(2), PEAT_INTEGER, "Argument error in second argument of function [GetJoystickButtonState(<joystick>,<button>)]: ");
+    unsigned int button  = (unsigned int)(int)(plist->Nth(2));
 
 
     return joystick->GetButtonState(button);
@@ -1103,12 +1100,11 @@ Variant  PEBLEnvironment::GetJoystickAxisState(Variant v)
     //The first argument should be a joystick
     PError::AssertType(plist->First(), PEAT_JOYSTICK, "Argument error in first argument of function [GetJoystickAxisState(<joystick>,<axis>)]: ");
     PlatformJoystick * joystick = dynamic_cast<PlatformJoystick*>(plist->First().GetComplexData()->GetObject().get());
-    plist->PopFront();
+    //plist->PopFront();
 
-    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in second argument of function [GetJoystickAxisState(<joystick>,<axis>)]: ");
+    PError::AssertType(plist->Nth(2), PEAT_INTEGER, "Argument error in second argument of function [GetJoystickAxisState(<joystick>,<axis>)]: ");
 
-    unsigned int axis  = (unsigned int)(int)(plist->First());
-
+    unsigned int axis  = (unsigned int)(int)(plist->Nth(2));
 
     return joystick->GetAxisState(axis);
 
@@ -1121,9 +1117,9 @@ Variant  PEBLEnvironment::GetJoystickHatState(Variant v)
     //The first argument should be a joystick
     PError::AssertType(plist->First(), PEAT_JOYSTICK, "Argument error in first argument of function [GetJoystickHatState(<joystick>,<hat>)]: ");
     PlatformJoystick * joystick = dynamic_cast<PlatformJoystick*>(plist->First().GetComplexData()->GetObject().get());
-    plist->PopFront();
+    //    plist->PopFront();
 
-    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in second argument of function [GetJoystickHatState(<joystick>,<hat>)]: ");
+    PError::AssertType(plist->Nth(2), PEAT_INTEGER, "Argument error in second argument of function [GetJoystickHatState(<joystick>,<hat>)]: ");
 
     unsigned int hat  = (unsigned int)(int)(plist->First());
 
@@ -1138,10 +1134,10 @@ Variant  PEBLEnvironment::GetJoystickBallState(Variant v)
     //The first argument should be a joystick
     PError::AssertType(plist->First(), PEAT_JOYSTICK, "Argument error in first argument of function [GetJoystickBallState(<joystick>,<button>)]: ");
     PlatformJoystick * joystick = dynamic_cast<PlatformJoystick*>(plist->First().GetComplexData()->GetObject().get());
-    plist->PopFront();
+    //    plist->PopFront();
 
-    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in second argument of function [GetJoystickBallState(<joystick>,<button>)]: ");
-    unsigned int button  = (unsigned int)(int)(plist->First());
+    PError::AssertType(plist->Nth(2), PEAT_INTEGER, "Argument error in second argument of function [GetJoystickBallState(<joystick>,<button>)]: ");
+    unsigned int button  = (unsigned int)(int)(plist->Nth(2));
 
 
     return joystick->GetBallState(button);
@@ -1174,7 +1170,7 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
 
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [RegisterEvent(<string>)]:  ");
-    string mystring = PEBLUtility::ToUpper(plist->First()); plist->PopFront();
+    string mystring = PEBLUtility::ToUpper(plist->First()); //plist->PopFront();
 
     PDevice*device;
 
@@ -1238,13 +1234,13 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
 
 
     //Netx argument is the interface
-    Variant intface =(plist->First()); plist->PopFront();
+    Variant intface =(plist->Nth(2));// plist->PopFront();
 
 
     //Next argument is a value or range
     //It should be either a number,
     // or a list of 2 or 4 items
-    Variant p = plist->First();plist->PopFront();
+    Variant p = plist->Nth(3);//plist->PopFront();
     Variant v1,v2,v11,v12,v21,v22;
     enum DeviceTestType testtype;
 
@@ -1267,8 +1263,8 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
             // if it is an intervalstate, the list well have two numbers inside it
             // for a regionstate, the list will have two sublists.
 
-             v1 = myList->First();myList->PopFront();
-             v2 = myList->First();myList->PopFront();
+            v1 = myList->First();//myList->PopFront();
+            v2 = myList->Nth(2);//First();myList->PopFront();
 
              if(0)//v1.IsList())
                 {
@@ -1282,10 +1278,10 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
                     PList * sublist2 = (PList*)(v2.GetComplexData()->GetObject().get());
 
                     //Could this end up destroying a global list???
-                    v11 = sublist1->First(); sublist1->PopFront();
-                    v12 = sublist1->First();
-                    v21 = sublist2->First(); sublist1->PopFront();
-                    v22 = sublist2->First();
+                    v11 = sublist1->First();// sublist1->PopFront();
+                    v12 = sublist1->Nth(2);
+                    v21 = sublist2->First(); //sublist1->PopFront();
+                    v22 = sublist2->Nth(2);//First();
 
                 }
             else
@@ -1327,13 +1323,11 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
     //   FALSE
 
 
-    PError::AssertType(plist->First(), PEAT_STRING,
+     PError::AssertType(plist->Nth(4), PEAT_STRING,
                        "Error in  of function [RegisterEvent(<device>,<interface>,<function>)]: ");
 
 
-    std::string test = PEBLUtility::ToUpper(plist->First()); plist->PopFront();
-
-
+     std::string test = PEBLUtility::ToUpper(plist->Nth(4)); //plist->PopFront();
     enum DeviceTest type;
 
     switch(testtype)
@@ -1420,12 +1414,10 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
 
 
 
-
-    PError::AssertType(plist->First(), PEAT_STRING, "Error in parameter of function [RegisterEvent(<device>,<xxx>,<functionname>)]:  ");
-    string funcname = PEBLUtility::ToUpper(plist->First()); plist->PopFront();
+    
+    PError::AssertType(plist->Nth(5), PEAT_STRING, "Error in parameter of function [RegisterEvent(<device>,<xxx>,<functionname>)]:  ");
+    string funcname = PEBLUtility::ToUpper(plist->Nth(5));// plist->PopFront();
     //Can we check to see if funcname exists in the functionmap?
-
-
 
 
 
@@ -1448,7 +1440,7 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
 
     //get the parameter to pass to the callback function.
 
-    Variant parameters =  plist->First(); plist->PopFront();
+    Variant parameters =  plist->Nth(6);//; plist->PopFront();
 
     if(parameters.IsStackSignal())
         parameters = Variant(NULL);
@@ -1510,7 +1502,7 @@ Variant PEBLEnvironment::TranslateKeyCode(Variant v)
 
     PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in function [TranslateKeyCode(<integer>)]:  ");
 
-    int key = (int)(plist->First()); plist->PopFront();
+    int key = (int)(plist->First());// plist->PopFront();
 
     std::string retval = PEBLUtility::TranslateKeyCode((PEBLKey)key, PEBLMOD_NONE);
     return Variant(retval);
@@ -1540,8 +1532,15 @@ Variant PEBLEnvironment::TimeStamp(Variant v)
 }
 
 
+Variant PEBLEnvironment::GetCurrentScreenResolution(Variant v)
+{
+    return SDLUtility::GetCurrentScreenResolution();
+}
+
+
 Variant PEBLEnvironment::GetVideoModes(Variant v)
 {
+
     return myEnv->GetScreenModes();
 
 }
@@ -1570,7 +1569,7 @@ Variant PEBLEnvironment::GetSystemType(Variant v)
 Variant PEBLEnvironment::LaunchFile(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
-    std::string file  = plist->First().GetString(); plist->PopFront();
+    std::string file  = plist->First().GetString(); //plist->PopFront();
 
 
     PEBLUtility::LaunchFile(file.c_str());
@@ -1581,14 +1580,14 @@ Variant PEBLEnvironment::SystemCall(Variant v)
 {
 
     PList * plist = v.GetComplexData()->GetList();
-    std::string call  = plist->First().GetString(); plist->PopFront();
+    std::string call  = plist->First().GetString();// plist->PopFront();
 
 
     std::string args;
 
     if(plist->Length()>0)
         {
-            args = plist->First().GetString(); plist->PopFront();
+            args = plist->Nth(2).GetString();// plist->PopFront();
         }
     else
         {
