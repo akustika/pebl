@@ -1,6 +1,12 @@
 define Start(p)
 {
 
+## Consists of 3 conditions:
+## testtype == 1: use OS mouse, stop when you click; don't track stream.
+## testtype == 2: move graphical cursor, stop when you click; record xy stream
+## testtype == 3: trial ends when you stop moving; logs xy stream
+
+  testtype <- 2
 
   targdist <- [50,75,100,200,350,500,700]
   targsize <- [10,20,40]
@@ -45,7 +51,7 @@ define Start(p)
   {
     gCounter.text <- ("Trial [" + i + "] of "+l)
     FilePrint_(gFileOut,gSubNum + " " + i + " ")
-    Trial(i, First(trial),Nth(trial,2),3)
+    Trial(i, First(trial),Nth(trial,2),testtype)
     i <- i + 1
   }
   ShowCursor(1)
@@ -72,7 +78,8 @@ define ListEqual(l1,l2)
 define Trial(trial, pos, size,type)
 {
 
-   ##Type == 1:
+   ##Type == 1: OS mouse; don't log cursor; trial end wih click
+   ##Type == 2: crosshairs mouse; requires clicking.
    ##Type == 3;  doesn't require clicking; only dwelling.
 
 
@@ -132,7 +139,7 @@ define Trial(trial, pos, size,type)
         #If you stop moving, check to see if you are inside the target
         if(ListEqual(mousepos,lastpos) )
           {
-            continue <- (1 - ClickOn(mousepos,[gStartx+pos,gHomeY],size, gTargHeight))
+            continue <- (1 - Inside(mousePos, targ0))
 
           }
          lastpos <- mousepos
@@ -142,18 +149,61 @@ define Trial(trial, pos, size,type)
        endtime <- GetTime()
         Wait(200)
 
+   }elseif(type == 2)
+   {
+     Draw()
+     continue <- 1
+     while(continue)
+       {
+        time <- GetTime()
+        mousepos <- WaitForMouseButtonWithTimeout(10)
+        if(First(mousepos)=="<timeout>")
+	{
+           continue <- 1
+	} else {
+
+
+         x <-  Inside(mousePos, targ0)
+      ## ClickOn(mousepos,[gStartx+pos,gHomeY],size, gTargHeight)
+
+       if(x)
+        {
+            endtime <- GetTime()
+            clicks <- clicks + 1
+            continue <- 0
+          }
+	}
+
+	
+	mousepos <- GetMouseCursorPosition()
+        MoveCursor(mousepos)
+
+
+        FilePrintList(gPointfile,Merge([trial,size,pos, time],mousepos))
+
+         Draw()
+       }
+       endtime <- GetTime()
+       Wait(200)
+
    } else {
- 
+    ##type == 1:
+    ShowCursor(1)
+    Draw()
     x <- 0
 
-    while(not x)
+     while(not x)
       {
        mousepos<-WaitForDownClick()
-    	x <-  ClickOn(mousepos,[gStartx+pos,gHomeY],size, gTargHeight)
+       x <-  Inside(mousePos, targ0)
+       #ClickOn(mousepos,[gStartx+pos,gHomeY],size, gTargHeight)
        endtime <- GetTime()
        clicks <- clicks + 1
       }
      }
+
+
+
      FilePrint_(gFileOut,type+ " " +pos + " " + size + " " + gShowPreview  + " " +First(mousepos) + " " + Nth(mousepos,2) + " " + clicks + " ")
      FilePrint(gFileOut,(endtime - start))
 
@@ -169,32 +219,32 @@ define Trial(trial, pos, size,type)
 
 ##Use rectangles for targets.
 ##Determines whether you clicked in the circle.
-define ClickOn(mousepos, pos,width, height)
-{
+##define ClickOn(mousepos, pos,width, height)
+## {
    
-  mouseX <- First(mousepos)  
-  mouseY <- Nth(mousepos,2)
+##   mouseX <- First(mousepos)  
+##   mouseY <- Nth(mousepos,2)
 
-  xcenter <- First(pos)
-  ycenter <- Nth(pos,2)
+##   xcenter <- First(pos)
+##   ycenter <- Nth(pos,2)
 
-  minX <-  xcenter-width/2
-  maxX <-  xcenter + width/2
-  minY <-  ycenter - height/2
-  maxY <-  ycenter + height/2
+##   minX <-  xcenter-width/2
+##   maxX <-  xcenter + width/2
+##   minY <-  ycenter - height/2
+##   maxY <-  ycenter + height/2
  
-  x <- First(mousepos)
-  y <- Nth(mousepos,2)
+##   x <- First(mousepos)
+##   y <- Nth(mousepos,2)
 
-  if( x <= maxX and x >= minX and y <= maxY and y >= minY)
-   {
-     ret <- 1
-   } else {
-     ret <- 0
-   }
+##   if( x <= maxX and x >= minX and y <= maxY and y >= minY)
+##    {
+##      ret <- 1
+##    } else {
+##      ret <- 0
+##    }
 
- return ret
-}
+##  return ret
+## }
 
 
 define WaitForDownClick()

@@ -240,7 +240,7 @@ int PEBLInterpret( int argc, char *argv[] )
     std::string displaySize="0x0";
     
 
-    std::string depth = "16";
+    std::string depth = "32";  //used to be 16; does this matter?
     enum PEBLVideoMode displayMode;
     enum PEBLVideoDepth displayDepth;
     bool windowed = true;
@@ -498,7 +498,12 @@ int PEBLInterpret( int argc, char *argv[] )
 
             //Be sure SDL quits.  It should probably be handled elsewhere,
             //but this seems to work.
+#ifdef PEBL_MOVIES
+            //Close the wave player library.  
+            WV_waaveClose();
+#endif
             SDL_Quit();
+
             return 0;
         }
     else
@@ -523,6 +528,10 @@ void  CaptureSignal(int signal)
     
     //Evaluator::gGlobalVariableMap.DumpValues();
 
+#ifdef PEBL_MOVIES
+            //Close the wave player library.  
+            WV_waaveClose();
+#endif
 
 
     //quit SDL here.  It should be killed els
@@ -632,6 +641,11 @@ int main(int argc,  char *argv[])
             return 1;
 #endif
         }
+
+#ifdef PEBL_MOVIES
+            //Close the wave player library.  
+            WV_waaveClose();
+#endif
 
     //This does'nt seem to have any impact.  Not sure why.
     SDL_Quit();

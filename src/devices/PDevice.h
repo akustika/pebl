@@ -3,7 +3,7 @@
 //    Name:       src/devices/PDevice.h
 //    Purpose:    Master Generic Device Class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -51,6 +51,8 @@ enum PEBL_DEVICE_TYPE
         PDT_JOYSTICK_BUTTON,
         PDT_JOYSTICK_HAT,
         PDT_PORT,
+        PDT_MOVIE_REFRESH,
+        PDT_MOVIE_END,
         PDT_DUMMY
 	};
 

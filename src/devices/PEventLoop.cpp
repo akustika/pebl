@@ -214,22 +214,30 @@ PEvent PEventLoop::Loop()
 
                     if(mIsEvent[i])   //The test is for an event queue-type event.
                         {
+
+                            // Note: 'events' contrast with 'states', handled later.
+                            // These are devices which send events through the PEBL Event queue.
+                            // So, if the current test is an 'event' state, we need to check the event queue.
+                            
                             //Only test the event if the queue is not empty.
                             if(!gEventQueue->IsEmpty())
                                 {
                                     //Now, we only should test an event if it is the proper device type.
+                                    //cout << "statetype"<< mStates[i]->GetDeviceType() << endl;
+                                    
                                     if(gEventQueue->GetFirstEventType() == mStates[i]->GetDeviceType())
                                         {
+
                                             //Now, just test the device.
+                                            //I don't think any devices support TestDevice currently.
                                             result = mStates[i]->TestDevice();
                                                
                                             if(result)
                                                 {
                                                     returnval = gEventQueue->GetFirstEvent();
 
-                                                    //The test was successful.  Add a global variable giving the time of the event.
-                                                    
-                                                   // myEval->gGlobalVariableMap.AddVariable("gLastEventTime", gEventQueue->GetFirstEvent().GetTime());
+                                                    // The test was successful.  Add a global variable giving the time of the event.
+                                                    // myEval->gGlobalVariableMap.AddVariable("gLastEventTime", gEventQueue->GetFirstEvent().GetTime());
 
                                                     if(mNodes[i])  //Execute mNodes
                                                         {
@@ -256,9 +264,10 @@ PEvent PEventLoop::Loop()
                         }
                     else
                         {
-                            //mStates isn't a device-type state.
+                            //mStates[i] isn't a device-type state.
 
                             //The test examines the device's state directly.
+                            //I don't think any devices support TestDevice currently.
                             result = mStates[i]->TestDevice();
                             if(result)
 

@@ -2,15 +2,13 @@
  ##
  ## Color Stroop Task, with option for vocal response
  ##
- ## (c) 2011 Shane T. Mueller and Alena Esposito
+ ## (c) 2011 Shane T. Mueller
  ## smueller at obereed dot net
  ## PEBL Color Stroop Task, Version 0.1
  ## 
  ## 
  ## Modeled to be roughly equivalent to the number stroop task
  ## also available via the PEBL Test Battery.
- ##
- ## Spanish translation by Alena Esposito
  ##
  ##
  ## By default, use only the ink-naming version, which
@@ -19,8 +17,14 @@
 
 define Start(p)
 {
+
+
+
    gVideoWidth <- 800
    gVideoHeight <- 600
+
+   gStimSize <- 60 ##Stimulus size of font.
+
 
    ##
    ##  Options:
@@ -30,16 +34,16 @@ define Start(p)
    ##
    ## gResponseType <- "keyboard"
    ## gResponseType <- "audio"
-   ## gResponseType <- "keypad"
+
 
    Initialize()
 
+
+
    gResponseType <- GetEasyChoice("Select input type ",
-                               ["1-2-3 Number Line on keyboard",
-                                "1-2-3 numbers on keypad",
+                               ["1-2-3-4 Number Line on keyboard",
                                "Vocal input from microphone"],
-							   
-                       ["keyboard","keypad","audio"], gWin)
+                               ["keyboard","audio"], gWin)
 
 
    ##for audio, set this to 1 to score real-time with keyboard.  
@@ -50,6 +54,9 @@ define Start(p)
    ##Determine which conditions you want to use here:
    gUseHueNaming <- 1
    gUseWordReading <- 0
+
+   gGiveFeedback <- 1  ##should you give feedback?  This will be reset later
+                       ##to 0 for test trials, and 1 for practice trials.
 
    ## The voice key will trip when 55% of the last 
    ## gVoiceKeyDuration 1-ms bins are above the threshold.
@@ -72,12 +79,18 @@ define Start(p)
    usePreset <- 1
    
    gFixationTime <- 1000  #time for the fixation cross
-   gResponseTimeout <- 2000 #Time limit given for responding
+   gResponseTimeout <- 3000 #Time limit given for responding
 
    ##Set gLanguage here to hard code
-   gLanguage <- "ES"
+   gLanguage <- "EN"
 
    GetStrings(gLanguage)
+
+
+   Print(GenerateStimuli(8,"color"))
+   Print(GenerateStimuli(24,"color"))
+   Print(GenerateStimuli(24,"color"))
+
 
    ##Enter the subject code here if one wasn't already provided.
    if(gSubNum == 0)
@@ -124,10 +137,9 @@ define Start(p)
   ###############################
 
   ##This, by default, reads in a fixed
-  block0 <- PracticeTrials(usepreset,"word")
-  block1 <- Round1Trials(usepreset,"word")
-  block2 <- Round2Trials(usepreset,"word")
-
+  block0 <- PracticeTrials(usepreset,"color")
+  block1 <- Round1Trials(usepreset,"color")
+  block2 <- Round2Trials(usepreset,"color")
 
   #################################
   ##Show the instructions.  
@@ -154,11 +166,12 @@ define Start(p)
 
    gHeader.text <- gPracticeHeaderText
 
+   #############################################
    ##Do the practice round
    ##
   gTrial <- 0
   gBlock <- 0
-
+  gGiveFeedback <- 1
 
    loop(trial,block0)
    {
@@ -183,6 +196,8 @@ define Start(p)
    Hide(gInstructions)
    Draw()
    gHeader.text <- gTestHeaderText
+
+   gGiveFeedback <- 0
 
    gBlock <- 1
    ##Do Round 1
@@ -282,18 +297,20 @@ define Start(p)
 define DoTrial(stim,cond,code)
 {
 
-   Print(stim)
-   length <- StringLength(Second(stim))
-   fname <- code + "-"+length+".wav"
+  ##stim has three values; 
+  ##first is the condition
+  ##second is the word to print
+  ##third is the index of the color/font to use to print it.
+
+
+   fname <- code + "-"+First(stim)+"-"+Second(stim)+"-"+Third(stim)+".wav"
 
    ##Condition is the response type.
    type <- First(stim)
 
-
    gFooter2.text <- gFooter2Text
-if(cond == "keyboard" or cond=="keypad")
+  if(cond == "keyboard")
   {
-
    gFooter1.text <- gFooter1textManual
    Show(gFooter1)
    Show(gFooter2)
@@ -311,26 +328,46 @@ if(cond == "keyboard" or cond=="keypad")
 
 
    gStimLabel.text <- Second(stim)
+   gStimLabel.font <- Nth(gFonts,Third(stim))
+
    Draw()
 
    time1 <- GetTime()
-   if(cond == "keyboard" or cond == "keypad")
+   gStimLabel.font <- Nth(gFonts,5)
+   if(cond == "keyboard")
     {
 
 
         resp <-WaitForListKeyPressWithTimeout(gKeys,2000,1)
         time2 <- GetTime()
+	Print(resp)
          if(IsList(resp))   ##Check to see if there was a time-out.
            {
              gStimLabel.text <- "Too Slow"
              Draw()
              Wait(500)
-			 responded <- 0
+             responded <- 0
+	     corr <- 0
            } else{
              responded <- 1
+             corr <- ToNumber(resp) == Third(stim)
+
+	     if(gGiveFeedback)
+	     {
+	     if(corr)
+	     {
+     	       gStimLabel.text <-"Correct"
+	     }else{
+     	       gStimLabel.text <-"Incorrect"
+	     }
+
+	     Draw()
+	     Wait(500)
+	     
+	     }
            }
              
-	   corr <- ToNumber(resp) == length
+
            rt <-(time2-time1)
    
     	out <- gSubNum + "," + cond + "," + code + "," + gBlock +","+ gTrial + "," +
@@ -339,8 +376,8 @@ if(cond == "keyboard" or cond=="keypad")
 
     }elseif(cond=="audio")
     {
-		Print("time1")
-    resp0 <-  GetVocalResponseTime(gResponseBuffer,gVoiceKeyThreshold, gVoiceKeyDuration)
+         Print("time1")
+         resp0 <-  GetVocalResponseTime(gResponseBuffer,gVoiceKeyThreshold, gVoiceKeyDuration)
 #        Wait(300)
 
         time2 <- GetTime()
@@ -362,8 +399,7 @@ if(cond == "keyboard" or cond=="keypad")
 	Hide(gStimLabel)
         Draw()
 
-       ##use the following for keypad entry:
-       ## resp <-WaitForListKeyPress(["<KP_1>","<KP_2>","<KP_3>","<KP_4>"])
+
         resp <-WaitForListKeyPress([1,2,3,4])
 	corr <- ToNumber(resp)==length
 
@@ -448,15 +484,22 @@ define PracticeTrials(usepreset,dim)
 { 
   if(usePreset)
    {
-
-       ##These won't work for color stroop.
-      x <- [["N", "G"], ["C", "333"], ["I", "3"], ["N", "MMM"], ["N", "GG"], ["I", "111"], ["I", "2"], ["C", "22"],
-            ["I", "33"], ["I", "11"], ["C", "1"], ["I", "222"], ["C", "1"], ["N", "ZZ"], ["I", "111"], ["N", "ZZZ"],
-            ["C", "333"], ["C", "22"], ["N", "MM"], ["N", "GGG"], ["N", "M"], ["I", "222"], ["C", "1"], ["C", "333"]]
-
+     ##Hardcode list here.
+      if(dim=="color")
+      {
+      x <-[[I, yellow, 2], [N, when, 4], [C, green, 3], [N, hard, 1],
+       [C, yellow, 4], [I, green, 2], [C, blue, 2], [N, and, 3],
+        [I, blue, 3], [I, yellow, 3], [C, red, 1], [N, hard, 2],
+	 [C, green, 3], [C, red, 1], [N, and, 1], [C, blue, 2],
+	  [C, yellow, 4], [I, red, 3], [N, and, 4], [N, over, 2],
+	   [I, green, 4], [N, when, 2], [I, yellow, 1], [I, red, 4]]
+      }else{
+       x <- GenerateStimuli(8,dim)
+      }
    }else {
-      x <- GenerateStimuli(8,dim)
+       x <- GenerateStimuli(8,dim)
    }
+  Print(x)
   return x
 }
 
@@ -465,18 +508,20 @@ define Round1Trials(usepreset,dim)
 {
   if(usePreset)
    {
-##These won't work for color stroop
-      x <-[["C", "1"], ["C", "333"], ["I", "222"], ["C", "22"], ["C", "22"], ["I", "222"], ["I", "33"],
-    ["N", "G"], ["C", "1"], ["N", "GG"], ["C", "333"], ["N", "ZZZ"], ["C", "22"], ["N", "ZZZ"], ["I", "111"],
-    ["I", "2"], ["N", "G"], ["I", "11"], ["I", "2"], ["N", "MMM"], ["C", "333"], ["I", "11"], ["C", "1"],
-    ["N", "ZZ"], ["I", "3"], ["N", "MM"], ["N", "GGG"], ["I", "33"], ["I", "33"], ["C", "22"], ["C", "333"],
-    ["C", "333"], ["C", "333"], ["C", "1"], ["N", "M"], ["N", "GGG"], ["C", "1"], ["I", "3"], ["N", "ZZ"], ["C", "22"],
-    ["C", "333"], ["C", "1"], ["I", "222"], ["C", "1"], ["I", "33"], ["I", "3"], ["N", "MMM"], ["I", "111"], ["C", "22"],
-    ["N", "M"], ["C", "22"], ["C", "22"], ["N", "GGG"], ["I", "2"], ["I", "222"], ["N", "ZZZ"], ["I", "111"], ["N", "M"],
-    ["I", "3"], ["N", "Z"], ["N", "MM"], ["N", "GG"], ["N", "G"], ["N", "M"], ["N", "MM"], ["N", "MMM"], ["I", "2"], ["N", "GG"],
-    ["C", "22"], ["N", "Z"], ["I", "11"], ["N", "ZZ"], ["N", "Z"], ["I", "111"], ["C", "1"], ["I","222"], ["I", "33"],
-    ["I", "111"], ["C", "1"], ["C", "333"], ["C", "333"], ["I", "2"], ["I", "11"],["C", "333"]]
-
+   if(dim=="color")
+   {
+    x <- [[I, green, 4], [C, blue, 2], [N, and, 4], [I, blue, 1], [I, green, 4], [N, and, 1], [N, and, 3], [N, hard, 1],
+ [C, green, 3], [I, yellow, 1], [C, red, 1], [C, yellow, 4], [C, blue, 2], [I, red, 4], [C, green, 3], [C, red, 1],
+ [N, hard, 2], [N, over, 1], [N, over, 4], [C, yellow, 4], [I, green, 2], [C, blue, 2], [N, hard, 2], [C, red, 1],
+ [N, when, 4], [I, green, 1], [N, hard, 1], [N, hard, 4], [I, blue, 3], [N, when, 1], [I, green, 2], [C, red, 1],
+ [I, blue, 4], [I, yellow, 1], [I, yellow, 3], [N, hard, 3], [C, yellow, 4], [C, green, 3], [I, red, 2], [N, when, 4],
+ [C, red, 1], [N, when, 3], [N, over, 2], [N, and, 4], [I, yellow, 3], [C, green, 3], [I, red, 3], [I, red, 2],
+ [N, over, 4], [C, yellow, 4], [N, hard, 4], [C, blue, 2], [I, blue, 3], [C, yellow, 4], [C, green, 3], [C, blue, 2],
+ [N, when, 2], [N, when, 2], [I, yellow, 2], [I, red, 4], [N, and, 3], [I, green, 1], [I, blue, 1], [C, green, 3], 
+ [I, red, 3], [I, blue, 4], [C, red, 1], [N, over, 3], [I, yellow, 2], [C, yellow, 4], [C, blue, 2], [N, and, 2]]
+    } else {
+     x <- GenerateStimuli(28,dim)
+    }
    }else {
       x <- GenerateStimuli(28,dim)
 
@@ -491,9 +536,28 @@ define Round2Trials(usepreset,dim)
   if(usePreset)
    
   {
-##These won't work for color stroop.
-        x <-  [["N", "MM"],["C", "22"],["N", "MM"],["C", "333"],["C", "333"],["N", "G"],["N", "GG"],["I", "3"],["C", "22"],["I", "3"],["I", "11"],["I", "111"],["I", "111"],["N", "G"],["N", "ZZZ"],["N", "GG"],["N", "ZZ"],["C", "22"],["N", "MMM"],["N", "MMM"],["N", "GGG"],["I", "3"],["I", "2"],["N", "ZZ"],["N", "MM"],["C", "333"],["N", "M"],["I", "222"],["C", "22"],["I", "111"],["C", "333"],["C", "333"],["C", "333"],["N", "GGG"],["N", "GGG"],["I", "222"],["N", "G"],["C", "1"],["I", "33"],["C", "1"],["I", "33"],["N", "MMM"],["N", "G"],["I", "222"],["N", "ZZZ"],["C", "1"],["I", "111"],["N", "M"],["C", "1"],["C", "333"],["I", "11"],["C", "1"],["C", "1"],["I", "3"],["I", "2"],["I", "2"],["I", "11"],["I", "2"],["N", "GG"],["N", "Z"],["I", "11"],["I", "111"],["I", "33"],["N", "ZZZ"],["N", "Z"],["C", "1"],["N", "ZZ"],["C", "333"],["I", "222"],["C", "22"],["I", "3"],["C", "22"],["C", "22"],["N", "M"],["N", "Z"],["C", "22"],["C", "1"],["I", "33"],["C", "22"],["C", "333"],["C", "22"],["I", "11"],["I", "33"],["C", "1"]]
-
+   if(dim=="color")
+   {
+     x <- [[I, yellow, 3], [I, green, 2], [I, red, 2], [N, hard, 4], 
+ [C, blue, 2], [I, yellow, 2], [N, when, 4], [N, when, 3], [N, and, 2],
+ [I, green, 4], [I, yellow, 2], [I, blue, 4], [I, blue, 3],
+ [I, green, 4], [I, blue, 1], [C, red, 1], [I, blue, 4],
+ [N, and, 1], [N, over, 4], [C, yellow, 4], [C, blue, 2], [C, green, 3],
+ [C, red, 1], [I, blue, 3], [C, green, 3], [I, green, 2],
+ [C, blue, 2], [I, red, 4], [I, red, 3], [N, over, 4], [C, red, 1],
+ [N, and, 3], [C, yellow, 4], [N, over, 3], [C, green, 3],
+ [N, hard, 2], [C, blue, 2], [C, red, 1], [N, and, 2],
+ [C, green, 3], [I, blue, 1], [N, and, 3], [N, when, 2],
+ [C, yellow, 4], [N, hard, 2], [N, over, 1], [I, green, 1],
+ [C, blue, 2], [I, yellow, 3], [I, yellow, 1], [I, green, 1],
+ [C, red, 1], [I, red, 4], [I, yellow, 1], [N, hard, 3],
+ [N, when, 1], [C, green, 3], [C, red, 1], [C, yellow, 4],
+ [C, yellow, 4], [I, red, 3], [N, over, 2], [N, when, 1],
+ [I, red, 2], [N, hard, 1], [C, yellow, 4], [N, and, 1],
+ [C, blue, 2], [N, hard, 1], [N, and, 4], [C, green, 3], [N, over, 2]]
+   }else{
+      x <- GenerateStimuli(28,dim)
+   }
    }else {
       x <- GenerateStimuli(28,dim)
 
@@ -506,21 +570,27 @@ define Round2Trials(usepreset,dim)
 define GenerateStimuli(num,responsedim)
 {
 
+   ##This returns a list of triplets;
+   ##the first is the condition (cong, neut, incong)
+   ##the second is the word
+   ##the third is the color id (element of gColors, where 5 indicates black)
 
    ##We need neutral, congruent, and incongruent stimuli here.
-   
+
+
+   ##Generate stimili for a word reading condition.     
    if(responseDim == "word")
     {
-
-	congbase <- Transpose([gColorNames,gColors])
-	neutbase <- Transpose([gColorNames, Repeat(gBlack,4)])	
+      
+	congbase <- Transpose([gColorNames,[1,2,3,4]])
+	neutbase <- Transpose([gColorNames, Repeat(5,4)])	
 
 	incongbase0 <- CrossFactorWithoutDuplicates([1,2,3,4])
  	incongbase <- []
 	loop(i,incongbase0)
 	{
 	   incongbase <- Append(incongbase, [Nth(gColorNames,First(i)),
-	   	                        Nth(gColors,Second(i))])
+	   	                             Second(i)])
 	}
 
     congruents <- RepeatEnough(congbase,num)	
@@ -533,17 +603,17 @@ define GenerateStimuli(num,responsedim)
     {
 
 
-	congbase <- Transpose([gColorNames,gColors])
-	neutbase <- Transpose([Repeat(gBlackName,4),gColors])	
-
+	congbase <- Transpose([gColorNames,[1,2,3,4]])
+	neutbase <- DesignFullCounterbalance(gNeutralNames,[1,2,3,4])
 
 	incongbase0 <- CrossFactorWithoutDuplicates([1,2,3,4])
  	incongbase <- []
 	loop(i,incongbase0)
 	{
 	   incongbase <- Append(incongbase,[ Nth(gColorNames,First(i)),
-	   	                        Nth(gColors,Second(i))])
+	   	                             Second(i)])
 	}
+
 
     congruents <- RepeatEnough(congbase,num)	
     neutrals <- RepeatEnough(neutbase,num)
@@ -556,8 +626,9 @@ define GenerateStimuli(num,responsedim)
 
 
    type <- Flatten([Repeat("N",num),Repeat("I",num),Repeat("C",num)])
+   stimbase <- Transpose(FlattenN([neutrals,incongruents,congruents],1))
 
-  return Shuffle(Transpose([type,Flatten([neutrals,incongruents,congruents])]))
+  return Shuffle(Transpose([type,First(stimbase),Second(stimbase)]))
 
 }
 
@@ -570,6 +641,7 @@ define PasteTables(tab1,tab2)
 
    return Transpose(Merge(a,b))
 }
+
 
 
 
@@ -646,42 +718,31 @@ define GetStrings(language)
 
 ##stimili are defined here because different languages may require different number or letter characters.
   
-if (Uppercase(language) == "ES")
-{
-   gNeutralStim    <- ["Z","ZZ","ZZZ","M","MM","MMM","G","GG","GGG"]
-   gIncongruentStim <- ["11","111","2","222","3","33"]
-   gCongruentStim  <- ["1","22","333"]
+##Ignore the translation for now.
+
+
+   gColorNames      <- ["red","blue","green","yellow"]
+   gBlackName <- "black"
+   gNeutralNames    <- ["when","hard","and","over"]
+
+
    if(gResponseType=="keyboard")
    {
-     gKeys <- [1,2,3]
-     keystring <-  "1, 2, or 3 key"
-   } elseif(gResponseType=="keypad")
-   {
-     gKeys <- ["<KP_1>","<KP_2>","<KP_3>"]
-     keystring <-  "1, 2, or 3 key"
-   }else{
-    
-	 gKeys <- [1,2,3]
-     keystring <- "uno, dos, o tres"
+     gKeys <- [1,2,3,4]
+     keystring <-  "1 = red   2 = blue  3 = green  4 = yellow"
+     }else{
+      gKeys <- [1,2,3,4]
+      keystring <- "Say 'red', 'blue', 'green', or 'yellow'"
    }
 
     gInstructionsBase<- "You are about to take part in an study in which you will be asked to determine how many characters are displayed on the computer screen.  There will either be one, two, or three characters.  Sometimes the characters will be letters, and other times they will be numbers. "
 
-	gKeyManual <- "You will need to respond with the 1-2-3 keys on the "+gResponseType+"
-      Z       1     2      3        (respond by pressing '1')
-     MM    11   22    33       (respond by pressing '2')
-    GGG  111  222  333     (respond by pressing '3').  
+	gKeyManual <- "You will need to respond with the 1-2-3-4 keys on the "
 
-Remember to ignore the actual identity of the character.  Press any key to try a practice round."
+	gKeyVocal <- "You will need to respond by saying the color of the written word, loudly and clearly, into the microphone."
 
-	gKeyVocal <- "You will need to respond by saying the number 1, 2, or 3, loudly and clearly, into the microphone:
-      Z       1     2      3        (respond by saying '1')
-     MM    11   22    33       (respond by saying '2')
-    GGG  111  222  333     (respond by saying '3').  
 
-Remember to ignore the actual identity of the character.  Press any key to try a practice round."
-
-if(gResponseType=="keyboard" or gResponseType=="keypad")
+if(gResponseType=="keyboard" )
   {
     gInstructionsText <- gInstructionsBase+gKeyManual
   }else{
@@ -693,31 +754,24 @@ if(gResponseType=="keyboard" or gResponseType=="keypad")
     gBreak2Text <- "You may now take a short break.  When you resume, remember to  answer as quickly and accurately as possible.  Press any key to continue."
 
     gPracticeHeaderText <- "PRACTICE"
-	gTestHeaderText    <-  "TEST"
+    gTestHeaderText    <-  "TEST"
 
-    gFooter1TextManual <- "Press "+keystring+" for the number of characters that appear on the screen"
-    gFooter1TextManual2 <- "Press "+keystring+" or '4' for other error."
+    gFooter1TextManual <- "Press "+keystring+" for the color of the word"
+    gFooter1TextManual2 <- "Press "+keystring+" or '5' for other error."
     gFooter1TextVocal <- "Say '"+keystring+"' for the number of characters that appear on the screen"
-	gFooter2Text <-"Respond as quickly and accurately as possible."
+    gFooter2Text <-"Respond as quickly and accurately as possible."
 
     gExitText <-"You are now finished. Thank you for participating."
-  } else  {
+  
 
-
-   ###############################################################
-   ##Default to english
-
-
-   gPEBLColorNames  <- ["red","navy","darkgreen","yellow1"]
    gColorNames      <- ["red","blue","green","yellow"]
    gBlackName <- "black"
    gNeutralNames    <- ["when","hard","and","over"]
-
-
+   gPEBLColorNames  <- ["red","navy","darkgreen","yellow1","black"]
 
    ##Create the actual colors to be used.
    gColors <- []
-   loop(i,gColorNames)
+   loop(i,gPEBLColorNames)
    {
      gColors <- Append(gColors,MakeColor(i))
    }
@@ -727,62 +781,14 @@ if(gResponseType=="keyboard" or gResponseType=="keypad")
    gFonts <- []
    loop(i,gColors)
    {
-      gFonts <- Append(gFonts, MakeFont(gPEBLBaseFontMono, 0, 24, i,gBg,0))
+      gFonts <- Append(gFonts, MakeFont(gPEBLBaseFontMono, 0, gStimSize, i,gBg,0))
    }
-
-
-   if(gResponseType=="keyboard")
-   {
-     gKeys <- [1,2,3]
-     keystring <-  "1, 2, or 3 key"
-   } elseif(gResponseType=="keypad")
-   {
-     gKeys <- ["<KP_1>","<KP_2>","<KP_3>"]
-     keystring <-  "1, 2, or 3 key"
-   }else{
-	 gKeys <- [1,2,3]
-         keystring <- "one, two, or three"
-   }
-
-    gInstructionsBase<- "You are about to take part in an study in which you will be asked to determine how many characters are displayed on the computer screen.  There will either be one, two, or three characters.  Sometimes the characters will be letters, and other times they will be numbers. "
-
-	gKeyManual <- "You will need to respond with the 1-2-3 keys on the "+gResponsetype+":
-      Z       1     2      3        (respond by pressing '1')
-     MM    11   22    33       (respond by pressing '2')
-    GGG  111  222  333     (respond by pressing '3').  
-
-Remember to ignore the actual identity of the character.  Press any key to try a practice round."
-
-	gKeyVocal <- "You will need to respond by saying the number 1, 2, or 3, loudly and clearly, into the microphone:
-      Z       1     2      3        (respond by saying '1')
-     MM    11   22    33       (respond by saying '2')
-    GGG  111  222  333     (respond by saying '3').  
-
-Remember to ignore the actual identity of the character.  Press any key to try a practice round."
-
-if(gResponseType=="keyboard" or gResponseType=="keypad")
-  {
-    gInstructionsText <- gInstructionsBase+gKeyManual
-  }else{
-    gInstructionsText <- gInstructionsBase+gKeyVocal
-  }
-
-    gBreak1Text <- "Practice is complete.  Now you will be tested for real.  Remember to answer as quickly and accurately as possible.  Press any key to begin."
-    gBreak2Text <- "You may now take a short break.  When you resume, remember to  answer as quickly and accurately as possible.  Press any key to continue."
 
     gPracticeHeaderText <- "PRACTICE"
     gTestHeaderText    <-  "TEST"
-
-    gFooter1TextManual <- "Press "+keystring+" for the number of characters that appear on the screen"
-    gFooter1TextManual2 <- "Press "+keystring+" or '4' for other error."
-    gFooter1TextVocal <- "Say '"+keystring+"' in response to the number of characters you see appear on the screen"
-    gFooter2Text <-"Respond as quickly and accurately as possible."
-
-    gExitText <-"You are now finished. Thank you for participating."
-
  }
 
-}
+
 
 
 ## Repeat list enough times to make it length long.
@@ -792,8 +798,7 @@ define RepeatEnough(list,length)
  
    l <- Length(list)
    times <- Ceiling(length/l)
-   tmp <- Flatten(ShuffleRepeat(list,times))
-
+   tmp <- FlattenN(ShuffleRepeat(list,times),1)
 
    return SubList(tmp,1,length)
 }

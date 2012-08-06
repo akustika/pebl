@@ -3,7 +3,7 @@
 //    Name:       src/devices/PEven.h
 //    Purpose:    Events processed by Event Loop.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -88,6 +88,17 @@ typedef struct
 
 typedef struct
 {
+    bool value;  //Not sure if event has anything in it.
+} PEBL_MovieRefreshEvent;
+
+
+typedef struct
+{
+    bool value;  //Not sure if event has anything in it.
+} PEBL_MovieEndEvent;
+
+typedef struct
+{
     int value;
 
 } PEBL_DummyEvent;
@@ -107,6 +118,8 @@ class PEvent
     void SetMouseMovementEvent(const PEBL_MouseMovementEvent & evt);
     void SetMouseButtonEvent(const PEBL_MouseButtonEvent & evt);
     void SetPortEvent(const PEBL_PortEvent & evt);
+    void SetMovieRefreshEvent(const PEBL_MovieRefreshEvent & evt);
+    void SetMovieEndEvent(const PEBL_MovieEndEvent & evt);
     void SetDummyEvent(const PEBL_DummyEvent & evt);
 
     int GetState(int iface) const;
@@ -117,6 +130,8 @@ class PEvent
     PEBL_MouseMovementEvent GetMouseMovementEvent() const;
     PEBL_MouseButtonEvent GetMouseButtonEvent() const;
     PEBL_MouseButtonEvent GetPortEvent() const;
+    PEBL_MovieRefreshEvent GetMovieRefreshEvent() const;
+    PEBL_MovieEndEvent GetMovieEndEvent() const;
     PEBL_DummyEvent GetDummyEvent() const;
 
  private:
@@ -129,6 +144,8 @@ class PEvent
 		PEBL_MouseMovementEvent mouseMovementEvent;
         PEBL_MouseButtonEvent   mouseButtonEvent;
         PEBL_PortEvent          portEvent;
+        PEBL_MovieRefreshEvent  movieRefreshEvent;
+        PEBL_MovieEndEvent      movieEndEvent;
         PEBL_DummyEvent         dummyEvent;
 	} mEvent;
 

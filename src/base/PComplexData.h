@@ -42,6 +42,7 @@
 #include "../platforms/sdl/PlatformKeyboard.h"
 #include "../platforms/sdl/PlatformDrawObject.h"
 #include "../platforms/sdl/PlatformCanvas.h"
+#include "../platforms/sdl/PlatformMovie.h"
 #include "../devices/PStream.h"
 #include "../platforms/sdl/PlatformAudioOut.h"
 #include "../platforms/sdl/PlatformNetwork.h"
@@ -164,6 +165,7 @@ public:
     bool IsJoystick() const;
     bool IsParallelPort() const;
     bool IsComPort() const;
+    bool IsMovie() const;
 
 
 

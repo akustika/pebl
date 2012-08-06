@@ -1,7 +1,7 @@
 define Start(p)
 { 
-  address <- "localhost"
-  #address <- "mastermeese.no-ip.org"
+  #address <- "localhost"
+  address <- "mastermeese.no-ip.org"
   gNetwork <- 0
   time0 <- GetTime()
   success <- 0
@@ -14,7 +14,7 @@ define Start(p)
   PrintProperties(gNetwork)
   if(gNetwork)
   {
-    success <-  SendFile2(gNetwork,"test0.txt","IDENTIFIER"+RandomDiscrete(1000))
+    success <-  SendFile(gNetwork,"test0.txt","IDENTIFIER"+RandomDiscrete(1000))
    
     CloseNetworkConnection(gNetwork)
     Print("File Sent with success:"+success)
@@ -34,7 +34,7 @@ define SendFile2(network,filename,id)
    {
      SignalFatalError("Cannot send a file this long:"+length)
    }
-   message <- Format(length,16) + Format(id,16) + text
+   message <-  Format(id,32)+Format(length,16) + text
 
    ##Send 1024 bytes at a time.
    chunksize <- 1024
@@ -71,7 +71,7 @@ define SendFile(network,filename,id)
      SignalFatalError("Cannot send a file this long:"+length)
    }
 
-   message <- Format(length,16) + Format(id,16) + text
+   message <-  Format(id,32)+Format(length,16) + text
    success <- SendData(network,message)
   
    return success

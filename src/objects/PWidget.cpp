@@ -103,6 +103,14 @@ bool PWidget::SetPoint(int x, int y, PColor col)
 }
 
 
+PColor PWidget::GetPixel(int x, int y)
+{
+    //This should go straight to PlatforwWidget::GetPixel
+
+    return false;
+}
+
+
 
 bool PWidget::SetProperty(std::string name, Variant v)
 {

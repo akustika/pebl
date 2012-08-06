@@ -230,7 +230,7 @@ Variant::Variant(const Variant &v):
 
 
     //This should behave differently depending on what type of variant v is
-
+    //    cout << "Q: " << v << endl;
     mDataType = v.GetDataType();
 
     switch(mDataType)
@@ -271,6 +271,7 @@ Variant::Variant(const Variant &v):
         case P_DATA_COMPLEXDATA:
             {
 
+                //cout<<"TYPE:" << v << endl;
                 PComplexData * pcd = v.GetComplexData();
 
                 if(pcd)

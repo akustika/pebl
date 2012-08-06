@@ -176,6 +176,7 @@ bool PlatformLabel::SetProperty(std::string name, Variant v)
     else if (name == "FONT")
         {
             SetFont(v.GetComplexData()->GetObject());
+            
         }
     else return false;
     
@@ -213,6 +214,7 @@ bool PlatformLabel::Draw()
 {
     if(mTextChanged)
         {
+
             RenderText();
             //Reposition.  This just recalculates so things are centered
             //correctly; labels are positioned based on their center.

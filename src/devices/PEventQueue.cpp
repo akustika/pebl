@@ -3,7 +3,7 @@
 //    Name:       src/devices/PEventQueue.cpp
 //    Purpose:    Interface to platform-specific event queue.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -22,8 +22,9 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with PEBL; if not, write to the Free Software
-//    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-////////////////////////////////////////////////////////////////////////////////
+//    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  
+//    02111-1307  USA
+////////////////////////////////////////////////////////////////////////////
 
 #include "PEventQueue.h"
 #include "PEvent.h"

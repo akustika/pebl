@@ -2954,6 +2954,8 @@ Insert(<[list]>,<item>,<position>)
 
 \end{desc}
 
+
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Inside()+
 
@@ -2971,7 +2973,7 @@ Inside(<[xylist]>,<object>)
 
 \item[Example]	
 
-
+\begin{verbatim}
       button <- EasyLabel("Click me to continue", 100,100,gWin,12)
 
       continue <- 1
@@ -2980,7 +2982,7 @@ Inside(<[xylist]>,<object>)
          xy <- WaitForMouseButton()
          continue <- Inside(xy,button)
       }
-     
+\end{verbatim}
 
 \item[See Also]	
 \verb+WaitForMouseButton()+, \verb+GetMouseCursorPosition+

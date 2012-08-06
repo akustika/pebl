@@ -460,6 +460,21 @@ void PError::AssertType(Variant v, int type, const string & outsideMessage)
 
           break;
 
+        case PEAT_MOVIE:
+            
+            if(v.IsComplexData())
+                {
+                    if((v.GetComplexData())->IsMovie())
+                        {
+                            //Everything is fine, return without error.
+                            return;
+                        }
+                }
+            message = outsideMessage;
+            message +="Wanted Movie but got " + GetTypeName(v) + ": "+ v.GetString();
+            SignalFatalError(message);
+            
+            break;
 
             
         case PEAT_UNDEFINED:

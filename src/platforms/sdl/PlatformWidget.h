@@ -62,6 +62,10 @@ public:
     //Draws a pixel on the widget.
     bool SetPoint(int x, int y, PColor col);
 
+   
+    PColor GetPixel(int x, int y);
+
+
 protected:
 
     //These are inherited by the SDL-specific widgets:    

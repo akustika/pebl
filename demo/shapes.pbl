@@ -319,6 +319,20 @@
 
 
 
+
+
   WaitForAnyKeyPress()
 
+
+  loop(size,Sequence(8,50,1))
+  {
+  font <- MakeFont("Vera.ttf",0,size,black,col,1)  
+#  font.size  <- size  ##we cannot just do this.
+  lab.font <- font
+  lab.text <- "Point size "+size
+  Wait(50)
+  Draw()
+  }
+ 
+ WaitForAnyKeyPress()
 }

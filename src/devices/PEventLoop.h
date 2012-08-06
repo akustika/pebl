@@ -3,7 +3,7 @@
 //    Name:       src/devices/PEventLoop.h
 //    Purpose:    Primary Event Loop.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2004 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   

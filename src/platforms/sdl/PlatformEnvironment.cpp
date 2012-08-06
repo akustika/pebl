@@ -100,7 +100,7 @@ void PlatformEnvironment::Initialize()
 
 
     mIsInitialized = true;
-    if ( SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE ) < 0 )
+    if ( SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO| SDL_INIT_TIMER | SDL_INIT_NOPARACHUTE ) < 0 )
         {
             cerr << "Unable to init SDL: " <<  SDL_GetError() << endl;;
             mIsInitialized = false;

@@ -147,6 +147,8 @@ std::string PComplexData::GetTypeName() const
 
   case CDT_JOYSTICK:
       return "Complex Data: Joystick";
+  case CDT_MOVIE:
+      return "Complex Data: Movie";
 
   case CDT_UNDEFINED:
   default:
@@ -186,7 +188,7 @@ bool PComplexData::IsEnvironment() const
 bool PComplexData::IsWidget() const
 {
   if ( ( GetType() == CDT_WINDOW ) || ( GetType() == CDT_LABEL ) || ( GetType() == CDT_IMAGEBOX )
-       || ( GetType() == CDT_TEXTBOX ) || ( GetType() == CDT_DRAWOBJECT ) || ( GetType() == CDT_CANVAS ) )
+       || ( GetType() == CDT_TEXTBOX ) || ( GetType() == CDT_DRAWOBJECT ) || ( GetType() == CDT_CANVAS ) || GetType() == CDT_MOVIE)
          return true;
   else
     return false;
@@ -285,6 +287,10 @@ bool PComplexData::IsComPort() const
 }
 
 
+bool PComplexData::IsMovie() const
+{
+  return GetType() == CDT_MOVIE;
+}
 
 PList * PComplexData::GetList()const
 {

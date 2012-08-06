@@ -1,9 +1,9 @@
 //* -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*- */
-/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 //    Name:       src/platforms/sdl/PlatformEventQueue.cpp
 //    Purpose:    Interface to platform-specific event queue.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -30,7 +30,9 @@
 #include "../../devices/PEvent.h"
 #include "../../utility/PError.h"
 #include "SDL/SDL.h"
-
+#ifdef PEBL_MOVIES
+#include "WAAVE.h"
+#endif
 using std::cout;
 using std::endl;
 
@@ -59,6 +61,7 @@ void PlatformEventQueue::Prime()
     //when there are no pending events available.
     while(SDL_PollEvent(&test_event))
         {
+            
 
             //cout << "Event [" << (int)(test_event.type) << "]\n";
 
@@ -91,8 +94,8 @@ void PlatformEventQueue::Prime()
                         PEBL_KeyboardEvent pke;
   //                         cout <<  "PRESSED->[" << SDL_GetKeyName(test_event.key.keysym.sym)<<"] ";
   //                          cout << test_event.key.keysym.unicode << "=|=" << (test_event.key.keysym.unicode & 0x7F)
-  //                         << "||" << test_event.key.keysym.scancode << "|\n";  
-          
+  //                         << "||" << test_event.key.keysym.scancode << "|\n";
+
                  //       cout << SDL_GetScancodeName(test_event.key.keysym.scancode) <<"\n";
 
 
@@ -168,7 +171,7 @@ void PlatformEventQueue::Prime()
                         mEventQueue.push(evt);
 
                     }
-
+                    break;
                 case SDL_MOUSEMOTION:
                     {
                         PEvent evt(PDT_MOUSE_MOVEMENT, time);
@@ -184,7 +187,30 @@ void PlatformEventQueue::Prime()
                         mEventQueue.push(evt);
 
                     }
+                    break;
+#ifdef PEBL_MOVIES
+                case WV_REFRESH_EVENT:
+                    {
+                        //cout <<" XXXXX Refresh\n";
+                        //cout << test_event << endl;
+                        //PEvent evt(PDT_MOVIE_REFRESH,time);
+                        WV_refreshVideoFrame(&test_event);
+                        
 
+                    }
+                    break;
+
+                case WV_EOF_EVENT:
+                    {
+
+                        //cout << "End of movie:\n";
+                        PEvent evt(PDT_MOVIE_END, time);
+                        mEventQueue.push(evt);
+
+
+                    }
+                    break;
+#endif
                 default:
                     ;
                 }

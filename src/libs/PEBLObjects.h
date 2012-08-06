@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLObjects.h
 //    Purpose:    Function Library for managing PEBL Objects
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -59,6 +59,7 @@ namespace PEBLObjects
     Variant GetText(Variant v);
 
     Variant SetPoint(Variant v);
+    Variant GetPixelColor(Variant v);
 
     Variant SetFont(Variant v);
 
@@ -97,7 +98,11 @@ namespace PEBLObjects
 
     Variant RotoZoom(Variant v);
 
-    
+    Variant LoadMovie(Variant v);
+
+    Variant StartPlayback(Variant v);
+    Variant PausePlayback(Variant v);
+
 }
 
 

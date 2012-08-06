@@ -52,7 +52,8 @@ namespace SDLUtility
     void DrawSmoothLine(SDL_Surface *surface, int x1, int y1, int x2, int y2, PColor color);
      
     Uint32 GetPixel(SDL_Surface *surface, int x, int y);
-    
+    PColor GetPixelColor(SDL_Surface *surface, int x, int y);
+
     int WritePNG(const Variant fname, PlatformWidget * wid);
 
     Variant GetCurrentScreenResolution();

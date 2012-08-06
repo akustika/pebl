@@ -55,6 +55,7 @@ public:
 
     virtual bool RotoZoom(double angle, double zoomx, double zoomy, int smooth);
     virtual bool SetPoint(int x, int y, PColor col);
+    virtual PColor GetPixel(int x, int y);
     ///This unconditionally sets the parent widget.
     virtual void SetParent(PWidget * widget){mParent = widget;}
 
@@ -86,7 +87,8 @@ public:
     virtual void SetBackgroundColor(PColor color);
     virtual PColor  GetBackgroundColor(){return mBackgroundColor;};
     
-    ///AddSubWidget takes care of adding a widget to a parent widget, and setting
+    ///AddSubWidget takes care of adding a widget to a current parent widget, 
+    /// and setting
     ///the parent field of the child widget to the parent widget.
     virtual bool AddSubWidget(PWidget * widget);
 

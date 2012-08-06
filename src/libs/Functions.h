@@ -198,6 +198,7 @@ namespace PEBLObjects
             {(char*)"ADDOBJECT",         AddObject,  2, 2},
             {(char*)"REMOVEOBJECT",      RemoveObject,  2, 2},
             {(char*)"SETPOINT",          SetPoint, 4,4},
+            {(char*)"GETPIXELCOLOR",     GetPixelColor,3,3},
             {(char*)"SETCURSORPOSITION", SetCursorPosition, 2,2},
             {(char*)"GETCURSORPOSITION", GetCursorPosition, 1,1},
             {(char*)"SETEDITABLE",       SetEditable,  2,2},
@@ -237,6 +238,10 @@ namespace PEBLObjects
             {(char*)"BEZIER",           Bezier,      6, 6},
 
             {(char*)"ROTOZOOM",          RotoZoom,     5,5},
+
+            {(char*)"LOADMOVIE",      LoadMovie,     4,4},
+            {(char*)"STARTPLAYBACK",   StartPlayback,  1,1},
+            {(char*)"PAUSEPLAYBACK",   PausePlayback,  1,1},
 
             {0,            0,  0, 0}
         };
@@ -337,6 +342,9 @@ namespace PEBLEnvironment
             {(char*)"ISWIDGET",                        IsWidget,           1,1},
             {(char*)"ISWINDOW",                        IsWindow,           1,1},
             {(char*)"ISSHAPE",                         IsShape,            1,1},
+
+            {(char*)"PLAYMOVIE",   PlayMovie,  1,1},
+
 
             {0,            0,  0, 0}
         };

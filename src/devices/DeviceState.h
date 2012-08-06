@@ -106,6 +106,8 @@ protected:
                             // an eventqueue. 
 };
 
+
+//Determine whether device has a particular value
 class ValueState: public DeviceState
 {
 public:
@@ -119,7 +121,7 @@ private:
     int mValue;
 };
     
-
+//Determine whether device has a particular value in a range
 class IntervalState: public DeviceState
 {
 public:
@@ -137,6 +139,7 @@ private:
     
 };
 
+//Determine whether device has a particular value in a 2D range
 class RegionState: public DeviceState
 {
 public:

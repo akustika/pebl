@@ -3,7 +3,7 @@
 //    Name:        src/devices/PEvent.cpp
 //    Purpose:     Events processed by Event Loop.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -65,6 +65,20 @@ PEvent::PEvent(const PEvent & evt)
                 mEvent.mouseButtonEvent = event;
             }
             break;
+		case PDT_MOVIE_REFRESH:
+            {
+                PEBL_MovieRefreshEvent event = evt.GetMovieRefreshEvent();
+                mEvent.movieRefreshEvent = event;
+            }
+            break;
+
+		case PDT_MOVIE_END:
+            {
+                PEBL_MovieEndEvent event = evt.GetMovieEndEvent();
+                mEvent.movieEndEvent = event;
+            }
+            break;
+
 		case PDT_TIMER:
         case PDT_UNKNOWN:
 		default:
@@ -91,6 +105,19 @@ void PEvent::SetMouseButtonEvent(const PEBL_MouseButtonEvent & evt)
     mType = PDT_MOUSE_BUTTON;
     mEvent.mouseButtonEvent = evt;
 }
+
+void PEvent::SetMovieRefreshEvent(const PEBL_MovieRefreshEvent & evt)
+{
+    mType = PDT_MOVIE_REFRESH;
+    mEvent.movieRefreshEvent = evt;
+}
+
+void PEvent::SetMovieEndEvent(const PEBL_MovieEndEvent & evt)
+{
+    mType = PDT_MOVIE_END;
+    mEvent.movieEndEvent = evt;
+}
+
 
 void PEvent::SetDummyEvent(const PEBL_DummyEvent & evt)
 {
@@ -148,6 +175,32 @@ PEBL_MouseButtonEvent PEvent::GetMouseButtonEvent() const
         }
 }
 
+
+PEBL_MovieRefreshEvent PEvent::GetMovieRefreshEvent() const
+{
+    if(PDT_MOVIE_REFRESH ==  mType )
+        return mEvent.movieRefreshEvent;
+    else
+        {
+            PEBL_MovieRefreshEvent tmp;
+            tmp.value = true;
+            return tmp;
+        }
+}
+
+PEBL_MovieEndEvent PEvent::GetMovieEndEvent() const
+{
+    if(PDT_MOVIE_END ==  mType )
+        return mEvent.movieEndEvent;
+    else
+        {
+            PEBL_MovieEndEvent tmp;
+            tmp.value = true;
+            return tmp;
+        }
+}
+
+
 PEBL_DummyEvent PEvent::GetDummyEvent() const
 {
     if(PDT_DUMMY == mType)
@@ -187,11 +240,13 @@ int PEvent::GetState(int iface) const
  
             break;
              
- 
+          
             
         case PDT_MOUSE_MOVEMENT:
         case PDT_MOUSE_BUTTON:
         case PDT_TIMER:
+        case PDT_MOVIE_REFRESH:
+        case PDT_MOVIE_END:
         case PDT_UNKNOWN:
             return PEBL_UNKNOWN;
              

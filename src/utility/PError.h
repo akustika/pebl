@@ -67,7 +67,8 @@ enum PErrorAssertType
         PEAT_TEXTBOX,
         PEAT_LABEL,
         PEAT_WIDGET,
-        PEAT_WINDOW
+        PEAT_WINDOW,
+        PEAT_MOVIE
     };
 
 

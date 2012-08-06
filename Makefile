@@ -32,7 +32,7 @@ PREFIX = /usr/local/
 #On mac, one might prefer the following:
 #PREFIX = /opt/local/
 
-
+PEBL_VERSON = 0.13
 C   = gcc
 CXX = g++ 
 DEBUGFLAGS = -lefence -DPEBL_DEBUG -g
@@ -41,13 +41,13 @@ CFLAGS =   -O3 -std=c99 -DPREFIX=$(PREFIX) -g
 
 
 #CXXFLAGS =  -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  -DENABLE_BINRELOC -DPREFIX=$(PREFIX)  -DPEBL_AUDIOIN
-CXXFLAGS =  -O3  -DPEBL_UNIX  -DPEBL_LINUX -DENABLE_BINRELOC -DPREFIX=$(PREFIX)  -DPEBL_AUDIOIN -g
+CXXFLAGS =  -O3  -DPEBL_UNIX  -DPEBL_LINUX -DENABLE_BINRELOC -DPREFIX=$(PREFIX)  -DPEBL_AUDIOIN -DPEBL_MOVIES -g
 
 
 
 SDL_CONFIG = /usr/bin/sdl-config
 
-SDL_FLAGS = -I/usr/include/SDL -D_REENTRANT -L/usr/lib
+SDL_FLAGS = -I/usr/include/SDL -I/usr/local/include -D_REENTRANT -L/home/smueller/Projects/src/waave-1.0/src -L/usr/lib -L/usr/local/lib
 #SDL_LIBS = -L/usr/lib -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lSDL -lpthread -lSDLmain
 
 
@@ -57,7 +57,7 @@ OSX_FLAGS =
 
 #SDLIMG_FLAGS =  -L/usr/lib -L/usr/local/lib -Wl,-rpath,/usr/lib
 SDLIMG_FLAGS =  -L/usr/lib -Wl,-rpath,/usr/lib
-SDLIMG_LIBS =   -lSDL -lSDLmain -lpthread -lSDL_image -lSDL_net -lSDL_audioin
+SDLIMG_LIBS =   -lSDL -lSDLmain -lpthread -lSDL_image -lSDL_net -lSDL_audioin -lwaave
 
 
 SHELL = /bin/bash
@@ -132,7 +132,8 @@ POBJECT_SRC  =  $(OBJECTS_DIR)/PEnvironment.cpp \
 		$(OBJECTS_DIR)/PFont.cpp \
 		$(OBJECTS_DIR)/PTextObject.cpp \
 		$(OBJECTS_DIR)/PLabel.cpp \
-		$(OBJECTS_DIR)/PTextBox.cpp 
+		$(OBJECTS_DIR)/PTextBox.cpp \
+		$(OBJECTS_DIR)/PMovie.cpp
 ##		$(PUTILITIES_SRC)
 
 
@@ -176,7 +177,9 @@ PLATFORM_SDL_SRC  =	$(SDL_DIR)/PlatformEnvironment.cpp \
 			$(SDL_DIR)/PlatformAudioIn.cpp \
 			$(SDL_DIR)/PlatformAudioOut.cpp \
 			$(SDL_DIR)/PlatformNetwork.cpp \
-			$(SDL_DIR)/PlatformJoystick.cpp
+			$(SDL_DIR)/PlatformJoystick.cpp\
+			$(SDL_DIR)/PlatformMovie.cpp 
+
 
 PLATFORM_SDL_OBJ  = 	$(patsubst %.cpp, %.o, $(PLATFORM_SDL_SRC))
 PLATFORM_SDL_INC  = 	$(patsubst %.cpp, %.h, $(PLATFORM_SDL_SRC))
@@ -191,78 +194,6 @@ FUNCTIONLIB_SRC = $(LIBS_DIR)/PEBLMath.cpp \
 
 FUNCTIONLIB_OBJ =  $(patsubst %.cpp, %.o, $(FUNCTIONLIB_SRC))
 FUNCTIONLIB_INC =  $(patsubst %.cpp, %.h, $(FUNCTIONLIB_SRC))
-
-TEST_VARIANT_SRC = $(TEST_DIR)/VariantTest.cpp $(PEBLBASE_SRCXX) \
-			$(PDEVICES_SRC) \
-			$(FUNCTIONLIB_SRC) \
-			$(POBJECT_SRC) \
-			$(PLATFORM_SDL_SRC)
-TEST_VARIANT_OBJ = $(patsubst %.cpp, %.o, $(TEST_VARIANT_SRC))
-TEST_VARIANT_INC = $(patsubst %.cpp, %.h, $(TEST_VARIANT_SRC))
-
-
-
-TEST_VARIABLE_MAP_SRC = $(TEST_DIR)/VariableMapTest.cpp \
-		$(PEBLBASE_SRCXX) \
-			$(PDEVICES_SRC) \
-			$(FUNCTIONLIB_SRC) \
-			$(POBJECT_SRC) \
-			$(PLATFORM_SDL_SRC)
-
-
-TEST_VARIABLE_MAP_OBJ = $(patsubst %.cpp, %.o, $(TEST_VARIABLE_MAP_SRC))
-TEST_VARIABLE_MAP_INC = $(patsubst %.cpp, %.h, $(TEST_VARIABLE_MAP_SRC))
-
-
-
-TEST_PNODE_SRC = $(TEST_DIR)/PNodeTest.cpp $(BASE_DIR)/Variant.cpp\
-   $(BASE_DIR)/PComplexData.cpp $(BASE_DIR)/PList.cpp $(BASE_DIR)/PNode.cpp \
-   $(OBJECTS_DIR)/PObject.cpp $(UTIL_DIR)/PEBLUtility.cpp
-TEST_PNODE_OBJ = $(patsubst %.cpp, %.o, $(TEST_PNODE_SRC))
-TEST_PNODE_INC = $(patsubst %.cpp, %.h, $(TEST_PNODE_SRC))
-
-TEST_PARSER_SRC = $(TEST_DIR)/ParserTest.cpp $(PEBLBASE_SRCXX) \
-			$(PDEVICES_SRC) \
-			$(FUNCTIONLIB_SRC) \
-			$(POBJECT_SRC) \
-			$(PLATFORM_SDL_SRC)
-
-TEST_PARSER_OBJ = $(patsubst %.cpp, %.o, $(TEST_PARSER_SRC))
-TEST_PARSER_INC = $(patsubst %.cpp, %.h, $(TEST_PARSER_SRC))
-
-
-TEST_FMAP_SRC = $(TEST_DIR)/FunctionMapTest.cpp $(BASE_DIR)/FunctionMap.cpp $(BASE_DIR)/Variant.cpp $(BASE_DIR)/PComplexData.cpp $(BASE_DIR)/PList.cpp $(BASE_DIR)/PNode.cpp $(OBJECTS_DIR)/PObject.cpp $(UTIL_DIR)/PEBLUtility.cpp
-TEST_FMAP_OBJ = $(patsubst %.cpp, %.o, $(TEST_FMAP_SRC))
-TEST_FMAP_INC = $(patsubst %.cpp, %.h, $(TEST_FMAP_SRC))
-
-
-TEST_MATHLIBS_SRC = $(TEST_DIR)/MathLibTest.cpp $(LIBS_DIR)/PEBLMath.cpp $(BASE_DIR)/Variant.cpp $(BASE_DIR)/PList.cpp  $(BASE_DIR)/PComplexData.cpp
-TEST_MATHLIBS_OBJ = $(patsubst %.cpp, %.o, $(TEST_MATHLIBS_SRC))
-TEST_MATHLIBS_INC = $(patsubst %.cpp, %.h, $(TEST_MATHLIBS_SRC))
-
-TEST_WINDOW_SRC = $(PLATFORM_SDL_SRC) $(POBJECT_SRC) $(PDEVICES_SRC)  $(TEST_DIR)/WindowTest.cpp
-TEST_WINDOW_OBJ = $(patsubst %.cpp, %.o, $(TEST_WINDOW_SRC))
-TEST_WINDOW_INC = $(patsubst %.cpp, %.h, $(TEST_WINDOW_SRC))
-
-TEST_COLOR_SRC =  $(OBJECTS_DIR)/PColor.cpp $(OBJECTS_DIR)/PObject.cpp $(BASE_DIR)/PComplexData.cpp  $(PUTILITIES_SRC) $(TEST_DIR)/ColorTest.cpp
-TEST_COLOR_OBJ = $(patsubst %.cpp, %.o, $(TEST_COLOR_SRC))
-TEST_COLOR_INC = $(patsubst %.cpp, %.h, $(TEST_COLOR_SRC))
-
-TEST_FONT_SRC =  $(PEBLBASE_SRCXX) $(FUNCTIONLIB_SRC) $(OBJECTS_DIR)/PColor.cpp $(OBJECTS_DIR)/PObject.cpp $(BASE_DIR)/PComplexData.cpp $(OBJECTS_DIR)/PFont.cpp  $(PUTILITIES_SRC) $(TEST_DIR)/FontTest.cpp
-TEST_FONT_OBJ = $(patsubst %.cpp, %.o, $(TEST_FONT_SRC))
-TEST_FONT_INC = $(patsubst %.cpp, %.h, $(TEST_FONT_SRC))
-
-TEST_PSTREAM_SRC =   $(DEVICES_DIR)/PStream.cpp $(DEVICES_DIR)/PDevice.cpp $(TEST_DIR)/PStreamTest.cpp
-TEST_PSTREAM_OBJ = $(patsubst %.cpp, %.o, $(TEST_PSTREAM_SRC))
-TEST_PSTREAM_INC = $(patsubst %.cpp, %.h, $(TEST_PSTREAM_SRC))
-
-TEST_AUDIOOUT_SRC = src/platforms/sdl/PlatformAudioOut.cpp src/devices/PAudioOut.cpp src/devices/PDevice.cpp $(TEST_DIR)/AudioOutTest.cpp
-TEST_AUDIOOUT_OBJ = $(patsubst %.cpp, %.o, $(TEST_AUDIOOUT_SRC))
-TEST_AUDIOOUT_INC = $(patsubst %.cpp, %.h, $(TEST_AUDIOOUT_SRC))
-
-TEST_PATH_SRC = $(TEST_DIR)/PathTest.cpp  $(UTIL_DIR)/PEBLPath.cpp
-TEST_PATH_OBJ = $(patsubst %.cpp, %.o, $(TEST_PATH_SRC))
-TEST_PATH_INC = $(patsubst %.cpp, %.h, $(TEST_PATH_SRC))
 
 
 VCG_MAKER_SRC = $(BASE_DIR)/VCG.cpp  $(PEBLBASE_SRCXX)  $(POBJECT_SRC) $(FUNCTIONLIB_SRC) $(PUTILITY_SRC)
@@ -304,13 +235,21 @@ DIRS = \
 ##	   -L$(PREFIX)/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  -lSDL_net -lpng -lSDL_audioin\
 
 main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
-	$(CXX) $(CXXFLAGS)  -L/usr/lib  -L/usr/local/lib -o $(BIN_DIR)/pebl \
-	-I/usr/include/SDL -D_REENTRANT \
+	$(CXX) $(CXXFLAGS) -Wall -Wl,-rpath -Wl,LIBDIR $(DEBUGFLAGS) \
+	-L/home/smueller/Projects/src/waave-1.0/src -L/usr/lib  -L/usr/local/lib \
+	-I/usr/include/SDL -I/usr/include -I/usr/local/include -D_REENTRANT \
+	-o $(BIN_DIR)/pebl \
 	$(OSX_FLAGS) $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(PEBLMAIN_OBJ)) \
-	-lSDL -lSDLmain -lpthread -lSDL_image  -lSDL_ttf -lSDL_gfx  -lSDL_net -lsdl_audioin -lpng 
+	-lwaave -lSDL -lSDLmain -lpthread -lSDL_image  -lSDL_ttf -lSDL_gfx  \
+	-lSDL_net -lsdl_audioin -lpng  
+##  -Wl,-V #verbose linking 
 ## -Wl,-rpath,/usr/lib \
 
-deb:    main
+doc: $(PEBLBASE_SRCXX)
+	cd doc/pman; pdflatex main.tex
+	cp doc/pman/main.pdf doc/pman/PEBLManual$(PEBL_VERSION).pdf
+
+deb:    main doc
 	epm -f deb pebl
 
 parse:
@@ -322,58 +261,7 @@ parse-debug:
 	flex  -o$(BASE_DIR)/lex.yy.c -d $(BASE_DIR)/Pebl.l
 
 .PHONY: tests
-tests:  $(BIN_DIR)/varianttest $(BIN_DIR)/variablemaptest $(BIN_DIR)/pnodetest $(BIN_DIR)/parsertest $(BIN_DIR)/functionmaptest
 
-$(BIN_DIR)/varianttest: $(TEST_VARIANT_OBJ) $(TEST_VARIANT_INC)  $(POBJECT_OBJ) $(PLATFORM_SDL_OBJ)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/varianttest 	-Wall -I$(PREFIX)include/SDL -D_REENTRANT  \
-	   -L$(PREFIX)lib -lSDL -lpthread -lSDL_image -lSDL_ttf  $(BASE_DIR)/lex.yy.c $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_VARIANT_OBJ))
-
-$(BIN_DIR)/variablemaptest: $(TEST_VARIABLE_MAP_OBJ) $(TEST_VARIABLE_MAP_INC)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/variablemaptest -I$(PREFIX)include/SDL -D_REENTRANT \
-	-L$(PREFIX)lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  $(OSX_FLAGS) \
-	 $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_VARIABLE_MAP_OBJ))
-
-$(BIN_DIR)/pnodetest: $(TEST_PNODE_OBJ) $(TEST_PNODE_INC)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/pnodetest $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_PNODE_OBJ))
-
-$(BIN_DIR)/parsertest: $(TEST_PARSER_OBJ) $(TEST_PARSER_INC)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/parsertest -g -O2 -Wall -I$(PREFIX)include/SDL -D_REENTRANT  \
-	   -L$(PREFIX)lib -lSDL -lpthread -lSDL_image -lSDL_ttf \
-	 $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_PARSER_OBJ))
-
-$(BIN_DIR)/functionmaptest:  $(TEST_FMAP_OBJ) $(TEST_FMAP_INC)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/functionmaptest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_FMAP_OBJ))
-
-$(BIN_DIR)/mathlibstest:  $(TEST_MATHLIBS_OBJ) $(TEST_MATHLIBS_INC)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/mathlibstest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_MATHLIBS_OBJ))
-
-$(BIN_DIR)/colortest:  $(TEST_COLOR_OBJ)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/colortest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_COLOR_OBJ))
-
-$(BIN_DIR)/fonttest:  $(TEST_FONT_OBJ)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/fonttest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_FONT_OBJ))
-
-$(BIN_DIR)/VCGMaker: $(APPS_DIR)/VCGMaker.cpp $(VCG_MAKER_OBJ) $(VCG_MAKER_INC) $(PUTILITIES_OBJ) $(PLATFORM_SDL_OBJ) $(PDEVICES_OBJ)
-	$(CXX) $(CXXFLAGS) -o $(BIN_DIR)/VCGMaker -O2 -Wall -I$(PREFIX)include/SDL -D_REENTRANT  \
-	   -L$(PREFIX)lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  $(BASE_DIR)/$(PEBLBASE_SRC) \
-        $(APPS_DIR)/VCGMaker.cpp $(patsubst %.o, $(OBJ_DIR)/%.o, $(VCG_MAKER_OBJ) $(PLATFORM_SDL_OBJ) $(PDEVICES_OBJ))
-
-$(BIN_DIR)/windowtest:  $(TEST_WINDOW_OBJ) $(TEST_WINDOW_INC)
-	$(CXX) $(CXXFLAGS) -O2 -Wall -I$(PREFIX)include/SDL -D_REENTRANT  \
-	   -L$(PREFIX)lib -lSDL -lpthread -lSDL_image -lSDL_ttf -o $(BIN_DIR)/windowtest \
-            $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_WINDOW_OBJ))
-
-$(BIN_DIR)/pstreamtest:  $(TEST_PSTREAM_OBJ) $(TEST_PSTREAM_INC)
-	$(CXX) $(CXXFLAGS)  -O2 -Wall -I$(PREFIX)include/SDL -D_REENTRANT  \
-	   -L$(PREFIX)lib  -o $(BIN_DIR)/pstreamtest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_PSTREAM_OBJ))
-
-$(BIN_DIR)/audioouttest: $(TEST_AUDIOOUT_SRC) $(TEST_AUDIOOUT_OBJ) $(TEST_AUDIOOUT_INC)
-	$(CXX) $(CXXFLAGS) -O2 -Wall -I$(PREFIX)include/SDL -D_REENTRANT  \
-	   -L$(PREFIX)lib -lSDL -lpthread -o $(BIN_DIR)/audioouttest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_AUDIOOUT_OBJ))
-
-$(BIN_DIR)/pathtest: $(TEST_PATH_SRC) $(TEST_PATH_OBJ) $(TEST_PATH_INC)
-	$(CXX) $(CXXFLAGS) -O2 -Wall  -D_REENTRANT  \
-	   -L$(PREFIX)lib  -lpthread -o $(BIN_DIR)/pathtest  $(patsubst %.o, $(OBJ_DIR)/%.o, $(TEST_PATH_OBJ))
 
 %.h:
 	echo Updating %.h

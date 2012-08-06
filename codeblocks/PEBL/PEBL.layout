@@ -7,7 +7,7 @@
 	<File name="../../src/base/VCG.h" open="0" top="0" tabpos="0">
 		<Cursor position="1798" topLine="11" />
 	</File>
-	<File name="../../src/base/Variant.h" open="1" top="1" tabpos="0">
+	<File name="../../src/base/Variant.h" open="1" top="0" tabpos="1">
 		<Cursor position="1402" topLine="19" />
 	</File>
 	<File name="../../src/base/grammar.tab.cpp" open="0" top="0" tabpos="0">
@@ -46,8 +46,17 @@
 	<File name="../../src/platforms/sdl/PlatformEnvironment.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="3265" topLine="0" />
 	</File>
+	<File name="../../src/platforms/sdl/PlatformEventQueue.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="6861" topLine="175" />
+	</File>
 	<File name="../../src/platforms/sdl/PlatformFont.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="11526" topLine="374" />
+	</File>
+	<File name="../../src/platforms/sdl/PlatformJoystick.cpp" open="1" top="1" tabpos="5">
+		<Cursor position="3531" topLine="121" />
+	</File>
+	<File name="../../src/platforms/sdl/PlatformMovie.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="5216" topLine="167" />
 	</File>
 	<File name="../../src/platforms/sdl/PlatformTextBox.cpp" open="0" top="0" tabpos="11">
 		<Cursor position="5376" topLine="129" />

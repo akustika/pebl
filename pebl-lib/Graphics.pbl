@@ -119,7 +119,7 @@ define BlockE(x,y,h,w,thick,dir,color)
 
 
 	a1 <- abase + xo*(-1)*w/2
-    a2 <- abase+  xo*w/2
+        a2 <- abase+  xo*w/2
 	a3 <- a1+ xo*thick
 	a4 <- a2
 	
@@ -954,6 +954,45 @@ define GetMinDist(pts)
 
    return [mindist,id1,id2]
 }
+
+
+ define LayoutGrid(xmin,xmax,ymin,ymax, tall, wide, horvert)
+ {
+     xskip <- (xmax-xmin)/(wide+1)
+     yskip <- (ymax-ymin)/(tall+1)
+
+     pts <- []
+
+     if(horvert == 1)
+      {
+        x <- xmin+xskip
+       loop(i,Sequence(1,wide,1))
+        { 
+          y <- ymin+yskip
+         loop(j,Sequence(1,tall,1))
+          {
+             pts <- Append(pts, [x,y])
+             y <- y + yskip
+          }
+          x <- x + xskip
+        }
+      } else {
+       y <- ymin+yskip
+       loop(i,Sequence(1,tall,1))
+        { 
+          x <- xmin+xskip
+         loop(j,Sequence(1,wide,1))
+          {
+
+             pts <- Append(pts, [x,y])
+             x <- x + xskip
+             y <- y + yskip       
+          }
+
+     }}
+
+   return pts
+  }
 
 
 

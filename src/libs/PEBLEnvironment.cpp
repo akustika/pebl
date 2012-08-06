@@ -61,7 +61,6 @@ namespace PEBLEnvironment
 {
     PlatformTimer myTimer;
     PlatformKeyboard myKeyboard;
-
 }
 
 extern PlatformEnvironment * myEnv;
@@ -533,7 +532,7 @@ Variant PEBLEnvironment::WaitForListKeyPressWithTimeout(Variant v)
             key = PEBLUtility::TranslateString(*p);
             state = new ValueState(PEBL_PRESSED, DT_EQUAL, key, gEventQueue, PDT_KEYBOARD);
             //NULL,NULL will terminate the looping
-            Evaluator::mEventLoop.RegisterEvent(state,funcname, Variant(NULL));
+            Evaluator::mEventLoop.RegisterEvent(state,funcname, Variant(0));
             p++;
         }
 
@@ -546,7 +545,7 @@ Variant PEBLEnvironment::WaitForListKeyPressWithTimeout(Variant v)
 
 
     //NULL,NULL will terminate the looping
-    Evaluator::mEventLoop.RegisterState(timestate, funcname, Variant(NULL));
+    Evaluator::mEventLoop.RegisterState(timestate, funcname, Variant(0));
     PEvent returnval = Evaluator::mEventLoop.Loop();
 
     //Now, clear the event loop tests
@@ -606,7 +605,7 @@ Variant PEBLEnvironment::WaitForKeyListDown(Variant v)
             key = PEBLUtility::TranslateString(*p);
             state = new ValueState(1, DT_EQUAL, key, device, PDT_KEYBOARD);
             //NULL,NULL will terminate the looping
-            Evaluator::mEventLoop.RegisterState(state,funcname, Variant(NULL));
+            Evaluator::mEventLoop.RegisterState(state,funcname, Variant(0));
             p++;
         }
 
@@ -671,7 +670,7 @@ Variant PEBLEnvironment::WaitForListKeyPress(Variant v)
             //            std::cout<< "Key:" << *p << "|"<<key<< std::endl;
             state = new ValueState(PEBL_PRESSED, DT_EQUAL, key, gEventQueue, PDT_KEYBOARD);
             //NULL,NULL will terminate the looping
-            Evaluator::mEventLoop.RegisterEvent(state,funcname, Variant(NULL));
+            Evaluator::mEventLoop.RegisterEvent(state,funcname, Variant(0));
             p++;
         }
 
@@ -697,8 +696,6 @@ Variant PEBLEnvironment::GetInput(Variant v)
     //The first argument should be a textbox.
     PError::AssertType(plist->First(), PEAT_TEXTBOX, "Argument error in function [GetInput(<textbox>,<key-string>)]: ");
     PlatformTextBox * textbox = dynamic_cast<PlatformTextBox*>(plist->First().GetComplexData()->GetObject().get());
-    //    plist->PopFront();
-
 
     //The next argument should be the 'escape' key, or a list of 'escape' keys.
     // l.GetType() << std::endl;
@@ -726,18 +723,17 @@ Variant PEBLEnvironment::GetInput(Variant v)
 
 
     //Evaluator::mEventLoop.Clear();
-    Evaluator::mEventLoop.RegisterEvent(keypressstate, funcname, Variant(NULL));
+    Evaluator::mEventLoop.RegisterEvent(keypressstate, funcname, Variant(0));
 
     //Evaluate the last list item, if it exists
-    if(!plist->IsEmpty())
+    if(plist->Length() > 2)
         {
-            Variant tmp = plist->First();
+            Variant tmp = plist->Nth(3);
             if(tmp)
                 {
-
                     //add a mouse click as an exit too.
                     ValueState  * state2 = new ValueState(PEBL_PRESSED, DT_TRUE, 1, gEventQueue, PDT_MOUSE_BUTTON);
-                    Evaluator::mEventLoop.RegisterEvent(state2,funcname, Variant(NULL));
+                    Evaluator::mEventLoop.RegisterEvent(state2,funcname, Variant(0));
                 }
         }
 
@@ -850,7 +846,7 @@ Variant PEBLEnvironment::WaitForMouseButton(Variant v)
 
     //NULL,NULL will terminate the looping
     string funcname = "";
-    Evaluator::mEventLoop.RegisterEvent(state,funcname, Variant(NULL));
+    Evaluator::mEventLoop.RegisterEvent(state,funcname, Variant(0));
     PEvent returnval = Evaluator::mEventLoop.Loop();
 
     //Now, clear the event loop tests
@@ -917,8 +913,8 @@ Variant PEBLEnvironment::WaitForMouseButtonWithTimeout(Variant v)
 
     //NULL,NULL will terminate the looping
     string funcname = "";
-    Evaluator::mEventLoop.RegisterEvent(state,funcname, Variant(NULL));
-    Evaluator::mEventLoop.RegisterState(timestate, funcname, Variant(NULL));
+    Evaluator::mEventLoop.RegisterEvent(state,funcname, Variant(0));
+    Evaluator::mEventLoop.RegisterState(timestate, funcname, Variant(0));
 
     PEvent returnval = Evaluator::mEventLoop.Loop();
 
@@ -1443,7 +1439,7 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
     Variant parameters =  plist->Nth(6);//; plist->PopFront();
 
     if(parameters.IsStackSignal())
-        parameters = Variant(NULL);
+        parameters = Variant(0);
 
     if(devicetype == PDT_TIMER)
         {
@@ -1923,5 +1919,46 @@ Variant PEBLEnvironment::IsShape(Variant v)
                 }
         }
     return Variant(false);
+}
+
+
+
+
+Variant PEBLEnvironment::PlayMovie(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_MOVIE, "Argument error in first parameter of function [PlayMovie(<movie>)]: "); 
+    
+
+    Variant v1 = plist->First();
+    PlatformMovie * myMovie = dynamic_cast<PlatformMovie*>(v1.GetComplexData()->GetObject().get());
+
+    //the endmovie event seems to be a bit buggy; so we need to get the actual duration and add a 'kill' event a bit after that.
+    long int movietime = myMovie->GetLength();
+    
+
+    movietime  += PEBLEnvironment::myTimer.GetTime()+100;
+    PDevice * timer = new PlatformTimer(PEBLEnvironment::myTimer);
+    ValueState  * timestate = new ValueState(movietime, DT_GREATER_THAN_OR_EQUAL, 1, timer, PDT_TIMER);
+    string funcname = "";
+    Evaluator::mEventLoop.RegisterState(timestate, funcname, Variant(0));
+    ValueState  * state = new ValueState(1, DT_EQUAL, true, myMovie, PDT_MOVIE_END);
+    //NULL,NULL will terminate the looping
+
+
+    //Loop (play movie) until you get the end-of-movie event.
+    Evaluator::mEventLoop.RegisterEvent(state, funcname, Variant(0));
+
+    myMovie->StartPlayback();
+    PEvent returnval = Evaluator::mEventLoop.Loop();
+
+    cout << "movieplaying done!\n";
+    //Now, clear the event loop tests
+    Evaluator::mEventLoop.Clear();
+
+    return Variant(returnval.GetDummyEvent().value);
+
+
 }
 

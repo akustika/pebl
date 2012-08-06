@@ -72,7 +72,10 @@ bool PEBLObjectBase::SetProperty(std::string name, Variant v)
         }
     else
         {
-            PError::SignalFatalError("Failing to set property\n");
+            Variant msg = Variant("Failing to set property:[") + 
+                Variant(name)+ Variant("]:[")+v+Variant("]\n");
+
+            PError::SignalFatalError(msg);
             return false;
         }
 }

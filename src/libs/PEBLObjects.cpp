@@ -30,6 +30,7 @@
 #include "../base/Variant.h"
 #include "../base/PList.h"
 #include "../base/PComplexData.h"
+#include "../base/Evaluator.h"
 #include "../base/PEBLObject.h"
 
 #include "../devices/DeviceState.h"
@@ -57,7 +58,8 @@
 
 #include <string>
 using std::string;
-
+using std::cout;
+using std::endl;
 
 namespace PEBLObjects
 {
@@ -447,7 +449,33 @@ Variant PEBLObjects::SetPoint(Variant v)
     return Variant(true);
 }
 
+Variant PEBLObjects::GetPixelColor(Variant v)
+{
+   PList * plist = v.GetComplexData()->GetList();
 
+    Variant v1 = plist->First(); //plist->PopFront();
+    PError::AssertType(v1, PEAT_WIDGET, "Argument error in first parameter of function [GetPixelColor(<widget>,<x>, <y>)]: "); 
+    PlatformWidget * widget = dynamic_cast<PlatformWidget*>(v1.GetComplexData()->GetObject().get());
+
+
+    int x = plist->Nth(2);// plist->PopFront();
+    PError::AssertType(x, PEAT_NUMBER, "Argument error in second parameter of function [GetPixelColor(<widget>,<x>, <y>, <color>)]: "); 
+
+    int y = plist->Nth(3);// plist->PopFront();
+    PError::AssertType(y, PEAT_NUMBER, "Argument error in third parameter of function [GetPixelColor(<widget>,<x>, <y>)]: "); 
+
+    PColor  c1 = (widget->GetPixel(x,y));
+    //cout << "C1:" << c1 << endl;
+    PColor * tmpColor = new PColor(c1);
+    //cout << "C2:" << *tmpColor << endl;
+    counted_ptr<PEBLObjectBase> myColor = counted_ptr<PEBLObjectBase>(tmpColor);
+    PComplexData *  pcd = new PComplexData(myColor);
+
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
+}
 
 //This sets the  cursor location (in characters) within a textbox.
 Variant PEBLObjects::SetCursorPosition(Variant v)
@@ -1311,4 +1339,74 @@ Variant PEBLObjects::Gabor(Variant v)
 
 
 }
+  
 #endif
+
+Variant PEBLObjects::LoadMovie(Variant v)
+{
+
+    //
+    // v[1] should be name of movie
+    // v[2] should be width; v[3] should be height.
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in first parameter of function [LoadMovie(<filename>,<window>,<width>, <height>)]: "); 
+    Variant filename = plist->First();
+
+    Variant v2 = plist->Nth(2); //plist->PopFront();
+    PError::AssertType(v2, PEAT_WIDGET, "Argument error in second parameter of function [LoadMovie(<filename>,<window>,<width>, <height>)]: "); 
+
+    PlatformWindow * window = dynamic_cast<PlatformWindow*>(v2.GetComplexData()->GetObject().get());
+
+   
+
+    PError::AssertType(plist->Nth(3), PEAT_NUMBER, "Argument error in second parameter of function  [LoadMovie(<filename>,<window>,<width>, <height>)]: "); 
+    int width = plist->Nth(3);
+
+
+    PError::AssertType(plist->Nth(4), PEAT_NUMBER, "Argument error in second parameter of function  [LoadMovie(<filename>,<window>,<width>, <height>)]: "); 
+    int height = plist->Nth(4);
+
+
+    PlatformMovie* myMovie = new PlatformMovie();
+    myMovie->LoadMovie(filename,window,width,height);
+
+    //    myMovie->StartPlayback();
+
+    counted_ptr<PEBLObjectBase> tmpMov = counted_ptr<PEBLObjectBase>(myMovie);
+    PComplexData *  pcd = new PComplexData(tmpMov);
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
+
+}
+
+
+
+Variant PEBLObjects::StartPlayback(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_MOVIE, "Argument error in first parameter of function [StartPlayback(<movie>)]: "); 
+    
+    Variant v1 = plist->First();
+    PlatformMovie * myMovie = dynamic_cast<PlatformMovie*>(v1.GetComplexData()->GetObject().get());
+    myMovie->StartPlayback();
+    
+}
+
+
+Variant PEBLObjects::PausePlayback(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_MOVIE, "Argument error in first parameter of function [PausePlayback(<movie>)]: "); 
+    
+
+    Variant v1 = plist->First();
+    PlatformMovie * myMovie = dynamic_cast<PlatformMovie*>(v1.GetComplexData()->GetObject().get());
+    myMovie->PausePlayback();
+
+}
+

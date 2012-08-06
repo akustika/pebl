@@ -35,7 +35,7 @@
 #endif
 
 #include "SDLUtility.h"
-
+#include "../../utility/PError.h"
 #include <iostream>
 
 using std::cout;
@@ -192,6 +192,14 @@ bool PlatformWidget::SetPoint(int x, int y, PColor col)
     return true;
 }
 
+
+PColor PlatformWidget::GetPixel(int x, int y)
+{
+    return SDLUtility::GetPixelColor(mSurface,x,y);
+}
+
+
+
 bool PlatformWidget::RotoZoom(double angle, double zoomx, double zoomy, int smooth)
 
 {
@@ -224,9 +232,16 @@ SDL_Surface * PlatformWidget::GetSDL_Surface()
 
 bool PlatformWidget::AddSubWidget(PlatformWidget * child)
 {
-    child->SetParentSurface(mSurface);
-    PWidget::AddSubWidget(child);
 
+
+    if(strcmp(child->ObjectName().c_str(),"PlatformMovie")==0)
+        {
+            PError::SignalFatalError("Cannot add movie to another widget\n");
+        } else {
+        child->SetParentSurface(mSurface);
+        PWidget::AddSubWidget(child);
+    }
+    
     return true;
 }
 

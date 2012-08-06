@@ -140,6 +140,9 @@ namespace PEBLEnvironment
     Variant IsSquare(Variant v);
     Variant IsRectangle(Variant v);
 
+
+    Variant PlayMovie(Variant v) ;
+
 }
 
 

@@ -27,9 +27,30 @@ obsolete.
 
 
                  RELEASE NOTES
+###
+Version 0.13
+
+ - Rename files that collide with FileOpen (Probably was in 0.12)
+ - By default, PEBL now uses the current screen size, and accepts
+   any widthxheight screen size when you use the --display
+   command-line option.
+
+-three types of trials in fitts stuy.
+
+- GetCurrentScreenResolution function
+-lists now use an underlying vector container.  As it turns out, PEBL was not using many or any of the unique capabilities of list-based data structures, and the limitations it had were no different than those imposed by vectors.  Now you can get an arbitrary list element in constant time with the Nth function, and set an arbitrary list element in constant time with the SetElement function.
+
+-Fixed syntax where we couldn't previously have the end-of-list bracket be on a new line.
+
+-Allow empty code blocks for functions and if/else statements
+
+-Added PushOnEnd() to replace Append() efficiently.  Note that for convenience,
+ you can replace x <- Append(x,i) with x <- PushOnEnd(x,i), but only 
+ PushOnEnd(x,i) is really needed, and saves maybe 10% of the time.
 
 
-
+ -Fixed gonogo task so total errors/total correct is computed correctly (Thx Marco Moniz)
+- Minor fixes to TOH task (including some contributed by Ross Spoon)
 
 -------------------------------------------------
 

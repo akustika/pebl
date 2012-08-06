@@ -33,8 +33,10 @@
 			<Add option="`sdl-config --cflags`" />
 			<Add option="-DPEBL_UNIX" />
 			<Add option="-DPEBL_LINUX" />
+			<Add option="-DPEBL_MOVIES" />
 			<Add directory="/usr/include/SDL" />
 			<Add directory="/usr/include/" />
+			<Add directory="/usr/local/include" />
 		</Compiler>
 		<Linker>
 			<Add option="`sdl-config --libs`" />
@@ -44,7 +46,9 @@
 			<Add library="SDL_ttf" />
 			<Add library="SDL_net" />
 			<Add library="png" />
+			<Add library="waave" />
 			<Add directory="/usr/lib" />
+			<Add directory="/usr/local/ib" />
 		</Linker>
 		<Unit filename="cb.bmp" />
 		<Unit filename="../../src/apps/Globals.h" />
@@ -124,6 +128,8 @@
 		<Unit filename="../../src/objects/PImageBox.h" />
 		<Unit filename="../../src/objects/PLabel.cpp" />
 		<Unit filename="../../src/objects/PLabel.h" />
+		<Unit filename="../../src/objects/PMovie.cpp" />
+		<Unit filename="../../src/objects/PMovie.h" />
 		<Unit filename="../../src/objects/PObject.cpp" />
 		<Unit filename="../../src/objects/PObject.h" />
 		<Unit filename="../../src/objects/PTextBox.cpp" />
@@ -157,6 +163,8 @@
 		<Unit filename="../../src/platforms/sdl/PlatformKeyboard.h" />
 		<Unit filename="../../src/platforms/sdl/PlatformLabel.cpp" />
 		<Unit filename="../../src/platforms/sdl/PlatformLabel.h" />
+		<Unit filename="../../src/platforms/sdl/PlatformMovie.cpp" />
+		<Unit filename="../../src/platforms/sdl/PlatformMovie.h" />
 		<Unit filename="../../src/platforms/sdl/PlatformNetwork.cpp" />
 		<Unit filename="../../src/platforms/sdl/PlatformNetwork.h" />
 		<Unit filename="../../src/platforms/sdl/PlatformTextBox.cpp" />
@@ -185,6 +193,7 @@
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

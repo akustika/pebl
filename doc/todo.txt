@@ -1,12 +1,47 @@
 ========================================
 To Do for 0.13:
 
+- Seems to be a problem with setting x/y location of images that are scaled?
+
+- determine whether secret abort code works on italian keyboards.
+
+-document what happens when lookup doesn't find a match.
+- be sure to fix keypad entry on digit span; probably fixed for 3001; see Marco Moniz email.
+
+- New trail test (Salthouse's one).
+
+-Document transition from list to vector; acces to lists via [].
+
+Transpose seems to give a wrong answer for Transpose([[1,2]]), Which I think should be [[1],[2]]
+
+- PrintProperties only works on widgets; shuold work on all objects.
+
+- Loading/reloading sound files that are mono crashes on the conversion. (See ann gilman's bug).
+-launcher should work on 1024x600 screen
+
+- Improved Debian Packaging.
+- Incorporate documentation in makefile.
+
+EasyLabel can't accept a number in the text variable. Maybe it should?
+
+- Perseveration stuff in BCST.
+
+-possibly, do checking for screen size under fullscreen mode.
+
+ - Fix cr/lf in windows battery.
+ - fix shuffling problem in BCST
+
+- Function that determines current screen size. ****Done
+
  - Allow Shuffle to take multiple arguments, which are shuffled in parallel???
- - Create a PushOn type function
+ - Create a PushOn type function (DONE)
 
 - WaitForAnyKeyPressForTimeout doesn't work.
 
 -Solve CJK font issue (replace firefly and the other one??)
+
+-ANT test problems (crashes in 0.12)
+-TOL test problems (crasher)
 
  -Document Parallel port functions
    -consider changing getstate function to return list of 0/1
@@ -16,6 +51,9 @@ To Do for 0.13:
  -Krystal's bug in TOH
 
 - document Match(), Filter(), and Levels()
+
+-  Document GetCurrentScreenResolution and GetVideoModes()
+
 
 -document RemoveFile(), changes to FileOpenWrite()
 

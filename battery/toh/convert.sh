@@ -1,3 +1,4 @@
+#!/bin/sh
 ## Converts svg pix to .png
 ##
 

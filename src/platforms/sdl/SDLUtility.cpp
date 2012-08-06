@@ -152,34 +152,53 @@ void SDLUtility::DrawSmoothLine(SDL_Surface *surface, int x1, int y1, int x2, in
 }
 
 
+/*
+     * Return the pixel value at (x, y)
+     * NOTE: The surface must be locked before calling this!
+     */
+Uint32 SDLUtility::GetPixel(SDL_Surface *surface, int x, int y)
+    {
+        int bpp = surface->format->BytesPerPixel;
+        /* Here p is the address to the pixel we want to retrieve */
+        Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
+   
+       switch (bpp) {
+       case 1:
+           return *p;
+   
+       case 2:
+           return *(Uint16 *)p;
+   
+       case 3:
+           if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
+               return p[0] << 16 | p[1] << 8 | p[2];
+           else
+               return p[0] | p[1] << 8 | p[2] << 16;
+   
+       case 4:
+           return *(Uint32 *)p;
+ 
+     default:
+         return 0;       /* shouldn't happen, but avoids warnings */
+     } // switch
+ }
+
 
 /// This extracts the color of a pixel.
-Uint32 SDLUtility::GetPixel(SDL_Surface *surface, int x, int y)
+PColor SDLUtility::GetPixelColor(SDL_Surface *surface, int x, int y)
 {
-  int bpp = surface->format->BytesPerPixel;
-  /* Here p is the address to the pixel we want to retrieve */
-  Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
-  
-  switch (bpp) {
-  case 1:
-      return *p;
-      
-  case 2:
-      return *(Uint16 *)p;
-      
-  case 3:
-      if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-          return p[0] << 16 | p[1] << 8 | p[2];
-      else
-          return p[0] | p[1] << 8 | p[2] << 16;
-      
-  case 4:
-      return *(Uint32 *)p;
-      
-  default:
-      return 0;       /* shouldn't happen, but avoids warnings */
-  } // switch
+    Uint32 pxl =GetPixel(surface,x,y);
+    Uint8 r;
+    Uint8 g;
+    Uint8 b;
+
+    SDL_GetRGB(pxl, surface->format, &r,&g,&b);
+
+    //    cout <<"Uint pxl:" << pxl << endl;
+    PColor col = PColor(r,g,b,0);
+    return col;
 }
+
 
 
 int SDLUtility::WritePNG(const Variant fname, PlatformWidget* wid)

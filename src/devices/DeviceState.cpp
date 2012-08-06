@@ -3,7 +3,7 @@
 //    Name:       src/devices/DeviceState.cpp
 //    Purpose:    Data structure allowing a device's state to be tested.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2004 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -92,9 +92,9 @@ ValueState::~ValueState()
 
 int ValueState::TestDevice() const
 {
-
-
+    //cout << "Testing value of device\n";
     int value = mDevice->GetState(mInterface);
+    //cout << "value tested\n";
     switch(mDeviceTest)
         {
 
@@ -153,6 +153,7 @@ IntervalState::~IntervalState()
 
 int IntervalState::TestDevice() const
 {
+
 
     long int value = mDevice->GetState(mInterface);
     switch(mDeviceTest)
@@ -225,6 +226,7 @@ RegionState::~RegionState()
 
 int RegionState::TestDevice() const
 {
+
     int valueX = mDevice->GetState(mInterface);
     int valueY = mDevice->GetState(mInterface+1);
 

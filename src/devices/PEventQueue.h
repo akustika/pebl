@@ -3,7 +3,7 @@
 //    Name:       src/devices/PEven.h
 //    Purpose:    Events processed by Event Loop.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
