@@ -85,10 +85,9 @@ define Start(p)
 
 
 
-  if(gSubNum==0)
+  if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)
-
    }
 
   if(gUseBeep)
