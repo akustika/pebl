@@ -15,14 +15,15 @@ define Start(p)
   gWin <- MakeWindow()
 
   ##Get subject code if we need to:    
-    if(gSubNum==0)
+    if(gSubNum+""=="0")
     {
 	  gSubNum <- GetSubNum(gWin)
     }
 
 
-  gFileOut <- FileOpenWrite("fitts-"+gSubNum+".txt")
-  gPointFile <- FileOpenWrite("fittspoints-"+gSubNum+".txt")
+  MakeDirectory("data")
+  gFileOut <- FileOpenWrite("data/fitts-"+gSubNum+".csv")
+  gPointFile <- FileOpenWrite("data/fittspoints-"+gSubNum+".csv")
 
   ShowCursor(0)
   gTargCol  <- MakeColor("red")
@@ -50,7 +51,7 @@ define Start(p)
   loop(trial,trials)
   {
     gCounter.text <- ("Trial [" + i + "] of "+l)
-    FilePrint_(gFileOut,gSubNum + " " + i + " ")
+    FilePrint_(gFileOut,gSubNum + "," + i + ",")
     Trial(i, First(trial),Nth(trial,2),testtype)
     i <- i + 1
   }
@@ -179,7 +180,7 @@ define Trial(trial, pos, size,type)
         MoveCursor(mousepos)
 
 
-        FilePrintList(gPointfile,Merge([trial,size,pos, time],mousepos))
+        FilePrintList(gPointfile,Merge([trial,size,pos,time],mousepos))
 
          Draw()
        }
@@ -204,7 +205,7 @@ define Trial(trial, pos, size,type)
 
 
 
-     FilePrint_(gFileOut,type+ " " +pos + " " + size + " " + gShowPreview  + " " +First(mousepos) + " " + Nth(mousepos,2) + " " + clicks + " ")
+     FilePrint_(gFileOut,type+ "," +pos + "," + size + "," + gShowPreview  + "," +First(mousepos) + "," + Nth(mousepos,2) + "," + clicks + ",")
      FilePrint(gFileOut,(endtime - start))
 
    RemoveObject(targ,gWin)
@@ -289,4 +290,18 @@ define MoveCursor(pos)
 ## Use this to allow any y position.
    gCursor.y <- Nth(pos,2)
   Draw()
+}
+
+## This overrides the default one to use comma-separations
+##
+define FilePrintList(file,list)
+{
+   tmp <- ""
+   sep <- ""
+   loop(i,list)
+   {
+     tmp <- tmp + sep + i
+     sep <- ","
+   }
+  FilePrint(file,tmp)
 }
