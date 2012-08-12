@@ -35,39 +35,42 @@ define Start(p)
 {
 
  
-      gAllowAutoPump <- 0   ##Does the balloon continue to pump up while holding the button down?
+     gAllowAutoPump <- 0   ##Does the balloon continue to pump up while holding the button down?
 
-      gStartBalloonSize <- 10
- 
-	  gMoneyPerPump <- .05
+     gStartBalloonSize <- 10
+     gMoneyPerPump <- .05  #How much money do you get per pump
 
-	  ##Get the translation text
-  	  GetStrings(gLanguage)
-
-
-      gWin <- MakeWindow("black")
-
-	  if(gSubNum==0)
-	  {
-         gSubNum <- GetSubNum(gWin)
-      }
-
-	  Init()
-
-      Draw()
-
-	  ##values
-	  gTotal <- 0
-	  gLast  <- 0
+     ##Get the translation text
+     GetStrings(gLanguage)
 
 
-	  btypes <- [1,2,3]
-	  lifes <- [8,16,128]
-	  cols <- [MakeColor("darkorange"),Makecolor("gold"),MakeColor("darkslateblue")]
-	  gFileOut <- FileOpenAppend("bart-"+gSubNum+".csv")
+    gWin <- MakeWindow("black")
+
+   ##Get subject code if we need to:    
+   if(gSubNum+""=="0")
+    {
+       gSubNum <- GetSubNum(gWin)
+    }
+
+    ##Initialize a bunch of book-keeping stuff.
+    Init()
+    Draw()
+
+     ##values
+     gTotal <- 0
+     gLast  <- 0
 
 
-	  ##Do the instructions
+    ##Define the balloon types:
+     btypes <- [1,2,3]  
+     lifes <- [8,16,128]
+     cols <- [MakeColor("darkorange"),Makecolor("gold"),MakeColor("darkslateblue")]
+
+     MakeDirectory("data")
+     gFileOut <- FileOpenAppend("data/bart-"+gSubNum+".csv")
+
+
+      ##Do the instructions
       inst <- EasyTextBox(gInstructions, 10,10,gWin,18,gVideoWidth-20,gVideoHeight-20)
 
 	  Draw() 
@@ -93,7 +96,7 @@ define Start(p)
 
 	  trials <- FlattenN([group1,group2,group3,group4],1)
 
-	  Print(trials)
+	  
 	  FilePrint(gFileOut,"subnum,trial,type,life,pumps,total,collected,burst,time")
 
       ##  Set up some global data here.
@@ -176,7 +179,7 @@ define Trial(life,color)
         	  if(resp==1)  #click on pump
 	        		  {
 
-                   	   pumps <- pumps + 1
+                  	   pumps <- pumps + 1
                         PlayBackground(gBlow)
 
 						##pump up the balloon
@@ -417,20 +420,18 @@ define UpdateCash(radius)
 
 define MakeMoney(num)
 {
-		
     cents <- SubString(Round(Mod(num*100,100))+"00",1,2)
-	dollars <- Floor(num)
-
-	return gMoney+" " +dollars+"."+cents
+    dollars <- Floor(num)
+    return gMoney+" " +dollars+"."+cents
 }
 
 
 ##Get the y offset of the balloon, given radius
 define GetY(radius)
 {
-	return gYB-radius-60
-	
+    return gYB-radius-60
 }
+
 
 define GetStrings(lang)
 {
