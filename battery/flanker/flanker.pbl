@@ -27,7 +27,6 @@
 define Start(p)
 {
 
-
    numreps <- 20  ##number of repeats of the 2x3 design
 
    gWin <- MakeWindow("black")
@@ -35,14 +34,14 @@ define Start(p)
    Initialize()
 
    ##Get subject code if we need to:    
-   if(gSubNum==0)
+   if(gSubNum+""=="0")
     {
 	  gSubNum <- GetSubNum(gWin)
     }
 
    ##Make data files   
 
-
+   MakeDirectory("data")
    gFileOut <- FileOpenAppend("data/flanker-"+gSubNum+".csv")
    gPooledFileOut <- FileOpenAppend("data/flanker-pooled.csv")
    gSumFileOut <- FileOpenWrite("data/flanker-summary-"+ gSubNum+".txt")
