@@ -18,10 +18,10 @@ define Start(par)
   
     gTimeOut <-  10000  #maximum time allowed to hit target
     
-	gWin <- MakeWindow()
+    gWin <- MakeWindow()
 
     ##Get subject code if we need to:    
-    if(gSubNum==0)
+    if(gSubNum+""=="0")
     {
 	  gSubNum <- GetSubNum(gWin)
     }
@@ -32,7 +32,8 @@ define Start(par)
     gMinDist <- 100                    # Minimum distance to target
     gMaxDist <- (gVideoHeight-20)/2    # Maximum distance to target
 
-    fileout <- FileOpenWrite("dext-"+gSubNum+".dat")
+    MakeDirectory("data")
+    fileout <- FileOpenWrite("data/dext-"+gSubNum+".csv")
 
 
 
@@ -57,7 +58,7 @@ define Start(par)
     Hide(tb)
     ShowCursor(0)
 
-	FilePrint(fileout,"subnum trial startx starty noise targx targy distance complete time moves")
+	FilePrint(fileout,"subnum,trial,startx,starty,noise,targx,targy,distance,complete,time,moves")
     circ1 <- Circle(gHomeX,gHomeY,gMinDist,MakeColor("black"),0)   
     circ2 <- Circle(gHomeX,gHomeY,gMaxDist,MakeColor("black"),0)
     AddObject(circ1,gWin)
@@ -78,7 +79,7 @@ define Start(par)
        results <-  Trial(noise)   
        dat <- Merge([gSubNum,trial, gHomeX, gHomeY, noise],results)
 
-       FilePrintList(fileout,Flatten(dat))
+       FilePrint(fileout,MakeCSVLine(Flatten(dat)))
        
        alldat <- Append(alldat,dat)
        trial <- trial + 1
@@ -218,4 +219,17 @@ define RemoveObjects(list,win)
     { 
       RemoveObject(i,win) 
     }
+}
+
+
+define MakeCSVLine(list)
+{
+  tmp <- ""
+  sep <- ""
+  loop(i,list)
+  {
+   tmp <- tmp + sep + i
+   sep <- ","
+  }
+ return tmp
 }
