@@ -24,12 +24,13 @@ define Start(p)
   isi <- 200
   gWin <- MakeWindow("black")
   ##Get subject code if we need to:    
-    if(gSubNum==0)
+    if(gSubNum+""=="0")
     {
 	  gSubNum <- GetSubNum(gWin)
     }
 
-  gFileOut <- FileOpenWrite("fourchoice-"+gSubNum+".txt")
+  MakeDirectory("data")
+  gFileOut <- FileOpenWrite("data/fourchoice-"+gSubNum+".csv")
 
   gBeep <- LoadSound("tone.wav")
 
@@ -77,11 +78,11 @@ define Start(p)
   dat <- []
   gSleepEasy <- 0
   trial <- 1
-  FilePrint(gFileout,"subnum resptype isi trial sound resp quad leftright updown respquad  corr lapse rt")
+  FilePrint(gFileout,"subnum,resptype,isi,trial,sound,resp,quad,leftright,updown,respquad,corr,lapse,rt")
 
   while(trial <= gNumTrials)
   {
-    FilePrint_(gFileOut,gSubNum + " " + gRtype + " " + isi +" " +  trial + " ")
+    FilePrint_(gFileOut,gSubNum + "," + gRtype + "," + isi +"," +  trial + ",")
      x <- Trial()
     dat <- Append(dat,x)
     Wait(isi)
@@ -177,9 +178,9 @@ define Trial()
 
    quadlabel <- GetQuadLabel(quad)
 
-  FilePrint(gFileOut,  gUseSound + " " + x + " " + quad + " "+
-        First(quadlabel) + " " + Nth(quadlabel,2) + " " + 
-        respquad + " " + corr + " " + lapse + " " + rt)
+  FilePrint(gFileOut,  gUseSound + "," + x + "," + quad + ","+
+        First(quadlabel) + "," + Nth(quadlabel,2) + "," + 
+        respquad + "," + corr + "," + lapse + "," + rt)
 
    RemoveObject(stim,gWin)
    Draw()
