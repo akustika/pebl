@@ -25,13 +25,11 @@ define Start(p)
    numreps <- 1      ##this many reps of the 20-trial design
    soa <- 3000    ##Fix the stimulus-onset asynchrony.
 
-   Print(gVideoWidth+"x"+gVideoheight)
    gWin <- MakeWindow("black")
-   Print(gVideoWidth+"x"+gVideoheight)
    Initialize()
 
    ##Get subject code if we need to:    
-   if(gSubNum==0)
+   if(gSubNum+""=="0")
     {
 	  gSubNum <- GetSubNum(gWin)
     }
