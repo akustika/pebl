@@ -5,12 +5,22 @@
 define Start(lPar)
 {
 
-  reps <- 5
-  gSoa <- 2000
+  reps <- 5      #How many reps of the stimuli
+  gSoa <- 2000   #how long between stimil?
+  
+  ##Stimuli to choose from:
   basestim <- ["a", "d", "c", "e", "o", "n"]
+
+
   gSleepEasy <- 1
   #Initialize Window
   gWindow <- MakeWindow("black") 
+
+  if(gSubNum+""=="0")
+   {
+      gSubNum <- GetSubNum(gWin)
+   }
+
   ShowCursor(0)
   #Initialize Font and colors
   fg <- MakeColor("white")
@@ -24,7 +34,8 @@ define Start(lPar)
   Draw()
 
   stimuli <- Shuffle(RepeatList(CrossFactorWithoutDuplicates(basestim),reps))
-  fileout <- FileOpenAppend("CRT-"+gSubNum+".csv")
+  MakeDirectory("data")
+  fileout <- FileOpenAppend("data/CRT-"+gSubNum+".csv")
   FilePrint(fileout,"subnum,targ,foil,time,delay,resp,corr,mask,presstart,respend,prestime,rt")
 
   loop(i, stimuli)
