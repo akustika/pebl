@@ -15,11 +15,28 @@
 
 define Start(p)
 {
+   ##Could be 'mouse' or 'touch', currently no differences.
    gInputDevice <- "mouse"
-   gVideoWidth  <-  800
-   gVideoHeight <- 600
+
+
+  ##Now, use 7x7 as the test size:
+  wide <- 7
+  high <- 7
+
+   ##Time limit in seconds.   Use -1 for no time limit.
+   timelimit <- 20
 
    gWin <- MakeWindow("black")
+
+   if(gVideoWidth<600 or gVideoheight < 600)
+    {
+     MessageBox("Screen size too small to run connections task.  Requires at least 600x500",gWin)
+     SignalFatalError("Screen size too small to run connections task.  Requires at least 600x500")
+    }
+    gXrange <- [gVideoWidth/2 -300, gVideoWidth/2+300]
+    gYrange <- [gVideoHeight/2 -250, gVideoHeight/2+250]
+
+
    gFont <- MakeFont(gPEBLBaseFontMono,3,18,MakeColor("white"),Makecolor("black"),0)
    Draw()
    gSleepEasy <- 1
@@ -29,19 +46,73 @@ define Start(p)
   {
     gSubNum <- GetSubNum(gWin)
   }
+
   MakeDirectory("data")
-  fileout <- FileOpenAppend("data/connections-"+gSubNum+".csv")
+  fileout <- FileOpenWrite("data/connections-"+gSubNum+".csv")
 
-  wide <- 7
-  high <- 7
+  FilePrint_(fileout, "subnum,type,trial,width,height,length,sumdist,anglesum,sumoptions,entropy,numclicks,lastclick,rt,time")
+  seq <- Sequence(1,wide*high,1)
+  loop(i,seq)
+  {
+    FilePrint_(fileout,",s"+ZeroPad(i,3))
+  }
+  FilePrint(fileout,"")
 
+  ##create a log for each click we do.
+  gPathfileout <- FileOpenWrite("data/connections-path-practice"+gSubNum+".csv")
 
-   trial <- 1
+ ##Create 4 paths total
 
-   ##Create 4 paths total
-   paths <-[MakePath(wide,high,0),MakePath(wide,high,0),
+ instbox <- EasyTextBox("Generating paths",100,40,gWin,20,gVideoWidth-200,200)
+ Draw()
+ paths <-[MakePath(wide,high,0),MakePath(wide,high,0),
    	   MakePath(wide,high,0),MakePath(wide,high,0)]
 
+
+
+   practicepath <- MakePath(4,4,0)
+
+   if(timelimit>0)
+   {
+     timelimitinst <- "There will be a time limit to complete this test. You will have "+timelimit+" s to complete as much of the path as you can in that time.  The time will countdown to the right side of the screen."
+   } else {
+    timelimitinst <- ""
+  }
+
+
+   instbox.text <- "In this task, you will need to connect a set of circles that are labeled with numbers and letters. In different versions of the task, you will connect them based on a sequence of numbers (1-2-3-4), letters (A-B-C-D), or an alternating sequence (1-A-2-B).  For trials using letters, it will go through the alphabet twice, putting a * beside each letter the second time through.  The next circle in the sequence will always be next to the previous one, either above, below, left, right, or diagonally.  "+timelimitinst+" Practice the short test below, in which you will follow the numbers 1-2-3-4-5.  Click the highlighted '1' circle to begin."
+
+    #Temporarily change the display range.
+    gXrange0 <- gXRange
+    gYrange0 <- gYRange
+
+    gXRange <- [gVideoWidth/2 -150, gVideoWidth/2+150]
+    gYrange <- [275, 575]
+
+    gTrial <- "P1"
+    dat <-  CollectPath(practicepath,"num",4,4, timelimit) 
+   Print(dat)
+
+    instbox.text <- "Sometimes, the test will require you to use an alternating pattern of letters and numbers, either A-1-B-2 etc., or 1-A-2-B etc.  The type of test will be labeled at the bottom of the screen.  Try a second trial with the alternating letters."
+
+   practicepath <- MakePath(4,4,0)
+    gTrial <- "P2"
+   dat <-  CollectPath(practicepath,"numletter",4,4, timelimit) 
+   Print(dat)
+
+    gXRange <- gXrange0
+    gYRange <- gYrange0
+   Draw()
+
+   instbox.text <- "Now, you will do the real test, which contains a "+wide+"x"+high+" grid.  Before each test, you will see the instructions at the bottom of the screen.  Click the screen to begin."
+  Draw()
+  WaitForDownClick()
+  Hide(instbox)
+  Draw()
+
+  ##close the practice log and reopen.
+  FileClose(gPathFileout)
+  gPathfileout <- FileOpenWrite("data/connections-path-"+gSubNum+".csv")
 
   tpaths <- []
   loop(i,paths)
@@ -61,28 +132,53 @@ define Start(p)
 
   data <- []
   conds <- []
-
+  footer <- Easylabel("",gVideoWidth/2,Second(gYrange)+20,gWin,22)
+   gTrial <- 1
    loop(i, trials)
     {
-
 
        type <-First(i)
        path <- Second(i)
 
+
+       if(type=="num")
+       {
+         
+         foot <- "Connect circles 1 - 2 - 3 - 4"
+       }elseif(type=="numletter")
+       {
+          foot <- "Connect circles 1 - A - 2 - B"
+       }elseif(type=="letternum")
+       {
+          foot <- "Connect circles A - 1 - B - 2"
+       }else{
+          foot <- "Connect circles A - B - C - D"
+       }
+
+       footer.text <- foot +  " Trial: ["+gTrial+"/"+Length(trials)+ "] Click screen to begin"
+       Draw()
+       footer.text <- foot+" Trial: ["+gTrial+"/"+Length(trials)+"]"
+
        time0 <- GetTime()
-       dat <-  CollectPath(path,type,wide,high) 
+       dat <-  CollectPath(path,type,wide,high,timelimit) 
+
+       ##dat returns [numclicks, id-at-finish, time-to-finish]
+
        time1 <- GetTime()
        ##Get some specific stats.
-       stats <- GetStats(path,wide,high)
 
-       datalist <- Flatten([gSubNum,i,wide,high,type, trial, stats,dat,(time1-time0),path])
+       mypath <- SubList(path,1,Second(dat))
+       stats <- GetStats(mypath,wide,high)
+       
+       datalist <- Flatten([gSubNum,type, gTrial, stats, 
+                             dat,(time1-time0),path])
        FilePrint(fileout,PrintCSVList(datalist))
-       data <- Append(data,dat)
+
+       data <- Append(data,Merge(dat,stats))
        conds <- Append(conds,type)
+       gTrial <- gtrial + 1
     }
 
-  Print(conds)
-  Print(data) 
 
   numsdat <- Filter(data,Match(conds,"num"))
   letsdat <- Filter(data,Match(conds,"letter"))
@@ -92,21 +188,45 @@ define Start(p)
   single <- Transpose(Merge(numsdat,letsdat))
   switch <- Transpose(Merge(nldat,lndat))
 
-
+  Print(single)
+  Print(switch)
 ##These have clicks/time pairs
    singleClicks <- Mean(First(single))
-   singleRTs <- Mean(Second(single))
+   singleTargs <- Mean(Second(single))
+   singleOverclicks <- Sum(First(single))-Sum(Second(single)) 
+   singleRTs <- Mean(Third(single))
 
    switchClicks <- Mean(First(switch))
-   switchRTs <- Mean(Second(switch ))
+   switchTargs <- Mean(Second(switch ))
+   switchOverclicks <- Sum(First(switch))-Sum(Second(switch)) 
+   switchRTs <- Mean(Third(switch ))
 
-  Print("---------------------------------------")
-  Print("Mode:        Single   Switch   Ratio")
-  Print("---------------------------------------")
-  Print("Clicks:     "+singleClicks+"    " + switchClicks + "   " + switchClicks-singleClicks)
-  Print("RT:         "+singleRTS+"    " + switchRTS + "   " + switchRTS/singleRTS)
-  Print("--------------------------------------")
-  MessageBox("Thank you for participating",gWin)
+  out <- ""
+  out <- out +  Print("---------------------------------------")+CR(1)
+  out <- out +  Print("Mode:        Single   Switch   Ratio/difference ")+CR(1)
+  out <- out +  Print("---------------------------------------")+CR(1)
+  out <- out +  Print("Targets:     "+singleTargs+"    " + switchTargs + "   " + (switchTargs/singleTargs))+CR(1)
+  out <- out +  Print("RT:          "+singleRTS+"    " + switchRTS + "   " + (switchRTS/singleRTS))+CR(1)
+  out <- out +  Print("Clicks:      "+singleClicks+"    " + switchClicks + "   " + (switchClicks-singleClicks))+CR(1)
+  out <- out +  Print("OverClicks:  "+singleOverClicks+"    " + switchOverClicks + "   " + (switchOverClicks -singleOverClicks))+CR(1)
+  out <- out +  Print("--------------------------------------")+CR(1)
+  MessageBox("Thank you for participating"+out,gWin)
+
+
+  report <- FileOpenWrite("data/connections-report-"+gSubNum+".txt")
+  FilePrint(report,"-------------------------------------------------------")
+  FilePrint(report,"  PEBL Connection Test")
+  FilePrint(report,"To cite:")  
+  FilePrint(report, "Mueller, S. T. (2012).  The PEBL Connections Test [Computer Software].  Retreived from http://pebl.sf.net")
+  FilePrint(report,"  Based on connections test by Salthouse et al. (2000) ")
+  FilePrint(report,"-------------------------------------------------------")
+  FilePrint(report,TimeStamp())
+  FilePrint(report,"Gridsize:          "+wide +"x"+high) 
+  FilePrint(report,"Time limit:        "+timelimit)
+  FilePrint(report,"Participant code:  " +gSubNum)
+  FilePrint(report,out)
+  FilePrint(report,"-------------------------------------------------------")
+
 
 }
 
@@ -114,7 +234,6 @@ define Start(p)
 ##Computes the transpose path--same pattern but row-column instead of column-row.
 define TransposePath(path,w,h)
 {
-Print(path)
 
   newpath <- []
   loop(i,path)
@@ -141,9 +260,13 @@ define PrintCSVList(list)
    return text
 }
 
+
+## This function can be used to generate and save
+## simulated paths.  It is not used in the default task.
+##
 define SimPaths(wide,high,num)
 {
- fileout <- FileOpenAppend("pathstats.txt")
+ fileout <- FileOpenAppend("data/pathstats.txt")
 #  fileout <- FileOpenAppend("tmp.txt")
 
 #   FilePrint(fileout,"Seed Pathsize pathlength anglesum optionsum entropy")
@@ -153,16 +276,17 @@ define SimPaths(wide,high,num)
   while(i <= num) 
    { 
 
+##Use the following for debugging.
     rand <- RandomDiscrete(10000000)
-#    rand <- (5535518)
-    Print(i + ": " + rand)
+##    rand <- (5535518)
+##    Print(i + ": " + rand)
     SeedRNG(rand)
 
 
 
     path <- MakePath(wide,high,0)
 
-   stuff <-   DrawPath(path,wide,high,[100,700],[100,550])
+   stuff <-   DrawPath(path,wide,high,gXrange, gYrange)
    Draw()
    RemoveObjects(stuff,gWin)
 
@@ -179,8 +303,13 @@ define SimPaths(wide,high,num)
 
 
 
-define CollectPath(path,style,w,h)
+define CollectPath(path,style,w,h,timelimit)
 {
+
+  if(timelimit>0)
+  {
+    timer <- EasyLabel(timelimit+"",Second(gxRange)+50,gVideoHeight/2,gWin,40)
+  }
 
   if(style=="num")
    {
@@ -242,7 +371,7 @@ define CollectPath(path,style,w,h)
 
 
 
-  bgstuff <-  DrawPathDetail(path,w,h, [100,700],[100,550],vals,Repeat(0,Length(path)))
+  bgstuff <-  DrawPathDetail(path,w,h, gXrange,gYrange,vals,Repeat(0,Length(path)))
 
   lines <- First(bgstuff)
   targets <- Second(bgstuff)
@@ -254,6 +383,9 @@ define CollectPath(path,style,w,h)
   }
 
 
+  thegrid <- Repeat(Sequence(1,w,1),h)
+  rows <- Flatten(Transpose(thegrid))
+  cols <- Flatten(thegrid)
 
   id <- 2
   clicks <- 0
@@ -265,11 +397,14 @@ define CollectPath(path,style,w,h)
   back.color <- MakeColor("red")
 
   ##This may differ for keyboard entry.
-  inst <- EasyLabel("Click on highlighted circle to start",gVideoWidth/2,25,gWin,25)
+  insttext <- "Click on highlighted circle to start " 
+  inst <- EasyLabel(insttext,gVideoWidth/2,25,gWin,25)
   Show(First(labs))
 
   Draw()
   WaitForClickOnTarget([First(targets)],[1])
+
+
   back.color <- clickedColor
   loop(i,labs)
   {
@@ -277,38 +412,124 @@ define CollectPath(path,style,w,h)
   }
 
   time1 <- GetTime()
+  if(timelimit >0)
+  {
+    endtime <- time1 + timelimit*1000
+  } else {
+    endtime <- time1 + 1000*60*60  ##1 hr to finish.
+  }
   
 
+  ##Loop over all targets in sequence:
   loop(i,Transpose([newlines,newtargs]))
   {
-
-##  WaitForAnyKeyPress() 
-
-      
       Draw()
-      if(gInputDevice == "mouse" or gINputDevice == "touch")
-      {
-         resp <- -1
-	 while(not resp == Nth(path,id))
-	 {
-             resp <- WaitForClickOnTarget(targets,path)
-	     clicks <- clicks + 1  
-	 }
-          
-          id <- id + 1
-      }
-      line <- First(i)
-      
+      resp <- -1
+      cont <- 1
 
-      Show(First(i)) #Show the line
+      ##Keep going until we get to the end of the 
+      ##list or time runs out.
+
+       while(cont)
+	 { 
+
+	   ##Do we have a time limit?
+           if(timelimit > 0)
+	     {
+               #IF so, collect time with a timeout function 
+	       # so we can update a timer.
+	       resp <- "<timeout>"
+	       while(resp == "<timeout>")
+	        {
+		 ##tHIS draws the timer ever 100 ms:
+                 resp <- WaitForClickOnTargetWithTimeout(targets,
+							 path,100)
+		 					 
+                 timeleft <- (endtime - GetTime())
+
+		 if(timeleft>0)
+                  {
+                    timer.text <-MakeTime(timeleft)
+                    Draw()
+                 }else{
+		   resp <- "toolong"
+		 }
+
+
+		}
+
+	     }else{
+	       ##We don't have a time limit--go easy.
+               resp <- WaitForClickOnTarget(targets,path)
+             }
+               ##Get and record current time.
+               time <- GetTime()
+
+
+	     ##At this point, we have a click on some circle,
+	     ##not necessarily the right one
+
+	     ##update the click count.
+	     clicks <- clicks + 1  
+
+	     ##if the resp is 'toolong', we are out of time and need to stop.
+	     if(resp == "toolong")
+	     {
+                 cont <- 0
+	     }else {
+	       ##Otherwise, we are not out of time; score/record the 
+	       ##click and move on.
+
+              corr <- (resp == Nth(path,id))
+  	      target <- Second(i)
+
+	      row <-Nth(rows,resp)
+	      col <- Nth(cols,resp)
+
+              FilePrint(gPathFileOut,gSubNum+","+ gTrial+","+
+                         style+","+ w +","+h+","+row+","+col+","+
+			  target.x+","+target.y+","+ 
+			  resp+","+ clicks+","+ id+","+
+                          corr+","+(time-time1))
+
+              #Did we make it all the way to the end?
+               cont <- (not resp == Nth(path,id))
+   	     }
+
+	   ##when we get here, we have either clicked on
+	   ##the next target, an incorrect circle,  or
+           ## have run out of time.
+
+
+	   ##we only get out of this while if the target
+	   ##is good or time is up.
+	 }
+	 
+
+
+
+    ##Has time limit elapsed?
+    if(resp == "toolong")
+      {
+        break
+      } else {
+
+        ##increment the id of the 'next' target
+	##and update the display
+
+      line <- First(i)
+      Show(line) #Show the line
       bg <- Second(i)
       bg.color <- clickedcolor  ##Change the color of the bg.
+
       Draw()
+
+        id <- id + 1
+      }
 
   }
   time2 <- GetTime()
-
-  return [clicks,(time2-time1)]
+  return [clicks,(id-1),(time2-time1)]
 }
 
 define VecAbs(vec)
@@ -492,7 +713,7 @@ define MakePath(w,h,crosses)
     current <- nextID
    }
 
-#  stuff <-   DrawPath(path,7,7,[100,700],[100,550])
+#  stuff <-   DrawPath(path,7,7,gXrange,gYrange)
 #  Draw()
 #   RemoveObjects(stuff,gWin)
 
@@ -603,14 +824,14 @@ define MakePath(w,h,crosses)
 
 
 
-#  stuff <-   DrawPath(path,w,h,[100,700],[100,550])
+#  stuff <-   DrawPath(path,w,h,gXrange,gYrange)
 #  Draw()
 #  RemoveObjects(stuff,gWin)
     
   remains <- Rest(remains)
 
 
-   }
+ }
 
 
 
@@ -757,11 +978,11 @@ define VecPlus(a,b)
  return sum
 }
 
+
 ##This will draw a path with all the elements 
 define DrawPath(path,w,h,xrange,yrange)
 {
   return DrawPathDetail(path,w,h,xrange,yrange,Sequence(1,w*h,1),Repeat(1,Length(path)))
-
 }
 
 define DrawPathDetail(path,w,h,xrange,yrange,labels,connected)
@@ -845,3 +1066,13 @@ define RemoveObjects(list,win)
     RemoveObject(i,win)
   }
 }
+
+
+
+define MakeTime(msecs)
+{
+   secs <- Floor(msecs/1000)
+   tenths <- Floor(Mod(msecs,1000)/100)
+   return secs+"."+tenths
+}
+
