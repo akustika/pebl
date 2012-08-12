@@ -22,9 +22,9 @@ define Start(p)
    Initialize()
 
    ##Get subject code if we need to:    
-   if(gSubNum==0)
+   if(gSubNum+""=="0")
     {
-	  gSubNum <- GetSubNum(gWin)
+       gSubNum <- GetSubNum(gWin)
     }
 
    ##Make data files   
@@ -98,9 +98,9 @@ define Start(p)
     abstime <- GetTime()
     loop(trial,round1)
     {
-	  abstime <- abstime + 4000
+      abstime <- abstime + 4000
       Trial(trial,0,abstime)
-	  gTrial <- gTrial + 1
+      gTrial <- gTrial + 1
     }    
 
     MessageKeyBox(gInterblock)
@@ -513,10 +513,10 @@ define Initialize()
   GetStrings(gLanguage) 
   ShowCursor(0)
 
-  ##  The screen re
+  ##  The screen resolution should be set automatically.
   ##
-  gVideoWidth <- 800
-  gVideoheight <- 600
+  ## gVideoWidth <- 800
+  ## gVideoheight <- 600
 
   ## the yoffset is supposed to be 1.06 degrees above offset.
   ##
@@ -550,21 +550,6 @@ define Initialize()
 
    
 
-}
-
-
-define CountDown()
-{
-
-    label <- EasyLabel("",gVideoWidth/2,gVideoHeight/2,gWin,100)
-    labs <- [3,2,1]
-    loop(i,labs)
-     {
-    	label.text <- i
-        Draw()
-		Wait(500)
-     }
-   RemoveObject(label,gWin)
 }
 
 
