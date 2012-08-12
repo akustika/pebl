@@ -31,6 +31,12 @@ define Start(lPar)
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
 
+  ##Get subject code if one has not been supplied
+  if(gSubNum+""=="0")
+  {
+   gSubNum <- GetSubNum(gWin)
+  }
+
 
   gDirection <- "forward"  #change "forward" to "backward" to do
                             #backward scoring
