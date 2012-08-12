@@ -38,7 +38,7 @@ define Start(p)
   gHomeY <- gVideoHeight/2
 
    ##Get subject code if we need to:    
-   if(gSubNum==0)
+   if(gSubNum+""=="0")
     {
 	  gSubNum <- GetSubNum(gWin)
     }
@@ -73,7 +73,8 @@ define Start(p)
 
   tb.text <-  "Watch the red target. "+CR(2)+"Hit space bar when red circle skips a position."
  
- fileOut <- FileOpenAppend("clock-"+gSubNum+".csv")
+  MakeDirectory("data")
+  fileOut <- FileOpenWrite("data/clock-"+gSubNum+".csv")
   FilePrint(fileout,"subnum,trial,ticker,sec,skip,resp,corr,starttime,rt,curtime")  
 
   trial <- 1
