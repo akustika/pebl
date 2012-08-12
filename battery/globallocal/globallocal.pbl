@@ -1,0 +1,319 @@
+##
+## A basic version of Navon's global-local task.
+## This uses a special-purpose function to create the stimuli,
+## which uses the rendered characters in a specified font to create the
+## global/local font image.
+
+
+define Start(p)
+{
+  gDebugDraw <- 0
+  gSleepEasy <- 1
+  gVideoWidth <- 1000
+  gVideoHeight <- 600
+
+   Print(MakeRangeSequence(1,5))
+   Print(MakeRangeSequence(.2,5.2))
+   Print(MakeRangeSequence(.8,5.8))
+   Print(MakeRangeSequence(.8,.9))
+   Print(MakeRangeSequence(.8,1.1))
+#   Print(MakeRangeSequence(10,5))
+   
+    gWin <- MakeWindow("grey")
+
+    stim1 <- MakeNavonStim("P","E","DejaVuSansMono.ttf",10,200)
+    AddObject(stim1, gWin)
+    Move(stim1,150,300)
+    Draw()
+    
+    stim2 <- MakeNavonStim("E","A","DejaVuSansMono.ttf",15,200)
+    AddObject(stim2, gWin)
+    Move(stim2,350,300)
+    Draw()
+    stim3 <- MakeNavonStim("B","S","DejaVuSansMono.ttf",20,200)
+    AddObject(stim3, gWin)
+    Move(stim3,550,300)
+    Draw()
+    stim4 <- MakeNavonStim("L","Y","DejaVuSansMono.ttf",30,200)
+    AddObject(stim4, gWin)
+    Move(stim4,750,300)
+    Draw()
+
+
+    WaitForAnyKeyPress()
+
+    if(0)
+    {
+    base <- MakeImage("smiley-big.png")
+    stamp <- MakeLabel("X",MakeFont(gPEBLBaseFont,0,15,MakeColor("red"),
+                                                   MakeColor("black"),1))
+
+    
+    img <- PrintImageWithStamp(base,stamp,600)
+    AddObject(img,gWin)
+    Move(img,gVideoWidth/2,gVideoHeight/2)
+    Draw()
+    WaitForAnyKeyPress()
+    }
+}   
+
+
+
+define MakeNavonStim(stimGlobal, stimLocal, fontname, localfontmax,xsize)
+{
+  fontnamelocal <- fontname
+  fontnameglobal <- fontname
+
+
+  ##First, make a global stimulus template, preferably something large.  
+  bg <- MakeColor("black")
+  bg.alpha <- 255
+
+  fontGlobal <- MakeFont(fontnameGlobal,0,40,MakeColor("white"),MakeColor("black"),1)
+  fontLocal <- MakeFont(fontnameLocal,0,localFontMax,MakeColor("white"),MakeColor("black"),0)
+
+  ##Here is the printing template:
+  orig <- MakeLabel(stimGlobal,fontGlobal)
+  
+  ##Here is the stamp:
+  stamp <- MakeLabel(stimLocal,fontLocal)
+  canv <- PrintImageWithStamp(orig,stamp,xsize)
+
+  return canv
+}
+
+
+##This creates a new canvas the same proportions as basewidget
+##which is embossed with the 'stamp' widget.  This is a generalization
+##of the Navon stimulus, and is reminiscent of AALib.
+define PrintImageWithStamp(basewidget,stamp,width)
+{
+  
+  ##Make the background color of the canvas:
+  bg <- MakeColor("black")
+#  bg.alpha <- 255
+
+  scale <- width/basewidget.width
+
+  ##Make canv with the same aspect ratio as the basewidget, but possibly of a different size.
+  canv <- MakeCanvas(width, basewidget.height*scale,bg)
+
+  ##Create a stamp out of the local stimulus character, and get its dimensions.
+  stampw <-  stamp.width
+  stamph <- stamp.height
+
+
+
+  ##Now, set up a grid on canv to print the character.
+
+  ##We should maybe do an offset here to center it on the sampling size.
+  hratio <- Floor(canv.height/stamph)  #How many stamps high is it?
+  wratio <- Floor(canv.width/stampw)  #How many stamps wide is it?
+
+  if(gDebugDraw)
+  {
+   AddObject(canv,gWin)
+   Move(canv,300,300)
+  }
+  ##Now, take the original template widget and figure out the grid size of pixels that
+  ##needs to be sampled on each round:  
+  
+  ##While we are at it, create a canvas so we can actually access the pixels
+  ##Some widgets may not be accessible.
+  copy <- MakeCanvas(basewidget.width,basewidget.height,MakeColor("black"))
+  AddObject(basewidget,copy)
+  MoveCorner(basewidget,0,0)
+  Draw(copy)
+  PrintProperties(basewidget)
+  RemoveObject(basewidget,copy)
+  if(gDebugDraw)
+  {
+    AddObject(copy,gWin)
+    Move(copy,copy.width/2+10,copy.height/2+10)
+    Draw()
+  }
+  ##For debugging only?:  
+
+  
+
+  AddObject(stamp,canv)
+  ##Go through each gridpoint on the global stimulus (copy).
+  loop(i,Sequence(1,wRatio,1))
+   {
+   loop(j,Sequence(1,hRatio,1))
+    {
+
+    ##Now, we need the average intensity of the orig
+    ##stimulus at the corresponding grid location.
+    ##intensity should be a value between 0 and 1
+
+    ##select the appropriate sampling region and compute its intensity
+    vals <- GetIntensity(copy,i,wRatio,j,hRatio)
+
+    intensity <- First(vals)
+    xcenter <- Second(vals)
+    yCenter <- Third(vals)
+
+    cutoffLow <- 50    #Anything below cutoff doesn't get printed.
+    cutoffHigh <- 220  #Anything above this is the max size
+
+    ##There should be a high cutoff too.
+    if(intensity > cutoffLow)
+    {
+
+      if(intensity > cutoffHigh)
+      { 
+       newsize <- 1
+      }	else {
+       newsize <- .5 + ((intensity-cutoffLow)/(cutoffHigh-cutoffLow) )/2
+      }
+
+      stamp.zoomX <- newsize
+      stamp.zoomY <- newsize
+      Move(stamp,(i+xcenter)*stampw,(j+ycenter)*stamph)
+      Draw(canv)
+#      Draw()
+    }
+   }
+  }
+  RemoveObject(canv,gWin)
+ return canv
+}
+
+
+define GetIntensity(template,xgrid,maxxgrid,ygrid,maxygrid)
+{
+
+   ##xgrid,ygrid should tell us the grid position (from upper left)
+   ##that we are sampling from.  maxxgrid, maxygrid tells us the number
+   ##of grids in each direction.
+
+
+ ## This is the size of the sampling region, in pixels
+ ## it might be a non-whole number like 1.5.
+   stepx <- template.width / maxxgrid 
+   stepy <- template.height / maxygrid  
+
+#   Print("Step:" + stepx + ","+ stepy)
+   xmin <- Max([0,Round((xgrid-1)*stepx)])
+
+   ymin <- Max([0,Round((ygrid-1)*stepy)])
+
+   xmax <-(Min([xmin+stepx,template.width]))
+   ymax <-(Min([ymin+stepy,template.height]))
+
+   sumN  <- 0
+   sumValue <- 0
+   dcolor <- MakeColor("red")
+
+   ##compute the center of gravity of the stimuli.
+   xCenter <- 0
+   yCenter <- 0
+
+  loop(x,MakeRangeSequence(xmin,xmax))
+   {
+     loop(y,MakeRangeSequence(ymin,ymax))
+     {
+
+       ##x and y are separators which may be mid-pixel.
+       ##we need to estimate the color of the pixel they are on,
+       ##then add them to the total in a weighted fashion.
+       
+      px<- Floor(First(x))+1
+      py <- Floor(First(y))+1
+
+      pixel <- GetPixelColor(template,px,py)
+      hsv <- RGBtoHSV(pixel)     
+      v <- Third(hsv)
+
+
+       weight <-  (Second(x)-First(x))*(Second(y)-First(y))
+       sumN <- sumN +weight
+       sumValue <- sumValue + v*weight
+  
+       xratio <- (Second(x)-xmin)/(xmax-xmin)
+       yratio <- (Second(y)-ymin)/(ymax-ymin)
+
+       xCenter <- xCenter + v*(xratio-.5)
+       yCenter <- yCenter + v*(yRatio-.5)
+if(0)
+{
+     if((px+1)<=Second(x) or (py+1)<=Second(y))
+     {
+          Print("don'tyet")
+     } else
+     {
+       SetPixel(template,px,py,dcolor)
+     }
+     #  Draw(template)
+     #  Draw()
+     }
+
+}
+   }
+
+  if(gDebugDraw)
+  {
+     Draw(template)
+     Draw()
+     Print("Intensity of : " + xgrid + "," + ygrid + " of " + maxxgrid+","+maxygrid+" --  "+ xmin + "-" + xmax + "     ,    "  + ymin + "-"+ymax +":     "+sumValue/sumN) 
+ }
+  ##center of gravity is the x values, weighted by the sum of the weights.
+  xCenter <- (xCenter/sumValue)
+  yCenter <- (yCenter/sumValue)
+#  Draw()
+#  Print("Value:" + sumValue / sumN)
+  return [sumValue / sumN,xCenter,ycenter]
+}
+
+
+## Create a list of whole numbers between lo and hi,
+## including lo and hi at the ends (they may be non-integers)
+##
+define MakeRangeSequence(lo,hi)
+{
+ if(lo>hi)
+ {
+   SignalFatalError("hi must be higher than lo")
+ } 
+ 
+ rlo <- Ceiling(lo)
+ rhi <- Floor(hi)
+
+ if(rlo==lo)
+ {
+   rlo <- rlo+1
+ }
+ if(rhi ==hi)
+ {
+  rhi <- rhi - 1
+ }
+
+ if(rlo>rhi)
+ {
+  los <- [lo]
+  his <- [hi]
+ }else {
+
+ los <- Unique(Merge([lo],Sequence(rlo,rhi,1)))
+ his <- Unique(Merge(Sequence(rlo,rhi,1),[hi]))
+}
+ 
+ return Transpose([los,his])
+}
+
+define Unique(list)
+  {
+    tmp <- Sort(list)
+    newlist <- [First(tmp)]
+    prev <- First(tmp)
+    loop(i,tmp)
+    {
+	if(not i==prev)
+	{
+	  PushOnEnd(newlist,i)
+	}
+	prev <- i
+    }
+    return newlist
+   }
