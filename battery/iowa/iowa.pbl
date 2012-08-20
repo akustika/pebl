@@ -87,8 +87,8 @@ define Start(lPar)
 
 
   ## results are stored in tmpresults.dat
-  gFileOut <-FileOpenAppend("igt-" + gSubNum +".txt")
-
+  MakeDirectory("data")
+  gFileOut <-FileOpenWrite("data/igt-" + gSubNum +".csv")
 
 
 
@@ -405,8 +405,8 @@ define Start(lPar)
 
 
       ## Print out data to the file
-      FilePrint_(gFileOut, gSubNum + " " + trialnum + " " + resp + " " + reward + " " + penalty)
-      FilePrint(gFileOut, " " + net + " " + gTotal + " " + time1 + " " +  rt )
+      FilePrint_(gFileOut, gSubNum + "," + trialnum + "," + resp + "," + reward + "," + penalty)
+      FilePrint(gFileOut, "," + net + "," + gTotal + "," + time1 + "," +  rt )
 
       Draw()
       trialnum <- trialnum + 1
