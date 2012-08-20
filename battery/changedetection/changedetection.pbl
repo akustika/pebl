@@ -52,9 +52,8 @@ define Start(par)
     }
 
 
-    gFileOut <- FileOpenWrite("change-"+gSubNum+".txt")
-
-
+    MakeDirectory("data")
+    gFileOut <- FileOpenWrite("data/change-"+gSubNum+".csv")
 
     if(guseBackground)
     {
@@ -125,13 +124,13 @@ Press any key to begin."
     Hide(tb)
     Draw()
     Wait(1000)
-    FilePrint(gFileOut,"subnum trial cond x1 y1 r1 col1 x2 y2 r2 col2 blanks shows blanktime showtime corr rt clickx clicky")
+    FilePrint(gFileOut,"subnum,trial,cond,x1,y1,r1,col1,x2,y2,r2,col2,blanks,shows,blanktime,showtime,corr,rt,clickx,clicky")
 
     i <- 1
     trials <- Shuffle(RepeatList([1,2,3,4],condsize))
     loop(trial,trials)
      {
-      FilePrint_(gFileOut,gSubNum + " "+ i  + " "+ trial + " ")
+      FilePrint_(gFileOut,gSubNum + ","+ i  + ","+ trial + ",")
       Trial(trial)
       i  <- i + 1
     }
@@ -355,11 +354,11 @@ define Trial(cond)
 
     }
 
-    FilePrint(gFileOut, x1 + " " +y1 + " " + size1 + " " +ColPrint(col1) + " " +
-	          x2 + " " + y2+ " " + size2 + " " + ColPrint(col2) + " "+
-              screenN + " " + showN + " " + screenSum/screenN + " "+ showSum/showN + " "+
-	          corr + " " + (endtime - starttime) + " " +
-              First(pos) + " " + Nth(pos,2))
+    FilePrint(gFileOut, x1 + "," +y1 + "," + size1 + "," +ColPrint(col1) + "," +
+	          x2 + "," + y2+ "," + size2 + "," + ColPrint(col2) + ","+
+              screenN + "," + showN + "," + screenSum/screenN + ","+ 
+              showSum/showN + ","+    corr + "," + (endtime - starttime) + "," +
+              First(pos) + "," + Nth(pos,2))
 
     gFooter.text <- tmp+ " Hit enter to see change.  Hit space bar to finish."
     resp <- "<return>"    

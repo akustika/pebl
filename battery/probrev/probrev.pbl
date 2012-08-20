@@ -80,15 +80,16 @@ Press any key to begin.")
   ## Set up the basic  environment 
   ##
 
-   datafile   <- FileOpenWrite("probrev-"+ gSubNum + ".txt")
-   reportfile <- FileOpenWrite("probrev-report-" + gSubNum + ".txt")
+   MakeDirectory("data")
+   datafile   <- FileOpenWrite("data/probrev-"+ gSubNum + ".csv")
+   reportfile <- FileOpenWrite("data/probrev-report-" + gSubNum + ".txt")
 
 
 
    ## Global data structures which save data for analysis and
    ## report at end of study. 
 
-   FilePrint(datafile,"sub block stage trial targ")
+   FilePrint(datafile,"sub,block,stage,trial,targ")
 
 
    ##Go through each block of the task, starting here.
@@ -204,7 +205,7 @@ Press space bar to begin."
       }
 
 
-	FilePrint(datafile,gSubNum + " " + blockID + " " + stage + " " + tottrials+ " " +  trialnum +" " +  order + " " + valid + " " + corrfeedback + " " + acc + " " + corr  + " " + gRT)
+	FilePrint(datafile,gSubNum + "," + blockID + "," + stage + "," + tottrials+ "," +  trialnum +"," +  order + "," + valid + "," + corrfeedback + "," + acc + "," + corr  + "," + gRT)
 
       Show(feedback)
       Draw()
@@ -277,7 +278,7 @@ define Initialize()
   gWin <- MakeWindow("black")   
   
 
-  if(gSubNum==0)
+  if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)
    }

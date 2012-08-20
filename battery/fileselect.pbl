@@ -17,7 +17,7 @@ define Start(p)
 
  gLastUpdate <- GetTime() ##keep track of updates
 
-
+ gScreenresInitial <- GetCurrentScreenResolution()
 
 ###set the configuration/chain name: use 'default' as default.
   if(Length(p) >0)
@@ -76,14 +76,10 @@ define Start(p)
 
    gSleepEasy <- 1
 
-  ##Get the current screen size.
-  screenres <- GetCurrentScreenResolution()
-  ##Make the test screen res slightly smaller than the current, but only use it
-  ## if we are not fullscreen.
-  gScreenResLine <- "--display " + (First(screenres) - 50) + "x" + (Second(screenres) - 50)
-
 
    ReadConfigFile(gConfigname)
+
+
 
    if(gScreenSize =="large")
    {
@@ -97,8 +93,6 @@ define Start(p)
 
    win <- MakeWindow()
 
-
-   
 
   ##Now, determine the proper translation strings.
   GetStrings(gLanguage)
@@ -287,6 +281,15 @@ define Start(p)
    Hide(cloboxhighlight)
 
 
+### screen resolution
+   screenselection <- Easylabel(gScreenRes,expbox.x+expbox.width/2,expbox.y+expbox.height+15,win,fontsize)
+   screenback <- Rectangle(screenselection.x,screenselection.y,screenselection.width+6,screenselection.height,MakeColor("black"),0)
+   AddObject(screenback,win)
+   screenlabel <- EasyLabel(gScreenResLabel,expbox.x,expbox.y+20,win,fontsize)
+   Move(screenlabel,screenselection.x-screenlabel.width/2-screenselection.width/2-10,screenselection.y)
+
+
+
 #####################################
    ##Fullscreen checkbox:
    fullscreenbox    <-EasyTextBox(fstext,           xbase+width+10,ybase+120,win,fontsize,yheight,yheight)
@@ -390,13 +393,14 @@ define Start(p)
     				   addtochain,clearchain,launchchain,viewoutput,viewerror,
 					   edit,openmanual,requestfeature,visitweb,about,
 					   description,demobox,savechain,loadchain,wiki,
-                       subplusbutton,clobox,filter,transmit,review],
+                       subplusbutton,clobox,filter,transmit,review,screenselection],
 				   [1,2,3,4,5,
 				   6,7,8,9,10,
 				   11,12,13,14,15,
 				   16,17,18,19,20,
 				   21,22,23,24,25,
-				   26,27,28,29,30])
+				   26,27,28,29,30,
+				   31])
 
 	 if(tmp==1)  #Click was on the portal.
       {
@@ -651,26 +655,42 @@ define Start(p)
 
       }elseif(tmp==14)  ##View debug output
       {
-	     PushButton(viewoutput)  
- 	     LaunchFile(DirListToText(gDirChain)+"stdout.txt")
+
+         PushButton(viewoutput)  
+         file <- DirListToText(gDirChain)+"stdout.txt"	 
+         resp <- LaunchFile(file)
+	 ##resp==0 should mean success!
+	 if(not resp==0)
+	 {
+	   MessageBox("Unable to find file: ["+file+"]",win)
+	 }
   
 #	     SystemCall(gViewerCommand,  DirListToText(gDirChain)+"stdout.txt &")
       
       }elseif(tmp==15)  ##View error output
       {
-	     PushButton(viewerror)
-         LaunchFile(DirListToText(gDirChain)+"stderr.txt")
+         PushButton(viewerror)
+         file <- DirListToText(gDirChain)+"stderr.txt"	 
+         success <- LaunchFile(file)
+	 ##success==0 should mean success!
+	 if(not success==0)
+	 {
+	   MessageBox("Unable to find file: ["+file+"]",win)
+	 }
          #SystemCall(gViewerCommand, DirListToText(gDirChain)+"stderr.txt &")
+
       }elseif(tmp==16)  ##Edit script
       {
-		  PushButton(edit)
-	      if(IsPEBLFile(Nth(gFlatFileList,gselected)))
-            {
-              LaunchFile(DirListToText(gDirChain)+Nth(gFlatFileList,gselected))
-            } else {
+         PushButton(edit)    
 
-              LaunchFile(DirListToText(gDirChain)+Nth(gFlatFileList,gselected))
-            }
+	 file <- DirListToText(gDirChain)+Nth(gFlatFileList,gselected)
+         success <-  LaunchFile(file)
+ 
+         if(not success == 0)
+            {
+	      	   MessageBox("Unable to find file: ["+file+"]",win)
+            } 
+
       }elseif(tmp==17)  ##Open Manual
       {
 	     PushButton(openmanual)
@@ -680,21 +700,20 @@ define Start(p)
         
       }elseif(tmp==18)  ##Request Feature
       {
-	     PushButton(requestfeature)
-         LaunchFile("https://fundry.com/project/69-pebl")
-
+	 PushButton(requestfeature)
+         #LaunchFile("https://fundry.com/project/69-pebl")
 
       }elseif(tmp==19)  ##Visit web
       {
-	     PushButton(visitweb)
+         PushButton(visitweb)
          #SystemCall("http://pebl.sourceforge.net","")	  
-	   Launchfile("http://pebl.sourceforge.net")	  
+	 Launchfile("http://pebl.sourceforge.net")	  
 	   
 
       }elseif(tmp==20)  ##About
       {
-	     PushButton(about)
-		 MessageBox(gAboutText,win)
+	   PushButton(about)
+	   MessageBox(gAboutText,win)
       } elseif(tmp==21) ##edit description
       {
         if(gEditDescription)
@@ -832,8 +851,7 @@ define Start(p)
 			message2 <- EasyLabel("",750,80,win,22)
 			
 			entry <- EasyTextBox(gDefaultHostName,550,100,win,16,400,20)
-
-            address <- GetInput(entry,"<return>")
+                        address <- GetInput(entry,"<return>")
 			gDefaultHostName <- entry.text
 			Draw()
 
@@ -911,8 +929,67 @@ define Start(p)
 	   {
  	     PushButton(review)
 	     Launchfile("http://sourceforge.net/projects/pebl/reviews/")
-	   }
+	   
+         }elseif(tmp==31)  ##Change screen resolution.
+         {       
 
+	  currentxy <- First(gScreenResInitial) +"x" + Second(gScreenResInitial)
+          screenmodes <- GetVideoModes()
+
+	  ##create a list of text-based screen modes to choose from:
+          modes <- []
+	  loop(i, screenmodes)
+	  {
+
+	    tmp <- First(i)+"x"+Second(i)
+
+            Print(tmp+"=="+currentxy)
+	    if(tmp==currentxy)
+	    { 
+               PRINT("FOUNDIT")
+               tmp <- tmp + "*"
+	    }
+
+	     modes <- Append(modes, tmp)
+	  }  
+
+	  ##Add the custom option to the end of each:
+	  modes <- Append(modes,gCurrent)
+	  modes <- Append(modes,gCustomText)
+
+	  screenmodes <- Append(screenmodes,gCurrent)
+	  screenmodes <- Append(screenmodes,gCustomText)
+
+ 	  Print(modes)
+	  Print(screenmodes)
+          choice <-  GetEasychoice(gChooseScreenText,
+                           modes,
+			   screenmodes,
+			   win)
+
+
+          Print("CHOICE:")
+          Print(choice)
+
+           if(choice == gCustomText)
+	   {
+	     ##get custom screen size:
+                 width <- ToNumber(GetEasyInput(gGetWidthText,win))
+		 height <- ToNumber(GetEasyInput(gGetHeightText,win))
+		 gScreenRes <-  width+"x"+height
+
+	   } elseif(choice == gCurrent)
+	   {
+            ##Use the current screen resolution:
+	    gScreenRes <- gCurrent
+
+	   } else {
+	      #Use the specified resolution.
+              gScreenRes <- First(choice)+"x"+Second(choice)
+	   }
+      }
+      screenselection.text <- gScreenRes
+      screenback.width <- screenselection.width+6
      Draw()
    }
 
@@ -1124,9 +1201,22 @@ define RunScript(dirChain,filename,fullscreen,language,logfile,subcode,experimen
          Print("Executing : [" + callstring + "]")
       }
 
+
+      ##Get the current screen size to use for launching experiments,
+      ##the preferred size should be set or read in from config file.
+      ## if we are not fullscreen.
+     if(gScreenRes == gCurrent)
+      {
+        gScreenResLine <- ""
+      }else  {
+        gScreenResLine <- "--display " + gScreenRes
+      }
+
+
 	  if(fullscreen)
 	   {
-	     callstring <- callstring + " --fullscreen "
+	     callstring <- callstring + " --fullscreen " + gScreenResLine
+
            }else{
               ##If not fullscreen, use something sligtly smaller
               ##to make way for toolbars etc.
@@ -1268,35 +1358,22 @@ define ReadConfigFile(configname)
 	     keys<- Append(keys,First(i))
            }
 
-	   gScreenSize <- Second(Lookup("screensize",keys,config))
-	   gfullscreen <- ToNumber(Second(Lookup("fullscreen",keys,config)))
-	   gnimhdemographics <- ToNumber(Second(Lookup("nimhdemo",keys,config)))       
-	   gsubcode    <- Second(Lookup("subcode",keys,config))
+	   tmpres <- First(gScreenResInitial)+"x"+Second(gScreenResInitial)
+	   gScreenRes <- GetConfig("screenres",keys,config,tmpres)
+	   gScreenSize <- GetConfig("screensize",keys,config,"large")
+	   gfullscreen <- ToNumber(GetConfig("fullscreen",keys,config,0))
+	   gnimhdemographics <- ToNumber(GetConfig("nimhdemo",keys,config,0))
+	   gsubcode    <- GetConfig("subcode",keys,config,"0")
 	   if(gAutoSubCode)
             {
 	     gSubCode <- (ToNumber(gSubCode)+1)+""
             }
 
 
-	   tmp <- Lookup("ipaddress",keys,config)
-	   if(Length(tmp)==2)
-	   {
-	     gDefaultHostName <- Second(tmp)
-	   } else {
-	     gDefaultHostName <- "localhost"
-           }
-
-	   tmp <- Lookup("commandline",keys,config)
-
-	   if(Length(tmp)==2)
-           {
-           gCommandLineText <- Second(tmp)
-           } else {
-           gCommandLineText <- ""
-           }
-
-	   gexperimenter <-Second(Lookup("experimenter",keys,config))
-	   glanguage <-Second(Lookup("language",keys,config))
+	   gDefaultHostName <- GetConfig("ipaddress",keys,config,"localhost")
+	   gCommandLineText <- GetConfig("commandline",keys,config,"")
+	   gexperimenter <-GetConfig("experimenter",keys,config,"default")
+	   glanguage <-GetConfig("language",keys,config,"en")
 
    	   gexpchain <- []         ##sequence of experiments to run
    	   ##Get all config entries named 'expchain'
@@ -1317,10 +1394,8 @@ define ReadConfigFile(configname)
         gexpchain <- []         ##sequence of experiments to run
 	gnimhdemographics <- 0
 	gScreenSize <- "large"
-
+        gScreenRes <-  First(gScreenResInitial)+"x"+Second(gScreenResInitial)
       }
-
-
 
 }
 
@@ -1336,7 +1411,9 @@ define Saveconfig(configname)
 	        ["nimhdemo",gnimhdemographics],
 	        ["commandline",gCommandLineText],
 	        ["ipaddress",gDefaultHostName],
-		["screensize",gScreenSize]]
+		["screensize",gScreenSize],
+		["screenres",gScreenRes]
+                             ]
             
 
 	  loop(i,gexpchain)
@@ -1412,9 +1489,6 @@ define CLEARTHUMBCAPTURE(p)
 
 define GetStrings(lang)
 {
-   lang <- Uppercase(lang)
-   if(lang == "EN")
-   {
 
     gRunText <- "Run selected script"
 	gOpenText <- "Open"
@@ -1434,13 +1508,20 @@ define GetStrings(lang)
     gNoDesc <- "No description found"
     gPEBLTitle <- "PEBL Launcher for "
     gPartCode <- "Participant Code:"
+    gCustomText <- "Custom:"
+    gCurrent <- "Current"
+    gGetWidthText <- "Enter custom width in pixels:"
+    gGetHeightText <- "Enter custom height in pixels:"
 	gExperCode <- "Experimenter:"
 	gCommandLineOptions <- "Command line options:"
 	gLangcode  <- "Language:"
 	gFulltext <- "Fullscreen"
 	gCollectDemoText <- "Collect demographics"
+    gScreenResLabel <- "Screen resolution:"
+
     gExpChainText <- "Experiment Chain:"
     gConfigNameText <- "Config name?"
+    gChooseScreenText <- "Choose screen resolution to use"
     gAboutText <-"PEBL is a system for creating and running psychology experiments.  It is developed by Shane T Mueller, Ph.D., and includes more than 50 standard psychology lab experiments.  You can use PEBL to create your own tests or modify previous ones FREE OF CHARGE. Find out more at http://pebl.sf.net
 
 This launcher is written in PEBL itself, allowing a fairly uniform launcher on all platforms. Only .pbl  files and directories are shown in the file window--use your file manager to get the data after your experiment is complete. Click on a directory that has been selected to open it.  Add scripts to the experiment chain window to run a sequence of experiment in a row, all using the same subject code.  
@@ -1450,7 +1531,9 @@ This launcher is written in PEBL itself, allowing a fairly uniform launcher on a
  *Error and automatic messages from each script are saved in the file [stderr.txt] in a script's directory."
 
 
-   } elseif(lang == "ES")
+
+  lang <- Uppercase(lang)
+  if(lang == "ES")
    {
     gRunText <- "Ejecutar script seleccionado"
     gOpenText <- "Abre"
@@ -1474,7 +1557,11 @@ This launcher is written in PEBL itself, allowing a fairly uniform launcher on a
 	gCommandLineOptions <- "Command line options:"
     gLangcode <- "Idioma:"
     gFulltext <- "Pantalla Completa"
+    gScreenResLabel <- "Screen resolution:"
+    gCustomText <- "Custom:"
+    gCurrent <- "Current"
     gCollectDemoText <- "Recoger datos demográficos?"
+    gChooseScreenText <- "Choose screen resolution to use"
     gExpChainText <- "Experimento de la cadena:"
     gConfigNameText <- "nombre de configuración?"
     gAboutText <- "Spanish Translation courtesy automated translation. PEBL es un sistema de creación y ejecución de experimentos de psicología Es desarrollado por Shane T Mueller, Ph.D., e incluye más de 50 experimentos de laboratorio estándar de la psicología Puede utilizar PEBL para crear sus propias pruebas o modificar la anterior. los GRATUITO. Más información en http://pebl.sf.net
@@ -1485,9 +1572,6 @@ Este lanzamiento está escrito en PEBL sí mismo, permitiendo que un lanzador ba
  * La salida de depuración de cada secuencia de comandos (usando la Print() comando) se guarda en el archivo el archivo [stdout.txt] en el directorio de un script.
  * Mensajes de error y automática de cada secuencia de comandos se guardan en el archivo [stderr.txt] en el directorio de una secuencia de comandos."
 
-
-   } else {
-     GetStrings("EN")
    }
 }
 
@@ -1512,4 +1596,18 @@ define ReceiveText(network)
 	len <- ToNumber(GetData(network,10))
 	text <- GetData(network,len)
 	return text
+}
+
+
+## a robust version of lookup:
+define GetConfig(key, keys, database,empty)
+{
+   line <- Lookup(key,keys,database)
+   if(Length(line)==0)
+   {
+    ret <- empty
+   }else{
+   ret <- Second(line)
+   }
+  return ret
 }

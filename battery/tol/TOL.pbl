@@ -179,8 +179,8 @@ define Start(p)
   InitPoles()   
    
 
-  FilePrint(gFileOut,"sub trial size current end step reset tries score abstime trialtime clicktime done")
-  FilePrint(gFileOutSum,"sub trial size shortest startlab endlab startconf endconf success tries score steps roundstart starttime firsttime time")
+  FilePrint(gFileOut,"sub,trial,size,current,end,step,reset,tries,score,abstime,trialtime,clicktime,done")
+  FilePrint(gFileOutSum,"sub,trial,size,shortest,startlab,endlab,startconf,endconf,success,tries,score,steps,roundstart,starttime,firsttime,time")
 
   gInstructions.width <- 220
   gInstructions.height <- 520
@@ -336,11 +336,11 @@ define Trial(pair)
     time <- startTime
 
     ##record the starting configuration of the trial
-    FilePrint(gfileout, gSubNum + " " + gTrial + " " + numdisks + " " +
-                  MakeStateString(config) + " " +
-                  MakeStateString(config1) + " 0 0 " + gTries + " " +gScore + " " +
-                   starttime + " 0 "+
-                  (time - lasttime)  + " 0")
+    FilePrint(gfileout, gSubNum + "," + gTrial + "," + numdisks + "," +
+                  MakeStateString(config) + "," +
+                  MakeStateString(config1) + ",0,0," + gTries + "," +gScore + "," +
+                   starttime + ",0,"+
+                  (time - lasttime)  + ",0")
 
 
     continue <- 1
@@ -398,11 +398,11 @@ define Trial(pair)
        }
 
       ##record move time.
-      FilePrint(gfileout, gSubNum + " " + gTrial + " " + numdisks + " " +
-              MakeStateString(config) + " " + MakeStateString(config1) + " " + 
-                 step + " " + gReset + " " + gTries + " " + gScore + " " +
-                  time + " " + (time - starttime) +" " +
-                    (time-lasttime) + " " + success)
+      FilePrint(gfileout, gSubNum + "," + gTrial + "," + numdisks + "," +
+              MakeStateString(config) + "," + MakeStateString(config1) + "," + 
+                 step + "," + gReset + "," + gTries + "," + gScore + "," +
+                  time + "," + (time - starttime) +"," +
+                    (time-lasttime) + "," + success)
 
       lasttime <- time
 
@@ -454,11 +454,11 @@ define Trial(pair)
    }
 
    Wait(100)
-   FilePrint(gFileOutSum, gSubNum + " " + gTrial + " " + numdisks + 
-       " "+ shortest + " "  +   startlab+ " "+ endlab + " " +
-       origstring  + " " +  MakeStateString(config1) + " " + success +
-       " "+ gTries + " " + gScore + " " + (step-1) + " " + gStartTime +
-       " " +  starttime + " " +   firstmovetime + " "+ (time-starttime))
+   FilePrint(gFileOutSum, gSubNum + "," + gTrial + "," + numdisks + 
+       ","+ shortest + ","  +   startlab+ ","+ endlab + "," +
+       origstring  + "," +  MakeStateString(config1) + "," + success +
+       ","+ gTries + "," + gScore + "," + (step-1) + "," + gStartTime +
+       "," +  starttime + "," +   firstmovetime + ","+ (time-starttime))
 
 
      if(gUseTimer)
@@ -500,7 +500,7 @@ define Init()
 #  ShowCursor(0)
   gWin <- MakeWindow("black")
  
-   if(gSubNum==0)
+   if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)
    }
@@ -580,8 +580,9 @@ define InitPoles()
   ##Keep track of the image complex:
   gComplex <- []
 
-  gFileOut <- FileOpenAppend("tol-"+gsubnum+".txt")
-  gFileOutSum <- FileOpenAppend("tol-summary-"+gsubnum+".txt")
+  MakeDirectory("data")
+  gFileOut <- FileOpenWrite("data/tol-"+gsubnum+".csv")
+  gFileOutSum <- FileOpenWrite("tol-summary-"+gsubnum+".csv")
 
  }
 
@@ -1199,7 +1200,7 @@ define FimbelOld()
 
   trialsOld <- [AssembleTrial(1,2,1,3,s,dists),
 				AssembleTrial(5,3,5,2,s,dists),
-  			    AssembleTrial(2,3,2,4,s,dists),
+                                AssembleTrial(2,3,2,4,s,dists),
 				AssembleTrial(1,2,1,5,s,dists),
 				AssembleTrial(2,3,3,6,s,dists),
 
@@ -1552,61 +1553,6 @@ define UpdateGraph(myGraph, remaining, x,y, total)
 }
 
 
-
-##targetlist is a set of graphical objects,
-##keylist is a set of keys whose corresponding 
-##value should be returned when a graphical object is clicked upon.
-
-define WaitForClickOnTargetWithTimeout(targetlist,keylist,time)
-{
-
-  ret <- ""
-  testlist <- Transpose([targetlist,keylist])
-   
-   wait1 <- 1
-   while(wait1)
-     {
-      wait2 <- 1
-      while(wait2)
-       {
-         pos <- WaitForMouseButtonWithTimeout(time)
-
-		 if(Length(pos)==4)
-          {
-           if(Nth(pos,4)=="<pressed>" and Nth(pos,3)==1)
-            {
-              wait2 <- 0
-              gClick <- pos
-            }
-         } else {
-            wait2 <- 0
-			wait1 <- 0
-            gClick <- [-1,-1]
-            ret <- "<timeout>"
-           
-         }
-       }
-
-       ##only loop through the test if wait1 is 0; otherwise
-       ##we timed out.
-      if(wait1)
-      {
-       newtargs <- []
-
-       loop(i,testlist)
-          {
-
-             if(Inside(pos,First(i)))
-             {
-			    wait1 <- 0
-                ret <- Nth(i,2)
-                break
-             }
-          }
-     }
-    }
-  return ret
-}
 
 
 ##

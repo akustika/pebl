@@ -21,13 +21,13 @@ define Start(p)
   gWin <- MakeWindow()
 
 
-   if(gSubNum==0)
+   if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)
    }
 
-
-  gFileOut <- FileOpenWrite("timetap-"+gsubnum+".dat")
+  MakeDirectory("data")
+  gFileOut <- FileOpenWrite("data/timetap-"+gsubnum+".csv")
   tb <- EasyTextBox("In this task, you are asked to tap the keyboard
   at the specified rate for "+ numtrials +" trials of " +
   trialtime/1000 + " seconds each.  You will see the fixation cross
@@ -86,7 +86,7 @@ define Start(p)
        time <- GetTime()
        remaining <- Ceiling((finaltime - time)/60000)
   	   lab.text <- "Responses are being recorded: [" + remaining + " min]"
-       FilePrint(gFileOut,gSubNum + " " + trial + " 1 " + targtime + " "  + hits + " " +  time + " " + (time-prevtime))
+       FilePrint(gFileOut,gSubNum + "," + trial + ",1," + targtime + ","  + hits + "," +  time + "," + (time-prevtime))
        Draw()   
        hits <- hits + 1
        prevtime <-time
@@ -128,8 +128,8 @@ define Train(cycle, count)
        Draw()
        Wait(100)
        Hide(targ)
-       FilePrint(gFIleOut,gSubNum + " X -1 " + cycle + " " + i + " " +
-   time + " " + (time-lasttime))
+       FilePrint(gFIleOut,gSubNum + ",X,-1," + cycle + "," + i + "," +
+   time + "," + (time-lasttime))
        Draw()
        i <- i + 1
 	   lasttime <- time

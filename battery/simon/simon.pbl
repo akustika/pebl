@@ -1,11 +1,11 @@
 define Start(p)
 {
    gWin <- MakeWindow("BLACK")
-  if(gSubNum==0)
+
+  if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)
    }
-
 
 
 
@@ -18,7 +18,8 @@ Practice now by hitting the shift keys to see which stimulus the map onto.  Hit 
    ShowCursor(0)
    gSleepEasy <- 1
    
-   gFileout <-FileOpenAppend("simon-"+gSubNum+".csv")
+   MakeDirectory("data")
+   gFileout <-FileOpen("data/simon-"+gSubNum+".csv")
 
    ##This controls how many times through the 10-stimulus trial set we go
    reps <- 10

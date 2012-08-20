@@ -361,8 +361,9 @@ define InitPoles()
   gRect <- Rectangle(325,80,460,140,MakeColor("white"),1)
   AddObject(gRect,gWin)
 
-  gFileOut <- FileOpenAppend("toh-"+gsubnum+".csv")
-  gFileOutSum <- FileOpenAppend("toh-summary-"+gsubnum+".csv")
+  MakeDirectory("data")
+  gFileOut <- FileOpenWrite("data/toh-"+gsubnum+".csv")
+  gFileOutSum <- FileOpenWrite("data/toh-summary-"+gsubnum+".csv")
 
  }
 

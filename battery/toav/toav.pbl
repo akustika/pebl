@@ -47,14 +47,16 @@ define Start(lPar)
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
   gSleepEasy <- 1
-  if(gSubNum==0)
+  if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)
    }
 
   ShowCursor(0)
  
-   if(IsAnyKeyDown())
+   if(0)
+   { 
+  if(IsAnyKeyDown())
    {
       gInstructions.text <- "Please make sure no keys are pressed.
    Make sure that the numlock and scroll lock keys are untoggled."
@@ -62,7 +64,7 @@ define Start(lPar)
       Draw()
       WaitForAllKeysUp()
    }
-  
+  }
   ####################################################
   ##  Now, generate stimuli/conditions
   ####################################################
@@ -134,9 +136,9 @@ define Start(lPar)
    Hide(gInstructions)
    Draw()
 
-
-  datafile   <- FileOpenWrite("toav-"+ gSubNum + ".txt")
-  reportfile <- FileOpenWrite("toav-report-" + gSubNum + ".txt")
+  MakeDirectory("data")
+  datafile   <- FileOpenWrite("data/toav-"+ gSubNum + ".csv")
+  reportfile <- FileOpenWrite("data/toav-report-" + gSubNum + ".txt")
 
 
    ## 
@@ -164,7 +166,7 @@ define Start(lPar)
    totalTrials2 <- 0   # 
 
 
-   FilePrint(datafile,"sub trial targ toofast responded corr mult time rt")
+  FilePrint(datafile,"sub,trial,targ,toofast,responded,corr,mult,time,rt")
 
 
     half <- 1  
@@ -287,7 +289,7 @@ define Start(lPar)
      }
 
      corr <- (i == responded)
-     FilePrint(datafile,gSubNum + "   " + trialnum + "     " + i + "    " + toofast + "       " +  responded + "         " + corr + "    " + mult + "    " + timeStart + " " + rt)
+     FilePrint(datafile,gSubNum + "," + trialnum + "," + i + "," + toofast + "," +  responded + "," + corr + "," + mult + "," + timeStart + "," + rt)
 
      ##Now, update counters/structures. based on the stats
 

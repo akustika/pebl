@@ -78,7 +78,8 @@ define Start(lPar)
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
 
-  gFileOut <-FileOpenWrite("bcst-" + gSubNum +".txt")
+  MakeDirectory("data")
+  gFileOut <-FileOpenWrite("data/bcst-" + gSubNum +".csv")
 
   gSleepEasy <- 1
   persevs <- []
@@ -220,7 +221,7 @@ define Start(lPar)
   ## Begin presenting and collecting data
   ####################################################
  
-  FilePrint(gFileOut, "Subnum trial run rule lastrule color shape number resp corr last_corr corr_col corr_shape corr_num persev persev_err abstime rt")
+  FilePrint(gFileOut,"Subnum,trial,run,rule,lastrule,color,shape,number,resp,corr,last_corr,corr_col,corr_shape,corr_num,persev,persev_err,abstime,rt")
 ####################################################
 ##  Start the experimental trials.
 ## 
@@ -397,20 +398,20 @@ define Start(lPar)
          }
 
       
-	  FilePrint_(gFileOut, gSubNum + " " + trialnum + " " + numCatsExp +  " " + rule + " " + lastrule + " ")
+	  FilePrint_(gFileOut, gSubNum + "," + trialnum + "," + numCatsExp +  "," + rule + "," + lastrule + ",")
       index <- 1
       ##Print out the trial data.
       loop(i,s)
       {
         if(index !=4)
         {
-         FilePrint_(gFileOut,i+" ")
+         FilePrint_(gFileOut,i+",")
         }
        index <- index + 1
       }
 
-	  FilePrint_(gFileOut, resp + " " + corr + " " + corrLast + " " +  corrCol + " " + corrShape + " " + corrNum + " ")
-      FilePrint( gFileOut, trialpersev + " " + trialperseverr + " " +  time0 + " " + rt )
+	  FilePrint_(gFileOut, resp + "," + corr + "," + corrLast + "," +  corrCol + "," + corrShape + "," + corrNum + ",")
+      FilePrint( gFileOut, trialpersev + "," + trialperseverr + "," +  time0 + "," + rt )
       Show(feedback)
       Draw()
       Wait(500)
@@ -530,7 +531,7 @@ define Start(lPar)
 
 
    FileClose(gFileOut)
-   report <-FileOpenWrite("bcst-report-" + gSubNum +".txt")
+   report <-FileOpenWrite("data/bcst-report-" + gSubNum +".txt")
    FilePrint(report,"---------------------------------------------------")
    FilePrint(report," Report for PEBL's _Berg's Card Sorting Task_,")
    FilePrint(report," a free version of the Wisconsin Card Sorting Task (tm)*")

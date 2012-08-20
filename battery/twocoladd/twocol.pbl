@@ -20,13 +20,14 @@ define Start(p)
 
   win <- MakeWindow()
 
-   if(gSubNum==0)
+   if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(win)
    }
 
-  gFileOut <- FileOpenWrite("twocol-"+gsubnum+".csv")
-  gSummaryFile <- FileOpenWrite("twocol-summary-"+gsubnum+".txt")
+   MakeDirectory("data")
+   gFileOut <- FileOpenWrite("data/twocol-"+gsubnum+".csv")
+   gSummaryFile <- FileOpenWrite("data/twocol-summary-"+gsubnum+".txt")
 
 
   Draw()

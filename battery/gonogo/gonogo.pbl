@@ -15,14 +15,17 @@ define Start(p)
  
 #  gVideoWidth <- 800
 #  gVideoheight <- 600
+
   GetStrings(gLanguage)
+
   gWin <- MakeWindow("black")
+
   gSleepEasy <- 1
+
   ShowCursor(0) 
 
-
    ##Get subject code if we need to:    
-   if(gSubNum==0)
+   if(gSubNum+""=="0")
     {
 	  gSubNum <- GetSubNum(gWin)
     }

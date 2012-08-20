@@ -41,7 +41,7 @@
   gWin <- MakeWindow()
 
   ##Get subject code if we need to:    
-   if(gSubNum==0)
+   if(gSubNum+""=="0")
     {
 	  gSubNum <- GetSubNum(gWin)
     }
@@ -49,7 +49,9 @@
   gLinecolor <- MakeColor("Black")
   gCellempty <- MakeColor("grey20")
   gCellFull  <-  MakeColor("orange")
-  gFileOut <- FileOpenWrite("matrot-"+gSubNum+".txt")
+
+  MakeDirectory("data")
+  gFileOut <- FileOpenWrite("data/matrot-"+gSubNum+".csv")
 
   instruc <- "This experiment will examine your ability to mentally rotate one figure to compare it with another. You will see a 5 by 5 grid, with five of its cells lighted. You should learn the pattern as quickly and as accurately as possible, and then press a button on the keyboard when you are sure you know the pattern. As soon as you press the key, a new pattern will be presented.   If the new pattern is the same as the old pattern, but turned 90 degrees to the left or right, press the left shift key on the keyboard. If the pattern is not a 90 degree left or right rotation of the old pattern, press the right shift key on the keyboard.  If you have any questions, please ask the experimenter now.
 
@@ -71,7 +73,7 @@ Press any key to begin"
   Draw()
 
   ## Print file header
-  FilePrint(gFileOut,"subnum trial samediff dir mat1 mat2 studytime rt resp corr")
+  FilePrint(gFileOut,"subnum,trial,samediff,dir,mat1,mat2,studytime,rt,resp,corr")
 
   trial <- 1
   loop(cond,conds)
@@ -84,7 +86,7 @@ Press any key to begin"
    dir <- Sample(["<right>","<left>"])
 
    starttime <- GetTime()
-   FilePrint_(gFileOut,gsubnum + " " + trial + " " + cond + " " + dir + " " )
+   FilePrint_(gFileOut,gsubnum + "," + trial + "," + cond + "," + dir + "," )
 
    if(cond =="same")
     {
@@ -95,8 +97,8 @@ Press any key to begin"
     #Create the test matrix
     test <- RotateMatrix(alt,dir)
 
-    FilePrint_(gFileOut,ListToString(Flatten(matrix))+ " ")
-	FilePrint_(gFileOut,ListToString(Flatten(test))+ " ")
+    FilePrint_(gFileOut,ListToString(Flatten(matrix))+ ",")
+    FilePrint_(gFileOut,ListToString(Flatten(test))+ ",")
    
  ##Present the study matrix
     gFooter.text <- inst1
@@ -115,7 +117,7 @@ Press any key to begin"
     t2 <- GetTime()
     
     corr <- (resp == Lookup(cond,["same","diff"],["<lshift>","<rshift>"]))
-    FilePrint(gFileOut,(t1-starttime) + " " + (t2-t1) + " " + resp + " " + corr)      
+    FilePrint(gFileOut,(t1-starttime) + "," + (t2-t1) + "," + resp + "," + corr)      
 
     if(giveFeedback)
     {
@@ -329,4 +331,18 @@ define CheckMatrix(list)
    }
 
  return ok
+}
+
+
+define ListtoString(list)
+{
+  sep <- ""
+  out <- ""
+  loop(i,list)
+  {
+    out <- out + sep + i
+    sep <- ","
+  }
+
+ return out
 }

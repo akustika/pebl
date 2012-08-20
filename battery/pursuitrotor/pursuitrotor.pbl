@@ -48,8 +48,11 @@ define Start(p)
 
    Init()
    Draw()
-   gFileOut <- FileOpenAppend("pursuitrotor-"+gSubNum+".txt")   
-   gReportOut <- FileOpenAppend("pursuitrotor-report-"+gSubNum+".txt")
+
+   ##create the output files.
+   MakeDirectory("data")
+   gFileOut <- FileOpenWrite("data/pursuitrotor-"+gSubNum+".csv")   
+   gReportOut <- FileOpenWrite("data/pursuitrotor-report-"+gSubNum+".txt")
 
    inst <- EasyTextBox("In this task, you will track a red circle moving steadily around a circular path.  Try to keep your mouse button on the path at all times.  There will be a total of " +
      trials +" trials, each lasting "+trialtime+" seconds.  Press mouse button to initialize first trial.",200,200,gWin,15,400,200)
@@ -163,8 +166,8 @@ define Trial(timeinsecs,head)
 
     totaltime <- totaltime + tDiff*inside  #increment the elapsed time
  
-    FilePrint(gFileOut,head+ " " + steps + " " + tNow + " " + tElapsed  + " " +  gTarg.x + " " + gTarg.y + " " + First(mouse) +  " " +
-    Second(mouse) + " " +inside + " " + tdiff + " " + totaltime + " " + diff + " " + totaldev)
+    FilePrint(gFileOut,head+ "," + steps + "," + tNow + "," + tElapsed  + "," +  gTarg.x + "," + gTarg.y + "," + First(mouse) +  "," +
+    Second(mouse) + "," +inside + "," + tdiff + "," + totaltime + "," + diff + "," + totaldev)
     Wait(10)  ##Needed to allow mouse to sync.
     steps <- steps + 1
   }
@@ -186,11 +189,10 @@ define Init()
   gWin <- MakeWindow()
 
   gSleepEasy <- 1  
-  if(gSubNum==0)
+  if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)
    }
-
 
 
   ##if (a3)^2+(a4)^2 = 17^2, then 

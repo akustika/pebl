@@ -13,12 +13,13 @@ define Start(p)
   gWin <- MakeWindow()
 
    ##Get subject code if we need to:    
-    if(gSubNum==0)
+    if(gSubNum+""=="0")
     {
 	  gSubNum <- GetSubNum(gWin)
     }
 
-  gFileOut <- FileOpenWrite("mathproc-"+gSubNum+".txt")
+    MakeDirectory("data")
+    gFileOut <- FileOpenWrite("data/mathproc-"+gSubNum+".txt")
 
   footer1 <- EasyLabel("Left Shift                                 Right Shift",gVideoWidth/2,gVideoHeight-80,gWin,30)
   footer2 <- EasyLabel("Sum less than 5                        Sum greater than 5",gVideoWidth/2,gVideoHeight-30,gWin,30)
@@ -41,7 +42,7 @@ The number of additions and subtractions to be performed in each problem will va
   design <- DesignFullCounterBalance(sums,lengths)
   stimuli <- Shuffle(design)
 
-  FilePrint(gFileOut, "subnum trial feedback val length stim resp corr tooslow time rt")
+  FilePrint(gFileOut, "subnum,trial,feedback,val,length,stim,resp,corr,tooslow,time,rt")
 
 
   blockdat <- Shuffle(Transpose([lengths,deadlines]))
@@ -79,7 +80,7 @@ The problems in this block will all have " + length + " numbers. You have a dead
      sums <- Rotate(sums,1)  #Move to the next value
   
      x <- MakeProblem(val,length)
-     FilePrint_(gFileOut, gSubNum + " " + trial + " " + gFeedback + " " + val + " " + length + " " +   ListToString(x))
+     FilePrint_(gFileOut, gSubNum + "," + trial + "," + gFeedback + "," + val + "," + length + "," +   ListToString(x))
 
      Trial(x,deadline)
 
@@ -225,7 +226,7 @@ define Trial(list,deadline)
 
   rt <- time1-time0
   gDat <- Append(gDat, [Length(list),corr,rt,tooslow])
-  FilePrint(gFileOut, sum + " " + resp + " " + corr + " " + tooslow + " " + time1 + " " + rt )
+  FilePrint(gFileOut, sum + "," + resp + "," + corr + "," + tooslow + "," + time1 + "," + rt )
   RemoveObject(lab,gWin)
   Draw()
   Wait(200)
@@ -327,4 +328,18 @@ define AddDigit(list, last)
 define Rest(list)
 {
   return SubList(list,2,Length(list))
+}
+
+
+define ListtoString(list)
+{
+  sep <- ""
+  out <- ""
+  loop(i,list)
+  {
+    out <- out + sep + i
+    sep <- ","
+  }
+
+ return out
 }

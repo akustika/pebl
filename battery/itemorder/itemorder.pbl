@@ -1,17 +1,16 @@
 define Start(p)
 {
   Init()
-  gFileOut <- FileOpenAppend("itemorder-"+gSubNum+".txt")
+  MakeDirectory("data")
+  gFileOut <- FileOpenAppend("data/itemorder-"+gSubNum+".csv")
   
   giveFeedback <- 1
-
-
   trials <-Shuffle(Flatten([Repeat(0,20),Repeat(1,10),Repeat(2,10)]))
 
   trial <- 1
   loop(cond, trials)
    {
-    FilePrint_(gFileOut,gSubNum + " " + trial + " "+ cond + " ")
+    FilePrint_(gFileOut,gSubNum + "," + trial + ","+ cond + ",")
     Trial(cond)
     trial <- trial + 1
    }
@@ -30,7 +29,7 @@ define Init()
   gWin <- MakeWindow("black")
 
   ShowCursor(0)
-  if(gSubNum == 0)
+  if(gSubNum+"" == "0")
   {
     gSubNum <- GetSubNum(gWin)
   }
@@ -122,7 +121,7 @@ define Trial(type)
 
   corr <- ((type==0) and ( resp == "<lshift>")) or ((type > 0) and (resp=="<rshift>"))
 
-  FilePrint(gFileOut,   target + " " + compare + " " + pos + " "  + resp + " "  + corr + " " + time0 + " " + (time1-time0))
+  FilePrint(gFileOut,   target + "," + compare + "," + pos + ","  + resp + ","  + corr + "," + time0 + "," + (time1-time0))
 
   if(giveFeedback)
   {

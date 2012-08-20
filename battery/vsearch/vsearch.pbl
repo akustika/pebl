@@ -20,12 +20,14 @@ define Start(p)
   gDisplayBoxSizeY <- 400  ##400 pixels/side,centered
 
   ##get subject code if you don't have one.
-  if(gSubNum == 0) 
+  if(gSubNum+"" == "0") 
    {
      gSubNum <- GetSubNum(gWin)
    }
-  gFileOut <- FileOpenAppend("vsearch-"+gsubnum+".txt")
-  FilePrint(gFileOut,"sub trial time numtargs size targchar targcol stim resp corr rt1 rt2")
+
+   MakeDirectory("data")
+   gFileOut <- FileOpenWrite("data/vsearch-"+gsubnum+".csv")
+   FilePrint(gFileOut,"sub,trial,time,numtargs,size,targchar,targcol,stim,resp,corr,rt1,rt2")
 
   MessageBox("You are about to take part in a study where you see a screen with many letters on it, and are searching for a particular target.  At the start of each trial, you will be shown the target.  Then, a screen will appear, and you will need to search for the target.  On some trials, the target will be present; on other trials it will be absent.  When you find the target or determine that it is absent, click the mouse button.  Following the mouse click, At this point, the targets will all be replaced by boxes so that you can no longer see what they were.  When this is done, click on the location of the target or the 'None' button.",gWin)
 
@@ -60,10 +62,10 @@ define Start(p)
      targcol  <-  Second(Second(i))
 
      out <- SearchTrial(targ,foils, MakeColor(targcol),foilcolor,numTargs,num)
-     FilePrint_(gFileOut,gSubNum + " " + trial + " " + time + " " + numTargs + " " + num + " " +targ + " " + targcol)
+     FilePrint_(gFileOut,gSubNum + "," + trial + "," + time + "," + numTargs + "," + num + "," +targ + "," + targcol)
      loop(j,SubList(out,3,Length(out)))
       {
-         FilePrint_(gFileOut," " + j )
+         FilePrint_(gFileOut,"," + j )
       }
     FilePrint(gFileOut,"")
     trial <- trial + 1

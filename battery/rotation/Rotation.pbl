@@ -61,7 +61,8 @@ define Start(par)
   col2 <- MakeColor("darkgreen")
   black <- MakeColor("black")
 
-  fileout <- FileOpenWrite("rotate-"+gSubNum+".txt")
+  MakeDirectory("data")
+  fileout <- FileOpenWrite("data/rotate-"+gSubNum+".csv")
   data <- []
 
 
@@ -126,8 +127,8 @@ define Start(par)
 
     cor <- ScoreTrial(resp,cond)
 
-    FilePrint(fileout,gSubNum + " " + trialnum + " " + cond + " " + stimid + " " +
-            rot + " " + resp + " " + cor + " " + (t2-t1))
+    FilePrint(fileout,gSubNum + "," + trialnum + "," + cond + "," + stimid +
+               "," +  rot + "," + resp + "," + cor + "," + (t2-t1))
 
 
     data <- Append(data,[cond,rot,(t2-t1)])
