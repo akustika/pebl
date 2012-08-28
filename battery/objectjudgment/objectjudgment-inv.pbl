@@ -71,8 +71,15 @@ define Start(p)
   RemoveObject(poly2,gWin)
   RemoveObject(poly3,gWin)
   }
-  gSubNum <- GetSubNum(gWin)
-  gFileOut <- FileOpenAppend("objjudgeinv-"+gSubNum+".txt")
+
+  if(gSubNum+""=="0")
+  {
+    gSubNum <- GetSubNum(gWin)
+  }
+
+  MakeDirectory("data")
+  gFileOut <- FileOpenWrite("data/objjudgeinv-"+gSubNum+".csv")
+
 
   gstimFont <-  MakeFont("VeraMono.ttf",0,18,MakeColor("yellow"),gStimColor,1)
   gclickedFont <- MakeFont("VeraMono.ttf",1,18,MakeColor("yellow"),gStimColor,1)
@@ -139,7 +146,7 @@ Press any key to begin"
 
      out <-  TrialSD(pts,shape2,cond)
 
-     FilePrint(gFileout, gSubNum + " inv "  + trial + " " + cond + " "  + angle + " " + size + " " + shapepert + " " + First(out) + " " +   Second(out) + " " + Third(out) + " " + Fourth(out))
+     FilePrint(gFileout, gSubNum + ",inv,"  + trial + "," + cond + ","  + angle + "," + size + "," + shapepert + "," + First(out) + "," +   Second(out) + "," + Third(out) + "," + Fourth(out))
 
     trial <- trial + 1
 

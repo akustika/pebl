@@ -125,11 +125,12 @@ define Start(lPar)
   ## Set up the basic  environment 
   ##
 
-   datafile   <- FileOpenWrite("pcpt-"+ gSubNum + ".csv")
-   masterdatafile <- FileOpenAppend("pooled-pcpt.csv")
-   reportfile <- FileOpenWrite("pcpt-report-" + gSubNum + ".txt")
+  MakeDirectory("data")
+   datafile   <- FileOpenWrite("data/pcpt-"+ gSubNum + ".csv")
+   masterdatafile <- FileOpenAppend("data/pooled-pcpt.csv")
+   reportfile <- FileOpenWrite("data/pcpt-report-" + gSubNum + ".txt")
    
-   log <- FileOpenAppend("pcpt-log.txt")
+   log <- FileOpenAppend("data/pcpt-log.txt")
    FilePrint(log,"PCPT Started:  " + gSubNum + " " + TimeStamp())
 
 
@@ -507,7 +508,7 @@ define Initialize()
   gWin <- MakeWindow("black")   
             
   ##Initialize Font and colors
-  if(gSubNum==0)
+  if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)
    }

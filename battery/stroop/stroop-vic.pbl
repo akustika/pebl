@@ -13,14 +13,14 @@ define Start(p)
 
  ##The number of trials per block (and condition)
 
-   reps <- 6 #24 items per test
+   reps <- 6 #reps*4 is the number of items per test (6=24 items)
 
    ## Uncomment to eliminate busy-wait (mostly for older machines or
    ## laptops that might overheat.)
    gSleepEasy <- 1
    Initialize()
 
-  if(gSubNum==0)
+  if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)
    }
@@ -64,9 +64,9 @@ define Start(p)
 
 
 
-
-  gFileOut <- FileOpenWrite("vstroop-"+gSubNum+".csv")
-  gSumFileOut <- FileOpenWrite("vstroop-summary-"+gSubNum+".txt")
+  MakeDirectory("data")
+  gFileOut <- FileOpenWrite("data/vstroop-"+gSubNum+".csv")
+  gSumFileOut <- FileOpenWrite("data/vstroop-summary-"+gSubNum+".txt")
 
 
   FilePrint(gFileOut,"subnum,block,trial,word,color,part,xpos,ypos,resp,rname,correct,intrusion,numresponses,time0,timea,timeend,trialtime,responsetime")
@@ -207,7 +207,7 @@ define Start(p)
    FilePrint(gSumFileOut,text)
    FilePrint(gSumFileOut,"------------------------------------------")
 
-   filesum <- FileOpenAppend("stroop-v-all.csv")
+   filesum <- FileOpenAppend("data/stroop-v-all.csv")
    FilePrint(filesum, gSubNum + "," + TimeStamp() + "," + GetTime()+"," + time1+ ","+ resp1+","+ time2+","+resp2+","+time3+","+resp3+","+intrusions)
 
 #   MessageBox("This output only provided for testing.  Uncomment for deployment"+CR(1)+text,gWin)

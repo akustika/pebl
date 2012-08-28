@@ -63,7 +63,7 @@ define Start(lPar)
   ##
 
   Initialize()
-  if(gSubNum==0)
+  if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)
    }
@@ -72,7 +72,9 @@ define Start(lPar)
   ## The delays are pre-generated to make it easier to control things, 
   ## like sequential dependencies, distributions, fixed delays, etc.
   delayseq <- Shuffle(DesignBalancedSampling(delays, numtrials))
-  datafile   <- FileOpenAppend("srt-"+ gSubNum + ".txt")
+
+  MakeDirectory("data")
+  datafile   <- FileOpenWrite("data/srt-"+ gSubNum + ".csv")
 
 
  
@@ -135,7 +137,7 @@ define Start(lPar)
   Hide(gStim)
   Draw()
 
-  FilePrint(datafile, gSubNum + " " + block + " " + trial + " " +  time0 +" " + delay + " " + (time1-time0) + " " + (time3-time2) + " " + resp1 + " " + resp2) 
+  FilePrint(datafile, gSubNum + "," + block + "," + trial + "," +  time0 +"," + delay + "," + (time1-time0) + "," + (time3-time2) + "," + resp1 + "," + resp2) 
 
 
   ####################
@@ -161,7 +163,7 @@ define Start(lPar)
   ####################
   ##Experiment is finished; print out summary stats
 
-  reportfile <- FileOpenAppend("srt-report-" + gSubNum + ".txt")
+  reportfile <- FileOpenWrite("data/srt-report-" + gSubNum + ".txt")
    FilePrint(reportfile,"------------------------------------------------------")
    FilePrint(reportfile," Report for PEBL Simple Response Time Task Version 0.2")
    FilePrint(reportfile, " "+GetPEBLVersion())

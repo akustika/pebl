@@ -64,14 +64,15 @@ define Start(p)
 
    Init()
 
-   if(gSubNum == 0)
+
+   if(gSubNum+"" == "0")
    {
      gSubNum <- GetSubNum(gWin)
    }
 
 
    MakeDirectory("data")
-   gFileOut <- FileOpenAppend("data/pcards-"+gSubNum+".csv")
+   gFileOut <- FileOpenWrite("data/pcards-"+gSubNum+".csv")
    gLogFile <- FileOpenAppend("data/pcards-log.txt")
    FilePrint(gLogFile,"pcards start " +GetTime() + " " + TimeStamp() +  " " + gSubNum + " " + cond)
 
@@ -703,3 +704,17 @@ define Enquote (txt)
   return gQuote + txt + gQuote
 }
 
+
+##Shadow built-in listtostring with one that uses commas to separate.
+define ListToString(list)
+{
+
+  out <- ""
+  sep <- ""
+  loop(i,list)
+  {
+   out <- out + sep + i
+   sep <- ","
+  }
+  return out
+}

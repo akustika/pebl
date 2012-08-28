@@ -19,7 +19,7 @@ Practice now by hitting the shift keys to see which stimulus the map onto.  Hit 
    gSleepEasy <- 1
    
    MakeDirectory("data")
-   gFileout <-FileOpen("data/simon-"+gSubNum+".csv")
+   gFileout <-FileOpenWrite("data/simon-"+gSubNum+".csv")
 
    ##This controls how many times through the 10-stimulus trial set we go
    reps <- 10
@@ -45,8 +45,8 @@ Practice now by hitting the shift keys to see which stimulus the map onto.  Hit 
 
    AddObject(stimA,gWin)
    AddObject(stimB,gWin)
-   Move(stimA,200,350)
-   Move(stimB,600,350)
+   Move(stimA,gVideoWidth/2-200,350)
+   Move(stimB,gVideoWidth/2+200,350)
 
 
    
@@ -151,7 +151,7 @@ Practice now by hitting the shift keys to see which stimulus the map onto.  Hit 
    rtsum<- SortBy(rtSum,[2,1,3,4,6,7,5,9,8,10,11,13,14,12])
    corrsum<- SortBy(corrSum,[2,1,3,4,6,7,5,9,8,10,11,13,14,12])
 
-   sumfile <-FileOpenAppend("simon-summary-"+gSubNum+".txt")
+   sumfile <-FileOpenWrite("simon-summary-"+gSubNum+".txt")
    FilePrint(sumfile,"PEBL Simon Test: Summary data")
    FilePrint(sumfile,GetPEBLVersion())
    FilePrint(sumfile,TimeStamp())

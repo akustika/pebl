@@ -46,7 +46,7 @@ define Start(lPar)
 
            
    ##Get subject code if we need to:    
-    if(gSubNum==0)
+    if(gSubNum+""=="0")
     {
 	  gSubNum <- GetSubNum(gWin)
     }
@@ -90,8 +90,10 @@ define Start(lPar)
 
   numStim <- 40
   
-  gFileOut <- FileOpenWrite("iat-" + gSubNum + ".dat")
-  reportFile <- FileOpenWrite("iat-report-" + gSubNum + ".dat")
+  MakeDirectory("data")
+  gFileOut <- FileOpenWrite("data/iat-" + gSubNum + ".csv")
+  reportFile <- FileOpenWrite("data/iat-report-" + gSubNum + ".txt")
+
   grey <- MakeColor("GREY")
   red <- MakeColor("RED")
   black <- MakeColor("BLACK")
@@ -214,7 +216,7 @@ define Start(lPar)
    loop(i,stimAll)
    { 
 
-     FilePrint_(gFileOut, gSubNum + " " + trial + " " +  round + " ")
+     FilePrint_(gFileOut, gSubNum + "," + trial + "," +  round + ",")
      rt <-   MatchTrial(First(i), Nth(i,2),Nth(i,3),Nth(i,4))   
      rt1 <- Append(rt1,rt)
      err1 <- err1 + (1-gCorr)
@@ -248,7 +250,7 @@ define Start(lPar)
    Wait(2500) 
    loop(i,stimAll)
    { 
-     FilePrint_(gFileOut, gSubNum + " " + trial + " " +  round + " ")
+     FilePrint_(gFileOut, gSubNum + "," + trial + "," +  round + ",")
      rt<-MatchTrial(First(i), Nth(i,2),Nth(i,3),Nth(i,4))   
      rt2 <- Append(rt2,rt)
      err2 <- err2 + (1-gCorr)
@@ -285,7 +287,7 @@ define Start(lPar)
    loop(i,stimAll)
    { 
 
-     FilePrint_(gFileOut, gSubNum + " " + trial + " " + round + " ")
+     FilePrint_(gFileOut, gSubNum + "," + trial + "," + round + ",")
      rt <- MatchTrial(First(i), Nth(i,2),Nth(i,3),Nth(i,4))   
 
      if(Nth(i,3	) == 1)
@@ -325,7 +327,7 @@ define Start(lPar)
    Wait(2500) 
    loop(i,stimAll)
    { 
-     FilePrint_(gFileOut, gSubNum + " " + trial + " " + round + " ")
+     FilePrint_(gFileOut, gSubNum + "," + trial + "," + round + ",")
      rt <- MisMatchTrial(First(i), Nth(i,2),Nth(i,3),Nth(i,4))   
      rt4 <- Append(rt4,rt)
      err4 <- err4 + (1-gCorr)
@@ -358,7 +360,7 @@ define Start(lPar)
    Wait(2500) 
    loop(i,stimAll)
    { 
-     FilePrint_(gFileOut, gSubNum + " " + trial + " " + round + " ")
+     FilePrint_(gFileOut, gSubNum + "," + trial + "," + round + ",")
      rt <-  MisMatchTrial(First(i), Nth(i,2),Nth(i,3),Nth(i,4))   
      rt5 <- Append(rt5,rt)
      err5 <- err5 + (1-gCorr)
@@ -398,7 +400,7 @@ define Start(lPar)
    Wait(2500) 
    loop(i,stimAll)
    { 
-     FilePrint_(gFileOut, gSubNum + " " + trial + " " + round + " ")
+     FilePrint_(gFileOut, gSubNum + "," + trial + "," + round + ",")
      rt <- MisMatchTrial(First(i), Nth(i,2),Nth(i,3),Nth(i,4))   
 
      if(Nth(i,3) == 1)
@@ -493,7 +495,7 @@ define MatchTrial(stim, text, type, lgoodness)
       RemoveObject(gCorrection,gWin)
    }
    gCorr <- corr
-   FilePrint(gFileOut, FixString(text) + " " + type + " " + lgoodness + " " + (t2-t1) + " " + corr )
+   FilePrint(gFileOut, FixString(text) + "," + type + "," + lgoodness + "," + (t2-t1) + "," + corr )
 
    Hide(stim)
    Draw(gWin)
@@ -539,7 +541,7 @@ define MisMatchTrial(stim, text, type, lgoodness)
       Hide(gCorrection)
       RemoveObject(gCorrection,gWin)
    }
-   FilePrint(gFileOut,FixString(text) + " " + type + " " + lgoodness + " " + (t2-t1) + " " + corr)
+   FilePrint(gFileOut,FixString(text) + "," + type + "," + lgoodness + "," + (t2-t1) + "," + corr)
 
    gCorr <- corr
    Hide(stim)
@@ -552,24 +554,10 @@ define MisMatchTrial(stim, text, type, lgoodness)
 
 ## This changes a string with spaces to a string without spaces, but with underscores.
 ##
-define FixString(wordwithspaces)
+define FixString(words)
 {
-
-   list <- SplitString(wordwithspaces, " ")
-   
-   newString <- ""
-   index <- 0
-   loop(i,list)
-   {
-     if(index == 0)
-     {
-       newString <- newString + i
-     } else {
-       newString <- newString + "_" + i
-     }
-      index <- index + 1
-   }
-	return newString
+   out <- ReplaceChar(word," ","_")
+   return out
 }
 
 

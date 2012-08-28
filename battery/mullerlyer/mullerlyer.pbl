@@ -18,11 +18,20 @@ define Start(p)
   trials <- 50            ##Number of trials
   spread <- 125           ##How many pixels left and right of the centerline will the stimuli be
   giveFeedback <- 0
-  
+  stepsize <- 10          ##How big of a step to make after judgement?
+  randomstep <- 16        ##How much randomness to include in step?
+
+  diff <- -40    ##start diff value.  It should be somewhat negative.
+
+
+
+  ##Keep track of some stats:
+  diffs <- []
+  resps <- []
 
   gWin <- MakeWindow("black")
 
-  if(gSubNum==0)
+  if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)
    }
@@ -30,45 +39,54 @@ define Start(p)
   gSleepEasy <- 1
   ShowCursor(0)
 
-  inst <- EasyTextBox("In this study, you will see pairs of figure, like are shown on the bottom.  You will be asked which side has the longer line.  You should ignore the arrows on the ends, and look just at the line.  In the example below, the lines are actually the same length. There will be a total of "+trials+ " comparisons to make.  Make your decision as quickly and and accurately as possible.  You will make your response by hitting the left and right shift keys.  Press any key to begin.", 10,10,gWin,15,gVideoWidth-20,120)
+  inst <- EasyTextBox("In this study, you will see a horizontal line with arrowheads, like the one pictured below. Notice that there is a center set of arrowheads which divides the line roughly in half.  You will be asked to judge which side of the line is longer, to the left of the central arrowhead or to the right.  You should ignore the arrowheads, and look just at the line.  In the example below, the two lines are not the same length, but they may appear to be close. "+CR(2)+"There will be a total of "+trials+ " comparisons to make.  Make your decision as quickly and and accurately as possible.  You will make your response by hitting the left and right shift keys.  Press any key to begin.", 10,10,gWin,15,gVideoWidth-20,120)
   
  
-    line1 <- MakeMLStim(gVideoWidth/2-spread,gVideoHeight/2+30,120,50,100)
-    line2 <- MakeMLStim(gVideoWidth/2+spread,gVideoHeight/2+30,120,50,80)
-      
+#    line1 <- MakeMLStim(gVideoWidth/2-spread,gVideoHeight/2+30,120,50,100)
+#    line2 <- MakeMLStim(gVideoWidth/2+spread,gVideoHeight/2+30,120,50,80)
+#     AddComplex(line2,gWin)
+#     RemoveComplex(line2,gWin)
+
+
+     line1 <- MakeMLStimHor(gVideoWidth/2,gVideoHeight/2,400,80,75,diff,1)      
      AddComplex(line1,gWin)
-     AddComplex(line2,gWin)
      Draw()
      WaitForAnyKEyPress() 
      RemoveComplex(line1,gWin)
-     RemoveComplex(line2,gWin)
+
 	 Hide(inst)
-  fileout <- FileOpenAppend("mullerlyer-"+gSubNum+".csv")
-  header <- EasyLabel("which is longer?",gVideoWidth/2,20,gWin,22)
-  footer <- EasyLabel("<lshift>                 <rshift>",gVideoWidth/2,gVideoHeight-40,gWin,22)
+
+
+  MakeDirectory("data")
+  fileout <- FileOpenWrite("data/mullerlyer-"+gSubNum+".csv")
+
+
+  header <- EasyLabel("which is longer?",gVideoWidth/2,100,gWin,40)
+  footer <- EasyLabel("<lshift>           <rshift>",gVideoWidth/2,gVideoHeight/2+150,gWin,40)
 
    mid <- ThickLine(gVideoWidth/2,gVideoHeight/2+12,
                     gVideoWidth/2,gVideoHeight/2-12,4,MakeColor("white"))
    AddObject(mid,gWin)
    Hide(mid)
 
-   diff <- 0    ##start diff value.
+
+   
    ##Use a jittered staircase method to find point of indifference.
    trial <- 1
    while(trial<=trials)
    {
 
-     ##determine difference between the two; +/-
-     Print(diff)
+     diffs <- Append(diffs,diff)
 
+     ##determine difference between the two; +/-
      line1 <- MakeMLStimHor(gVideoWidth/2,gVideoHeight/2,400,80,75,diff,1)
      AddComplex(line1,gWin)
 
      Draw()
-#     RemoveComplex(line1,gWin)
-	  HideComplex(line1)
+
+     HideComplex(line1)
      Wait(prestime)
-#     WaitForAnyKeyPress()
+
 
     Show(header)
     Show(footer)
@@ -79,24 +97,25 @@ define Start(p)
 
     corr <- ScoreResp(resp,diff)
 
-	if(giveFeedback)
+   if(giveFeedback)
     {
     ShowComplex(line1)
     Show(mid)
     Draw()
     Wait(500)
-
     }
+
+    resps <- Append(resps,resp)
     RemoveComplex(line1,gWin)
-	Hide(mid)
+    Hide(mid)
     Draw()
     ##Determine next diff semi-randomly
     ##if correct, move diff toward (or past) 0
     if(corr)
       {
-        diff <- diff - Sign(diff) *5 + Round(Random()*10)-5
+        diff <- diff - Sign(diff) *stepsize + Round((Random()-.5)*randomstep)
       }else{
-        diff <- diff + Sign(diff) *5 + Round(Random()*10)-5
+        diff <- diff + Sign(diff) *stepsize + Round((Random()-.5)*randomstep)
 
       }
 
@@ -108,7 +127,12 @@ define Start(p)
     trial <- trial + 1
   }
 
-  inst.text <- "Thank you for participating in the study."
+
+  ##Let's compute a threshold out of the last half of the trials.
+
+  meandiff <- Round(Mean(SubList(diffs,Max([1,Floor(trials/2)]),trials)),2)
+
+  inst.text <- "Thank you for participating in the study.  Your computed threshold was: ["+meandiff+"]."
   Show(inst)
   Draw()
   WaitForAnyKeyPress()

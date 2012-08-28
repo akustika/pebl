@@ -12,32 +12,29 @@ define Start(p)
   gVideoWidth <- 1000
   gVideoHeight <- 600
 
-   Print(MakeRangeSequence(1,5))
-   Print(MakeRangeSequence(.2,5.2))
-   Print(MakeRangeSequence(.8,5.8))
-   Print(MakeRangeSequence(.8,.9))
-   Print(MakeRangeSequence(.8,1.1))
-#   Print(MakeRangeSequence(10,5))
-   
-    gWin <- MakeWindow("grey")
+  
+    gWin <- MakeWindow("orange")
 
-    stim1 <- MakeNavonStim("P","E","DejaVuSansMono.ttf",10,200)
-    AddObject(stim1, gWin)
-    Move(stim1,150,300)
-    Draw()
+#    stim1 <- MakeNavonStim("P","E","DejaVuSansMono.ttf",10,200)
+#    AddObject(stim1, gWin)
+#    Move(stim1,150,300)
+#    Draw()
     
-    stim2 <- MakeNavonStim("E","A","DejaVuSansMono.ttf",15,200)
-    AddObject(stim2, gWin)
-    Move(stim2,350,300)
-    Draw()
+#    stim2 <- MakeNavonStim("E","A","DejaVuSansMono.ttf",15,200)
+#    AddObject(stim2, gWin)
+#    Move(stim2,350,300)
+#    Draw()
+
     stim3 <- MakeNavonStim("B","S","DejaVuSansMono.ttf",20,200)
     AddObject(stim3, gWin)
     Move(stim3,550,300)
     Draw()
-    stim4 <- MakeNavonStim("L","Y","DejaVuSansMono.ttf",30,200)
-    AddObject(stim4, gWin)
-    Move(stim4,750,300)
-    Draw()
+
+
+#    stim4 <- MakeNavonStim("L","Y","DejaVuSansMono.ttf",30,200)
+#    AddObject(stim4, gWin)
+#    Move(stim4,750,300)
+#    Draw()
 
 
     WaitForAnyKeyPress()
@@ -69,12 +66,31 @@ define MakeNavonStim(stimGlobal, stimLocal, fontname, localfontmax,xsize)
   bg <- MakeColor("black")
   bg.alpha <- 255
 
-  fontGlobal <- MakeFont(fontnameGlobal,0,40,MakeColor("white"),MakeColor("black"),1)
+  fontGlobal <- MakeFont(fontnameGlobal,0,40,MakeColor("white"),MakeColor("green"),0)
   fontLocal <- MakeFont(fontnameLocal,0,localFontMax,MakeColor("white"),MakeColor("black"),0)
 
   ##Here is the printing template:
-  orig <- MakeLabel(stimGlobal,fontGlobal)
+  orig1 <- MakeLabel(stimGlobal,fontGlobal)
+
+  orig <- MakeCanvas(orig1.width+2, orig1.height+2, MakeColor("green"))
+  AddObject(orig1,orig)
+  Move(orig1,Floor(orig.width/2),Floor(orig.height/2))
+  Draw(orig)
+
+  AddObject(orig,gWin)
+  Move(orig,200,200)
+  orig.zoomX <- 10
+  orig.zoomY <- 10
+  PrintProperties(orig)
+   Draw()
+  WaitForAnyKeyPress()
+  orig.zoomX <- 1
+  orig.zoomY <- 1
+  Draw()
+
+
   
+
   ##Here is the stamp:
   stamp <- MakeLabel(stimLocal,fontLocal)
   canv <- PrintImageWithStamp(orig,stamp,xsize)
@@ -194,9 +210,8 @@ define GetIntensity(template,xgrid,maxxgrid,ygrid,maxygrid)
    stepx <- template.width / maxxgrid 
    stepy <- template.height / maxygrid  
 
-#   Print("Step:" + stepx + ","+ stepy)
+   Print("Step:" + stepx + ","+ stepy)
    xmin <- Max([0,Round((xgrid-1)*stepx)])
-
    ymin <- Max([0,Round((ygrid-1)*stepy)])
 
    xmax <-(Min([xmin+stepx,template.width]))
@@ -212,6 +227,7 @@ define GetIntensity(template,xgrid,maxxgrid,ygrid,maxygrid)
 
   loop(x,MakeRangeSequence(xmin,xmax))
    {
+   Print("//////")
      loop(y,MakeRangeSequence(ymin,ymax))
      {
 
@@ -219,7 +235,7 @@ define GetIntensity(template,xgrid,maxxgrid,ygrid,maxygrid)
        ##we need to estimate the color of the pixel they are on,
        ##then add them to the total in a weighted fashion.
        
-      px<- Floor(First(x))+1
+      px <- Floor(First(x))+1
       py <- Floor(First(y))+1
 
       pixel <- GetPixelColor(template,px,py)
@@ -228,6 +244,12 @@ define GetIntensity(template,xgrid,maxxgrid,ygrid,maxygrid)
 
 
        weight <-  (Second(x)-First(x))*(Second(y)-First(y))
+      Print(px+","+py+ "--"+hsv +"---"+ weight)
+
+      if(px>23 or py > 48)
+      {
+        Print("********")
+      }
        sumN <- sumN +weight
        sumValue <- sumValue + v*weight
   
@@ -236,6 +258,9 @@ define GetIntensity(template,xgrid,maxxgrid,ygrid,maxygrid)
 
        xCenter <- xCenter + v*(xratio-.5)
        yCenter <- yCenter + v*(yRatio-.5)
+
+
+
 if(0)
 {
      if((px+1)<=Second(x) or (py+1)<=Second(y))
@@ -263,7 +288,8 @@ if(0)
   yCenter <- (yCenter/sumValue)
 #  Draw()
 #  Print("Value:" + sumValue / sumN)
-  return [sumValue / sumN,xCenter,ycenter]
+
+  return [sumValue / sumN,xCenter,yCenter]
 }
 
 
@@ -277,8 +303,8 @@ define MakeRangeSequence(lo,hi)
    SignalFatalError("hi must be higher than lo")
  } 
  
- rlo <- Ceiling(lo)
- rhi <- Floor(hi)
+  rlo <- Ceiling(lo)
+  rhi <- Floor(hi)
 
  if(rlo==lo)
  {

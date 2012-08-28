@@ -30,7 +30,7 @@ define Start(p)
    ##Make data files   
 
 
-   gFileOut <- FileOpenAppend("data/ANT-"+gSubNum+".csv")
+   gFileOut <- FileOpenWrite("data/ANT-"+gSubNum+".csv")
    gPooledFileOut <- FileOpenAppend("data/ANT-pooled.csv")
    gSumFileOut <- FileOpenWrite("data/ANT-summary-"+ gSubNum+".txt")
    gLog <- FileOpenAppend("data/ANT-log.csv")

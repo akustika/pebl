@@ -41,7 +41,7 @@ define Start(p)
 
 
   gWin <- MakeWindow()
-  if(gSubNum==0)
+  if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)
    }
@@ -51,8 +51,9 @@ define Start(p)
   gAccentColor <- MakeColor("yellow")
   gstimFont <-  MakeFont(gPEBLBaseFontMono,0,18,gAccentColor,gStimColor,1)
   gclickedFont <- MakeFont(gPEBLBaseFontMono,1,18,MakeColor("grey35"),gStimColor,1)
-  gFileOut <- FileOpenAppend("ptrails-"+gSubNum+".txt")
-  gSumFile <- FileOpenAppend("ptrails-summary-"+gSubNum+".txt")
+  MakeDirectory("data")
+  gFileOut <- FileOpenWrite("data/ptrails-"+gSubNum+".csv")
+  gSumFile <- FileOpenWrite("data/ptrails-summary-"+gSubNum+".csv")
 
 
     inst <- "In this experiment, your goal is to click on each circle, in sequence, as quickly as you can.  When you click on the correct circle, its number will change to boldface, and a line will be drawn from the previous circle to the new circle.  On some trials, the circles will be numbered from 1 to 26, and you should click on them in numerical order (1-2-3-4, and so on).   On other trials, the circles will have both numbers (1 to 13) and letters (A through L), and you should click on them in an alternating order (1-A-2-B-3-C and so on).  If you click the wrong circle, no line will be drawn.  The trial will continue until you have successfully clicked on all of the circles in the correct order. 
@@ -109,7 +110,7 @@ After the display appears, you can examine the circles as long as you want.  Tim
 
 
 
-  FilePrint(gSumFile,"sub type distance studytime totaltime mediantime targs clicks acc")
+  FilePrint(gSumFile,"sub,type,distance,studytime,totaltime,mediantime,targs,clicks,acc")
    type <- 1
    gTrial <- 1
    loop(i,pts)
@@ -283,7 +284,7 @@ define Trial(pts,type)
            corr <- 0 
          }
 
-        FilePrint(gFileOut,gSubNum +  " "+ gtrial + " " + clicks + " "  + hits + " " + clicktime + " " + First(pos) + " " +   Nth(pos, 2) + " " +  corr + " " + id + " " + (clicktime - lastclick) + " "+ (clicktime-lastsucc))
+        FilePrint(gFileOut,gSubNum +  ","+ gtrial + "," + clicks + ","  + hits + "," + clicktime + "," + First(pos) + "," +   Nth(pos, 2) + "," +  corr + "," + id + "," + (clicktime - lastclick) + ","+ (clicktime-lastsucc))
         lastclick <- clicktime
         if(corr)
           {
@@ -295,7 +296,7 @@ define Trial(pts,type)
 
   }
 
-   FilePrint(gSumFile,gSubNum + " " + type+ " " + dist + " " + studytime + " " + (clicktime - starttime) + " "  + Median(times) +   " " + hits + " " +clicks + " " + hits/clicks )
+   FilePrint(gSumFile,gSubNum + "," + type+ "," + dist + "," + studytime + "," + (clicktime - starttime) + ","  + Median(times) +   "," + hits + "," +clicks + "," + hits/clicks )
 
 #   WritePNG("solution.png",gWin)
    RemoveObjects(stimObjects,gWin)

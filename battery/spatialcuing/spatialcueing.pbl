@@ -27,13 +27,14 @@ define Start(par)
 {
 
     gWin <- MakeWindow("grey")
-    if(gSubNum==0)
+    if(gSubNum+""=="0")
     {
       gSubNum <- GetSubNum(gWin)
     }
 
 
-    gFileOut <-FileOpenAppend("spatialcueing-" +gSubNum+ ".txt")
+    MakeDirectory("data")
+    gFileOut <-FileOpenWrite("data/spatialcueing-" +gSubNum+ ".csv")
 
 
 #######################################################################
@@ -119,16 +120,16 @@ MakeColor("grey"), 1)
     trialnum <- 1
     loop(i, stimSequence)
     {
-       FilePrint_(gFileOut,gSubnum + " " + trialnum + " " )
+       FilePrint_(gFileOut,gSubnum + "," + trialnum + "," )
        time <- Trial(First(i), Nth(i,2))
        corr <- Append(corr, First(i)*Nth(i,2))
-	   rts <- Append(rts,time)
+       rts <- Append(rts,time)
        trialnum <- trialnum + 1
     }
 
 
   cond <- Transpose(stimSequence)
-  report <- FileOpenWrite("spatialcueing-report-"+gSubNum+".txt")
+  report <- FileOpenWrite("data/spatialcueing-report-"+gSubNum+".txt")
 
    FilePrint(report,"---------------------------------------------------")
    FilePrint(report," Report for PEBL's Spatial Cueing Task,")
@@ -235,7 +236,7 @@ define Trial(stim, cue)
 
 		correct <- (cue == stim)
         #Record the data
-        FilePrint(gFileOut, cue + " " + stim + " " + correct + " " + delay + " " + (end - start))
+        FilePrint(gFileOut, cue + "," + stim + "," + correct + "," + delay + "," + (end - start))
         Wait(100)
 
         return (end-start) 

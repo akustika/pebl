@@ -102,9 +102,9 @@ define Start(p)
   MakeDirectory(root)
   MakeDirectory("data/summary")
 
-  gFileOutClick <- FileOpenAppend(root+"/corsi-"+dirlabel+"-detail"+ gSubNum + ".csv") ##individual subject data, each line is a click
-  gFileOutTrial <- FileOpenAppend(root+"/corsi-"+dirlabel+"-trial"+ gSubNum + ".csv") ##individual subject data,each line is a trial
-  gSumFile <- FileOpenAppend(root+"/corsi-"+dirlabel+"-data-summary_"+ gSubNum + ".txt") ##Individual summary
+  gFileOutClick <- FileOpenWrite(root+"/corsi-"+dirlabel+"-detail"+ gSubNum + ".csv") ##individual subject data, each line is a click
+  gFileOutTrial <- FileOpenWrite(root+"/corsi-"+dirlabel+"-trial"+ gSubNum + ".csv") ##individual subject data,each line is a trial
+  gSumFile <- FileOpenWrite(root+"/corsi-"+dirlabel+"-data-summary_"+ gSubNum + ".txt") ##Individual summary
   gLogFile <- FileOpenAppend("data/corsi-log.txt")             ##Basic start/end log
 
 
@@ -114,7 +114,6 @@ define Start(p)
 
   head1 <- "subnum,direction,type,trialnum,order,trialstart,itemstart,itemend,abstime,rt,posx,posy"
   head2 <- "subnum,direction,type,trialnum,trialstart,length,stim,resp,numcorr,nummiss,allcorr,time"
-
 
   FilePrint(gFileOutClick,head1)
   FilePrint(gFileOutTrial,head2)

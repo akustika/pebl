@@ -67,8 +67,7 @@ define Start(p)
      cols <- [MakeColor("darkorange"),Makecolor("gold"),MakeColor("darkslateblue")]
 
      MakeDirectory("data")
-     gFileOut <- FileOpenAppend("data/bart-"+gSubNum+".csv")
-
+     gFileOut <- FileOpenWrite("data/bart-"+gSubNum+".csv")
 
       ##Do the instructions
       inst <- EasyTextBox(gInstructions, 10,10,gWin,18,gVideoWidth-20,gVideoHeight-20)

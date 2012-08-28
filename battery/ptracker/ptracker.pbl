@@ -26,8 +26,18 @@
 ##Initialize many of the 
 define Init()
 {
-  gVideoWidth <- 800
-  gVideoHeight <- 600
+#  gVideoWidth <- 800
+#  gVideoHeight <- 600
+
+  ##restrict the bounds of the cursor.
+  boundsW <- Min([800,gVideoWidth])
+  boundsH <- Min([600,gVideoHeight])
+
+  gBoundsMinX <- -(boundsw)/2
+  gBoundsMaxX <- (boundsw)/2
+
+  gBoundsMinY <-  -(boundsh)/2
+  gBoundsMaxY <-  (boundsh)/2
 
   gHomeX <- Round(gVideoWidth/2)
   gHomeY <- Round(gVideoHeight/2)
@@ -75,12 +85,16 @@ define Start(p)
   ShowCursor(0)  
   gSleepEasy <- 1
 
-  gFileOut <- FileOpenWrite("ptracker-"+gSubNum+".dat")
+
   gWin <- MakeWindow("grey10")
-  if(gSubNum==0)
+
+  if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)
    }
+
+  MakeDirectory("data")
+  gFileOut <- FileOpenWrite("data/ptracker-"+gSubNum+".csv")
 
   inst <- EasyTextBox("Your goal in this task is to keep the ball near
   the target using your mouse or pointing device.  The test lasts
@@ -119,10 +133,9 @@ Press any key to begin", 20,20,gwin, 18,gVideoWidth-40,250)
      mousepos <- GetMouseCursorPosition()
 
      userdelta <- AddVectors(mousepos,[-gHomeX,-gHomeY])
-
      newpos <-NewPos(newpos,lastpos,userdelta)
-
      Move(target, gHomeX+First(newpos), gHomeY+Nth(newpos,2))
+
      SetMouseCursorPosition(gHomeX,gHomeY)
 
      ##update list every few seconds
@@ -135,7 +148,7 @@ Press any key to begin", 20,20,gwin, 18,gVideoWidth-40,250)
 
      lastpos <- newpos
      dat <- Flatten([t, newpos, userdelta])
-     FilePrintList(gFileOut,dat)
+     FilePrint(gFileOut,ListToCSV(dat))
 
 
      Draw()
@@ -149,6 +162,18 @@ Press any key to begin", 20,20,gwin, 18,gVideoWidth-40,250)
   }
  FileClose(gFileOut)
 
+}
+
+define ListToCSV(dat)
+{
+  out <- ""
+  sep <- ""
+  loop(i,dat)
+  {
+    out <- out + sep + i
+    sep <- ","
+  }
+ return out
 }
 
 
@@ -201,6 +226,7 @@ define Gravity (pos)
 
 ##pos1 is current position
 ##pos0 is previous position
+
 define NewPos(pos1, pos0,userinput)
 {
  x0 <- First(pos0)
@@ -217,7 +243,13 @@ define NewPos(pos1, pos0,userinput)
   delta <- ScaleVector(AddVectors(pos1, ScaleVector(pos0,-1)),gDamping)
   newpos <- AddVectors(AddVectors(AddVectors(pos1, delta),prevdrag),force)
 
- return newpos
+
+  x <- Min([Max([gBoundsMinX,First(newpos)]),gBoundsMaxX])
+  y <- Min([Max([gBoundsMinY,Second(newpos)]),gBoundsMaxY])
+
+  Print(gBoundsMinX+"<"+x+"<"+gBoundsMaxX +"   "+gBoundsMinY+"<"+y+"<"+gBoundsMaxY )
+ return [x,y]
+
 }
 
 

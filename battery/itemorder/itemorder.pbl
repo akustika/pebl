@@ -1,8 +1,9 @@
 define Start(p)
 {
   Init()
+
   MakeDirectory("data")
-  gFileOut <- FileOpenAppend("data/itemorder-"+gSubNum+".csv")
+  gFileOut <- FileOpenWrite("data/itemorder-"+gSubNum+".csv")
   
   giveFeedback <- 1
   trials <-Shuffle(Flatten([Repeat(0,20),Repeat(1,10),Repeat(2,10)]))

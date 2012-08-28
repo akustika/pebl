@@ -42,7 +42,7 @@ define Start(p)
    ##Make data files   
 
    MakeDirectory("data")
-   gFileOut <- FileOpenAppend("data/flanker-"+gSubNum+".csv")
+   gFileOut <- FileOpenWrite("data/flanker-"+gSubNum+".csv")
    gPooledFileOut <- FileOpenAppend("data/flanker-pooled.csv")
    gSumFileOut <- FileOpenWrite("data/flanker-summary-"+ gSubNum+".txt")
    gLog <- FileOpenAppend("data/flanker-log.csv")

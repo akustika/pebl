@@ -34,8 +34,9 @@ define Start(lPar)
   Draw()
 
   stimuli <- Shuffle(RepeatList(CrossFactorWithoutDuplicates(basestim),reps))
+
   MakeDirectory("data")
-  fileout <- FileOpenAppend("data/CRT-"+gSubNum+".csv")
+  fileout <- FileOpenWrite("data/CRT-"+gSubNum+".csv")
   FilePrint(fileout,"subnum,targ,foil,time,delay,resp,corr,mask,presstart,respend,prestime,rt")
 
   loop(i, stimuli)

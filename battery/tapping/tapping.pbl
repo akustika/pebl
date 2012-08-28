@@ -51,7 +51,7 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
    }
 
-  gFileOut <-FileOpenAppend("tapping-"+gSubNum+".csv")
+  gFileOut <-FileOpenWrite("tapping-"+gSubNum+".csv")
   FilePrint(gFileOut,"sub,trial,domhand,hand,tap,sumtime,trialtime,rt")
   font <-  MakeFont(gPEBLBaseFontMono,0,24,MakeColor("white"),MakeColor("black"),1)
   
@@ -98,7 +98,7 @@ define Start(p)
 
 
 
-   reportfile <-  FileOpenAppend("tapping-summary-"+gSubNum+".txt")
+   reportfile <-  FileOpenWrite("tapping-summary-"+gSubNum+".txt")
    FilePrint(reportfile,"--------------------------------------------------------")
    FilePrint(reportfile, gSummaryFile1)
    FilePrint(reportfile, " http://pebl.sf.net")

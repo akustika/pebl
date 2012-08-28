@@ -40,7 +40,7 @@ define Start(p)
        SignalFatalError("File named 'data' exists.  Remove so data directory can be created.")    
     }
 
-   gFileOut <- FileOpenAppend("data/gonogo-"+gSubNum+".csv")
+   gFileOut <- FileOpenWrite("data/gonogo-"+gSubNum+".csv")
    gPooledFileOut <- FileOpenAppend("data/gonogo-pooled.csv")
    gSumFileOut <- FileOpenWrite("data/gonogo-summary-"+ gSubNum+".txt")
    gLog <- FileOpenAppend("data/gonogo-log.csv")

@@ -103,7 +103,7 @@ Press any key to begin."
      } else{
        msg <- msg+"Too short: "
     }
-       msg <-  msg + "  " + RoundTime(resp) + "s for " +  RoundTime(targ) + "s"
+       msg <-  msg + "  " + Round(resp/1000,2) + "s for " +  Round(targ/1000,2) + "s"
    }
    gFeedback.text <- msg
    shortlong <-  Sign(resp-targ)
@@ -117,15 +117,16 @@ Press any key to begin."
   Hide(gFeedback)
   trial <- trial + 1
   }  
-
+ 
+  instruct.text <- "Thank you for participating.  Press any key to exit"
+  Show(instruc)
+  Draw()
+  WaitForAnyKeyPress()
   FileClose(gFileOut)
 }
 
 
-define RoundTime(num)
-{
-   return  Round( num / 100)/10
-}
+
 
 define Trial()
 {

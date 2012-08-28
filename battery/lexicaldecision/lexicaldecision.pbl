@@ -18,14 +18,15 @@ define Start(lPar)
   gWin <- MakeWindow("GREY")
 
   ##Get subject code if we need to:    
-    if(gSubNum==0)
+    if(gSubNum+""=="0")
     {
 	  gSubNum <- GetSubNum(gWin)
     }
 
  #open a file for writing to.
-  gFileOut <- FileOpenWrite("ld-"+ gSubnum +".txt")
-  FilePrint(gFileOut,"subnum trial stim type resp corr rt")
+  MakeDirectory("data")
+  gFileOut <- FileOpenWrite("data/ld-"+ gSubnum +".csv")
+  FilePrint(gFileOut,"subnum,trial,stim,type,resp,corr,rt")
   #Read in the words/nonwords.  
   words <- FileReadList("words.txt")
   nonwords <- FileReadList("nonwords.txt")
@@ -63,7 +64,7 @@ define Start(lPar)
   loop(i,stim)
   {
    #Print out basic info to the output file.
-   FilePrint_(gFileOut, gSubnum + " " + trial + " ")
+   FilePrint_(gFileOut, gSubnum + "," + trial + ",")
    Trial(i)
    trial <- trial + 1
   }
@@ -118,10 +119,10 @@ define Trial(stim)
     }
   
   time2 <- GetTime()
-  FilePrint_(gFileOut,First(stim) + " " + type )
-  FilePrint_(gFileOut, " " + response)
-  FilePrint_(gFileOut," " + correct)
-  FilePrint(gFileOut,  " " + (time2-time1)) 
+  FilePrint_(gFileOut,First(stim) + "," + type )
+  FilePrint_(gFileOut, "," + response)
+  FilePrint_(gFileOut,"," + correct)
+  FilePrint(gFileOut,  "," + (time2-time1)) 
   RemoveObject(text, gWin)
   RemoveObject(fixation,gWin)
   ClearEventLoop()

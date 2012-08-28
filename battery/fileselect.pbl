@@ -832,14 +832,14 @@ define Start(p)
 
       }elseif(tmp==29)
        {		
-         PushButton(transmit)
+                 PushButton(transmit)
 		 fname <-DirListToText(gDirChain)+ Nth(gFlatFileList,gselected)
 		 if(IsDataFile(fname))
          {
 
 
 
-			bg1 <- Rectangle(750,400,500,800,MakeColor("black"),1)
+			bg1 <- Rectangle(550,400,700,800,MakeColor("black"),1)
 			bg <- Rectangle(750,400,490,790,MakeColor("grey"),1)
 
 			AddObject(bg1,win)			
@@ -871,22 +871,18 @@ define Start(p)
 			
 			while(network==0 and secs < 10)
  			{
-			  Print(GetTime())
-			
-			  Print("one ")
 
-	           network <- ConnectToHost(address,4444)			     
+ 	                   network <- ConnectToHost(address,4444)			     
 			   time <- Floor((GetTime()-starttime)/1000)
 			   
-			   Print(time+"--"+secs)
 			  
 			   if(time > secs)
 			   {
 			     Print("XXXX----")
 			     secs <- time
-				 message2.text <- message2.text + "."
-				 Draw()
-               }
+	                     message2.text <- message2.text + "."
+			      Draw()
+                            }
 			}			
 
 			if(network==0)
@@ -899,13 +895,10 @@ define Start(p)
 			   message.text <- "Connected to host. Sending data."
 			   Draw()
 
-			    SendText(network,"SEND PEBL DATA FILE")
-				SendText(network,fname)
-				SendText(network,text)
-	
-				message.text <-  "Data sent."
+			    SendFile(network,fname,"USER"+RandomDiscrete(10000),message)
+			    message.text <-  "Data sent."
  	  	 	    message2.text <- "Press any key to return."
-            	CloseNetworkConnection(network)
+             	            CloseNetworkConnection(network)
 			}
 
 			Draw()
@@ -1610,4 +1603,43 @@ define GetConfig(key, keys, database,empty)
    ret <- Second(line)
    }
   return ret
+}
+
+
+
+
+
+
+## This sends a file using a direct tcp/ip connection, using
+## a special file protocol.
+##
+
+define SendFile(network,filename,id,label)
+{ 
+   Print("loading filename: ["+filename+"]")
+   text <- FileReadText(filename)
+   length <- StringLength(text)+""
+   
+   if(StringLength(length)>16)
+   {
+     SignalFatalError("Cannot send a file this long:"+length)
+   }
+
+   Print("Sending: [" +id +"] : "+length)
+   message <-  Format(id,32)+Format(length,16) + text
+   label.text <-"Attempting to send data to server (up to 10 secs)"
+   Draw()
+   Wait(500)
+   success <- SendData(network,message)
+   if(success)
+   {
+      label.text <- "Succeeded at sending data"
+      Draw()
+      Wait(500)
+   } else {
+      label.text <- "Failed to send data.  Please try again later or send data files directly. Press any key to begin."
+      Draw()
+      WaitForAnyKeyPress()
+   }
+   return success
 }

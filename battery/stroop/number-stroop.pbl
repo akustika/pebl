@@ -107,7 +107,7 @@ define Start(p)
    
    MakeDirectory("data/"+gSubNum)
 
-   gFileOut <- FileOpenAppend("data/"+gSubnum+"/numstroop-"+gResponseType+"-"+gSubNum+".csv")
+   gFileOut <- FileOpenWrite("data/"+gSubnum+"/numstroop-"+gResponseType+"-"+gSubNum+".csv")
    gPooledFileOut <- FileOpenAppend("data/numstroop-"+gResponseType+"-pooled.csv")
    gSumFileOut <- FileOpenWrite("data/" + gSubNum + "/numstroop-"+gResponseType+"-summary-" + gSubNum+".txt")
    gLog <- FileOpenAppend("data/nstroop-log.csv")
@@ -751,56 +751,4 @@ define RepeatEnough(list,length)
 
 
    return SubList(tmp,1,length)
-}
-
-
-
-define GetEasyChoice(text,choices,output,win)
-{
-
- ShowCursor(1)
- if(not IsWindow(win))
-  { 
-    SignalFatalError("GetEasyChoice(win) needs a window to be specified, not [" + win + "]")
-  }
-   bgcol <- win.BGCOLOR
-
-   bg  <- MakeCanvas(gVideoWidth,gVideoHeight,bgcol)
-   Move(bg,gVideoWidth/2,gVideoHeight/2)
-   AddObject(bg,win)
-
-   box <- EasyTextBox(text+CR(1)+"Click box to select option.",100,100, win,20,gVideoWidth-200,gVideoHeight-200)
-   
-
-   tmp <- []
-   clickon <- []
-   y <- 200
-   skip <- 80
-
-   loop(i, choices)
-    {
-      bg <- Square(180,y,40,MakeColor("grey"),1)
-	  AddObject(bg,win)
-      lab <- EasyLabel(i,80, y,win,25)
-	  Move(lab, 220+ lab.width/2,y)
-      tmp <- Append(tmp,lab)
-      clickon <- Append(clickon,bg)
-     y <- y + 60
-    }
-
-   Draw()
-
-	x <-   WaitForClickOnTarget(clickon,output )
-
-   RemoveObject(bg,win)
-
-   loop(i,Transpose([tmp,clickon]))
-    {
-      RemoveObject(First(i),win)
-  	  RemoveObject(Second(i),win)
-    }
-
-   Draw()
-
-  return x
 }

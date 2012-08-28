@@ -1,8 +1,9 @@
 define Start(p)
 {
+
+  ##Currently designed for 800x600:
   gVideoWidth <- 800
   gVideoHeight<- 600
-
 
 
   gStepSize <- .2  #small number specifying hom many rads/ms the
@@ -22,8 +23,13 @@ define Start(p)
   gHomeX <- gVideoWidth/2
   gHomeY <- gVideoheight/2
 
+  if(gSubNum+""=="0")
+  {
   gSubNum <- GetSubNum(gWin)
-  gFileOut <- FileOpenAppend("device-"+gSubNum+".dat")
+  }
+
+  MakeDirectory("data")
+  gFileOut <- FileOpenWrite("data/device-"+gSubNum+".csv")
 
   ##device colors
    gArm1Col <- MakeColor("red")
@@ -135,11 +141,11 @@ define Trial (pathname,showarms)
     score <- (Score(ev,ev2))
     Print("score computed:" + score)
 
-    FilePrint(gFileOut, gSubNum + " " + pathname + " " + showarms + " "  +  
-         targetlength + " " + targetdist + " " + targetCrit + " " +
-         subLength + " " +subDist + " " + subCrit + " " +
-         First(stats) + " " + Second(stats) + " " +Third(stats) + " "+
-          Fourth(stats)+ " " + score)
+    FilePrint(gFileOut, gSubNum + "," + pathname + "," + showarms + ","  +  
+         targetlength + "," + targetdist + "," + targetCrit + "," +
+         subLength + "," +subDist + "," + subCrit + "," +
+         First(stats) + "," + Second(stats) + "," +Third(stats) + ","+
+          Fourth(stats)+ "," + score)
  
 
     RemoveComplex(p1)
@@ -173,7 +179,6 @@ define WriteCSV(file,table)
 define MakeCSVLine(list)
 {
   txt <- ""
-
   loop(i,list) 
    {
      txt <- txt + i + ", "
@@ -184,8 +189,6 @@ define MakeCSVLine(list)
 
 define CollectPath(homeX,homeY,arm1,arm2,theta10,theta20)
 {
-
-
 
   arm1l <- arm1
   arm2l <- arm2

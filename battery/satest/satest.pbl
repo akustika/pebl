@@ -13,14 +13,15 @@ define Start(p)
    Init()
    GetStrings(gLanguage)
 
-  if(gSubNum==0)
+  if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)
    }
 
    MakeDirectory("data")
+
    gLogFile <- FileOpenAppend("data/satest-log.txt")
-   gFileOut <- FileOpenAppend("data/satest-"+gSubNum+".txt")
+   gFileOut <- FileOpenWrite("data/satest-"+gSubNum+".csv")
    FilePrint(gLogFile,"SATEST start " +GetTime() + " " + TimeStamp() + "  " + gSubNum )
 
    gUseTracking <- 0  #Should a predator follow a  prey around?
@@ -283,8 +284,8 @@ define Start(p)
          Draw()
 
 
-         outputhead <- gsubnum + " " + block + " " + trial + " "+
-         probenum+ " "  + i + " " + starttime + " " + GetTime() + " " + Logpos()
+         outputhead <- gsubnum + "," + block + "," + trial + ","+
+         probenum+ ","  + i + "," + starttime + "," + GetTime() + "," + Logpos()
 
          ##Here, trial means trial type, not trial 'number'.
          if(trial == 1)
@@ -398,7 +399,7 @@ define GetResponsesL1(outputhead)
 
         tmp <- Append(tmp,resp)
 
-        FilePrint(gFileOut,outputhead + " Click " + clicks + " " + resp.x + " " + resp.y + " " + GetTime() + " NA")
+        FilePrint(gFileOut,outputhead + ",Click," + clicks + "," + resp.x + "," + resp.y + "," + GetTime() + ",NA")
         clicks <- clicks + 1
 
 
@@ -426,7 +427,7 @@ define GetResponsesL1(outputhead)
 
    score <-  Round(Score(clickpoints, Merge(gCurPrey,gCurPred)))/100
 
-   FilePrint(gFileOut,outputhead + " Summary NA NA NA " + GetTime() + " " + score)
+   FilePrint(gFileOut,outputhead + ",Summary,NA,NA,NA," + GetTime() + "," + score)
    gHeader.text <- gHead2a + score  + gHead2b
    Show(gHeader)
    Draw()
@@ -523,7 +524,7 @@ define GetResponsesIDPos(outputhead)
      ##I should score targx for being correct
      corr <- targx == targid
      corrs <- corrs+corr
-     FilePrint(gFileOut,outputhead + " Click " + i + " " +  targid + " " + targx  + " " +  GetTime() + " " + corr)        
+     FilePrint(gFileOut,outputhead + ",Click," + i + "," +  targid + "," + targx  + "," +  GetTime() + "," + corr)        
    
 
     i <- i + 1
@@ -628,7 +629,7 @@ define GetResponsesAnticipate1(outputhead,endpred, endprey)
      predtarg <- Nth(gPredTargets,id) 
      corr <- predtarg == x ##how to know if this is correct?
      corrs <- corrs + corr  
-     FilePrint(gFileOut,outputhead + " Click " + id  + " " + (predtarg+2)+ " " + (x+2)  +" " +  GetTime() + " " + corr)        
+     FilePrint(gFileOut,outputhead + ",Click," + id  + "," + (predtarg+2)+ "," + (x+2)  +"," +  GetTime() + "," + corr)        
  
     id <- id + 1
   }
@@ -738,7 +739,7 @@ define GetResponsesL3(outputhead)
      rada <- DegToRad(angle)
      radr <- DegToRad(r)
     deltangle <- RadToDeg(ACos(Cos(rada) * Cos(radr) + Sin(rada)*Sin(radr)))
-    FilePrint(gFileOut,outputhead + " ANGLE " + targID  + " " + target1.x+ " " + target1.y + " "+ r +" " + angle + " " +  GetTime() + " " + deltangle)
+    FilePrint(gFileOut,outputhead + ",ANGLE," + targID  + "," + target1.x+ "," + target1.y + ","+ r +"," + angle + "," +  GetTime() + "," + deltangle)
 
 
   timeEnd <- GetTime()

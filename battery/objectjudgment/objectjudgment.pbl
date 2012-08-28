@@ -28,12 +28,14 @@ define Start(p)
   gWin <- MakeWindow("black")
   ShowCursor(0)
 
-  if(gSubNum==0)
+  if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)
    }
 
-  gFileOut <- FileOpenAppend("objjudge-"+gSubNum+".txt")
+   MakeDirectory("data")
+  gFileOut <- FileOpenWrite("data/objjudge-"+gSubNum+".csv")
+
   gStimColor <- MakeColor("blue")
   gstimFont <-  MakeFont(gPEBLBaseFontMono,0,18,MakeColor("yellow"),gStimColor,1)
   gclickedFont <- MakeFont(gPEBLBaseFontMono,1,18,MakeColor("yellow"),gStimColor,1)
@@ -111,7 +113,7 @@ In this test, you will be show a study shape, followed shortly afterwards by a p
      }
 
      out <-  TrialFC(pts,shape2)
-     FilePrint(gFileout, gSubNum + " abs "  + trial + " " + cond + " "   + Second(type) + " -1 " + shapepert +" " + First(out) + " " +   Second(out) + " " + Third(out) + " " +Fourth(out))
+     FilePrint(gFileout, gSubNum + ",abs,"  + trial + "," + cond + ","   + Second(type) + ",-1," + shapepert +"," + First(out) + "," +   Second(out) + "," + Third(out) + "," +Fourth(out))
    trial <- trial + 1
    }
 

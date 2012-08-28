@@ -19,7 +19,7 @@ define Start(p)
    gScaleHeight <- 300
    gWin <- MakeWindow("black")
    gSleepEasy <- 1
-   if(gSubNum == 0)
+   if(gSubNum+"" == "0")
    {
      gSubNum <- GetSubNum(gWin)
    }
@@ -174,8 +174,9 @@ define Start(p)
     }
    outline <- outline + ","+GetTime()
 
-   out <- FileOpenAppend("tlx-data.csv")
-   PrinT(outline)
+   MakeDirectory("data")
+   out <- FileOpenWrite("data/tlx-data.csv")
+   #PrinT(outline)
    FilePrint(out,outline)
 }
 

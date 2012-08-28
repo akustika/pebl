@@ -38,8 +38,6 @@
 define Start(p)
 {
 
-
-
 ##  Basic translations strings are assigned in GetStrings (see bottom of file).
 ##
 ##
@@ -145,7 +143,7 @@ define Start(p)
 
 
 
-   gAllowReset <- 1    ## Make a 'reset' button?
+   gAllowReset <- 0    ## Make a 'reset' button?
 
 ##############################################################
   
@@ -194,6 +192,9 @@ define Start(p)
   ##Keep track of a 'score' option.
   gScore <- 0
 
+  gTotalMoves <- 0
+  gMinMoves <- 0
+  gTotalTime <- 0
 
 
   loop(pair, stim)
@@ -206,13 +207,17 @@ define Start(p)
     ##You should run a trial if gReset is both not 0 (0 signals completion)
     ## and gReset <3 (4+ indicates you ran out of turns)
     gStartTime <- GetTime()   
-	gEndTime <- gStartTime+ gTimeLimit*1000
+    gEndTime <- gStartTime+ gTimeLimit*1000
 
     while(gReset == 1 and gTries <= 3) 
       {
 
-       gResetLabel.text <- gResetText + " ["+(3-gTries)+"]"
-
+ 
+      if(gAllowReset)
+         {
+          gResetLabel.text <- gResetText + " ["+(3-gTries)+"]"
+         }
+ 
        gReset <- 0
 
 
@@ -287,9 +292,20 @@ define Start(p)
    }
 
    ##Record a final line 
+   report <-"Tower of London Test"+CR(1)+
+      TimeStamp() + CR(1)+
+    "Participant:          " +gSubNum +CR(1)+ 
+    "Trials:               "+Length(stim)+CR(1)+
+    "Total moves:          "+gTotalMoves+CR(1)+
+    "Minimum moves:        " +gMinMoves +CR(1)+
+    "Total time:           "+gtotalTime/1000
+ 
 
+   FilePrint(gReportFile,report)
+   FilePrint(gPooledFile,gSubNum+","+TimeStamp()+","+  Length(stim)+","+
+ gTotalMoves+","+gMinMoves +","+gtotalTime)
 
-   gInstructions.text <- gDebriefing
+   gInstructions.text <- gDebriefing + CR(2) + report
 
    Show(gInstructions)
    Draw()
@@ -461,6 +477,11 @@ define Trial(pair)
        "," +  starttime + "," +   firstmovetime + ","+ (time-starttime))
 
 
+     gTotalMoves <- gTotalMoves+(step-1)
+     gMinMoves <- gMinmoves + shortest
+     gTotalTime <- gTotalTime + (time-starttime)
+
+
      if(gUseTimer)
         {
           RemoveComplex(gTimeGraph)
@@ -495,8 +516,8 @@ define Init()
 {
   gSleepEasy <- 1
 
-  gVideoWidth <- 800
-  gVideoHeight <- 600
+#  gVideoWidth <- 800
+#  gVideoHeight <- 600
 #  ShowCursor(0)
   gWin <- MakeWindow("black")
  
@@ -582,7 +603,9 @@ define InitPoles()
 
   MakeDirectory("data")
   gFileOut <- FileOpenWrite("data/tol-"+gsubnum+".csv")
-  gFileOutSum <- FileOpenWrite("tol-summary-"+gsubnum+".csv")
+  gFileOutSum <- FileOpenWrite("data/tol-summary-"+gsubnum+".csv")
+  gPooledFile <- FileOpenAppend("data/pooled-tol.csv")
+  gReportFile <- FileOpenWrite("data/tol-report-"+gSubNum+".txt")
 
  }
 
@@ -791,7 +814,7 @@ define MoveDisk(config)
       {
       ##Remove the disk complex so it can be re-drawn
       RemoveComplex(gComplex)
-	  gComplex <- PlotDisksAnimate(config,disk,450,gDisks,10)
+      gComplex <- PlotDisksAnimate(config,disk,450,gDisks,10)
       Draw()
 
 
@@ -880,8 +903,6 @@ define RemoveComplex(x)
 ##Returns a string describing a state of the problem
 define MakeStateString(config)
 {
-
-
 
   string <- "|"
   loop(i,config)
@@ -1337,7 +1358,7 @@ define ShalliceRandom(numtrials)
      a1 <- Pick(id)
      a2 <- Pick(id)
      b1 <- Pick(id)
-	 b2 <- Pick(id)
+     b2 <- Pick(id)
 
     ##Make sure the two stacks are not identical at outset:
     while(GetTOLDist(dists,a1,a2,b1,b2)<2)  # Make sure you need at
@@ -1473,10 +1494,8 @@ define M(m,i,j)
 
 
 
-
 define MakeGraph(remaining,total,x,y,label,numticks)
 {
-
     ##Sets up some basic parameters for plotting the graph at the bottom of the screen
     font <- MakeFont(gPEBLBaseFont,0,12,MakeColor("grey80"),MakeColor("black"),0)
     height <- 250
@@ -1488,7 +1507,7 @@ define MakeGraph(remaining,total,x,y,label,numticks)
     xcenter <- x
 
     
-	bgcol <- MakeColor("grey20")
+    bgcol <- MakeColor("grey20")
 #    fgcol <- MakeColor("red")
     fgcol <- MakeColorRGB(170,0,0)
     black <- MakeColor("grey80")

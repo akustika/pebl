@@ -86,7 +86,8 @@ define Start(lPar)
   ## like sequential dependencies, distributions, fixed delays, etc.
 
   delayseq <- Shuffle(DesignBalancedSampling(soas, numtrials))
-  gDatafile   <- FileOpenAppend("partreport-"+ gSubNum + ".txt")
+  MakeDirectory("data")
+  gDatafile   <- FileOpenWrite("data/partreport-"+ gSubNum + ".csv")
   gInstructions.text <- "You are about to take part in a simple task.  On each trial, you will see a + sign, surrounded by a circle of eight letters.  The letters are chosen randomly from D F J and K.  The letters will disappear quickly, but shortly after they appear an arrow will appear, pointing to the location of a letter.  Your task is to identify what letter the arrow pointed to.
 
   This task is very difficult.  It will measure how your iconic memory decays with time. We need to test you on "+blocks+ " blocks of "+blocklength + " trials,  but have a chance to rest between each block.  The first block is only for practice.  After the final block, we will show you your data, and how it compares to others."
@@ -109,7 +110,7 @@ define Start(lPar)
   loop(i, delayseq)
    {
 
-     FilePrint_(gDataFile,gSubNum + " " + blocknum + " " + trialnum +" ")
+     FilePrint_(gDataFile,gSubNum + "," + blocknum + "," + trialnum +",")
      corr <- Trial(SampleNWithReplacement(stimLetters,8),i)
 
     ##Keep track of data after practice block:
@@ -147,7 +148,7 @@ define Start(lPar)
   Print(aggdata)
   GraphStats(aggdata)
  
-   reportfile <- FileOpenWrite("partialreport-report-" + gSubNum + ".txt")
+   reportfile <- FileOpenWrite("data/partialreport-report-" + gSubNum + ".txt")
    FilePrint(reportfile,"------------------------------------------------------")
    FilePrint(reportfile," Report for PEBL Partial Report Procedure Version 0.1")
    FilePrint(reportfile, " "+GetPEBLVersion())
@@ -180,13 +181,14 @@ define Start(lPar)
 define Initialize()
 {
 
-  gVideoWidth <- 1024
-  gVideoHeight <- 768
+##Take video screen size from launcher/environment.
+#  gVideoWidth <- 1024
+#  gVideoHeight <- 768
 
   ##Initialize Window, etc.
   gWin <- MakeWindow("grey")   
 
-  if(gSubNum==0)
+  if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)
    }
@@ -234,12 +236,12 @@ define Trial(letters, delay)
     complex <- []
     seq <- Transpose([letters,gPosX,gPosY])
 
-    FilePrint_(gDataFile,delay+ " ")
+    FilePrint_(gDataFile,delay+ ",")
 
     loop(i,seq)
     { 
       stimbase <- First(i)
-      FilePrint_(gDataFile,stimbase + " ")
+      FilePrint_(gDataFile,stimbase + ",")
       x <- Nth(i,2) + gVideoWidth/2
       y <- Nth(i,3) + gVideoHeight/2
       label <- MakeLabel(stimbase,gStimFont)
@@ -265,7 +267,7 @@ define Trial(letters, delay)
     cueY <- Nth(gPosY,cueID)+gVideoHeight/2
     cueResp <- Nth(letters,cueID)
 
-    FilePrint_(gDataFile,cueID+ " " + cueResp + " ")
+    FilePrint_(gDataFile,cueID+ "," + cueResp + ",")
     cue <- MakeArrow(gVideoWidth/2,gVideoHeight/2,Nth(gPosX,cueID)*.6,Nth(gPosY,cueID)*.6)
 
     HideComplex(cue)
@@ -296,7 +298,7 @@ define Trial(letters, delay)
     {
       corr <- 1
     }
-    FilePrint(gDataFile,resp + " " + corr + " " + (time2 - time1))
+    FilePrint(gDataFile,resp + "," + corr + "," + (time2 - time1))
     ##Clean up after ourselves.
     Hide(gScreen)
     RemoveComplex(complex)

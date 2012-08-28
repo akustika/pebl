@@ -22,13 +22,16 @@ define Start(p)
    gSleepEasy <- 1
 
 
-   if(gSubNum==0)
+   if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)
    }
 
-   gFileOutSum <- FileOpenAppend("switch-summary-"+gSubNum+".csv")
-   gFileOut <- FileOpenAppend("switch-"+gSubNum+".csv")
+   
+   MakeDirectory("data")
+   gFileOutSum <- FileOpenWrite("data/switch-summary-"+gSubNum+".csv")
+   gFileOut <- FileOpenWrite("data/switch-"+gSubNum+".csv")
+
    gRuleNames <- ["color","letter","shape"]
    coltmplt <-   [1,1,2,2,3,3,4,4,5,5]
    numtmplt <-   [1,2,3,4,5,1,2,3,4,5]
