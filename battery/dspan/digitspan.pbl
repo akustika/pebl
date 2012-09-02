@@ -46,7 +46,7 @@ define Start(lPar)
   ## keyboard, which uses the top numbers for data entry
   ## keypad, which uses the keypad numbers
   ## mouse, which creates a screen ala virtualkeyboard.
-  gInputDevice <- "mouse"
+  gInputDevice <- "keypad"
 
   MakeDirectory("data") ##make the data directory if it doesn't exist.
 
@@ -407,7 +407,8 @@ define Trial(stimpairs)
 
   }elseif(gInputDevice == "keypad")
   {
-     responses <- ["KP_1","KP_2","KP_3","KP_4","KP_5","KP_6","KP_7","KP_8","KP_9","KP_0","<kp_enter>","<return>"]
+     responses <- ["<kp_1>","<kp_2>","<kp_3>","<kp_4>","<kp_5>","<kp_6>",
+                   "<kp_7>","<kp_8>","<kp_9>","<kp_0>","<kp_enter>","<return>"]
   } elseif (gInputDevice == "mouse"){
 
 
@@ -487,14 +488,14 @@ define Trial(stimpairs)
   resp <- ""
 
   time1 <- GetTime()
-  while(not (resp == "<return>" or resp== "<enter>"))
-  {
+  while(not (resp == "<return>" or resp== "<enter>" or resp== "<kp_enter>"))
+  { 
     if(gInputDevice=="keyboard" or gInputDevice == "keypad")
     {
-    resp <- WaitForListKeyPress(responses)
+       resp <- WaitForListKeyPress(responses)
+
     }elseif(gInputDevice == "mouse")
     {
-      Print(responses)
      
       resp <- WaitForClickOnTarget(responses, ["1","2","3","4","5","6","7","8","9","<backspace>","0","<return>"] )
     }
@@ -517,7 +518,7 @@ define Trial(stimpairs)
         }
 
 
-     } elseif(resp == "<return>") {
+     } elseif(resp == "<return>" or resp == "<kp_enter>") {
          ##
          33
      } else {
