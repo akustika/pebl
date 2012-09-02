@@ -1,6 +1,8 @@
+#!/usr/local/bin/pebl
 ##  This is a PEBL script that acts as a cross-platform 
 ##  launcher for PEBL.
-##  Version 0.2: Initial release, to accompany PEBL 0.13.
+##  Version 0.1: Initial release, to accompany PEBL 0.12.
+##  Version 0.2: incorporates file server, other fixes.
 ##  (c) 2011-2012 Shane T. Mueller, Ph.D. smueller@obereed.net
 ##
 
@@ -70,8 +72,9 @@ define Start(p)
    }elseif(systemType == "OSX")
    {
      gViewerCommand <- "open"
-     gPEBLName      <- "/opt/local/bin/pebl"
-     gOpenManual    <- "acroread /opt/local/share/pebl/doc/PEBLManual0.12.pdf"
+     gPEBLName      <- "/Applications/pebl.app/Contents/MacOS/pebl"
+     gOpenManual    <- "acroread /opt/local/share/pebl/doc/PEBLManual0.13.pdf"
+     gManualLoc     <- "/Applications/pebl.app/Contents/Resources/PEBLManual.0.13.pdf"
    }
 
    gSleepEasy <- 1
@@ -682,10 +685,8 @@ define Start(p)
       }elseif(tmp==16)  ##Edit script
       {
          PushButton(edit)    
-
 	 file <- DirListToText(gDirChain)+Nth(gFlatFileList,gselected)
          success <-  LaunchFile(file)
- 
          if(not success == 0)
             {
 	      	   MessageBox("Unable to find file: ["+file+"]",win)
@@ -693,7 +694,8 @@ define Start(p)
 
       }elseif(tmp==17)  ##Open Manual
       {
-	     PushButton(openmanual)
+
+         PushButton(openmanual)
          #SystemCall(gManualLoc,"")	  
         Print(gManualLoc)
         LaunchFile(gManualLoc)
