@@ -375,21 +375,26 @@ define Lookup(key, keylist, database)
 
 ## makes a label with a standard font, black on grey, in specified location.
 ##
-define EasyLabel(text,x,y,parent,fontsize)
+define EasyLabel(text,xx,yy,parent,fontsize)
 {
 
- if(not IsText(text))
+ 
+ if(not IsText(text+""))
    {
       SignalFatalError("First argument of EasyLabel[text,x,y,parent,fontsize] must be text")
    }
- if(not (IsNumber(x) and IsNumber(y)))
+
+  ##Convert x/y to numbers.
+  x <- ToNumber(xx)
+  y <- ToNumber(yy)
+ if(not (IsNumber(xx) and IsNumber(yy)))
    {
-      SignalFatalError("Second and third argument of EasyLabel[text,x,y,parent,fontsize] must be numbers")
+      Print("Warning: Second and third argument of EasyLabel[text,x,y,parent,fontsize] should be numbers.  Autoconverting from ['"+xx+"','"+yy+"'] to [" +x+","+y+"]")
    }
 
   if(not IsWidget(parent))
   { 
-    SignalFatalError("EasyLabel[text,x,y,parent,fonsize] must be added to a window, not [" + parent+"]")
+    SignalFatalError("EasyLabel[text,x,y,parent,fontsize] must be added to a window, not [" + parent+"]")
   }
 
   bgcol <- parent.BGCOLOR
@@ -963,4 +968,76 @@ define WaitForDownClick()
      return x
 }
 
+
+##targetlist is a set of graphical objects,
+##keylist is a set of keys whose corresponding 
+##value should be returned when a graphical object is clicked upon.
+
+define WaitForClickOnTargetWithTimeout(targetlist,keylist,time)
+{
+
+  ret <- ""
+  testlist <- Transpose([targetlist,keylist])
+   
+   wait1 <- 1
+   while(wait1)
+     {
+      wait2 <- 1
+      while(wait2)
+       {
+         pos <- WaitForMouseButtonWithTimeout(time)
+
+		 if(Length(pos)==4)
+          {
+           if(Nth(pos,4)=="<pressed>" and Nth(pos,3)==1)
+            {
+              wait2 <- 0
+              gClick <- pos
+            }
+         } else {
+            wait2 <- 0
+			wait1 <- 0
+            gClick <- [-1,-1]
+            ret <- "<timeout>"
+           
+         }
+       }
+
+       ##only loop through the test if wait1 is 0; otherwise
+       ##we timed out.
+      if(wait1)
+      {
+       newtargs <- []
+
+       loop(i,testlist)
+          {
+
+             if(Inside(pos,First(i)))
+             {
+			    wait1 <- 0
+                ret <- Nth(i,2)
+                break
+             }
+          }
+     }
+    }
+  return ret
+}
+
+
+
+
+define CountDown()
+{
+
+    label <- EasyLabel("",gVideoWidth/2,gVideoHeight/2,gWin,100)
+    labs <- [3,2,1]
+    loop(i,labs)
+     {
+    	label.text <- i
+        Draw()
+		Wait(500)
+     }
+   RemoveObject(label,gWin)
+}
 
