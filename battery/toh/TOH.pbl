@@ -1,4 +1,3 @@
-
 #################################################
 ##
 ##   PEBL's Tower of Hanoi
@@ -38,14 +37,14 @@ define Start(p)
    ## From here VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 
 
-  gInstructions <- MakeTextBox("",gFont,760,560)
+  gInstructions <- MakeTextBox("",gFont,gVideoWidth-100,560)
   AddObject(gInstructions,gWin)
-  Move(gInstructions,20,20)
+  Move(gInstructions,50,20)
 
 
    stim <- MakeProblems3(10)  ## unconstrained pole height,
                               ## with number of disks in
-							  ## order specified by first argument
+  			      ## order specified by first argument
 
  #   stim <- MakeBishopProblems()
 
@@ -83,7 +82,7 @@ define Start(p)
 
   gInstructions.width <- 220
   gInstructions.height <- 520
-  Move(gInstructions,565,50)
+  Move(gInstructions,gVideoWidth/2+ 200,50)
   gInstructions.text <- gContinue
 
 
@@ -122,15 +121,18 @@ define TrialTOH(pair)
     gTimeranout <- 0
 
     ## Make standard and new configurations
+    ##This will move the disks into the right configuration, even though 
+    ## they have already been added to the window.
     c1 <- PlotDisksAnimate(config,440,gDisks,5)
     c2 <- PlotDisksAnimate(config1,120,gDisks2,5)
+
+    ##if we have a valid turn limit, and turnlimit is turned on, make a graph.
     if(shortest > 0 and gUseTurnLimit)    
     {
       cGraph <- MakeGraph(shortest,shortest,650,400,gClickLab,shortest)
     }
 
-
-
+    ##Initiate timing
     startTime <- GetTime()
     lasttime <- GetTime()
     time <- GetTime()
@@ -139,8 +141,6 @@ define TrialTOH(pair)
                   MakeStateString(config1) + ",0," + starttime + ",0,"+
                   (time - lasttime)  + ",0")
     #Allow disk moves until the two have identical configurations.
-    continue <- 1
-    step <- 1 
     gEndTime <- time + gTimeLimit*1000
     if(gUseTimer)
     {
@@ -161,10 +161,10 @@ define TrialTOH(pair)
       gTimeGraph <- MakeGraph(gTimeLimit,gTimeLimit,710,400,gTimeLab,numticks)
     }
 
-
-    disks2 <- SubList(gDisks,1,Length(config))
+   ##Add the two sets of disks to the window:
+    disks0 <- SubList(gDisks,1,Length(config))
     ##Add the disks to the window.
-    loop(disk,disks2)
+    loop(disk,disks0)
     {
      AddObject(disk,gWin)
     }
@@ -173,14 +173,21 @@ define TrialTOH(pair)
     ##Add the disks to the window.
     loop(disk,disks2)
     {
+
      AddObject(disk,gWin)
     }
 
     Draw()
     
+    continue <- 1
+    step <- 1 
 
+    
     while(continue)
     {
+    
+      ##This function gets the next move, and returns the new configuration
+
       config <- MoveDisk(config)
       time <- GetTime()
       FilePrint_(gfileout, gSubNum + "," + gTrial + "," + numdisks + "," +
@@ -188,7 +195,8 @@ define TrialTOH(pair)
                   "," + (time - starttime) +"," + (time-lasttime))
 
       lasttime <- time
-
+    
+     ##Check to see if we have succeeded     
      if(ListEqual(config,config1))
        {
          success <- 1
@@ -197,26 +205,37 @@ define TrialTOH(pair)
        } else {
          FilePrint(gfileout, ",0")
        }
+
     ##only update the graph if we have a good measure of
     ## shortest path, and if the global flag specifies it.
+    
     if(shortest > 0 and gUseTurnLimit)
      {
+
         rem <- Max([0,shortest-step])
         UpdateGraph(cgraph,rem, 650,400,shortest)
         #if no moves remain:
         if(rem == 0)
          {
+
+
            #if continue == 0, we have solved the puzzle already. 
            if(continue == 0)
               {
+
                   success <- 1
+  		  result <- 1
               }else{
+
                   gMovesRanOut <- 1     
                   continue <- 0
                   success <- 0
+		          result <- 0
               }
          }
      }
+
+
     if(gUseTimer)
      {  
          if(gTimeRanOut)
@@ -246,14 +265,13 @@ define TrialTOH(pair)
      gInstructions.text <- gIncomplete
      if(gMovesRanOut)
       {
-        ginstructions.text <- gInstructions.text +gMovesOutLab
-      }
-     if(gtimeRanOut)
+        ginstructions.text <- gInstructions.text +gMovesOutLab 
+      }elseif(gtimeRanOut)
       {
-        ginstructions.text <- gInstructions.text + gTimeOutLab
-      }
-    
-      gInstructions.text <- gInstructions.text+CR(2)+ gContinue
+        ginstructions.text <- gInstructions.text + gTimeOutLab 
+      }else{
+        gInstructions.text <- gInstructions.text+CR(2)+ gContinue
+       }
     }
    RemoveObject(gInstructions,gWin)
    AddObject(gInstructions,gWin)
@@ -272,7 +290,10 @@ define TrialTOH(pair)
    { 
      RemoveComplex(cGraph)
    }
-
+ RemoveComplex(disks0)
+ RemoveComplex(disks2)
+ 
+return success
 }
 
 
@@ -289,12 +310,12 @@ define Init()
   gSleepEasy <- 1
 
   gPoleHeights <- 6
-  gVideoWidth <- 800
-  gVideoHeight <- 600
+#  gVideoWidth <- 800
+#  gVideoHeight <- 600
 #  ShowCursor(0)
   gWin <- MakeWindow("black")
  
-   if(gSubNum==0)
+   if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)
    }
@@ -309,15 +330,17 @@ define InitPoles()
 {
 ##Make hot zones for each stack.
 
+   gBasex <- 250
+
    height <- (gPoleHeights)*30+15
    y <- 470-height/2
-   r1 <-  Rectangle(170,y,150,height,MakeColor("white"),1)
+   r1 <-  Rectangle(gbaseX+155,y,150,height,MakeColor("white"),1)
    height <-(gPoleHeights)*30+15
    y <- 470-height/2
-   r2 <-  Rectangle(325,y,150,height,MakeColor("white"),1)
+   r2 <-  Rectangle(gbaseX+310,y,150,height,MakeColor("white"),1)
    height <- (gPoleHeights)*30+15
    y <- 470-height/2
-   r3 <-  Rectangle(480,y,150,height,MakeColor("white"),1)
+   r3 <-  Rectangle(gbaseX+465,y,150,height,MakeColor("white"),1)
 
    AddObject(r1,gWin)
    AddObject(r2,gWin)
@@ -342,7 +365,7 @@ define InitPoles()
     {
      gHand   <- MakeImage("png/hand.png")
      AddObject(gHand,gWin)
-     Move(gHand,330,225)
+     Move(gHand,gBaseX+310,225)
     }
 
 
@@ -350,15 +373,15 @@ define InitPoles()
 
    gFooter <- MakeLabel(gFooterLab,footerfont)
    AddObject(gFooter,gWin)
-   Move(gFooter,300,490)
+   Move(gFooter,gBaseX+310,490)
 
    gHeader <- MakeLabel(gHeaderLab,footerfont)
    AddObject(gHeader,gWin)
-   Move(gHeader,325,165)
+   Move(gHeader,gbaseX,165)
   ##Keep track of the image complex:
   gComplex <- []
 
-  gRect <- Rectangle(325,80,460,140,MakeColor("white"),1)
+  gRect <- Rectangle(gbaseX+310,80,460,140,MakeColor("white"),1)
   AddObject(gRect,gWin)
 
   MakeDirectory("data")
@@ -371,11 +394,6 @@ define InitPoles()
 
 define PlotDisksAnimate(config,ybase,disks,steps)
 {
-
-  Print(config)
-  Print(ybase)
-  Print(disks)
-  Print(steps)
 
   ydelta <- 20
   yheights <- Repeat(0,Length(disks))
@@ -390,7 +408,7 @@ define PlotDisksAnimate(config,ybase,disks,steps)
      startxy <- Append(startxy, [i.x,i.y])
    }
 
-  x <- 15
+  x <- gBaseX
   complex <- []
   
 
@@ -400,14 +418,13 @@ define PlotDisksAnimate(config,ybase,disks,steps)
   loop(disk,config)
   {
 
-
    if(disk == 0)
      {
-       endXY <- Append(endXY, [320,225])
+       endXY <- Append(endXY, [gBaseX+310,225])  ##Move to hand.
      }else{
 
        endXY <- Append(endXY, [x+155*disk,ybase+Nth(yheights,disk)])
-	   yheights <-AddToListItem(yheights,disk,-ydelta)
+       yheights <-AddToListItem(yheights,disk,-ydelta)
      }
 
   }
@@ -438,7 +455,7 @@ define PlotDisksAnimate(config,ybase,disks,steps)
 
         disk.x <- First(end) - First(diff)   * (steps-step)
         disk.y <- Second(end) - Second(diff) * (steps-step)
-    }
+     }
 
    Draw()          
    step <- step + 1
@@ -527,8 +544,8 @@ define MoveDisk(config)
       cont <- 1
       if(CheckValid(config,next))
         {
-	   cont <- 0
-	}
+	     cont <- 0
+	    }
 
 
       while(cont)
@@ -537,7 +554,7 @@ define MoveDisk(config)
 
          if(next=="<timeout>")
            {
-	      timeleft <- (gEndTime-GetTime())/1000
+	          timeleft <- (gEndTime-GetTime())/1000
               UpdateGraph(gTimegraph,Max([0,timeleft]), 710,400,gTimeLimit)
               Draw()
               if(timeleft < 0)
@@ -554,7 +571,6 @@ define MoveDisk(config)
       } else {
         ##No timer, so use just standard click.
         next <- WaitForClickOnTarget(gZones, [1,2,3])
-	Print(next)
         while(not CheckValid(config,next))
          {
            next <- WaitForClickOnTarget(gZones, [1,2,3])
@@ -768,8 +784,8 @@ define MakeGraph(remaining,total,x,y,label,numticks)
     #Create rectangle for background and for data
     back <- Rectangle(xcenter,ycenter, 70, height+50, bgcol, 1)
     data <- Rectangle(xcenter,ycenter + height/2 - dataheight/2, width, dataheight, fgcol, 1)
-     lab <- MakeLabel(label,font)
-     Move(lab,xcenter, ycenter+height/2+14)
+    lab <- MakeLabel(label,font)
+    Move(lab,xcenter, ycenter+height/2+14)
      
 
     AddObject(back,gWin)
@@ -794,7 +810,7 @@ define MakeGraph(remaining,total,x,y,label,numticks)
         Move(yy,  xcenter-20, ycenter + height/2 - i*scale)
         Show(yy)
         composite <- Append(composite,yy)
-		tick <- Line(Floor(xcenter-width/2),ycenter+height/2-i*scale,width,0,black)
+        tick <- Line(Floor(xcenter-width/2),ycenter+height/2-i*scale,width,0,black)
         AddObject(tick,gWin)
         composite <- Append(composite,tick)
         
@@ -931,6 +947,7 @@ define GetStrings(language)
     gInstText2 <- " You will have a time limit to finish each problem.  Attempt to finish each problem within the allotted time."
     gInstText3 <- " You will have only a limited number of moves to solve each problem. Before you make your first move, think about the problem to make sure you can solve it within your move limit.  If you do not finish the problem within the limit, the turn will end and you will move on to the next problem."
     gBegin <-  "Click the mouse to begin."
+    gRepeatLab <- " Click mouse to repeat trial."
     gContinue <- "Trial Complete. "+CR(2)+ "Click mouse to continue to the next trial."
     gIncomplete <- "Trial Incomplete. "
     gClickLab <- "Clicks"
@@ -952,6 +969,7 @@ define GetStrings(language)
     gInstText3 <- " Usted tendrá solamente un número limitado de movimientos para resolver cada problema. Antes de hacer su primer movimiento, pensar en el problema para asegurarse de que puede resolver dentro de su límite de movimiento. Si no termina el problema en el límite, el a su vez terminará y se trasladará al siguiente problema."
     gBegin <-  "Haga clic en el ratón para empezar."
     gContinue <- "Prueba Completa. "+ CR(1) +" Haga clic en el ratón para continuar a la siguiente prueba. "
+    gRepeatLab <- " Click mouse to repeat trial."
     gIncomplete <- "Prueba Incompleta. "
     gClickLab <- "Clics"
     gTimeLab <-  "Tiempo (s)"
