@@ -29,25 +29,46 @@
 #locatable anywhere
 PREFIX = /usr/local/
 
-#On mac, one might prefer the following:
-#PREFIX = /opt/local/
-
 PEBL_VERSION = 0.13
+USE_WAAVE=1       ##Optional; comment out to turn off waave multimedia library
+USE_AUDIOIN=1     ##Optional; comment out to turn off  sdl_audioin library
+#USE_DEBUG = 1     ##Optional; turn on/off debugging stuff.
 C   = gcc
 CXX = g++ 
+ifdef USE_DEBUG
 DEBUGFLAGS = -lefence -DPEBL_DEBUG -g
-
+else
+DEBUGFLAGS = 
+endif
 CFLAGS =   -O3 -std=c99 -DPREFIX=$(PREFIX) -g 
 
 
-#CXXFLAGS =  -O3  -Wno-deprecated -Wall -pedantic -DPEBL_UNIX  -DENABLE_BINRELOC -DPREFIX=$(PREFIX)  -DPEBL_AUDIOIN
-CXXFLAGS =  -O3  -DPEBL_UNIX  -DPEBL_LINUX -DENABLE_BINRELOC -DPREFIX=$(PREFIX)  -DPEBL_AUDIOIN -DPEBL_MOVIES -g
+CXXFLAGS0 =  -O3  -DPEBL_UNIX  -DPEBL_LINUX -DENABLE_BINRELOC -DPREFIX=$(PREFIX)
 
 
+ifdef USE_WAAVE
+#	@echo "Using WAAVE movie library";
+	CXXFLAGS1 = -DPEBL_MOVIES  
+	LINKOPTS1 = -lwaave
+endif
+
+ifdef USE_AUDIOIN
+#	@echo "Using audio in library"
+	CXXFLAGS2 = -DPEBL_AUDIOIN
+	LINKOPTS2 = -lsdl_audioin
+endif
+
+CXXFLAGS = $(CXXFLAGS0) $(CXXFLAGS1) $(CXXFLAGS2)
+LINKOPTS = $(LINKOPTS1) $(LINKOPTS2)
 
 SDL_CONFIG = /usr/bin/sdl-config
 
-SDL_FLAGS = -I/usr/include/SDL -I/usr/local/include -D_REENTRANT -L/home/smueller/Projects/src/waave-1.0/src -L/usr/lib -L/usr/local/lib
+SDL_FLAGS = -I/usr/include/SDL -I/usr/local/include -D_REENTRANT -L/usr/lib -L/usr/local/lib
+
+#ifeq($(USE_WAAVE),1)
+#SDL_FLAGS = $(SDLFLAGS) -L/home/smueller/Projects/src/waave-1.0/src 
+#endif
+
 #SDL_LIBS = -L/usr/lib -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lSDL -lpthread -lSDLmain
 
 
@@ -56,9 +77,8 @@ SDL_FLAGS = -I/usr/include/SDL -I/usr/local/include -D_REENTRANT -L/home/smuelle
 OSX_FLAGS =
 
 #SDLIMG_FLAGS =  -L/usr/lib -L/usr/local/lib -Wl,-rpath,/usr/lib
-SDLIMG_FLAGS =  -L/usr/lib -Wl,-rpath,/usr/lib
-SDLIMG_LIBS =   -lSDL -lSDLmain -lpthread -lSDL_image -lSDL_net -lSDL_audioin -lwaave
-
+#SDLIMG_FLAGS =  -L/usr/lib -Wl,-rpath,/usr/lib
+#SDLIMG_LIBS =   -lSDL -lSDLmain -lpthread -lSDL_image -lSDL_net 
 
 SHELL = /bin/bash
 BISON = /usr/bin/bison
@@ -241,15 +261,17 @@ DIRS = \
 # Dependencies
 #
 ##	   -L$(PREFIX)/lib -lSDL -lpthread -lSDL_image -lSDL_ttf -lSDL_gfx  -lSDL_net -lpng -lSDL_audioin\
+#  SDL_FLAGS = -I/usr/include/SDL -I/usr/local/include -D_REENTRANT -L/usr/lib -L/usr/local/lib
+#	-L/home/smueller/Projects/src/waave-1.0/src -L/usr/lib  -L/usr/local/lib \
+#	-I/usr/include/SDL -I/usr/include -I/usr/local/include -D_REENTRANT \
 
 main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
 	$(CXX) $(CXXFLAGS) -Wall -Wl,-rpath -Wl,LIBDIR $(DEBUGFLAGS) \
-	-L/home/smueller/Projects/src/waave-1.0/src -L/usr/lib  -L/usr/local/lib \
-	-I/usr/include/SDL -I/usr/include -I/usr/local/include -D_REENTRANT \
+	$(SDL_FLAGS)	\
 	-o $(BIN_DIR)/pebl \
 	$(OSX_FLAGS) $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(PEBLMAIN_OBJ)) \
-	-lwaave -lSDL -lSDLmain -lpthread -lSDL_image  -lSDL_ttf -lSDL_gfx  \
-	-lSDL_net -lsdl_audioin -lpng  
+	-lSDL -lSDLmain -lpthread -lSDL_image  -lSDL_ttf -lSDL_gfx  \
+	-lSDL_net -lpng  $(LINKOPTS)
 ##  -Wl,-V #verbose linking 
 ## -Wl,-rpath,/usr/lib \
 
@@ -272,7 +294,7 @@ parse-debug:
 
 
 %.h:
-	echo Updating %.h
+	@echo Updating %.h;
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $^ -o $(OBJ_DIR)/$@ $(SDL_FLAGS)
 
@@ -316,17 +338,23 @@ install: uninstall
 	install -d $(PREFIX)share/pebl/media
 	install -d $(PREFIX)share/pebl/pebl-lib
 	install -d $(PREFIX)share/pebl/doc
+	install -d $(PREFIX)share/pebl/battery
 	cp -R media/* $(PREFIX)share/pebl/media/
+	rm -rf `find $(PREFIX)share/pebl/media -type d -name .svn`
 	cp  pebl-lib/*.pbl $(PREFIX)share/pebl/pebl-lib/
 	cp doc/pman/PEBLManual0.12.pdf $(PREFIX)/share/pebl/doc
-	rm -Rf $(PREFIX)share/pebl/media/CVS
-	rm -Rf $(PREFIX)share/pebl/media/images/CVS
-	rm -Rf $(PREFIX)share/pebl/media/sounds/CVS
-	rm -Rf $(PREFIX)share/pebl/media/fonts/CVS
-	rm -Rf $(PREFIX)share/pebl/media/text/CVS
-	rm -Rf $(PREFIX)share/pebl/pebl-lib/CVS
 	chmod -R uga+r $(PREFIX)share/pebl/
 #	chmod +s $(PREFIX)bin/pebl ##suid root
+	cp -R battery/* $(PREFIX)share/pebl/battery
+	rm -rf `find $(PREFIX)share/pebl/battery -type d -name .svn`
+	rm `find $(PREFIX)share/pebl/battery | grep \~`
+	rm -Rf `find $(PREFIX)share/pebl/battery | grep 'data'`
+	rm $(PREFIX)share/pebl/battery/launch.bat
+	rm $(PREFIX)share/pebl/battery/PEBLLaunch-log.txt
+	rm $(PREFIX)share/pebl/battery/*.config
+	rm $(PREFIX)share/pebl/battery/makelinks-mac.sh
+##Now, convert all the battery files to unix format.
+	find $(PREFIX)share/pebl/battery -name '*pbl' -exec dos2unix {} \;
 
 ifeq (.depend,$(wildcard .depend))
 include .depend
