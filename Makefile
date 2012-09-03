@@ -32,7 +32,7 @@ PREFIX = /usr/local/
 #On mac, one might prefer the following:
 #PREFIX = /opt/local/
 
-PEBL_VERSON = 0.13
+PEBL_VERSION = 0.13
 C   = gcc
 CXX = g++ 
 DEBUGFLAGS = -lefence -DPEBL_DEBUG -g
@@ -100,7 +100,15 @@ PUTILITIES_OBJ  = $(patsubst %.c, %.o, $(PUTILITIES_OBJ1))   ##Get the .c file
 PUTILITIES_INC1  = $(patsubst %.cpp, %.h, $(PUTILITIES_SRC))
 PUTILITIES_INC  = $(patsubst %.c, %.h, $(PUTILITIES_INC1))   ##Get the plain .c file
 
-
+MAN_DIR  =   doc/pman
+PEBL_DOCSRC = 		$(MAN_DIR)/main.tex \
+			$(MAN_DIR)/intro.tex \
+			$(MAN_DIR)/chap3.tex \
+			$(MAN_DIR)/chap4.tex \
+			$(MAN_DIR)/chap5.tex \
+			$(MAN_DIR)/launcher.tex \
+			$(MAN_DIR)/reference.tex \
+			$(MAN_DIR)/colors.tex 
 
 PEBLBASE_SRCXX =	$(BASE_DIR)/Evaluator.cpp \
 			$(BASE_DIR)/FunctionMap.cpp \
@@ -245,7 +253,7 @@ main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
 ##  -Wl,-V #verbose linking 
 ## -Wl,-rpath,/usr/lib \
 
-doc: $(PEBLBASE_SRCXX)
+doc: $(PEBL_DOCSRC)
 	cd doc/pman; pdflatex main.tex
 	cp doc/pman/main.pdf doc/pman/PEBLManual$(PEBL_VERSION).pdf
 
