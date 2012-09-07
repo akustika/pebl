@@ -240,6 +240,7 @@ namespace PEBLObjects
             {(char*)"ROTOZOOM",          RotoZoom,     5,5},
 
             {(char*)"LOADMOVIE",      LoadMovie,     4,4},
+            {(char*)"LOADAUDIOFILE",  LoadAudioFile, 1,1},
             {(char*)"STARTPLAYBACK",   StartPlayback,  1,1},
             {(char*)"PAUSEPLAYBACK",   PausePlayback,  1,1},
 

@@ -1,5 +1,6 @@
+#!/bin/sh
 ## Converts svg pix to .png
-##
+## requires inkscape to be installed.
  pathname="png/"
  ext=".png"
  for i in svg/*

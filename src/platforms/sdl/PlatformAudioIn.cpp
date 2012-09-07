@@ -44,8 +44,7 @@
 #endif
 
 #ifdef PEBL_AUDIOIN
- #include "SDL/SDL_audioin.h"
-
+#include "SDL/SDL_audioin.h"
 
 #include <cmath>
 #include <vector>

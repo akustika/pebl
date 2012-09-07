@@ -1,3 +1,9 @@
+##############################################################
+##
+## Simple variation on the classic memory span task,  
+## requiring a sequence to be 'built up' with repeated 
+## presentation.
+## 
 ## This tests works like 'simon', and assesses the ability to 
 ## 'learn' the sequence, by adding one item at a time.
 ##

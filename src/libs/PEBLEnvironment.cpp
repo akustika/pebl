@@ -1544,7 +1544,7 @@ Variant PEBLEnvironment::GetVideoModes(Variant v)
 Variant  PEBLEnvironment::GetPEBLVersion(Variant v)
 {
 
-    return Variant("PEBL Version 0.12");
+    return Variant("PEBL Version 0.13");
 }
 
 
@@ -1555,10 +1555,9 @@ Variant PEBLEnvironment::GetSystemType(Variant v)
 #elif defined (PEBL_UNIX)
     Variant type = "LINUX";
 #else
-    Variant type = "WINDOWS";
+    Variant  type = "WINDOWS";
 #endif
-
-    return type;
+  return type;
 }
 
 
@@ -1568,8 +1567,8 @@ Variant PEBLEnvironment::LaunchFile(Variant v)
     std::string file  = plist->First().GetString(); //plist->PopFront();
 
 
-    PEBLUtility::LaunchFile(file.c_str());
-  return Variant(0);
+  Variant success =   PEBLUtility::LaunchFile(file.c_str());
+  return success;
 }
 
 Variant PEBLEnvironment::SystemCall(Variant v)
@@ -1926,6 +1925,7 @@ Variant PEBLEnvironment::IsShape(Variant v)
 
 Variant PEBLEnvironment::PlayMovie(Variant v)
 {
+#ifdef PEBL_MOVIES
     PList * plist = v.GetComplexData()->GetList();
 
     PError::AssertType(plist->First(), PEAT_MOVIE, "Argument error in first parameter of function [PlayMovie(<movie>)]: "); 
@@ -1950,15 +1950,16 @@ Variant PEBLEnvironment::PlayMovie(Variant v)
     //Loop (play movie) until you get the end-of-movie event.
     Evaluator::mEventLoop.RegisterEvent(state, funcname, Variant(0));
 
-    myMovie->StartPlayback();
+    myMovie->StartPlayback(); 
     PEvent returnval = Evaluator::mEventLoop.Loop();
 
-    cout << "movieplaying done!\n";
+
     //Now, clear the event loop tests
     Evaluator::mEventLoop.Clear();
 
     return Variant(returnval.GetDummyEvent().value);
-
-
+#else
+    PError::SignalFatalError("Movie playing capabilities not supported in this version."); 
+#endif
 }
 

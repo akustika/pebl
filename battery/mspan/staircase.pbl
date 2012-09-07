@@ -1,3 +1,10 @@
+####################################################
+##
+## Visually-presented memory span task with a staircase method
+##
+## practice vs. normal mode can be selected via command line option.
+##
+
 define Start(p)
 {
 

@@ -1,17 +1,9 @@
-##This is an experiment for running likert-type or yes-no type questionnaires
+##This just displays the current version number.
  
 define Start(par) {
 
-  if(IsList(par))
-   {
-      subnum <- First(par)
-   } else {
-
-    subnum <- 0
-   }
-
   win <- MakeWindow()
-  font <- MakeFont("Vera.ttf",0,16, MakeColor("black"), MakeColor("white"),1)
+  font <- MakeFont(gPEBLBasefont,0,40, MakeColor("black"), MakeColor("white"),0)
   lab <- MakeLabel(GetPEBLVersion(),font)
   Print(GetPEBLVersion())
   AddObject(lab,win)

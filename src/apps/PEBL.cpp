@@ -41,6 +41,7 @@
 #include "../utility/PEBLPath.h"
 #include "../utility/PEBLUtility.h"
 #include "../utility/rc_ptrs.h"
+#include "../utility/BinReloc.h"
 
 #include "../devices/PEventLoop.h"
 #include "Globals.h"
@@ -109,6 +110,33 @@ PNode * head;
 
 int PEBLInterpret( int argc, char *argv[] )
 { 
+
+#ifdef PEBL_UNIX
+    if(argc==2 && strcmp(argv[1], "--install")==0)
+        {
+            
+            string basedir = "";
+            BrInitError error; 
+            if (br_init (&error) == 0 && error != BR_INIT_ERROR_DISABLED) 
+                { 
+                    PError::SignalWarning("Warning: BinReloc failed to initialize.\n Will fallback to hardcoded default path.\n"); 
+                    basedir = "/usr/local/share/pebl/";
+                }
+            
+            string prefix = br_find_prefix("/usr/local/");
+            basedir = prefix + string("/share/pebl/battery/");
+            string destdir = "~/Documents/pebl-exp.0.13";
+            
+            //Now, copy everything in 'battery' to your documents directory.
+            std::cerr << "Creating Documents/pebl-exp.0.13 Directory\n";
+            PEBLUtility::SystemCall("mkdir ~/Documents","");
+            PEBLUtility::SystemCall("mkdir "+destdir,"");
+            std::cerr << "Copying files to ["+destdir+ "]\n";
+            PEBLUtility::SystemCall("cp -R "+ basedir + "* " + destdir,"");
+            exit(0);
+        }
+#endif
+ 
 
 /*    
 	for(int i = 0; i < argc; i++)
@@ -251,9 +279,8 @@ int PEBLInterpret( int argc, char *argv[] )
     for(int j = 1; j < argc; j++)
         {
          
-			//std::cout << argv[j] << endl;
             if(strcmp(argv[j], "-v")==0 ||
-               strcmp(argv[j], "-V")==0)
+                    strcmp(argv[j], "-V")==0)
                 {
                     Variant tmp = argv[++j];
 					cout <<"Content of passed-in variable " << j << ":" << tmp << endl;
@@ -320,8 +347,8 @@ int PEBLInterpret( int argc, char *argv[] )
     
     //This sets the video driver, and other platform-specific stuff.
 #if defined(PEBL_UNIX)
-    //Do specific *nix stuff here (excluding OSX).    
 
+    //Do specific *nix stuff here (excluding OSX).    
     //These can be controlled by a command-line option
     // setenv("SDL_VIDEODRIVER", "dga",1);  //Requires root privileges to run;  fullscreen.
     //setenv("SDL_VIDEODRIVER", "svgalib",1);  //Requires root and special library; allows you to run on virtual terminal.
@@ -529,15 +556,15 @@ void  CaptureSignal(int signal)
     //Evaluator::gGlobalVariableMap.DumpValues();
 
 #ifdef PEBL_MOVIES
-            //Close the wave player library.  
-            WV_waaveClose();
+    //Close the wave player library.  
+    WV_waaveClose();
 #endif
 
-
+    
     //quit SDL here.  It should be killed els
     SDL_Quit();
-
-
+    
+    
     raise(signal);
     exit(0);
 }
@@ -576,7 +603,7 @@ int main(int argc,  char *argv[])
 
     if(argc == 1)
         {
-
+            //This indicates there are no command-line arguments.
 #ifdef PEBL_OSX
 			
 			CFBundleRef mainBundle = CFBundleGetMainBundle();
@@ -595,9 +622,7 @@ int main(int argc,  char *argv[])
 			std::string base = (std::string)resourcepath ;
 			cerr << "RESOURCES PATH: " << resourcepath << endl;
 			
-			
 			std::string launch = base + script;	
-			
 			
 			std::string home = "";
 			char* val = getenv("HOME");
@@ -610,7 +635,7 @@ int main(int argc,  char *argv[])
 			argc = 4;
 
 	
-			if(PEBLUtility::FileExists(home + "/Documents/pebl-exp.0.1/"))
+			if(PEBLUtility::FileExists(home + "/Documents/pebl-exp.0.13/"))
 			   {
 				
                   //Move to the right directory.
@@ -643,15 +668,14 @@ int main(int argc,  char *argv[])
         }
 
 #ifdef PEBL_MOVIES
-            //Close the wave player library.  
-            WV_waaveClose();
+    //Close the wave player library.  
+    //WV_waaveClose();
 #endif
 
     //This does'nt seem to have any impact.  Not sure why.
-    SDL_Quit();
+    //       SDL_Quit();
 
     return PEBLInterpret(argc, argv);
-
 }
 
 

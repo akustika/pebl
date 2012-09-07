@@ -1,6 +1,6 @@
 define Start(par)
 {
-  gUseGUI <- 0
+  gUseGUI <- 1
 
   if(gUseGUI)
   {
@@ -79,10 +79,10 @@ if(not gUseGUI)
    if(not (resp == "Q"))
    {
      Message("Client Connected")
+     tag <- StripSpace(GetData(gNetwork,32))
+     Message("Using tag:              " + tag)
      length <- ToNumber(GetData(gNetwork,16))
      Message("Getting file of length: " + length)
-     tag <- StripSpace(GetData(gNetwork,16))
-     Message("Using tag:              " + tag)
 
      Print("***************fileserver2 Getting file of length: "+ length)
      data <- GetData(gNetwork,length)

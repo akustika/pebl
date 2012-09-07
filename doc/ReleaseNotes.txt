@@ -30,10 +30,18 @@ obsolete.
 ###
 Version 0.13
 
+
+ * With the help of the ffmpeg and the waave  libraries, PEBL now supports loading and playing a number of media file formats (movies and audio).  This includes .avi, .wmv, .mp3, .ogg, and others.  This support added the functions:
+  LoadMovie()
+  LoadAudioFile()
+  StartPlayback()
+  PausePlayback()
+  PlayMovie()
+
  - Rename files that collide with FileOpen (Probably was in 0.12)
  - By default, PEBL now uses the current screen size, and accepts
    any widthxheight screen size when you use the --display
-   command-line option.
+   command-line option.  There is also an option on the launcher to force specific screen resolutions or use the current one.
 
 -three types of trials in fitts stuy.
 
@@ -48,9 +56,16 @@ Version 0.13
  you can replace x <- Append(x,i) with x <- PushOnEnd(x,i), but only 
  PushOnEnd(x,i) is really needed, and saves maybe 10% of the time.
 
+Changed lists to use a vector internally.  This means that now, list access using Nth() can be made directly in constant time.  Also, you can change particular list members using SetElement(list,element). Look forward in the future to accessing and setting elements using the [] syntax familiar to many other languages.
 
  -Fixed gonogo task so total errors/total correct is computed correctly (Thx Marco Moniz)
 - Minor fixes to TOH task (including some contributed by Ross Spoon)
+
+-if you use AddObject to a window that it is already added to, it will automatically remove it first, to avoid automatically multiple references in the child widget list.
+
+New task: The Connections task, a version of the trail-making test popularized by Tim Salthouse.
+Hungry Donkey task now works with mouse (by default; old keypress can still be used)
+
 
 -------------------------------------------------
 

@@ -255,6 +255,10 @@ void PWidget::SetBackgroundColor(PColor color)
 bool PWidget::AddSubWidget(PWidget * widget)
 {
 
+    //Remove the subwidget if it is already there.
+    mSubWidgets.remove(widget);    
+
+    //now, add it back on:
     mSubWidgets.push_front(widget);
     widget->SetParent(this);
     return true;

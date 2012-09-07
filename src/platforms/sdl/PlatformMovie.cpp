@@ -47,6 +47,7 @@ using std::list;
 using std::ostream;
 using std::string;
 
+#ifdef PEBL_MOVIES
 ///Standard Constructor
 PlatformMovie::PlatformMovie():
     PMovie()
@@ -73,7 +74,7 @@ PlatformMovie::PlatformMovie(PlatformMovie & pm):
 PlatformMovie::~PlatformMovie()
 {
 
-#ifdef PEBL_MOVIES
+
 
   /* close the opened stream. not mandatory  */
   if(mStream)
@@ -92,7 +93,7 @@ PlatformMovie::~PlatformMovie()
   //maybe in ~PlatformEnvironment???
 
   //  WV_waaveClose();
-#endif
+
 
 }
 
@@ -254,26 +255,83 @@ bool PlatformMovie::LoadMovie(const std::string &  moviefilename, PlatformWindow
     return false;
 }
 
+// This is for loading .mp3 and the like 
+//
+//
+bool PlatformMovie::LoadAudioFile(const std::string &  audiofilename)
+{
+
+#if defined(PEBL_MOVIES)
+    //mParent = window;  movie really doesn't have a parent.
+
+    //Check to see if we can find the movie file; if not, call everything off.
+    string filename = Evaluator::gPath.FindFile(audiofilename);
+
+    if(filename == "")
+        PError::SignalFatalError(string("Unable to find audio file [")  + audiofilename + string("]."));
+
+    //This uses the waave library to load a movie
+    //Initialize the library.  We may initialize it multiple times,
+    //and I don't know what that will dho.
+    WV_waaveInit(WAAVE_INIT_AUDIO);
+    char* fname = (char*)(filename.c_str());
+    mStream = WV_getStream(fname);  //shouldn't this be const???
+
+    
+    int streamType = WV_getStreamType(mStream);
+    
+    if(streamType == WV_STREAM_TYPE_VIDEO || streamType ==WV_STREAM_TYPE_AUDIOVIDEO)
+        {
+	  std::cerr << "Waring: trying to load video file using LoadAudioFile\n";
+
+        }else if(streamType == WV_STREAM_TYPE_AUDIO )
+      {
+	//just load the audio.
+	mStreamObj  = NULL;
+	WV_loadStream(mStream);
+
+      }else{
+        PError::SignalFatalError(string("file is not a known media file."));
+        }
+
+
+    PMovie::SetProperty("WIDTH", Variant(0));
+    PMovie::SetProperty("HEIGHT", Variant(0));
+    PMovie::SetProperty("DURATION",
+                       Variant((long unsigned int)
+                                          WV_getStreamDuration(mStream)));
+
+    PMovie::SetProperty("FILENAME",Variant(filename));
+    
+
+    
+#else
+    PError::SignalFatalError("PEBL Not compiled with movie playing support");
+#endif
+    return false;
+}
+
+
 
 
 void PlatformMovie::StartPlayback()
 {
-#ifdef PEBL_MOVIES
+
     if(mStream)
         {
             WV_playStream(mStream);
         }
-#endif
+
 }
 
 void PlatformMovie::PausePlayback()
 {
-#ifdef PEBL_MOVIES
+
     if(mStream)
         {
             WV_pauseStream(mStream);
         }
-#endif
+
 }
 
 
@@ -307,3 +365,5 @@ Variant PlatformMovie::GetProperty(std::string name)const
         }
     return PEBLObjectBase::GetProperty(name);
 }
+
+#endif

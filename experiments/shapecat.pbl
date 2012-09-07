@@ -34,8 +34,8 @@
     gIncorrect <- MakeImage("frowney-big.png")
     AddObject(gCorrect,gWin)
     AddObject(gIncorrect,gWin)
-    Move(gCorrect,320,240)
-    Move(gIncorrect,320,240)
+    Move(gCorrect,gVideoWidth/2,gVideoheight/2)
+    Move(gIncorrect,gVideoWidth/2,gVideoHeight/2)
     Hide(gCorrect)
     Hide(gIncorrect)
 
@@ -43,14 +43,14 @@
     gFont <- MakeFont("Vera.ttf",0,18,MakeColor("black"), MakeColor("grey"),1)
 	gHeader <- MakeLabel("",gFont)
     AddObject(gHeader,gWin)
-    Move(gHeader,300,50)
+    Move(gHeader,gVideoWidth/2,50)
 
 
-    gShapeA <- Rectangle(200,300,50,50,MakeColor("red"),1)
-    gShapeB <- Ellipse(460,300,50,50,MakeColor("red"),1)
+    gShapeA <- Rectangle(gVideoWidth/2,gVideoHeight/2,50,50,MakeColor("red"),1)
+    gShapeB <- Ellipse(gVideoWidth/2,gVideoheight/2,50,50,MakeColor("red"),1)
 
-	AddObject(gShapeA,gWin)
-	AddObject(gShapeB,gWin)
+    AddObject(gShapeA,gWin)
+    AddObject(gShapeB,gWin)
     Show(gShapeA)
     Show(gShapeB)
     Draw()
@@ -73,17 +73,17 @@
 define TaskSingle()
 {
     
-    Move(gShapeA,320,240)
-    Move(gShapeB,320,240)
+    Move(gShapeA,gVideoWidth/2,gVideoHeight/2-100)
+    Move(gShapeB,gVideoWidth/2,gVideoHeight/2-100)
     Hide(gShapeA)
     Hide(gShapeB)
 
-	gHeader.text <- "Categorize shape as 1 or 2"
+    gHeader.text <- "Categorize shape as 1 or 2"
 
     ##First, do primary gShape learning
     resp <- ""
     trial <- 1
-     while(trial < 50)
+     while(trial < 10)
     {
 	  gender <- RandomBernoulli(.5)
    	  type <- RandomBernoulli(.5)	
@@ -127,16 +127,16 @@ define TaskSingle()
 define TaskChoose()
 {
     
-    Move(gShapeA,320,200)
-    Move(gShapeB,320,200)
+    Move(gShapeA,gVideoWidth/2-100,gVideoHeight/2-100)
+    Move(gShapeB,gVideoWidth/2+100,gVideoHeight/2-100)
     Hide(gShapeA)
     Hide(gShapeB)
 	
 
-    optA1 <- Rectangle(200,350,50,50,MakeColor("red"),1)
-    optA2 <- Rectangle(200,350,50,50,MakeColor("red"),1)
-    optB1 <- Ellipse(460,350,50,50,MakeColor("red"),1)
-    optB2 <- Ellipse(460,350,50,50,MakeColor("red"),1)
+    optA1 <- Rectangle(gVideoWidth/2-100,gVideoHeight/2-100,50,50,MakeColor("red"),1)
+    optA2 <- Rectangle(gVideoWidth/2-100,gVideoHeight/2-100,50,50,MakeColor("red"),1)
+    optB1 <- Ellipse(gVideoWidth/2+100,gVideoHeight/2-100,50,50,MakeColor("red"),1)
+    optB2 <- Ellipse(gVideoWidth/2+100,gVideoHeight/2-100,50,50,MakeColor("red"),1)
 
     AddObject(optA1,gWin)
     AddObject(optA2,gWin)
@@ -150,12 +150,12 @@ define TaskChoose()
     Hide(optB2)
 
 
-	gHeader.text <- "Which shape goes with the top target [1 or 2]?"
+    gHeader.text <- "Which shape goes with the top target [1 or 2]?"
     trial <- 1
     resp <- "" 
     sum <- 0
     grandsum <- 0
-    while(trial < 50)
+    while(trial < 10)
     { 
     ## first, select the probe.  Then, choose a type.  Finally, 
     ## generate one opposite member of the same type, and one of the opposite type.
@@ -245,10 +245,10 @@ define TaskChoose()
 
 
 define TaskMatch()
-{
+{   
 
-    Move(gShapeA,200,300)
-    Move(gShapeB,460,300)
+    Move(gShapeA,gVideoWidth/2-100,gVideoHeight/2-100)
+    Move(gShapeB,gVideoWidth/2+100,gVideoHeight/2-100)
 
     ## Now, do conjunction learning.
 	gHeader.text <- "Do these shapes go together (Y or N)"
@@ -394,8 +394,8 @@ define MakeB(type)
 
 define ChangeRectangle(shape,specs)
 {
-   shape.dy <- First(specs)
-   shape.dx <- Nth(specs,2)
+   shape.height <- First(specs)
+   shape.width <- Nth(specs,2)
    shape.color <- Nth(specs,3)
 }
 

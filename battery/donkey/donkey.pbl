@@ -88,9 +88,7 @@ define Start(lPar)
 
 
    ## Give instructions; wait for them to hit a key, 
-   SetText(gInstructions,"Note to experimenter: Make sure capslock and numlock are OFF.
-
-You are about to play a game in which you help a donkey get apples.  Behind each door are some apples that the donkey will receive, but also each door will cost the donkey some apples."+method)
+   SetText(gInstructions,"You are about to play a game in which you help a donkey get apples.  Behind each door are some apples that the donkey will receive, but also each door will cost the donkey some apples."+method)
 
    Show(gInstructions)
    Draw()  
@@ -187,7 +185,7 @@ You are about to play a game in which you help a donkey get apples.  Behind each
        Hide(Nth(gDoors,door))
        ShowPayoff(reward,penalty,Nth(gDoors,door))
        Draw()
-       Wait(150)
+       Wait(250)
       ##Figure out the +/- sign
 
       gTotal <- gTotal + net
@@ -341,14 +339,14 @@ define ShowPayoff(plus, minus, door)
 
    ## These numbers just automatically compute the best
    ## positions to display the feedback at
-   x <- door.x-door.width/2+15
+   x <- door.x-door.width/2+5
    y <- door.y + door.height/2-25
 
 
     if(plus != 0)
      {
       plusImage <- Nth(gPlus,ToInteger(plus/2))
-      MoveLower(plusImage,x+10,y)
+      MoveLower(plusImage,x,y)
       Show(plusImage)
      }
 
@@ -356,16 +354,16 @@ define ShowPayoff(plus, minus, door)
     {
       orderMinus <- [1,2,3,8,10,12,50]
       loop(i, Transpose([orderMinus,gMinus]))
-    {
+      {
 
-      if(minus == First(i))
-      { 
-         minusImage <- Nth(i,2)
-         break
+        if(minus == First(i))
+        { 
+          minusImage <- Nth(i,2)
+          break
+        }
       }
-    }
      
-      MoveLower(minusImage,x+35,y)
+      MoveLower(minusImage,x+40,y)
       Show(minusImage)
     }
 

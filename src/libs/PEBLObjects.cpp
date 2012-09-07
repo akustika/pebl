@@ -611,6 +611,8 @@ Variant PEBLObjects::PrintProperties(Variant v)
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First();// plist->PopFront();
     //This should also work for PEBLObjectBase things.
+    //It should also work for devices and the like; 
+    //it probably does not currently do so.
 
     PError::AssertType(v1, PEAT_OBJECT, "Argument error in function [PrintProperties(<object>)]: "); 
     
@@ -1345,7 +1347,7 @@ Variant PEBLObjects::Gabor(Variant v)
 Variant PEBLObjects::LoadMovie(Variant v)
 {
 
-    //
+#ifdef PEBL_MOVIES    
     // v[1] should be name of movie
     // v[2] should be width; v[3] should be height.
     PList * plist = v.GetComplexData()->GetList();
@@ -1379,13 +1381,42 @@ Variant PEBLObjects::LoadMovie(Variant v)
     delete pcd;
     pcd=NULL;
     return tmp;
+#endif
+}
 
+
+
+
+Variant PEBLObjects::LoadAudioFile(Variant v)
+{
+#ifdef PEBL_MOVIES
+    // v[1] should be name of movie
+    // v[2] should be width; v[3] should be height.
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in first parameter of function [LoadAudioFile(<filename>)]: "); 
+    Variant filename = plist->First();
+
+   
+    PlatformMovie* myMovie = new PlatformMovie();
+    myMovie->LoadAudioFile(filename);
+
+    //    myMovie->StartPlayback();
+
+    counted_ptr<PEBLObjectBase> tmpMov = counted_ptr<PEBLObjectBase>(myMovie);
+    PComplexData *  pcd = new PComplexData(tmpMov);
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
+#endif
 }
 
 
 
 Variant PEBLObjects::StartPlayback(Variant v)
 {
+#ifdef PEBL_MOVIES
     PList * plist = v.GetComplexData()->GetList();
 
     PError::AssertType(plist->First(), PEAT_MOVIE, "Argument error in first parameter of function [StartPlayback(<movie>)]: "); 
@@ -1393,12 +1424,15 @@ Variant PEBLObjects::StartPlayback(Variant v)
     Variant v1 = plist->First();
     PlatformMovie * myMovie = dynamic_cast<PlatformMovie*>(v1.GetComplexData()->GetObject().get());
     myMovie->StartPlayback();
-    
+
+#endif    
 }
 
 
 Variant PEBLObjects::PausePlayback(Variant v)
 {
+
+#ifdef PEBL_MOVIES
     PList * plist = v.GetComplexData()->GetList();
 
     PError::AssertType(plist->First(), PEAT_MOVIE, "Argument error in first parameter of function [PausePlayback(<movie>)]: "); 
@@ -1407,6 +1441,7 @@ Variant PEBLObjects::PausePlayback(Variant v)
     Variant v1 = plist->First();
     PlatformMovie * myMovie = dynamic_cast<PlatformMovie*>(v1.GetComplexData()->GetObject().get());
     myMovie->PausePlayback();
-
+    return Variant(true);
+#endif
 }
 

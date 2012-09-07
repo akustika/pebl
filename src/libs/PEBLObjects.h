@@ -99,6 +99,7 @@ namespace PEBLObjects
     Variant RotoZoom(Variant v);
 
     Variant LoadMovie(Variant v);
+    Variant LoadAudioFile(Variant v);
 
     Variant StartPlayback(Variant v);
     Variant PausePlayback(Variant v);

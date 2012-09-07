@@ -2,46 +2,65 @@
 To Do for 0.13:
 
 - Seems to be a problem with setting x/y location of images that are scaled?
+   (cannot replicate.)
 
 - determine whether secret abort code works on italian keyboards.
+   (fixed...)
 
--document what happens when lookup doesn't find a match.
-- be sure to fix keypad entry on digit span; probably fixed for 3001; see Marco Moniz email.
+- document what happens when lookup doesn't find a match.
 
-- New trail test (Salthouse's one).
+- be sure to fix keypad entry on digit span; probably fixed for 3001; see Marco Moniz email.  ***Fixed.
 
--Document transition from list to vector; acces to lists via [].
+- New trail test (Salthouse's one). **Completed.
 
-Transpose seems to give a wrong answer for Transpose([[1,2]]), Which I think should be [[1],[2]]
+-Document transition from list to vector; access to lists via [] not yet possible.
 
-- PrintProperties only works on widgets; shuold work on all objects.
+Transpose seems to give a wrong answer for Transpose([[1,2]]), Which I think should be [[1],[2]]  FIXED--it does give this answer.
 
-- Loading/reloading sound files that are mono crashes on the conversion. (See ann gilman's bug).
--launcher should work on 1024x600 screen
+- PrintProperties only works on widgets; shuold work on all objects. (it should work on network objects and ports etc.)
+
+- Loading/reloading sound files that are mono crashes on the conversion. (See ann gilman's bug--document this???)
+
+-launcher should work on 1024x600 screen (small screen works)
 
 - Improved Debian Packaging.
+- debian makefile stuff.
 - Incorporate documentation in makefile.
 
 EasyLabel can't accept a number in the text variable. Maybe it should?
+  --fixed: autoconvert to numbers, but send a warning in case things go awry.
 
-- Perseveration stuff in BCST.
+- Perseveration stuff in BCST. (data script is fixed...may not be ready?)
 
--possibly, do checking for screen size under fullscreen mode.
+  -possibly, do checking for screen size under fullscreen mode.
 
- - Fix cr/lf in windows battery.
- - fix shuffling problem in BCST
+ - Fix cr/lf in windows battery files. (mostly fixed)
+
+  - Have consistent solution to getting subject code in battery tests. (mostly fixed)
+
+ - fix shuffling problem in BCST  ????
 
 - Function that determines current screen size. ****Done
 
- - Allow Shuffle to take multiple arguments, which are shuffled in parallel???
+
+
+ - for battery, fix gsubnum stuff and screen resolution stuff. (Mostly fixed)
+
+ - move GetEasychoice to libs; remove from battery tests that use it. ****DONE
+
+ - Allow Shuffle to take multiple arguments, which are shuffled in parallel??? (Not done)
+
  - Create a PushOn type function (DONE)
 
-- WaitForAnyKeyPressForTimeout doesn't work.
+- look at layout functions in multichoice batter test to incorporate as full function. (now in ebbinghaus and multichoice for testing; need work there).
+
+- WaitForAnyKeyPressWithTimeout doesn't work.
 
 -Solve CJK font issue (replace firefly and the other one??)
 
--ANT test problems (crashes in 0.12)
--TOL test problems (crasher)
+-ANT test problems (crashes in 0.12) ***FIXED
+-TOL test problems (crasher w/too long lists) ***Fixed
+-TOH--slowdown with trials (TOH TOO?). ***Fixed for TOH
 
  -Document Parallel port functions
    -consider changing getstate function to return list of 0/1
@@ -50,14 +69,15 @@ EasyLabel can't accept a number in the text variable. Maybe it should?
 
  -Krystal's bug in TOH
 
+ -document WaitForClickOnTargetWithTimeout, remove from battery tests
+ -document CountDown(), remove from battery tests.
 - document Match(), Filter(), and Levels()
 
--  Document GetCurrentScreenResolution and GetVideoModes()
+- Document GetCurrentScreenResolution and GetVideoModes()
 
+- document RemoveFile(), changes to FileOpenWrite()
 
--document RemoveFile(), changes to FileOpenWrite()
-
--improve  recursion stuff.
+- improve  recursion stuff. (Not done)
 
 --------------------------------------------
 ##Completed for 0.12

@@ -1,8 +1,7 @@
-#!/usr/local/bin/pebl
+#!/usr/bin/env pebl
 ##  This is a PEBL script that acts as a cross-platform 
 ##  launcher for PEBL.
-##  Version 0.1: Initial release, to accompany PEBL 0.12.
-##  Version 0.2: incorporates file server, other fixes.
+##  Version 0.2: Initial release, to accompany PEBL 0.13.
 ##  (c) 2011-2012 Shane T. Mueller, Ph.D. smueller@obereed.net
 ##
 
@@ -27,7 +26,7 @@ define Start(p)
        gConfigName <- First(p)
 	   if(gConfigName==0)
         {
-		  gConfigName <- "default"
+           gConfigName <- "default"
         }
    }else{
        gConfigName <- "default"
@@ -72,9 +71,8 @@ define Start(p)
    }elseif(systemType == "OSX")
    {
      gViewerCommand <- "open"
-     gPEBLName      <- "/Applications/pebl.app/Contents/MacOS/pebl"
-     gOpenManual    <- "acroread /opt/local/share/pebl/doc/PEBLManual0.13.pdf"
-     gManualLoc     <- "/Applications/pebl.app/Contents/Resources/PEBLManual.0.13.pdf"
+     gPEBLName      <- "/opt/local/bin/pebl"
+     gOpenManual    <- "acroread /opt/local/share/pebl/doc/PEBLManual0.12.pdf"
    }
 
    gSleepEasy <- 1
@@ -178,7 +176,7 @@ define Start(p)
    ##upper right buttons
    openmanual <- MakeButton(630,50,130,win,gOpenManualText)
    about      <- MakeButton(770,50,130,win,gAboutLabelText)
-   requestfeature <- MakeButton(630,75,130,win,gRequestText)
+   launchsize  <- MakeButton(630,75,130,win,gSizeText+gScreenSize)
    visitweb <- MakeButton(770,75,130,win,gWebText)
    wiki     <- MakeButton(910,50,130,win,gWikiText)
 
@@ -392,11 +390,11 @@ define Start(p)
      Draw()
 
      tmp <-	 WaitForClickOnTarget([gPortal,upbg,downbg,exit,slidebin,
-						run,subjectbox,fullscreenbox,expbox,langbox,
+					run,subjectbox,fullscreenbox,expbox,langbox,
     				   addtochain,clearchain,launchchain,viewoutput,viewerror,
-					   edit,openmanual,requestfeature,visitweb,about,
-					   description,demobox,savechain,loadchain,wiki,
-                       subplusbutton,clobox,filter,transmit,review,screenselection],
+				   edit,openmanual,launchsize,visitweb,about,
+				   description,demobox,savechain,loadchain,wiki,
+                                   subplusbutton,clobox,filter,transmit,review,screenselection],
 				   [1,2,3,4,5,
 				   6,7,8,9,10,
 				   11,12,13,14,15,
@@ -685,8 +683,10 @@ define Start(p)
       }elseif(tmp==16)  ##Edit script
       {
          PushButton(edit)    
+
 	 file <- DirListToText(gDirChain)+Nth(gFlatFileList,gselected)
          success <-  LaunchFile(file)
+ 
          if(not success == 0)
             {
 	      	   MessageBox("Unable to find file: ["+file+"]",win)
@@ -694,16 +694,23 @@ define Start(p)
 
       }elseif(tmp==17)  ##Open Manual
       {
-
-         PushButton(openmanual)
+	     PushButton(openmanual)
          #SystemCall(gManualLoc,"")	  
         Print(gManualLoc)
         LaunchFile(gManualLoc)
         
-      }elseif(tmp==18)  ##Request Feature
+      }elseif(tmp==18)  ##Launcher Size
       {
-	 PushButton(requestfeature)
+	 PushButton(launchsize)
          #LaunchFile("https://fundry.com/project/69-pebl")
+	 if(gScreenSize=="small")
+	 {
+	   gScreenSize <- "large"
+	 } else {
+           gScreenSize <- "small"
+         }
+
+       MessageBox(gRelaunchMessage,win)
 
       }elseif(tmp==19)  ##Visit web
       {
@@ -1496,7 +1503,7 @@ define GetStrings(lang)
 	gLoadChainText <- "Load Chain"
 	gOpenManualText <- "Open Manual"
 	gAboutLabelText <- "About"
-	gRequestText <- "Request Feature"
+	gSizeText <- "Size: "
 	gwebtext <- "Visit Website"
 	gWikiText <- "Wiki"
 	gLaunchChainText <- "Launch Chain"
@@ -1516,6 +1523,7 @@ define GetStrings(lang)
 
     gExpChainText <- "Experiment Chain:"
     gConfigNameText <- "Config name?"
+    gRelaunchMessage <- "Please exit the launcher and restart."
     gChooseScreenText <- "Choose screen resolution to use"
     gAboutText <-"PEBL is a system for creating and running psychology experiments.  It is developed by Shane T Mueller, Ph.D., and includes more than 50 standard psychology lab experiments.  You can use PEBL to create your own tests or modify previous ones FREE OF CHARGE. Find out more at http://pebl.sf.net
 
@@ -1541,7 +1549,7 @@ This launcher is written in PEBL itself, allowing a fairly uniform launcher on a
     gLoadChainText <- "Cadena de carga"
     gOpenManualText <- "Abrir Manual"
     gAboutLabelText <- "Acerca de"
-    gRequestText <- "Solicitud de prestación"
+    gSizeText <-"Size: "
     gwebtext <- "Página Web"
     gWikiText <- "Wiki"
     gLaunchChainText <- "Lanzamiento de la cadena"
@@ -1559,6 +1567,7 @@ This launcher is written in PEBL itself, allowing a fairly uniform launcher on a
     gChooseScreenText <- "Choose screen resolution to use"
     gExpChainText <- "Experimento de la cadena:"
     gConfigNameText <- "nombre de configuración?"
+    gRelaunchMessage <- "Please exit the launcher and restart."
     gAboutText <- "Spanish Translation courtesy automated translation. PEBL es un sistema de creación y ejecución de experimentos de psicología Es desarrollado por Shane T Mueller, Ph.D., e incluye más de 50 experimentos de laboratorio estándar de la psicología Puede utilizar PEBL para crear sus propias pruebas o modificar la anterior. los GRATUITO. Más información en http://pebl.sf.net
 
 Este lanzamiento está escrito en PEBL sí mismo, permitiendo que un lanzador bastante uniforme en todas las plataformas. . Sólo los archivos y directorios pbl se muestran en la ventana del archivo - utilizar su gestor de archivos para obtener los datos después de la prueba se ha completado. Haga clic en un directorio que ha sido seleccionada para abrirlo. Agregar secuencias de comandos a la ventana de la cadena de experimento para ejecutar una secuencia de experimentos en una fila, todas ellas con el código mismo tema.

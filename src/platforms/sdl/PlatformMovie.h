@@ -43,8 +43,6 @@
 
 #ifdef PEBL_MOVIES
 #include "WAAVE.h"
-#endif
-
 
 #include <string>
 ///
@@ -63,6 +61,11 @@ public:
     virtual bool LoadMovie(const std::string & imagefilename,
                            PlatformWindow* window,
                            int width, int height);
+
+    virtual bool LoadAudioFile(const std::string & imagefilename);
+
+
+
     virtual void StartPlayback();
     virtual void PausePlayback();
 
@@ -70,8 +73,11 @@ public:
 
     virtual void RefreshVideo(SDL_Event & event);
 
+
     virtual WVStream * GetStream(){return mStream;};
     virtual  WVStreamingObject * GetStreamingObj(){return mStreamObj;};
+
+
     virtual int GetState(int interface) const;
 
     virtual void SetPosition(int x, int y);
@@ -89,14 +95,14 @@ protected:
 
 
 private:
-#ifdef PEBL_MOVIES
+
     /* playing stream */
     PlatformWindow *mWindow;  //movie needs to be attached to a window!
     SDL_Overlay * mOverlay;
     WVStream * mStream;
     WVStreamingObject* mStreamObj;
-#endif
+
 };
 
-
+#endif
 #endif
