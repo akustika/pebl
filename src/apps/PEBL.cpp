@@ -661,6 +661,58 @@ int main(int argc,  char *argv[])
 			new_argv[2]= pv;
 			new_argv[3]= presources;
             argv = new_argv;
+#elseif defined(PEBL_WIN32)
+
+            string basedir = "";
+            BrInitError error; 
+            if (br_init (&error) == 0 && error != BR_INIT_ERROR_DISABLED) 
+                { 
+                    PError::SignalWarning("Warning: BinReloc failed to initialize.\n Will fallback to hardcoded default path.\n"); 
+                    basedir = "%ProgramFiles%\\PEBL";
+                }
+            
+            string basedir = br_find_prefix("%ProgramFiles%\PEBL");
+
+            string destdir = "%Documents%\\pebl-exp.0.13";
+            
+            			
+			//See if $HOME/Documents/ and $Home/Documents/filelauncher.pbl exist. 
+            // If so, run with those arguments.
+			std::string script = "\\launch.pbl";
+			std::string launch = pbasedir + script;	
+			
+			std::string v = (std::string)"-v";
+			argc = 4;
+
+	
+			if(PEBLUtility::FileExists(destdir))
+			   {
+				
+                  //Move to the right directory.
+				 
+				    script = (std::string)destdir + (std::string)"\fileselect.pbl";
+				    chdir(distdir.c_str());
+				    launch = script;
+            
+				    v = "";
+				   argc = 2;
+			   }
+		
+
+            //Now, launch the script file we care about.
+			std::cerr << launch << endl;
+			
+			char** new_argv = new char*[3];
+			new_argv[0]=argv[0];
+			char* plaunch =(char*)(launch.c_str());
+			char* pv     = (char*)(v.c_str());
+			char* presources = (char*)resourcepath;
+								
+			new_argv[1]= plaunch;
+			new_argv[2]= pv;
+			new_argv[3]= presources;
+            argv = new_argv;
+
 #else
             PrintOptions();
             return 1;
