@@ -8,7 +8,7 @@
 define Start(p)
 {
   ##How many lists? (each repeated twice)
-  numlists <- 4
+  numlists <- 2
   
   length <- 8  ##Should be 8, 12, or maybe 16
 
@@ -20,14 +20,17 @@ define Start(p)
       gSubNum <- GetSubNum(gWin)
    }
 
+   cond <- GetEasyChoice("Select stimulus set to use:",["Nonsense CVS","3-letter Words"],["cvcs","words"],gWin)
+
+
 
    MakeDirectory("data")
 	
-   gFileOut <- FileOpenWrite("data/ebbing-"+gSubNum+".csv")
+   gFileOut <- FileOpenWrite("data/ebbing-"+gSubNum+"-"+cond+".csv")
 
    MessageBox("In this task, you will see a list of "+length+" meaningless syllables.  Afterwards, you will be shown a screen with all of the syllables and be asked to choose the original order.  Choose all syllables, and when you are complete, the computer will determine whether you were correct.  Each list will repeat until you correctly remember the entire list twice in a row.  Once you do this, you will move to the next list.  You will learn a total of "+numlists+ " lists." ,gWin)
 
-   stim <- FoldList(MakeStimList(length*numlists),length)
+   stim <- FoldList(MakeStimList(length*numlists,cond+".txt"),length)
    gTrial <- 1
    learning1 <- []
    loop(i, stim)
@@ -230,7 +233,11 @@ define MultiOptionChoice(options,win)
 
 
   grid <- GetGrid(Length(options))
-  layout <-  LayoutGrid(100, gVideoWidth-100, 100, gVideoheight-100,
+
+   width <- Max([750,gVideoWidth-100])
+   height <- Max([550,gVideoHeight-100])
+  layout <-  LayoutGrid((gVideoWidth-width)/2, (gVideoWidth+width)/2, 
+                       (gVideoHeight-height)/2, (gVideoheight+height)/2,
                         First(grid), Second(grid), 1)
 
   ##make it the right length
@@ -308,9 +315,9 @@ define MultiOptionChoice(options,win)
   }
 
 
-define MakeStimList(length)
+define MakeStimList(length,file)
 {
-  stim <- FileReadList("stim.txt")
+  stim <- FileReadList(file)
   list <- SampleN(stim,length)
   return list
 }
