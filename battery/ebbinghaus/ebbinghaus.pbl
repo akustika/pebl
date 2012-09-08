@@ -272,48 +272,6 @@ define MultiOptionChoice(options,win)
 
 }
 
-## horvert other than 1 is currently broken:
-## 
- define LayoutGrid(xmin,xmax,ymin,ymax, tall, wide, horvert)
- {
-     xskip <- (xmax-xmin)/(wide+1)
-     yskip <- (ymax-ymin)/(tall+1)
-
-     pts <- []
-
-      ##vertical layout
-     if(horvert == 1)
-      {
-        x <- xmin+xskip
-       loop(i,Sequence(1,wide,1))
-        { 
-          y <- ymin+yskip
-         loop(j,Sequence(1,tall,1))
-          {
-             pts <- Append(pts, [x,y])
-             y <- y + yskip
-          }
-          x <- x + xskip
-        }
-      } else {
-      #horizontal layout.
-       y <- ymin+yskip
-       loop(i,Sequence(1,tall,1))
-        { 
-          x <- xmin+xskip
-         loop(j,Sequence(1,wide,1))
-          {
-
-             pts <- Append(pts, [x,y])
-             x <- x + xskip
-             y <- y + yskip       
-          }
-
-     }}
-
-   return pts
-  }
-
 
 define MakeStimList(length,file)
 {
