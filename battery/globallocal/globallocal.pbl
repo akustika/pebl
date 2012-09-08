@@ -15,15 +15,15 @@ define Start(p)
   
     gWin <- MakeWindow("orange")
 
-#    stim1 <- MakeNavonStim("P","E","DejaVuSansMono.ttf",10,200)
-#    AddObject(stim1, gWin)
-#    Move(stim1,150,300)
-#    Draw()
+    stim1 <- MakeNavonStim("P","E","DejaVuSansMono.ttf",10,200)
+    AddObject(stim1, gWin)
+    Move(stim1,150,300)
+    Draw()
     
-#    stim2 <- MakeNavonStim("E","A","DejaVuSansMono.ttf",15,200)
-#    AddObject(stim2, gWin)
-#    Move(stim2,350,300)
-#    Draw()
+    stim2 <- MakeNavonStim("E","A","DejaVuSansMono.ttf",15,200)
+    AddObject(stim2, gWin)
+    Move(stim2,350,300)
+    Draw()
 
     stim3 <- MakeNavonStim("B","S","DejaVuSansMono.ttf",20,200)
     AddObject(stim3, gWin)
@@ -31,10 +31,10 @@ define Start(p)
     Draw()
 
 
-#    stim4 <- MakeNavonStim("L","Y","DejaVuSansMono.ttf",30,200)
-#    AddObject(stim4, gWin)
-#    Move(stim4,750,300)
-#    Draw()
+    stim4 <- MakeNavonStim("L","Y","DejaVuSansMono.ttf",30,200)
+    AddObject(stim4, gWin)
+    Move(stim4,750,300)
+    Draw()
 
 
     WaitForAnyKeyPress()
@@ -58,6 +58,8 @@ define Start(p)
 
 define MakeNavonStim(stimGlobal, stimLocal, fontname, localfontmax,xsize)
 {
+ 
+  debug <- 0
   fontnamelocal <- fontname
   fontnameglobal <- fontname
 
@@ -66,17 +68,18 @@ define MakeNavonStim(stimGlobal, stimLocal, fontname, localfontmax,xsize)
   bg <- MakeColor("black")
   bg.alpha <- 255
 
-  fontGlobal <- MakeFont(fontnameGlobal,0,40,MakeColor("white"),MakeColor("green"),0)
+  fontGlobal <- MakeFont(fontnameGlobal,0,40,MakeColor("white"),MakeColor("black"),0)
   fontLocal <- MakeFont(fontnameLocal,0,localFontMax,MakeColor("white"),MakeColor("black"),0)
 
-  ##Here is the printing template:
+  ##Here is the printing template.  Add a label onto a canvas so we have a real background.
   orig1 <- MakeLabel(stimGlobal,fontGlobal)
-
-  orig <- MakeCanvas(orig1.width+2, orig1.height+2, MakeColor("green"))
+  orig <- MakeCanvas(orig1.width+2, orig1.height+2, MakeColor("black"))
   AddObject(orig1,orig)
   Move(orig1,Floor(orig.width/2),Floor(orig.height/2))
   Draw(orig)
 
+ if(debug)
+  {
   AddObject(orig,gWin)
   Move(orig,200,200)
   orig.zoomX <- 10
@@ -87,7 +90,7 @@ define MakeNavonStim(stimGlobal, stimLocal, fontname, localfontmax,xsize)
   orig.zoomX <- 1
   orig.zoomY <- 1
   Draw()
-
+ }
 
   
 
