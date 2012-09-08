@@ -152,11 +152,9 @@ define RegisterClickOnEvent(rectangle)
 
 define MakeResponseScreen(stim)
 {
-  gridpoints <-  LayoutGrid(4,3,gHomeX,gHomeY-100,
-                  gVideoWidth-200,
-                  gVideoHeight-300)      
-
-   
+  gridpoints <-  LayoutGrid(100,gVideoWidth-100,
+                            100,gVideoHeight-140,
+			    4,3,0)
 
    ##Put the gridpoints and the stimuli together
    seq <- Transpose([gridpoints,stim])
@@ -225,36 +223,6 @@ define Stim()
 {
     x<-["A","F","G","H"]
     return x 
-}
-
-
-define LayoutGrid(high,across,centerx,centery,width,height)
-{
-
-     points <- []
-     i <- 1
-
-     dx <- width/(across-1)
-	 dy <- height/(high-1)
-     x <- centerx - width/2
-     y <- centery - height/2
-     while(i <= high)
-      {
-
- 	    j <- 1 
-        x <- centerx-width/2
-        while(j <= across)
-        { 
-          j <- j + 1
- 		  points <- Append(points,[x,y])
-		  x <- x + dx
-        }
-	   y <- y + dy
-       i <- i + 1
-      }
-   
-
-  return points
 }
 
 
