@@ -312,13 +312,11 @@ if(dotraining)
   Show(gHeader)
    ##Create the grid layout.
    xypoints <- LayoutGrid(-20,gVideoWidth+20,
-                          80,450, 6,4,0)
+                          80,450, 6,4,1)
 
     ##Wait at this point for the subject to press a key to begin.
     gHeader.text <- gHeadBegin
     Draw()
-
-
 
     WaitForAnyKeyPress()
     gHeader.text <- gHead
@@ -452,52 +450,6 @@ define ChooseFont(name)
   return font
 }
 
-
-define LayoutGrid(xmin,xmax,ymin,ymax, wide,tall, horvert)
-{
-
-    xskip <- (xmax-xmin)/(wide+1)
-    yskip <- (ymax-ymin)/(tall+1)
-
-    pts <- []
-
-
-
-    if(horvert == 1)
-     {
-    x <- xmin+xskip
-      loop(i,Sequence(1,wide,1))
-       {   
-         y <- ymin+yskip
-        loop(j,Sequence(1,tall,1))
-         {
-
-            pts <- Append(pts, [x,y])
-            y <- y + yskip
-         }
-         x <- x + xskip
-       }
-    } else {
-
-      y <- ymin+yskip
-      loop(i,Sequence(1,tall,1))
-       {   
-         x <- xmin+xskip
-        loop(j,Sequence(1,wide,1))
-         {
-
-            pts <- Append(pts, [x,y])
-            x <- x + xskip
-         }
-        y <- y + yskip
-       }
-
-
-    }
-
-  return pts
-  
-}
 
 ##depending upon condition, 
 define ScoreTrial(resp,wordname,colorname,btype)
