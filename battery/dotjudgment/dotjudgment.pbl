@@ -333,19 +333,6 @@ define Initialize()
 }
 
 
-define CountDown()
-{
-
-    label <- EasyLabel("",gVideoWidth/2,gVideoHeight/2,gWin,100)
-    labs <- [3,2,1]
-    loop(i,labs)
-     {
-    	label.text <- i
-        Draw()
-		Wait(500)
-     }
-   RemoveObject(label,gWin)
-}
 
 
 define MessageKeyBox(message)

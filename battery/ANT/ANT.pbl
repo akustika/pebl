@@ -80,7 +80,7 @@ define Start(p)
     ## Do the practice round
 	gTrial <- 1
     gBlock <- 0
-    CountDown()
+    CountDown(gWin)
     abstime <- GetTime()
     loop(trial,practrials)
     {
@@ -90,7 +90,7 @@ define Start(p)
     }    
 
     MessageKeyBox(gInterblock)
-    CountDown()
+    CountDown(gWin)
     ###########################################
     ## Do the first test round
     FilePrint(gLog, gSubNum + "," + gLanguage + "," +   TimeStamp()+",ANT,"+gResponseType+",BLOCK 1 BEGIN") 
@@ -104,7 +104,7 @@ define Start(p)
     }    
 
     MessageKeyBox(gInterblock)
-    CountDown()
+    CountDown(gWin)
     ###########################################
     ## Do the second test round
     FilePrint(gLog, gSubNum + "," + gLanguage + "," +  TimeStamp()+",ANT,"+gResponseType+",BLOCK 2 BEGIN") 
@@ -118,7 +118,7 @@ define Start(p)
     }    
 
     MessageKeyBox(gInterblock)
-    CountDown()
+    CountDown(gWin)
     ###########################################
     ## Do the third test round
     FilePrint(gLog, gSubNum + "," + gLanguage + "," +   TimeStamp()+",ANT,"+gResponseType+",BLOCK 3 BEGIN")
@@ -515,8 +515,6 @@ define Initialize()
 
   ##  The screen resolution should be set automatically.
   ##
-  ## gVideoWidth <- 800
-  ## gVideoheight <- 600
 
   ## the yoffset is supposed to be 1.06 degrees above offset.
   ##

@@ -35,7 +35,7 @@ define Start(p)
    learning1 <- []
    loop(i, stim)
     {
-      CountDown() 
+      CountDown(gWin) 
       num <-  Trial(i)
       learning1 <- Append(learning1,num)
       gTrial <- gTrial + 1
@@ -47,7 +47,7 @@ define Start(p)
    learning2 <- []
    loop(i, stim)
     {
-      CountDown()
+      CountDown(gWin)
       num <-  Trial(i)
       learning2 <- Append(learning2,num)
       gTrial <- gTrial + 1

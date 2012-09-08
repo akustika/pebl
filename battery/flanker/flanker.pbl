@@ -39,6 +39,7 @@ define Start(p)
 	  gSubNum <- GetSubNum(gWin)
     }
 
+
    ##Make data files   
 
    MakeDirectory("data")
@@ -80,24 +81,24 @@ define Start(p)
     ##Set up some data holders
     gBlocknum <-   []
     gCuetype <-    []
-	gCongruence <- []
+    gCongruence <- []
     gRTs        <- []
-	gCorr       <- []
+    gCorr       <- []
 
     ###########################################
     ## Do the practice round
-	gTrial <- 1
+    gTrial <- 1
     gBlock <- 0
-    CountDown()
+    CountDown(gWin)
     abstime <- GetTime()
     loop(trial,practrials)
     {
       Trial(trial,1)
-	  gTrial <- gTrial + 1
+      gTrial <- gTrial + 1
     }    
 
     MessageKeyBox(gInterblock)
-    CountDown()
+    CountDown(gWin)
     ###########################################
     ## Do the first test round
     FilePrint(gLog, gSubNum + "," + gLanguage + "," +   TimeStamp()+",FLANKER,"+gResponseType+",BLOCK 1 BEGIN") 
@@ -391,10 +392,6 @@ define Initialize()
   GetStrings(gLanguage) 
   ShowCursor(0)
 
-  ##  The screen re
-  ##
-  gVideoWidth <- 800
-  gVideoheight <- 600
 
   ## the yoffset is supposed to be 1.06 degrees above offset.
   ##
@@ -430,20 +427,6 @@ define Initialize()
 
 }
 
-
-define CountDown()
-{
-
-    label <- EasyLabel("",gVideoWidth/2,gVideoHeight/2,gWin,100)
-    labs <- [3,2,1]
-    loop(i,labs)
-     {
-    	label.text <- i
-        Draw()
-		Wait(500)
-     }
-   RemoveObject(label,gWin)
-}
 
 
 define MessageKeyBox(message)

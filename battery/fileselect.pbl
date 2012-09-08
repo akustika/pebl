@@ -945,7 +945,6 @@ define Start(p)
 
 	    tmp <- First(i)+"x"+Second(i)
 
-            Print(tmp+"=="+currentxy)
 	    if(tmp==currentxy)
 	    { 
                PRINT("FOUNDIT")

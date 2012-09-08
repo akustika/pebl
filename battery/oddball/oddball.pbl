@@ -81,13 +81,13 @@ define Start(p)
     ##Set up some data holders
     gOddball    <- []
     gRTs        <- []
-	gCorr       <- []
+    gCorr       <- []
 
     ###########################################
     ## Do the practice round
 	gTrial <- 1
     gBlock <- 0
-    CountDown()
+    CountDown(gWin)
 
     endtime <- GetTime()
 
@@ -99,7 +99,7 @@ define Start(p)
     }
 
     MessageKeyBox(gInterblock)
-    CountDown()
+    CountDown(gWin)
 
     ###########################################
     ## Do the first test round
@@ -408,21 +408,6 @@ define Initialize()
 
    
 
-}
-
-
-define CountDown()
-{
-
-    label <- EasyLabel("",gVideoWidth/2,gVideoHeight/2,gWin,100)
-    labs <- [3,2,1]
-    loop(i,labs)
-     {
-    	label.text <- i
-        Draw()
-		Wait(500)
-     }
-   RemoveObject(label,gWin)
 }
 
 
