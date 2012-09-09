@@ -839,64 +839,6 @@ define UpdateGraph(myGraph, remaining, x,y, total)
 
 }
 
-
-
-##targetlist is a set of graphical objects,
-##keylist is a set of keys whose corresponding 
-##value should be returned when a graphical object is clicked upon.
-
-define WaitForClickOnTargetWithTimeout(targetlist,keylist,time)
-{
-
-  ret <- ""
-  testlist <- Transpose([targetlist,keylist])
-   
-   wait1 <- 1
-   while(wait1)
-     {
-      wait2 <- 1
-      while(wait2)
-       {
-         pos <- WaitForMouseButtonWithTimeout(time)
-
-		 if(Length(pos)==4)
-          {
-         if(Nth(pos,4)=="<pressed>")
-          {
-            wait2 <- 0
-            gClick <- pos
-          }
-         } else {
-            wait2 <- 0
-			wait1 <- 0
-            gClick <- [-1,-1]
-            ret <- "<timeout>"
-           
-         }
-       }
-
-       ##only loop through the test if wait1 is 0; otherwise
-       ##we timed out.
-      if(wait1)
-      {
-       newtargs <- []
-
-       loop(i,testlist)
-          {
-
-             if(Inside(pos,First(i)))
-             {
-			    wait1 <- 0
-                ret <- Nth(i,2)
-                break
-             }
-          }
-     }
-    }
-  return ret
-}
-
-
 ##
 ##
 ##
