@@ -298,12 +298,7 @@ so you can't, for example, directly modify the contents of a string.
   a  <- "your string"  #re-assigns a to a new string literal
   b  <- a              #makes b refer to a's new string literal
 \end{verbatim}
-There are no `list surgery' or `string surgery' functions, like: 
-\begin{verbatim}
-  SetCharacter(a,5,"X")
-\end{verbatim}
-which would theoretically change the string pointed to by `\texttt{a}' to 
-\texttt{"yourXstring"}.  If there were, `\texttt{b}' would also point to \texttt{"yourXstring"}.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -323,7 +318,7 @@ The true power of PEBL lies in its extensive library of
 functions that allow specific experiment-related tasks to be
 accomplished easily. For the sake of convenience, the library is divided into a number of subordinate libraries.  This library structure
 is transparent to the user, who does not need to know where
-a function resides in order to use it. Chapter \ref{sec:five} includes a quick reference to functions; Chapter \ref{sec:six} includes a complete alphabetical reference.
+a function resides in order to use it. Chapter \ref{sec:five} includes a quick reference to functions; Chapter \ref{sec:colors} includes a complete alphabetical reference.
 
 \newpage
 \sect{ A Simple Program}

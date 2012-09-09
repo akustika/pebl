@@ -1,5 +1,5 @@
 \chapter{Detailed Function and Keyword Reference}
-\label{sec:six}
+\label{sec:reference}
 
 \setlength{\parindent}{0pt}
 
@@ -474,11 +474,35 @@ ACos(<num>)
 
 \item[Name/Symbol]  	\verb+AddObject()+
 
-\item[Description] 	Adds a widget to a parent window.
+\item[Description] 	Adds a widget to a parent window, at the top of the object stack.  Once added, the object will be drawn onto the parent last, meaning it will be on top of anything previously added. 
 
-\item[Usage]		
+In general, objects can be added to other objects as well as windows.  For example, you can add drawing objects (circles, etc.) to an image to annotate the image and maintain its proper x,y coordinates.
 
-\item[Example]	
+Also, if you 're-add' an object that is already on a widget, it will get automatically removed from the window first.  This is an easy way to reorder elements on a screen.
+
+\begin{verbatim}
+AddObject(<obj>, <window>)
+AddObject(<obj>, <canvas>)
+AddObject(<obj>, <widget>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+
+define Start(p)
+{
+ win <- MakeWindow()
+ img <- MakeImage("pebl.png")
+ circ <- Circle(20,20,10,MakeColor("red"),1)
+ AddObject(circ,img)
+ AddObject(img,win)
+ Move(img,100,100)
+ Draw()
+ WaitForAnyKeyPress()
+}
+\end{verbatim}
+
+
 
 \item[See Also]    	\verb+RemoveObject()+
 \end{desc}
@@ -512,6 +536,9 @@ ACos(<num>)
   
 \item[Description]  	Appends an item to a list.  Useful for constructing lists in conjunction with the loop statement.
 
+Note: \texttt{Append()} is useful, but inefficent for large data structures, because it requires making a copy of the entire data list and then overwriting it, if you use
+\texttt{list <- Append(list, item)}.  The overhead will be hardly noticeable unless you are building lists hundreds of elements long.  In that case you shuold either create the list upfront and use \texttt{SetElement}, or you \texttt{PushOnEnd} to modify the list directly.
+
 \item[Usage] 
 \begin{verbatim}
 Append(<list>, <item>)
@@ -529,7 +556,7 @@ Print(double)
 # Produces [[1,1],[2,2],[3,3],[4,4],[5,5]]
 \end{verbatim}
 
-\item[See Also]     	\verb+List()+, \verb+[ ]+, \verb+Merge()+
+\item[See Also]  \verb+SetElement()+ \verb+List()+, \verb+[ ]+, \verb+Merge()+, \verb+PushOnEnd+
 \end{desc}
 
 
@@ -793,6 +820,30 @@ Circle(<x>, <y>, <r>,<color>)
 \end{desc}
 
 
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+CheckForNetworkConnection()+
+
+\item[Description] Checks to see if there is an incoming TCP/IP connection on a network that is opened using \verb+OpenNetworkListener+.  This is an alternative to the \verb+WaitForNetworkConnection+ function that allows more flexibility (and allows updating the during waiting for the connection).
+
+\item[Usage]
+\begin{verbatim}
+net <- CheckForNetwokConnection(network)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+  network <-      OpenNetworkListener(4444) 
+  time <- GetTime()
+  while(not connected and (GetTime() < time + 5000))
+   {
+      connected <- CheckForNetwokConnection(network) 
+   }
+
+\end{verbatim}
+\item[See Also]	\verb+OpenNetworkListener()+, \verb+Getdata()+, \verb+WaitForNetworkConnection()+, \verb+CloseNetwork()+
+\end{desc}
+
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+ClearEventLoop()+ 
@@ -1002,6 +1053,29 @@ output:
 \item[See Also]     	\verb+Sin()+, \verb+Tan()+, \verb+ATan()+, \verb+ACos()+, \verb+ATan()+
 \end{desc}
 
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+Countdown()+
+			 
+\item[Description] 	Displays a 3-2-1 countdown on the screen in with 500 ms ISI.
+\verb+CountDown+ temporarily hides whatever is on the screen. It is useful in orienting participants to
+the first trial of a task.
+
+\item[Usage]		
+\begin{verbatim}
+   CountDown(win)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+  win <- MakeWindow()
+  MessageBox("Press any key to begin",win)
+  CountDown(win)
+  Trial()
+\end{verbatim}
+
+\item[See Also]   \verb+MessageBox+
+\end{desc}
 
 
 
@@ -1627,7 +1701,8 @@ FileOpenAppend(<filename>)
 
 \item[Example]	
 
-\item[See Also]	\verb+FileClose()+, \verb+FileOpenRead()+, \verb+FileOpenWrite()+
+\item[See Also]	\verb+FileClose()+, \verb+FileOpenRead()+, \verb+FileOpenWrite()+, 
+\verb+FileOpenOverWrite()+
 \end{desc}
 
 
@@ -1698,7 +1773,7 @@ text ``testing 2''.
   f2 <- FileOpenWrite("test.txt")
   FilePrint(f2,"testing 2")
   FileClose(f2)
- \end{verbatim}
+\end{verbatim}
 
 \item[See Also]	\verb+FileClose()+, \verb+FileOpenAppend()+, \verb+FileOpenRead()+, \verb+FileOpenOverWrite()+
 \end{desc}
@@ -2157,6 +2232,38 @@ GetAngle3(<a>,<b>,<c>)
 \item[See Also]	\verb+DegtoRad+, \verb+RadToDeg+, \verb+GetAngle+, \verb+ToRight+
 \end{desc}
 
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+GetCurrentScreenResolution()+
+
+\item[Description]	Returns an list of [width,height] specifying what the 
+current computer screen resolution is.  This is used within the pebl launcher in order
+to use the current resolution to run the experiment.
+
+\item[Usage]
+\begin{verbatim}
+res <- GetCurrentScreenResolution()
+\end{verbatim}
+
+\item[Example]	
+
+\begin{verbatim}
+define Start(p)
+{
+   ## For testing, let's make the screen resolution a bit smaller than the 
+   ## current one so that it doesn't get hidden by the bottom task bar
+   ##
+   res <- GetCurrentScreenResolution()
+   gVideoWidth <- First(res)-100
+   gVideoHeight <- Second(res)-100
+   gWin <- MakeWindow()
+   MessageBox("Window slightly smaller than screen",gWin)
+}
+\end{verbatim}
+
+
+\item[See Also]	\verb+GetVideoModes()+
+\end{desc}
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+GetCursorPosition()+
@@ -2577,6 +2684,29 @@ Print(GetPEBLVersion())
 \end{desc}
 
 
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+GetPixelColor()+
+
+\item[Description] Gets a color object specifying the color of a particular pixel on a widget.
+
+\item[Usage]
+\begin{verbatim}
+color <- GetPixelColor(widget,x,y) 
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+  ##Judge brightness of a pixel
+  img <- MakeImage("test.png")
+  col <- GetPixelColor(img,20,20)
+  hsv <- RGBtoHSV(col)
+  Print(Third(hsv))
+
+\end{verbatim}
+
+\item[See Also]	\verb+SetPixel()+
+\end{desc}
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] \verb+GetPPortState+ 
@@ -2775,10 +2905,8 @@ Print(GetVideoModes)
 \end{verbatim}
 
 \item[See Also]	
+\verb+GetCurrentScreenResolution+, \verb+gVideoWidth+,\verb+gVideoHeight+
 \end{desc}
-
-
-
 
 
 \begin{desc}{Name/Symbol}
@@ -3710,6 +3838,80 @@ LaunchFile("data\")
 
 
 
+\begin{desc}{Name/Symbol}
+   
+\item[Name/Symbol] \verb+LayoutGrid+
+
+\item[Description]      Creates a grid of x,y points in a range, that are 
+spaced in a specified number of rows and columns.  Furthermore, you can specify
+whether they are vertical or horizontally laid out.
+
+\item[Usage]       
+\verb+LayoutGrid(<xmin>,<xmax>,<ymin>,<ymax>,<culumns>,<rows>,<vertical>)+
+
+\item[Example]
+
+Example PEBL Program using NonoverlapLayout:
+\begin{verbatim}
+define Start(p)
+{
+   gWin <- MakeWindow()
+   gVideoWidth <- 800
+   gVideoHeight <- 300
+
+   lab1 <- EasyLabel("LayoutGrid, horizontal",
+                     200,25,gWin,24)
+   lab2 <- EasyLabel("LayoutGrid, vertical",
+                     600,25,gWin,24)
+   nums <- Sequence(1,20,1)
+   stim1 <- []
+   stim2 <- []
+
+   font <- MakeFont(gPeblBaseFont,0,25,
+              MakeColor("black"),MakeColor("white"),0)
+   loop(i,nums)
+   {
+     stim1 <- Append(stim1,MakeLabel(i+"",font))
+     stim2 <- Append(stim2,MakeLabel(i+"",font))
+    }
+
+  layout1 <- LayoutGrid(50,gVideoWidth/2-50,
+                       50,gVideoHeight-50,5,4,0)
+  layout2 <- LayoutGrid(gVideoWidth/2+50,gVideoWidth-50,
+                       50,gVideoHeight-50,5,4,1)
+
+
+  ##Now, layout the stuff.
+
+  loop(i,Transpose([stim1,layout1]))
+   {	
+      obj <- First(i)
+      xy <- Second(i)
+      AddObject(obj,gWin)
+      Move(obj, First(xy),Second(xy))
+   }
+
+  loop(i,Transpose([stim2,layout2]))
+   {	
+      obj <- First(i)
+      xy <- Second(i)
+      AddObject(obj,gWin)
+      Move(obj, First(xy),Second(xy))
+   }
+
+  Draw()
+  WaitForAnyKeyPress()
+}
+\end{verbatim}
+
+The output of the above program is shown below.  Even for the left configuration, which is too compact (and which takes a couple seconds to run), the targets are fairly well distributed.
+\includegraphics[scale=.35]{images/LayoutGrid.png} 
+
+\item[See Also]     
+\verb+NonOverlapLayout()+
+\end{desc}
+
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Line()+
@@ -3845,12 +4047,89 @@ Levels([1,3,55,1,5,1,5])	# == [1,3,5,55]
 \end{desc}
 
 
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+LoadAudioFile()+
+ 
+\item[Description] Loads an audio file supported by  the ffmpeg library.  It is nearly identical to
+LoadMovie(), but only works for audio files (.ogg, .mp3, .wav, .aiff, .wma, et.).  It creates a movie
+object, which can then be played using PlayMovie() or StartPlayback() functions.  Currently,
+only supported on Windows and Linux.
+
+The ffmpeg (\verb+http://ffmpeg.org+) library supports a wide range of audio formats,
+including most .wav, .mp3, .ogg, .flac, .aiff, .wma, and others.   Currently, there appears to sometimes
+be playback problems if the audio stream is not stereo, so be sure to convert your audio to stereo.
+Also, there appears to be some problems with .flac data formats.
+
+If you have problems with playback, 
+you should verify that your media file loads with another ffmpeg media player.
+
+\item[Usage]		
+\begin{verbatim}
+LoadAudioFile(audiofile)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+   movie <- LoadAudioFile("instuctions.mp3")
+   PrintProperties(inst)
+   PlayMovie(inst)
+   PausePlayback(insnt)
+\end{verbatim}
+
+\item[See Also]  \verb+LoadMovie()+, \verb+tPlayMovie()+,\verb+StartPlayback()+ \verb+PausePlayback()+
+\end{desc}
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+LoadMovie()+
+ 
+\item[Description] Loads a movie file using the ffmpeg library.  It creates a movie
+object, which can then be played using PlayMovie() or StartPlayback() functions.  Currently,
+only supported on Windows and Linux.
+
+The ffmpeg (\verb+http://ffmpeg.org+) library supports a wide range of video and audio formats,
+including most .mpg, .avi, .ogg and .mp3 type formats.  Audio-only formats should load
+and play with LoadMovie, but another function, LoadAudioFile(), has been created for these,
+as they do not need to be added to a window to work.
+
+If you have problems with playback, 
+you should verify that your media file loads with another ffmpeg media player.
+
+For technical reasons, a movie MUST be loaded directly onto a window, and not another widget.
+
+\item[Usage]		
+\begin{verbatim}
+LoadMovie(movie,window, width, height)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+   movie <- LoadMovie("movie.avi",gWin,640,480)
+   PrintProperties(movie)
+   Move(movie,20,20)
+   Draw() 
+   StartPlayback(movie)
+   Wait(500) #Play 500 ms of the movie.
+   PausePlayback(movie)
+\end{verbatim}
+
+\item[See Also] \verb+LoadAudioFile()+, \verb+LoadMovie()+, \verb+tPlayMovie()+,\verb+StartPlayback()+ \verb+PausePlayback()+
+\end{desc}
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+LoadSound()+
 
 \item[Description]	Loads a soundfile from \verb+<filename>+, 
-		returning a variable that can be played.
+returning a variable that can be played using the PlayForeground or PlayBackground functions.
+\texttt{LoadSound} only loads uncompressed .wav files, but uses a background mixer to play them with fairly low latency.  
+In contrast, LoadAudioFile can load many different multimedia files other than .wav, and uses a different audio playback mechanism.  LoadSound
+is appropriate for playing stimulus sounds and feedback, whereas LoadAudioFile may be more appropriate for instructions and longer feedback that should be 
+encoded efficiently.
+
+When the file gets loaded, it gets automatically transcoded into a stereo 44100-sampling rate audio stream, regardless of its original
+playback rate.  We have reports that in some cases, this can cause some problems, especially if a mono file
+gets loaded multiple times in an experiment. If you experience playback problems, try converting your audio to 
+stereo 44100 hz and see if it helps.
 
 \item[Usage]
 \begin{verbatim}
@@ -3858,8 +4137,16 @@ LoadSound(<filename>)
 \end{verbatim}
 
 \item[Example]	
+\begin{verbatim}
+  woof   <- LoadSound("dog.wav")
+  PlayBackground(woof)
+  Wait(200)
+  Stop(woof)
+  PlayForeground(woof)
+\end{verbatim}
 
 \item[See Also]	
+\verb+PlayForeground+, \verb+PlayBackground+, \verb+LoadAudioFile+, \verb+LoadMovie+
 \end{desc}
 
 
@@ -3958,6 +4245,7 @@ Ln(<num>)
 element in \verb+<database>+ corresponding to element of
 \verb+<keylist>+ that matches \verb+<key>+.
 
+If no match exists, Match returns an empty list.
 \item[Usage]		
 \begin{verbatim}
 Lookup(<key>,<keylist>,<database>)
@@ -3984,7 +4272,7 @@ key <- First(data)
 Print(Lookup("alex", key, data))
 ##Returns ["alex","keaton"]
 \end{verbatim}
-\item[See Also]	
+\item[See Also]	\verb+Match+
 \end{desc}
 
 \begin{desc}{Name/Symbol}
@@ -4371,7 +4659,7 @@ MakeSineWave(<duration_in_ms>, <hz>, <amplitude>)
 \begin{verbatim}
 
    ##Make a sound that is 1000 ms, but just play 300 ms
-   sound  <- MakeSoundWave(200, 220, 1000)
+   sound  <- MakeSineWave(200, 220, 1000)
    PlayBackground(sound)
    Wait(300)
    Stop(sound)
@@ -4707,7 +4995,7 @@ The function usually returns fairly quickly, so it can often be used real-time b
 
 \item[Example]
 
-Example PEBL Program using Nonoverlap:
+Example PEBL Program using NonoverlapLayout:
 \begin{verbatim}
 define Start(p)
  {
@@ -4756,7 +5044,7 @@ The output of the above program is shown below.  Even for the left configuration
 
 
 \item[See Also]     
-
+\verb+LayoutGrid()+
 \end{desc}
 
 
@@ -4885,6 +5173,31 @@ GetJoystickAxisState(), GetJoystickHatState(), GetJoystickButtonState()
 
 
 \begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+OpenNetworkListener()+
+
+\item[Description] Creates a network object that listens on a particular port, and is able to accept incoming connections. You can the nuse \verb+CheckForNetworkConnections+ to accept incoming connections.  
+This is an alternative to the \verb+WaitForNetworkConnection+ function that allows more flexibility (and allows updating the during waiting for the connection).
+
+\item[Usage]
+\begin{verbatim}
+net <- OpennetworkListener(port)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+  network <-      OpenNetworkListener(4444) 
+  time <- GetTime()
+  while(not connected and (GetTime() < time + 5000))
+   {
+      connected <- CheckForNetwokConnection(network) 
+   }
+
+\end{verbatim}
+\item[See Also]	\verb+CheckForNetworkConnection()+, \verb+Getdata()+, \verb+WaitForNetworkConnection()+, \verb+CloseNetwork()+
+\end{desc}
+
+
+\begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+or+                   
 
 \item[Description]	Logical or
@@ -4942,6 +5255,36 @@ LPT1, but other configurations are sometimes possible.
 \sect{P}
 \vfill
 
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+PausePlayback()+
+ 
+\item[Description] Pauses a playing movie or audio stream.  This is used for 
+movies whose playback was initiated using STartPlayback, which then ran as
+background threads during a Wait() function. 
+
+\item[Usage]		
+\begin{verbatim}
+PausePlayBack(movie)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+   movie <- LoadMovie("movie.avi",gWin,640,480)
+   PrintProperties(movie)
+   Move(movie,20,20)
+   Draw() 
+   StartPlayback(movie)
+   Wait(500) #Play 500 ms of the movie.
+   PausePlayback(movie)
+   Wait(500)
+   
+\end{verbatim}
+
+\item[See Also] \verb+LoadAudioFile()+, \verb+LoadMovie()+, \verb+tPlayMovie()+, \verb+StartPlayback()+
+\end{desc}
+
+
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+PlayForeground()+  
@@ -4955,7 +5298,10 @@ PlayForeground(<sound>)
 \end{verbatim}
 
 \item[Example]	
-
+\begin{verbatim}
+   sound  <- MakeSineWave(200, 220, 1000)
+   PlayForeground(sound)
+\end{verbatim}
 \item[See Also]	\verb+PlayBackground()+, \verb+Stop()+
 \end{desc}
 
@@ -4970,9 +5316,45 @@ PlayBackground(<sound>)
 \end{verbatim}
 
 \item[Example]	
+\begin{verbatim}
+   sound  <- MakeSineWave(200, 220, 1000)
+   PlayBackground(sound)
+   Wait(300)
+   Stop(sound)
+\end{verbatim}
 
 \item[See Also]	\verb+PlayForeground()+, \verb+Stop()+
 \end{desc}
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+PlayMovie()+
+ 
+\item[Description]	Plays the movie (or other multimedia file) loaded via
+either the LoadMovie or LoadAudioFile function.  Note that this functionality uses a 
+different underlying system than the sound playing functions PlayBackground and PlayForeground,
+and they are not interchangeable.
+
+\item[Usage]		
+\begin{verbatim}
+PlayMovie(movie)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+   movie <- LoadMovie("movie.avi",gWin,640,480)
+   PrintProperties(movie)
+   Move(movie,20,20)
+   movie.volume <- .1
+   status <- EasyLabel("Demo Movie Player",300,25,gWin,22)    
+   Draw()
+   PlayMovie(movie)
+\end{verbatim}
+
+\item[See Also] \verb+LoadAudioFile()+, \verb+LoadMovie()+, \verb+StartPlayback()+, \verb+PausePlayback()+
+\end{desc}
+
+
 
 
 \begin{desc}{Name/Symbol}
@@ -5142,6 +5524,8 @@ Print("Another line")
 
 \item[See Also]	\verb+Print()+, \verb+FilePrint()+
 \end{desc}
+
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+PrintList()+
 
@@ -5149,11 +5533,11 @@ Print("Another line")
   characters. Puts a carriage return at the end.  Returns a string
   that was printed.  If a list contains other lists, the printing will
   wrap multiple lines and the internal lists will be printed as
-  normal.  To avoid this, try PrintList(file,Flatten(list)).
+  normal.  To avoid this, try PrintList(Flatten(list)).
 
 \item[Usage]
 \begin{verbatim}
-PrintList(<filestream>, <list>)
+PrintList( <list>)
 \end{verbatim}
 
 \item[Example]
@@ -5176,6 +5560,43 @@ PrintList(Flatten([[1,2],[3,4],[5,6]]))
 
 \item[See Also]	\verb+Print()+, \verb+Print_()+, \verb+FilePrint()+, \verb+FilePrint_()+, \verb+FilePrintList()+,
 \end{desc}
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+PushOnEnd+
+  
+\item[Description]  	Pushes an item onto the end of a list, modifying the list itself.
+
+Note: \texttt{PushOnEnd} is a more efficient replacement for \texttt{Append()}. Unlike \texttt{Append}, it will modify the original list as a side effect, so the following works:
+
+\begin{verbatim}
+  PushOnEnd(list, item)
+\end{verbatim}
+There is no need to set the original list to the result of PushOnEnd, like you must do with Append.  However, it does in fact work, and incurs only a slight overhead, so that Append can often be replaced with PushOnEnd without worry.
+\begin{verbatim}
+ list <-  PushOnEnd(list, item)
+\end{verbatim}
+
+\item[Usage] 
+\begin{verbatim}
+PushOnEnd(<list>, <item>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+list <- Sequence(1,5,1)
+double  <- []
+loop(i, list)
+{
+  PushOnEnd(double, [i,i])
+}
+Print(double)
+# Produces [[1,1],[2,2],[3,3],[4,4],[5,5]]
+
+\end{verbatim}
+
+\item[See Also]  \verb+SetElement()+ \verb+List()+, \verb+[ ]+, \verb+Merge()+, \verb+PushOnEnd+
+\end{desc}
+
 
 \vfill
 \newpage
@@ -5554,8 +5975,29 @@ USAGE CURRENTLY UNDOCUMENTED
 \end{desc}
 
 
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+RemoveFile()+
 
+\item[Description] Removes a file from the file system.
+\item[Usage]
+\begin{verbatim}
+RemoveObject( <filename>)
+\end{verbatim}
 
+\item[Example]	
+
+\begin{verbatim}
+tmpfile <- FileOpenWrite("tmp.txt")
+FilePrint(tmpfile,Random())
+FileClose(tmpfile)
+text <- FileReadText("tmp.txt")
+RemoveFile("tmp.txt")
+\end{verbatim}
+
+\item[See Also]	
+\item[See Also]\verb+GetDirectoryListing()+, \verb+FileExists()+,       \verb+IsDirectory()+,        
+   \verb+MakeDirectory()+      
+\end{desc}
 
 
 \begin{desc}{Name/Symbol}
@@ -6191,6 +6633,8 @@ SetCursorPosition(tb, 23)
 \item[See Also]   	\verb+SetEditable()+, \verb+GetCursorPosition()+, \verb+SetText()+, \verb+GetText()+
 \end{desc}
 
+
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+SetEditable()+
 
@@ -6212,6 +6656,41 @@ SetEditable(tb, 1)
 
 \item[See Also]    	\verb+GetEditable()+
 \end{desc}
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] 	\verb+SetElement()+
+
+\item[Description] Efficiently alter a specific item from a list.  \verb+SetElement+ has 
+length-constant access time, and so it can be efficient to pre-create a list structure
+and then populate it one-by-one.
+	
+
+\item[Usage]
+\begin{verbatim}
+SetElement(<list>, <index>, <value>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+ 
+ ##Set a random subset of elements to their index:
+ list <- Repeat(0,10)
+  index <- 1
+  while(index <= 10)
+  {
+    if(Random()<.2)
+     {
+        SetElement(list,index,index)
+      }
+    index <- index + 1
+   }
+
+\end{verbatim}
+
+\item[See Also]   	\verb+Nth()+, \verb+Append()+, \verb+PushOnEnd()+
+\end{desc}
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+SetFont()+
@@ -6716,6 +7195,33 @@ StartEventLoop()
 \verb+RegisterEvent()+, \verb+ClearEventLoop()+
 \end{desc}
 
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+StartPlayback()+
+ 
+\item[Description] Initiates playback of a movie so that it will play in the background
+when a Wait() or WaitFor() function is called.  This allows one to collect a response while 
+playing a movie.  The movie will not actually play until the event loop is started, typically
+with something like Wait().
+
+\item[Usage]		
+\begin{verbatim}
+StartPlayBack(movie)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+   movie <- LoadMovie("movie.avi",gWin,640,480)
+   PrintProperties(movie)
+   Move(movie,20,20)
+   Draw() 
+   StartPlayback(movie)
+   Wait(500) #Play 500 ms of the movie.
+   PausePlayback(movie)
+\end{verbatim}
+
+\item[See Also] \verb+LoadAudioFile()+, \verb+LoadMovie()+, \verb+tPlayMovie()+, \verb+PausePlayback()+
+\end{desc}
 
 
 
@@ -7415,11 +7921,12 @@ WaitForAnyKeyDownWithTimeout(<time>)
   objs <- []
   loop(i,resp)
   {
-    tmp <- EasyLabel(resp +". ", 100+50*i,100,
-                     gWin,15)
-    obj <- Append(obj,tmp)
+    tmp <- EasyLabel(i +". ",
+             100+50*i,100,gWin,25)
+    objs <- Append(objs, tmp)
   }
-  click  <- WaitForClickOnTarget(obj,resp)
+  Draw()
+  click  <- WaitForClickOnTarget(objs,resp)
   Print("You clicked on " + click)
   Print("Click location: [" + First(gClick) + 
         ", " + Second(gClick) + "]")
@@ -7431,16 +7938,25 @@ WaitForAnyKeyDownWithTimeout(<time>)
 
 
 \begin{desc}{Name/Symbol}
-\item[Name/Symbol]  	\verb+WaitForClickOnTarget()+
+\item[Name/Symbol]  	\verb+WaitForClickOnTargetWithTimeout()+
 
 \item[Description]	
   Allows you to specify a list of graphical objects in \verb+<objectlist>+ and awaits a click
   on any one of them, returning the corresponding key in \verb+<keylist>+.  Also, sets the 
   global variable gClick which saves the location of the click, if 
-  you need it for something else.
+  you need it for something else.  The function will return after the specified time limit.
+
+  If no response is made by timeout, the text <timeout> will be returned (instead of the correspnoding keylist element),
+and gClick will be set to [-1, -1].
+
+This function can also be useful to dynamically update some visual object while waiting for
+a response.  Give timeout some small number (below 50 ms, as low as 1-5), and loop over this
+repeatedly until a 'proper' response is given, redrawing a timer or other dynamic visual element
+each time.
+
 \item[Usage]		
 \begin{verbatim}
-  x <- WaitForClickOnTarget(<objectlist>,<keylist>)
+  x <- WaitForClickOnTarget(<objectlist>,<keylist>,<timeout-in-ms>)
 \end{verbatim}
 
 \item[Example]	
@@ -7450,11 +7966,12 @@ WaitForAnyKeyDownWithTimeout(<time>)
   objs <- []
   loop(i,resp)
   {
-    tmp <- EasyLabel(resp +". ",
-             100+50*i,100,gWin,15)
-    obj <- Append(obj,tmp)
+    tmp <- EasyLabel(i +". ",
+             100+50*i,100,gWin,25)
+    objs <- Append(objs, tmp)
   }
-  click  <- WaitForClickOnTarget(obj,resp)
+  Draw()
+  click  <- WaitForClickOnTargetWithTimeout(objs,resp,3000)
   Print("You clicked on " + click)
   Print("Click location: [" + First(gClick) + 
         ", " + Second(gClick) + "]")

@@ -20,20 +20,27 @@ their relevant objects below.
 
 Lists are incredibly useful and flexible storage structures that play
 an important role in PEBL. A list is simply a series of variables. It
-is like an array, except that it takes longer to access items later in
-the list than items at the beginning. But it is much easier to do
-things like split and combine lists of items than arrays of items. And
-given the speed of computers, accessing elements of a list is not too
-costly, unless the list is really long (thousands of items). The
-\texttt{Nth} function can extract items from a list, but it is
-somewhat costly, and there are often better ways.
+is the equivalent to a vector, array, or other similar data structure in many other 
+programming languages.
 
-\newpage
-For example, suppose you want to print out every item in a list. Looping through, accessing, and printing all the items of a list is a traditional approach:
+Creating and accessing elements of lists can be accomplished in a number of ways.  If you have a set 
+of values you want to create a list from, you simply need to put them inside square brackets, separated by commas:
+
 \begin{verbatim}
- #This could also be written [1,2,3,4,5,6,7,8,9]
-  list <- Sequence(1,9,1) 
+  mylist <- [1,2,3,4,5,6,7,8,9]
+\end{verbatim}
 
+Many functions related to experimental design return lists already created. Two simple functions are \verb+Repeat+ and \verb+Sequence+:
+\begin{verbatim}
+  list1 <- Repeat(0,10)      ##ten zeroes
+  list2 <- Sequence(0,20,2)  ##numbers 0 to 20 step 2
+\end{verbatim}
+
+Accessing list items can be done in a number of ways.  The simplest is using the \verb+Nth()+ function.
+For a slightly more complex example, suppose you want to print out every item in a list. Looping through, accessing, and printing all the items of a list using this approach: 
+\begin{verbatim}
+
+  list <- Sequence(1,9,1) 
   len <- Length(list)
   i <- 1
   while (i <= len)
@@ -44,23 +51,71 @@ For example, suppose you want to print out every item in a list. Looping through
   } 
 
 \end{verbatim}
-But this is inefficient for many reasons (it could be made more
-efficient, but only with a loss in clarity). The biggest problem is
-that the proper element of the list must be found during each
-iteration, which takes longer as \texttt{i} grows. This poses a
-considerable problem for larger lists.
-
-However, there is an alternative.  Items from
+Note that prior to PEBL 0.12, using Nth to access list items was inefficient.  Since PEBL 0.13, you can use Nth to access list items in amortized constant time!  But nevertheless, the above method of looping is verbose and error-prone.  There is an alternative.  Items from
 lists can be iterated over using the `\texttt{loop}' command:  
 \begin{verbatim}
-  #This could also be written [1,2,3,4,5,6,7,8,9]
+
   list <- Sequence(1,9,1)
   loop(item, list) 
   {
     Print(item)
   }
 \end{verbatim}
-These two code blocks produce identical output, but in the former block, each item of the list must be found on each iteration, which takes longer as \texttt{i} grows. In the latter block, a list item is bound directly to `\texttt{item}' on each iteration, so every item on the list takes the same amount of time. Not only is the latter more efficient, it is implemented in fewer lines of code, and so fewer errors (like forgetting to increment \texttt{i}) are possible.
+
+These two code blocks produce identical output, but in the former
+block, each item of the list must be found on each iteration, but in
+the latter block, a list item is bound directly to `\texttt{item}' on
+each iteration.  There is no appreciable difference in the efficiency
+of these two methods, but the second is simpler and in many cases
+easier to use, and avoids some errors (like forgetting to increment
+\texttt{i}).
+
+\subsection{Growing Lists}
+Oftentimes, you want to create a list one element at a time.  For example, you may have a sampling scheme for stimuli and need to pick each consecutive randomly, or you want to record response times or accuracies one trial at a time.  There are two ways you can do this.  If you know how long your list will be, you can create a list with as many elements as you need, and then alter each element one at a time.  
+\begin{verbatim}
+##I need ten items
+
+items <- Repeat(0,10)
+i <- 1
+while(i <= Length(items))
+{
+  SetElement(items,i,Random())
+}
+\end{verbatim}
+
+Oftentimes, however, this is difficult because you do no know how long the list should be at the beginning.  The \verb+Append()+ function is able to add an item to the end of a list, and you can use that to 'grow' a list one item at a time:
+
+\begin{verbatim}
+##I need ten items
+
+items <- []
+i <- 1
+while(i <= 10)
+{
+  items <- Append(items,Random())
+}
+\end{verbatim}
+
+This ideom is used in many places in PEBL test batteries.  However, it can be inefficient as the length of the list grows.  This is because on each iteration, a new list is created that is 1 element longer than the previous list (and each element is copied to the new list).  For small lists, even ones hundred of items long, this overhead is pretty small and you hardly notice.  But as a list gets thousands of items long, this can start to slow things down, especially if you are doing something complex between each trial. As of PEBL 0.13, we support another function called PushOnEnd():
+\begin{verbatim}
+items <- []
+i <- 1
+while(i <= 10)
+{
+  PushOnEnd(items,Random())
+}
+\end{verbatim}
+
+\texttt{PushOnEnd} will alter \texttt{items} directly, and do so in a very efficient way.  Notice that you don't need to copy the new list and overwrite itself.  However, for ease of use, \texttt{PushOnEnd()} returns the current copy of the list, and so you can often use it as a drop-in replacement for Append (in cases where you are throwing away the original list).  In tests, this method appears to be only 5-10\% less efficient than using \texttt{PushOnEnd} alone, and so it should hardly be noticed.
+
+\begin{verbatim}
+items <- []
+i <- 1
+while(i <= 10)
+{
+  items <- PushOnEnd(items,Random())
+}
+\end{verbatim}
 
 A caveat when using lists: Some functions operate on lists to produce
 new lists (sub-lists, re-ordered lists, etc.). When the lists contain
@@ -74,7 +129,27 @@ only limited modification of existing data structures, it is still
 possible. This is a special case of the copy/assignment issue
 discussed in Section~\ref{sec:copies_and_ass}:~Copies and Assignment.
 
+\subsection{Recursion on lists}
+Many mathematical functions that take a single argument can be applied either to a number or a list of numbers.  When applied to an entire list, it will return the function applied to each element of that list.  For example, \texttt{Ln(1)} return 0, but
+ \texttt{Ln([1,1,1]} returns [0,0,0].
 
+A list of functions that support this include:
+
+\begin{tabular}{llll}
+ \textbullet~ \texttt{Log10} &  \textbullet~ \texttt{Log2} &   \textbullet~ \texttt{Ln} &  \textbullet~ \texttt{Exp}\\
+\textbullet~ \texttt{Sqrt}& \textbullet~ \texttt{Tan} & \textbullet~ \texttt{Sin}& \textbullet~ \texttt{Cos} \\
+\textbullet~ \texttt{ATan}& \textbullet~ \texttt{ASin}&\textbullet~ \texttt{ACos}&\textbullet~ \texttt{DegToRad}\\
+\textbullet~ \texttt{RadToDeg}&\textbullet~ \texttt{Round}&\textbullet~ \texttt{Floor}&\textbullet~ \texttt{Ceiling}\\
+\textbullet~ \texttt{AbsFloor}&\textbullet~ \texttt{Sign}&\textbullet~ \texttt{Abs}\\
+\end{tabular}
+
+In addition, a number of math functions that take two argumunts will apply themselves recursively to the first argument should it be a list. For example, \texttt{LogN([1,1,1],5)} will return [0,0,0].  Functions that support this include:
+
+\begin{tabular}{lll}
+\textbullet~ \texttt{LogN} &
+\textbullet~ \texttt{Pow}&
+\textbullet~ \texttt{NthRoot}\\
+\end{tabular}
 
 \newpage
 \sect{Fonts}
@@ -267,9 +342,7 @@ behavior.
   widget.ZOOMX
   widget.ZOOMY
 \end{verbatim}
-
-
-  
+ 
 
 \sect{Images}
 
@@ -538,6 +611,33 @@ Currently, audio output is very primitive, and there are no facilities for recor
 The \texttt{PlayForeground()} function returns once the sound is finished playing; \texttt{PlayBackground()} returns immediately and the sound plays in a separate thread.  When using \texttt{PlayBackground}, playing can be stopped using the \texttt{Stop()} function.  If another \texttt{PlayForeground()} or \texttt{PlayBackground()} is then used,
 the initial sound will immediately terminate and the new file will play. Currently, PEBL can only play one sound at a time.
 
+\sect{Movie Files}
+
+If compiled to support them, PEBL can read numerous video and audio
+media files \texttt{waave} library and ffmpeg.  Use the
+\texttt{LoadMovie()} function to read a movie file into a movie
+object.  The \texttt{Move()} function moves the upper left corner of the movie to the
+specified point.  An audio file can be similarly loaded using the \texttt{LoadAudioFile} function.
+
+Movie playback is done via a handler placed in the event loop.  This handler is placed there with the \texttt{StartPlayback} function.  Then, when the event loop runs, the movie will get updated in proper time sequence.  The event loop is used for most WaitFor type events.  This allows you to play a movie and wait for a response at the same time.  Alternately, a complete movie file can be played in full (with no possibility for stopping early) using the PlayMovie() function.
+
+Movies have a number of properties that can be set to change playback or determine aspects of the movie. These are all accessible via .property syntax, and can be printed by the PrintProperties function.  Properties include:
+\begin{itemize}
+\item DURATION: time in ms
+\item FILENAME: filename
+\item HEIGHT: pixels high
+\item NAME: \verb+<MOVIE>+
+\item PLAYBACKPOSITION: where playback is
+\item ROTATION: Inherited; will not work 
+\item VISIBLE: whether hidden or visible
+\item VOLUME: volume on a logarithmic scale--can go from 0 to +infinity
+\item WIDTH: screen width in pixels
+\item X:  upper left corner x
+\item Y:  upper left corner y
+\item ZOOMX: scaling; not used (just set width)
+\item ZOOMY: scaling; not used (just set height)
+\end{itemize}
+
 
 \sect{Keyboard Entry}
 
@@ -702,6 +802,7 @@ server, you execute the function
 \texttt{WaitForNetworkConnection(port)}, which listens on the
 specified port until the client tries to connect.  After the server is
 started, the client calls \texttt{ConnectToHost(hostname, port)} or
+\texttt{AcceptNetworkConnection(port)}
 \texttt{ConnectToIP(ipnum, port)}, depending upon whether you are using the
 hostname or ip address.  Typically, ip numbers are specified by four
 three-digit numbers separated by dots, like 196.168.0.1. This actually
@@ -764,12 +865,11 @@ The internal c++ parallel port classes have substantially more flexibility, and 
 
 
 \sect{Serial Port}
-
-            {"OPENCOMPORT",      OpenComPort,          1,1},
-            {"COMPORTSENDBYTE",  ComPortSendByte,      2,2},
-            {"COMPORTGETBYTE",   ComPortGetByte,       1,1},
-
-
+\begin{itemize}
+\item OPENCOMPORT
+\item COMPORTSENDBYTE
+\item COMPORTGETBYTE
+\end{itemize}
 
 
 \sect{The Event Loop}

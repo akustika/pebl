@@ -8,14 +8,18 @@ suit your needs as long as you follow the terms of the GPL, under
 which the source code is licensed. PEBL is written primarily in
 \texttt{C++}, but requires a few other tools (\texttt{flex},
 \texttt{yacc}) and libraries (\texttt{SDL}, \texttt{SDL\_image},
-\texttt{SDL\_gfx}, and \texttt{SDL\_ttf}) to use. 
+\texttt{SDL\_gfx}, and \texttt{SDL\_ttf}) to use.  In addition, a set
+of audio recording functions are available using the (now old and
+basically unmaintained) sdl\_audioin library.  Finally, the
+\texttt{waave} library optionally supports movie playback on linux and
+windows.
 
 
-It currently
-compiles and runs on Linux (using \texttt{g++}), Mac OSX (also using
-\texttt{g++}), and Microsoft Windows (using \texttt{Dev-cpp} and
+It currently compiles and runs on Linux (using \texttt{g++}), Mac OSX
+(using xcode), and Microsoft Windows (using \texttt{code:blocks} and
 \texttt{mingw}) platforms using free tools. It has been developed
-primarily by Shane T.~Mueller, Ph.D. (\href{mailto:smueller@obereed.net}{smueller@obereed.net}). This
+primarily by Shane T.~Mueller,
+Ph.D. (\href{mailto:smueller@obereed.net}{smueller@obereed.net}). This
 document was prepared with editorial and formatting help from Gulab
 Parab and Samuele Carcagno. Contributions are welcome and encouraged.
 
@@ -32,9 +36,9 @@ Currently, there is no automated compile procedure.  PEBL requires the
 \texttt{SDL-ttf} libraries and development headers.  It also uses
 \texttt{flex} and \texttt{bison}, but you can compile without these
 tools. PEBL compiles on both Linux and Windows using the free
-\texttt{gcc} compiler. Note that \texttt{SDL-image} may require
+\texttt{gcc} compiler; on windows this is most easily supported through the code:blocks IDE. Note that \texttt{SDL-image} may require
 \texttt{jpeg}, \texttt{png}, and a \texttt{zlib} compression library,
-while \texttt{SDL-ttf} requires \texttt{truetype 2.0}.
+while \texttt{SDL-ttf} uses \texttt{truetype 2.0}.
 
 \subsection{Linux}
 
@@ -50,50 +54,36 @@ tree.)  These will not exist if you check out from CVS.
 \subsection{Microsoft Windows}
 
 On Microsoft Windows, PEBL is designed to be compiled using the Free
-ide \texttt{dev-c++} available at
-\href{http://www.bloodshed.net/dev/devcpp.html}{http://www.bloodshed.net/dev/devcpp.html}
-and instructions for installing \texttt{dev-c++}, \texttt{sdl}, and
-the \texttt{minGW} system can be found at:\\
-
-\href{http://www.libsdl.org/pipermail/sdl/2002-June/046382.html}{http://www.libsdl.org/pipermail/sdl/2002-June/046382.html}\\
-
-and elsewhere on the net.  Email the PEBL list for more details.
+IDE \texttt{code:blocks}.  A code:blocks project file is included in the source code directory. Email the PEBL list for more details.
 
 \subsection{Mac OSX}
 
-PEBL is compiled
-and runs from the command-line, and resides in
-\texttt{/usr/local/share/pebl} and \texttt{/usr/local/bin}.  To
-compile, download the source and compile \texttt{libSDL},
-\texttt{libSDL\_image}, and \texttt{libSDL\_ttf}.
-\texttt{libSDL\_ttf} requires freetype, and \texttt{libSDL\_image}
-requires \texttt{libpng}, \texttt{libjpeg}, and \texttt{zlib}.
+Originally, PEBL compiled to a command-line function.  Since 0.12, PEBL will compile to a .app package using xcode.  An xcode package is available in the source package.
 
 
-
+\sect{Installation}
 \subsection{Linux}
 
-On Linux, you will probably have to install from source.
-There is an `\texttt{install}' option in the Makefile that, if invoked with
-`\texttt{make install}', will copy \texttt{bin/pebl} to \texttt{/usr/local/bin/pebl}, and the
-\texttt{media/} directories to \texttt{/usr/local/share/pebl/media}.  You must be root
-to do this, and you can just as easily do it by hand.
+On Linux, there are .deb packages available for debian.  However, it is fairly easy to 
+compile and install from source. To begin, be sure that all the sdl packages are installed.  Then, go to the main pebl directory and type:
+\begin{verbatim}
+>make
+>sudo make install
+\end{verbatim}
+Once installed, you can install the test battery into \texttt{Documents/pebl-exp.X} using the command pebl --install.
 
 \subsection{Microsoft Windows}
 
 In Microsoft Windows, we provide an installer package that contains
 all necessary executable binary files and \texttt{.dlls}. This
 installer places PEBL in \texttt{c:\char92 Program Files\char92PEBL},
-and creates a directory \texttt{pebl-exp} in \texttt{My Documents}
+and creates a directory \texttt{pebl-exp.X} in \texttt{My Documents}
 with a shortcut that allows PEBL to be launched and programs that
 reside there to be run.
 
 \subsection{Macintosh OSX}
 
-For OSX, we provide a \texttt{.pkg} installer that installs all the
-necessary files and libraries in \texttt{/usr/local/share/pebl}.  PEBL can be
-run from the command line by invoking \texttt{/usr/local/bin/pebl}.
-
+For OSX, we provide a \texttt{.app} package that can be dragged into your Applications folder.  The first time any user  runs pebl, it gives the option to install the battery and other files into Documentspebl-exp.X.  Afterward, it will run the launcher from that directory.
 
 \sect{How to Run a PEBL Program}
 
@@ -125,7 +115,7 @@ PEBL can be launched from the command line in Windows by going to the
 PEBL requires you to specify one or more source files that it will
 compile and run.  For example, the command
 \begin{verbatim}
-  > pebl stroop.pbl library.pbl
+  > pebl.exe stroop.pbl library.pbl
 \end{verbatim}
 loads the experiment described in \texttt{stroop.pbl}, and loads supplementary library functions in \texttt{library.pbl}.
 
@@ -139,7 +129,6 @@ specify directories without a file (as long as they end with
 `\texttt{\char92}').  Doing so will add that directory to the search
 path when files are opened. See Section \ref{sec:2.5}: Command-Line
 Arguments.
-
 
 Launching programs from the command-line on Windows is cumbersome.
 One easy way to launch PEBL on Windows is to create a shortcut to the
@@ -155,44 +144,10 @@ script.
 The latest version of PEBL packaged for OSX is 0.12. It is compiled as an application bundle with both 32-bit and 64-bit architectures available. We do not support PPC architecture.
 
 
-On OSX, PEBL can be run as a command-line tool, just as in linux.
-Also, you can make a .command file (see instructions in the
-installer), and the test battery includes a script that will create
-.command launchers for each of the test battery experiments.  There
-are instructions in the installation .zip for creating this.  Also, 
-I've included a little drop-on
-script courtesy of applescript.  These are little
-application launchers that let you drag a script onto the launcher
-(you can put the script anywhere too), and it will launch with the
-specified options.  Applescript is available on all OSX machines, so
-you should be able to edit this to do things like collect experiment
-options and subject numbers, launch multiple scripts, upload data
-afterwords, and so on.
+The simplest way to run PEBL is through the launcher, but you can also use Applescript
+to create your own sequences of experiments.
 
-
-Installing PEBL via the install command file places PEBL in\\
-\texttt{/usr/local/share/pebl} and \texttt{/usr/local/bin}.
-To run via the command line  Open a terminal (in the applications folder)
-and type at the \texttt{\$} prompt:
-\begin{verbatim}
-$ /usr/local/bin/pebl
-\end{verbatim}
-To execute, type:
-\begin{verbatim}
-$  /usr/local/bin/pebl Documents/test.pbl
-\end{verbatim}
-To truncate, add \texttt{/usr/local/bin to the path}:
-\begin{verbatim}
-export PATH=$PATH:/usr/local/bin
-\end{verbatim}
-Then you can run:
-\begin{verbatim}
-$  pebl Documents/test.pbl
-\end{verbatim}
-
-On OSX, there is no such thing as double-buffering.  However, under
-fullscreen mode, drawing can be synced to the vertical refresh. But as
-a caveat, this has not yet been implemented.
+On OSX, PEBL can be run as a command-line tool, just as in linux.  Once installed, the application is located at /Applications/pebl.app/Contents/MacOS/pebl. 
 
 \sect{How to stop running a program}
 
@@ -266,53 +221,27 @@ pebl experiment.pbl -v 33 -v 2 --fullscreen --display 640x480
 --display  <widthxheight>
 \end{verbatim}
   Controls the screen width and height (in pixels). Defaults
-  to \texttt{640x480}.
-  Currently, only the following screens are supported:
-\begin{description}
-\item
-\begin{verbatim}
-512x384
-\end{verbatim}
-\item
-\begin{verbatim}
-640x480
-\end{verbatim}
-\item
-\begin{verbatim}
-800x600
-\end{verbatim}
-\item
-\begin{verbatim}
-960x720
-\end{verbatim}
-\item
-\begin{verbatim}
-1024x768
-\end{verbatim}
-\item
-\begin{verbatim}
-1152x864
-\end{verbatim}
-\item
-\begin{verbatim}
-1280x1024
-\end{verbatim}
-\end{description}
+  to the current resolution of the screen.  Unlike older versions of PEBL, 
+after 0.12 any legal combination of width and height should work.
 
-Note: the way this is invoked may be changed in the
-future.  Your video display may not support the
-command-line argument.  If it does not, PEBL should exit
-and disply a useful error message; of course, it could
-possibly damage your hardware. 
+The screensize a PEBL script runs at depends on a number of things. If no --display size is given
+ (e.g., when 'default' is chosen in the launcher), PEBL will try to determine the current screen size 
+and use that, for both fullscreen and windowed mode.  Otherwise, it will try to use the specified value.
 
-For the sake of convenience, the width, height, and bit depth can be
-accessed from within a PEBL script using the global variables
-\texttt{gVideoWidth}, \texttt{gVideoHeight}, and \texttt{gVideoDepth}.
-If these values are set within a script before the function
-\verb+MakeWindow()+ is called,  the window will be created with these values,
-overriding any command-line parameters.  Many of the test battery tests define these within the script,
-overriding whatever command-line parameters are given.
-  
+However, these values are only a request.  When the script starts, it sets the values
+of the global variables \texttt{gVideoWidth} and \texttt{gVideoHeight} based on either the 
+specified values or the current screen size.  These values can be changed in the script before the \texttt{MakeWindow} function is called,
+so that a script can require a particular screen size. 
+Then, the window will be created with those dimensions, 
+overriding any command-line parameters.   For greatest flexibility, it is recommended that you do not
+hard-code screen size but rather make your test adapt to a large number of screen sizes.
+
+Finally, if a screen size is selected that the video card cannot
+support (i.e., in fullscreen mode), \texttt{gVideWidth} and \texttt{gVideoHeight} will
+be set to the legal screen size closest to the one you requested.  PEBL should never crash because 
+you have specified the wrong screen size, but it should rather use one it can support.  The values of 
+\texttt{gVideoWidth} and \texttt{gVideoHeight} will be changed by MakeWindow to whatever screen size it actually uses.
+
 \item
 \begin{verbatim}
 --depth
@@ -323,9 +252,8 @@ overriding whatever command-line parameters are given.
   specified bit depth, and bit depths such as 2 and 8 are
   likely never useful.  Changing depths can, for
   some drivers and video cards, enable better performance or
-  possibly better video sychrony.
+  possibly better video sychrony.  Defaults to 32.
 
-  
 \item
 \begin{verbatim}
 --language
@@ -336,8 +264,10 @@ overriding whatever command-line parameters are given.
 
 \item
 \verb+--windowed+ or \verb+--fullscreen+
-
 Controls whether the script will run in a window or fullscreen.  
+The screen resolution a PEBL script runs at depends on a number of things.  See the \verb+--display+ option above for more details.
+
+
 \end{description}
 
 

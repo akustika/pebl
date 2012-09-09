@@ -7,6 +7,7 @@ not provided in any of these functions, contact us, or better yet,
 contribute to the PEBL project by implementing the function yourself. 
 
 
+
 \begin{longtable}{p{3cm}p{3cm}p{6cm}} 
 \caption{Function Quick Reference} \label{tab:quick} \\ 
 \toprule 
@@ -95,8 +96,9 @@ contribute to the PEBL project by implementing the function yourself.
 & &Determines whether line segment ax intersects cd.\\
 \verb+NonOverlapLayout+&\verb+<xmin,xmax,ymin,ymax,tol,num>+\\
 &  &Creates a set of num points that don't overlap, but fails gracefully\\
+\verb+LayoutGrid+& \verb+<minx,maxx,miny,maxy,height,width,vertical>+\\
+                          &&Creates [x,y] pairs in a grid for graphical layout \\
 %% these are not released yet:
-%% \verb+LayoutGrid&\verb++&Creates [x,y] pairs in a grid for graphical layout \\
 %%  \verb+LayoutGrid2&\verb++&Creates [x,y] pairs in a grid for graphical layout \\
 
 
@@ -135,6 +137,7 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+FileExists+&\verb+<path>+&Checks whether a file exists\\
 \verb+IsDirectory+&\verb+<path>+&Checks whether a file is a directory\\
 \verb+MakeDirectory+&\verb+<path>+,\verb+<dirname>+&Creates a directory in path\\
+\verb+RemoveFile+&\verb+<file>+&Removes and deletes a file \\
 \verb+AppendFile+& \verb+<file1>+ ,\verb+<file2>+ & Appends a file2 to file1\\
 \verb+DeleteFile+& \verb+<file1>+ & Deletes a file\\
 \verb+ConnectToIP+ &\verb+<ip>+ \verb+<port>+&Connects to a port on another computer, returning network object.   \\
@@ -147,6 +150,8 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+GetData+&\verb+<network>+ \verb+<length>+&return a string from network connection\\
 \verb+ConvertIPString+&\verb+<ip-as-string>+&Converts an
 ip-number-as-string to usable address \\
+\verb+OpenNetworkListener+&\verb+<port>+&Opens a port for listening\\
+\verb+CheckForNetworkConnection+&\verb+<network>+&Checks for incoming connection\\
 \verb+WritePNG+&\verb+<filename>+, \verb+<object>+ &Makes a .png from a window or object\\
 
 \verb+GetNumJoysticks+& no argument&Determines how many joysticks are available\\
@@ -249,6 +254,7 @@ points for a set\\
 \verb+Inside+  & \verb+<[x,y]>+ \verb+<object>+ & Determines whether a point is inside a graphical object\\ 
 \verb+SetPixel+&\verb+x,y,color+&Sets the color of a pixel on an image or canvas to \verb+color+\\
 \verb+SetPoint+&\verb+x,y,color+&Sets the color of a pixel on an image or canvas to \verb+color+\\
+\verb+GetPixelColor+&\verb+<obj>,x,y+&Gets the color of a specified pixel on a widget\\
 \verb+MakeGabor+&\verb+size,freq,sd, angle,phase,bglev+\\
       &&Creates a 'gabor patch' with specified parameters\\
 \addlinespace[0.2cm] 
@@ -276,6 +282,13 @@ points for a set\\
 %\verb+MakeSawtoothWave+ & & NOT IMPLEMENTED\\ 
 %\verb+MakeChirp+ & & NOT IMPLEMENTED\\ 
 
+\verb+LoadMovie+ &\verb+<movie_filename>+ &Load a movie file\\
+ &\verb+<window>+,\verb+<width>+,\verb+<height>+ \\
+\verb+LoadAudioFile+ &\verb+<audio_filename>+ &Load an audio file\\
+
+\verb+PlayMovie+&\verb+<movie>+ &Plays a movie until its end\\
+\verb+StartPlayback+&\verb+<movie>+&Initiates playback in background, updated with Wait()\\
+\verb+PausePlayback+&\verb+<movie>+&Pauses playback of movie\\
 
 \addlinespace[0.2cm] 
 
@@ -307,7 +320,10 @@ points for a set\\
 \verb+WaitForMouseButton+ & &Waits until any of the mouse buttons is pressed or released, and returns message indicating what happened \\ 
 \verb+WaitForMouseClickWithTimeout+ \\&\verb+<timeout>+\\
 & &Waits until any of the mouse buttons is pressed, or a prespecified timout has elapsed. \\ 
-\verb+WaitForClickOnTarget+ & &Waits until any of a set of target objects are clicked.\\ 
+\verb+WaitForClickOnTarget+ \\
+&\verb+<target>+ &Waits until any of a set of target objects are clicked.\\ 
+\verb+WaitForClickOnTargetWithTimeout+\\
+     &\verb+<target>+, \verb+<timeout>+ &Waits with a max time for a set of targets to be clicked.\\ 
 \verb+WaitForDownClick+ & &Waits for mouse button to be clicked \\ 
 
 \verb+RegisterEvent+ &\verb+<>+ &Registers events to trigger based on particular conditions\\ 
@@ -319,14 +335,17 @@ points for a set\\
 \verb+GetPEBLVersion+ &\verb+<>+ &Returns a string indicating which version of PEBL you are using\\ 
 \verb+GetSystemType+ &\verb+<>+ &Identifies the type of operating system being used.\\ 
 \verb+GetVideoModes+&\verb+<>+& Gets list of available screen resolutions\\
+\verb+GetCurrentScreenResolution+&\verb+<>+& Gets the current widthxheight of the screen\\
 \verb+SystemCall+ &\verb+<command>+ \verb+<optional-args>+ &Executes command in operating system\\ 
 \verb+LaunchFile+ & \verb+<file>+&Launches a file using platform-specific handlers\\
 \verb+GetNIMHDemographics+ & \hspace{0.7cm}\verb+<code>+ \verb+<window>+ \verb+<file>+ & Asks NIMH-related questions\\ 
 \verb+GetSubNum+ & \verb+<window>+ & Asks user to enter subject number\\
 \verb+MessageBox+ &\verb+<text>+ \verb+<win>+&Pops up a message, overtop the entire screen, and waits for a click to continue.\\
 \verb+GetEasyInput+&\verb+<text>+ \verb+<win>+&Gets typed input based on a prompt.\\
-\verb+GetEasyChoice+&\verb+<text>+, \verb+<choices>+, &\\
+\verb+GetEasyChoice+&\verb+<text>+, \verb+<choices>+, &Simple multiple choice \\
                    &\verb+<output>+, \verb+<window>+ &\\
+\verb+CountDown+&\verb+<window>+&Displays a 3 2 1 countdown on screen\\
+
 \verb+IsAudioOut+ & \verb+<variant>+ & Tests whether \verb+<variant>+ is a AudioOut stream\\ 
 \verb+IsCanvas+ & \verb+<variant>+ & Tests whether \verb+<variant>+ is a Canvas\\ 
 \verb+IsColor+ & \verb+<variant>+ & Tests whether \verb+<variant>+ is a Color\\ 
@@ -384,13 +403,14 @@ list, in the order they appear in the original list\\
 \verb+First+ &\verb+<list>+ & Returns the first item in a list. \\ 
 \verb+Last+ &\verb+<list>+ & Returns the last item in a list.\\ 
 \verb+Merge+ &\verb+<list1>+ \verb+<list2>+& Combines two lists.\\ 
-\verb+Append+ &\verb+<list>+ \verb+<item>+ & Adds \verb+<item>+ to \verb+<list>+ \\ 
+\verb+Append+ &\verb+<list>+ \verb+<item>+ & Returns new list combining  \verb+<list>+ and \verb+<item>+ \\ 
+\verb+PushOnEnd+ &\verb+<list>+ \verb+<item>+ & Adds \verb+<item>+ to \verb+<list>+ efficiently \\ 
 \verb+List+ &\verb+<item1>+ \verb+<item2>...+ &Makes a list out of items\\ 
 \verb+Sort+ &\verb+<list>+ &Sorts a list by its values. \\ 
 \verb+SortBy+ &\verb+<list>+ \verb+<key>+ & Sorts list by the values in \verb+<key>+ \\ 
 \verb+Nth+ &\verb+<list>+ \verb+<n>+ &Returns the nth item in a list.\\ 
 \verb+Subset+ &\verb+<list>+ \verb+<list-of-indices>+ & returns a subset of items from a list\\ 
-
+\verb+SetElement+&\verb+<list>+, \verb+<index>+, \verb+<value>+&Sets an element of list to value\\
 \verb+Match+&\verb+[list]+,\verb+<item>+&Returns a list of 0/1s, indicating which elements of list match item.\\
 
 \verb+Filter+&\verb+[list]+,\verb+<indicators>+& Filters a list based on a 0/1 list produced by Match.\\
