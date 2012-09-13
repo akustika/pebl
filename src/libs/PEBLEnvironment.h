@@ -117,7 +117,8 @@ namespace PEBLEnvironment
     Variant MakeDirectory(Variant v);
     Variant DeleteFile(Variant v);
     Variant GetHomeDirectory(Variant v);
-
+    Variant GetWorkingDirectory(Variant v);
+    Variant SetWorkingDirectory(Variant v);
 
     Variant VariableExists(Variant v);
     Variant IsText(Variant v);

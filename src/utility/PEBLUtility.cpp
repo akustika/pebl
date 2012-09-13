@@ -56,7 +56,12 @@
 #include <shlobj.h>
 #elif defined(PEBL_LINUX)
 #include <sys/stat.h>
+#include <unistd.h>
 #include <bits/types.h>
+#include <pwd.h>
+#elif defined (PEBL_OSX)
+#include <unistd.h>
+#include <pwd.h>
 #endif
 
 #include <sys/stat.h>
@@ -1081,7 +1086,6 @@ Variant PEBLUtility::MakeDirectory(std::string path)
 
 #ifdef PEBL_UNIX
 
-
     if (mkdir(path.c_str(), 0777) == -1)
        {
            PError::SignalFatalError("Unable to create directory: " );//+ Variant(strerror(errno)));
@@ -1114,16 +1118,58 @@ Variant PEBLUtility::DeleteMyFile(std::string path)
 
 Variant PEBLUtility::GetHomeDirectory()
 {
+
 #ifdef PEBL_WIN32
   char path[ MAX_PATH ];
   if (SHGetFolderPathA( NULL, CSIDL_PROFILE, NULL, 0, path ) != S_OK)
     {
         PError::SignalFatalError("Unable to find user's home directory!");
     }
-   #endif
+#else
+
+  struct passwd *p=getpwuid(getuid());
+  std::string path = p->pw_dir;
+
+#endif
+
+  return Variant(path);
+}
+
+Variant PEBLUtility::GetWorkingDirectory()
+{
+#ifdef PEBL_WIN32
+    //maybe this will work given we compile with g++
+
+    char* path = get_current_dir_name();
+
+#else
+
+    char* path = get_current_dir_name();
+
+#endif
 
  return Variant(path);
 }
+
+Variant PEBLUtility::SetWorkingDirectory(std::string path)
+{
+#ifdef PEBL_WIN32
+
+    if(::SetCurrentDirectory(path) == FALSE)
+        PError::SignalFatalError("Unable to Set Working Directory: " + path);
+    //GetLastError should help more here.
+#else
+    int result = chdir(path.c_str());
+   if(result != 0)
+        {
+            PError::SignalFatalError("Unable to Set Working Directory: " + path);
+        }
+#endif
+
+ return Variant(true);
+}
+
+
 
 Variant PEBLUtility::LaunchFile(std::string file)
 {

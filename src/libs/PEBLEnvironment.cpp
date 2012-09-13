@@ -478,7 +478,7 @@ Variant PEBLEnvironment::WaitForAnyKeyPressWithTimeout(Variant v)
     Evaluator::mEventLoop.RegisterState(timestate, funcname, Variant(0));
     PEvent returnval = Evaluator::mEventLoop.Loop();
 
-    //    std::cout << "Returnval: "<<returnval.GetType() << std::endl;
+     std::cout << "Returnval: "<<returnval.GetType() << std::endl;
     //Now, clear the event loop tests
     Evaluator::mEventLoop.Clear();
     //    return Variant(returnval.GetDummyEvent().value);
@@ -1665,6 +1665,27 @@ Variant PEBLEnvironment::GetHomeDirectory(Variant v)
     return out;
 
 }
+
+
+
+Variant PEBLEnvironment::GetWorkingDirectory(Variant v)
+{
+
+    Variant out = PEBLUtility::GetWorkingDirectory();
+    return out;
+}
+
+
+Variant PEBLEnvironment::SetWorkingDirectory(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [SetWorkingDirectory(<pathname>)]:  ");
+
+    Variant out = PEBLUtility::SetWorkingDirectory(plist->First());
+    return out;
+}
+
 
 
 //  This does not currently work.

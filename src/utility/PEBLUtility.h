@@ -80,6 +80,8 @@ namespace PEBLUtility
     Variant MakeDirectory(std::string path);
     Variant DeleteMyFile(std::string path);
     Variant GetHomeDirectory();
+    Variant GetWorkingDirectory();
+    Variant SetWorkingDirectory(std::string path);
 
     const std::string  StripFile(const std::string &  file);
 

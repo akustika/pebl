@@ -67,10 +67,10 @@
 
 #ifdef WIN32
 #include <time.h>
-#endif
-
 #include <objbase.h>
 #include <shlobj.h>
+#endif
+
 
 
 #ifdef PEBL_OSX
@@ -134,9 +134,9 @@ int PEBLInterpret( int argc, char *argv[] )
             //Now, copy everything in 'battery' to your documents directory.
             std::cerr << "Creating Documents/pebl-exp.0.13 Directory\n";
             PEBLUtility::SystemCall("mkdir ~/Documents","");
-            PEBLUtility::SystemCall("mkdir "+destdir,"");
+            //PEBLUtility::SystemCall("mkdir "+destdir,"");
             std::cerr << "Copying files to ["+destdir+ "]\n";
-            PEBLUtility::SystemCall("cp -R "+ basedir + "* " + destdir,"");
+            PEBLUtility::SystemCall("cp -R "+ basedir + " " + destdir,"");
             exit(0);
         }
 #endif
@@ -604,8 +604,8 @@ int main(int argc,  char *argv[])
 
     signal(SIGTERM, CaptureSignal);
 
-  cout << "ARGC" << argc << endl ;
-  cout << PEBL_WIN32 << endl;
+    //cout << "ARGC" << argc << endl ;
+    //cout << PEBL_WIN32 << endl;
     if(argc == 1)
         {
             //This indicates there are no command-line arguments.

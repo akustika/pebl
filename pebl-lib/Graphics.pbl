@@ -956,42 +956,38 @@ define GetMinDist(pts)
 }
 
 
- define LayoutGrid(xmin,xmax,ymin,ymax, tall, wide, horvert)
+ define LayoutGrid(xmin,xmax,ymin,ymax, tall, wide, vertical)
  {
      xskip <- (xmax-xmin)/(wide+1)
      yskip <- (ymax-ymin)/(tall+1)
 
-     pts <- []
 
-     if(horvert == 1)
-      {
-        x <- xmin+xskip
-       loop(i,Sequence(1,wide,1))
+
+     ##Make the layout grid as a matrix first, 
+     ## each sublist specifying a row.
+     pts <- []
+      x <- xmin+xskip
+      loop(i,Sequence(1,wide,1))
         { 
+         line <- []    
           y <- ymin+yskip
          loop(j,Sequence(1,tall,1))
           {
-             pts <- Append(pts, [x,y])
+             line <- Append(line, [x,y])
              y <- y + yskip
           }
           x <- x + xskip
+	  pts <- Append(pts,line)
         }
-      } else {
-       y <- ymin+yskip
-       loop(i,Sequence(1,tall,1))
-        { 
-          x <- xmin+xskip
-         loop(j,Sequence(1,wide,1))
-          {
 
-             pts <- Append(pts, [x,y])
-             x <- x + xskip
-             y <- y + yskip       
-          }
+      ##Transpose if  horizontal:
+     if(vertical == 0)
+      {
+         pts <- Transpose(pts)
+      }
 
-     }}
-
-   return pts
+   #Return the layout.
+   return FlattenN(pts,1)
   }
 
 

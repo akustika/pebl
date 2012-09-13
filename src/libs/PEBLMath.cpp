@@ -63,8 +63,7 @@ Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
     //Make a results list
     PList * resultslist = new PList();
     //Declare a temporary argument list.
-   
-    //Now, apply 
+   //Now, apply 
 
 
     PList* arglist;
@@ -73,16 +72,15 @@ Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
     PComplexData * tmpPCD;
     
 
-
-    //    std::list<Variant>::iterator p = plist->Begin();    
-    while(!plist->IsEmpty())
+    std::vector<Variant>::iterator p = plist->Begin();    
+    while(p != plist->End())
         {
 
             //Create new variant list to pass to function
             arglist = new PList();
 
             //Add the first element of plist to it
-            arglist->PushBack(plist->First());
+            arglist->PushBack(*p);
             
             //make it into a PCD
             tmpObj = counted_ptr<PEBLObjectBase>(arglist);
@@ -101,9 +99,10 @@ Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
             //Get rid of arglist so we can make a new one.
             delete arglist;
             arglist = NULL;
-            //plist->PopFront();  We need to do something here to handle recursiion with vectors instead of lists
+            //plist->PopFront();  We need to do something here to handle recursion with vectors instead of lists
             //e.g., an iterator.
-            PError::SignalFatalError("Recursive operation not supported.");
+            //PError::SignalFatalError("Recursive operation not supported.");
+            p++;
         }
 
     //Now, resultslist is a PList.  Put it into a PCD.
@@ -123,7 +122,6 @@ Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
 Variant PEBLMath::Recurse2(Variant v, Variant (*funcname)(Variant), Variant argument)
 {
 
-            PError::SignalFatalError("Recursion is broken.");
     //If this function is called, v is a list of elements.
     //We should call the function on each element of the list, creating 
     //a list of the results, turn this into a variant, and return it.
@@ -140,21 +138,27 @@ Variant PEBLMath::Recurse2(Variant v, Variant (*funcname)(Variant), Variant argu
 
     //Add the argument onto arglist.  argument should be a list of variants.
     //Declare an temporary argument list.
-    counted_ptr<PEBLObjectBase>  tmp2 = argument.GetComplexData()->GetObject();
-    PList * arglist = ((PList*)(tmp2.get()));
+    //counted_ptr<PEBLObjectBase>  tmp2 = argument.GetComplexData()->GetObject();
+    //Variant arg2 = ((PList*)(tmp2.get()));
+
+    PList * arglist = NULL;
+
     PComplexData * pcd;
     while(p != plist->End())
         {
-            arglist->PushBack(*p);                          //Add the critical argument 
+            arglist = new PList();     
+            arglist->PushBack(*p);           //Add the critical argument 
+            arglist->PushBack(argument);        //add second argument
             counted_ptr<PEBLObjectBase> tmp3 = counted_ptr<PEBLObjectBase>(arglist);
 
             pcd = new PComplexData(tmp3);
             Variant tmp = Variant(pcd);
-            //delete pcd;
-            //pcd=NULL;
-
             resultslist->PushBack(funcname(tmp));        //Execute
-            //arglist->PopFront();                             //Pop of argument to move to next one.
+
+            delete arglist;
+            arglist = NULL;
+     
+
             p++;
         }
 
@@ -252,20 +256,23 @@ Variant PEBLMath::LogN(Variant v)
 
     //Don't get the second argument right away--if the first argument is
     //a list, we should just pass it along to the recurse2 function.
+
+    Variant base = plist->Nth(2);// plist->PopFront();   //Get the base argument    
     
-    if(number.IsNumber())
+if(number.IsNumber())
         {                  
-            Variant base = plist->Nth(2);// plist->PopFront();   //Get the base argument
-            return Variant(logl(number.GetFloat())/ logl(base.GetFloat()));
+                return Variant(logl(number.GetFloat())/ logl(base.GetFloat()));
         }
     else if(number.GetComplexData()->IsList())
         {
-            counted_ptr<PEBLObjectBase>tmp2 = counted_ptr<PEBLObjectBase>(plist);
-            PComplexData * pcd = new PComplexData(tmp2);
-            Variant args = Variant(pcd);
-            delete pcd;
-            pcd=NULL;
-            Variant retval = Recurse2(number, LogN, args);
+
+            //counted_ptr<PEBLObjectBase>tmp2 = counted_ptr<PEBLObjectBase>(plist);
+            //PComplexData * pcd = new PComplexData(tmp2);
+
+            //Variant args = Variant(pcd);
+            //delete pcd;
+            //pcd=NULL;
+            Variant retval = Recurse2(number, LogN, base);
             return retval;
         }
     else
@@ -874,7 +881,7 @@ Variant PEBLMath::Abs(Variant v)
     
 
 //     Variant min = plist->First();
-//     std::list<Variant>::const_iterator i = plist->Begin();
+//     std::vector<Variant>::const_iterator i = plist->Begin();
     
 //     while(i != plist->End())
 //         {
@@ -905,7 +912,7 @@ Variant PEBLMath::Abs(Variant v)
 //         }
     
 //     Variant max = plist->First();
-//     std::list<Variant>::const_iterator i = plist->Begin();
+//     std::vector<Variant>::const_iterator i = plist->Begin();
     
 //     while(i != plist->End())
 //         {

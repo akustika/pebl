@@ -355,22 +355,24 @@ define ReplaceChar(word,char, char2)
 
 define Lookup(key, keylist, database)
 {
+  if(not Length(keylist) == Length(database))
+  {
+    SignalFatalError("In Function Lookup, keylist and database must be the same length")
+  }
   found <- []
   table <- Transpose([keylist, database])
    loop(i, table)
-  {
+   {
 
      if(key == First(i))
      {
        found <- Nth(i,2)
        break
      }
-  }
+   }
 
    return found
 }
-
-
 
 
 ## makes a label with a standard font, black on grey, in specified location.
@@ -1026,18 +1028,29 @@ define WaitForClickOnTargetWithTimeout(targetlist,keylist,time)
 
 
 
-
-define CountDown()
+##  This gives a short 3 2 1 countdown, 500 ms ISI.
+##
+define CountDown(win)
 {
 
-    label <- EasyLabel("",gVideoWidth/2,gVideoHeight/2,gWin,100)
+  if(not IsWindow(win))
+  { 
+    SignalFatalError("CountDown(win) needs a window to be specified, not [" + win + "]")
+  }
+
+
+    bgcol <- win.BGCOLOR
+    rect <- Rectangle(gVideoWidth/2,gVideoHeight/2,gVideoWidth,gVideoHeight,bgcol,1)
+    AddObject(rect,win)  
+    label <- EasyLabel("",gVideoWidth/2,gVideoHeight/2,win,100)
     labs <- [3,2,1]
     loop(i,labs)
      {
     	label.text <- i
         Draw()
-		Wait(500)
+	Wait(500)
      }
-   RemoveObject(label,gWin)
+   RemoveObject(rect,win)
+   RemoveObject(label,win)
 }
 

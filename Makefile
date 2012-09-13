@@ -29,10 +29,10 @@
 #locatable anywhere
 PREFIX = /usr/local/
 
-PEBL_VERSION = 0.13
+PEBL_VERSION =0.13
 USE_WAAVE=1       ##Optional; comment out to turn off waave multimedia library
 USE_AUDIOIN=1     ##Optional; comment out to turn off  sdl_audioin library
-#USE_DEBUG = 1     ##Optional; turn on/off debugging stuff.
+USE_DEBUG = 1     ##Optional; turn on/off debugging stuff.
 C   = gcc
 CXX = g++ 
 ifdef USE_DEBUG
@@ -43,7 +43,7 @@ endif
 CFLAGS =   -O3 -std=c99 -DPREFIX=$(PREFIX) -g 
 
 
-CXXFLAGS0 =  -O3  -DPEBL_UNIX  -DPEBL_LINUX -DENABLE_BINRELOC -DPREFIX=$(PREFIX)
+CXXFLAGS0 =  -O3  -DPEBL_UNIX  -DPEBL_LINUX -DENABLE_BINRELOC -DPREFIX=$(PREFIX) 
 
 
 ifdef USE_WAAVE
@@ -339,13 +339,16 @@ install: uninstall
 	install -d $(PREFIX)share/pebl/pebl-lib
 	install -d $(PREFIX)share/pebl/doc
 	install -d $(PREFIX)share/pebl/battery
+
 	cp -R media/* $(PREFIX)share/pebl/media/
 	rm -rf `find $(PREFIX)share/pebl/media -type d -name .svn`
 	cp  pebl-lib/*.pbl $(PREFIX)share/pebl/pebl-lib/
-	cp doc/pman/PEBLManual0.12.pdf $(PREFIX)/share/pebl/doc
+	cp doc/pman/PEBLManual$(PEBL_VERSION).pdf $(PREFIX)/share/pebl/doc
 	chmod -R uga+r $(PREFIX)share/pebl/
 #	chmod +s $(PREFIX)bin/pebl ##suid root
 	cp -R battery/* $(PREFIX)share/pebl/battery
+	cp battery/\.\.png $(PREFIX)share/pebl/battery
+	cp battery/\.\.about.txt $(PREFIX)share/pebl/battery
 	rm -rf `find $(PREFIX)share/pebl/battery -type d -name .svn`
 	rm `find $(PREFIX)share/pebl/battery | grep \~`
 	rm -Rf `find $(PREFIX)share/pebl/battery | grep 'data'`

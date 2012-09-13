@@ -325,6 +325,8 @@ namespace PEBLEnvironment
             {(char*)"GETDIRECTORYLISTING",             GetDirectoryListing,1,1},
             {(char*)"MAKEDIRECTORY",                   MakeDirectory,      1,1},
             {(char*)"GETHOMEDIRECTORY",                GetHomeDirectory,    0,0},
+            {(char*)"GETWORKINGDIRECTORY",             GetWorkingDirectory,    0,0},
+            {(char*)"SETWORKINGDIRECTORY",             SetWorkingDirectory,    1,1},
 
             {(char*)"DELETEFILE",                      DeleteFile,      1,1},
 
