@@ -54,12 +54,23 @@ define Start(p)
 	   }
 	   
   	  dest <- ghome+ doc + "\pebl-exp.0.13" 
-      Print("starging in " + dest)
+      Print("starting in " + dest)
+
+     ##Decide whether to run for the first time
 	  if(FileExists(dest))
 	  {
-	    FileSelect(["default"]) ##Giving an argument here will specify a data file
-	  } else {
-        RunFirstTime(p)
+	    list <- GetDirectoryListing(dest)
+        Print(list)
+		if(Length(list)>2)
+		 {
+          SetWorkingDirectory(dest)
+   	      FileSelect(["default"]) ##Giving an argument here will specify a data file
+         } else{
+           RunFirstTime(p)
+		 }
+		} else {
+
+	       RunFirstTime(p)
 	  }
 }
 
@@ -218,7 +229,7 @@ define FileSelect(p)
 
 
 
-   run        <- MakeButton(xbase+100,ybase-30,200,win,gRuntext)
+   run        <- MakeButton(xbase+100,ybase-40,200,win,gRuntext)
    edit       <- MakeButton(xbase+55,ybase+height+20,120,win,gOpenText)
    exit       <- MakeButton(xbase+55,ybase+height+50,120,win,gExitText)
    viewoutput <- MakeButton(xbase+200,ybase+height+20,150,win,gViewDebugText)
@@ -261,8 +272,9 @@ define FileSelect(p)
    AddObject(bg,win)
    MoveCorner(bg,xbase,ybase)
 
-   
+   wd   <- EasyLabel(GetWorkingDirectory(),(xbase+width/2), ybase-25, win,fontsize)
    path <- EasyLabel(DirListToText(gDirChain),(xbase+width/2), ybase-10, win,fontsize)
+   MoveCorner(wd,xbase,ybase-30)
    yheight <- path.height
    gYHeight <- yHeight
 
