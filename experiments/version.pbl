@@ -7,9 +7,13 @@ define Start(par) {
   win <- MakeWindow()
   font <- MakeFont(gPEBLBasefont,0,40, MakeColor("black"), MakeColor("white"),0)
   lab <- MakeLabel(GetPEBLVersion(),font)
+  lab2 <- MakeLabel("Press any key to exit.",font)
+
   Print(GetPEBLVersion())
   AddObject(lab,win)
   Move(lab, 300,200)
+  AddObject(lab2,win)
+  Move(lab, 300,240)
   Draw()
   WaitForAnyKeyPress()
 

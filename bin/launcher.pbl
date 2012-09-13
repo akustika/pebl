@@ -748,10 +748,11 @@ define FileSelect(p)
       {
          PushButton(edit)    
 
-	 file <- DirListToText(gDirChain)+Nth(gFlatFileList,gselected)
+	    file <- DirListToText(gDirChain)+Nth(gFlatFileList,gselected)
          success <-  LaunchFile(file)
  
-         if(not success == 0)
+          ##This may work not be correct o all platfroms
+         if(success == 0)
             {
 	      	   MessageBox("Unable to find file: ["+file+"]",win)
             } 
