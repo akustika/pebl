@@ -18,7 +18,7 @@
 !define REG_APP_PATH "Software\Microsoft\Windows\CurrentVersion\App Paths\${MAIN_APP_EXE}"
 !define UNINSTALL_PATH "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}"
 !define USERDIR "$DOCUMENTS\pebl-exp.0.13"
-######################################################################
+
 
 VIProductVersion  "${VERSION}"
 VIAddVersionKey "ProductName"  "${APP_NAME}"
@@ -28,8 +28,13 @@ VIAddVersionKey "FileDescription"  "${DESCRIPTION}"
 VIAddVersionKey "FileVersion"  "${VERSION}"
 
 ######################################################################
-
 SetCompressor ZLIB
+######################################################################
+!define MULTIUSER_EXECUTIONLEVEL Highest
+;!define MULTIUSER_NOUNINSTALL ;Uncomment if no uninstaller is created
+!include MultiUser.nsh
+
+
 #Name "${APP_NAME}"
 Caption "${APP_NAME}"
 OutFile "${INSTALLER_NAME}"
@@ -184,9 +189,9 @@ SetOutPath "$INSTDIR\bin"
 File "..\bin\pebl.exe"
 File "..\bin\launcher.pbl"
 File "..\dlls\*"
-SetOutPath "$DOCUMENTS\pebl-exp.0.13"
-CreateShortCut "launcher.lnk"  "$INSTDIR\bin\pebl.exe" "launcher.pbl"
-CreateShortCut "docs.lnk" "$INSTDIR\doc"
+#SetOutPath "$DOCUMENTS\pebl-exp.0.13"
+#CreateShortCut "launcher.lnk"  "$INSTDIR\bin\pebl.exe" "launcher.pbl"
+#CreateShortCut "docs.lnk" "$INSTDIR\doc"
 
 
 SetOutPath "$INSTDIR\battery"
@@ -690,8 +695,9 @@ WriteUninstaller "$INSTDIR\uninstall.exe"
 
 !ifdef REG_START_MENU
 !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
+SetShellVarContext all
 CreateDirectory "$SMPROGRAMS\$SM_Folder"
-SetOutPath "$DOCUMENTS\pebl-exp.0.13\"
+SetOutPath "$TEMP"
 CreateShortCut "$SMPROGRAMS\$SM_Folder\${APP_NAME}.lnk" """$INSTDIR\bin\pebl.exe"""
 CreateShortCut "$SMPROGRAMS\$SM_Folder\doc.lnk" "$INSTDIR\doc\PEBLManual0.13.pdf"
 !ifdef WEB_SITE
@@ -702,8 +708,9 @@ CreateShortCut "$SMPROGRAMS\$SM_Folder\${APP_NAME} Website.lnk" "$INSTDIR\${APP_
 !endif
 
 !ifndef REG_START_MENU
+SetShellVarContext all
 CreateDirectory "$SMPROGRAMS\PEBL"
-SetOutPath "$DOCUMENTS\pebl-exp.0.13\"
+SetOutPath "$TEMP"
 CreateShortCut "$SMPROGRAMS\PEBL\${APP_NAME}.lnk" "$INSTDIR\bin\pebl.exe" 
 !ifdef WEB_SITE
 WriteIniStr "$INSTDIR\${APP_NAME} website.url" "InternetShortcut" "URL" "${WEB_SITE}"
@@ -878,3 +885,10 @@ SectionEnd
 
 ######################################################################
 
+Function .onInit
+  !insertmacro MULTIUSER_INIT
+FunctionEnd
+
+Function un.onInit
+  !insertmacro MULTIUSER_UNINIT
+FunctionEnd
