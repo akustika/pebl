@@ -13,7 +13,7 @@ define Start(par) {
   AddObject(lab,win)
   Move(lab, 300,200)
   AddObject(lab2,win)
-  Move(lab, 300,240)
+  Move(lab2, 300,240)
   Draw()
   WaitForAnyKeyPress()
 
