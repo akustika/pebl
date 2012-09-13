@@ -1,4 +1,4 @@
-#!/usr/bin/env pebl
+﻿#!/usr/bin/env pebl
 ##  This is a PEBL script that acts as a cross-platform 
 ##  launcher for PEBL.
 ##  Version 0.2: Initial release, to accompany PEBL 0.13.
@@ -30,6 +30,9 @@ define Start(p)
 		WaitForDownClick() 
 
 		}
+		
+		
+		
       if(gSystemtype == "WINDOWS")
 	   {
  	    if(FileExists(ghome+"\Documents"))
@@ -51,13 +54,7 @@ define Start(p)
 	   }
 	   
   	  dest <- ghome+ doc + "\pebl-exp.0.13" 
-      Print("Checking to determine whether file exists:"+dest)
-      Print(FileExists(dest))
-      Print(FileExists(ghome+ doc + "\pebl-exp.0.13"))
-      Print(FileExists(ghome+ doc + "\pebl-exp.0.13\battery\battery.txt"))
-      Print(FileExists(ghome+ doc + "\pebl-exp.0.13\test folder"))
-
-
+      Print("starging in " + dest)
 	  if(FileExists(dest))
 	  {
 	    FileSelect(["default"]) ##Giving an argument here will specify a data file
@@ -1735,20 +1732,28 @@ define RunFirstTime(p)
 {
    if(Length(p)>1)
      {
-	     Print(p)
-   	     resources <- Nth(p,1)
+	 Print(p)
+   	 resources <- Nth(p,1)
          Print("Resources:" + resources)
-		 targetdir <- Second(p)
-		 home <- targetdir
+	 targetdir <- Second(p)
+	 home <- targetdir
+
 	} else {
     	 Print("using default resources")
 		 if(GetSystemType()=="OSX")
 		  {
-	        resources <- "/Applications/pebl.app/Contents/Resources"
+	           resources <- "/Applications/pebl.app/Contents/Resources"
 
   		  } else{
+                      ##Check here for robustness.
+                      if (FileExists("%ProgramFiles(x86)%"))
+ 		     {
+		       resources <- "%ProgramFiles(x86)%\\PEBL"
+		      } else {
 
-            resources <- "%ProgramFiles(x86)%\\PEBL"
+		       resources <- "%ProgramFiles%\\PEBL"
+		      }
+
 		  }
 
 	 }
@@ -1824,7 +1829,7 @@ if(1)
       if(FileExists(ghome+"\Documents"))
 	    {
 		   doc <- "\Documents"
-		} elseif (FileExists(home+"\My Documents"))
+	    } elseif (FileExists(ghome+"\My Documents"))
 		{
 		   doc <- "\My Documents"
 		} else {
@@ -1834,20 +1839,26 @@ if(1)
 		
 		dest <- ghome+ doc + "\pebl-exp.0.13" 
  	    #SystemCall("md " + dest +" >> "gHome+"\pebl_install_log.txt","")
-	    Print(gQuote+dest+gQuote)
-        MakeDirectory(dest)
+	    Print("Creating:"+gQuote+dest+gQuote)
+            MakeDirectory(dest)
 	    Print(dest+"\battery")
 	    MakeDirectory(dest+"\battery")
 	    Print(dest+"\demo")
 	    MakeDirectory(dest+"\demo")
 
-	    ##copy test battery:
-	    SystemCall("xcopy "+gQuote+resources+"\battery\*"+gQuote+" "+dest+"\battery /e","")
+	 ##copy test battery:
+          Print("xcopy "+gQuote+resources+"\battery\*"+gQuote+" "+gQuote+dest+"\battery"+gQuote+" /e")
+	 SystemCall("xcopy "+gQuote+resources+"\battery\*"+gQuote+" "+gQuote+dest+"\battery"+gQuote+" /e","")
         ##Copy demo:
-        SystemCall("xcopy "+gQuote+resources+"\demo\*"+gQuote+" "+dest+"\demo /e","")
+        Print("xcopy "+gQuote+resources+"\demo\*"+gQuote+" "+gQuote+dest+"\demo"+gQuote+" /e")
+        SystemCall("xcopy "+gQuote+resources+"\demo\*"+gQuote+" "+gQuote+dest+"\demo"+gQuote+" /e","")
+        
+        #Print("xcopy "+gQuote+resources+"\demo\*"+gQuote+" "+dest+"\demo"+" /e")
+        #SystemCall("xcopy "+gQuote+resources+"\demo\*"+gQuote+" "+dest+"\demo"+" /e","")
 
-        ##Copy demo:
-        SystemCall("copy "+gQuote+resources+"\doc\PEBLManual0.13.pdf"+gQuote+" "+dest,"")
+        ##Copy doc:
+        Print("copy "+gQuote+resources+"\doc\PEBLManual0.13.pdf"+gQuote+" "+gQuote+dest+gQuote)
+        SystemCall("copy "+gQuote+resources+"\doc\PEBLManual0.13.pdf"+gQuote+" "+gQuote+dest+gQuote,"")
 		
 	  }
 		
