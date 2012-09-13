@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Release" />
+	<File name="..\..\src\apps\PEBL.cpp" open="1" top="1" tabpos="1">
+		<Cursor position="20547" topLine="670" />
+	</File>
+	<File name="..\..\src\apps\SDL_win32_main.c" open="1" top="0" tabpos="2">
+		<Cursor position="5157" topLine="77" />
+	</File>
+	<File name="..\..\src\base\Evaluator.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="19272" topLine="720" />
+	</File>
+	<File name="..\..\src\utility\PEBLPath.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="7695" topLine="148" />
+	</File>
+	<File name="..\..\src\utility\PEBLPath.h" open="1" top="0" tabpos="5">
+		<Cursor position="2027" topLine="36" />
+	</File>
+	<File name="..\..\src\utility\PEBLUtility.cpp" open="0" top="0" tabpos="2">
+		<Cursor position="43015" topLine="975" />
+	</File>
+	<File name="..\..\src\utility\PEBLUtility.h" open="1" top="0" tabpos="4">
+		<Cursor position="3073" topLine="66" />
+	</File>
+</CodeBlocks_layout_file>
