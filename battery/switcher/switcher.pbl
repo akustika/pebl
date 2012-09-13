@@ -32,7 +32,7 @@ define Start(p)
    gFileOutSum <- FileOpenWrite("data/switch-summary-"+gSubNum+".csv")
    gFileOut <- FileOpenWrite("data/switch-"+gSubNum+".csv")
 
-   gRuleNames <- ["color","letter","shape"]
+   gRuleNames <- ["color","letter","shape","NA"]
    coltmplt <-   [1,1,2,2,3,3,4,4,5,5]
    numtmplt <-   [1,2,3,4,5,1,2,3,4,5]
    shapetmplt <- [1,2,1,3,2,4,3,5,4,5]
@@ -269,7 +269,7 @@ define Trial(setup,cues)
    Draw()
    try <- 0
    successes <- 0
-   lastrule <- 0
+   lastrule <- 4   #4 is a non-rule.
    lastmatches <- 0 # Count how many mis-clicks matched the previous rule
    matchanys <- 0   # count hom many mis-clicks matched any dimension of the current selection
    current <- First(stim)
@@ -322,20 +322,21 @@ define Trial(setup,cues)
 #       Print("wrong")
         #lets do some scoring for type of error.
 
-
+#	Print("lastrule: "+lastrule)
         ## Let's check whether the clicked-on object matches each 
         ##of the three features of the current one.  If correct,
         ## they all should match
 	matchColor <- First(resp)==First(respa)
         matchLetter <-Second(resp)==Second(respa)
         matchShape <- Third(resp)==Third(respa)
-	matchlast <- Nth([matchColor,matchLetter,matchShape],lastrule)
+	matchlast <- Nth([matchColor,matchLetter,matchShape,"NA"],lastrule)
         matchany <- matchcolor or matchletter or matchshape
 
 	matchanys <- matchanys + matchany
         lastmatches <- lastmatches + matchlast
         
       }
+
 
        out <-  FilePrint(gFileOut,gSubNum+","+ gBlock + "," + gType+","+
         try+","+successes+"," + Nth(gRuleNames,rule) + ","+Nth(gRuleNames,lastrule)+","+curid+","+
