@@ -6,7 +6,7 @@
 //    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
-//   
+//
 //
 //     This file is part of the PEBL project.
 //
@@ -41,23 +41,22 @@ class Variant;
 class PEBLPath
 {
 public:
-    
+
     PEBLPath();
     ~PEBLPath();
 
-    //This sets up default pathnames.  Called by const char constructor; takes the 
+    //This sets up default pathnames.  Called by const char constructor; takes the
     //binary filename and uses it on platforms where this indicates location of
     //support files.
     void Initialize(std::list<std::string>);
-    
 
-    void AddToPathList(const string & s); 
+
+    void AddToPathList(const string & s);
     std::string FindFile(const string &  filename);
 
-    const string  StripFile(const string &  file);     
-    const string  MergePathAndFile(const string &  path, const string & file);  
+    const string  MergePathAndFile(const string &  path, const string & file);
     bool IsDirectory(const string & pathname);
-    
+
 
     friend std::ostream & operator << (std::ostream & out, const PEBLPath & path);
     std::ostream & Print(std::ostream & out) const;
@@ -66,8 +65,8 @@ private:
     ///This stores a list of paths that are combined with filenames and searched, in
     ///the order they were added.
     std::list<string> mPathList;
-    
-    
+
+
 };
 
 #endif

@@ -6,7 +6,7 @@
 //    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
-//   
+//
 //
 //     This file is part of the PEBL project.
 //
@@ -55,18 +55,22 @@
 //Unix-specific definitions
 #if defined(PEBL_UNIX)
 //For running at higher priority:
-#include <sys/resource.h>   
+#include <sys/resource.h>
 //For better fifo scheduling.
-#include <sched.h>  
+#include <sched.h>
 
 #elif defined(PEBL_WIN32)
 //For running at higher priority.
 #include <windows.h>
+
 #endif
 
 #ifdef WIN32
 #include <time.h>
 #endif
+
+#include <objbase.h>
+#include <shlobj.h>
 
 
 #ifdef PEBL_OSX
@@ -84,7 +88,7 @@ using std::endl;
 
 /// This is the main PEBL interpreter program. It takes files as command-line arguments,
 /// which it parses with the bison parser, creating a single tree of PNodes.  Then, it feeds
-/// this tree into the loader, which loads the individual functions into a function map.  Then, 
+/// this tree into the loader, which loads the individual functions into a function map.  Then,
 /// it sets up any global entities:  a graphical environment, a timer, a global variable map.
 /// Finally, it locates the 'Start' function and executes it.
 
@@ -93,10 +97,10 @@ using std::endl;
 PNode *  parse(const char* filename);
 std::list<string> GetFiles(int argc, char * argv[]);
 void  PrintOptions();
-   
+
 ///Initiate some static member data.
 FunctionMap Evaluator::mFunctionMap;
-PEventLoop Evaluator::mEventLoop; 
+PEventLoop Evaluator::mEventLoop;
 VariableMap Evaluator::gGlobalVariableMap;
 const PNode * Evaluator::gEvalNode = NULL;
 PEBLPath  Evaluator::gPath;
@@ -109,24 +113,24 @@ PNode * head;
 
 
 int PEBLInterpret( int argc, char *argv[] )
-{ 
+{
 
 #ifdef PEBL_UNIX
     if(argc==2 && strcmp(argv[1], "--install")==0)
         {
-            
+
             string basedir = "";
-            BrInitError error; 
-            if (br_init (&error) == 0 && error != BR_INIT_ERROR_DISABLED) 
-                { 
-                    PError::SignalWarning("Warning: BinReloc failed to initialize.\n Will fallback to hardcoded default path.\n"); 
+            BrInitError error;
+            if (br_init (&error) == 0 && error != BR_INIT_ERROR_DISABLED)
+                {
+                    PError::SignalWarning("Warning: BinReloc failed to initialize.\n Will fallback to hardcoded default path.\n");
                     basedir = "/usr/local/share/pebl/";
                 }
-            
+
             string prefix = br_find_prefix("/usr/local/");
             basedir = prefix + string("/share/pebl/battery/");
             string destdir = "~/Documents/pebl-exp.0.13";
-            
+
             //Now, copy everything in 'battery' to your documents directory.
             std::cerr << "Creating Documents/pebl-exp.0.13 Directory\n";
             PEBLUtility::SystemCall("mkdir ~/Documents","");
@@ -136,16 +140,16 @@ int PEBLInterpret( int argc, char *argv[] )
             exit(0);
         }
 #endif
- 
 
-/*    
+
+/*
 	for(int i = 0; i < argc; i++)
 	{
       cout << argv[i] << endl;
 	}
 */
     PNode * tmp = NULL;
-    
+
     //Cycle through command-line parameters extracting the files.
     //This does not check for file validity, it just removes any other command-line options,
     //i.e. ones that are of the form <-flag> <option> or whatever.
@@ -153,7 +157,7 @@ int PEBLInterpret( int argc, char *argv[] )
 
     //Set up the search path.
     Evaluator::gPath.Initialize(files);
-    
+
     cerr << Evaluator::gPath;
 
     //Add the built-in PEBL libraries to the files list.
@@ -173,7 +177,7 @@ int PEBLInterpret( int argc, char *argv[] )
     //        Process all files on the command-line
     //-----------------------------------------------------------
 
-	std::cout << "Loading filename:"      << *i << endl;
+	std::cout << "Loading filename:["      << *i << "]\n";
 	string inputfilename = Evaluator::gPath.FindFile(*i);
 
     head = NULL;
@@ -186,11 +190,11 @@ int PEBLInterpret( int argc, char *argv[] )
         {
             PError::SignalFatalError("Unable to find file: [" + inputfilename + "].");
         }
-    
+
     //If there are any more arguments, process them by accomodating them
     //inside a function list.
-    
-    //Increment the iterator to move to the second command-line 
+
+    //Increment the iterator to move to the second command-line
     i++;
     while(i != files.end())
         {
@@ -200,14 +204,14 @@ int PEBLInterpret( int argc, char *argv[] )
             if(inputfilename != "")
                 {
                     cerr << "Processing PEBL Source File2: " <<  inputfilename << endl;
-                    
-                    //A filename could be a directory (e.g., with media in it.)  
+
+                    //A filename could be a directory (e.g., with media in it.)
                     //If so, don't parse it.
                     if(!Evaluator::gPath.IsDirectory(inputfilename))
                         {
                             //Make a new node.
                             tmp = parse(inputfilename.c_str());
-                            
+
                             //Now, make a new node that contains head and tmp.
                             head = new OpNode(PEBL_FUNCTIONS, head, tmp, "INTERNAL PEBL STRUCTURE", -1);
                         }
@@ -218,16 +222,16 @@ int PEBLInterpret( int argc, char *argv[] )
                 }
             i++;
        }
-    
+
     //       Done processing files.
     //------------------------------------------------------
 
-    
-    cerr << "---------Loading Program---------" << endl;     
+
+    cerr << "---------Loading Program---------" << endl;
     //Now, load it into the environment:
- 
-    // Create a loader that will load functions into the functionmap 
-    myLoader = new Loader(); 
+
+    // Create a loader that will load functions into the functionmap
+    myLoader = new Loader();
     myLoader->LoadUserFunctions((OpNode*)head);
 
 
@@ -260,13 +264,13 @@ int PEBLInterpret( int argc, char *argv[] )
     PList *  arglist = new PList();
 
 
-    //Use the current screen resolution as a startingp 
+    //Use the current screen resolution as a startingp
 
-    
+
     //Initialize display size here with a non-interesting one.
     //It may get set by a command-line argument later.
     std::string displaySize="0x0";
-    
+
 
     std::string depth = "32";  //used to be 16; does this matter?
     enum PEBLVideoMode displayMode;
@@ -275,10 +279,10 @@ int PEBLInterpret( int argc, char *argv[] )
     bool unicode = true;
     Variant lang = "en";
     Variant subnum = 0;
-    //Extract the command-line variables to bind   
+    //Extract the command-line variables to bind
     for(int j = 1; j < argc; j++)
         {
-         
+
             if(strcmp(argv[j], "-v")==0 ||
                     strcmp(argv[j], "-V")==0)
                 {
@@ -299,7 +303,7 @@ int PEBLInterpret( int argc, char *argv[] )
                     if(j+1 < argc)
                         {
                             j++;
-                            
+
                             //This now works on Windows; windib versus directx.
 #if defined(PEBL_UNIX)
                             setenv("SDL_VIDEODRIVER", argv[j] ,1);
@@ -313,13 +317,13 @@ int PEBLInterpret( int argc, char *argv[] )
                 {
                     displaySize = argv[++j];
                 }
-            
+
             else if(strcmp(argv[j],"--depth")==0)
                 {
                     depth = argv[++j];
-                    
+
                 }
-            
+
             else if (strcmp(argv[j],"--fullscreen")==0)
                 {
                     windowed = false;
@@ -337,35 +341,35 @@ int PEBLInterpret( int argc, char *argv[] )
                     lang = argv[++j];
                 }
         }
-            
+
 
     //Now, set the display modes variables based on the command-line options.
     displayMode = PEBLUtility::GetVideoMode(displaySize);
     displayDepth = PEBLUtility::GetVideoDepth(depth);
-    
-    
-    
+
+
+
     //This sets the video driver, and other platform-specific stuff.
 #if defined(PEBL_UNIX)
 
-    //Do specific *nix stuff here (excluding OSX).    
+    //Do specific *nix stuff here (excluding OSX).
     //These can be controlled by a command-line option
     // setenv("SDL_VIDEODRIVER", "dga",1);  //Requires root privileges to run;  fullscreen.
     //setenv("SDL_VIDEODRIVER", "svgalib",1);  //Requires root and special library; allows you to run on virtual terminal.
     // setenv("SDL_VIDEODRIVER", "x11",1);
 
-    
+
     //Now, set the priority to the highest it can go.
 
     //setpriority(PRIO_PROCESS,0,PRIO_MIN);
      setpriority(PRIO_PROCESS,0,0);
     int priority = getpriority(PRIO_PROCESS,0);
     cerr << "Process running at a nice value of " << priority << endl;
-    
+
     /*
       struct sched_param mysched;
       mysched.sched_priority = sched_get_priority_max(SCHED_FIFO) - 1;
-      if( sched_setscheduler( 0, SCHED_RR, &mysched ) == -1 ) 
+      if( sched_setscheduler( 0, SCHED_RR, &mysched ) == -1 )
       {
       cout << "Unable to enable round-robin scheduling.  Must have root priviledges.\n";
       }
@@ -373,7 +377,7 @@ int PEBLInterpret( int argc, char *argv[] )
       {
       cout << "Round-robin scheduling enabled.\n";
       }
-      
+
       struct timespec interval;
       if(sched_rr_get_interval(0,&interval)== -1)
       {
@@ -383,17 +387,17 @@ int PEBLInterpret( int argc, char *argv[] )
       {
       cout << "Round Robin Scheduling Interval: [" <<interval.tv_sec * 1000 + interval.tv_nsec / 1000 <<"] ms.\n";
       }
-      
+
     */
-    
+
 
 #elif defined(PEBL_WIN32)
      //Do specific win32 stuff here.
-    
+
     //SetPriorityClass(GetCurrentProcess(),REALTIME_PRIORITY_CLASS);
     //REALTIME causes program to hang on keyboard input.
     SetPriorityClass(GetCurrentProcess(),HIGH_PRIORITY_CLASS);
-       
+
     //setenv()
 #endif
 
@@ -402,7 +406,7 @@ int PEBLInterpret( int argc, char *argv[] )
     PEBLObjects::MakeEnvironment(displayMode, displayDepth, windowed,unicode);
 
 
-    
+
 
 
 
@@ -427,10 +431,10 @@ int PEBLInterpret( int argc, char *argv[] )
             PComplexData * pcd = new PComplexData(counted_ptr<PEBLObjectBase>(arglist));
             pList->PushBack(Variant(pcd));
         }
-        
+
     PComplexData * pcd = new PComplexData(counted_ptr<PEBLObjectBase>(pList));
     Variant v = Variant(pcd);
-    
+
 
     std::list<PNode> tmpcallstack;
     Evaluator * myEval = new Evaluator(v,"Start");
@@ -444,24 +448,24 @@ int PEBLInterpret( int argc, char *argv[] )
     myEval->gGlobalVariableMap.AddVariable("gVideoWidth", width);
     myEval->gGlobalVariableMap.AddVariable("gVideoHeight", height);
 
-    //displaysize may have been set at the command line.  If so, we will need to 
+    //displaysize may have been set at the command line.  If so, we will need to
     //override it.  It is currently a string called displaysize.
 
-    
+
     size_t found = displaySize.find("x");
     if(found == string::npos)
         {
             //Nothing is found.  Use 0s to indicate an invalid displaysize
             width = 0;
             height = 0;
-        } else 
+        } else
         {
             cerr <<"Size from command line argument: "  << displaySize.substr(0,found)<< "|"<< displaySize.substr(found+1) <<endl;
             //something was found.
             width =  atoi(displaySize.substr(0,found).c_str());
             height = atoi(displaySize.substr(found+1).c_str());
         }
-    
+
 
     if((long int)width>0  & (long int)height>0)
         {
@@ -472,12 +476,12 @@ int PEBLInterpret( int argc, char *argv[] )
 
     //Add the subject identifier.
     Evaluator::gGlobalVariableMap.AddVariable("gSubNum",subnum);
-    
+
 
     //Translate lang to the uppercase 2-letter code
     std::string tmps =lang;
     transform(tmps.begin(),tmps.end(),tmps.begin(),toupper);
-    
+
     Evaluator::gGlobalVariableMap.AddVariable("gLanguage",Variant(tmps));
 
 
@@ -514,7 +518,7 @@ int PEBLInterpret( int argc, char *argv[] )
 
             Evaluator::gGlobalVariableMap.Destroy();
 
-            delete myLoader; 
+            delete myLoader;
             if(myEnv) delete myEnv;
             Evaluator::mFunctionMap.Destroy();
 
@@ -526,7 +530,7 @@ int PEBLInterpret( int argc, char *argv[] )
             //Be sure SDL quits.  It should probably be handled elsewhere,
             //but this seems to work.
 #ifdef PEBL_MOVIES
-            //Close the wave player library.  
+            //Close the wave player library.
             WV_waaveClose();
 #endif
             SDL_Quit();
@@ -548,23 +552,23 @@ void  CaptureSignal(int signal)
 
     Evaluator::gGlobalVariableMap.Destroy();
 
-    delete myLoader; 
+    delete myLoader;
     if(myEnv) delete myEnv;
     Evaluator::mFunctionMap.Destroy();
-    
-    
+
+
     //Evaluator::gGlobalVariableMap.DumpValues();
 
 #ifdef PEBL_MOVIES
-    //Close the wave player library.  
+    //Close the wave player library.
     WV_waaveClose();
 #endif
 
-    
+
     //quit SDL here.  It should be killed els
     SDL_Quit();
-    
-    
+
+
     raise(signal);
     exit(0);
 }
@@ -572,8 +576,8 @@ void  CaptureSignal(int signal)
 
 int main(int argc,  char *argv[])
 {
-    
-    //  Set up some signals to capture  
+
+    //  Set up some signals to capture
 #ifdef SIGHUP
     signal(SIGHUP, CaptureSignal);
 #endif
@@ -599,13 +603,14 @@ int main(int argc,  char *argv[])
 
 
     signal(SIGTERM, CaptureSignal);
-    
 
+  cout << "ARGC" << argc << endl ;
+  cout << PEBL_WIN32 << endl;
     if(argc == 1)
         {
             //This indicates there are no command-line arguments.
 #ifdef PEBL_OSX
-			
+
 			CFBundleRef mainBundle = CFBundleGetMainBundle();
 			CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
 			char resourcepath[PATH_MAX];
@@ -614,16 +619,16 @@ int main(int argc,  char *argv[])
 				PError::SignalFatalError("Unable to identify resource location.\n");// error!
 			}
 			CFRelease(resourcesURL);
-			
-			
-			//See if $HOME/Documents/ and $Home/Documents/filelauncher.pbl exist.  If so, run 
+
+
+			//See if $HOME/Documents/ and $Home/Documents/filelauncher.pbl exist.  If so, run
 			//with those arguments.
 			std::string script = "/launch.pbl";
 			std::string base = (std::string)resourcepath ;
 			cerr << "RESOURCES PATH: " << resourcepath << endl;
-			
-			std::string launch = base + script;	
-			
+
+			std::string launch = base + script;
+
 			std::string home = "";
 			char* val = getenv("HOME");
 			if(val)
@@ -634,98 +639,118 @@ int main(int argc,  char *argv[])
 			std::string v = (std::string)"-v";
 			argc = 4;
 
-	
+
 			if(PEBLUtility::FileExists(home + "/Documents/pebl-exp.0.13/"))
 			   {
-				
+
                   //Move to the right directory.
-				 
+
 				    script = (std::string)resourcepath + (std::string)"/fileselect.pbl";
 					base = home + "/Documents/pebl-exp.0.13/";
 				    chdir(base.c_str());
 				    launch = script;
-            
+
 				    v = "";
 				   argc = 2;
 			   }
-		
+
 			std::cerr << launch << endl;
-			
+
 			char** new_argv = new char*[3];
 			new_argv[0]=argv[0];
 			char* plaunch =(char*)(launch.c_str());
 			char* pv     = (char*)(v.c_str());
 			char* presources = (char*)resourcepath;
-								
+
 			new_argv[1]= plaunch;
 			new_argv[2]= pv;
 			new_argv[3]= presources;
             argv = new_argv;
-#elseif defined(PEBL_WIN32)
+#elif defined(PEBL_WIN32)
 
-            string basedir = "";
-            BrInitError error; 
-            if (br_init (&error) == 0 && error != BR_INIT_ERROR_DISABLED) 
-                { 
-                    PError::SignalWarning("Warning: BinReloc failed to initialize.\n Will fallback to hardcoded default path.\n"); 
-                    basedir = "%ProgramFiles%\\PEBL";
-                }
-            
-            string basedir = br_find_prefix("%ProgramFiles%\PEBL");
+           cout << "Autolaunching PEBL\n";
+           string basedir = PEBLUtility::StripFile(argv[0]) + "..\\";
+            cout <<"basedir:"<< basedir << endl;
 
-            string destdir = "%Documents%\\pebl-exp.0.13";
-            
-            			
-			//See if $HOME/Documents/ and $Home/Documents/filelauncher.pbl exist. 
+//This may work for vista+
+//TCHAR szFolderPath[MAX_PATH];
+//if (!SHGetSpecialFolderPath(NULL, szFolderPath,    CSIDL_DEFAULT_MYDOCUMENTS, FALSE))
+//{
+//    // Uh-oh! An error occurred; handle it.
+//}
+
+#if 0
+TCHAR szPath[MAX_PATH];
+if(SUCCEEDED(SHGetFolderPath(NULL,
+                             CSIDL_DEFAULT_MYDOCUMENTS,
+                             NULL,
+                             0,
+                             szPath)))
+{
+    PathAppend(szPath, TEXT("New Doc.txt"));
+    HANDLE hFile = CreateFile(szPath, ...);
+}
+    std::string docdir = (std::string)szFolderPath;
+
+
+    string destdir = docdir + "\\pebl-exp.0.13\"";
+    cout << "Destination: " << destdir << endl;
+
+#endif
+			//See if $HOME/Documents/ and $Home/Documents/filelauncher.pbl exist.
             // If so, run with those arguments.
-			std::string script = "\\launch.pbl";
-			std::string launch = pbasedir + script;	
-			
-			std::string v = (std::string)"-v";
-			argc = 4;
+			std::string script = "\\bin\\launcher.pbl";
+			std::string launch = basedir + script;
 
-	
-			if(PEBLUtility::FileExists(destdir))
+			std::string v = (std::string)"-v";
+
+
+#if (0)
+//			if(PEBLUtility::FileExists(destdir))
 			   {
-				
+			        cout << "File already exists!!!!!!!!!!!!\n";
+
                   //Move to the right directory.
-				 
-				    script = (std::string)destdir + (std::string)"\fileselect.pbl";
-				    chdir(distdir.c_str());
+
+				    script = "\""+(std::string)destdir + (std::string)"\\fileselect.pbl\"";
+				  //  chdir(distdir.c_str());
 				    launch = script;
-            
+
 				    v = "";
 				   argc = 2;
 			   }
-		
+#endif
 
             //Now, launch the script file we care about.
-			std::cerr << launch << endl;
-			
-			char** new_argv = new char*[3];
+			std::cout << "launch script:" << launch << endl;
+            argc = 4;
+			char** new_argv = new char*[6];
 			new_argv[0]=argv[0];
-			char* plaunch =(char*)(launch.c_str());
-			char* pv     = (char*)(v.c_str());
-			char* presources = (char*)resourcepath;
-								
+
+			//This doesn't work, because launch is gone by the time PEBLInterpret gets run
+			char *plaunch = new char[launch.size()+1];
+			strcpy(plaunch,launch.c_str());
+			char *pv     = new char[v.size()+1];
+			strcpy(pv,v.c_str());
+			char *presources  = new char[basedir.size()+1];
+			strcpy(presources,basedir.c_str());
+		//	char *pdest = new char[destdir.size()+1];
+		//	strcpy(pdest,destdir.c_str());
+
+
 			new_argv[1]= plaunch;
 			new_argv[2]= pv;
 			new_argv[3]= presources;
+           // new_argv[4]= pv;
+           // new_argv[5]= pdest;
             argv = new_argv;
 
+          cout << argv[0] <<"|" << argv[1] <<"|" << argv[2] <<"|" << argv[3] << endl;
 #else
             PrintOptions();
             return 1;
 #endif
         }
-
-#ifdef PEBL_MOVIES
-    //Close the wave player library.  
-    //WV_waaveClose();
-#endif
-
-    //This does'nt seem to have any impact.  Not sure why.
-    //       SDL_Quit();
 
     return PEBLInterpret(argc, argv);
 }
@@ -739,7 +764,7 @@ std::list<std::string> GetFiles(int argc,  char * argv[])
     for(int i = 0; i < argc; i++)
         {
             if(strcmp(argv[i], "-v")==0 ||
-               strcmp(argv[i], "-V")==0 || 
+               strcmp(argv[i], "-V")==0 ||
                strcmp(argv[i], "-s")==0 ||
                strcmp(argv[i], "-S") == 0 ||
                strcmp(argv[i], "--language")==0)
@@ -765,7 +790,7 @@ std::list<std::string> GetFiles(int argc,  char * argv[])
 
                     tmp.push_back(std::string(argv[i]));
                 }
-            
+
         }
     return tmp;
 }

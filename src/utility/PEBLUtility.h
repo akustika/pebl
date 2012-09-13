@@ -6,7 +6,7 @@
 //    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
-//   
+//
 //
 //     This file is part of the PEBL project.
 //
@@ -43,7 +43,7 @@ namespace PEBLUtility
 
     std::string ToUpper(const std::string & text);
     std::string ToLower(const std::string & text);
-  
+
 
     /// This does its best, with the available libraries, to convert
     /// a string to a long double.
@@ -55,7 +55,7 @@ namespace PEBLUtility
     long int Truncate(long double val);
 
     Variant Tokenize(const char* line, char separator);
-    
+
     PEBLKey TranslateString(const std::string & letters);
     std::string TranslateKeyCode(const PEBLKey key, int modkeys);
 
@@ -79,6 +79,9 @@ namespace PEBLUtility
     Variant FileExists(std::string path);
     Variant MakeDirectory(std::string path);
     Variant DeleteMyFile(std::string path);
+    Variant GetHomeDirectory();
+
+    const std::string  StripFile(const std::string &  file);
 
     Variant LaunchFile(std::string file);
     Variant SystemCall(std::string path, std::string args);
@@ -87,7 +90,7 @@ namespace PEBLUtility
     void strrev_utf8(char*p);
     std::string strrev(std::string p);
     std::string strrev_utf8(std::string p);
-    
+
 }
 
 

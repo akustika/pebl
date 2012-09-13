@@ -310,7 +310,7 @@ namespace PEBLEnvironment
             {(char*)"TRANSLATEKEYCODE",                TranslateKeyCode,  1, 1},
             {(char*)"TIMESTAMP",                       TimeStamp,         0, 0},
 
-            {(char*)"GETCURRENTSCREENRESOLUTION",      GetCurrentScreenResolution,    0, 0},            
+            {(char*)"GETCURRENTSCREENRESOLUTION",      GetCurrentScreenResolution,    0, 0},
             {(char*)"GETVIDEOMODES",                   GetVideoModes,    0, 0},
             {(char*)"GETPEBLVERSION",                  GetPEBLVersion,    0, 0},
 
@@ -319,10 +319,13 @@ namespace PEBLEnvironment
             {(char*)"SYSTEMCALL",                      SystemCall,        1,2},
             {(char*)"VARIABLEEXISTS",                  VariableExists,    1,1},
 
+
             {(char*)"ISDIRECTORY",                     IsDirectory,        1,1},
             {(char*)"FILEEXISTS",                      FileExists,        1,1},
             {(char*)"GETDIRECTORYLISTING",             GetDirectoryListing,1,1},
             {(char*)"MAKEDIRECTORY",                   MakeDirectory,      1,1},
+            {(char*)"GETHOMEDIRECTORY",                GetHomeDirectory,    0,0},
+
             {(char*)"DELETEFILE",                      DeleteFile,      1,1},
 
 

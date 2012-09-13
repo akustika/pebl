@@ -6,7 +6,7 @@
 //    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
-//   
+//
 //
 //     This file is part of the PEBL project.
 //
@@ -52,7 +52,8 @@
 #ifdef PEBL_WIN32
 #include <direct.h>
 #include <windows.h>
-#include <bits/types.h>
+//#include <bits/types.h>
+#include <shlobj.h>
 #elif defined(PEBL_LINUX)
 #include <sys/stat.h>
 #include <bits/types.h>
@@ -86,6 +87,32 @@ std::string PEBLUtility::ToLower(const std::string & text)
 }
 
 
+//When given a filename, this will strip the filename from
+//the path and return the path. If given a directory name
+// (ending with a '/' or '\'), it won't strip that character.
+const std::string PEBLUtility::StripFile(const std::string &  file)
+{
+#if defined PEBL_UNIX
+    char separator = '/';
+#else
+    char separator = '\\';
+#endif
+
+    int lastsep  = 0;
+    int i = file.size();
+    //end
+    //Start at the end of the filename and move backward
+    while(i > 0)
+        {
+            if(file[i] == separator)
+                {
+                    lastsep = i;
+                    return file.substr(0,lastsep+1);
+                }
+            i--;
+        }
+    return "";
+}
 // ///This returns a pointer to an upper-case version of the text.
 // ///buffer better be at least n items long.
 // void PEBLUtility::ToUpper(const char* text, char* buffer, int n)
@@ -107,20 +134,20 @@ std::string PEBLUtility::ToLower(const std::string & text)
 // ///This returns a pointer to a lower-case version of the text.
 // void PEBLUtility::ToLower(const char* text, char* buffer, int n)
 // {
-    
+
 //     //Go through each letter, copying the lower-case version to buffer.
 //     //Stop before the last letter because we need a \0.
-//     int i = 0;    
+//     int i = 0;
 //     while(text[i] != '\0' && i < (n-1))
 //         {
 //             buffer[i] = tolower(text[i]);
 //             i++;
 //         }
-    
+
 //     //Add an end-of-string character
 //     buffer[i] = '\0';
-    
-    
+
+
 // }
 
 
@@ -128,14 +155,14 @@ Variant PEBLUtility::Tokenize(const char* line, char separator)
 {
     //We have a string with separators in it.  Go through it character by character and
     //form a list out of the tokens.
-    
+
 
     PList * plist = new PList;
     int i = 0;
     int begin = 0;
     char * token;
 
-    //Go through each item of the string.  Cut a token whenever you get to a separator or 
+    //Go through each item of the string.  Cut a token whenever you get to a separator or
     //a character that might be the end of the line.
     while(true)
         {
@@ -143,17 +170,17 @@ Variant PEBLUtility::Tokenize(const char* line, char separator)
                || line[i] == '\0'
                || line[i] == 10
                || line[i] == 13)
-                {  
+                {
                     //line[i] is the separator; the token is from
                     //begin to line[i-1]
                     token = (char*)malloc((i-begin+1+1) * sizeof(char));
                     strncpy(token, &line[begin], i-begin);
                     token[i-begin]='\0';
-                        
+
                     plist->PushBack(Variant(token));
                     begin = i+1;
                 }
-            
+
             if(line[i] == '\0'|| line[i] == 10  || line[i] == 13)
                 break;
             i++;
@@ -170,7 +197,7 @@ long double PEBLUtility::StringToLongDouble(const char * mystring)
 {
 #if defined(strold)
     return strtold(mystring,0);
-#else 
+#else
     return (long double)strtod(mystring,0);
 #endif
 }
@@ -179,7 +206,7 @@ long double PEBLUtility::StringToLongDouble(const char * mystring)
 
 double PEBLUtility::RandomUniform()
 {
-    return (double)rand() / RAND_MAX; 
+    return (double)rand() / RAND_MAX;
 }
 
 
@@ -191,7 +218,7 @@ double PEBLUtility::RandomNormal()
 
     double x1 = RandomUniform();
     double x2 = RandomUniform();
-  
+
     return sqrt(-2 * log(x1)) * cos(2 * PI * x2);
 }
 
@@ -201,7 +228,7 @@ long double PEBLUtility::Log2(long double val)
     return log2l(val);
 #elif defined(log2)
     return (long double)log2((double)val);
-#else 
+#else
     return logl(val) / logl(2);
 #endif
 }
@@ -239,8 +266,8 @@ long int PEBLUtility::Truncate(long double val)
     return truncl(val);
 #elif defined(trunc)
     return trunc((double)val);
-#else 
-    int sign = val < 0 ? -1: 1; 
+#else
+    int sign = val < 0 ? -1: 1;
     return sign * Round(sign * val);
 #endif
 
@@ -255,7 +282,7 @@ PEBLKey PEBLUtility::TranslateString(const std::string & let)
     //This should all be loaded into a hash table or map on startup.
 
     //Use as a default the first letter.
-    
+
     PEBLKey code = PEBLKey(int(let[0]));
     //First, see if we are only a single character.  If so, rock-n-roll.
     if(let.length() == 1)
@@ -264,12 +291,12 @@ PEBLKey PEBLUtility::TranslateString(const std::string & let)
             if(code > 64 && code < 91)
                 code = PEBLKey(int(code) + 32);
             return code;
-        }  
-    
+        }
+
 
     std::string letters = PEBLUtility::ToLower(let);
 
-    if(letters == "<RETURN>" || letters == "<return>") 
+    if(letters == "<RETURN>" || letters == "<return>")
         return PEBLKEY_RETURN;
     if(letters == "<esc>" || letters == "<ESC>")
         return PEBLKEY_ESCAPE;
@@ -303,7 +330,7 @@ PEBLKey PEBLUtility::TranslateString(const std::string & let)
     if(letters == "<f14>")  return PEBLKEY_F14;
     if(letters == "<f15>")  return PEBLKEY_F15;
 
-    
+
 /* Key state modifier keys */
 
     if(letters == "<numlock>")  return PEBLKEY_NUMLOCK;
@@ -363,10 +390,10 @@ PEBLKey PEBLUtility::TranslateString(const std::string & let)
 //This returns a text-valued description of the key pressed.
 std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
 {
-            
+
 //            cout << "translating [" << key << "]\n";
 
-    //These are tailored to US keyboard.    
+    //These are tailored to US keyboard.
     switch(key)
         {
             /* The keyboard syms have been cleverly chosen to map to ASCII */
@@ -449,9 +476,9 @@ std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
         case PEBLKEY_z:         return ShiftSwitch(modkeys, "z","Z");
         case PEBLKEY_DELETE:         return "<delete>";
             /* End of ASCII mapped keysyms */
-            
+
             /*Note: WORLD_0 through WORD_64 are currently unverified and most likely incorrect)*/
-            
+
             /* International keyboard syms */
         case PEBLKEY_WORLD_0:           return " ";  //160
         case PEBLKEY_WORLD_1:           return "¡";
@@ -649,7 +676,7 @@ std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
 //         case PEBLKEY_SPACE:          return " ";
 //         case PEBLKEY_EXCLAIM:        return "!";
 //         case PEBLKEY_QUOTEDBL:       return "\"";
-//         case PEBLKEY_HASH:           return "#";	
+//         case PEBLKEY_HASH:           return "#";
 //         case PEBLKEY_DOLLAR:         return "$";
 //         case PEBLKEY_AMPERSAND:      return "&";
 //         case PEBLKEY_QUOTE:          return "'";
@@ -678,7 +705,7 @@ std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
 //         case PEBLKEY_GREATER:       return ">";
 //         case PEBLKEY_QUESTION:      return "?";
 //         case PEBLKEY_AT:            return "@";
-//         /* 
+//         /*
 //            Skip uppercase letters
 //         */
 //         case PEBLKEY_LEFTBRACKET:         return "[";
@@ -948,7 +975,7 @@ Variant PEBLUtility::IsDirectory(std::string path)
 
     if(dirp)
         {
-			
+
 			closedir(dirp);
             return Variant(1);
         }
@@ -961,16 +988,17 @@ Variant PEBLUtility::IsDirectory(std::string path)
     //entry->d_type;
 
 
-    
+
 }
 
 Variant PEBLUtility::FileExists(std::string path)
 {
 
-    struct stat stFileInfo; 
+    struct stat stFileInfo;
     //may need to use _stat on windows
     int out = stat(path.c_str(),&stFileInfo);
-    
+     //cout << path.c_str()<<"\n";
+     //cout << "File info:" << out << endl;
     //  We can get better info about the file
     //  if we look at out.
     return Variant(out==0);
@@ -979,7 +1007,7 @@ Variant PEBLUtility::FileExists(std::string path)
 
 
 
- 
+
 Variant PEBLUtility::GetDirectoryListing(std::string path)
 {
     DIR *dirp;
@@ -990,7 +1018,7 @@ Variant PEBLUtility::GetDirectoryListing(std::string path)
     dirp = opendir(path.c_str());
     if(dirp)
         {
-        
+
             //not this is an assignment, not an equality
             while((entry = readdir(dirp)))
                 {
@@ -1001,12 +1029,12 @@ Variant PEBLUtility::GetDirectoryListing(std::string path)
 //			EACCES
 
 //				EMFILE
-//				
+//
 //				ENFILE
 //				The entire system, or perhaps the file system which contains the directory, cannot support any additional open files at the moment. (This problem cannot happen on the GNU system.)
 //				ENOMEM
-//				Not enough memory available. 
-				
+//				Not enough memory available.
+
 		    Variant codes = "";
 			switch (errno) {
 				case EACCES:
@@ -1026,17 +1054,17 @@ Variant PEBLUtility::GetDirectoryListing(std::string path)
 					codes ="Unknown error" + Variant(errno);
 					break;
 			}
-			
+
 			PError::SignalFatalError(Variant("Unable to get Directory listing at ") + Variant(path) + codes);
-			
+
 		}
 
 
         closedir(dirp);
 
         counted_ptr<PEBLObjectBase> pob = counted_ptr<PEBLObjectBase>(plist);
-        pcd = new PComplexData(pob); 
-        
+        pcd = new PComplexData(pob);
+
         return Variant(pcd);
 }
 
@@ -1053,16 +1081,17 @@ Variant PEBLUtility::MakeDirectory(std::string path)
 
 #ifdef PEBL_UNIX
 
- 
-    if (mkdir(path.c_str(), 0777) == -1) 
+
+    if (mkdir(path.c_str(), 0777) == -1)
        {
            PError::SignalFatalError("Unable to create directory: " );//+ Variant(strerror(errno)));
        }
 
 #elif defined(PEBL_WIN32)
-    if (mkdir(path.c_str()) == -1) 
+    if (mkdir(path.c_str()) == -1)
         {
-            PError::SignalFatalError("Unable to create directory: ");// + Variant(strerror(errno)));
+            cout << strerror(errno)<<endl;
+            PError::SignalFatalError("Unable to create directory: " + Variant(strerror(errno)));
         }
 
 #endif
@@ -1083,34 +1112,66 @@ Variant PEBLUtility::DeleteMyFile(std::string path)
 
 }
 
+Variant PEBLUtility::GetHomeDirectory()
+{
+#ifdef PEBL_WIN32
+  char path[ MAX_PATH ];
+  if (SHGetFolderPathA( NULL, CSIDL_PROFILE, NULL, 0, path ) != S_OK)
+    {
+        PError::SignalFatalError("Unable to find user's home directory!");
+    }
+   #endif
 
+ return Variant(path);
+}
 
 Variant PEBLUtility::LaunchFile(std::string file)
 {
-        
+
     int x;
-    //cout << "Running launchfile\n";   
-#if defined(PEBL_WIN32) 
-    HINSTANCE hInst = ShellExecute(0,                           
+    //cout << "Running launchfile\n";
+#if defined(PEBL_WIN32)
+    HINSTANCE hInst = ShellExecute(0,
                                    "open",                      // Operation to perform
                                    file.c_str(),                // document name???Application name
                                    NULL,                        // Additional parameters
                                    0,                           // Default directory
                                    SW_SHOW);
-    x = ((int)hInst > 32);  //hInst returns an error code > 32 on success.
+    cout<< "LaunchFile:{" << file <<"}{"<< hInst << endl;
+
+   if ((int)hInst == SE_ERR_NOASSOC ||
+       (int)hInst == SE_ERR_ASSOCINCOMPLETE ||
+       (int)hInst == SE_ERR_ACCESSDENIED)
+    {
+      SHELLEXECUTEINFO exeInfo = {0};
+      exeInfo.cbSize = sizeof(SHELLEXECUTEINFO);
+      exeInfo.lpVerb = "openas";
+      exeInfo.lpFile = file.c_str();
+      exeInfo.fMask = SEE_MASK_INVOKEIDLIST;
+      exeInfo.nShow = SW_SHOWDEFAULT;
+
+      // Open up the open as window
+      if (ShellExecuteEx(&exeInfo) == FALSE);
+      {
+        x = false ;
+      }
+    } else {
+
+       x = ((int)hInst > 32);  //hInst returns an error code > 32 on success.
+     }
 #elif defined(PEBL_LINUX)
 
 
     std::string call2 = "gnome-open " + file;
     x = system(call2.c_str());  //do a system call with the argument string.
-    
 
-	
+
+
 
 #elif defined(PEBL_OSX)
      std::string call2 = "open " + file;
      x = system(call2.c_str());  //do a system call with the argument string.
-   
+
 #endif
 
  return Variant(x);
@@ -1119,10 +1180,10 @@ Variant PEBLUtility::LaunchFile(std::string file)
 
 Variant PEBLUtility::SystemCall(std::string call, std::string args)
 {
-    //   cout << "Systemcalling inner\n";   
+    //   cout << "Systemcalling inner\n";
 
 
-#if defined( PEBL_UNIX )   
+#if defined( PEBL_UNIX )
 
     std::string tmp = call + " " + args;
 
@@ -1131,7 +1192,7 @@ Variant PEBLUtility::SystemCall(std::string call, std::string args)
 
 #elif defined (PEBL_WIN32)
     std::string tmp = "cmd.exe /c " + call + " " + args;
-    
+
     //   cout << "["<<tmp <<"]"<< std::endl;
     STARTUPINFO info={sizeof(info)};
     PROCESS_INFORMATION processInfo;
@@ -1194,7 +1255,7 @@ void PEBLUtility::strrev_utf8(char *p)
 }
 std::string PEBLUtility::strrev(std::string p)
 {
-    
+
     std::string q = std::string(p);
     std::reverse(q.begin(),q.end());
     return q;
@@ -1207,7 +1268,7 @@ std::string PEBLUtility::strrev_utf8(std::string p)
     std::wstring q(p.length(), L' '); // Make room for characters
     // Copy string to wstring.
     std::copy(p.begin(), p.end(), q.begin());
-    
+
     // reverse:
     std::reverse(q.begin(),q.end());
 
@@ -1232,9 +1293,9 @@ std::string PEBLUtility::strrev_utf8(std::string p)
 //         while(qq >= q.begin())
 //             {
 
-//                 switch( (*qq & 0xF0) >> 4 ) 
+//                 switch( (*qq & 0xF0) >> 4 )
 //                     {
-                        
+
 //                     case 0xF: /* U+010000-U+10FFFF: four bytes. */
 //                         std::swap(*qq,*(qq-3));
 //                         std::swap(*(qq-1),*(qq-2));
@@ -1242,13 +1303,13 @@ std::string PEBLUtility::strrev_utf8(std::string p)
 //                         //q.replace(qq-1,qq-2,q,1);
 //                         qq -= 3;
 //                         break;
-                    
+
 //                     case 0xE: /* U+000800-U+00FFFF: three bytes. */
 //                         std::swap(*qq,*(qq-2));
 //                         //q.replace(qq,qq-2,q,1);
 //                         qq -= 2;
 //                         break;
-                        
+
 //                     case 0xC: /* fall-through */
 //                     case 0xD: /* U+000080-U+0007FF: two bytes. */
 //                         std::swap(*qq,*(qq-1));

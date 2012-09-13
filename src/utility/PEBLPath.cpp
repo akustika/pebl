@@ -6,7 +6,7 @@
 //    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
-//   
+//
 //
 //     This file is part of the PEBL project.
 //
@@ -29,7 +29,7 @@
 #include "../base/Variant.h"
 #include "PError.h"
 #include "BinReloc.h"
-
+#include "PEBLUtility.h"
 #include <sys/stat.h>
 #include <list>
 #include <string>
@@ -58,7 +58,7 @@ void PEBLPath::Initialize(std::list<std::string> files)
     //On unix, add the following paths:
     //current working directory,
     AddToPathList("./");
-    
+
     //Look for absolute pathnames
     AddToPathList("");
     //The directories of each file on the command-line.
@@ -68,7 +68,7 @@ void PEBLPath::Initialize(std::list<std::string> files)
     while(i != files.end())
         {
             //For each commandline argument, strip the filename and add it.
-            tmp = StripFile(*i);
+            tmp = PEBLUtility::StripFile(*i);
             if(tmp != "")
                 {
                     AddToPathList(tmp);
@@ -78,10 +78,10 @@ void PEBLPath::Initialize(std::list<std::string> files)
 
     string basedir = "";
     //Initialize the binreloc library (courtesy of autopackage).
-    BrInitError error; 
-    if (br_init (&error) == 0 && error != BR_INIT_ERROR_DISABLED) 
-        { 
-            PError::SignalWarning("Warning: BinReloc failed to initialize.\n Will fallback to hardcoded default path.\n"); 
+    BrInitError error;
+    if (br_init (&error) == 0 && error != BR_INIT_ERROR_DISABLED)
+        {
+            PError::SignalWarning("Warning: BinReloc failed to initialize.\n Will fallback to hardcoded default path.\n");
             basedir = "/usr/local/share/pebl/";
         } else {
 
@@ -89,30 +89,30 @@ void PEBLPath::Initialize(std::list<std::string> files)
             string prefix = br_find_prefix("/usr/local/");
             basedir = prefix + string("/share/pebl/");
             std::cerr << "Base resources found at: ["<< basedir <<"]\n";
-            
+
         }
 
-        
-    
+
+
     //media subdirectories of execution directory.
     //fonts
     AddToPathList(MergePathAndFile(basedir, "media/fonts/"));
-    
+
     //Sounds
     AddToPathList(MergePathAndFile(basedir, "media/sounds/"));
-    
+
     //images
     AddToPathList(MergePathAndFile(basedir, "media/images/"));
-    
+
     //text
     AddToPathList(MergePathAndFile(basedir, "media/text/"));
-    
+
     //library functions
     AddToPathList(MergePathAndFile(basedir, "pebl-lib/"));
 
 #elif defined PEBL_OSX
 
-	
+
 	// ----------------------------------------------------------------------------
 	// This makes relative paths work in C++ in Xcode by changing directory to the
 	//  Resources folder inside the .app bundle
@@ -124,14 +124,14 @@ void PEBLPath::Initialize(std::list<std::string> files)
 		PError::SignalFatalError("Unable to identify resource location.\n");// error!
     }
     CFRelease(resourcesURL);
-	
+
 	std::string basedir = (std::string)path + "/";
-	
-	
+
+
     //On OSX, we will keep the things in the Resources/ subdirectory inside the application bundle
     //current working directory,
     AddToPathList("./");
-    
+
     //Look for absolute pathnames
     AddToPathList("");
     //The directories of each file on the command-line.
@@ -141,66 +141,66 @@ void PEBLPath::Initialize(std::list<std::string> files)
     while(i != files.end())
 	{
 		//For each commandline argument, strip the filename and add it.
-		tmp = StripFile(*i);
+		tmp = PEBLUtility::StripFile(*i);
 		if(tmp != "")
 		{
 			AddToPathList(tmp);
 		}
 		i++;
 	}
-	
 
-		
-		
+
+
+
 //		_NSGetExecutablePath( pathbuf, (uint32_t*)(&bufsize));
 //		cout << "OSX name: " << pathbuf << endl;
 
 //		string prefix = br_find_prefix("");
 //		basedir = prefix + string("Resources/");
 
-	
+
     //On OSX, we will keep the things in the Resources/ subdirectory inside the application bundle
- 	
-    
+
+
     //media subdirectories of execution directory.
     //fonts
     AddToPathList(MergePathAndFile(basedir, "media/fonts/"));
-    
+
     //Sounds
     AddToPathList(MergePathAndFile(basedir, "media/sounds/"));
-    
+
     //images
     AddToPathList(MergePathAndFile(basedir, "media/images/"));
-    
+
     //text
     AddToPathList(MergePathAndFile(basedir, "media/text/"));
-    
+
     //library functions
     AddToPathList(MergePathAndFile(basedir, "pebl-lib/"));
 
-	
+
 /*#elif defined(PEBL_WIN32) or defined(WIN32)*/
 #else
 	//On Windows add the following paths:
 
     //current working directory
     AddToPathList(".\\");
-    
+
     //Absolute Pathnames
     AddToPathList("");
-    
+
     //The base directory is the parent of the executable's directory.
-    string basedir = StripFile(files.front()) + "..\\";
+    string basedir = PEBLUtility::StripFile(files.front()) + "..\\";
 
     //The directories of each file on the command-line.
-    // files[0] is the execution directory, 
+    // files[0] is the execution directory,
     // the others are filenames.
     string tmp;
     std::list<string>::iterator i=files.begin();
     while(i != files.end())
         {
             //For each commandline argument, strip the filename and add it.
-            tmp = StripFile(*i);
+            tmp = PEBLUtility::StripFile(*i);
             if(tmp != "")
                 {
                     AddToPathList(tmp);
@@ -208,27 +208,27 @@ void PEBLPath::Initialize(std::list<std::string> files)
             i++;
         }
 
-    
+
     //media subdirectories of execution directory.
     //fonts
     AddToPathList(MergePathAndFile(basedir, "media\\fonts\\"));
-    
+
     //Audio
     AddToPathList(MergePathAndFile(basedir, "media\\sounds\\"));
-    
+
     //images
     AddToPathList(MergePathAndFile(basedir, "media\\images\\"));
-    
+
     //Text files
     AddToPathList(MergePathAndFile(basedir, "media\\text\\"));
-    
+
     //PEBL Library functions
     AddToPathList(MergePathAndFile(basedir, "pebl-lib\\"));
 
- 
+
 #endif
-    
-    
+
+
 }
 
 PEBLPath::~PEBLPath()
@@ -249,21 +249,22 @@ string  PEBLPath::FindFile(const string & filename)
 {
 
     std::list<string>::const_iterator p = mPathList.begin();
-    
+
     struct stat st;
-    
+
     int lengthp;
     int lengthfilename;
     string tmp;
    while(p != mPathList.end())
        {
-           lengthp = (*p).size(); 
+           lengthp = (*p).size();
            lengthfilename = filename.size();
-           
+
            tmp = (*p) + filename;
-               
+
 
                //Check to see if the file exists.
+               //cout << "Checking:" << tmp.c_str() << stat(tmp.c_str(), &st)<< endl;
                if(stat(tmp.c_str(), &st)==0)
                    {
                        //The file exists, so return it
@@ -278,32 +279,6 @@ string  PEBLPath::FindFile(const string & filename)
 }
 
 
-//When given a filename, this will strip the filename from 
-//the path and return the path. If given a directory name 
-// (ending with a '/' or '\'), it won't strip that character.
-const string PEBLPath::StripFile(const string &  file)
-{
-#if defined PEBL_UNIX
-    char separator = '/';
-#else
-    char separator = '\\';
-#endif
-    
-    int lastsep  = 0;
-    int i = file.size();
-    //end 
-    //Start at the end of the filename and move backward
-    while(i > 0)
-        {
-            if(file[i] == separator)
-                {
-                    lastsep = i;
-                    return file.substr(0,lastsep+1);
-                }
-            i--;
-        }
-    return "";
-}
 
 const string PEBLPath::MergePathAndFile(const string & path, const string &  file)
 {
@@ -315,12 +290,12 @@ bool PEBLPath::IsDirectory(const string & pathname)
 {
 #if defined PEBL_UNIX
     char separator = '/';
-#elif defined PEBL_WIN32 
+#elif defined PEBL_WIN32
     char separator = '\\';
 #elif defined WIN32
 	char separator = '\\';
 #endif
-    
+
 
     //This may not be the best way to do it; we maybe
     //should check to see using OS library calls.
@@ -328,7 +303,7 @@ bool PEBLPath::IsDirectory(const string & pathname)
         return true;
     else
         return false;
-    
+
 }
 
 
@@ -336,14 +311,14 @@ ostream & PEBLPath::Print(ostream & out) const
 {
 
     out << "--------------------------------------\n";
-    out << "Path List:\n"; 
+    out << "Path List:\n";
     std::list<string>::const_iterator p = mPathList.begin();
     while(p != mPathList.end())
         {
             out << *p << endl;
             p++;
         }
-    
+
     out << "--------------------------------------\n";
     return out;
 }

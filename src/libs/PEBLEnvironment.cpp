@@ -1410,7 +1410,7 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
 
 
 
-    
+
     PError::AssertType(plist->Nth(5), PEAT_STRING, "Error in parameter of function [RegisterEvent(<device>,<xxx>,<functionname>)]:  ");
     string funcname = PEBLUtility::ToUpper(plist->Nth(5));// plist->PopFront();
     //Can we check to see if funcname exists in the functionmap?
@@ -1648,17 +1648,23 @@ Variant PEBLEnvironment::MakeDirectory(Variant v)
 
 Variant PEBLEnvironment::DeleteFile(Variant v)
 {
-        
+
     PList * plist = v.GetComplexData()->GetList();
 
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [DeleteFile(<filename>)]:  ");
     //cout << "Making directory in penviremnt" << plist->First()<<std::endl;
     Variant out = PEBLUtility::DeleteMyFile((std::string)(plist->First()));
     return out;
-        
-        
+
+
 }
 
+Variant PEBLEnvironment::GetHomeDirectory(Variant v)
+{
+    Variant out = PEBLUtility::GetHomeDirectory();
+    return out;
+
+}
 
 
 //  This does not currently work.
@@ -1928,15 +1934,15 @@ Variant PEBLEnvironment::PlayMovie(Variant v)
 #ifdef PEBL_MOVIES
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_MOVIE, "Argument error in first parameter of function [PlayMovie(<movie>)]: "); 
-    
+    PError::AssertType(plist->First(), PEAT_MOVIE, "Argument error in first parameter of function [PlayMovie(<movie>)]: ");
+
 
     Variant v1 = plist->First();
     PlatformMovie * myMovie = dynamic_cast<PlatformMovie*>(v1.GetComplexData()->GetObject().get());
 
     //the endmovie event seems to be a bit buggy; so we need to get the actual duration and add a 'kill' event a bit after that.
     long int movietime = myMovie->GetLength();
-    
+
 
     movietime  += PEBLEnvironment::myTimer.GetTime()+100;
     PDevice * timer = new PlatformTimer(PEBLEnvironment::myTimer);
@@ -1950,7 +1956,7 @@ Variant PEBLEnvironment::PlayMovie(Variant v)
     //Loop (play movie) until you get the end-of-movie event.
     Evaluator::mEventLoop.RegisterEvent(state, funcname, Variant(0));
 
-    myMovie->StartPlayback(); 
+    myMovie->StartPlayback();
     PEvent returnval = Evaluator::mEventLoop.Loop();
 
 
@@ -1959,7 +1965,7 @@ Variant PEBLEnvironment::PlayMovie(Variant v)
 
     return Variant(returnval.GetDummyEvent().value);
 #else
-    PError::SignalFatalError("Movie playing capabilities not supported in this version."); 
+    PError::SignalFatalError("Movie playing capabilities not supported in this version.");
 #endif
 }
 
