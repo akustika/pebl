@@ -28,13 +28,13 @@ define Start(p)
 
    gWin <- MakeWindow("black")
 
-   if(gVideoWidth<600 or gVideoheight < 600)
+   if(gVideoWidth<800 or gVideoheight < 600)
     {
-     MessageBox("Screen size too small to run connections task.  Requires at least 600x500",gWin)
-     SignalFatalError("Screen size too small to run connections task.  Requires at least 600x500")
+     MessageBox("Screen size too small to run connections task.  Requires at least 800x600",gWin)
+     SignalFatalError("Screen size too small to run connections task.  Requires at least 800x600")
     }
     gXrange <- [gVideoWidth/2 -300, gVideoWidth/2+300]
-    gYrange <- [gVideoHeight/2 -250, gVideoHeight/2+250]
+    gYrange <- [gVideoHeight/2 -220, gVideoHeight/2+270]
 
 
    gFont <- MakeFont(gPEBLBaseFontMono,3,18,MakeColor("white"),Makecolor("black"),0)
@@ -63,7 +63,7 @@ define Start(p)
 
  ##Create 4 paths total
 
- instbox <- EasyTextBox("Generating paths",100,40,gWin,20,gVideoWidth-200,200)
+ instbox <- EasyTextBox("Generating paths",25,40,gWin,18,gVideoWidth-50,220)
  Draw()
  paths <-[MakePath(wide,high,0),MakePath(wide,high,0),
    	   MakePath(wide,high,0),MakePath(wide,high,0)]
@@ -87,7 +87,7 @@ define Start(p)
     gYrange0 <- gYRange
 
     gXRange <- [gVideoWidth/2 -150, gVideoWidth/2+150]
-    gYrange <- [275, 575]
+    gYrange <- [290, 590]
 
     gTrial <- "P1"
     dat <-  CollectPath(practicepath,"num",4,4, timelimit) 
