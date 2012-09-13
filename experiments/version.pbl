@@ -2,6 +2,8 @@
  
 define Start(par) {
 
+  gVideoWidth <- 800
+  gVideoHeight <- 600
   win <- MakeWindow()
   font <- MakeFont(gPEBLBasefont,0,40, MakeColor("black"), MakeColor("white"),0)
   lab <- MakeLabel(GetPEBLVersion(),font)

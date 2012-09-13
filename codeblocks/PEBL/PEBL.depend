@@ -1,3 +1,4278 @@
+<<<<<<< .mine
+# depslib dependency file v1.0
+1319941866 source:/home/shanem/Projects/pebl/codeblocks/PEBL/main.cpp
+	<cstdlib>
+	<stdlib.h>
+	<SDL/SDL.h>
+	<SDL.h>
+
+1319827588 /usr/local/include/SDL/SDL.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_audio.h"
+	"SDL_cdrom.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_loadso.h"
+	"SDL_mutex.h"
+	"SDL_rwops.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_video.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1319827588 /usr/local/include/SDL/SDL_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+	"begin_code.h"
+	"close_code.h"
+
+1319827588 /usr/local/include/SDL/SDL_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<iconv.h>
+	"begin_code.h"
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	"close_code.h"
+
+1319827588 /usr/local/include/SDL/SDL_config.h
+	"SDL_platform.h"
+	<stdarg.h>
+
+1319827588 /usr/local/include/SDL/SDL_platform.h
+
+1319827588 /usr/local/include/SDL/begin_code.h
+
+1319827588 /usr/local/include/SDL/close_code.h
+
+1319827588 /usr/local/include/SDL/SDL_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1319827588 /usr/local/include/SDL/SDL_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1319827588 /usr/local/include/SDL/SDL_endian.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1319827588 /usr/local/include/SDL/SDL_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1319827588 /usr/local/include/SDL/SDL_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	"close_code.h"
+
+1319827588 /usr/local/include/SDL/SDL_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1319827588 /usr/local/include/SDL/SDL_cdrom.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1319827588 /usr/local/include/SDL/SDL_cpuinfo.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1319827588 /usr/local/include/SDL/SDL_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_active.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_quit.h"
+	"begin_code.h"
+	"close_code.h"
+
+1319827588 /usr/local/include/SDL/SDL_active.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1319827588 /usr/local/include/SDL/SDL_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keysym.h"
+	"begin_code.h"
+	"close_code.h"
+
+1319827588 /usr/local/include/SDL/SDL_keysym.h
+
+1319827588 /usr/local/include/SDL/SDL_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1319827588 /usr/local/include/SDL/SDL_video.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1319827588 /usr/local/include/SDL/SDL_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1319827588 /usr/local/include/SDL/SDL_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1319827588 /usr/local/include/SDL/SDL_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1319827588 /usr/local/include/SDL/SDL_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1319827588 /usr/local/include/SDL/SDL_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1319570032 source:/home/shanem/Projects/pebl/src/apps/PEBL.cpp
+	"../base/Evaluator.h"
+	"../base/grammar.tab.hpp"
+	"../base/PNode.h"
+	"../base/Loader.h"
+	"../base/PComplexData.h"
+	"../base/PList.h"
+	"../base/FunctionMap.h"
+	"../base/VariableMap.h"
+	"../base/Variant.h"
+	"../libs/PEBLObjects.h"
+	"../utility/PError.h"
+	"../utility/PEBLPath.h"
+	"../utility/PEBLUtility.h"
+	"../utility/rc_ptrs.h"
+	"../devices/PEventLoop.h"
+	"Globals.h"
+	<iostream>
+	<signal.h>
+	<list>
+	<string>
+	<algorithm>
+	<sys/resource.h>
+	<sched.h>
+	<windows.h>
+	<time.h>
+	"../platforms/sdl/PlatformEnvironment.h"
+
+1319570034 /home/shanem/Projects/pebl/src/base/Evaluator.h
+	<stack>
+	<list>
+	"Variant.h"
+	"FunctionMap.h"
+	"../utility/PEBLPath.h"
+	"VariableMap.h"
+	"../utility/PError.h"
+
+1319570034 /home/shanem/Projects/pebl/src/base/Variant.h
+	<iostream>
+	"../utility/rc_ptrs.h"
+
+1319570032 /home/shanem/Projects/pebl/src/utility/rc_ptrs.h
+	<iostream>
+	<stddef.h>
+
+1319570034 /home/shanem/Projects/pebl/src/base/FunctionMap.h
+	"PNode.h"
+	<map>
+	<string>
+
+1319570034 /home/shanem/Projects/pebl/src/base/PNode.h
+	"Variant.h"
+	<string>
+
+1319570032 /home/shanem/Projects/pebl/src/utility/PEBLPath.h
+	<list>
+	<string>
+
+1319570034 /home/shanem/Projects/pebl/src/base/VariableMap.h
+	"Variant.h"
+	<map>
+	<string>
+
+1319570032 /home/shanem/Projects/pebl/src/utility/PError.h
+	<string>
+	<list>
+	"../base/Variant.h"
+	"../base/PNode.h"
+
+1319570034 /home/shanem/Projects/pebl/src/base/grammar.tab.hpp
+
+1319570034 /home/shanem/Projects/pebl/src/base/Loader.h
+	"PNode.h"
+	"Variant.h"
+	"VariableMap.h"
+	"FunctionMap.h"
+	<set>
+	<map>
+
+1319570034 /home/shanem/Projects/pebl/src/base/PComplexData.h
+	"PList.h"
+	"../objects/PColor.h"
+	"../platforms/sdl/PlatformEnvironment.h"
+	"../platforms/sdl/PlatformWindow.h"
+	"../platforms/sdl/PlatformImageBox.h"
+	"../platforms/sdl/PlatformFont.h"
+	"../platforms/sdl/PlatformLabel.h"
+	"../platforms/sdl/PlatformTextBox.h"
+	"../platforms/sdl/PlatformKeyboard.h"
+	"../platforms/sdl/PlatformDrawObject.h"
+	"../platforms/sdl/PlatformCanvas.h"
+	"../devices/PStream.h"
+	"../platforms/sdl/PlatformAudioOut.h"
+	"../platforms/sdl/PlatformNetwork.h"
+	"../utility/rc_ptrs.h"
+	"../platforms/sdl/PlatformJoystick.h"
+	"../devices/PParallelPort.h"
+	"../devices/PComPort.h"
+	<iostream>
+
+1319570034 /home/shanem/Projects/pebl/src/base/PList.h
+	"Variant.h"
+	"../utility/rc_ptrs.h"
+	"PEBLObject.h"
+	<list>
+	<iostream>
+
+1319570034 /home/shanem/Projects/pebl/src/base/PEBLObject.h
+	"Variant.h"
+	<iostream>
+	<map>
+	<string>
+
+1319570033 /home/shanem/Projects/pebl/src/objects/PColor.h
+	"../base/PEBLObject.h"
+	<iostream>
+	<string>
+
+1319570033 /home/shanem/Projects/pebl/src/platforms/sdl/PlatformEnvironment.h
+	"PlatformWindow.h"
+	"../../objects/PEnvironment.h"
+	"../../apps/Globals.h"
+	"../../base/PEBLObject.h"
+	<list>
+
+1319570033 /home/shanem/Projects/pebl/src/platforms/sdl/PlatformWindow.h
+	"PlatformWidget.h"
+	"../../base/PEBLObject.h"
+	"../../objects/PWindow.h"
+	"../../objects/PColor.h"
+	"../../apps/Globals.h"
+	"SDL/SDL.h"
+
+1319570033 /home/shanem/Projects/pebl/src/platforms/sdl/PlatformWidget.h
+	"../../objects/PWidget.h"
+	"SDL/SDL.h"
+
+1319570033 /home/shanem/Projects/pebl/src/objects/PWidget.h
+	"../base/PEBLObject.h"
+	"PColor.h"
+	<list>
+	<iostream>
+
+1319570033 /home/shanem/Projects/pebl/src/objects/PWindow.h
+	"PWidget.h"
+	"PColor.h"
+	<iostream>
+
+1319570032 /home/shanem/Projects/pebl/src/apps/Globals.h
+
+1319570033 /home/shanem/Projects/pebl/src/objects/PEnvironment.h
+	"../base/PEBLObject.h"
+	"PWindow.h"
+
+1319570033 /home/shanem/Projects/pebl/src/platforms/sdl/PlatformImageBox.h
+	"PlatformWidget.h"
+	"../../objects/PImageBox.h"
+	"../../base/PEBLObject.h"
+	"SDL/SDL.h"
+	"SDL/SDL_image.h"
+	<string>
+
+1319570033 /home/shanem/Projects/pebl/src/objects/PImageBox.h
+	"PWidget.h"
+	<string>
+
+1319570033 /home/shanem/Projects/pebl/src/platforms/sdl/PlatformFont.h
+	"../../objects/PFont.h"
+	"../../objects/PColor.h"
+	"../../utility/rc_ptrs.h"
+	"../../base/PEBLObject.h"
+	"SDLUtility.h"
+	"SDL/SDL_ttf.h"
+	"SDL/SDL.h"
+
+1319570033 /home/shanem/Projects/pebl/src/objects/PFont.h
+	"PWidget.h"
+	"PColor.h"
+	<string>
+	"../utility/rc_ptrs.h"
+	"../base/PEBLObject.h"
+
+1319570033 /home/shanem/Projects/pebl/src/platforms/sdl/SDLUtility.h
+	"../../objects/PColor.h"
+	"SDL/SDL.h"
+	"PlatformWindow.h"
+
+1319570033 /home/shanem/Projects/pebl/src/platforms/sdl/PlatformLabel.h
+	"PlatformWidget.h"
+	"PlatformFont.h"
+	"../../objects/PLabel.h"
+	"../../utility/rc_ptrs.h"
+	"../../base/PEBLObject.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+
+1319570033 /home/shanem/Projects/pebl/src/objects/PLabel.h
+	"PTextObject.h"
+	"PFont.h"
+	"PColor.h"
+	"../utility/rc_ptrs.h"
+	<string>
+
+1319570033 /home/shanem/Projects/pebl/src/objects/PTextObject.h
+	"PWidget.h"
+	"PFont.h"
+	"PColor.h"
+	"../utility/rc_ptrs.h"
+	<string>
+
+1319570033 /home/shanem/Projects/pebl/src/platforms/sdl/PlatformTextBox.h
+	"PlatformWidget.h"
+	"PlatformFont.h"
+	"../../objects/PTextBox.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+	"../../utility/rc_ptrs.h"
+	"../../base/PEBLObject.h"
+	<vector>
+
+1319570033 /home/shanem/Projects/pebl/src/objects/PTextBox.h
+	"PTextObject.h"
+	"PFont.h"
+	"../utility/rc_ptrs.h"
+	<string>
+
+1319570033 /home/shanem/Projects/pebl/src/platforms/sdl/PlatformKeyboard.h
+	"../../devices/PKeyboard.h"
+	"../../base/PEBLObject.h"
+	"SDL/SDL.h"
+	<list>
+
+1319570032 /home/shanem/Projects/pebl/src/devices/PKeyboard.h
+	"PDevice.h"
+	<list>
+	<string>
+
+1319570032 /home/shanem/Projects/pebl/src/devices/PDevice.h
+	<iostream>
+
+1319570033 /home/shanem/Projects/pebl/src/platforms/sdl/PlatformDrawObject.h
+	"PlatformWidget.h"
+	"../../objects/PDrawObject.h"
+	"../../objects/PColor.h"
+	"../../base/PEBLObject.h"
+	"SDL/SDL.h"
+
+1319570033 /home/shanem/Projects/pebl/src/objects/PDrawObject.h
+	"PWidget.h"
+	"PColor.h"
+	<vector>
+
+1319570033 /home/shanem/Projects/pebl/src/platforms/sdl/PlatformCanvas.h
+	"PlatformWidget.h"
+	"../../objects/PCanvas.h"
+	"SDL/SDL.h"
+	"../../utility/rc_ptrs.h"
+	"../../base/PEBLObject.h"
+	<vector>
+
+1319570033 /home/shanem/Projects/pebl/src/objects/PCanvas.h
+	"../utility/rc_ptrs.h"
+	"PWidget.h"
+	"PColor.h"
+
+1319570032 /home/shanem/Projects/pebl/src/devices/PStream.h
+	"PDevice.h"
+	"../base/PEBLObject.h"
+	<fstream>
+	<string>
+
+1319570033 /home/shanem/Projects/pebl/src/platforms/sdl/PlatformAudioOut.h
+	"../../devices/PAudioOut.h"
+	"../../base/PEBLObject.h"
+	"SDL/SDL.h"
+	"SDL/SDL_audio.h"
+	<string>
+
+1319570032 /home/shanem/Projects/pebl/src/devices/PAudioOut.h
+	"PDevice.h"
+	<string>
+
+1319570033 /home/shanem/Projects/pebl/src/platforms/sdl/PlatformNetwork.h
+	"../../devices/PNetwork.h"
+	"SDL/SDL_net.h"
+
+1319570032 /home/shanem/Projects/pebl/src/devices/PNetwork.h
+	"PDevice.h"
+	"../base/PEBLObject.h"
+	<fstream>
+	<string>
+
+1319570033 /home/shanem/Projects/pebl/src/platforms/sdl/PlatformJoystick.h
+	"../../devices/PJoystick.h"
+	<fstream>
+	<string>
+	"SDL/SDL.h"
+
+1319570032 /home/shanem/Projects/pebl/src/devices/PJoystick.h
+	"PDevice.h"
+	"../base/PEBLObject.h"
+	<fstream>
+	<string>
+
+1319570032 /home/shanem/Projects/pebl/src/devices/PParallelPort.h
+	"PDevice.h"
+	"../base/PEBLObject.h"
+	<fstream>
+	<string>
+
+1319570032 /home/shanem/Projects/pebl/src/devices/PComPort.h
+	"PDevice.h"
+	"../base/PEBLObject.h"
+	<fstream>
+	<string>
+
+1319570033 /home/shanem/Projects/pebl/src/libs/PEBLObjects.h
+	"../platforms/sdl/PlatformEnvironment.h"
+	"../apps/Globals.h"
+
+1319570032 /home/shanem/Projects/pebl/src/utility/PEBLUtility.h
+	"../devices/PKeyboard.h"
+	"../apps/Globals.h"
+	<string>
+
+1319570032 /home/shanem/Projects/pebl/src/devices/PEventLoop.h
+	<iostream>
+	<vector>
+	"DeviceState.h"
+	"PEvent.h"
+	"../utility/rc_ptrs.h"
+	"../base/PEBLObject.h"
+
+1319570032 /home/shanem/Projects/pebl/src/devices/DeviceState.h
+	<iostream>
+	"PDevice.h"
+	"PEvent.h"
+
+1319570032 /home/shanem/Projects/pebl/src/devices/PEvent.h
+	"PKeyboard.h"
+
+1319570034 source:/home/shanem/Projects/pebl/src/base/Evaluator.cpp
+	"Evaluator.h"
+	"PNode.h"
+	"grammar.tab.hpp"
+	"VariableMap.h"
+	"Variant.h"
+	"PComplexData.h"
+	"PList.h"
+	"FunctionMap.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	"../utility/rc_ptrs.h"
+	<iostream>
+	<string>
+	<strstream>
+	<math.h>
+
+1319570034 source:/home/shanem/Projects/pebl/src/base/FunctionMap.cpp
+	"FunctionMap.h"
+	"PNode.h"
+	"../utility/PEBLUtility.h"
+	<iostream>
+	<map>
+	<string>
+	<functional>
+
+1319570034 source:/home/shanem/Projects/pebl/src/base/Loader.cpp
+	"Loader.h"
+	"PNode.h"
+	"grammar.tab.hpp"
+	"Variant.h"
+	"FunctionMap.h"
+	"Evaluator.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	"../libs/Functions.h"
+	"../libs/PEBLEnvironment.h"
+	"../libs/PEBLMath.h"
+	"../libs/PEBLObjects.h"
+	"../libs/PEBLStream.h"
+	"../libs/PEBLString.h"
+	<iostream>
+	<list>
+	<string>
+
+1319570033 /home/shanem/Projects/pebl/src/libs/Functions.h
+	"PEBLEnvironment.h"
+	"PEBLMath.h"
+	"PEBLStream.h"
+	"PEBLObjects.h"
+	"PEBLList.h"
+	"PEBLString.h"
+
+1319570033 /home/shanem/Projects/pebl/src/libs/PEBLEnvironment.h
+
+1319570033 /home/shanem/Projects/pebl/src/libs/PEBLMath.h
+
+1319570033 /home/shanem/Projects/pebl/src/libs/PEBLStream.h
+
+1319570033 /home/shanem/Projects/pebl/src/libs/PEBLList.h
+
+1319570033 /home/shanem/Projects/pebl/src/libs/PEBLString.h
+
+1319570034 source:/home/shanem/Projects/pebl/src/base/PComplexData.cpp
+	"PComplexData.h"
+	<iostream>
+	"../utility/PError.h"
+	"../utility/rc_ptrs.h"
+
+1319570034 source:/home/shanem/Projects/pebl/src/base/PEBLObject.cpp
+	"PEBLObject.h"
+	"../base/PComplexData.h"
+	"../utility/PError.h"
+	<stdio.h>
+
+1319570034 source:/home/shanem/Projects/pebl/src/base/PList.cpp
+	"PList.h"
+	"Variant.h"
+	"../utility/PError.h"
+	"PEBLObject.h"
+	<list>
+	<map>
+	<stdio.h>
+
+1319570034 source:/home/shanem/Projects/pebl/src/base/PNode.cpp
+	"PNode.h"
+	"grammar.tab.hpp"
+	<iostream>
+	<string>
+	<stdlib.h>
+
+1319570034 source:/home/shanem/Projects/pebl/src/base/VariableMap.cpp
+	"VariableMap.h"
+	"../utility/PError.h"
+	"../utility/PEBLUtility.h"
+	<iostream>
+	<map>
+	<string>
+
+1319570034 source:/home/shanem/Projects/pebl/src/base/Variant.cpp
+	"Variant.h"
+	"PComplexData.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	<iostream>
+	<sstream>
+	<math.h>
+	<string>
+	<stdlib.h>
+
+1319570034 source:/home/shanem/Projects/pebl/src/base/grammar.tab.cpp
+	"PNode.h"
+	<stdio.h>
+	<iostream>
+	<cctype>
+	<cstring>
+	<vector>
+	<stack>
+	<stddef.h>
+	<libintl.h>
+	<alloca.h>
+	<malloc.h>
+	<stdlib.h>
+	<stdlib.h>
+	<stdio.h>
+
+1319570034 source:/home/shanem/Projects/pebl/src/base/lex.yy.cpp
+	<stdio.h>
+	<string.h>
+	<errno.h>
+	<stdlib.h>
+	<inttypes.h>
+	<stdlib.h>
+	"PNode.h"
+	"grammar.tab.hpp"
+	"../utility/PEBLUtility.h"
+	<string.h>
+	<math.h>
+
+1319570032 source:/home/shanem/Projects/pebl/src/devices/DeviceState.cpp
+	"PDevice.h"
+	"DeviceState.h"
+	<iostream>
+
+1319570032 source:/home/shanem/Projects/pebl/src/devices/PAudioOut.cpp
+
+1319570032 source:/home/shanem/Projects/pebl/src/devices/PComPort.cpp
+	"PComPort.h"
+	"../utility/rs232.h"
+	"../utility/PError.h"
+	<sys/io.h>
+
+1319570032 /home/shanem/Projects/pebl/src/utility/rs232.h
+	<stdio.h>
+	<string.h>
+	<termios.h>
+	<sys/ioctl.h>
+	<unistd.h>
+	<fcntl.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<limits.h>
+	<windows.h>
+
+1319570032 source:/home/shanem/Projects/pebl/src/devices/PDevice.cpp
+	"PDevice.h"
+	<iostream>
+
+1319570032 source:/home/shanem/Projects/pebl/src/devices/PEvent.cpp
+	"PEvent.h"
+	"../utility/PError.h"
+	<iostream>
+
+1319570032 source:/home/shanem/Projects/pebl/src/devices/PEventLoop.cpp
+	"PEventLoop.h"
+	"PDevice.h"
+	"PEventQueue.h"
+	"../platforms/sdl/PlatformEventQueue.h"
+	"../base/FunctionMap.h"
+	"../base/Evaluator.h"
+	"../base/PComplexData.h"
+	"../base/PEBLObject.h"
+	"../base/grammar.tab.hpp"
+	"../libs/PEBLEnvironment.h"
+	<iostream>
+
+1319570032 /home/shanem/Projects/pebl/src/devices/PEventQueue.h
+	"PEvent.h"
+	<queue>
+	<iostream>
+
+1319570033 /home/shanem/Projects/pebl/src/platforms/sdl/PlatformEventQueue.h
+	"../../devices/PEventQueue.h"
+	"../../devices/PEvent.h"
+
+1319570032 source:/home/shanem/Projects/pebl/src/devices/PEventQueue.cpp
+	"PEventQueue.h"
+	"PEvent.h"
+
+1319570032 source:/home/shanem/Projects/pebl/src/devices/PJoystick.cpp
+	"PJoystick.h"
+	"../utility/PError.h"
+
+1319570032 source:/home/shanem/Projects/pebl/src/devices/PKeyboard.cpp
+	"PKeyboard.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	<iostream>
+	<list>
+	<string>
+
+1319570032 source:/home/shanem/Projects/pebl/src/devices/PNetwork.cpp
+	"PNetwork.h"
+	"../utility/PError.h"
+
+1319570032 source:/home/shanem/Projects/pebl/src/devices/PParallelPort.cpp
+	"PParallelPort.h"
+	"../utility/PError.h"
+	<sys/io.h>
+	<windows.h>
+	<conio.h>
+	<stdio.h>
+
+1319570032 source:/home/shanem/Projects/pebl/src/devices/PStream.cpp
+	"PStream.h"
+	"../utility/PError.h"
+	<iostream>
+	<fstream>
+	<sstream>
+	<list>
+	<string>
+	<algorithm>
+	<sys/stat.h>
+
+1319570032 source:/home/shanem/Projects/pebl/src/devices/PTimer.cpp
+	"PTimer.h"
+	"DeviceState.h"
+	<iostream>
+
+1319570032 /home/shanem/Projects/pebl/src/devices/PTimer.h
+	"PDevice.h"
+	<iostream>
+
+1319570033 source:/home/shanem/Projects/pebl/src/libs/PEBLEnvironment.cpp
+	"PEBLEnvironment.h"
+	"PEBLObjects.h"
+	"../base/Variant.h"
+	"../base/PList.h"
+	"../base/PComplexData.h"
+	"../base/Evaluator.h"
+	"../utility/PError.h"
+	"../utility/PEBLUtility.h"
+	"../utility/rc_ptrs.h"
+	"../devices/PTimer.h"
+	"../devices/DeviceState.h"
+	"../devices/PEventLoop.h"
+	"../objects/PTextBox.h"
+	"../platforms/sdl/PlatformTimer.h"
+	"../platforms/sdl/PlatformKeyboard.h"
+	"../platforms/sdl/PlatformTextBox.h"
+	"../platforms/sdl/PlatformEventQueue.h"
+	<ctime>
+	<string>
+	<windows.h>
+
+1319570033 /home/shanem/Projects/pebl/src/platforms/sdl/PlatformTimer.h
+	"../../devices/PTimer.h"
+	"SDL/SDL.h"
+	<stdio.h>
+
+1319570033 source:/home/shanem/Projects/pebl/src/libs/PEBLList.cpp
+	"PEBLList.h"
+	"../base/Variant.h"
+	"../base/PComplexData.h"
+	"../base/PList.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	"../utility/rc_ptrs.h"
+	<list>
+	<sstream>
+	<string>
+	<vector>
+	<iostream>
+
+1319570033 source:/home/shanem/Projects/pebl/src/libs/PEBLMath.cpp
+	"PEBLMath.h"
+	"../base/Variant.h"
+	"../base/PList.h"
+	"../base/PComplexData.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	"../base/PEBLObject.h"
+	<stdlib.h>
+	<math.h>
+	<list>
+	<string>
+	<strstream>
+	<time.h>
+
+1319570033 source:/home/shanem/Projects/pebl/src/libs/PEBLObjects.cpp
+	"PEBLObjects.h"
+	"PEBLEnvironment.h"
+	"../base/Variant.h"
+	"../base/PList.h"
+	"../base/PComplexData.h"
+	"../base/PEBLObject.h"
+	"../devices/DeviceState.h"
+	"../devices/PEventLoop.h"
+	"../objects/PColor.h"
+	"../objects/PTextBox.h"
+	"../objects/PDrawObject.h"
+	"../utility/PError.h"
+	"../platforms/sdl/PlatformEnvironment.h"
+	"../platforms/sdl/PlatformWindow.h"
+	"../platforms/sdl/PlatformImageBox.h"
+	"../platforms/sdl/PlatformDrawObject.h"
+	"../platforms/sdl/PlatformLabel.h"
+	"../platforms/sdl/PlatformFont.h"
+	"../platforms/sdl/PlatformEventQueue.h"
+	"../platforms/sdl/PlatformTextBox.h"
+	"../platforms/sdl/PlatformCanvas.h"
+	"../platforms/sdl/PlatformAudioIn.h"
+	"PEBLList.h"
+	<string>
+
+1319570033 /home/shanem/Projects/pebl/src/platforms/sdl/PlatformAudioIn.h
+	"../../base/Variant.h"
+	"../../base/PEBLObject.h"
+	"SDL/SDL.h"
+	"SDL/SDL_audioin.h"
+	"PlatformAudioOut.h"
+	<string>
+
+1319570033 source:/home/shanem/Projects/pebl/src/libs/PEBLStream.cpp
+	"PEBLStream.h"
+	"../base/Variant.h"
+	"../base/PComplexData.h"
+	"../base/PList.h"
+	"../base/Evaluator.h"
+	"../devices/PStream.h"
+	"../utility/PError.h"
+	"../utility/PEBLPath.h"
+	"../utility/PEBLUtility.h"
+	"../devices/PParallelPort.h"
+	<list>
+	<iostream>
+	<fstream>
+	<stdio.h>
+	<stdlib.h>
+	<unistd.h>
+	<sys/io.h>
+
+1319570033 source:/home/shanem/Projects/pebl/src/libs/PEBLString.cpp
+	"PEBLString.h"
+	"../base/Variant.h"
+	"../base/PComplexData.h"
+	"../base/PList.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	<string>
+	<vector>
+	<algorithm>
+	<iostream>
+	<cctype>
+
+1319570033 source:/home/shanem/Projects/pebl/src/objects/PCanvas.cpp
+	"PCanvas.h"
+	"PColor.h"
+	"../utility/rc_ptrs.h"
+	"../utility/PEBLUtility.h"
+	"../base/PComplexData.h"
+	<iostream>
+
+1319570033 source:/home/shanem/Projects/pebl/src/objects/PColor.cpp
+	"PColor.h"
+	"../base/Variant.h"
+	"../base/PEBLObject.h"
+	"RGBColorNames.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	<string>
+	<cstring>
+
+1319570033 /home/shanem/Projects/pebl/src/objects/RGBColorNames.h
+
+1319570033 source:/home/shanem/Projects/pebl/src/objects/PDrawObject.cpp
+	"PDrawObject.h"
+	"PWidget.h"
+	"../base/PComplexData.h"
+	<list>
+
+1319570033 source:/home/shanem/Projects/pebl/src/objects/PEnvironment.cpp
+	"PEnvironment.h"
+
+1319570033 source:/home/shanem/Projects/pebl/src/objects/PFont.cpp
+	"PFont.h"
+	"PColor.h"
+	"../base/Variant.h"
+	"../base/PComplexData.h"
+	"../utility/rc_ptrs.h"
+	<iostream>
+
+1319570033 source:/home/shanem/Projects/pebl/src/objects/PImageBox.cpp
+	"PImageBox.h"
+	<iostream>
+
+1319570033 source:/home/shanem/Projects/pebl/src/objects/PLabel.cpp
+	"PLabel.h"
+	"PFont.h"
+	<string>
+	<iostream>
+
+1319570033 source:/home/shanem/Projects/pebl/src/objects/PObject.cpp
+
+1319570033 source:/home/shanem/Projects/pebl/src/objects/PTextBox.cpp
+	"PTextBox.h"
+	"PFont.h"
+	"../utility/rc_ptrs.h"
+	"../utility/PEBLUtility.h"
+	"../devices/PKeyboard.h"
+	"../libs/PEBLEnvironment.h"
+	<iostream>
+
+1319570033 source:/home/shanem/Projects/pebl/src/objects/PTextObject.cpp
+	"PWidget.h"
+	"PTextObject.h"
+	"PFont.h"
+	"../utility/PError.h"
+	<string>
+	<iostream>
+
+1319570033 source:/home/shanem/Projects/pebl/src/objects/PWidget.cpp
+	"PWidget.h"
+	"../base/PComplexData.h"
+	"../utility/PError.h"
+	<list>
+	<iostream>
+
+1319570033 source:/home/shanem/Projects/pebl/src/objects/PWindow.cpp
+	"PWindow.h"
+	"PWidget.h"
+	<string>
+	<iostream>
+
+1319570033 source:/home/shanem/Projects/pebl/src/platforms/sdl/PlatformAudioIn.cpp
+	"PlatformAudioIn.h"
+	"PlatformAudioOut.h"
+	"../../utility/PEBLPath.h"
+	"../../utility/PError.h"
+	"../../base/Evaluator.h"
+	"../../base/PList.h"
+	"../../base/PComplexData.h"
+	"SDL/SDL.h"
+	"SDL/SDL_audioin.h"
+	<cmath>
+	<vector>
+	<fstream>
+
+1319570033 source:/home/shanem/Projects/pebl/src/platforms/sdl/PlatformAudioOut.cpp
+	"PlatformAudioOut.h"
+	"../../devices/PAudioOut.h"
+	"../../utility/PEBLPath.h"
+	"../../utility/PError.h"
+	"../../base/Evaluator.h"
+	"SDL/SDL.h"
+	"SDL/SDL_audio.h"
+	<cmath>
+	<fstream>
+
+1319570033 source:/home/shanem/Projects/pebl/src/platforms/sdl/PlatformCanvas.cpp
+	"PlatformCanvas.h"
+	"../../objects/PCanvas.h"
+	"SDLUtility.h"
+	"../../base/PComplexData.h"
+	"../../utility/rc_ptrs.h"
+	"../../utility/PError.h"
+	"../../utility/PEBLUtility.h"
+	"SDL/SDL.h"
+	<stdio.h>
+	<string>
+
+1319570033 source:/home/shanem/Projects/pebl/src/platforms/sdl/PlatformDrawObject.cpp
+	"PlatformDrawObject.h"
+	"PlatformWidget.h"
+	"SDL/SDL.h"
+	"SDL/SDL_gfxPrimitives.h"
+	"../../base/PList.h"
+	"../../base/Variant.h"
+	"../../base/PComplexData.h"
+	<iostream>
+	<list>
+
+1319570033 source:/home/shanem/Projects/pebl/src/platforms/sdl/PlatformEnvironment.cpp
+	"PlatformEnvironment.h"
+	"../../objects/PEnvironment.h"
+	"PlatformWindow.h"
+	"../../base/PList.h"
+	"../../base/PComplexData.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+	<list>
+	<stdio.h>
+	"../../utility/PError.h"
+	<windows.h>
+
+1319570033 source:/home/shanem/Projects/pebl/src/platforms/sdl/PlatformEventQueue.cpp
+	"PlatformEventQueue.h"
+	"../../devices/PEventQueue.h"
+	"../../devices/PEvent.h"
+	"../../utility/PError.h"
+	"SDL/SDL.h"
+
+1319570033 source:/home/shanem/Projects/pebl/src/platforms/sdl/PlatformFont.cpp
+	"PlatformFont.h"
+	"../../objects/PFont.h"
+	"../../objects/PColor.h"
+	"../../utility/PEBLPath.h"
+	"../../utility/PError.h"
+	"../../base/Evaluator.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+	<stdio.h>
+	<iostream>
+
+1319570033 source:/home/shanem/Projects/pebl/src/platforms/sdl/PlatformImageBox.cpp
+	"PlatformImageBox.h"
+	"../../utility/PEBLPath.h"
+	"../../utility/PError.h"
+	"../../base/Evaluator.h"
+	"../../base/PEBLObject.h"
+	"SDL/SDL.h"
+	"SDL/SDL_image.h"
+	<string>
+	<stdio.h>
+
+1319570033 source:/home/shanem/Projects/pebl/src/platforms/sdl/PlatformJoystick.cpp
+	"PlatformJoystick.h"
+	"SDL/SDL.h"
+	<list>
+	<stdio.h>
+	"../../utility/PError.h"
+	"../../base/PList.h"
+	"../../base/PComplexData.h"
+
+1319570033 source:/home/shanem/Projects/pebl/src/platforms/sdl/PlatformKeyboard.cpp
+	"PlatformKeyboard.h"
+	"../../devices/PKeyboard.h"
+	"../../devices/DeviceState.h"
+	"SDL/SDL.h"
+	"PlatformTimer.h"
+	<stdio.h>
+
+1319570033 source:/home/shanem/Projects/pebl/src/platforms/sdl/PlatformLabel.cpp
+	"PlatformLabel.h"
+	"../../objects/PLabel.h"
+	"PlatformFont.h"
+	"../../utility/rc_ptrs.h"
+	"../../utility/PError.h"
+	"../../base/PComplexData.h"
+	"../../utility/PEBLUtility.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+	<stdio.h>
+	<algorithm>
+
+1319570033 source:/home/shanem/Projects/pebl/src/platforms/sdl/PlatformNetwork.cpp
+	"PlatformNetwork.h"
+	"../../devices/PNetwork.h"
+	"../../utility/PError.h"
+	"SDL/SDL_net.h"
+	<string>
+
+1319570033 source:/home/shanem/Projects/pebl/src/platforms/sdl/PlatformTextBox.cpp
+	"PlatformTextBox.h"
+	"../../objects/PTextBox.h"
+	"PlatformFont.h"
+	"SDLUtility.h"
+	"../../base/PComplexData.h"
+	"../../devices/PKeyboard.h"
+	"../../utility/rc_ptrs.h"
+	"../../utility/PError.h"
+	"../../utility/PEBLUtility.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+	<stdio.h>
+	<string>
+	<algorithm>
+
+1319570033 source:/home/shanem/Projects/pebl/src/platforms/sdl/PlatformTimer.cpp
+	"PlatformTimer.h"
+	"SDL/SDL.h"
+	<iostream>
+	"../../devices/DeviceState.h"
+
+1319570033 source:/home/shanem/Projects/pebl/src/platforms/sdl/PlatformWidget.cpp
+	"PlatformWidget.h"
+	"SDL/SDL.h"
+	"SDL/SDL_rotozoom.h"
+	"SDLUtility.h"
+	<iostream>
+
+1319570033 source:/home/shanem/Projects/pebl/src/platforms/sdl/PlatformWindow.cpp
+	"PlatformWindow.h"
+	"../../objects/PWindow.h"
+	"../../objects/PColor.h"
+	"../../base/Evaluator.h"
+	"../../base/VariableMap.h"
+	"SDL/SDL.h"
+	<stdio.h>
+
+1319570033 source:/home/shanem/Projects/pebl/src/platforms/sdl/SDLUtility.cpp
+	"SDLUtility.h"
+	"../../objects/PColor.h"
+	"../../utility/PError.h"
+	"PlatformWindow.h"
+	"SDL/SDL.h"
+	<png.h>
+	<math.h>
+	<iostream>
+
+1319570032 source:/home/shanem/Projects/pebl/src/utility/BinReloc.cpp
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdio.h>
+	<stdlib.h>
+	<limits.h>
+	<string.h>
+	"BinReloc.h"
+
+1319570032 /home/shanem/Projects/pebl/src/utility/BinReloc.h
+
+1319570032 source:/home/shanem/Projects/pebl/src/utility/PEBLPath.cpp
+	"PEBLPath.h"
+	"../base/Variant.h"
+	"PError.h"
+	"BinReloc.h"
+	<sys/stat.h>
+	<list>
+	<string>
+	<iostream>
+
+1319570032 source:/home/shanem/Projects/pebl/src/utility/PEBLUtility.cpp
+	"PEBLUtility.h"
+	"PError.h"
+	"rc_ptrs.h"
+	"../base/Variant.h"
+	"../base/PComplexData.h"
+	"../base/PList.h"
+	"../devices/PKeyboard.h"
+	"../apps/Globals.h"
+	<ctype.h>
+	<string>
+	<stdlib.h>
+	<cmath>
+	<iostream>
+	<strstream>
+	<algorithm>
+	<png.h>
+	<dirent.h>
+	<direct.h>
+	<windows.h>
+	<sys/stat.h>
+	<bits/types.h>
+	<sys/stat.h>
+	<stdio.h>
+
+1319570032 source:/home/shanem/Projects/pebl/src/utility/PError.cpp
+	"PError.h"
+	"../base/PNode.h"
+	"../base/Evaluator.h"
+	"../base/Variant.h"
+	"../base/PComplexData.h"
+	<iostream>
+	<string>
+	<signal.h>
+
+1319570032 source:/home/shanem/Projects/pebl/src/utility/rs232.c
+	"rs232.h"
+
+1321650899 source:/home/smueller/Projects/pebl/codeblocks/PEBL/main.cpp
+	<cstdlib>
+	<stdlib.h>
+	<SDL/SDL.h>
+	<SDL.h>
+
+1309958464 /usr/include/SDL/SDL.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_audio.h"
+	"SDL_cdrom.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_loadso.h"
+	"SDL_mutex.h"
+	"SDL_rwops.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_video.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include/SDL/SDL_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include/SDL/SDL_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<iconv.h>
+	"begin_code.h"
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	"close_code.h"
+
+1309958464 /usr/include/SDL/SDL_config.h
+	"SDL_platform.h"
+	<stdarg.h>
+
+1309958464 /usr/include/SDL/SDL_platform.h
+
+1309958464 /usr/include/SDL/begin_code.h
+
+1309958464 /usr/include/SDL/close_code.h
+
+1309958464 /usr/include/SDL/SDL_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include/SDL/SDL_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include/SDL/SDL_endian.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include/SDL/SDL_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include/SDL/SDL_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	"close_code.h"
+
+1309958464 /usr/include/SDL/SDL_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include/SDL/SDL_cdrom.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include/SDL/SDL_cpuinfo.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include/SDL/SDL_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_active.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_quit.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include/SDL/SDL_active.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include/SDL/SDL_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keysym.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include/SDL/SDL_keysym.h
+
+1309958464 /usr/include/SDL/SDL_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include/SDL/SDL_video.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include/SDL/SDL_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include/SDL/SDL_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1309958464 /usr/include/SDL/SDL_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include/SDL/SDL_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include/SDL/SDL_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1327782177 source:/home/smueller/Projects/pebl/src/apps/PEBL.cpp
+	"../base/Evaluator.h"
+	"../base/grammar.tab.hpp"
+	"../base/PNode.h"
+	"../base/Loader.h"
+	"../base/PComplexData.h"
+	"../base/PList.h"
+	"../base/FunctionMap.h"
+	"../base/VariableMap.h"
+	"../base/Variant.h"
+	"../libs/PEBLObjects.h"
+	"../utility/PError.h"
+	"../utility/PEBLPath.h"
+	"../utility/PEBLUtility.h"
+	"../utility/rc_ptrs.h"
+	"../devices/PEventLoop.h"
+	"Globals.h"
+	<iostream>
+	<signal.h>
+	<list>
+	<string>
+	<algorithm>
+	<sys/resource.h>
+	<sched.h>
+	<windows.h>
+	<time.h>
+	<mach-o/dyld.h>
+	<CoreFoundation/CFBundle.h>
+	"../platforms/sdl/PlatformEnvironment.h"
+
+1320869855 /home/smueller/Projects/pebl/src/base/Evaluator.h
+	<stack>
+	<list>
+	"Variant.h"
+	"FunctionMap.h"
+	"../utility/PEBLPath.h"
+	"VariableMap.h"
+	"../utility/PError.h"
+
+1327114887 /home/smueller/Projects/pebl/src/base/Variant.h
+	<iostream>
+	"../utility/rc_ptrs.h"
+
+1320869856 /home/smueller/Projects/pebl/src/utility/rc_ptrs.h
+	<iostream>
+	<stddef.h>
+
+1320869855 /home/smueller/Projects/pebl/src/base/FunctionMap.h
+	"PNode.h"
+	<map>
+	<string>
+
+1320869855 /home/smueller/Projects/pebl/src/base/PNode.h
+	"Variant.h"
+	<string>
+
+1320869856 /home/smueller/Projects/pebl/src/utility/PEBLPath.h
+	<list>
+	<string>
+
+1320869855 /home/smueller/Projects/pebl/src/base/VariableMap.h
+	"Variant.h"
+	<map>
+	<string>
+
+1320869856 /home/smueller/Projects/pebl/src/utility/PError.h
+	<string>
+	<list>
+	"../base/Variant.h"
+	"../base/PNode.h"
+
+1327114940 /home/smueller/Projects/pebl/src/base/grammar.tab.hpp
+
+1320869855 /home/smueller/Projects/pebl/src/base/Loader.h
+	"PNode.h"
+	"Variant.h"
+	"VariableMap.h"
+	"FunctionMap.h"
+	<set>
+	<map>
+
+1320869855 /home/smueller/Projects/pebl/src/base/PComplexData.h
+	"PList.h"
+	"../objects/PColor.h"
+	"../platforms/sdl/PlatformEnvironment.h"
+	"../platforms/sdl/PlatformWindow.h"
+	"../platforms/sdl/PlatformImageBox.h"
+	"../platforms/sdl/PlatformFont.h"
+	"../platforms/sdl/PlatformLabel.h"
+	"../platforms/sdl/PlatformTextBox.h"
+	"../platforms/sdl/PlatformKeyboard.h"
+	"../platforms/sdl/PlatformDrawObject.h"
+	"../platforms/sdl/PlatformCanvas.h"
+	"../devices/PStream.h"
+	"../platforms/sdl/PlatformAudioOut.h"
+	"../platforms/sdl/PlatformNetwork.h"
+	"../utility/rc_ptrs.h"
+	"../platforms/sdl/PlatformJoystick.h"
+	"../devices/PParallelPort.h"
+	"../devices/PComPort.h"
+	<iostream>
+
+1320869855 /home/smueller/Projects/pebl/src/base/PList.h
+	"Variant.h"
+	"../utility/rc_ptrs.h"
+	"PEBLObject.h"
+	<list>
+	<iostream>
+
+1320869855 /home/smueller/Projects/pebl/src/base/PEBLObject.h
+	"Variant.h"
+	<iostream>
+	<map>
+	<string>
+
+1320869856 /home/smueller/Projects/pebl/src/objects/PColor.h
+	"../base/PEBLObject.h"
+	<iostream>
+	<string>
+
+1320869855 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformEnvironment.h
+	"PlatformWindow.h"
+	"../../objects/PEnvironment.h"
+	"../../apps/Globals.h"
+	"../../base/PEBLObject.h"
+	<list>
+
+1320869855 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformWindow.h
+	"PlatformWidget.h"
+	"../../base/PEBLObject.h"
+	"../../objects/PWindow.h"
+	"../../objects/PColor.h"
+	"../../apps/Globals.h"
+	"SDL/SDL.h"
+
+1320869855 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformWidget.h
+	"../../objects/PWidget.h"
+	"SDL/SDL.h"
+
+1320869855 /home/smueller/Projects/pebl/src/objects/PWidget.h
+	"../base/PEBLObject.h"
+	"PColor.h"
+	<list>
+	<iostream>
+
+1320869855 /home/smueller/Projects/pebl/src/objects/PWindow.h
+	"PWidget.h"
+	"PColor.h"
+	<iostream>
+
+1320869856 /home/smueller/Projects/pebl/src/apps/Globals.h
+
+1320869855 /home/smueller/Projects/pebl/src/objects/PEnvironment.h
+	"../base/PEBLObject.h"
+	"PWindow.h"
+
+1327782177 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformImageBox.h
+	"PlatformWidget.h"
+	"../../objects/PImageBox.h"
+	"../../base/PEBLObject.h"
+	"SDL.h"
+	"SDL_image.h"
+	"SDL/SDL.h"
+	"SDL/SDL_image.h"
+	<string>
+
+1320869855 /home/smueller/Projects/pebl/src/objects/PImageBox.h
+	"PWidget.h"
+	<string>
+
+1327782177 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformFont.h
+	"../../objects/PFont.h"
+	"../../objects/PColor.h"
+	"../../utility/rc_ptrs.h"
+	"../../base/PEBLObject.h"
+	"SDLUtility.h"
+	"SDL.h"
+	"SDL_ttf.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+
+1320869856 /home/smueller/Projects/pebl/src/objects/PFont.h
+	"PWidget.h"
+	"PColor.h"
+	<string>
+	"../utility/rc_ptrs.h"
+	"../base/PEBLObject.h"
+
+1320869855 /home/smueller/Projects/pebl/src/platforms/sdl/SDLUtility.h
+	"../../objects/PColor.h"
+	"SDL/SDL.h"
+	"PlatformWindow.h"
+
+1327782177 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformLabel.h
+	"PlatformWidget.h"
+	"PlatformFont.h"
+	"../../objects/PLabel.h"
+	"../../utility/rc_ptrs.h"
+	"../../base/PEBLObject.h"
+	"SDL.h"
+	"SDL_ttf.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+
+1320869856 /home/smueller/Projects/pebl/src/objects/PLabel.h
+	"PTextObject.h"
+	"PFont.h"
+	"PColor.h"
+	"../utility/rc_ptrs.h"
+	<string>
+
+1320869856 /home/smueller/Projects/pebl/src/objects/PTextObject.h
+	"PWidget.h"
+	"PFont.h"
+	"PColor.h"
+	"../utility/rc_ptrs.h"
+	<string>
+
+1327782177 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformTextBox.h
+	"PlatformWidget.h"
+	"PlatformFont.h"
+	"../../objects/PTextBox.h"
+	"SDL.h"
+	"SDL_ttf.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+	"../../utility/rc_ptrs.h"
+	"../../base/PEBLObject.h"
+	<vector>
+
+1323474552 /home/smueller/Projects/pebl/src/objects/PTextBox.h
+	"SDL/SDL.h"
+	"PTextObject.h"
+	"PFont.h"
+	"../utility/rc_ptrs.h"
+	<string>
+
+1320869855 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformKeyboard.h
+	"../../devices/PKeyboard.h"
+	"../../base/PEBLObject.h"
+	"SDL/SDL.h"
+	<list>
+
+1320869856 /home/smueller/Projects/pebl/src/devices/PKeyboard.h
+	"PDevice.h"
+	<list>
+	<string>
+
+1320869856 /home/smueller/Projects/pebl/src/devices/PDevice.h
+	<iostream>
+
+1320869855 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformDrawObject.h
+	"PlatformWidget.h"
+	"../../objects/PDrawObject.h"
+	"../../objects/PColor.h"
+	"../../base/PEBLObject.h"
+	"SDL/SDL.h"
+
+1320869855 /home/smueller/Projects/pebl/src/objects/PDrawObject.h
+	"PWidget.h"
+	"PColor.h"
+	<vector>
+
+1320869855 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformCanvas.h
+	"PlatformWidget.h"
+	"../../objects/PCanvas.h"
+	"SDL/SDL.h"
+	"../../utility/rc_ptrs.h"
+	"../../base/PEBLObject.h"
+	<vector>
+
+1320869856 /home/smueller/Projects/pebl/src/objects/PCanvas.h
+	"../utility/rc_ptrs.h"
+	"PWidget.h"
+	"PColor.h"
+
+1320869856 /home/smueller/Projects/pebl/src/devices/PStream.h
+	"PDevice.h"
+	"../base/PEBLObject.h"
+	<fstream>
+	<string>
+
+1320869855 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformAudioOut.h
+	"../../devices/PAudioOut.h"
+	"../../base/PEBLObject.h"
+	"SDL/SDL.h"
+	"SDL/SDL_audio.h"
+	<string>
+
+1320869856 /home/smueller/Projects/pebl/src/devices/PAudioOut.h
+	"PDevice.h"
+	<string>
+
+1327782177 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformNetwork.h
+	"../../devices/PNetwork.h"
+	"SDL.h"
+	"SDL_net.h"
+	"SDL/SDL.h"
+	"SDL/SDL_net.h"
+
+1320869856 /home/smueller/Projects/pebl/src/devices/PNetwork.h
+	"PDevice.h"
+	"../base/PEBLObject.h"
+	<fstream>
+	<string>
+
+1320869855 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformJoystick.h
+	"../../devices/PJoystick.h"
+	<fstream>
+	<string>
+	"SDL/SDL.h"
+
+1320869856 /home/smueller/Projects/pebl/src/devices/PJoystick.h
+	"PDevice.h"
+	"../base/PEBLObject.h"
+	<fstream>
+	<string>
+
+1320869856 /home/smueller/Projects/pebl/src/devices/PParallelPort.h
+	"PDevice.h"
+	"../base/PEBLObject.h"
+	<fstream>
+	<string>
+
+1321649173 /home/smueller/Projects/pebl/src/devices/PComPort.h
+	"PDevice.h"
+	"../base/PEBLObject.h"
+	<fstream>
+	<string>
+
+1320869856 /home/smueller/Projects/pebl/src/libs/PEBLObjects.h
+	"../platforms/sdl/PlatformEnvironment.h"
+	"../apps/Globals.h"
+
+1327782177 /home/smueller/Projects/pebl/src/utility/PEBLUtility.h
+	"../devices/PKeyboard.h"
+	"../apps/Globals.h"
+	<string>
+
+1320869856 /home/smueller/Projects/pebl/src/devices/PEventLoop.h
+	<iostream>
+	<vector>
+	"DeviceState.h"
+	"PEvent.h"
+	"../utility/rc_ptrs.h"
+	"../base/PEBLObject.h"
+
+1320869856 /home/smueller/Projects/pebl/src/devices/DeviceState.h
+	<iostream>
+	"PDevice.h"
+	"PEvent.h"
+
+1323467781 /home/smueller/Projects/pebl/src/devices/PEvent.h
+	"PKeyboard.h"
+	"SDL/SDL.h"
+
+1320869855 source:/home/smueller/Projects/pebl/src/base/Evaluator.cpp
+	"Evaluator.h"
+	"PNode.h"
+	"grammar.tab.hpp"
+	"VariableMap.h"
+	"Variant.h"
+	"PComplexData.h"
+	"PList.h"
+	"FunctionMap.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	"../utility/rc_ptrs.h"
+	<iostream>
+	<string>
+	<strstream>
+	<math.h>
+
+1320869855 source:/home/smueller/Projects/pebl/src/base/FunctionMap.cpp
+	"FunctionMap.h"
+	"PNode.h"
+	"../utility/PEBLUtility.h"
+	<iostream>
+	<map>
+	<string>
+	<functional>
+
+1320869855 source:/home/smueller/Projects/pebl/src/base/Loader.cpp
+	"Loader.h"
+	"PNode.h"
+	"grammar.tab.hpp"
+	"Variant.h"
+	"FunctionMap.h"
+	"Evaluator.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	"../libs/Functions.h"
+	"../libs/PEBLEnvironment.h"
+	"../libs/PEBLMath.h"
+	"../libs/PEBLObjects.h"
+	"../libs/PEBLStream.h"
+	"../libs/PEBLString.h"
+	<iostream>
+	<list>
+	<string>
+
+1327782177 /home/smueller/Projects/pebl/src/libs/Functions.h
+	"PEBLEnvironment.h"
+	"PEBLMath.h"
+	"PEBLStream.h"
+	"PEBLObjects.h"
+	"PEBLList.h"
+	"PEBLString.h"
+
+1327782177 /home/smueller/Projects/pebl/src/libs/PEBLEnvironment.h
+
+1320869856 /home/smueller/Projects/pebl/src/libs/PEBLMath.h
+
+1327782177 /home/smueller/Projects/pebl/src/libs/PEBLStream.h
+
+1320869856 /home/smueller/Projects/pebl/src/libs/PEBLList.h
+
+1321649173 /home/smueller/Projects/pebl/src/libs/PEBLString.h
+
+1320869855 source:/home/smueller/Projects/pebl/src/base/PComplexData.cpp
+	"PComplexData.h"
+	<iostream>
+	"../utility/PError.h"
+	"../utility/rc_ptrs.h"
+
+1320869855 source:/home/smueller/Projects/pebl/src/base/PEBLObject.cpp
+	"PEBLObject.h"
+	"../base/PComplexData.h"
+	"../utility/PError.h"
+	<stdio.h>
+
+1320869855 source:/home/smueller/Projects/pebl/src/base/PList.cpp
+	"PList.h"
+	"Variant.h"
+	"../utility/PError.h"
+	"PEBLObject.h"
+	<list>
+	<map>
+	<stdio.h>
+
+1320869855 source:/home/smueller/Projects/pebl/src/base/PNode.cpp
+	"PNode.h"
+	"grammar.tab.hpp"
+	<iostream>
+	<string>
+	<stdlib.h>
+
+1320869855 source:/home/smueller/Projects/pebl/src/base/VariableMap.cpp
+	"VariableMap.h"
+	"../utility/PError.h"
+	"../utility/PEBLUtility.h"
+	<iostream>
+	<map>
+	<string>
+
+1320869855 source:/home/smueller/Projects/pebl/src/base/Variant.cpp
+	"Variant.h"
+	"PComplexData.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	<iostream>
+	<sstream>
+	<math.h>
+	<string>
+	<stdlib.h>
+
+1327114940 source:/home/smueller/Projects/pebl/src/base/grammar.tab.cpp
+	"PNode.h"
+	<stdio.h>
+	<iostream>
+	<cctype>
+	<cstring>
+	<vector>
+	<stack>
+	<stddef.h>
+	<libintl.h>
+	<alloca.h>
+	<malloc.h>
+	<stdlib.h>
+	<stdlib.h>
+	<stdio.h>
+
+1320869855 source:/home/smueller/Projects/pebl/src/base/grammar.tab.vc.cpp
+	"PNode.h"
+	<stdio.h>
+	<cctype>
+	<cstring>
+	<vector>
+	<stack>
+	<stdlib.h>
+	<stddef.h>
+	<stdio.h>
+
+1320869855 source:/home/smueller/Projects/pebl/src/base/lex.yy.c
+	<stdio.h>
+	<string.h>
+	<errno.h>
+	<stdlib.h>
+	<inttypes.h>
+	<stdlib.h>
+	"PNode.h"
+	"grammar.tab.hpp"
+	"../utility/PEBLUtility.h"
+	<string.h>
+	<math.h>
+	<unistd.h>
+
+1327114954 source:/home/smueller/Projects/pebl/src/base/lex.yy.cpp
+	<stdio.h>
+	<string.h>
+	<errno.h>
+	<stdlib.h>
+	<inttypes.h>
+	<stdlib.h>
+	"PNode.h"
+	"grammar.tab.hpp"
+	"../utility/PEBLUtility.h"
+	<string.h>
+	<math.h>
+	<unistd.h>
+
+1320869856 source:/home/smueller/Projects/pebl/src/devices/DeviceState.cpp
+	"PDevice.h"
+	"DeviceState.h"
+	<iostream>
+
+1320869856 source:/home/smueller/Projects/pebl/src/devices/PAudioOut.cpp
+
+1327782177 source:/home/smueller/Projects/pebl/src/devices/PComPort.cpp
+	"PComPort.h"
+	"../utility/rs232.h"
+	"../utility/PError.h"
+	<sys/io.h>
+
+1327782177 /home/smueller/Projects/pebl/src/utility/rs232.h
+	<stdio.h>
+	<string.h>
+	<termios.h>
+	<sys/ioctl.h>
+	<unistd.h>
+	<fcntl.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<limits.h>
+	<windows.h>
+
+1320869856 source:/home/smueller/Projects/pebl/src/devices/PDevice.cpp
+	"PDevice.h"
+	<iostream>
+
+1320869856 source:/home/smueller/Projects/pebl/src/devices/PEvent.cpp
+	"PEvent.h"
+	"../utility/PError.h"
+	<iostream>
+
+1320869856 source:/home/smueller/Projects/pebl/src/devices/PEventLoop.cpp
+	"PEventLoop.h"
+	"PDevice.h"
+	"PEventQueue.h"
+	"../platforms/sdl/PlatformEventQueue.h"
+	"../base/FunctionMap.h"
+	"../base/Evaluator.h"
+	"../base/PComplexData.h"
+	"../base/PEBLObject.h"
+	"../base/grammar.tab.hpp"
+	"../libs/PEBLEnvironment.h"
+	<iostream>
+
+1320869856 /home/smueller/Projects/pebl/src/devices/PEventQueue.h
+	"PEvent.h"
+	<queue>
+	<iostream>
+
+1320869855 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformEventQueue.h
+	"../../devices/PEventQueue.h"
+	"../../devices/PEvent.h"
+
+1320869856 source:/home/smueller/Projects/pebl/src/devices/PEventQueue.cpp
+	"PEventQueue.h"
+	"PEvent.h"
+
+1320869856 source:/home/smueller/Projects/pebl/src/devices/PJoystick.cpp
+	"PJoystick.h"
+	"../utility/PError.h"
+
+1320869856 source:/home/smueller/Projects/pebl/src/devices/PKeyboard.cpp
+	"PKeyboard.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	<iostream>
+	<list>
+	<string>
+
+1320869856 source:/home/smueller/Projects/pebl/src/devices/PNetwork.cpp
+	"PNetwork.h"
+	"../utility/PError.h"
+
+1320869856 source:/home/smueller/Projects/pebl/src/devices/PParallelPort.cpp
+	"PParallelPort.h"
+	"../utility/PError.h"
+	<sys/io.h>
+	<windows.h>
+	<conio.h>
+	<stdio.h>
+
+1320869856 source:/home/smueller/Projects/pebl/src/devices/PStream.cpp
+	"PStream.h"
+	"../utility/PError.h"
+	<iostream>
+	<fstream>
+	<sstream>
+	<list>
+	<string>
+	<algorithm>
+	<sys/stat.h>
+
+1320869856 source:/home/smueller/Projects/pebl/src/devices/PTimer.cpp
+	"PTimer.h"
+	"DeviceState.h"
+	<iostream>
+
+1322512115 /home/smueller/Projects/pebl/src/devices/PTimer.h
+	"PDevice.h"
+	<iostream>
+
+1327782177 source:/home/smueller/Projects/pebl/src/libs/PEBLEnvironment.cpp
+	"PEBLEnvironment.h"
+	"PEBLObjects.h"
+	"../base/Variant.h"
+	"../base/PList.h"
+	"../base/PComplexData.h"
+	"../base/Evaluator.h"
+	"../utility/PError.h"
+	"../utility/PEBLUtility.h"
+	"../utility/rc_ptrs.h"
+	"../devices/PTimer.h"
+	"../devices/DeviceState.h"
+	"../devices/PEventLoop.h"
+	"../objects/PTextBox.h"
+	"../platforms/sdl/PlatformTimer.h"
+	"../platforms/sdl/PlatformKeyboard.h"
+	"../platforms/sdl/PlatformTextBox.h"
+	"../platforms/sdl/PlatformEventQueue.h"
+	<ctime>
+	<string>
+	<windows.h>
+
+1322511708 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformTimer.h
+	"../../devices/PTimer.h"
+	"SDL/SDL.h"
+	<stdio.h>
+
+1320869856 source:/home/smueller/Projects/pebl/src/libs/PEBLList.cpp
+	"PEBLList.h"
+	"../base/Variant.h"
+	"../base/PComplexData.h"
+	"../base/PList.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	"../utility/rc_ptrs.h"
+	<list>
+	<sstream>
+	<string>
+	<vector>
+	<iostream>
+
+1320869856 source:/home/smueller/Projects/pebl/src/libs/PEBLMath.cpp
+	"PEBLMath.h"
+	"../base/Variant.h"
+	"../base/PList.h"
+	"../base/PComplexData.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	"../base/PEBLObject.h"
+	<stdlib.h>
+	<math.h>
+	<list>
+	<string>
+	<strstream>
+	<time.h>
+
+1327782177 source:/home/smueller/Projects/pebl/src/libs/PEBLObjects.cpp
+	"PEBLObjects.h"
+	"PEBLEnvironment.h"
+	"../base/Variant.h"
+	"../base/PList.h"
+	"../base/PComplexData.h"
+	"../base/PEBLObject.h"
+	"../devices/DeviceState.h"
+	"../devices/PEventLoop.h"
+	"../objects/PColor.h"
+	"../objects/PTextBox.h"
+	"../objects/PDrawObject.h"
+	"../utility/PError.h"
+	"../platforms/sdl/PlatformEnvironment.h"
+	"../platforms/sdl/PlatformWindow.h"
+	"../platforms/sdl/PlatformImageBox.h"
+	"../platforms/sdl/PlatformDrawObject.h"
+	"../platforms/sdl/PlatformLabel.h"
+	"../platforms/sdl/PlatformFont.h"
+	"../platforms/sdl/PlatformEventQueue.h"
+	"../platforms/sdl/PlatformTextBox.h"
+	"../platforms/sdl/PlatformCanvas.h"
+	"../platforms/sdl/PlatformAudioIn.h"
+	"PEBLList.h"
+	<string>
+
+1327782177 /home/smueller/Projects/pebl/src/platforms/sdl/PlatformAudioIn.h
+	"../../base/Variant.h"
+	"../../base/PEBLObject.h"
+	"SDL/SDL.h"
+	"SDL/SDL_audioin.h"
+	"PlatformAudioOut.h"
+	<string>
+
+1327782177 source:/home/smueller/Projects/pebl/src/libs/PEBLStream.cpp
+	"PEBLStream.h"
+	"../base/Variant.h"
+	"../base/PComplexData.h"
+	"../base/PList.h"
+	"../base/Evaluator.h"
+	"../devices/PStream.h"
+	"../utility/PError.h"
+	"../utility/PEBLPath.h"
+	"../utility/PEBLUtility.h"
+	"../devices/PParallelPort.h"
+	<list>
+	<iostream>
+	<fstream>
+	<stdio.h>
+	<stdlib.h>
+	<unistd.h>
+	<sys/io.h>
+
+1321649173 source:/home/smueller/Projects/pebl/src/libs/PEBLString.cpp
+	"PEBLString.h"
+	"../base/Variant.h"
+	"../base/PComplexData.h"
+	"../base/PList.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	<string>
+	<vector>
+	<algorithm>
+	<iostream>
+	<cctype>
+
+1320869856 source:/home/smueller/Projects/pebl/src/objects/PCanvas.cpp
+	"PCanvas.h"
+	"PColor.h"
+	"../utility/rc_ptrs.h"
+	"../utility/PEBLUtility.h"
+	"../base/PComplexData.h"
+	<iostream>
+
+1320869856 source:/home/smueller/Projects/pebl/src/objects/PColor.cpp
+	"PColor.h"
+	"../base/Variant.h"
+	"../base/PEBLObject.h"
+	"RGBColorNames.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	<string>
+	<cstring>
+
+1320869855 /home/smueller/Projects/pebl/src/objects/RGBColorNames.h
+
+1320869856 source:/home/smueller/Projects/pebl/src/objects/PDrawObject.cpp
+	"PDrawObject.h"
+	"PWidget.h"
+	"../base/PComplexData.h"
+	<list>
+
+1320869855 source:/home/smueller/Projects/pebl/src/objects/PEnvironment.cpp
+	"PEnvironment.h"
+
+1320869856 source:/home/smueller/Projects/pebl/src/objects/PFont.cpp
+	"PFont.h"
+	"PColor.h"
+	"../base/Variant.h"
+	"../base/PComplexData.h"
+	"../utility/rc_ptrs.h"
+	<iostream>
+
+1320869856 source:/home/smueller/Projects/pebl/src/objects/PImageBox.cpp
+	"PImageBox.h"
+	<iostream>
+
+1320869856 source:/home/smueller/Projects/pebl/src/objects/PLabel.cpp
+	"PLabel.h"
+	"PFont.h"
+	<string>
+	<iostream>
+
+1320869855 source:/home/smueller/Projects/pebl/src/objects/PObject.cpp
+
+1327782177 source:/home/smueller/Projects/pebl/src/objects/PTextBox.cpp
+	"PTextBox.h"
+	"PFont.h"
+	"../utility/rc_ptrs.h"
+	"../utility/PEBLUtility.h"
+	"../devices/PKeyboard.h"
+	"../libs/PEBLEnvironment.h"
+	"SDL/SDL.h"
+	<iostream>
+
+1320869855 source:/home/smueller/Projects/pebl/src/objects/PTextObject.cpp
+	"PWidget.h"
+	"PTextObject.h"
+	"PFont.h"
+	"../utility/PError.h"
+	<string>
+	<iostream>
+
+1320869855 source:/home/smueller/Projects/pebl/src/objects/PWidget.cpp
+	"PWidget.h"
+	"../base/PComplexData.h"
+	"../utility/PError.h"
+	<list>
+	<iostream>
+
+1320869855 source:/home/smueller/Projects/pebl/src/objects/PWindow.cpp
+	"PWindow.h"
+	"PWidget.h"
+	<string>
+	<iostream>
+
+1321649943 source:/home/smueller/Projects/pebl/src/platforms/sdl/PlatformAudioIn.cpp
+	"PlatformAudioIn.h"
+	"PlatformAudioOut.h"
+	"../../utility/PEBLPath.h"
+	"../../utility/PError.h"
+	"../../base/Evaluator.h"
+	"../../base/PList.h"
+	"../../base/PComplexData.h"
+	"SDL/SDL.h"
+	"SDL/SDL_audioin.h"
+	<cmath>
+	<vector>
+	<fstream>
+
+1320869855 source:/home/smueller/Projects/pebl/src/platforms/sdl/PlatformAudioOut.cpp
+	"PlatformAudioOut.h"
+	"../../devices/PAudioOut.h"
+	"../../utility/PEBLPath.h"
+	"../../utility/PError.h"
+	"../../base/Evaluator.h"
+	"SDL/SDL.h"
+	"SDL/SDL_audio.h"
+	<cmath>
+	<fstream>
+
+1320869855 source:/home/smueller/Projects/pebl/src/platforms/sdl/PlatformCanvas.cpp
+	"PlatformCanvas.h"
+	"../../objects/PCanvas.h"
+	"SDLUtility.h"
+	"../../base/PComplexData.h"
+	"../../utility/rc_ptrs.h"
+	"../../utility/PError.h"
+	"../../utility/PEBLUtility.h"
+	"SDL/SDL.h"
+	<stdio.h>
+	<string>
+
+1320869855 source:/home/smueller/Projects/pebl/src/platforms/sdl/PlatformDrawObject.cpp
+	"PlatformDrawObject.h"
+	"PlatformWidget.h"
+	"SDL/SDL.h"
+	"SDL/SDL_gfxPrimitives.h"
+	"../../base/PList.h"
+	"../../base/Variant.h"
+	"../../base/PComplexData.h"
+	<iostream>
+	<list>
+
+1323063317 source:/home/smueller/Projects/pebl/src/platforms/sdl/PlatformEnvironment.cpp
+	"PlatformEnvironment.h"
+	"../../objects/PEnvironment.h"
+	"PlatformWindow.h"
+	"../../base/PList.h"
+	"../../base/PComplexData.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+	<list>
+	<stdio.h>
+	"../../utility/PError.h"
+	<windows.h>
+
+1323467808 source:/home/smueller/Projects/pebl/src/platforms/sdl/PlatformEventQueue.cpp
+	"PlatformEventQueue.h"
+	"../../devices/PEventQueue.h"
+	"../../devices/PEvent.h"
+	"../../utility/PError.h"
+	"SDL/SDL.h"
+
+1323739198 source:/home/smueller/Projects/pebl/src/platforms/sdl/PlatformFont.cpp
+	"PlatformFont.h"
+	"../../objects/PFont.h"
+	"../../objects/PColor.h"
+	"../../utility/PEBLPath.h"
+	"../../utility/PError.h"
+	"../../base/Evaluator.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+	<stdio.h>
+	<iostream>
+
+1320869855 source:/home/smueller/Projects/pebl/src/platforms/sdl/PlatformImageBox.cpp
+	"PlatformImageBox.h"
+	"../../utility/PEBLPath.h"
+	"../../utility/PError.h"
+	"../../base/Evaluator.h"
+	"../../base/PEBLObject.h"
+	"SDL/SDL.h"
+	"SDL/SDL_image.h"
+	<string>
+	<stdio.h>
+
+1320869855 source:/home/smueller/Projects/pebl/src/platforms/sdl/PlatformJoystick.cpp
+	"PlatformJoystick.h"
+	"SDL/SDL.h"
+	<list>
+	<stdio.h>
+	"../../utility/PError.h"
+	"../../base/PList.h"
+	"../../base/PComplexData.h"
+
+1323061691 source:/home/smueller/Projects/pebl/src/platforms/sdl/PlatformKeyboard.cpp
+	"PlatformKeyboard.h"
+	"../../devices/PKeyboard.h"
+	"../../devices/DeviceState.h"
+	"SDL/SDL.h"
+	"PlatformTimer.h"
+	<stdio.h>
+
+1320869855 source:/home/smueller/Projects/pebl/src/platforms/sdl/PlatformLabel.cpp
+	"PlatformLabel.h"
+	"../../objects/PLabel.h"
+	"PlatformFont.h"
+	"../../utility/rc_ptrs.h"
+	"../../utility/PError.h"
+	"../../base/PComplexData.h"
+	"../../utility/PEBLUtility.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+	<stdio.h>
+	<algorithm>
+
+1320869855 source:/home/smueller/Projects/pebl/src/platforms/sdl/PlatformNetwork.cpp
+	"PlatformNetwork.h"
+	"../../devices/PNetwork.h"
+	"../../utility/PError.h"
+	"SDL/SDL_net.h"
+	<string>
+
+1323474578 source:/home/smueller/Projects/pebl/src/platforms/sdl/PlatformTextBox.cpp
+	"PlatformTextBox.h"
+	"../../objects/PTextBox.h"
+	"PlatformFont.h"
+	"SDLUtility.h"
+	"../../base/PComplexData.h"
+	"../../devices/PKeyboard.h"
+	"../../utility/rc_ptrs.h"
+	"../../utility/PError.h"
+	"../../utility/PEBLUtility.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+	<stdio.h>
+	<string>
+	<algorithm>
+
+1322513733 source:/home/smueller/Projects/pebl/src/platforms/sdl/PlatformTimer.cpp
+	"PlatformTimer.h"
+	"SDL/SDL.h"
+	<iostream>
+	"../../devices/DeviceState.h"
+	<sys/time.h>
+	<windows.h>
+	<iostream>
+	<iomanip>
+
+1320869855 source:/home/smueller/Projects/pebl/src/platforms/sdl/PlatformWidget.cpp
+	"PlatformWidget.h"
+	"SDL/SDL.h"
+	"SDL/SDL_rotozoom.h"
+	"SDLUtility.h"
+	<iostream>
+
+1320869855 source:/home/smueller/Projects/pebl/src/platforms/sdl/PlatformWindow.cpp
+	"PlatformWindow.h"
+	"../../objects/PWindow.h"
+	"../../objects/PColor.h"
+	"../../base/Evaluator.h"
+	"../../base/VariableMap.h"
+	"SDL/SDL.h"
+	<stdio.h>
+
+1320869855 source:/home/smueller/Projects/pebl/src/platforms/sdl/SDLUtility.cpp
+	"SDLUtility.h"
+	"../../objects/PColor.h"
+	"../../utility/PError.h"
+	"PlatformWindow.h"
+	"SDL/SDL.h"
+	<png.h>
+	<math.h>
+	<iostream>
+
+1320869856 source:/home/smueller/Projects/pebl/src/utility/BinReloc.cpp
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdio.h>
+	<stdlib.h>
+	<limits.h>
+	<string.h>
+	"BinReloc.h"
+
+1320869856 /home/smueller/Projects/pebl/src/utility/BinReloc.h
+
+1320869856 source:/home/smueller/Projects/pebl/src/utility/PEBLPath.cpp
+	"PEBLPath.h"
+	"../base/Variant.h"
+	"PError.h"
+	"BinReloc.h"
+	<sys/stat.h>
+	<list>
+	<string>
+	<iostream>
+
+1320869856 source:/home/smueller/Projects/pebl/src/utility/PEBLUtility.cpp
+	"PEBLUtility.h"
+	"PError.h"
+	"rc_ptrs.h"
+	"../base/Variant.h"
+	"../base/PComplexData.h"
+	"../base/PList.h"
+	"../devices/PKeyboard.h"
+	"../apps/Globals.h"
+	<ctype.h>
+	<string>
+	<stdlib.h>
+	<cmath>
+	<iostream>
+	<strstream>
+	<algorithm>
+	<png.h>
+	<dirent.h>
+	<direct.h>
+	<windows.h>
+	<sys/stat.h>
+	<bits/types.h>
+	<sys/stat.h>
+	<stdio.h>
+
+1320869856 source:/home/smueller/Projects/pebl/src/utility/PError.cpp
+	"PError.h"
+	"../base/PNode.h"
+	"../base/Evaluator.h"
+	"../base/Variant.h"
+	"../base/PComplexData.h"
+	<iostream>
+	<string>
+	<signal.h>
+
+1321649173 source:/home/smueller/Projects/pebl/src/utility/rs232.c
+	"rs232.h"
+
+1309958464 /usr/include//SDL/SDL.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_audio.h"
+	"SDL_cdrom.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_loadso.h"
+	"SDL_mutex.h"
+	"SDL_rwops.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_video.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include//SDL/SDL_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include//SDL/SDL_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<iconv.h>
+	"begin_code.h"
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	"close_code.h"
+
+1309958464 /usr/include//SDL/SDL_config.h
+	"SDL_platform.h"
+	<stdarg.h>
+
+1309958464 /usr/include//SDL/SDL_platform.h
+
+1317765338 /usr/include//stdio.h
+	<features.h>
+	<stddef.h>
+	<bits/types.h>
+	<libio.h>
+	<stdarg.h>
+	<bits/stdio_lim.h>
+	<bits/sys_errlist.h>
+	<getopt.h>
+	<bits/stdio.h>
+	<bits/stdio2.h>
+	<bits/stdio-ldbl.h>
+
+1317765287 /usr/include//features.h
+	<bits/predefs.h>
+	<sys/cdefs.h>
+	<gnu/stubs.h>
+
+1317765338 /usr/include//libio.h
+	<_G_config.h>
+	<stdarg.h>
+	<sys/cdefs.h>
+	<bits/stdio-lock.h>
+	<shlib-compat.h>
+	<bits/libio-ldbl.h>
+
+1317765338 /usr/include//_G_config.h
+	<bits/types.h>
+	<stddef.h>
+	<wchar.h>
+	<gconv.h>
+
+1317765346 /usr/include//wchar.h
+	<features.h>
+	<stdio.h>
+	<stdarg.h>
+	<bits/wchar.h>
+	<stddef.h>
+	<wctype.h>
+	<xlocale.h>
+	<xlocale.h>
+	<xlocale.h>
+	<wctype.h>
+	<bits/wchar2.h>
+	<bits/wchar-ldbl.h>
+
+1317765370 /usr/include//wctype.h
+	<features.h>
+	<bits/types.h>
+	<wchar.h>
+	<endian.h>
+	<xlocale.h>
+
+1317765344 /usr/include//endian.h
+	<features.h>
+	<bits/endian.h>
+	<bits/byteswap.h>
+
+1317765292 /usr/include//xlocale.h
+
+1317765289 /usr/include//gconv.h
+	<features.h>
+	<wchar.h>
+	<stddef.h>
+
+1317765356 /usr/include//getopt.h
+	<ctype.h>
+
+1317765320 /usr/include//ctype.h
+	<features.h>
+	<bits/types.h>
+	<endian.h>
+	<xlocale.h>
+
+1317765333 /usr/include//stdlib.h
+	<features.h>
+	<stddef.h>
+	<bits/waitflags.h>
+	<bits/waitstatus.h>
+	<xlocale.h>
+	<sys/types.h>
+	<alloca.h>
+	<bits/stdlib.h>
+	<bits/stdlib-ldbl.h>
+
+1317765333 /usr/include//alloca.h
+	<features.h>
+	<stddef.h>
+
+1317765342 /usr/include//malloc.h
+	<features.h>
+	<stddef.h>
+	<stdio.h>
+
+1317765344 /usr/include//memory.h
+	<features.h>
+	<string.h>
+
+1317765343 /usr/include//string.h
+	<features.h>
+	<stddef.h>
+	<xlocale.h>
+	<bits/string.h>
+	<bits/string2.h>
+	<bits/string3.h>
+
+1317765344 /usr/include//strings.h
+	<features.h>
+	<stddef.h>
+	<xlocale.h>
+
+1317765333 /usr/include//inttypes.h
+	<features.h>
+	<stdint.h>
+	<stddef.h>
+
+1317765333 /usr/include//stdint.h
+	<features.h>
+	<bits/wchar.h>
+	<bits/wordsize.h>
+
+1317765289 /usr/include//iconv.h
+	<features.h>
+	<stddef.h>
+
+1309958464 /usr/include//SDL/begin_code.h
+
+1309958464 /usr/include//SDL/close_code.h
+
+1309958464 /usr/include//SDL/SDL_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include//SDL/SDL_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include//SDL/SDL_endian.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include//SDL/SDL_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include//SDL/SDL_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	"close_code.h"
+
+1309958464 /usr/include//SDL/SDL_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include//SDL/SDL_cdrom.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include//SDL/SDL_cpuinfo.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include//SDL/SDL_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_active.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_quit.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include//SDL/SDL_active.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include//SDL/SDL_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keysym.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include//SDL/SDL_keysym.h
+
+1309958464 /usr/include//SDL/SDL_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include//SDL/SDL_video.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include//SDL/SDL_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include//SDL/SDL_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1309958464 /usr/include//SDL/SDL_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include//SDL/SDL_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1309958464 /usr/include//SDL/SDL_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1310092103 /usr/include//SDL/SDL_image.h
+	"SDL.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1301737694 /usr/include//SDL/SDL_ttf.h
+	"SDL.h"
+	"begin_code.h"
+	"close_code.h"
+
+1193837800 /usr/include//SDL/SDL_net.h
+	"SDL.h"
+	"SDL_endian.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1317765331 /usr/include//signal.h
+	<features.h>
+	<bits/sigset.h>
+	<bits/types.h>
+	<bits/signum.h>
+	<time.h>
+	<bits/siginfo.h>
+	<bits/sigaction.h>
+	<bits/sigcontext.h>
+	<stddef.h>
+	<bits/sigstack.h>
+	<sys/ucontext.h>
+	<bits/pthreadtypes.h>
+	<bits/sigthread.h>
+
+1317765350 /usr/include//time.h
+	<features.h>
+	<stddef.h>
+	<bits/time.h>
+	<bits/types.h>
+	<bits/types.h>
+	<bits/types.h>
+	<bits/types.h>
+	<bits/types.h>
+	<xlocale.h>
+
+1317765356 /usr/include//sched.h
+	<features.h>
+	<bits/types.h>
+	<stddef.h>
+	<time.h>
+	<bits/sched.h>
+
+1317765326 /usr/include//math.h
+	<features.h>
+	<bits/huge_val.h>
+	<bits/huge_valf.h>
+	<bits/huge_vall.h>
+	<bits/inf.h>
+	<bits/nan.h>
+	<bits/mathdef.h>
+	<bits/mathcalls.h>
+	<bits/mathcalls.h>
+	<bits/mathcalls.h>
+	<bits/mathinline.h>
+
+1317765321 /usr/include//libintl.h
+	<features.h>
+	<stddef.h>
+	<locale.h>
+
+1317765292 /usr/include//locale.h
+	<features.h>
+	<stddef.h>
+	<bits/locale.h>
+	<xlocale.h>
+
+1317765333 /usr/include//errno.h
+	<features.h>
+	<bits/errno.h>
+
+1317765360 /usr/include//termios.h
+	<features.h>
+	<bits/types.h>
+	<bits/termios.h>
+	<sys/ttydefaults.h>
+
+1317765356 /usr/include//unistd.h
+	<features.h>
+	<bits/posix_opt.h>
+	<bits/environments.h>
+	<bits/types.h>
+	<stddef.h>
+	<bits/confname.h>
+	<getopt.h>
+	<bits/unistd.h>
+
+1317765358 /usr/include//fcntl.h
+	<features.h>
+	<bits/fcntl.h>
+	<bits/types.h>
+	<time.h>
+	<bits/stat.h>
+	<bits/fcntl2.h>
+
+1317765286 /usr/include//limits.h
+	<features.h>
+	<bits/wordsize.h>
+	<bits/posix1_lim.h>
+	<bits/posix2_lim.h>
+	<bits/xopen_lim.h>
+
+1308352188 /usr/include//SDL/SDL_gfxPrimitives.h
+	<math.h>
+	"SDL.h"
+
+1308352188 /usr/include//SDL/SDL_rotozoom.h
+	<math.h>
+	"SDL.h"
+
+1313008360 /usr/include//png.h
+	"zlib.h"
+	"pngconf.h"
+	<crtdbg.h>
+
+1300696522 /usr/include//zlib.h
+	"zconf.h"
+
+1300696522 /usr/include//zconf.h
+	<windows.h>
+	"zlibdefs.h"
+	<sys/types.h>
+
+1300696522 /usr/include//zlibdefs.h
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+
+1313008360 /usr/include//pngconf.h
+	"pngusr.h"
+	"config.h"
+	<windows.h>
+	<stdio.h>
+	<stdio.h>
+	<sys/types.h>
+	<setjmp.h>
+	<strings.h>
+	<string.h>
+	<stdlib.h>
+	<fp.h>
+	<math.h>
+	<m68881.h>
+	<mem.h>
+	<alloc.h>
+	<malloc.h>
+	<time.h>
+	<dos.h>
+
+1317765329 /usr/include//setjmp.h
+	<features.h>
+	<bits/setjmp.h>
+	<bits/sigset.h>
+	<bits/setjmp2.h>
+
+1317765351 /usr/include//dirent.h
+	<features.h>
+	<bits/types.h>
+	<bits/dirent.h>
+	<bits/types.h>
+	<bits/posix1_lim.h>
+	<stddef.h>
+
+1310092103 /usr/include/SDL/SDL_image.h
+	"SDL.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1301737694 /usr/include/SDL/SDL_ttf.h
+	"SDL.h"
+	"begin_code.h"
+	"close_code.h"
+
+1193837800 /usr/include/SDL/SDL_net.h
+	"SDL.h"
+	"SDL_endian.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1335294889 source:c:\users\localadmin\documents\pebl\src\apps\pebl.cpp
+	"../base/Evaluator.h"
+	"../base/grammar.tab.hpp"
+	"../base/PNode.h"
+	"../base/Loader.h"
+	"../base/PComplexData.h"
+	"../base/PList.h"
+	"../base/FunctionMap.h"
+	"../base/VariableMap.h"
+	"../base/Variant.h"
+	"../libs/PEBLObjects.h"
+	"../utility/PError.h"
+	"../utility/PEBLPath.h"
+	"../utility/PEBLUtility.h"
+	"../utility/rc_ptrs.h"
+	"../devices/PEventLoop.h"
+	"Globals.h"
+	<iostream>
+	<signal.h>
+	<list>
+	<string>
+	<algorithm>
+	<sys/resource.h>
+	<sched.h>
+	<windows.h>
+	<time.h>
+	<mach-o/dyld.h>
+	<CoreFoundation/CFBundle.h>
+	"../platforms/sdl/PlatformEnvironment.h"
+
+1330936811 c:\users\localadmin\documents\pebl\src\base\evaluator.h
+	<stack>
+	<list>
+	"Variant.h"
+	"FunctionMap.h"
+	"../utility/PEBLPath.h"
+	"VariableMap.h"
+	"../utility/PError.h"
+
+1330936811 c:\users\localadmin\documents\pebl\src\base\variant.h
+	<iostream>
+	"../utility/rc_ptrs.h"
+
+1330936804 c:\users\localadmin\documents\pebl\src\utility\rc_ptrs.h
+	<iostream>
+	<stddef.h>
+
+1330936812 c:\users\localadmin\documents\pebl\src\base\functionmap.h
+	"PNode.h"
+	<map>
+	<string>
+
+1330936811 c:\users\localadmin\documents\pebl\src\base\pnode.h
+	"Variant.h"
+	<string>
+
+1330936804 c:\users\localadmin\documents\pebl\src\utility\peblpath.h
+	<list>
+	<string>
+
+1330936812 c:\users\localadmin\documents\pebl\src\base\variablemap.h
+	"Variant.h"
+	<map>
+	<string>
+
+1338394352 c:\users\localadmin\documents\pebl\src\utility\perror.h
+	<string>
+	<list>
+	"../base/Variant.h"
+	"../base/PNode.h"
+
+1330936811 c:\users\localadmin\documents\pebl\src\base\grammar.tab.hpp
+
+1330936811 c:\users\localadmin\documents\pebl\src\base\loader.h
+	"PNode.h"
+	"Variant.h"
+	"VariableMap.h"
+	"FunctionMap.h"
+	<set>
+	<map>
+
+1330936811 c:\users\localadmin\documents\pebl\src\base\pcomplexdata.h
+	"PList.h"
+	"../objects/PColor.h"
+	"../platforms/sdl/PlatformEnvironment.h"
+	"../platforms/sdl/PlatformWindow.h"
+	"../platforms/sdl/PlatformImageBox.h"
+	"../platforms/sdl/PlatformFont.h"
+	"../platforms/sdl/PlatformLabel.h"
+	"../platforms/sdl/PlatformTextBox.h"
+	"../platforms/sdl/PlatformKeyboard.h"
+	"../platforms/sdl/PlatformDrawObject.h"
+	"../platforms/sdl/PlatformCanvas.h"
+	"../devices/PStream.h"
+	"../platforms/sdl/PlatformAudioOut.h"
+	"../platforms/sdl/PlatformNetwork.h"
+	"../utility/rc_ptrs.h"
+	"../platforms/sdl/PlatformJoystick.h"
+	"../devices/PParallelPort.h"
+	"../devices/PComPort.h"
+	<iostream>
+
+1338394357 c:\users\localadmin\documents\pebl\src\base\plist.h
+	"Variant.h"
+	"../utility/rc_ptrs.h"
+	"PEBLObject.h"
+	<vector>
+	<iostream>
+
+1330936811 c:\users\localadmin\documents\pebl\src\base\peblobject.h
+	"Variant.h"
+	<iostream>
+	<map>
+	<string>
+
+1330936810 c:\users\localadmin\documents\pebl\src\objects\pcolor.h
+	"../base/PEBLObject.h"
+	<iostream>
+	<string>
+
+1330936806 c:\users\localadmin\documents\pebl\src\platforms\sdl\platformenvironment.h
+	"PlatformWindow.h"
+	"../../objects/PEnvironment.h"
+	"../../apps/Globals.h"
+	"../../base/PEBLObject.h"
+	<list>
+
+1330936807 c:\users\localadmin\documents\pebl\src\platforms\sdl\platformwindow.h
+	"PlatformWidget.h"
+	"../../base/PEBLObject.h"
+	"../../objects/PWindow.h"
+	"../../objects/PColor.h"
+	"../../apps/Globals.h"
+	"SDL/SDL.h"
+
+1330936806 c:\users\localadmin\documents\pebl\src\platforms\sdl\platformwidget.h
+	"../../objects/PWidget.h"
+	"SDL/SDL.h"
+
+1330936810 c:\users\localadmin\documents\pebl\src\objects\pwidget.h
+	"../base/PEBLObject.h"
+	"PColor.h"
+	<list>
+	<iostream>
+
+1330936810 c:\users\localadmin\documents\pebl\src\objects\pwindow.h
+	"PWidget.h"
+	"PColor.h"
+	<iostream>
+
+1330936803 c:\users\localadmin\documents\pebl\src\apps\globals.h
+
+1330936810 c:\users\localadmin\documents\pebl\src\objects\penvironment.h
+	"../base/PEBLObject.h"
+	"PWindow.h"
+
+1330936806 c:\users\localadmin\documents\pebl\src\platforms\sdl\platformimagebox.h
+	"PlatformWidget.h"
+	"../../objects/PImageBox.h"
+	"../../base/PEBLObject.h"
+	"SDL.h"
+	"SDL_image.h"
+	"SDL/SDL.h"
+	"SDL/SDL_image.h"
+	<string>
+
+1330936810 c:\users\localadmin\documents\pebl\src\objects\pimagebox.h
+	"PWidget.h"
+	<string>
+
+1330936806 c:\users\localadmin\documents\pebl\src\platforms\sdl\platformfont.h
+	"../../objects/PFont.h"
+	"../../objects/PColor.h"
+	"../../utility/rc_ptrs.h"
+	"../../base/PEBLObject.h"
+	"SDLUtility.h"
+	"SDL.h"
+	"SDL_ttf.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+
+1330936810 c:\users\localadmin\documents\pebl\src\objects\pfont.h
+	"PWidget.h"
+	"PColor.h"
+	<string>
+	"../utility/rc_ptrs.h"
+	"../base/PEBLObject.h"
+
+1338394354 c:\users\localadmin\documents\pebl\src\platforms\sdl\sdlutility.h
+	"../../objects/PColor.h"
+	"SDL/SDL.h"
+	"PlatformWindow.h"
+
+1330936807 c:\users\localadmin\documents\pebl\src\platforms\sdl\platformlabel.h
+	"PlatformWidget.h"
+	"PlatformFont.h"
+	"../../objects/PLabel.h"
+	"../../utility/rc_ptrs.h"
+	"../../base/PEBLObject.h"
+	"SDL.h"
+	"SDL_ttf.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+
+1330936810 c:\users\localadmin\documents\pebl\src\objects\plabel.h
+	"PTextObject.h"
+	"PFont.h"
+	"PColor.h"
+	"../utility/rc_ptrs.h"
+	<string>
+
+1330936810 c:\users\localadmin\documents\pebl\src\objects\ptextobject.h
+	"PWidget.h"
+	"PFont.h"
+	"PColor.h"
+	"../utility/rc_ptrs.h"
+	<string>
+
+1330936807 c:\users\localadmin\documents\pebl\src\platforms\sdl\platformtextbox.h
+	"PlatformWidget.h"
+	"PlatformFont.h"
+	"../../objects/PTextBox.h"
+	"SDL.h"
+	"SDL_ttf.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+	"../../utility/rc_ptrs.h"
+	"../../base/PEBLObject.h"
+	<vector>
+
+1330936810 c:\users\localadmin\documents\pebl\src\objects\ptextbox.h
+	"SDL/SDL.h"
+	"PTextObject.h"
+	"PFont.h"
+	"../utility/rc_ptrs.h"
+	<string>
+
+1330936806 c:\users\localadmin\documents\pebl\src\platforms\sdl\platformkeyboard.h
+	"../../devices/PKeyboard.h"
+	"../../base/PEBLObject.h"
+	"SDL/SDL.h"
+	<list>
+
+1330936802 c:\users\localadmin\documents\pebl\src\devices\pkeyboard.h
+	"PDevice.h"
+	<list>
+	<string>
+
+1330936802 c:\users\localadmin\documents\pebl\src\devices\pdevice.h
+	<iostream>
+
+1330936806 c:\users\localadmin\documents\pebl\src\platforms\sdl\platformdrawobject.h
+	"PlatformWidget.h"
+	"../../objects/PDrawObject.h"
+	"../../objects/PColor.h"
+	"../../base/PEBLObject.h"
+	"SDL/SDL.h"
+
+1330936810 c:\users\localadmin\documents\pebl\src\objects\pdrawobject.h
+	"PWidget.h"
+	"PColor.h"
+	<vector>
+
+1330936806 c:\users\localadmin\documents\pebl\src\platforms\sdl\platformcanvas.h
+	"PlatformWidget.h"
+	"../../objects/PCanvas.h"
+	"SDL/SDL.h"
+	"../../utility/rc_ptrs.h"
+	"../../base/PEBLObject.h"
+	<vector>
+
+1330936810 c:\users\localadmin\documents\pebl\src\objects\pcanvas.h
+	"../utility/rc_ptrs.h"
+	"PWidget.h"
+	"PColor.h"
+
+1330936802 c:\users\localadmin\documents\pebl\src\devices\pstream.h
+	"PDevice.h"
+	"../base/PEBLObject.h"
+	<fstream>
+	<string>
+
+1330936806 c:\users\localadmin\documents\pebl\src\platforms\sdl\platformaudioout.h
+	"../../devices/PAudioOut.h"
+	"../../base/PEBLObject.h"
+	"SDL/SDL.h"
+	"SDL/SDL_audio.h"
+	<string>
+
+1330936802 c:\users\localadmin\documents\pebl\src\devices\paudioout.h
+	"PDevice.h"
+	<string>
+
+1338394354 c:\users\localadmin\documents\pebl\src\platforms\sdl\platformnetwork.h
+	"../../devices/PNetwork.h"
+	"SDL.h"
+	"SDL_net.h"
+	"SDL/SDL.h"
+	"SDL/SDL_net.h"
+
+1338394351 c:\users\localadmin\documents\pebl\src\devices\pnetwork.h
+	"PDevice.h"
+	"../base/PEBLObject.h"
+	<fstream>
+	<string>
+
+1330936806 c:\users\localadmin\documents\pebl\src\platforms\sdl\platformjoystick.h
+	"../../devices/PJoystick.h"
+	<fstream>
+	<string>
+	"SDL/SDL.h"
+
+1330936802 c:\users\localadmin\documents\pebl\src\devices\pjoystick.h
+	"PDevice.h"
+	"../base/PEBLObject.h"
+	<fstream>
+	<string>
+
+1330936802 c:\users\localadmin\documents\pebl\src\devices\pparallelport.h
+	"PDevice.h"
+	"../base/PEBLObject.h"
+	<fstream>
+	<string>
+
+1330936802 c:\users\localadmin\documents\pebl\src\devices\pcomport.h
+	"PDevice.h"
+	"../base/PEBLObject.h"
+	<fstream>
+	<string>
+
+1330936808 c:\users\localadmin\documents\pebl\src\libs\peblobjects.h
+	"../platforms/sdl/PlatformEnvironment.h"
+	"../apps/Globals.h"
+
+1330936804 c:\users\localadmin\documents\pebl\src\utility\peblutility.h
+	"../devices/PKeyboard.h"
+	"../apps/Globals.h"
+	<string>
+
+1330936802 c:\users\localadmin\documents\pebl\src\devices\peventloop.h
+	<iostream>
+	<vector>
+	"DeviceState.h"
+	"PEvent.h"
+	"../utility/rc_ptrs.h"
+	"../base/PEBLObject.h"
+
+1330936802 c:\users\localadmin\documents\pebl\src\devices\devicestate.h
+	<iostream>
+	"PDevice.h"
+	"PEvent.h"
+
+1330936802 c:\users\localadmin\documents\pebl\src\devices\pevent.h
+	"PKeyboard.h"
+	"SDL/SDL.h"
+
+1330936811 source:c:\users\localadmin\documents\pebl\src\base\evaluator.cpp
+	"Evaluator.h"
+	"PNode.h"
+	"grammar.tab.hpp"
+	"VariableMap.h"
+	"Variant.h"
+	"PComplexData.h"
+	"PList.h"
+	"FunctionMap.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	"../utility/rc_ptrs.h"
+	<iostream>
+	<string>
+	<strstream>
+	<math.h>
+
+1330936811 source:c:\users\localadmin\documents\pebl\src\base\functionmap.cpp
+	"FunctionMap.h"
+	"PNode.h"
+	"../utility/PEBLUtility.h"
+	<iostream>
+	<map>
+	<string>
+	<functional>
+
+1330936811 source:c:\users\localadmin\documents\pebl\src\base\loader.cpp
+	"Loader.h"
+	"PNode.h"
+	"grammar.tab.hpp"
+	"Variant.h"
+	"FunctionMap.h"
+	"Evaluator.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	"../libs/Functions.h"
+	"../libs/PEBLEnvironment.h"
+	"../libs/PEBLMath.h"
+	"../libs/PEBLObjects.h"
+	"../libs/PEBLStream.h"
+	"../libs/PEBLString.h"
+	<iostream>
+	<list>
+	<string>
+
+1338394356 c:\users\localadmin\documents\pebl\src\libs\functions.h
+	"PEBLEnvironment.h"
+	"PEBLMath.h"
+	"PEBLStream.h"
+	"PEBLObjects.h"
+	"PEBLList.h"
+	"PEBLString.h"
+
+1338394356 c:\users\localadmin\documents\pebl\src\libs\peblenvironment.h
+
+1330936808 c:\users\localadmin\documents\pebl\src\libs\peblmath.h
+
+1338394356 c:\users\localadmin\documents\pebl\src\libs\peblstream.h
+
+1338394356 c:\users\localadmin\documents\pebl\src\libs\pebllist.h
+
+1330936808 c:\users\localadmin\documents\pebl\src\libs\peblstring.h
+
+1330936811 source:c:\users\localadmin\documents\pebl\src\base\pcomplexdata.cpp
+	"PComplexData.h"
+	<iostream>
+	"../utility/PError.h"
+	"../utility/rc_ptrs.h"
+
+1330936811 source:c:\users\localadmin\documents\pebl\src\base\peblobject.cpp
+	"PEBLObject.h"
+	"../base/PComplexData.h"
+	"../utility/PError.h"
+	<stdio.h>
+
+1330936812 source:c:\users\localadmin\documents\pebl\src\base\plist.cpp
+	"PList.h"
+	"Variant.h"
+	"../utility/PError.h"
+	"PEBLObject.h"
+	<list>
+	<map>
+	<stdio.h>
+
+1330936811 source:c:\users\localadmin\documents\pebl\src\base\pnode.cpp
+	"PNode.h"
+	"grammar.tab.hpp"
+	<iostream>
+	<string>
+	<stdlib.h>
+
+1330936811 source:c:\users\localadmin\documents\pebl\src\base\variablemap.cpp
+	"VariableMap.h"
+	"../utility/PError.h"
+	"../utility/PEBLUtility.h"
+	<iostream>
+	<map>
+	<string>
+
+1330936811 source:c:\users\localadmin\documents\pebl\src\base\variant.cpp
+	"Variant.h"
+	"PComplexData.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	<iostream>
+	<sstream>
+	<math.h>
+	<string>
+	<stdlib.h>
+
+1330936812 source:c:\users\localadmin\documents\pebl\src\base\grammar.tab.cpp
+	"PNode.h"
+	<stdio.h>
+	<iostream>
+	<cctype>
+	<cstring>
+	<vector>
+	<stack>
+	<stddef.h>
+	<libintl.h>
+	<alloca.h>
+	<malloc.h>
+	<stdlib.h>
+	<stdlib.h>
+	<stdio.h>
+
+1330936812 source:c:\users\localadmin\documents\pebl\src\base\lex.yy.cpp
+	<stdio.h>
+	<string.h>
+	<errno.h>
+	<stdlib.h>
+	<inttypes.h>
+	<stdlib.h>
+	"PNode.h"
+	"grammar.tab.hpp"
+	"../utility/PEBLUtility.h"
+	<string.h>
+	<math.h>
+	<unistd.h>
+
+1330936802 source:c:\users\localadmin\documents\pebl\src\devices\devicestate.cpp
+	"PDevice.h"
+	"DeviceState.h"
+	<iostream>
+
+1330936802 source:c:\users\localadmin\documents\pebl\src\devices\paudioout.cpp
+
+1335294912 source:c:\users\localadmin\documents\pebl\src\devices\pcomport.cpp
+	"PComPort.h"
+	"../utility/rs232.h"
+	"../utility/PError.h"
+	<sys/io.h>
+
+1335294936 c:\users\localadmin\documents\pebl\src\utility\rs232.h
+	<stdio.h>
+	<string.h>
+	<termios.h>
+	<sys/ioctl.h>
+	<unistd.h>
+	<fcntl.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<limits.h>
+	<windows.h>
+
+1330936802 source:c:\users\localadmin\documents\pebl\src\devices\pdevice.cpp
+	"PDevice.h"
+	<iostream>
+
+1330936802 source:c:\users\localadmin\documents\pebl\src\devices\pevent.cpp
+	"PEvent.h"
+	"../utility/PError.h"
+	<iostream>
+
+1335294936 source:c:\users\localadmin\documents\pebl\src\devices\peventloop.cpp
+	"PEventLoop.h"
+	"PDevice.h"
+	"PEventQueue.h"
+	"../platforms/sdl/PlatformEventQueue.h"
+	"../base/FunctionMap.h"
+	"../base/Evaluator.h"
+	"../base/PComplexData.h"
+	"../base/PEBLObject.h"
+	"../base/grammar.tab.hpp"
+	"../libs/PEBLEnvironment.h"
+	<iostream>
+
+1330936802 c:\users\localadmin\documents\pebl\src\devices\peventqueue.h
+	"PEvent.h"
+	<queue>
+	<iostream>
+
+1330936806 c:\users\localadmin\documents\pebl\src\platforms\sdl\platformeventqueue.h
+	"../../devices/PEventQueue.h"
+	"../../devices/PEvent.h"
+
+1330936802 source:c:\users\localadmin\documents\pebl\src\devices\peventqueue.cpp
+	"PEventQueue.h"
+	"PEvent.h"
+
+1330936802 source:c:\users\localadmin\documents\pebl\src\devices\pjoystick.cpp
+	"PJoystick.h"
+	"../utility/PError.h"
+
+1330936802 source:c:\users\localadmin\documents\pebl\src\devices\pkeyboard.cpp
+	"PKeyboard.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	<iostream>
+	<list>
+	<string>
+
+1330936802 source:c:\users\localadmin\documents\pebl\src\devices\pnetwork.cpp
+	"PNetwork.h"
+	"../utility/PError.h"
+
+1335294936 source:c:\users\localadmin\documents\pebl\src\devices\pparallelport.cpp
+	"PParallelPort.h"
+	"../utility/PError.h"
+	<sys/io.h>
+	<windows.h>
+	<conio.h>
+	<stdio.h>
+
+1330936802 source:c:\users\localadmin\documents\pebl\src\devices\pstream.cpp
+	"PStream.h"
+	"../utility/PError.h"
+	<iostream>
+	<fstream>
+	<sstream>
+	<list>
+	<string>
+	<algorithm>
+	<sys/stat.h>
+
+1330936801 source:c:\users\localadmin\documents\pebl\src\devices\ptimer.cpp
+	"PTimer.h"
+	"DeviceState.h"
+	<iostream>
+
+1330936802 c:\users\localadmin\documents\pebl\src\devices\ptimer.h
+	"PDevice.h"
+	<iostream>
+
+1330936808 source:c:\users\localadmin\documents\pebl\src\libs\peblenvironment.cpp
+	"PEBLEnvironment.h"
+	"PEBLObjects.h"
+	"../base/Variant.h"
+	"../base/PList.h"
+	"../base/PComplexData.h"
+	"../base/Evaluator.h"
+	"../utility/PError.h"
+	"../utility/PEBLUtility.h"
+	"../utility/rc_ptrs.h"
+	"../devices/PTimer.h"
+	"../devices/DeviceState.h"
+	"../devices/PEventLoop.h"
+	"../objects/PTextBox.h"
+	"../platforms/sdl/PlatformTimer.h"
+	"../platforms/sdl/PlatformKeyboard.h"
+	"../platforms/sdl/PlatformTextBox.h"
+	"../platforms/sdl/PlatformEventQueue.h"
+	<ctime>
+	<string>
+	<windows.h>
+
+1330936806 c:\users\localadmin\documents\pebl\src\platforms\sdl\platformtimer.h
+	"../../devices/PTimer.h"
+	"SDL/SDL.h"
+	<stdio.h>
+
+1330936808 source:c:\users\localadmin\documents\pebl\src\libs\pebllist.cpp
+	"PEBLList.h"
+	"../base/Variant.h"
+	"../base/PComplexData.h"
+	"../base/PList.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	"../utility/rc_ptrs.h"
+	<list>
+	<sstream>
+	<string>
+	<vector>
+	<iostream>
+
+1330936808 source:c:\users\localadmin\documents\pebl\src\libs\peblmath.cpp
+	"PEBLMath.h"
+	"../base/Variant.h"
+	"../base/PList.h"
+	"../base/PComplexData.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	"../base/PEBLObject.h"
+	<stdlib.h>
+	<math.h>
+	<list>
+	<string>
+	<strstream>
+	<time.h>
+
+1330936808 source:c:\users\localadmin\documents\pebl\src\libs\peblobjects.cpp
+	"PEBLObjects.h"
+	"PEBLEnvironment.h"
+	"../base/Variant.h"
+	"../base/PList.h"
+	"../base/PComplexData.h"
+	"../base/PEBLObject.h"
+	"../devices/DeviceState.h"
+	"../devices/PEventLoop.h"
+	"../objects/PColor.h"
+	"../objects/PTextBox.h"
+	"../objects/PDrawObject.h"
+	"../utility/PError.h"
+	"../platforms/sdl/PlatformEnvironment.h"
+	"../platforms/sdl/PlatformWindow.h"
+	"../platforms/sdl/PlatformImageBox.h"
+	"../platforms/sdl/PlatformDrawObject.h"
+	"../platforms/sdl/PlatformLabel.h"
+	"../platforms/sdl/PlatformFont.h"
+	"../platforms/sdl/PlatformEventQueue.h"
+	"../platforms/sdl/PlatformTextBox.h"
+	"../platforms/sdl/PlatformCanvas.h"
+	"../platforms/sdl/PlatformAudioIn.h"
+	"PEBLList.h"
+	<string>
+
+1330936806 c:\users\localadmin\documents\pebl\src\platforms\sdl\platformaudioin.h
+	"../../base/Variant.h"
+	"../../base/PEBLObject.h"
+	"SDL/SDL.h"
+	"SDL/SDL_audioin.h"
+	"PlatformAudioOut.h"
+	<string>
+
+1335294936 source:c:\users\localadmin\documents\pebl\src\libs\peblstream.cpp
+	"PEBLStream.h"
+	"../base/Variant.h"
+	"../base/PComplexData.h"
+	"../base/PList.h"
+	"../base/Evaluator.h"
+	"../devices/PStream.h"
+	"../utility/PError.h"
+	"../utility/PEBLPath.h"
+	"../utility/PEBLUtility.h"
+	"../devices/PParallelPort.h"
+	<list>
+	<iostream>
+	<fstream>
+	<stdio.h>
+	<stdlib.h>
+	<unistd.h>
+	<sys/io.h>
+
+1330936808 source:c:\users\localadmin\documents\pebl\src\libs\peblstring.cpp
+	"PEBLString.h"
+	"../base/Variant.h"
+	"../base/PComplexData.h"
+	"../base/PList.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	<string>
+	<vector>
+	<algorithm>
+	<iostream>
+	<cctype>
+
+1330936810 source:c:\users\localadmin\documents\pebl\src\objects\pcanvas.cpp
+	"PCanvas.h"
+	"PColor.h"
+	"../utility/rc_ptrs.h"
+	"../utility/PEBLUtility.h"
+	"../base/PComplexData.h"
+	<iostream>
+
+1330936810 source:c:\users\localadmin\documents\pebl\src\objects\pcolor.cpp
+	"PColor.h"
+	"../base/Variant.h"
+	"../base/PEBLObject.h"
+	"RGBColorNames.h"
+	"../utility/PEBLUtility.h"
+	"../utility/PError.h"
+	<string>
+	<cstring>
+
+1330936810 c:\users\localadmin\documents\pebl\src\objects\rgbcolornames.h
+
+1330936810 source:c:\users\localadmin\documents\pebl\src\objects\pdrawobject.cpp
+	"PDrawObject.h"
+	"PWidget.h"
+	"../base/PComplexData.h"
+	<list>
+
+1330936810 source:c:\users\localadmin\documents\pebl\src\objects\penvironment.cpp
+	"PEnvironment.h"
+
+1330936810 source:c:\users\localadmin\documents\pebl\src\objects\pfont.cpp
+	"PFont.h"
+	"PColor.h"
+	"../base/Variant.h"
+	"../base/PComplexData.h"
+	"../utility/rc_ptrs.h"
+	<iostream>
+
+1330936810 source:c:\users\localadmin\documents\pebl\src\objects\pimagebox.cpp
+	"PImageBox.h"
+	<iostream>
+
+1330936810 source:c:\users\localadmin\documents\pebl\src\objects\plabel.cpp
+	"PLabel.h"
+	"PFont.h"
+	<string>
+	<iostream>
+
+1330936810 source:c:\users\localadmin\documents\pebl\src\objects\pobject.cpp
+
+1330936810 source:c:\users\localadmin\documents\pebl\src\objects\ptextbox.cpp
+	"PTextBox.h"
+	"PFont.h"
+	"../utility/rc_ptrs.h"
+	"../utility/PEBLUtility.h"
+	"../devices/PKeyboard.h"
+	"../libs/PEBLEnvironment.h"
+	"SDL/SDL.h"
+	<iostream>
+
+1330936810 source:c:\users\localadmin\documents\pebl\src\objects\ptextobject.cpp
+	"PWidget.h"
+	"PTextObject.h"
+	"PFont.h"
+	"../utility/PError.h"
+	<string>
+	<iostream>
+
+1330936810 source:c:\users\localadmin\documents\pebl\src\objects\pwidget.cpp
+	"PWidget.h"
+	"../base/PComplexData.h"
+	"../utility/PError.h"
+	<list>
+	<iostream>
+
+1330936810 source:c:\users\localadmin\documents\pebl\src\objects\pwindow.cpp
+	"PWindow.h"
+	"PWidget.h"
+	<string>
+	<iostream>
+
+1330936807 source:c:\users\localadmin\documents\pebl\src\platforms\sdl\platformaudioin.cpp
+	"PlatformAudioIn.h"
+	"PlatformAudioOut.h"
+	"../../utility/PEBLPath.h"
+	"../../utility/PError.h"
+	"../../base/Evaluator.h"
+	"../../base/PList.h"
+	"../../base/PComplexData.h"
+	"SDL.h"
+	"SDL/SDL.h"
+	"SDL/SDL_audioin.h"
+	<cmath>
+	<vector>
+	<fstream>
+
+1330936806 source:c:\users\localadmin\documents\pebl\src\platforms\sdl\platformaudioout.cpp
+	"PlatformAudioOut.h"
+	"../../devices/PAudioOut.h"
+	"../../utility/PEBLPath.h"
+	"../../utility/PError.h"
+	"../../base/Evaluator.h"
+	"SDL/SDL.h"
+	"SDL/SDL_audio.h"
+	<cmath>
+	<fstream>
+
+1330936807 source:c:\users\localadmin\documents\pebl\src\platforms\sdl\platformcanvas.cpp
+	"PlatformCanvas.h"
+	"../../objects/PCanvas.h"
+	"SDLUtility.h"
+	"../../base/PComplexData.h"
+	"../../utility/rc_ptrs.h"
+	"../../utility/PError.h"
+	"../../utility/PEBLUtility.h"
+	"SDL/SDL.h"
+	<stdio.h>
+	<string>
+
+1330936806 source:c:\users\localadmin\documents\pebl\src\platforms\sdl\platformdrawobject.cpp
+	"PlatformDrawObject.h"
+	"PlatformWidget.h"
+	"SDL.h"
+	"SDL_gfxPrimitives.h"
+	"SDL/SDL.h"
+	"SDL/SDL_gfxPrimitives.h"
+	"../../base/PList.h"
+	"../../base/Variant.h"
+	"../../base/PComplexData.h"
+	<iostream>
+	<list>
+
+1330936807 source:c:\users\localadmin\documents\pebl\src\platforms\sdl\platformenvironment.cpp
+	"PlatformEnvironment.h"
+	"../../objects/PEnvironment.h"
+	"PlatformWindow.h"
+	"../../base/PList.h"
+	"../../base/PComplexData.h"
+	"SDL.h"
+	"SDL_ttf.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+	<list>
+	<stdio.h>
+	"../../utility/PError.h"
+	<windows.h>
+
+1330936806 source:c:\users\localadmin\documents\pebl\src\platforms\sdl\platformeventqueue.cpp
+	"PlatformEventQueue.h"
+	"../../devices/PEventQueue.h"
+	"../../devices/PEvent.h"
+	"../../utility/PError.h"
+	"SDL/SDL.h"
+
+1330936807 source:c:\users\localadmin\documents\pebl\src\platforms\sdl\platformfont.cpp
+	"PlatformFont.h"
+	"../../objects/PFont.h"
+	"../../objects/PColor.h"
+	"../../utility/PEBLPath.h"
+	"../../utility/PError.h"
+	"../../base/Evaluator.h"
+	"SDL.h"
+	"SDL_ttf.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+	<stdio.h>
+	<iostream>
+
+1335295030 source:c:\users\localadmin\documents\pebl\src\platforms\sdl\platformimagebox.cpp
+	"PlatformImageBox.h"
+	"../../utility/PEBLPath.h"
+	"../../utility/PError.h"
+	"../../base/Evaluator.h"
+	"../../base/PEBLObject.h"
+	"SDL/SDL.h"
+	"SDL/SDL_image.h"
+	<string>
+	<stdio.h>
+
+1330936806 source:c:\users\localadmin\documents\pebl\src\platforms\sdl\platformjoystick.cpp
+	"PlatformJoystick.h"
+	"SDL/SDL.h"
+	<list>
+	<stdio.h>
+	"../../utility/PError.h"
+	"../../base/PList.h"
+	"../../base/PComplexData.h"
+
+1330936806 source:c:\users\localadmin\documents\pebl\src\platforms\sdl\platformkeyboard.cpp
+	"PlatformKeyboard.h"
+	"../../devices/PKeyboard.h"
+	"../../devices/DeviceState.h"
+	"SDL/SDL.h"
+	"PlatformTimer.h"
+	<stdio.h>
+
+1330936806 source:c:\users\localadmin\documents\pebl\src\platforms\sdl\platformlabel.cpp
+	"PlatformLabel.h"
+	"../../objects/PLabel.h"
+	"PlatformFont.h"
+	"../../utility/rc_ptrs.h"
+	"../../utility/PError.h"
+	"../../base/PComplexData.h"
+	"../../utility/PEBLUtility.h"
+	"SDL.h"
+	"SDL_ttf.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+	<stdio.h>
+	<algorithm>
+
+1330936806 source:c:\users\localadmin\documents\pebl\src\platforms\sdl\platformnetwork.cpp
+	"PlatformNetwork.h"
+	"../../devices/PNetwork.h"
+	"../../utility/PError.h"
+	"SDL.h"
+	"SDL_net.h"
+	"SDL/SDL.h"
+	"SDL/SDL_net.h"
+	<string>
+
+1330936806 source:c:\users\localadmin\documents\pebl\src\platforms\sdl\platformtextbox.cpp
+	"PlatformTextBox.h"
+	"../../objects/PTextBox.h"
+	"PlatformFont.h"
+	"SDLUtility.h"
+	"../../base/PComplexData.h"
+	"../../devices/PKeyboard.h"
+	"../../utility/rc_ptrs.h"
+	"../../utility/PError.h"
+	"../../utility/PEBLUtility.h"
+	"SDL.h"
+	"SDL_ttf.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
+	<stdio.h>
+	<string>
+	<algorithm>
+
+1335294748 source:c:\users\localadmin\documents\pebl\src\platforms\sdl\platformtimer.cpp
+	"PlatformTimer.h"
+	"SDL/SDL.h"
+	<iostream>
+	"../../devices/DeviceState.h"
+	<sys/time.h>
+	<windows.h>
+	<iostream>
+	<iomanip>
+
+1330936807 source:c:\users\localadmin\documents\pebl\src\platforms\sdl\platformwidget.cpp
+	"PlatformWidget.h"
+	"SDL.h"
+	"SDL_rotozoom.h"
+	"SDL/SDL.h"
+	"SDL/SDL_rotozoom.h"
+	"SDLUtility.h"
+	<iostream>
+
+1330936806 source:c:\users\localadmin\documents\pebl\src\platforms\sdl\platformwindow.cpp
+	"PlatformWindow.h"
+	"../../objects/PWindow.h"
+	"../../objects/PColor.h"
+	"../../base/Evaluator.h"
+	"../../base/VariableMap.h"
+	"SDL/SDL.h"
+	<stdio.h>
+
+1330936804 source:c:\users\localadmin\documents\pebl\src\utility\binreloc.cpp
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<stdio.h>
+	<stdlib.h>
+	<limits.h>
+	<string.h>
+	"BinReloc.h"
+
+1330936804 c:\users\localadmin\documents\pebl\src\utility\binreloc.h
+
+1330936804 source:c:\users\localadmin\documents\pebl\src\utility\peblpath.cpp
+	"PEBLPath.h"
+	"../base/Variant.h"
+	"PError.h"
+	"BinReloc.h"
+	<sys/stat.h>
+	<list>
+	<string>
+	<iostream>
+	<mach-o/dyld.h>
+	<CoreFoundation/CFBundle.h>
+
+1330941022 source:c:\users\localadmin\documents\pebl\src\utility\peblutility.cpp
+	"PEBLUtility.h"
+	"PError.h"
+	"rc_ptrs.h"
+	"../base/Variant.h"
+	"../base/PComplexData.h"
+	"../base/PList.h"
+	"../devices/PKeyboard.h"
+	"../apps/Globals.h"
+	<errno.h>
+	<ctype.h>
+	<string>
+	<stdlib.h>
+	<cmath>
+	<iostream>
+	<strstream>
+	<algorithm>
+	<png.h>
+	<dirent.h>
+	<direct.h>
+	<windows.h>
+	<sys/stat.h>
+	<bits/types.h>
+	<sys/stat.h>
+	<stdio.h>
+
+1330936804 source:c:\users\localadmin\documents\pebl\src\utility\perror.cpp
+	"PError.h"
+	"../base/PNode.h"
+	"../base/Evaluator.h"
+	"../base/Variant.h"
+	"../base/PComplexData.h"
+	<iostream>
+	<string>
+	<signal.h>
+
+1330936804 source:c:\users\localadmin\documents\pebl\src\utility\rs232.c
+	"rs232.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_audio.h"
+	"SDL_cdrom.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_loadso.h"
+	"SDL_mutex.h"
+	"SDL_rwops.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_video.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<iconv.h>
+	"begin_code.h"
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	"close_code.h"
+
+1326114587 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_config.h
+	"SDL_platform.h"
+	"SDL_config_dreamcast.h"
+	"SDL_config_macos.h"
+	"SDL_config_macosx.h"
+	"SDL_config_symbian.h"
+	"SDL_config_win32.h"
+	"SDL_config_os2.h"
+	"SDL_config_minimal.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_platform.h
+
+1326114594 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_config_win32.h
+	"SDL_platform.h"
+
+1326114600 c:\users\localadmin\documents\sdl-libs\include\sdl\begin_code.h
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\close_code.h
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_endian.h
+	"SDL_stdinc.h"
+	<endian.h>
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	"close_code.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_cdrom.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_cpuinfo.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_active.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_quit.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_active.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keysym.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_keysym.h
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_video.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1325742239 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1330938918 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_image.h
+	"SDL.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1330939399 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_ttf.h
+	"SDL.h"
+	"begin_code.h"
+	"close_code.h"
+
+1330939435 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_net.h
+	"SDL.h"
+	"SDL_endian.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1322985609 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_gfxprimitives.h
+	<math.h>
+	"SDL.h"
+
+1322985609 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_rotozoom.h
+	<math.h>
+	"SDL.h"
+
+1330940633 c:\users\localadmin\documents\sdl-libs\include\png.h
+	"zlib.h"
+	"pngconf.h"
+	<crtdbg.h>
+
+1327864395 c:\users\localadmin\documents\sdl-libs\include\zlib.h
+	"zconf.h"
+
+1323335632 c:\users\localadmin\documents\sdl-libs\include\zconf.h
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+
+1330940642 c:\users\localadmin\documents\sdl-libs\include\pngconf.h
+	"pngusr.h"
+	"config.h"
+	<windows.h>
+	<stdio.h>
+	<stdio.h>
+	<sys/types.h>
+	<setjmp.h>
+	<strings.h>
+	<string.h>
+	<stdlib.h>
+	<fp.h>
+	<math.h>
+	<m68881.h>
+	<mem.h>
+	<alloc.h>
+	<malloc.h>
+	<time.h>
+	<dos.h>
+
+1330947290 source:c:\users\localadmin\documents\pebl\src\platforms\sdl\sdlutility.cpp
+	"SDLUtility.h"
+	"../../objects/PColor.h"
+	"../../utility/PError.h"
+	"PlatformWindow.h"
+	"SDL/SDL.h"
+	<png.h>
+	<math.h>
+	<iostream>
+
+1330936803 source:c:\users\localadmin\documents\pebl\src\apps\sdl_win32_main.c
+	<stdio.h>
+	<stdlib.h>
+	<windows.h>
+	<direct.h>
+	"SDL\SDL.h"
+	"SDL\SDL_main.h"
+
+=======
 # depslib dependency file v1.0
 1319941866 source:/home/shanem/Projects/pebl/codeblocks/PEBL/main.cpp
 	<cstdlib>
@@ -3025,3 +7300,4 @@
 	<SDL/begin_code.h>
 	<SDL/close_code.h>
 
+>>>>>>> .r689

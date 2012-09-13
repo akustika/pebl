@@ -668,9 +668,9 @@ int main(int argc,  char *argv[])
             argv = new_argv;
 #elif defined(PEBL_WIN32)
 
-           cout << "Autolaunching PEBL\n";
+           //cout << "Autolaunching PEBL\n";
            string basedir = PEBLUtility::StripFile(argv[0]) + "..\\";
-            cout <<"basedir:"<< basedir << endl;
+            //cout <<"basedir:"<< basedir << endl;
 
 //This may work for vista+
 //TCHAR szFolderPath[MAX_PATH];
@@ -745,7 +745,7 @@ if(SUCCEEDED(SHGetFolderPath(NULL,
            // new_argv[5]= pdest;
             argv = new_argv;
 
-          cout << argv[0] <<"|" << argv[1] <<"|" << argv[2] <<"|" << argv[3] << endl;
+ //         cout << argv[0] <<"|" << argv[1] <<"|" << argv[2] <<"|" << argv[3] << endl;
 #else
             PrintOptions();
             return 1;

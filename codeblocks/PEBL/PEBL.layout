@@ -1,76 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
-	<File name="../../src/apps/PEBL.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="2352" topLine="99" />
+	<File name="..\..\src\apps\PEBL.cpp" open="1" top="1" tabpos="0">
+		<Cursor position="1970" topLine="9" />
 	</File>
-	<File name="../../src/base/VCG.h" open="0" top="0" tabpos="0">
-		<Cursor position="1798" topLine="11" />
-	</File>
-	<File name="../../src/base/Variant.h" open="1" top="0" tabpos="1">
-		<Cursor position="1402" topLine="19" />
-	</File>
-	<File name="../../src/base/grammar.tab.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="764" topLine="0" />
-	</File>
-	<File name="../../src/devices/PComPort.cpp" open="0" top="0" tabpos="2">
-		<Cursor position="2772" topLine="72" />
-	</File>
-	<File name="../../src/devices/PTimer.cpp" open="0" top="0" tabpos="5">
-		<Cursor position="1599" topLine="4" />
-	</File>
-	<File name="../../src/devices/PTimer.h" open="0" top="0" tabpos="7">
-		<Cursor position="1989" topLine="8" />
-	</File>
-	<File name="../../src/libs/Functions.h" open="0" top="0" tabpos="9">
-		<Cursor position="4334" topLine="103" />
-	</File>
-	<File name="../../src/libs/PEBLEnvironment.cpp" open="0" top="0" tabpos="4">
-		<Cursor position="46245" topLine="1414" />
-	</File>
-	<File name="../../src/libs/PEBLEnvironment.h" open="0" top="0" tabpos="8">
-		<Cursor position="1498" topLine="18" />
-	</File>
-	<File name="../../src/libs/PEBLStream.cpp" open="0" top="0" tabpos="5">
-		<Cursor position="5028" topLine="184" />
-	</File>
-	<File name="../../src/objects/PTextBox.cpp" open="0" top="0" tabpos="2">
-		<Cursor position="3986" topLine="88" />
-	</File>
-	<File name="../../src/platforms/sdl/PlatformAudioIn.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="19599" topLine="676" />
-	</File>
-	<File name="../../src/platforms/sdl/PlatformDrawObject.cpp" open="0" top="0" tabpos="5">
-		<Cursor position="2726" topLine="40" />
-	</File>
-	<File name="../../src/platforms/sdl/PlatformEnvironment.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="3265" topLine="0" />
-	</File>
-	<File name="../../src/platforms/sdl/PlatformEventQueue.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="6861" topLine="175" />
-	</File>
-	<File name="../../src/platforms/sdl/PlatformFont.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="11526" topLine="374" />
-	</File>
-	<File name="../../src/platforms/sdl/PlatformJoystick.cpp" open="1" top="1" tabpos="5">
-		<Cursor position="3531" topLine="121" />
-	</File>
-	<File name="../../src/platforms/sdl/PlatformMovie.cpp" open="1" top="0" tabpos="4">
-		<Cursor position="5216" topLine="167" />
-	</File>
-	<File name="../../src/platforms/sdl/PlatformTextBox.cpp" open="0" top="0" tabpos="11">
-		<Cursor position="5376" topLine="129" />
-	</File>
-	<File name="../../src/platforms/sdl/PlatformTimer.cpp" open="0" top="0" tabpos="6">
-		<Cursor position="1492" topLine="12" />
-	</File>
-	<File name="../../src/platforms/sdl/PlatformTimer.h" open="0" top="0" tabpos="10">
-		<Cursor position="2038" topLine="8" />
-	</File>
-	<File name="../../src/utility/PEBLPath.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="5016" topLine="150" />
-	</File>
-	<File name="../../src/utility/PEBLUtility.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="0" topLine="503" />
+	<File name="..\..\src\apps\SDL_win32_main.c" open="0" top="0" tabpos="7">
+		<Cursor position="2816" topLine="128" />
 	</File>
 </CodeBlocks_layout_file>
