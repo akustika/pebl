@@ -2,7 +2,7 @@
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
 	<File name="..\..\src\apps\PEBL.cpp" open="1" top="1" tabpos="0">
-		<Cursor position="1970" topLine="9" />
+		<Cursor position="1967" topLine="45" />
 	</File>
 	<File name="..\..\src\apps\SDL_win32_main.c" open="0" top="0" tabpos="7">
 		<Cursor position="2816" topLine="128" />

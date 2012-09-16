@@ -64,6 +64,9 @@
 #include <pwd.h>
 #endif
 
+#include <unistd.h>
+
+
 #include <sys/stat.h>
 
 #include <stdio.h>
@@ -1140,7 +1143,9 @@ Variant PEBLUtility::GetWorkingDirectory()
 #ifdef PEBL_WIN32
     //maybe this will work given we compile with g++
 
-    char* path = get_current_dir_name();
+    char *path=NULL;
+    size_t size = 0;
+    path=getcwd(path,size);
 
 #else
 
@@ -1155,7 +1160,7 @@ Variant PEBLUtility::SetWorkingDirectory(std::string path)
 {
 #ifdef PEBL_WIN32
 
-    if(::SetCurrentDirectory(path) == FALSE)
+    if(::SetCurrentDirectory(path.c_str()) == FALSE)
         PError::SignalFatalError("Unable to Set Working Directory: " + path);
     //GetLastError should help more here.
 #else

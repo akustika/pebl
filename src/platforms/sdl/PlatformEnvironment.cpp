@@ -39,7 +39,8 @@
 #include "SDL/SDL_ttf.h"
 #endif
 
-
+#include <fstream>
+#include <iostream>
 
 #include <list>
 #include <stdio.h>
@@ -48,7 +49,7 @@
 
 #if defined PEBL_WIN32
 #include <windows.h>
-//#include <ddraw.h>  This may be needed for compiling with VC++ 
+//#include <ddraw.h>  This may be needed for compiling with VC++
 #endif
 
 using std::cout;
@@ -87,7 +88,7 @@ PlatformEnvironment::~PlatformEnvironment()
 // Inheritable function that is called by friend method << operator of PComplexData
 ostream & PlatformEnvironment::SendToStream(ostream& out) const
 {
-    
+
     out << "<SDL PlatformEnvironment>" << flush;
     return out;
 }
@@ -97,11 +98,14 @@ ostream & PlatformEnvironment::SendToStream(ostream& out) const
 ///This method initiates everything needed to display the main window
 void PlatformEnvironment::Initialize()
 {
-
+//   std::ofstream cct("CON");
+//   freopen( "CON", "w", stdout );
+//   freopen( "CON", "w", stderr );
 
     mIsInitialized = true;
     if ( SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO| SDL_INIT_TIMER | SDL_INIT_NOPARACHUTE ) < 0 )
         {
+
             cerr << "Unable to init SDL: " <<  SDL_GetError() << endl;;
             mIsInitialized = false;
         }
@@ -113,6 +117,9 @@ void PlatformEnvironment::Initialize()
         }
     else
         {
+           // freopen( "CON", "w", stdout );
+           // freopen( "CON", "w", stderr );
+
             //SDL_EnableUNICODE(mUnicode);
             SDL_EnableUNICODE(1);
             cerr << "Successfully UNICODED" << endl;
@@ -128,7 +135,7 @@ void PlatformEnvironment::Initialize()
     //atexit(SDL_Quit);
 }
 
-    
+
 
 /// This method 'draws' the environment; it iterates through
 /// each window in the environment and calls the draw method on each.
@@ -161,7 +168,7 @@ Variant PlatformEnvironment::GetProperty(std::string name )const
 // ObjectValidationError PlatformEnvironment::ValidateProperty(std::string, Variant v)const
 
 // ObjectValidationError PlatformEnvironment::ValidateProperty(std::string)const;
-   
+
 
 int PlatformEnvironment::ShowCursor(int val)
 {
@@ -195,7 +202,7 @@ Variant  PlatformEnvironment::GetCursorPosition()
     newlist->PushBack(Variant(x));
     newlist->PushBack(Variant(y));
     counted_ptr<PEBLObjectBase> newlist2 = counted_ptr<PEBLObjectBase>(newlist);
-    PComplexData *   pcd = new PComplexData(newlist2); 
+    PComplexData *   pcd = new PComplexData(newlist2);
     return Variant(pcd);
 }
 void PlatformEnvironment::SetKeyRepeat(bool onoff)
@@ -224,7 +231,7 @@ Variant  PlatformEnvironment::GetMouseState()
     newlist->PushBack(Variant(b3));
 
     counted_ptr<PEBLObjectBase> newlist2 = counted_ptr<PEBLObjectBase>(newlist);
-    PComplexData *   pcd = new PComplexData(newlist2); 
+    PComplexData *   pcd = new PComplexData(newlist2);
     return Variant(pcd);
 }
 
@@ -239,7 +246,7 @@ int PlatformEnvironment::GetNumJoysticks()
             PError::SignalWarning("No joysticks available");
         }
     int num   =  SDL_NumJoysticks();
-    
+
     return num;
 }
 
@@ -257,14 +264,14 @@ Variant PlatformEnvironment::GetJoystick(int index)
         }
     //    SDL_Joystick * joystick = SDL_JoystickOpen(int index);
     PlatformJoystick* joystick = new PlatformJoystick(index+1);
-    
+
 
 
     counted_ptr<PEBLObjectBase> tmp = counted_ptr<PEBLObjectBase>(joystick);
 
-    PComplexData *   pcd = new PComplexData(tmp); 
+    PComplexData *   pcd = new PComplexData(tmp);
     return Variant(pcd);
-    
+
 }
 
 //
@@ -279,7 +286,7 @@ Variant PlatformEnvironment::GetScreenModes()
 
     PList * baselist = new PList();
     PComplexData * pcd=NULL;
-    
+
     modes =SDL_ListModes(NULL,SDL_FULLSCREEN);
     for(int ii=0; modes[ii]; ++ii)
         {
@@ -288,13 +295,13 @@ Variant PlatformEnvironment::GetScreenModes()
              newlist->PushBack(Variant(modes[ii]->w));
              newlist->PushBack(Variant(modes[ii]->h));
              counted_ptr<PEBLObjectBase> newlist2 = counted_ptr<PEBLObjectBase>(newlist);
-             pcd = new PComplexData(newlist2); 
-             baselist->PushBack(Variant(pcd));             
-             //cerr << ii<< ". gVideoWidth <-"<< modes[ii]->w<<"; gVideoHeight<- " << modes[ii]->h <<"\n";                    
+             pcd = new PComplexData(newlist2);
+             baselist->PushBack(Variant(pcd));
+             //cerr << ii<< ". gVideoWidth <-"<< modes[ii]->w<<"; gVideoHeight<- " << modes[ii]->h <<"\n";
         }
 
-    counted_ptr<PEBLObjectBase> baselist2 = counted_ptr<PEBLObjectBase>(baselist);    
-    pcd = new PComplexData(baselist2); 
+    counted_ptr<PEBLObjectBase> baselist2 = counted_ptr<PEBLObjectBase>(baselist);
+    pcd = new PComplexData(baselist2);
     return Variant(pcd);
 }
 

@@ -11,9 +11,9 @@
 !define COPYRIGHT "Shane T. Mueller, Ph.D., 2012"
 !define DESCRIPTION "Application"
 !define LICENSE_TXT "..\COPYING"
-!define INSTALLER_NAME "..\PEBL_0.13.setup.exe"
+!define INSTALLER_NAME "..\PEBL_setup.0.13.exe"
 !define MAIN_APP_EXE "pebl.exe"
-!define INSTALL_TYPE "SetShellVarContext current"
+!define INSTALL_TYPE "SetShellVarContext all"
 !define REG_ROOT "HKCU"
 !define REG_APP_PATH "Software\Microsoft\Windows\CurrentVersion\App Paths\${MAIN_APP_EXE}"
 !define UNINSTALL_PATH "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}"
@@ -29,11 +29,8 @@ VIAddVersionKey "FileVersion"  "${VERSION}"
 
 ######################################################################
 SetCompressor ZLIB
-######################################################################
-!define MULTIUSER_EXECUTIONLEVEL Highest
-;!define MULTIUSER_NOUNINSTALL ;Uncomment if no uninstaller is created
-!include MultiUser.nsh
 
+######################################################################
 
 #Name "${APP_NAME}"
 Caption "${APP_NAME}"
@@ -44,8 +41,20 @@ InstallDirRegKey "${REG_ROOT}" "${REG_APP_PATH}" ""
 InstallDir "$PROGRAMFILES\PEBL"
 
 ######################################################################
+!define MULTIUSER_EXECUTIONLEVEL Highest
+;!define MULTIUSER_NOUNINSTALL ;Uncomment if no uninstaller is created
 
 !include "MUI.nsh"
+!include MultiUser.nsh
+!include MUI2.nsh
+
+;!define MULTIUSER_INSTALLMODEPAGE_TEXT_TOP 	"Text to display on the top of the page."
+;!define MULTIUSER_INSTALLMODEPAGE_TEXT_ALLUSERS 	"Text to display on the combo button for a per-machine installation."
+;!define MULTIUSER_INSTALLMODEPAGE_TEXT_CURRENTUSER 	"Text to display on the combo button for a per-user installation. "
+
+;!insertmacro MULTIUSER_PAGE_INSTALLMODE
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_INSTFILES 
 
 !define MUI_ABORTWARNING
 !define MUI_UNABORTWARNING
@@ -80,6 +89,7 @@ InstallDir "$PROGRAMFILES\PEBL"
 
 icon "..\devcpp\pebl.ico"
 Section -MainProgram
+SetShellVarContext all
 ${INSTALL_TYPE}
 SetOverwrite ifnewer
 
@@ -690,6 +700,7 @@ SectionEnd
 ######################################################################
 
 Section -Icons_Reg
+SetShellVarContext all
 SetOutPath "$INSTDIR"
 WriteUninstaller "$INSTDIR\uninstall.exe"
 
@@ -697,7 +708,7 @@ WriteUninstaller "$INSTDIR\uninstall.exe"
 !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
 SetShellVarContext all
 CreateDirectory "$SMPROGRAMS\$SM_Folder"
-SetOutPath "$TEMP"
+SetOutPath "$INSTDIR"
 CreateShortCut "$SMPROGRAMS\$SM_Folder\${APP_NAME}.lnk" """$INSTDIR\bin\pebl.exe"""
 CreateShortCut "$SMPROGRAMS\$SM_Folder\doc.lnk" "$INSTDIR\doc\PEBLManual0.13.pdf"
 !ifdef WEB_SITE
@@ -710,7 +721,7 @@ CreateShortCut "$SMPROGRAMS\$SM_Folder\${APP_NAME} Website.lnk" "$INSTDIR\${APP_
 !ifndef REG_START_MENU
 SetShellVarContext all
 CreateDirectory "$SMPROGRAMS\PEBL"
-SetOutPath "$TEMP"
+SetOutPath "$INSTDIR"
 CreateShortCut "$SMPROGRAMS\PEBL\${APP_NAME}.lnk" "$INSTDIR\bin\pebl.exe" 
 !ifdef WEB_SITE
 WriteIniStr "$INSTDIR\${APP_NAME} website.url" "InternetShortcut" "URL" "${WEB_SITE}"
@@ -863,6 +874,7 @@ Delete "$INSTDIR\${APP_NAME} website.url"
 RmDir "$INSTDIR"
 
 !ifdef REG_START_MENU
+SetShellVarContext all
 !insertmacro MUI_STARTMENU_GETFOLDER "Application" $SM_Folder
 Delete "$SMPROGRAMS\$SM_Folder\${APP_NAME}.lnk"
 !ifdef WEB_SITE
@@ -886,9 +898,12 @@ SectionEnd
 ######################################################################
 
 Function .onInit
+  SetShellVarContext all
   !insertmacro MULTIUSER_INIT
 FunctionEnd
 
 Function un.onInit
+  SetShellVarContext all
   !insertmacro MULTIUSER_UNINIT
 FunctionEnd
+

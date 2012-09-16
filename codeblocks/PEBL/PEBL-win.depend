@@ -1364,7 +1364,7 @@
 	<string>
 	<signal.h>
 
-1347302100 source:c:\users\localadmin\documents\code-0\src\apps\pebl.cpp
+1347548660 source:c:\users\localadmin\documents\code-0\src\apps\pebl.cpp
 	"../base/Evaluator.h"
 	"../base/grammar.tab.hpp"
 	"../base/PNode.h"
@@ -1717,7 +1717,7 @@
 	"../platforms/sdl/PlatformEnvironment.h"
 	"../apps/Globals.h"
 
-1347498785 c:\users\localadmin\documents\code-0\src\utility\peblutility.h
+1347548660 c:\users\localadmin\documents\code-0\src\utility\peblutility.h
 	"../devices/PKeyboard.h"
 	"../apps/Globals.h"
 	<string>
@@ -1795,7 +1795,7 @@
 	<list>
 	<string>
 
-1347498636 c:\users\localadmin\documents\code-0\src\libs\functions.h
+1347548661 c:\users\localadmin\documents\code-0\src\libs\functions.h
 	"PEBLEnvironment.h"
 	"PEBLMath.h"
 	"PEBLStream.h"
@@ -1803,7 +1803,7 @@
 	"PEBLList.h"
 	"PEBLString.h"
 
-1347498658 c:\users\localadmin\documents\code-0\src\libs\peblenvironment.h
+1347548661 c:\users\localadmin\documents\code-0\src\libs\peblenvironment.h
 
 1347031793 c:\users\localadmin\documents\code-0\src\libs\peblmath.h
 
@@ -1994,7 +1994,7 @@
 	"PDevice.h"
 	<iostream>
 
-1347498747 source:c:\users\localadmin\documents\code-0\src\libs\peblenvironment.cpp
+1347548661 source:c:\users\localadmin\documents\code-0\src\libs\peblenvironment.cpp
 	"PEBLEnvironment.h"
 	"PEBLObjects.h"
 	"../base/Variant.h"
@@ -2035,7 +2035,7 @@
 	<vector>
 	<iostream>
 
-1347031793 source:c:\users\localadmin\documents\code-0\src\libs\peblmath.cpp
+1347548661 source:c:\users\localadmin\documents\code-0\src\libs\peblmath.cpp
 	"PEBLMath.h"
 	"../base/Variant.h"
 	"../base/PList.h"
@@ -2252,7 +2252,7 @@
 	<iostream>
 	<list>
 
-1347031792 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformenvironment.cpp
+1347653051 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformenvironment.cpp
 	"PlatformEnvironment.h"
 	"../../objects/PEnvironment.h"
 	"PlatformWindow.h"
@@ -2262,6 +2262,8 @@
 	"SDL_ttf.h"
 	"SDL/SDL.h"
 	"SDL/SDL_ttf.h"
+	<fstream>
+	<iostream>
 	<list>
 	<stdio.h>
 	"../../utility/PError.h"
@@ -2432,7 +2434,7 @@
 	<mach-o/dyld.h>
 	<CoreFoundation/CFBundle.h>
 
-1347500862 source:c:\users\localadmin\documents\code-0\src\utility\peblutility.cpp
+1347549148 source:c:\users\localadmin\documents\code-0\src\utility\peblutility.cpp
 	"PEBLUtility.h"
 	"PError.h"
 	"rc_ptrs.h"
@@ -2455,7 +2457,12 @@
 	<windows.h>
 	<shlobj.h>
 	<sys/stat.h>
+	<unistd.h>
 	<bits/types.h>
+	<pwd.h>
+	<unistd.h>
+	<pwd.h>
+	<unistd.h>
 	<sys/stat.h>
 	<stdio.h>
 
