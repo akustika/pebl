@@ -1,0 +1,213 @@
+## An implementation of the Brown-Peterson task, as done by Peterson & Peterson,
+## 1959.
+##
+##
+
+define Start(p)
+{
+  gWin <- MakeWindow("black")
+  gSleepEasy <- 1
+  gUseBeep <- 1
+
+  ##Instrumentatino variables:
+  reps <- 8  ##for demo use 2; real test used 8
+  delays <- [3,6,9,12,15,18]  ##delays in seconds
+  numtrials <- Length(delays)*reps
+
+
+  if(gSubNum+""=="0")
+  {
+    gSubNum <- GetSubNum(gWin)
+  }  
+
+  MakeDirectory("data")
+  gFileOut <- FileOpenWrite("data/brownpeterson-"+gSubNum+".csv")
+  FilePrint(gFileOut,"subcode,trial,ccc,number,delay,resp,corr,rt")
+
+  consonants <- FileReadList("UppercaseConsonants.txt")
+
+
+  ##Make a unique stimulus list
+  cccs <- []
+  while (Length(cccs)<numtrials)
+   {
+     ccc <- ListToString(SampleN(consonants,3))
+     cccs <- Levels(Append(cccs,ccc))
+   }
+  cccs <- Shuffle(cccs)
+
+  ##stimuli require 3-digit numbers:
+  stimNumbers <- SampleN(Sequence(100,999,1),numTrials)
+
+  ##Create the delay durations too:
+  delayStim <- Shuffle(RepeatList(delays,reps))
+
+
+  ##Should we use a beep?  Load sounds if so.
+  if(gUseBeep)
+  {
+     gBeeps <-[MakeSineWave(400,200,.3),
+               MakeSineWave(800,200,.1)]
+  }
+
+## Here are the original instructions:
+##"Please sit against the back of your chair so that you are comfortable. You will not be shocked during this experiment. In front of you is a little black box. The top or green light is on now. This green light means that we are ready to begin a trial. I will speak some letters and then a number. You are to repeat the number immediately after I say it and begin counting backwards by S's (4's) from that number in time with the ticking that you hear. I might say, ABC 309. Then you say, 309, 306, 303, etc., until the bottom or red light comes on. When you see this red light come on, stop counting immediately and say the letters that were given at the beginning of the trial. Remember to keep your eyes on the black box at all times. There will be a short rest period and then the green light will come on again and we will start a new trial."
+
+inst <- "Please sit against the back of your chair so that you are comfortable.  In front of you is a computer screen, on which will be presented a series of memory trials. At the beginning of each trial, you will see a set of three consonants, followed shortly by a number.  Please read the consonants out loud, then await the number. You are to repeat the number immediately after I say it and begin counting backwards by 3's from that number in time with the ticking that you hear. You might see ABC then the number 309. Say ABC immediately after you see it, then once you see 309, you say 309, 306, 303, etc., until you are cued to recall.  Try to count in time to the beep, giving a response every other beep.  When this happens, stop counting immediately and enter the letters that were given at the beginning of the trial. Remember to keep your eyes on the screen at all times. We will start with a few practice trials."
+
+  MessageBox(inst,gWin)
+  Trial("BDG", 899, 5)
+  MessageBox("Now, we will do several more practice trials.",gWin)
+  Trial("SGN", 309, 3)
+  Trial("CXZ", 239, 8)
+  Trial("VQR", 411, 4)
+  
+  MessageBox("Now, we will do the real test.  There will be "+numtrials+"total trials.",gWin)
+
+  trialcounter <- Easylabel("",gVideoWidth-100,100,gWin,18)
+  ##Now, do the data collection.
+  data <- []  
+  stim <- Transpose([cccs,stimNumbers])
+  loop(i,Sequence(1,Length(delays)*reps,1))
+  { 
+   trialCounter.text <- "Trial ["+i+"] of "+numtrials
+   out <-    Trial(Nth(cccs,i),       ##The stimulus
+                   Nth(stimNumbers,i), ## the number
+                   Nth(delaystim,i))   ## The delay in seconds
+
+   PushOnEnd(data,Append(out,Nth(delayStim,i)))  ##accumulate data
+
+   FilePrint(gFileOut,gSubNum+","+i+","+
+                 Nth(cccs,i)+","+
+                 Nth(stimNumbers,i)+","+
+		 Nth(delayStim,i)+","+
+                 First(out)+","+
+		 Second(out)+","+
+		 Third(out))
+  }
+
+}
+
+
+define Trial(ccc,number,delay)
+{
+
+   ##Make sure they are always in the same order.
+
+
+   ##First, prepare the graphical elements: 
+   stim <- EasyLabel(ccc,gVideoWidth/2,gVideoHeight/2,gWin,44)
+   back <- Rectangle(gVideoWidth/2,gVideoHeight/2,300,80,MakeColor("red"),0)
+   AddObject(back,gWin)
+
+   prompt <- EasyLabel("Await stimulus",gVideoWidth/2,gVideoHeight-150,gWin,30)
+
+   #Orient attention:
+   CountDown(gWin)
+
+   ##Initiate start time.
+   time1 <- GetTime()
+   Draw()
+
+   ##after 500 ms, Hide stimulus:
+   WaitUntil(time1+1000)
+   Hide(stim)
+   Draw()
+
+   ##After another 500, start counting backward.
+   WaitUntil(time1+1500)
+   Show(stim)
+   stim.text <- number
+   Draw()
+   WaitUntil(time1+2000)
+   stim.text <- ""
+   prompt.text <- "Count backward by 3 ever other beep and flash"
+   Draw()
+
+   nexttick <- time1 + 2500
+
+   ##beep/flash until time limit.
+   id <- 1
+   while(GetTime()<time1+delay*1000)
+   {
+
+    WaitUntil(nexttick)
+    if(gUseBeep)
+    {
+       PlayBackground(Nth(gBeeps,id))
+       id <- 3-id  ##flip between 2 and 1
+    }
+    Hide(back)
+    Draw()
+    Wait(50)
+    Show(back)
+    Draw()    
+
+    nexttick <- nexttick + 500
+    Draw()
+   }
+    
+  ##Now, collect response:
+  stim.text <- "RECALL"
+  prompt.text <- "RECALL. Hit enter to accept."
+  Show(back)
+  Draw()
+
+  #accept letters, as well as backspace and enter key to complete.
+  cons <- Merge(FileReadList("UppercaseConsonants.txt"),
+                ["<backspace>","<return>","<enter>","<kp_enter>"])
+
+    
+   letters <- []
+   rt1 <- GetTime()
+   cont <- 1
+   Show(back)
+   while(cont)
+   {
+      #Repeate until you get enough responses
+     resp <- UpperCase(WaitForListKeyPress(cons))
+
+
+     ##Handle backspace:
+     if(resp == "<BACKSPACE>")
+     {
+       if(Length(letters)>1)
+       {
+         letters <- SubList(letters,1,Length(letters)-1)
+       }elseif(Length(letters)==1)
+       {
+         letters <- []
+       }
+
+     ##Handle the end of the list enter
+     }elseif( resp == "<RETURN>" or resp == "<KP_ENTER>")
+       {
+         if(Length(letters)==3 )
+	 {
+           cont <- 0
+  	 }
+       } elseif(Length(letters)<3) {
+
+         ##If we are here, the letter is good
+         letters <- Append(letters,resp)
+      }
+
+     #Update the current response on screen.
+      stim.text <- ListToString(letters)
+      Draw()
+   }
+
+  rt2 <- GetTime()
+  #Now, judge whether it is correct.
+  corr <- ListToString(letters) == ccc
+
+  return [ListtoString(letters), corr, rt2-rt1]
+}
+
+define WaitUntil(time)
+{
+     RegisterEvent("<TIMER>", 1, time,"<GEQ>","", [])
+     StartEventLoop()  #Start the timer
+     ClearEventLoop()  #clear it out when done.
+   
+}
