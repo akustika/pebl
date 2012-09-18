@@ -1,0 +1,198 @@
+define Start(p)
+{
+
+ gWin <- MakeWindow("black")
+ gSleepEasy <- 1
+
+##Note: use | for linebreaks:
+ problems <- [Uppercase("What if that is what order actually looks like.|We're here to bring order, but what if this mess is|the natural state, and what if what we're doing is|ridiculous."),
+ Uppercase("Ut tellus ipsum, pharetra vel, sagittis eu,|scelerisque ut, ligula. Proin pellentesque, nisl|sed porta lobortis, ante nisl faucibus libero, sit|amet blandit neque erat a diam. Mauris quis ipsum.|Phasellus massa dui, faucibus nec, euismod congue,|sagittis ut, dui. Maecenas a nulla."),
+Uppercase("On Mondays Wednesdays and Fridays while the rest of|the week it was the Organon. The governess was always|getting muddled with her astrolabe, and when she got|especially muddled she would take it out of the Wart.|She did not rap Kay's knuckles, because when Kay grew|older he would be Sir Kay, the master of the estate.|The Wart was called the Wart because it more or less|rhymed with Art, which was short for his real name.")]
+
+ gCR <- "
+"
+ time <- 60*1000 ##40 secs to finish.
+
+ loop(problem, Shuffle(problems))
+  {
+   stats <- Trial(problem,time)
+   Print(stats)
+   timeM <- Third(stats)/1000/60   ##time in minutes	
+   wpm <- First(stats)/timeM
+   cpm <- Second(stats)/timeM
+   errs <- Fourth(stats)/Second(stats)
+   problemlength <- Fifth(stats)
+   finished <- Nth(stats,6)
+report <- "Time:             " + timeM + " min.
+Words per min:    " + wpm + "
+Char. per min:    " + cpm + " 
+Completed:        " + Second(stats) + " of " +problemlength +"
+Accuracy:         " + (1-errs) +CR(1)
+
+   if(finished)
+   {
+     report <- report + "Problem finished"
+   } else {
+     report <- report + "Problem not finished"
+   }
+
+
+   Print(report)
+   MessageBox(report, gWin)
+
+  }
+
+}
+
+
+define Trial(problem,time)
+{
+
+   probtext <- ReplaceChar(problem,"|",CR(1))
+   font <- MakeFont(gPEBLBaseFontMono,0,22,MakeColor("white"),MakeColor("grey5"),0)
+   opts <- Merge(FileReadList("Uppercase.txt"),
+                 [" ",",",".","'",";","-",gQuote])
+
+   timer <- EasyLabel(FormatTime(time/1000),gVideoWidth/2+100,30,gWin,22)
+   bgTimer <-Rectangle(gVideoWidth/2+100,50,200,20,MakeColor("grey"),0)
+   fgTimer <-Rectangle(gVideoWidth/2+100,50,200,20,MakeColor("Red"),1)
+   AddObject(fgtimer,gWin)
+   AddObject(bgtimer,gWin)
+
+   ##Upper text box where the stimulus text appears.
+   tbupper <- MakeTextBox(probtext, font, 700, 300)
+   AddObject(tbupper,gWin)
+   Move(tbupper,(gVideoWidth-tbupper.width)/2,80)
+   SetEditable(tbupper,1)
+
+
+  tblower <- MakeTextBox("", font, 700, 300)
+  AddObject(tblower,gWin)
+  SetEditable(tblower,1)
+  Move(tblower,(gVideoWidth-tblower.width)/2,420)
+  
+  good <- Circle(gVideoWidth/2-100,35,30,MakeColor("green"),1)
+  bad  <- Circle(gVideoWidth/2-100,35,30,MakeColor("darkred"),1)
+  AddObject(good,gWin)
+  AddObject(bad,gWin)
+  Hide(good)
+  Hide(bad)
+
+   Draw()
+  started <- 0   
+  cont <- 1
+  pos <- 0
+  output <- ""
+  errors <- 0
+  words <- 0 
+  finished <- 0
+
+ while(cont)
+  {
+   target <-  SubString(problem,pos+1,1)
+
+   resp <- []
+   ##  Loop here until we have a real response.
+   ##  update the timer if it is not one.
+   while(IsList(resp))
+    {
+      resp <-(WaitForListKeyPressWithTimeout(opts,100,1))
+
+
+       #Update timer for whatever response path was taken.
+       if(started)
+       {
+         #update timer
+         timeleft <-  (endtime - GetTime())
+         ##If time is up, exit the loop.
+   	 if(timeleft < 0)
+	 {
+	  cont <- 0
+	  resp <- ""
+	 } 
+        ##Update the timer text and box size.
+ 	fgTimer.width <- Round(timeleft/time*bgTimer.width)
+	fgTimer.x <- bgTimer.x-(bgtimer.width/2)+fgtimer.width/2
+        timer.text <- FormatTime(timeleft/1000)
+        }
+
+     ##Draw only when we want to update timer.
+     if(IsList(resp))
+      {
+        Draw()
+      }
+    }
+
+   ##Transform the response to uppercase:
+   resp<- Uppercase(resp)
+
+   ##record start time of first key.
+   if(not started) 
+   {
+     started <- 1
+     time1 <- GetTime()
+     endtime <- time1  + time
+   }
+
+   ##This might be tough on a CR/LF text
+   ##correct for CR() so so it won't autowrap.
+
+   if(target == "|" and resp == " ")
+   {
+    target <- " "
+    resp <- gCR
+    correct <- 1
+   } else {
+    correct <- target == resp
+   }
+
+   #Count word breaks here.
+   if(target == " " )
+   {
+     words <- words + 1
+   }
+
+     ##light up immediate feedback.
+    if(not correct)
+    {
+#      problem <- SubString(problem,1,pos-1) + "-" + 
+#                 SubString(problem,pos+1, (StringLength(problem)-pos))
+#      tbupper.text <- problem       
+      Show(bad)
+      Hide(good)
+      errors <- errors + 1
+
+    }else{
+     Hide(bad)
+     Show(good)
+    }
+
+
+    output <- output + resp
+    tblower.text <- output    
+    pos <- pos + 1
+    SetCursorPosition(tblower,pos)
+    SetCursorPosition(tbupper,pos)
+
+
+    Draw()
+    ##Have we typed everything?
+    if(pos >= StringLength(problem))
+    {	   
+      finished <- 1
+      cont <- 0
+    }
+  }
+ time2 <- GetTime()
+
+  return [words,pos,(time2-time1),errors,StringLength(problem),finished]
+
+}
+
+define FormatTime(time)
+{
+	
+   secs <- "   "+Floor(time)
+   rem <- (time-Floor(time))+"000"
+   return SubString(secs,StringLength(secs)-3,4)  + "."+ SubString(rem,3,2)
+}
