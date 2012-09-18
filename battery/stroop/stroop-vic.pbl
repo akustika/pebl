@@ -8,7 +8,7 @@ define Start(p)
 ##  Translations: 
 ##  Chinese by Ron Ye
 ##  Portuguese (Brazilian)
-##
+##  Dutch by Alien Van der Sluis
 ##
 
  ##The number of trials per block (and condition)
@@ -286,7 +286,7 @@ if(dotraining)
    ##Lets do a little learning about the key mappings
    gInstructions.text <- gPracticeText
    Show(gInstructions)
-    patch <- Rectangle(gVideoWidth/2,gVideoHeight/2,300,100,MakeColor("black"),1)
+    patch <- Rectangle(gVideoWidth/2,gVideoHeight/2+60,300,100,MakeColor("black"),1)
     AddObject(patch,gWin)
     Draw()
     resp <- 1
@@ -312,7 +312,7 @@ if(dotraining)
   Show(gHeader)
    ##Create the grid layout.
    xypoints <- LayoutGrid(-20,gVideoWidth+20,
-                          80,450, 6,4,1)
+                          80,450, 6,4,0)
 
     ##Wait at this point for the subject to press a key to begin.
     gHeader.text <- gHeadBegin
@@ -484,8 +484,8 @@ define ScoreTrial(resp,wordname,colorname,btype)
 ##  objects used in experiments.
 define Initialize()
 {
-  gVideoWidth  <-800
-  gVideoHeight <- 600
+#  gVideoWidth  <-800
+#  gVideoHeight <- 600
 
   ##Initialize Window, etc.
   gWin <- MakeWindow("grey40")   
@@ -627,7 +627,7 @@ define Initialize()
    Press any key to begin."
  
 
-   gInst3 <- "Again, name the colors in which the words are printed as quickly as you can. Don't read the word! Instead, name the color in which the word is printed.
+   gInst3 <- "Again, name the colors in which the words are printed as quickly as you can. Don't read the word! Instead, name the color in which the  word is printed.
 
 
    Press any key to begin."
@@ -635,6 +635,38 @@ define Initialize()
    gHeadBegin <-"Press any key to begin"
    gHeadBlock <- "Press key to indicate color."
    gExitText <-"You are now finished. Thank you for participating."
+
+
+    }elseif(Uppercase(gLanguage)=="NL"){
+
+   ##DUTCH
+
+   gKeys <- ["1","2","3","4"]
+   keystring <-  First(gKeys) +", "+ Second(gKeys)+ ", " +Third(gKeys)+ ", of "+ Fourth(gkeys)
+   gColorBaseNames <- ["rood","groen","blauw","geel"]
+   gWords   <- ["als","moeilijk","en","over"]
+
+
+   gPracticeText <- "Voor we beginnen, neem een moment om de overeenkomst tussen de kleuren en toetsenbord nummers te leren.  Toets de nummers 1-4 achtereenvolgens om de stimuli te oefenen, en druk op de space bar om de test te beginnen." 
+   gInst1 <- "Je wordt getest op hoe goed je woorden en de kleuren waarin ze verschijnen kunt lezen. In het eerste deel, moet je de namen van de kleuren van de stippen zo snel mogelijk benoemen. Volg het grijze vierkant en druk vervolgens op de juiste toets[1-4].
+
+
+   Press any key to begin."
+ 
+   gInst2 <-  "Benoem nu de kleuren van de woorden zo snel als je kunt. Volg het grijze vierkant en druk op de juiste bijbehorende toets [1-4].
+
+
+   Druk op een willekeurige toets om te beginnen."
+ 
+
+   gInst3 <- "Opnieuw, benoem de kleuren waarin de woorden worden getoond zo snel als je kunt. Lees niet het woord! Noem in plaats daarvan de kleur waarin het is geprint.
+
+
+   Druk op een willekeurige toets om te beginnen."
+ 
+   gHeadBegin <-"Druk op een willekeurige toets om te beginnen"
+   gHeadBlock <- "Druk op een toets om de kleur aan te geven."
+   gExitText <-"Je bent nu klaar. Bedankt voor je deelname."
 
     } else {
 

@@ -6939,20 +6939,24 @@ Print(Shuffle([1,2,3,4,5]))
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+ShuffleRepeat()+
 
-\item[Description] 	Randomly shuffles  \verb+<list>+, repeating \verb+<n>+ times.  Shuffles
-  each iteration of the list separately, so you are guaranteed to go
-  through all elements of the list before you get another.
+\item[Description] 	Randomly shuffles  \verb+<list>+, repeating \verb+<n>+ times.  Shuffles  each iteration of the list separately, so you are guaranteed to go  through all elements of the list before you get another.  Returns a nested list.
 
 \item[Usage]    
 \begin{verbatim}
 ShuffleRepeat(<list>, <n>)
 \end{verbatim}
 
+
 \item[Example]
 \begin{verbatim}
 Print(ShuffleRepeat([1,2,3,4,5]),3)
 ##  Results might be anything, like:
-## [5,3,2,1,4, 3,2,5,1,4, 1,4,5,3,2]
+## [[5,3,2,1,4], [3,2,5,1,4], [1,4,5,3,2]]
+\end{verbatim}
+
+Typically, you will want to flatten before using:
+\begin{verbatim}
+list <-  Flatten(ShuffleRepeat([1,2,3], 5))
 \end{verbatim}
 
 \item[See Also]    	\verb+Sort()+, \verb+SortBy()+, \verb+ShuffleRepeat()+,

@@ -37,7 +37,7 @@
  ## Chinese translation contributed by Ron Ye 
  ## French translation contributed by Vladimir Bogdanov
  ## German translation by Corinne Vonlaufen
-
+ ## Dutch translation by Alien van der Sluis
 
 
 
@@ -148,7 +148,7 @@ define Start(lPar)
    {
    
      gInstructions.direction <- (-1)
-	 gFooter.direction <- (-1) 
+     gFooter.direction <- (-1) 
   }
 
    SetText(gInstructions,inst1)
@@ -181,21 +181,25 @@ define Start(lPar)
    colGain <- gColGreen
    colLoss <- gColRed
 
-   deck1 <- Rectangle(100,200,100,150,colCard,0)
-   deck2 <- Rectangle(250,200,100,150,colCard,0)
-   deck3 <- Rectangle(400,200,100,150,colCard,0)
-   deck4 <- Rectangle(550,200,100,150,colCard,0)
+   d1x <- gVideoWidth/2 -225
+   d2x <- gVideoWidth/2 -75
+   d3x <- gVideoWidth/2 +75
+   d4x <- gVideoWidth/2 +225
 
-   deck1g<- Rectangle(100,200,100,150,colGain,1)
-   deck2g<- Rectangle(250,200,100,150,colGain,1)
-   deck3g<- Rectangle(400,200,100,150,colGain,1)
-   deck4g<- Rectangle(550,200,100,150,colGain,1)
+   deck1 <- Rectangle(d1x,200,100,150,colCard,0)
+   deck2 <- Rectangle(d2x,200,100,150,colCard,0)
+   deck3 <- Rectangle(d3x,200,100,150,colCard,0)
+   deck4 <- Rectangle(d4x,200,100,150,colCard,0)
 
-   deck1l<- Rectangle(100,200,100,150,colLoss,1)
-   deck2l<- Rectangle(250,200,100,150,colLoss,1)
-   deck3l<- Rectangle(400,200,100,150,colLoss,1)
-   deck4l<- Rectangle(550,200,100,150,colLoss,1)
+   deck1g<- Rectangle(d1x,200,100,150,colGain,1)
+   deck2g<- Rectangle(d2x,200,100,150,colGain,1)
+   deck3g<- Rectangle(d3x,200,100,150,colGain,1)
+   deck4g<- Rectangle(d4x,200,100,150,colGain,1)
 
+   deck1l<- Rectangle(d1x,200,100,150,colLoss,1)
+   deck2l<- Rectangle(d2x,200,100,150,colLoss,1)
+   deck3l<- Rectangle(d3x,200,100,150,colLoss,1)
+   deck4l<- Rectangle(d4x,200,100,150,colLoss,1)
 
 
    deck1text <- MakeLabel(Nth(textlist,4),gHeaderFont)
@@ -222,7 +226,7 @@ define Start(lPar)
         Hide(i)
     }
 
-   x <- 100
+   x <- d1x
    loop(i, textUI) 
    {
       AddObject(i,gWin)
@@ -240,7 +244,7 @@ define Start(lPar)
    totstring <-Nth(textlist,9)
    gTotalLabel <- MakeLabel(totstring+gTotal,gHeaderFont)
    AddObject(gTotalLabel,gWin)
-   Move(gTotalLabel,450,380)
+   Move(gTotalLabel,gVideoWidth/2+50,380)
 
    textchoice <-  Nth(textlist,10)
    textreward <-  Nth(textlist,11)
@@ -450,8 +454,8 @@ define Initialize()
 {
 #  gVideoWidth <- 640
 #  gVideoheight <- 480
-  gVideoWidth <- 800
-  gVideoheight <- 600
+#  gVideoWidth <- 800
+#  gVideoheight <- 600
 
   ##Initialize Window, etc.
   gWin <- MakeWindow("white")   
@@ -479,9 +483,6 @@ define Initialize()
    ## Make and place the instruction box, then hide it  
    gInstructions <- MakeTextBox("", gInstructionsFont, 600,300)
 
-   Print("--------------------------------")
-   
-   PrintPRoperties(gInstructions)
 
    if(gLanguage=="he")
    {
@@ -502,7 +503,7 @@ define Initialize()
 
    gFooter <- MakeTextBox("",gStimFont,260,120)
    AddObject(gFooter,gWin)
-   Move(gFooter, 50,300)
+   Move(gFooter, gVideoWidth/2-350,300)
    
  }
 
@@ -528,7 +529,7 @@ define MakeEarningsGraph( earnings)
     height <- 20
     width  <- earnings / scale
     ycenter <- gVideoHeight/2 + 220
-    xcenter <- gVideoWidth/2 - 195
+    xcenter <- gVideoWidth/2 -195
 
    #Determine which color to make it.
    if(earnings < 0) 
@@ -543,7 +544,7 @@ define MakeEarningsGraph( earnings)
 
     x <- Rectangle(xcenter+width/2, ycenter, width, height, col, 1)
     outline <- Rectangle(gVideoWidth/2, ycenter-4,
-                         gVideoWidth-10,55,MakeColor("grey90"), 0)
+                         8000/scale,55,MakeColor("grey90"), 0)
     AddObject(x,gWin)
     AddObject(outline,gWin)
 

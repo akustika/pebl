@@ -51,9 +51,9 @@ define Start(p)
 
     gViewerCommand <- "gedit"
     gPEBLName      <- "pebl"
-    gOpenManual    <- "acroread /usr/local/share/pebl/doc/PEBLManual0.12.pdf&"
+    gOpenManual    <- "acroread /usr/local/share/pebl/doc/PEBLManual0.13.pdf&"
     gOpenURL        <- "firefox"
-    gManualLoc      <- "/usr/local/share/pebl/doc/PEBLManual0.12.pdf"
+    gManualLoc      <- "/usr/local/share/pebl/doc/PEBLManual0.13.pdf"
 
 		
    }elseif(systemType=="WINDOWS")   {
@@ -62,9 +62,9 @@ define Start(p)
 #     gPEBLName      <- "c:\Progra~1\PEBL\bin\pebl.exe "
      gPEBLName     <- gQuote+"%ProgramFiles%\PEBL\bin\pebl.exe"+gQuote+ " "
      gOpenManual    <- ""
-#     gManualLoc     <-  gQuote+"%ProgramFiles%\PEBL\doc\PEBLManual0.12.pdf"+gQuote
+#     gManualLoc     <-  gQuote+"%ProgramFiles%\PEBL\doc\PEBLManual0.13.pdf"+gQuote
      ##This shouldn't be hard-coded; but for now, change to localize.
-     gManualLoc    <- "C:\Program Files\PEBL\doc\PEBLManual0.12.pdf"
+     gManualLoc    <- "C:\Program Files\PEBL\doc\PEBLManual0.13.pdf"
      gOpenURL       <- ""
 
 
@@ -72,7 +72,7 @@ define Start(p)
    {
      gViewerCommand <- "open"
      gPEBLName      <- "/opt/local/bin/pebl"
-     gOpenManual    <- "acroread /opt/local/share/pebl/doc/PEBLManual0.12.pdf"
+     gOpenManual    <- "acroread /opt/local/share/pebl/doc/PEBLManual0.13.pdf"
    }
 
    gSleepEasy <- 1

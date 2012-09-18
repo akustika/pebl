@@ -1,5 +1,8 @@
 ========================================
 To Do for 0.13:
+-  stdout.txt problems
+- windows launcher won't load files with spaces in their names.
+- installing overtop 0.12 can cause some problems.
 
 - Seems to be a problem with setting x/y location of images that are scaled?
    (cannot replicate.)

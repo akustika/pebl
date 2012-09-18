@@ -512,9 +512,9 @@ Variant PEBLObjects::SetEditable(Variant v)
 
     PError::AssertType(plist->First(), PEAT_TEXTBOX, "Argument error in first argument of function [SetEditable(<textbox>, <boolean>)]: "); 
     
-    PlatformTextBox * textbox = dynamic_cast<PlatformTextBox*>(plist->Nth(2).GetComplexData()->GetObject().get()); //plist->PopFront();
+    PlatformTextBox * textbox = dynamic_cast<PlatformTextBox*>(plist->Nth(1).GetComplexData()->GetObject().get()); //plist->PopFront();
     
-    Variant v1 = plist->First(); //plist->PopFront();
+    Variant v1 = plist->Nth(2); //plist->PopFront();
 
     if(bool(v1))
         {
