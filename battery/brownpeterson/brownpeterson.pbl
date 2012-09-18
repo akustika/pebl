@@ -10,8 +10,9 @@ define Start(p)
   gUseBeep <- 1
 
   ##Instrumentatino variables:
-  reps <- 8  ##for demo use 2; real test used 8
-  delays <- [3,6,9,12,15,18]  ##delays in seconds
+  reps <- 8 ## real test used 8
+  delays <- [3,6,9,12,15,18]  ##delays in seconds of P&P 1959
+ # delays <- [3,6,18]  ##delays in seconds; shortened
   numtrials <- Length(delays)*reps
 
 
@@ -40,7 +41,8 @@ define Start(p)
   stimNumbers <- SampleN(Sequence(100,999,1),numTrials)
 
   ##Create the delay durations too:
-  delayStim <- Shuffle(RepeatList(delays,reps))
+  delayStim <- Flatten(ShuffleRepeat(delays,reps))
+
 
 
   ##Should we use a beep?  Load sounds if so.
@@ -56,13 +58,13 @@ define Start(p)
 inst <- "Please sit against the back of your chair so that you are comfortable.  In front of you is a computer screen, on which will be presented a series of memory trials. At the beginning of each trial, you will see a set of three consonants, followed shortly by a number.  Please read the consonants out loud, then await the number. You are to repeat the number immediately after I say it and begin counting backwards by 3's from that number in time with the ticking that you hear. You might see ABC then the number 309. Say ABC immediately after you see it, then once you see 309, you say 309, 306, 303, etc., until you are cued to recall.  Try to count in time to the beep, giving a response every other beep.  When this happens, stop counting immediately and enter the letters that were given at the beginning of the trial. Remember to keep your eyes on the screen at all times. We will start with a few practice trials."
 
   MessageBox(inst,gWin)
-  Trial("BDG", 899, 5)
+  Trial("BDG", 899, 5,1)
   MessageBox("Now, we will do several more practice trials.",gWin)
-  Trial("SGN", 309, 3)
-  Trial("CXZ", 239, 8)
-  Trial("VQR", 411, 4)
+  Trial("SGN", 309, 3,1)
+  Trial("CXZ", 239, 8,1)
+  Trial("VQR", 411, 4,1)
   
-  MessageBox("Now, we will do the real test.  There will be "+numtrials+"total trials.",gWin)
+  MessageBox("Now, we will do the real test.  There will be "+numtrials+" total trials.",gWin)
 
   trialcounter <- Easylabel("",gVideoWidth-100,100,gWin,18)
   ##Now, do the data collection.
@@ -73,8 +75,8 @@ inst <- "Please sit against the back of your chair so that you are comfortable. 
    trialCounter.text <- "Trial ["+i+"] of "+numtrials
    out <-    Trial(Nth(cccs,i),       ##The stimulus
                    Nth(stimNumbers,i), ## the number
-                   Nth(delaystim,i))   ## The delay in seconds
-
+                   Nth(delaystim,i),   ## The delay in seconds
+		   1)                  ##Number of learning repetitions
    PushOnEnd(data,Append(out,Nth(delayStim,i)))  ##accumulate data
 
    FilePrint(gFileOut,gSubNum+","+i+","+
@@ -86,22 +88,59 @@ inst <- "Please sit against the back of your chair so that you are comfortable. 
 		 Third(out))
   }
 
+
+##Now, do some data analytics--by delay.
+
+  datatable <- []
+  loop(i,delays)
+  {
+    filter <- Match(delayStim,i)
+    subset <- Filter(data,filter)
+    tsub <- Transpose(subset)
+    datatable <- Append(datatable,
+    [i,Sum(filter),Mean(Second(tsub)),Exp(Mean(Ln(Third(tSub)))),Median(Third(tSub))])
+
+  }
+
+
+ Print(datatable)
+ dttext <- "Results for Brown Peterson Task"+CR(1)+
+"Participant:     " + gSubNum +CR(1)+
+TimeStamp() + CR(1)+
+"-------------------------------------------
+Delay  N   Accuracy    Mean(RT)   Median(RT)
+-------------------------------------------"
+ loop(i,datatable)
+ {
+   dttext <- dtText + CR(1) +
+   First(i) + "   " + Second(i) + "   " + Third(i) + "   " + Fourth(i) +" "+ Fifth(i)
+ }
+
+  dtText <- dtText + CR(1) + "-------------------------------------------"
+
+  Print(dtText)
+  fileout2 <- FileOpenWrite("data/bp-report-"+gSubNum+".txt")
+  FilePrint(fileout2,dttext)
+  MessageBox(dttext+ CR(2)+ "Thank you for participating",gWin)
 }
 
 
-define Trial(ccc,number,delay)
+## Basic B-P trial.  Note that the reps value is set to 1 in this 
+## demo, but could be increased to give more learning, like in Exp. 2
+## of Peterson & Peterson.
+
+define Trial(ccc,number,delay,reps)
 {
 
    ##Make sure they are always in the same order.
-
 
    ##First, prepare the graphical elements: 
    stim <- EasyLabel(ccc,gVideoWidth/2,gVideoHeight/2,gWin,44)
    back <- Rectangle(gVideoWidth/2,gVideoHeight/2,300,80,MakeColor("red"),0)
    AddObject(back,gWin)
-
+   Hide(stim)
    prompt <- EasyLabel("Await stimulus",gVideoWidth/2,gVideoHeight-150,gWin,30)
-
+   Draw()
    #Orient attention:
    CountDown(gWin)
 
@@ -109,26 +148,51 @@ define Trial(ccc,number,delay)
    time1 <- GetTime()
    Draw()
 
+   
    ##after 500 ms, Hide stimulus:
-   WaitUntil(time1+1000)
-   Hide(stim)
-   Draw()
+   tick <- time1
+   nexttick <- time1 + 1000
 
-   ##After another 500, start counting backward.
-   WaitUntil(time1+1500)
+   loop(i,Sequence(1,reps,1))
+    {
+      Show(stim)
+      if(gUseBeep)
+      {
+        PlayBackground(Nth(gBeeps,1))
+      }
+      Draw()
+
+      WaitUntil(tick + 500)
+
+      Draw()
+      if(gUseBeep)
+      {
+        PlayBackground(Nth(gBeeps,2))
+      }
+
+      WaitUntil(nexttick)
+      Draw()
+
+      tick <- nexttick
+      nexttick <- tick + 1000
+    }
+        
+   ##After next tick,  start counting backward.
+   WaitUntil(tick+500)
    Show(stim)
    stim.text <- number
    Draw()
-   WaitUntil(time1+2000)
+   countStart <- GetTime()
+   WaitUntil(tick+1500)   ##Show number for 1 sec.
    stim.text <- ""
    prompt.text <- "Count backward by 3 ever other beep and flash"
    Draw()
 
-   nexttick <- time1 + 2500
+   nexttick <- tick + 2000
 
    ##beep/flash until time limit.
    id <- 1
-   while(GetTime()<time1+delay*1000)
+   while(GetTime()<countstart+delay*1000)
    {
 
     WaitUntil(nexttick)
