@@ -1,0 +1,487 @@
+## PEBL N-Back Test
+## Settings allow for either single or dual N-Back with 
+## a variety of settings.
+
+define Start(p)
+{
+
+    gConsonants <- ["C","H","K","N","R","W","X","Y"]
+    #gNumbers    <- ["1","2","3","4","5","6","8","9"]
+
+  gConsonantSounds <- LoadSounds(gConsonants)
+  gNumberSounds <- LoadSounds(gConsonants)
+
+  gWin <- MakeWindow("black")
+  gSleepEasy <- 1
+  if(gSubNum+""=="0")
+   {
+     gSubNum <- GetSubNum(gWin)
+   }
+  
+   MakeDirectory("data")
+   gFileOut <- FileOpenWrite("data/nback-"+gSubNum+".csv")
+
+  ## MessageBox("Istrucitons",gWin)
+  ##Pick single dual here.
+
+   ShowCursor(0)
+ 
+#   DoNBackSequence("consonants-av","none",1,3000,4,4,2,20)
+#   DoNBackSequence("none","squares",1,3000,4,4,2,20)
+   gBlock <- "p1"
+   DoNBackSequence("consonants-av","squares",1,3000,4,4,2,20)
+   gBlock <- "p2"
+   DoNBackSequence("consonants-av","squares",2,3000,4,4,2,20)
+   gBlock <- "p3"
+   DoNBackSequence("consonants-av","squares",3,3000,4,4,2,20)
+
+   ShowCursor(1)
+   MessageBox("Thanks.",gWin)
+
+}
+
+## This will perform an n-back sequence of trials stimuli.
+## This requires only 'yes' responses for either dimension.
+## It supports one or two dimensions simultaneously.
+## if you use only one type, dim2targs and bothtargse will be ignored.
+## the number of trials in the sequence needs to be at least n plus
+## the three targs values, and should be more.
+## Jaeggi et al would be  4,4,2,10+n
+
+define DoNBackSequence(dim1,dim2, n, isi, 
+                       dim1targs, dim2targs, bothtargs,trials )
+{
+
+
+  ontime <- 500
+#  dim1 <- "consonants-a" 
+#  dim2 <- "none"
+
+  ## currently, dim1 and dim2 need to be different,
+  ## and can be either:
+  ##  "squares"       (dim2 only)
+
+  ##dim1:
+  ##  "consonants-a"  (Auditory consonants)
+  ##  "consonants-v"  (Visual consonants)
+  ##  "consonants-av" (both audio and visual)
+
+  ##  "numbers-a"     (auditory numbers)
+  ##  "numbers-v"     (visual numbers)
+  ##  "numbers-av"     (visual numbers)
+
+  ##  "none"          (either dimension)
+
+
+  if(not IsMember(dim1,["consonants-a","consonants-v","consonants-av","numbers-a","numbers-v","numbers-av","none"]))
+  {
+     SignalFatalError("First dimension n-back must be audio or visual or none")
+  }
+
+  if(not IsMember(dim2,["squares","none"]))
+  {
+     SignalFatalError("Second dimension n-back must be squares or none")
+  }
+
+
+
+  ##First, let's do the design.  We'll start AFTER the
+  ##first N padding stimuli.
+
+  if(dim1=="none" and  dim2 == "none")
+   {
+      SignalFatalError("At least one dimension must a real dimension.")
+   }
+
+  if(dim2 == "none" or dim1 == "none")
+  {
+     ndim <- 1
+
+  }else{
+
+     ndim <- 2
+  }
+
+
+  ## do the design now. 
+   design <-  Merge(Repeat([0,0],n),Shuffle(FlattenN([Repeat([1,0],dim1targs),
+                       Repeat([0,1],dim2targs),
+           	       Repeat([1,1],bothtargs),
+		       Repeat([0,0],Max([0,trials-dim1targs-dim2targs-bothtargs]))],1)))
+
+      ##Now, our design tells us whether there should be a  in 
+      ##both dimensions 1 and dimensions 2, N-back
+      ##So, create the stimuli so this works.
+      ##each n-back task will have 8 possible stimuli.
+      
+      sampset <- Sequence(1,8,1)
+      fullstim <- []
+
+      ##Create the stimulus sequence now:
+      dim1stim <- SampleN(sampset,n)
+      dim2stim <- SampleN(sampset,n)
+      typeLabel1 <- ""
+      typeLabel2 <- ""
+
+      loop(i,Sequence(n+1, n+trials,1))
+      {
+        des <- Nth(design,i)
+
+        if(First(des)==0)
+         {
+	    ##choose on that doesn't match
+            dim1val <- SampleExcept(sampset,Nth(dim1stim,i-n))
+	 }else{
+  	   ##choose one that does match
+	    dim1val <- Nth(dim1stim,i-n)
+         }
+	 PushOnEnd(dim1Stim,dim1val)
+
+        if(Second(des)==0)
+         {
+	    ##choose on that doesn't match
+            dim2val <- SampleExcept(sampset,Nth(dim2stim,i-n))
+	 }else{
+	    ##choose on that does
+            dim2val <- Nth(dim2stim,i-n)
+         }
+	 PushOnEnd(dim2stim,dim2val)
+      }
+
+     td <- Transpose(design)
+     stimseq <- Transpose([First(td),Second(td),dim1stim,dim2stim])
+
+
+     ##Now, the stimulus sequence has been created.  We should
+     ##worry about what the stimuli are now.
+
+     ##Start them out empty:
+     audioList <- Repeat(0,8)
+     textList <- Repeat(0,8)
+     shapeList <- Repeat(0,8)
+
+      ##Now, we have the stimuli, the sequences, and can actually do the test.
+
+      doAudio <- ((dim1 == "consonants-a") or
+                  (dim1 == "numbers-a") or 
+		  (dim1 == "numbers-av") or 
+		  (dim1 == "consonants-av"))
+
+      doText <-  ((dim1 == "consonants-v") or
+                  (dim1 == "numbers-v") or
+		  (dim1 == "numbers-av") or 
+		  (dim1 == "consonants-av"))
+
+
+
+      doSpatial <-  (dim2 == "squares")
+
+
+
+
+    ##first, check for consonants, creating 
+      if(dim1 == "consonants-v" or dim1 == "consonants-av" or dim1 == "consonants-a")
+      {
+	dim1stimlist <- gConsonants
+	typelabel1 <- "LETTER"
+      }elseif(dim1 == "numbers-v" or dim1 == "numbers-av" or dim1 == "numbers-a")
+      {
+       dim1stimlist <- gNumbers
+       typeLabel1 <- "NUMBER"
+      }
+
+
+      if(doText)
+      {
+       widgets <- []
+       loop(i, dim1stimlist)
+        {
+          tmp <- EasyLabel(i,gVideoWidth/2,gVideoHeight/2,gWin,80)
+	  widgets <- Append(widgets,tmp)
+	  Hide(tmp)
+        }  
+	 
+       dim1widgets <- widgets
+      }else{
+       dim1widgets <- Repeat(0,8)
+      }
+
+
+     if(doSpatial)
+      {
+	 xc <- gVideoWidth/2
+	 yc <- gVideoHeight/2
+
+         cellsize <- 100
+         a <- cellsize  ##Adjustment
+         ##Add squares in their offset position.
+         posx <- [-a,0,a,-a,a,-a,0,a]
+	 posy <- [-a,-a,-a,0,0,a,a,a]
+	 widgets <- []
+	 loop(i,Transpose([posx,posy]))
+	 {
+	    tmp <- Square(First(i)+xc,
+                         Second(i)+yc,
+			 cellsize * .7,
+			 MakeColor("white"),1)
+            PushOnEnd(widgets,tmp)
+            AddObject(tmp,gWin)
+	    Hide(tmp)
+	 }
+
+	 dim2widgets <-  widgets
+
+	 ##Draw lines 
+	 white <- MakeColor("white")
+         lines <- [Line(xc-cellsize*1.5, yc-cellsize*1.5,0,cellsize*3,white),
+	          Line(xc-cellsize*.5,   yc-cellsize*1.5,0,cellsize*3,white),
+	          Line(xc+cellsize*.5,   yc-cellsize*1.5,0,cellsize*3,white),
+		  Line(xc+cellsize*1.5,  yc-cellsize*1.5,0,cellsize*3,white),
+		  Line(xc-cellsize*1.5,  yc-cellsize*1.5,cellsize*3,0,white),
+	          Line(xc-cellsize*1.5,  yc-cellsize*.5,cellsize*3,0,white),
+	          Line(xc-cellsize*1.5,  yc+cellsize*.5,cellsize*3,0,white),
+		  Line(xc-cellsize*1.5,  yc+cellsize*1.5,cellsize*3,0,white)]
+	loop(line,lines)
+	{
+          AddObject(line,gWin)
+	}
+	typelabel2 <- "SQUARES"
+
+      }else{
+        dim2widgets <- Repeat(0,8)
+      }
+
+      if(doAudio)
+      {
+	if(typelabel1 == "LETTER")
+	{
+	  dim1audio <- gConsonantSounds
+        }else{
+ 	 dim1Audio <- gNumeralSounds
+	}
+      } else {
+          dim1audio <- Repeat(0,8)
+      }
+
+     ##  Now, we have dim1widgets, dim1audio, and dim2widgets
+     ##  which we can just turn on and off. depending on
+     ## doAudio, doText, and doSpatial
+
+    topLabel <-  EasyLabel("Match ["+n+"] back",gVideoWidth/2,100,gWin,60)
+  
+    respfilter <- [doAudio or doText, doSpatial]
+
+    if(First(respfilter))
+    {  
+     keylabelLeft <- EasyLabel("(left shift) "+typelabel1 ,gVideoWidth/2-300, gVideoHeight/2+230,gWin,30)
+    }
+    if(Second(respFilter))
+    {
+      keyLabelRight<- Easylabel(typeLabel2+" (right shift)", gVideoWidth/2+300, gVideoHeight/2+230,gWin,30)
+    }
+
+    footer <- EasyLabel("press when match occurs", gVideoWidth/2, gVideoHeight/2+260,gWin,30)
+
+     respLeft <- Rectangle(keylabelLeft.x,keylabelleft.y,keylabelleft.width,keylabelleft.height,MakeColor("white"),0)
+     respRight <- Rectangle(keylabelRight.x,keylabelright.y,keylabelright.width,keylabelright.height,MakeColor("white"),0)
+     AddObject(respLeft,gWin);Hide(respLeft)
+     AddObject(respRight,gWin);Hide(respRight)
+     
+     center <- Easylabel("Press any key to begin.",gVideoWidth/2,gVideoHeight/2-220,gWin,80)
+     
+     Draw()
+     WaitForAnyKeyPress()
+
+     ##Flash + on the screen as a readying signal:
+     center.y <- gVideoHeight/2
+     center.text <- "+"
+     Draw()
+     Wait(500)
+     Hide(center)
+     Draw()
+     Wait(500)
+     Show(center)
+     Draw()     
+     Wait(500)
+     Hide(center)
+     Draw()
+     Wait(500)
+     Show(center)
+     Draw()     
+     Wait(500)
+     Hide(center)
+     Draw()
+     Wait(500)
+
+     trial <- 1
+     loop(i,Sequence(1,Length(stimseq),1))
+     {
+     
+
+      timestart <- GetTime()     
+      offtime <- timestart + ontime
+      endtrialtime <- timeStart + isi
+
+      if(doText)
+      {
+	tmpText <- Nth(dim1Widgets, Nth(dim1stim,i))
+	Show(tmpText)
+	##This should turn off the stimulus after, e.g., 500 ms.
+        RegisterEvent("<TIMER>", 1, offtime,"<GEQ>","HideLabel", [tmpText])
+	gLabelHidden <- 0
+      }
+     
+
+     if(doSpatial)
+     {	
+     	tmpSquare <- Nth(dim2Widgets, Nth(dim2stim,i))
+	Show(tmpSquare)
+	##This should turn off the stimulus after, e.g., 500 ms.
+        RegisterEvent("<TIMER>", 1, offtime,"<GEQ>","HideSquare", [tmpSquare])
+	gSquareHidden <- 0
+     }
+
+     ##Do a draw to turn it off after 500 ms.
+     ##RegisterEvent("<TIMER>", 1, offtime,"<GEQ>","DrawMe", [1])
+
+     if(doAudio)
+     {
+	tmpAudio <- Nth(dim1audio, Nth(dim1stim,i))
+	PlayBackground(tmpAudio)
+     }
+
+     opts <- Filter(["<lshift>","<rshift>"],respFilter)
+     Draw()
+     time1 <- GetTime()
+     resp1 <- WaitForListKeyPressWithTimeout(opts,endtrialtime-GetTime(),1)
+     time2 <- GetTime()
+
+     ##corr1 and corr2 should start out as the value they will have 
+     ##if no response were made.
+     corr1 <- Nth(des,1)==0
+     corr2 <- Nth(des,2)==0
+
+     des <- Nth(stimseq,i)
+
+     if(resp1 == "<lshift>")
+       {
+          Show(respLeft)
+          corr1 <- Nth(des,1)
+
+       }elseif(resp1=="<rshift>")
+       {
+          Show(respRight)
+	  corr2 <- Nth(des,2)
+       }
+
+     if(doText)
+     {	
+	Hide(tmpText)
+     }
+
+     if(doSpatial)
+     {	
+	Hide(tmpSquare)
+     }
+
+     Draw()
+
+     resp2 <- WaitForListKeyPressWithTimeout(opts,endtrialtime-GetTime(),1)
+     time3 <- GetTime()
+
+     if(resp2 == "<lshift>")
+       {
+          Show(respLeft)
+          corr1 <- Nth(des,1)
+       }elseif(resp2=="<rshift>")
+       {
+          Show(respRight)
+          corr2 <- Nth(des,2)
+       }
+     Draw()
+
+     WaitUntil(offtime)
+
+
+     Draw()
+
+
+
+     FilePrint(gFileOut,gSubNum+","+gblock+","+trial+","+  dim1 + ","+dim2+","+
+               nDim+","+n+","+isi+"," +
+	       Nth(des,1)+","+Nth(des,2)+","+Nth(des,3)+","+Nth(des,4)+","+
+	       doText+","+ doAudio+","+doSpatial+","+ timestart+","+
+	       resp1 + ","+corr1+"," + (time2) + "," + (time2-time1) + ","+ 
+	        resp2 + ","+corr2+"," + time3 + "," + (time3-time1)       )
+
+   
+     WaitUntil(timestart+isi)
+     Hide(respLeft)
+     Hide(respRight)
+     trial <- trial + 1
+     
+
+    }
+
+
+}
+
+
+
+define LoadSounds(list)
+{
+  newlist <- []
+  loop(i,list)
+  {
+    PushOnEnd(newlist,LoadSound("sounds/"+i+".wav"))
+  }
+  return newlist
+}    
+
+define HideSquare(widget)
+{
+  if(not gSquareHidden)
+   {
+     gSquareHidden <- 1
+     Hide(widget)
+     Draw()
+
+   }
+}
+
+define HideLabel(widget)
+{
+  if(not gLabelHidden)
+   {
+     gLabelHidden <- 1
+     Hide(widget)
+     Draw()
+   }
+}
+
+
+
+define DrawMe(p)
+{
+  Draw()
+}
+
+define WaitUntil(time)
+{
+    
+     RegisterEvent("<TIMER>", 1, time,"<GEQ>","", [])
+     StartEventLoop()  #Start the timer
+     ClearEventLoop()  #clear it out when done.
+   
+}
+
+
+define SampleExcept(list,value)
+{
+  test <- value
+  while(test == value)
+  {
+    test <- Sample(list)
+  }
+  return test
+}
