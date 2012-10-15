@@ -8,14 +8,17 @@
 ## Vernon, P. A. (1993). Der Zahlen-Verbindsungs Test and other
 ## trail-making correlates of general intelligence. Personality and
 ## Individual Differences, 14, 35-40
-##
-##
+## See:
+## Salthouse, T. A., Toth, J., Daniels, K., Parks, C., Pak, R., Wolbrette, M.,
+## et al. (2000). Effects of aging on the efficiency of task switching in
+## a variant of the Trail Making Test. Neuropsychology, 14, 102–111.
 ##  
 
 
 define Start(p)
 {
    ##Could be 'mouse' or 'touch', currently no differences.
+   ##a 'keypad' method should also be implemented.
    gInputDevice <- "mouse"
 
 
@@ -671,6 +674,8 @@ define GetNeighbors(nodeGrid,path,w,h)
 define MakePath(w,h,crosses)
 {
   
+   debugPlot <- 0
+
    endID <- w * h
    ids <- Sequence(1,endID,1)
 
@@ -713,10 +718,13 @@ define MakePath(w,h,crosses)
     current <- nextID
    }
 
-#  stuff <-   DrawPath(path,7,7,gXrange,gYrange)
-#  Draw()
-#   RemoveObjects(stuff,gWin)
 
+if(debugPlot)
+   {
+  stuff <-   DrawPath(path,w,h,gXrange,gYrange)
+   Draw()
+   RemoveObjects(stuff,gWin)
+   }
   ##Now we have an initial path.  Let's get a list of the nodes
   ##not on the path. 
   remains <- RemoveSubSet(ids,path)
@@ -799,6 +807,7 @@ define MakePath(w,h,crosses)
                }
 
 	       path <- newpath
+
 	       remains <- newrems
 	       tries <- 0  ##try again
           } else {
@@ -806,6 +815,7 @@ define MakePath(w,h,crosses)
  	   Print("Possible Bad Path Created")
 	   # SignalFatalError("Cannot create path. We should recurse here.")
 	  }
+
 
        }
      }
@@ -822,6 +832,12 @@ define MakePath(w,h,crosses)
                        First(remains),
 		       SubList(path,splicepoint+1,Length(path))])
 
+if(debugPlot)
+   {
+     stuff <-   DrawPath(path,w,h,gXrange,gYrange)
+     Draw()
+     RemoveObjects(stuff,gWin)
+   }
 
 
 #  stuff <-   DrawPath(path,w,h,gXrange,gYrange)

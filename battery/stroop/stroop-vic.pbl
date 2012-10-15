@@ -964,8 +964,8 @@ define WaitForIt(keylist)
     {
        if(Uppercase(resp) == Uppercase(First(i)))
        {
-	     outid <- Second(i)
-		 break
+	    outid <- Second(i)
+	    break
        }
     }
 

@@ -286,6 +286,8 @@ define Start(lPar)
       time1 <- GetTime()
       rt <- time1 - time0
        Draw()
+
+ 
       if(resp == "1")
       {
          reward <- deck1rew
@@ -392,7 +394,7 @@ define Start(lPar)
       RemoveComplex(earnings)
       earnings <- MakeEarningsGraph(gTotal)
       Draw()
- 
+ #    Wait(4000)      
 #Wait(400)
 #imname <- First(SampleN(gImNames,1))
 #backing <- Rectangle(gVideoWidth/2,gVideoHeight/2,   gVideoWidth,gVideoHeight,MakeColor("white"),1)
