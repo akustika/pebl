@@ -1564,7 +1564,7 @@ Variant PEBLEnvironment::GetSystemType(Variant v)
 Variant PEBLEnvironment::LaunchFile(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
-    std::string file  = plist->First().GetString(); //plist->PopFront();
+    std::string file  = plist->First().GetString();
 
 
   Variant success =   PEBLUtility::LaunchFile(file.c_str());
@@ -1575,14 +1575,14 @@ Variant PEBLEnvironment::SystemCall(Variant v)
 {
 
     PList * plist = v.GetComplexData()->GetList();
-    std::string call  = plist->First().GetString();// plist->PopFront();
+    std::string call  = plist->First().GetString();
 
 
     std::string args;
 
-    if(plist->Length()>0)
+    if(plist->Length()>=2)
         {
-            args = plist->Nth(2).GetString();// plist->PopFront();
+            args = plist->Nth(2).GetString();
         }
     else
         {
