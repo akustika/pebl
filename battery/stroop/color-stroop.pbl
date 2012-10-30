@@ -71,7 +71,7 @@ define Start(p)
    gSaveAudio <- 1
 
    ##command to compress audio
-   gCompressAudio <- 1
+   gCompressAudio <- 0
    gCompressor <- "oggenc "
 
 
@@ -429,12 +429,12 @@ define DoTrial(stim,cond,code)
             SaveAudioToWaveFile(fname,gResponseBuffer)		
  	if(gCompressAudio)
              {
-			    SystemCall(gCompressor + fname)
+			    SystemCall(gCompressor + fname,"")
 				if(GetSystemType()=="LINUX" or GetSystemType()=="OSX")
              {
-     				SystemCall("rm "+fname)
+     				SystemCall("rm "+fname,"")
              } else {
-     				SystemCall("del "+fname)
+     				SystemCall("del "+fname,"")
              }
 	   }
          }
