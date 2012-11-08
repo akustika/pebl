@@ -402,13 +402,15 @@ define Trial(stimpairs)
 
   if(gInputDevice == "keyboard")
   {
-     responses <- ["1","2","3","4","5","6","7","8","9","0","<return>"]
+     responses <- ["1","2","3","4","5","6","7","8","9","0","<return>","<kp_1>","<kp_2>","<kp_3>","<kp_4>","<kp_5>","<kp_6>",
+                   "<kp_7>","<kp_8>","<kp_9>","<kp_0>","<kp_enter>"]
 
 
   }elseif(gInputDevice == "keypad")
   {
      responses <- ["<kp_1>","<kp_2>","<kp_3>","<kp_4>","<kp_5>","<kp_6>",
                    "<kp_7>","<kp_8>","<kp_9>","<kp_0>","<kp_enter>","<return>"]
+
   } elseif (gInputDevice == "mouse"){
 
 
