@@ -67,7 +67,7 @@ define Start(p)
   }
   ShowCursor(0)
   tb <-  EasyTextBox ("Press any key to begin."+CR(2)+
-"Hit space bar when red circle skips a position.",250,200,gWin,22,300,120)
+"Hit space bar when red circle skips a position.",gVideoWidth/2-150,gVideoHeight/2-60,gWin,22,300,120)
   Draw()
   WaitForAnyKeyPress()
 
