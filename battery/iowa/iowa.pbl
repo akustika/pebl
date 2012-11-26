@@ -33,13 +33,12 @@
  ## Part of  The PEBL Psychological Testing Battery
  ##
  ##
- ## Polish translation contributed by  Artur Pilacinski
+ ## Polish translation contributed by  Artur Pilacinski and Jacek Gierus
  ## Chinese translation contributed by Ron Ye 
  ## French translation contributed by Vladimir Bogdanov
  ## German translation by Corinne Vonlaufen
  ## Dutch translation by Alien van der Sluis
-
-
+ ## Spanish translation by  Jorge Castañeda
 
 define Start(lPar)
 {
