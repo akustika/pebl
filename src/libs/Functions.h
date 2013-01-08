@@ -244,6 +244,7 @@ namespace PEBLObjects
             {(char*)"STARTPLAYBACK",   StartPlayback,  1,1},
             {(char*)"PAUSEPLAYBACK",   PausePlayback,  1,1},
 
+            {(char*)"MAKECUSTOMOBJECT",   MakeCustomObject,  1,1},
             {0,            0,  0, 0}
         };
 }

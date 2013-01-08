@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLObjects.h
 //    Purpose:    Function Library for managing PEBL Objects
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -103,6 +103,9 @@ namespace PEBLObjects
 
     Variant StartPlayback(Variant v);
     Variant PausePlayback(Variant v);
+
+
+    Variant MakeCustomObject(Variant v);
 
 }
 

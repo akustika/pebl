@@ -40,6 +40,7 @@
 #include "../objects/PColor.h"
 #include "../objects/PTextBox.h"
 #include "../objects/PDrawObject.h"
+#include "../objects/PCustomObject.h"
 #include "../utility/PError.h"
 
 
@@ -1445,3 +1446,22 @@ Variant PEBLObjects::PausePlayback(Variant v)
 #endif
 }
 
+
+
+
+Variant PEBLObjects::MakeCustomObject(Variant v)
+{
+
+
+    PList * plist = v.GetComplexData()->GetList();
+    std::string name = plist->First();// plist->PopFront();
+
+
+    counted_ptr<PEBLObjectBase> myObject = counted_ptr<PEBLObjectBase>(new PCustomObject(name));    
+    PComplexData *  pcd = new PComplexData(myObject);
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
+
+}
