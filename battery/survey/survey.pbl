@@ -40,12 +40,15 @@ define Start(p)
   MakeDirectory("output")
   fileout <- FileOpenAppend("output/results-"+gSubNum+".csv")
   gClickLog <- FileOpenAppend("output/clicklog-"+gSubNum+".csv")
-
+  gPooledFile <- FileOpenAppend("output/results-pooled.csv")
 
   ##Now, iterate through the questions.
   done <- []
+  rts <- Repeat("NA",Length(dat))
+  resps <- Repeat("NA",Length(dat))
   remn <- dat
 
+  question <- 1
   finished <- 0
   while(not finished)
   {
@@ -61,6 +64,7 @@ define Start(p)
        {
         remn <-  Merge([First(done)],remn)
         done <- Rest(done)
+	question <- question -1
        }
       
     } else { 
@@ -68,14 +72,29 @@ define Start(p)
       done <- Merge([First(remn)],done)
       remn <- Rest(remn)
 
+      SetElement(resps,question,Nth(out,7))
+      SetElement(rts,question,Nth(out,6))
+
+      question <- question + 1
+      
+
+
        if(Length(remn)==0)
        {
          finished <- 1
        }
+       ##Print response as one line.
        FilePrint(fileout,MakeCSVLine(out))
     }
+
+
+
  }
   FileClose(fileout)
+
+  FilePrint_(gPooledFile,gSubNum+",")
+  FilePrint_(gPooledFile,MakeTextCSVLine(resps)+",")
+  FilePrint(gPooledFile, MakeCSVLine(rts))
 
   RemoveObject(gLogo,gWin)
   RemoveObject(gLab,gWin)
@@ -776,14 +795,29 @@ define RemoveObjects(list,win)
 }
 
 
+## 'this puts each element in quotes, and replaces " characters.
+##
+define MakeTextCSVLine(list)
+{
+  txt <- ""
+  sep <- ""
+  loop(i,list) 
+   {
+     newi<-ReplaceChar(i+"", gQuote, "")
+     txt <- txt +sep + gQuote+newi+gQuote
+     sep <- ","
+   }
+ return txt
+}
 
 define MakeCSVLine(list)
 {
   txt <- ""
-
+  sep <- ""
   loop(i,list) 
    {
-     txt <- txt + i + ", "
+     txt <- txt +sep + i
+     sep <- ","
    }
  return txt
 }
