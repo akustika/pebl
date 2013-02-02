@@ -29,6 +29,8 @@ define Start(p)
    gFileOut <- FileOpenWrite("data/twocol-"+gsubnum+".csv")
    gSummaryFile <- FileOpenWrite("data/twocol-summary-"+gsubnum+".txt")
 
+  ##The sound file to play:
+  gBuzz <- LoadSound("buzz500ms.wav")
 
   Draw()
 
@@ -197,13 +199,13 @@ define Trial(feedback)
    {
 
      completetime <- GetTime()-starttime
-     x <- LoadSound("buzz500ms.wav")
+
 
      Show(gFeedback)
      Hide(gSum)
      gFeedback.text <- "Too Long"
      Draw()
-     PlayForeground(x)
+     PlayForeground(gBuzz)
      Hide(gFeedback)
  
      Draw()
@@ -279,7 +281,8 @@ define  FilePrintCSVList(file,list)
   
   loop(i,list)
   { 
-     FilePrint(file,sep+i)
+     FilePrint_(file,sep+i)
      sep <- ","
   }
+  FilePrint(file,"")
 }
