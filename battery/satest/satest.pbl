@@ -399,7 +399,7 @@ define GetResponsesL1(outputhead)
 
         tmp <- Append(tmp,resp)
 
-        FilePrint(gFileOut,outputhead + ",Click," + clicks + "," + resp.x + "," + resp.y + "," + GetTime() + ",NA")
+        FilePrint(gFileOut,outputhead + ",Click1," + clicks + "," + resp.x + "," + resp.y + "," + GetTime() + ",NA")
         clicks <- clicks + 1
 
 
@@ -524,7 +524,7 @@ define GetResponsesIDPos(outputhead)
      ##I should score targx for being correct
      corr <- targx == targid
      corrs <- corrs+corr
-     FilePrint(gFileOut,outputhead + ",Click," + i + "," +  targid + "," + targx  + "," +  GetTime() + "," + corr)        
+     FilePrint(gFileOut,outputhead + ",Click2," + i + "," +  targid + "," + targx  + "," +  GetTime() + "," + corr)        
    
 
     i <- i + 1
@@ -1068,20 +1068,26 @@ define Walk(pos, dest, dir, rate)
 define Init()
 {
    gSleepEasy <- 1
-   gVideoWidth <- 1000
-   gVideoHeight <- 800
+#   gVideoWidth <- 1000
+#   gVideoHeight <- 800
 
    gHomeX <- gVideoWidth/2
    gHomeY <- gVideoHeight/2
    gWin <- MakeWindow("black")
 
    ##set up the basic bounds of the simulation
-   gMinX <- 200
-   gMaxX <- gVideoWidth-gMinX
-   gMinY <- 200
-   gMaxY <- gVideoHeight-gMinY
+   fieldwidth <-600 
+   fieldheight <-400
 
-   gField <- Rectangle(gHomeX, gHomeY, gVideoWidth-gMinx*2 + 50,gVideoHeight-gMinY*2+50,MakeColor("grey90"),1)
+
+   gMinX <- gHomeX-fieldwidth/2
+   gMaxX <- gHomeX+fieldwidth/2
+   gMinY <- gHomeY-fieldheight/2
+   gMaxY <- gHomeY+fieldheight/2
+
+   gField <- Rectangle(gHomeX, gHomeY, 
+   	     		fieldwidth+50,
+   	     		fieldheight+50,MakeColor("grey90"),1)
    AddObject(gField,gWin)
    
 
