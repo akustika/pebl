@@ -1,0 +1,637 @@
+## Esposito's Color-Shape Interference Task 
+##
+##
+## Developed by Shane T. Mueller & Alena Esposito
+##
+## (See Esposito et al.  (in press). Interference Suppression
+## vs. Response Inhibition: An Explanation for the Absence of a
+## Bilingual Advantage in Preschoolers' Stroop Task
+## Performance. Cognitive Development. DOI: 
+## 
+##  This file is part of the PEBL project and the PEBL Test Battery
+##  http://pebl.sourceforge.net
+##
+##
+##  To run this test, you must first install PEBL on your computer.  Then,
+##  place this file and related media files in a subdirectory of the 
+##  PEBL experiment directory (e.g., Documents\pebl-exp-0.14\)  Finally,
+##  run the PEBL launcher and navigate to this file in order to run the 
+##  test.  Data will be saved in the data\ sub-directory of the folder this 
+##  file was saved in, in a file named interference-XXX.csv, where XXX 
+##  is the participant code entered in the PEBL Launcher.
+##
+##
+##  For help installing, running, or interpreting data from this test,
+##  please email the pebl-list: pebl-list@lists.sourceforge.net
+##
+##    This program is free software: you can redistribute it and/or modify
+##    it under the terms of the GNU General Public License as published by
+##    the Free Software Foundation, either version 3 of the License, or
+##    (at your option) any later version.
+##
+##    This program is distributed in the hope that it will be useful,
+##    but WITHOUT ANY WARRANTY; without even the implied warranty of
+##    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##    GNU General Public License for more details.
+##
+##    You should have received a copy of the GNU General Public License
+##    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+define Start(p)
+{
+   ##Control parameters.  Change the following values to 
+   ##use a different version of the experiment.
+
+   gUseRandom <- 1     ##set to 1 to make each test different
+
+   if(gUseRandom)
+    {
+      SeedRNG(1000)
+    }
+   gSleepEasy <- 1  ##reserve batteries.
+   gResponseOffset <- 100  ##Pixels from center line that the responses are placed
+   gResponseY     <-  600 ##Height of responses.
+   
+   gResponseTimeLimit <- 3000 ##Timeout in ms.
+
+ 
+   gUseVisualFeedback <- 0 ##Give visual feedback of 'correct' and 'incorrect'
+   gUseAudioFeedbackAlways <- 0
+   gUseAudioFeedbackPractice <- 1
+
+
+   numTrials <- 20  ##How many trials per block?
+   useLabels <- 1   ##should the pictures appear at the bottom?
+   gUseMouse <- 1   ##Use mouse/touch input.
+   gWin <- MakeWindow("white")
+   if(gSubNum+""=="0")
+    {
+       gSubNum <- GetSubNum(gWin)
+    }
+   MakeDirectory("data")
+   fileout <- FileOpenWrite("data/BST-"+gSubNum+".csv")
+   FilePrint(fileout,"subnum,type,block,congruency,trial,stim,resp,corr,rt,tooslow")
+   inst <- EasyTextBox("",50,50,gWin,30,gVideoWidth-100,gVideoHeight-200)
+
+
+
+########################################################
+## Set up the images, sounds, and text labels on screen
+########################################################
+
+### Make the feedback sounds:
+
+    gCorrectSound   <- LoadSound("beep.wav")
+    gIncorrectSound <- LoadSound("buzz.wav")
+    gUseAudioFeedback <- 0  ##Do not change this variable--this is a temporary
+                            ##state flag set by the program.
+
+
+#### Create the images.  A1 and B1 are the standards, A2 and B2 are
+####   the opposites.
+
+  ##Note that 1/2 are not consistently mapped to circle/square by design
+
+   picnameA1 <- "redcircle.png"
+   picnameA2 <- "redsquare.png"
+   picnameB1 <- "bluesquare.png"
+   picnameB2 <- "bluecircle.png"
+
+   picnameN1 <- "blackcircle.png"
+   picnameN2 <- "blacksquare.png"   
+
+   picA1 <- MakeImage(picnameA1)
+   picA2 <- MakeImage(picnameA2)
+   picB1 <- MakeImage(picnameB1)
+   picB2 <- MakeImage(picnameB2)
+
+   picN1 <- MakeImage(picnameN1)
+   picN2 <- MakeImage(picnameN2)
+
+   AddObject(picA1,gWin)
+   AddObject(picA2,gWin)
+   AddObject(picB1,gWin)
+   AddObject(picB2,gWin)
+   AddObject(picN1,gWin)
+   AddObject(picN2,gWin)
+
+   Hide(picA1)
+   Hide(picA2)
+   Hide(picB1)
+   Hide(picB2)
+   Hide(picN1)
+   Hide(picN2)
+
+
+   Move(picA1,gVideoWidth/2,gVideoHeight/2)
+   Move(picA2,gVideoWidth/2,gVideoHeight/2)
+   Move(picB1,gVideoWidth/2,gVideoHeight/2)
+   Move(picB2,gVideoWidth/2,gVideoHeight/2)
+   Move(picN1,gVideoWidth/2,gVideoHeight/2)
+   Move(picN2,gVideoWidth/2,gVideoHeight/2)
+
+   gPics <- [picA1,picA2,picB1,picB2,picN1,picN2]
+   label <- EasyLabel("",gVideoWidth/2,gVideoHeight-30,gWin,24)
+   
+   ##Make the footer response images.
+   footA <- MakeImage(picnameA1)
+   footB <- MakeImage(picnameB1)
+   AddObject(footA,gWin)
+   AddObject(footB,gWin)
+   Move(footA, gVideoWidth/2-gResponseOffset,gResponseY)
+   Move(footB, gVideoWidth/2+gResponseOffset,gResponseY)
+   Scale(footA,100)
+   Scale(footB,100)
+
+
+   gFeet <- [footA, footB]
+
+########################################################
+########################################################
+##   START TESTING HERE
+########################################################
+########################################################
+
+  Show(picB2)
+
+  text1 <- "In this game, you will see a shape in the center of the screen, like the blue circle you see below.  You will be asked to determine whether it belongs on the right side or left side, based on a rule."
+
+ if(gUseMouse)
+  {
+    inst.text <- text1 + "If it belongs on the left, click or touch the left shape. If it belongs on the right, click or touch the right shape. Press any key to continue to the first part of the game."
+  } else {
+    inst.text <- text1 + "If it belongs on the left, press the left shift key.  If it belongs on the right, press the right shape. Press any key to continue to the first part of the game."
+  }
+ Draw()
+ WaitForAnyKeyPress()
+ Hide(picB2)
+
+
+
+   ########################################################################
+   ###
+   ### Practice round--mixed
+
+   trial <- 1
+
+
+   if(gUseMouse)
+   {
+   inst.text <- "In this test, respond by clicking or touching the smaller shape corresponding to the SHAPE you see at the center of the screen. Ignore the color of the objects.  We will start with a practice round.
+Press any key to begin."
+
+}else{
+   inst.text <- "In this test, respond by pressing keyboard button (left or right shift) corresponding to the SHAPE you see on the screen.  Ignore the color of the objects.  We will start with a practice round.
+Press any key to begin."
+}
+
+   Show(inst)
+   Draw()
+   WaitForAnyKeyPress()
+   Hide(inst)
+   Draw()
+
+
+   stimSequence <- Shuffle(RepeatList([1,2,3,4,5,6],1))
+
+   block <- 0
+
+
+   if(gUseMouse)
+   {
+      label.text <- "Click or touch image that matches shape of center picture"
+    }else{
+      label.text <- "Press button that matches shape of center picture"
+   }
+
+    if(gUseAudioFeedbackPractice)
+     {  
+	    gUseAudioFeedback <- 1
+     }
+
+   loop(i,stimSequence)
+   {
+
+    if(i ==2 or i == 4)
+	  {
+           consistency <- -1
+	  }elseif(i==1 or i==3) {
+           consistency <- 1
+	  }else{
+	   consistency <- 0
+          }
+
+      out <-  Trial(i,consistency)
+      FilePrint(fileout,gSubNum+",practice," + block+","+consistency+","+trial+","+i+","+First(out)+","+Second(out)+","+Third(out)+","+Fourth(out))
+      trial <- trial + 1
+
+	  if(trial > 5 and gUseAudioFeedbackPractice)
+       { 
+         gUseAudioFeedback <- 0
+       }
+
+
+   }
+
+   ################################################################
+   ##now, a pure neutral block 
+   block <- 1
+   trial <- 1
+
+   if(gUseMouse)
+   {
+   inst.text <- "Good.  In the next round, respond by clicking or touching the smaller shape corresponding to the SHAPE you see at the center of the screen. Ignore the color of the objects.
+Press any key to begin."
+      label.text <- "Click or touch image that matches shape"
+}else{
+   inst.text <- "Good. In the next round, respond by pressing keyboard button (left or right shift) corresponding to the SHAPE you see on the screen.  Ignore the color of the objects. 
+Press any key to begin."
+      label.text <- "Press Button that matches Shape"
+}
+
+
+   Show(inst)
+   Draw()
+   WaitForAnyKeyPress()
+   Hide(inst)
+   Draw()
+
+   stimSequence <- Shuffle(RepeatList([5,6],Round(numtrials/2)))
+
+   loop(i,stimSequence)
+   {
+
+      if(i ==2 or i == 4)
+	  {
+           consistency <- -1
+	  }elseif(i==1 or i==3) {
+           consistency <- 1
+	  }else{
+	   consistency <- 0
+          }
+
+
+      out <-  Trial(i,consistency)	
+      FilePrint(fileout,gSubNum+",test,"+ block+","+consistency+"," +trial+","+i+","+First(out)+","+Second(out)+","+Third(out)+","+Fourth(out))
+       trial <- trial + 1
+      }
+   
+  #########################################################		
+         ##now, a pure congruent block 				  
+   block <- 2
+   trial <- 1
+
+   if(gUseMouse)
+   {
+    inst.text <- "In this test, respond by clicking or touching the smaller shape corresponding to the shape you see at the center of the screen. Ignore the color of the objects.
+Press any key to begin."
+    label.text <- "Click or touch image that matches shape"
+   }else{
+     inst.text <- "In this test, respond by pressing keyboard button (left or right shift) corresponding to the shape you see on the screen.  Ignore the color of the objects.  
+Press any key to begin."
+
+     label.text <- "Press button that matches shape"
+}
+
+   Show(inst)
+   Draw()
+   WaitForAnyKeyPress()
+   Hide(inst)
+   Draw()
+
+   stimSequence <- Shuffle(RepeatList([1,3],Round(numtrials/2)))
+
+
+   loop(i,stimSequence)
+   {
+      if(i ==2 or i == 4)
+	  {
+           consistency <- -1
+	  }elseif(i==1 or i==3) {
+           consistency <- 1
+	  }else{
+	   consistency <- 0
+          }
+
+
+      out <-  Trial(i,consistency)
+      FilePrint(fileout,gSubNum+",mixed," + block+","+consistency+"," +trial+","+i+","+First(out)+","+Second(out)+","+Third(out)+","+Fourth(out))
+      trial <- trial + 1
+   }
+
+
+
+  #########################################################		
+  ##now, a pure INcongruent block 				  
+   block <- 3
+   trial <- 1
+
+
+   if(gUseMouse)
+   {
+    inst.text <- "In this test, respond by clicking or touching the smaller shape corresponding to the shape you see at the center of the screen. Ignore the color of the objects. 
+Press any key to begin."
+    label.text <- "Click or touch image that matches shape"
+   }else{
+     inst.text <- "In this test, respond by pressing keyboard button (left or right shift) corresponding to the shape you see on the screen.  Ignore the color of the objects.  
+Press any key to begin."
+
+     label.text <- "Press button that matches shape"
+}
+
+
+
+   Show(inst)
+   Draw()
+   WaitForAnyKeyPress()
+   Hide(inst)
+   Draw()
+
+   stimSequence <- Shuffle(RepeatList([2,4],Round(numtrials/2)))
+
+   loop(i,stimSequence)
+   {
+
+      if(i ==2 or i == 4)
+	  {
+           consistency <- -1
+	  }elseif(i==1 or i==3) {
+           consistency <- 1
+	  }else{
+	        consistency <- 0
+      }
+
+
+      out <-  Trial(i,consistency)
+      FilePrint(fileout,gSubNum+",incongruent," + block+","+consistency+"," +trial+","+i+","+First(out)+","+Second(out)+","+Third(out)+","+Fourth(out))
+      trial <- trial + 1
+   }
+
+
+
+
+
+
+
+
+
+   ########################################################################
+   ####
+   ### Testing--mixed block
+
+   block <- 4
+   trial <- 1
+
+   if(gUseMouse)
+   {
+    inst.text <- "In this test, respond by clicking or touching the smaller shape corresponding to the shape you see at the center of the screen. Ignore the color of the objects.
+Press any key to begin."
+    label.text <- "Click or touch image that matches shape"
+   }else{
+     inst.text <- "In this test, respond by pressing keyboard button (left or right shift) corresponding to the shape you see on the screen.  Ignore the color of the objects.
+Press any key to begin."
+
+     label.text <- "Press button that matches Shape"
+}
+
+
+   inst.text <- "Match the shape.
+Press any key to begin."
+   Show(inst)
+   Draw()
+   WaitForAnyKeyPress()
+   Hide(inst)
+   Draw()
+
+
+   ##This block may be a bit longer than the standard block size to incorporate all the types.  
+  stimSequence <- Flatten(Shufflerepeat([1,2,3,4,5,6],Ceiling(numtrials/4)))
+  loop(i,stimSequence)
+   {
+
+      if(i ==2 or i == 4)
+	  {
+           consistency <- -1
+	  }elseif(i==1 or i==3) {
+           consistency <- 1
+	  }else{
+	   consistency <- 0
+          }
+
+
+      out <-  Trial(i,consistency)
+      FilePrint(fileout,gSubNum+",mixed," + block+","+consistency+"," +trial+","+i+","+First(out)+","+Second(out)+","+Third(out)+","+Fourth(out))
+      trial <- trial + 1
+   }
+
+
+
+
+   inst.text <- "Thank you for participating in this study.  Please alert the researcher that you are done."
+   Show(inst)
+   Draw()
+   WaitForAnyKeyPress()
+}
+
+
+
+
+####################################################################
+## The following function runs a single trial of the experiment.
+## i indicates the id of gPics that will be used for the stimulus.
+## consistency indicates whether it should be scored positive or
+## negative.  consistency=1 maps i={1,2} to left, i={3,4} to right;
+##         .  consistency=-1 maps i={1,2} to right, i={3,4} to left;
+
+define Trial(i,consistency)
+{
+    if(gUseMouse)
+     {
+         SetMouseCursorPosition(Round(gVideoWidth/2),Round(gVideoHeight/2))
+         Draw()
+     }
+     Wait(200)
+
+    id <- i
+    targ <- Nth(gPics,id)
+
+    #First, show the target:  
+    Show(targ)
+    Draw()
+    time1 <- GetTime()
+
+    ##Collect the response:
+    if(gUseMouse)
+     {
+        resp <- WaitForClickOnTargetWithTimeout(gFeet,["<lshift>","<rshift>"],gResponseTimeLimit)
+     } else {
+        resp <- WaitForListKeyPressWithTimeout(["<lshift>","<rshift>"],gResponseTimeLimit)
+     }
+    time2 <- GetTime()
+
+
+    if(IsList(resp) or resp == "<timeout>")
+    { #This was a timeout trial; score incorrect and move on.
+      timeout <- 1
+      resp <- -1
+      corr <- 0
+    } else {
+      timeout <- 0
+      corr <- ScoreTrial(resp,id,consistency)
+    }
+
+    Hide(targ)
+    Draw()
+    
+
+
+   if(gUseVisualFeedback)
+    {
+     if(corr)
+      {
+       feedback <- "Correct"
+      } else {
+       feedback <- "Incorrect"
+      }
+   
+    lab <- EasyLabel(feedback,gVideoWidth/2,gVideoHeight/2,gWin,44)
+    Draw()
+    Wait(250)
+    Hide(lab)	
+    }
+
+
+	if(gUseAudioFeedbackAlways or gUseAudioFeedback)
+	{
+      if(corr)
+	  {
+	     PlayForeground(gCorrectSound)
+      } else {
+	     PlayForeground(gInCorrectSound)
+	  }
+    }
+
+
+    Draw()
+ 
+   return [resp,corr,(time2-time1),timeout]
+}
+
+
+
+## This function scores whether the trial is correct, based on 
+## the response, the type, and the consistency.
+## It expects responses to be recorded as '<lshift>' and '<rshift>',
+## and so mouse responses must be recoded into these tokens.
+##
+define ScoreTrial(resp,type, consistency)
+{
+
+ if(IsList(resp))
+   {
+   corr <- 0
+   } else {
+  if(consistency==1)
+   {
+      if(resp == "<lshift>")
+       {
+           corr <- (type==1 or type==2 )
+       }else{
+           corr <- (type==3 or type==4 )
+       }
+   } elseif(consistency==-1){
+      if(resp == "<lshift>")
+       {
+           corr <- (type==3 or type==4 )
+       }else{
+           corr <- (type==1 or type==2 )
+       }
+   } elseif(consistency ==0)  ##incorporate neutral (non-color) stimuli
+   {
+      if(resp == "<lshift>")
+       {
+           corr <- (type==5)
+       }else{
+           corr <- (type==6)
+       }
+   }
+ }
+  return corr
+}
+
+
+
+## This just scales both the xzoom and yzoom of
+## an image by the same factor to fit a specified
+## pixel size.
+define Scale(pic,size)
+{
+   if(pic.width>pic.height)
+    {
+       scale <- size/pic.width
+    } else {
+       scale <- size/pic.height
+    }
+   pic.zoomX <- scale
+   pic.zoomY <- scale
+}
+
+
+
+
+##targetlist is a set of graphical objects,
+##keylist is a set of keys whose corresponding 
+##value should be returned when a graphical object is clicked upon.
+
+define WaitForClickOnTargetWithTimeout(targetlist,keylist,time)
+{
+
+  ret <- ""
+  testlist <- Transpose([targetlist,keylist])
+   
+   wait1 <- 1
+   while(wait1)
+     {
+      wait2 <- 1
+      while(wait2)
+       {
+         pos <- WaitForMouseButtonWithTimeout(time)
+
+		 if(Length(pos)==4)
+          {
+           if(Nth(pos,4)=="<pressed>" and Nth(pos,3)==1)
+            {
+              wait2 <- 0
+              gClick <- pos
+            }
+         } else {
+            wait2 <- 0
+			wait1 <- 0
+            gClick <- [-1,-1]
+            ret <- "<timeout>"
+           
+         }
+       }
+
+       ##only loop through the test if wait1 is 0; otherwise
+       ##we timed out.
+      if(wait1)
+      {
+       newtargs <- []
+
+       loop(i,testlist)
+          {
+
+             if(Inside(pos,First(i)))
+             {
+			    wait1 <- 0
+                ret <- Nth(i,2)
+                break
+             }
+          }
+     }
+    }
+  return ret
+}
+
