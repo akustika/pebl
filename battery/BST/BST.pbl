@@ -1,4 +1,4 @@
-## Esposito's Color-Shape Interference Task 
+## Esposito's Bivalent Shape Task (BST) 
 ##
 ##
 ## Developed by Shane T. Mueller & Alena Esposito
@@ -42,6 +42,7 @@ define Start(p)
 {
    ##Control parameters.  Change the following values to 
    ##use a different version of the experiment.
+   gWin <- MakeWindow("white")
 
    gUseRandom <- 1     ##set to 1 to make each test different
 
@@ -49,9 +50,10 @@ define Start(p)
     {
       SeedRNG(1000)
     }
+
    gSleepEasy <- 1  ##reserve batteries.
-   gResponseOffset <- 100  ##Pixels from center line that the responses are placed
-   gResponseY     <-  600 ##Height of responses.
+   gResponseOffset <- 130  ##Pixels from center line that the responses are placed
+   gResponseY     <-  gVideoHeight/2+150 ##Height of responses.  Override for better control.
    
    gResponseTimeLimit <- 3000 ##Timeout in ms.
 
@@ -62,9 +64,8 @@ define Start(p)
 
 
    numTrials <- 20  ##How many trials per block?
-   useLabels <- 1   ##should the pictures appear at the bottom?
-   gUseMouse <- 1   ##Use mouse/touch input.
-   gWin <- MakeWindow("white")
+   gUseMouse <- 0   ##Use mouse/touch input (1) versus keyboard (0)
+
    if(gSubNum+""=="0")
     {
        gSubNum <- GetSubNum(gWin)
@@ -132,7 +133,7 @@ define Start(p)
    Move(picN2,gVideoWidth/2,gVideoHeight/2)
 
    gPics <- [picA1,picA2,picB1,picB2,picN1,picN2]
-   label <- EasyLabel("",gVideoWidth/2,gVideoHeight-30,gWin,24)
+   label <- EasyLabel("",gVideoWidth/2,gVideoHeight-60,gWin,24)
    
    ##Make the footer response images.
    footA <- MakeImage(picnameA1)
@@ -161,7 +162,7 @@ define Start(p)
   {
     inst.text <- text1 + "If it belongs on the left, click or touch the left shape. If it belongs on the right, click or touch the right shape. Press any key to continue to the first part of the game."
   } else {
-    inst.text <- text1 + "If it belongs on the left, press the left shift key.  If it belongs on the right, press the right shape. Press any key to continue to the first part of the game."
+    inst.text <- text1 + "If it belongs on the left, press the LEFT SHIFT key.  If it belongs on the right, press the RIGHT SHIFT key. Press any key to continue to the first part of the game."
   }
  Draw()
  WaitForAnyKeyPress()
@@ -191,6 +192,9 @@ Press any key to begin."
    WaitForAnyKeyPress()
    Hide(inst)
    Draw()
+
+
+   dataMatrix <- []
 
 
    stimSequence <- Shuffle(RepeatList([1,2,3,4,5,6],1))
@@ -224,9 +228,11 @@ Press any key to begin."
 
       out <-  Trial(i,consistency)
       FilePrint(fileout,gSubNum+",practice," + block+","+consistency+","+trial+","+i+","+First(out)+","+Second(out)+","+Third(out)+","+Fourth(out))
+      PushOnEnd(dataMatrix, [gSubNum,"practice",block,consistency,trial,i,First(out),Second(out),Third(out),Fourth(out)])
+
       trial <- trial + 1
 
-	  if(trial > 5 and gUseAudioFeedbackPractice)
+	  if(trial > 6 and gUseAudioFeedbackPractice)
        { 
          gUseAudioFeedback <- 0
        }
@@ -234,6 +240,8 @@ Press any key to begin."
 
    }
 
+   ##add a delay to prevent keying through
+   Wait(1000)
    ################################################################
    ##now, a pure neutral block 
    block <- 1
@@ -273,10 +281,15 @@ Press any key to begin."
 
 
       out <-  Trial(i,consistency)	
-      FilePrint(fileout,gSubNum+",test,"+ block+","+consistency+"," +trial+","+i+","+First(out)+","+Second(out)+","+Third(out)+","+Fourth(out))
+      FilePrint(fileout,gSubNum+",neutral,"+ block+","+consistency+"," +trial+","+i+","+First(out)+","+Second(out)+","+Third(out)+","+Fourth(out))
+      PushOnEnd(dataMatrix, [gSubNum,"neutral",block,consistency,trial,i,First(out),Second(out),Third(out),Fourth(out)])
        trial <- trial + 1
       }
    
+
+   ##add a delay to prevent keying through
+   Wait(1000)
+
   #########################################################		
          ##now, a pure congruent block 				  
    block <- 2
@@ -316,11 +329,14 @@ Press any key to begin."
 
 
       out <-  Trial(i,consistency)
-      FilePrint(fileout,gSubNum+",mixed," + block+","+consistency+"," +trial+","+i+","+First(out)+","+Second(out)+","+Third(out)+","+Fourth(out))
+      FilePrint(fileout,gSubNum+",congruent," + block+","+consistency+"," +trial+","+i+","+First(out)+","+Second(out)+","+Third(out)+","+Fourth(out))
+      PushOnEnd(dataMatrix, [gSubNum,"congruent",block,consistency,trial,i,First(out),Second(out),Third(out),Fourth(out)])
       trial <- trial + 1
    }
 
 
+   ##add a delay to prevent keying through
+   Wait(1000)
 
   #########################################################		
   ##now, a pure INcongruent block 				  
@@ -365,6 +381,7 @@ Press any key to begin."
 
       out <-  Trial(i,consistency)
       FilePrint(fileout,gSubNum+",incongruent," + block+","+consistency+"," +trial+","+i+","+First(out)+","+Second(out)+","+Third(out)+","+Fourth(out))
+      PushOnEnd(dataMatrix, [gSubNum,"incongruent",block,consistency,trial,i,First(out),Second(out),Third(out),Fourth(out)])
       trial <- trial + 1
    }
 
@@ -375,6 +392,8 @@ Press any key to begin."
 
 
 
+   ##add a delay to prevent keying through
+   Wait(1000)
 
    ########################################################################
    ####
@@ -395,9 +414,6 @@ Press any key to begin."
      label.text <- "Press button that matches Shape"
 }
 
-
-   inst.text <- "Match the shape.
-Press any key to begin."
    Show(inst)
    Draw()
    WaitForAnyKeyPress()
@@ -422,10 +438,87 @@ Press any key to begin."
 
       out <-  Trial(i,consistency)
       FilePrint(fileout,gSubNum+",mixed," + block+","+consistency+"," +trial+","+i+","+First(out)+","+Second(out)+","+Third(out)+","+Fourth(out))
+      PushOnEnd(dataMatrix, [gSubNum,"mixed",block,consistency,trial,i,First(out),Second(out),Third(out),Fourth(out)])
       trial <- trial + 1
    }
 
 
+
+   ##############################################################
+   ##############################################################
+   ##Now, do some basic summary stats.
+
+
+
+   ##do a meta-condition:
+   tdat <- Transpose(datamatrix)
+   cond <- Transpose([Nth(tdat,2),Nth(tdat,4)])
+   cond2 <- []
+   loop(i,cond)
+    {
+      PushOnEnd(cond2,First(i)+"-"+Second(i))
+    }
+
+    acc <- SummaryStats(Nth(tdat,8),cond2)
+    rt <- SummaryStats(Nth(tdat,9),cond2)
+
+    meanACC <- Nth(Transpose(acc),4)
+    meanRT <- Nth(Transpose(rt),4)
+
+    
+    ##The data we want are in rows [2,6,1] (pure blocks)
+    ## and [3,4,5] (mixed block)
+
+   pureACC <- Subset(meanACC,[2,6,1])
+   mixedACC <- Subset(meanACC,[3,4,5])
+
+   pureRT <- Subset(meanRT,[2,6,1])
+   mixedRT <- Subset(meanRT,[3,4,5])
+    
+
+   
+   report <- ""
+
+  report <- report +  Print("---------------------------------------------------") + CR(1)
+  report <- report + Print("Esposito's Bivalent Shape Task (BST)")+ CR(1)
+report <- report +   Print("Participant code: " + gSubnum)+ CR(1)
+report <- report +   Print(Timestamp())+ CR(1)
+report <- report +   Print("Response time:")+ CR(1)
+report <- report +   Print("Condition       Incongruent"+Tab(1)+"Neutral "+Tab(1)+"Congruent")+ CR(1)
+report <- report +   Print("PURE:           " + ListToLine(pureRT,Tab(2)))+ CR(1)
+report <- report +   Print("MIXED:          " + ListToLine(mixedRT,Tab(2)))+ CR(1)
+
+
+report <- report +   Print(CR(3)+"Accuracy:")+ CR(1)
+report <- report +   Print("Condition       Incongruent"+Tab(1)+"Neutral "+Tab(1)+"Congruent")+ CR(1)
+report <- report +   Print("PURE:           " + ListToLine(pureACC,Tab(2)))+ CR(1)
+report <- report +   Print("MIXED:          " + ListToLine(mixedACC,Tab(2)))+ CR(1)
+
+report <- report +   Print("---------------------------------------------------")+ CR(1)
+
+
+    reportfile <- FileOpenWrite("data/report-"+gSubNum+".txt")
+    FilePrint(reportfile,report)
+
+    ##Figure out if we need to add the header:
+    if(FileExists("data/pooled.csv"))
+    {
+       doheader <- 0
+    } else {
+       doheader <- 1
+    }
+
+
+    summaryfile <- FileOpenAppend("data/pooled.csv")
+
+    ##Add the header, if necessary:
+    if(doheader)
+      {
+        FilePrint(summaryfile,"pcode,timestamp,ACC_PI,ACC_PN,ACC_PC,ACC_MI,ACC_MN,ACC_MC,RT_PI,RT_PN,RT_PC,RT_MI,RT_MN,RT_MC")
+      }
+
+    outlist <- Flatten([gSubNum,TimeStamp(), pureACC,mixedACC,pureRT,mixedRT])
+    FilePrint(summaryfile,ListToLine(outlist, ","))
 
 
    inst.text <- "Thank you for participating in this study.  Please alert the researcher that you are done."
@@ -435,6 +528,20 @@ Press any key to begin."
 }
 
 
+
+
+define ListToLine(list,divider)
+{ 
+   out <- ""
+   sep <- ""
+
+   loop(i,list)
+   {
+    out <- out+sep + i
+    sep <- divider
+   }
+  return out
+}
 
 
 ####################################################################
@@ -466,7 +573,7 @@ define Trial(i,consistency)
      {
         resp <- WaitForClickOnTargetWithTimeout(gFeet,["<lshift>","<rshift>"],gResponseTimeLimit)
      } else {
-        resp <- WaitForListKeyPressWithTimeout(["<lshift>","<rshift>"],gResponseTimeLimit)
+        resp <- WaitForListKeyPressWithTimeout(["<lshift>","<rshift>"],gResponseTimeLimit,1)
      }
     time2 <- GetTime()
 
@@ -576,62 +683,3 @@ define Scale(pic,size)
    pic.zoomX <- scale
    pic.zoomY <- scale
 }
-
-
-
-
-##targetlist is a set of graphical objects,
-##keylist is a set of keys whose corresponding 
-##value should be returned when a graphical object is clicked upon.
-
-define WaitForClickOnTargetWithTimeout(targetlist,keylist,time)
-{
-
-  ret <- ""
-  testlist <- Transpose([targetlist,keylist])
-   
-   wait1 <- 1
-   while(wait1)
-     {
-      wait2 <- 1
-      while(wait2)
-       {
-         pos <- WaitForMouseButtonWithTimeout(time)
-
-		 if(Length(pos)==4)
-          {
-           if(Nth(pos,4)=="<pressed>" and Nth(pos,3)==1)
-            {
-              wait2 <- 0
-              gClick <- pos
-            }
-         } else {
-            wait2 <- 0
-			wait1 <- 0
-            gClick <- [-1,-1]
-            ret <- "<timeout>"
-           
-         }
-       }
-
-       ##only loop through the test if wait1 is 0; otherwise
-       ##we timed out.
-      if(wait1)
-      {
-       newtargs <- []
-
-       loop(i,testlist)
-          {
-
-             if(Inside(pos,First(i)))
-             {
-			    wait1 <- 0
-                ret <- Nth(i,2)
-                break
-             }
-          }
-     }
-    }
-  return ret
-}
-

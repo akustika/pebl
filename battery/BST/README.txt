@@ -49,13 +49,12 @@ and include:
 
  gUseRandom <- 0     ##set to 1 to make each test different
  gResponseOffset <- 100  ##Pixels from center line that the responses are placed
- gResponseY     <-  600 ##Height of responses. 
+ gResponseY     <- gVideoHeight-150 ##Height of responses. 
  gResponseTimeLimit <- 3000 ##Timeout in ms.
  gUseVisualFeedback <- 0 ##Give visual feedback of 'correct' and 'incorrect'
  gUseAudioFeedbackAlways <- 0
  gUseAudioFeedbackPractice <- 1
- numTrials <- 10  ##How many trials per block?
- useLabels <- 1   ##should the pictures appear at the bottom?
+ numTrials <- 20  ##How many trials per block?
  gUseMouse <- 1   ##Use mouse/touch input.
 
 LICENSE:
