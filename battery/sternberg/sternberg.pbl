@@ -19,12 +19,17 @@ define Start(p)
     needsubnum <- 1
    }
 
+ if(not needsubnum)
+  {
+    gFileOut <- FileOpenAppend("data/"+gSubNum+"/sternberg-"+gSubNum+".csv")   
+  }
+
   while(needSubNum)
   {
      gSubNum <- GetSubNum(gWin)
    if(FileExists("data/"+gsubnum))
     {
-      opt <- GetEasychoice("Subject code already in use.  Choose now code or add session?",
+      opt <- GetEasychoice("Subject code already in use.  Choose new code or add session?",
           ["Choose new code","Add Session"], ["new","add"],gWin)
 
       if(opt == "add")
@@ -39,6 +44,8 @@ define Start(p)
      }
 
   }
+
+
 
   log <- FileOpenAppend("data/runlog.txt")
   FilePrint(log, gSubNum + "," + TimeStamp() + "Sterberg started")
