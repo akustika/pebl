@@ -44,13 +44,13 @@ define Start(p)
 	  if(FileExists(gdest))
 	  {
 	    list <- GetDirectoryListing(gdest)
-        #Print(list)
+             #Print(list)
 		if(Length(list)>2)
 		 {
-          SetWorkingDirectory(gdest)
-   	      FileSelect(["default"]) ##Giving an argument here will specify a data file
-         } else{
-           RunFirstTime(p)
+                   SetWorkingDirectory(gdest)
+   	          FileSelect(["default"]) ##Giving an argument here will specify a data file
+                 } else{
+                  RunFirstTime(p)
 		 }
 		} else {
 
@@ -1736,7 +1736,7 @@ define RunFirstTime(p)
      {
 	 Print(p)
    	 resources <- Nth(p,1)
-     Print("Resources:" + resources)
+         Print("Resources:" + resources)
 	 targetdir <- Second(p)
 	 home <- targetdir
 
@@ -1781,7 +1781,7 @@ define RunFirstTime(p)
    head1 <- EasyLabel(GetPEBLVersion() + " for " +GetSystemType(),gVideoWidth/2,50,gwin,22)
 
 
-   pebl <- MakeImage("pebl.bmp")
+   pebl <- MakeImage("pebl.png")
    AddObject(pebl,gWin)
    Move(pebl,gVideoWidth/2,125)
    message0 <- "Resources at: ["+resources+"]" +CR(1)+ "HOME at: " + ghome + CR(1)
@@ -1850,7 +1850,7 @@ if(1)
 
 	 ##copy test battery:
           Print("xcopy "+gQuote+resources+"\battery\*"+gQuote+" "+gQuote+dest+"\battery"+gQuote+" /e")
-	 SystemCall("xcopy "+gQuote+resources+"\battery\*"+gQuote+" "+gQuote+dest+"\battery"+gQuote+" /e","")
+ 	  SystemCall("xcopy "+gQuote+resources+"\battery\*"+gQuote+" "+gQuote+dest+"\battery"+gQuote+" /e","")
         ##Copy demo:
         Print("xcopy "+gQuote+resources+"\demo\*"+gQuote+" "+gQuote+dest+"\demo"+gQuote+" /e")
         SystemCall("xcopy "+gQuote+resources+"\demo\*"+gQuote+" "+gQuote+dest+"\demo"+gQuote+" /e","")
