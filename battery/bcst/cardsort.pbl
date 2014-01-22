@@ -25,39 +25,51 @@
 define Start(lPar)
 {
 
+
+  ##First, let's read in/set default parameters.
+
+  parpairs <- [["repeats",2],
+               ["runlength",10],
+               ["useCanonical",1],
+               ["useReduced",0],
+               ["rulefeedback",0],
+               ["usemouse",1]]
+
+  gParams <- CreateParameters(parpairs,"cardsort.pbl.par")
+
   ## repeats is the number of times you go through the deck (deck size 
   ## depends on whether useReduced is 0 or 1).
-  repeats <- 2
+#  repeats <- 2
 
   ## This is how long of a run is required before switching categories.
   ## Note: Versions 0.1 -0.2 of BCST used runlength 5 by default.
   ## This is now changed to be 10, which according to the Neuropsych
   ## Assessment Handbook is the typical version.
 
-  runlength <- 10
+#  runlength <- 10
 
   ## useCanonical determines whether the 'stimulus' cards are the same
   ## as in Berg, or whether they are chosen randomly.
-  useCanonical <- 1
+#  useCanonical <- 1
 
   ## Reduced uses a 24-card deck, removing cards sharing  2+
   ## attributes with stimulus cards
   ## See Nelson HE: A modified card sorting test sensitive to 
   ##        frontal lobe defects. Cortex 1976;12:313-324.
   ## Note: modified card sort also may use shorter runlength.
-  useReduced <- 0
+#  useReduced <- 0
 
   ###########################################
   ## The variable gRuleFeedback gives a cue when the rule changes.
   ## set from 0 to 1 to turn this feedback ON.
   ## The exact feedback may need to be translated into your own
   ## language.
-  gRuleFeedback <- 0
+#  gRuleFeedback <- 0
 
 
-  gUseMouse <- 1   #0 for keyboard 1-4, 1 for mouse entry.
+#  gUseMouse <- 1   #0 for keyboard 1-4, 1 for mouse entry.
 
-  if(gUseMouse)
+  if(gParams.UseMouse)
    {
     tag <- "-mouse"
    }else {
@@ -95,7 +107,7 @@ define Start(lPar)
 #  Print(gPEBLBaseFont)
 #  Print(gPEBLBaseFontMono)
 
-  if(gUseMouse==0)
+  if(gParams.UseMouse==0)
    {
      ShowCursor(0)  #hide the cursor
    }
@@ -108,7 +120,7 @@ define Start(lPar)
    rules <- ShuffleWithoutAdjacents([[1,1,1],[2,2,2],[3,3,3]])
 
   ##Mix up the order if we aren't using canonical stimulus cards.
-  if(not useCanonical)
+  if(not gParams.useCanonical)
    {
      gColors <- Shuffle(gColors)
      gShapes <- Shuffle(gShapes)
@@ -117,7 +129,7 @@ define Start(lPar)
   csn <- DesignFullCounterbalance(DesignFullCounterbalance(gColors,gShapes),gNumbers)
 
 
- if(useReduced)
+ if(gParams.useReduced)
    {
     #compute the reduced deck, dependent on the current pile stacks
 
@@ -153,7 +165,7 @@ define Start(lPar)
 
   decksize <- Length(csn)
 
-  stimcat <- FoldList(Flatten(Repeat(csn,repeats)),3)
+  stimcat <- FoldList(Flatten(Repeat(csn,gParams.repeats)),3)
 
   images<-[]
  
@@ -196,7 +208,7 @@ define Start(lPar)
    Move(comp3, gVideoWidth/2 - 400+ 28*3 + 125*2 + 125/2,105)
    Move(comp4,  gVideoWidth/2 - 400+28*4 + 125*3 + 125/2,105)
 
-   if(gUseMouse == 0)
+   if(gParams.UseMouse == 0)
    {
      gHeader.text <- "1           2            3            4"
    }
@@ -265,7 +277,7 @@ define Start(lPar)
       time0 <- GetTime()
 
 	  ## Get the response
-      if(gUseMouse)
+      if(gParams.UseMouse)
       {  
          resp <- WaitForClickOnTarget([comp1,comp2,comp3,comp4],["1","2","3","4"])
       }else{
@@ -421,7 +433,7 @@ define Start(lPar)
       Draw()
 
       ##if you have a run of runlength correct, change rules.
-      if(run >= runlength)
+      if(run >= gParams.runlength)
       {
         lastrule <- rule
         rule <- First(rules)
@@ -432,7 +444,7 @@ define Start(lPar)
 
 ### This gives rule-change feedback: 
 ##  It is not yet properly translated.
-  if(gRuleFeedback)
+  if(gParams.RuleFeedback)
   {
     tmp <- gPrompt.text
     gPrompt.text <- "Now the rule has changed"
@@ -544,8 +556,8 @@ define Start(lPar)
    FilePrint(report," http://pebl.sf.net")
    FilePrint(report,"---------------------------------------------------")
    FilePrint(report,"Parameters:")
-   FilePrint(report,"Run length to move to next category: "+runlength)
-   FilePrint(report,"Number of times through deck: "+repeats)
+   FilePrint(report,"Run length to move to next category: "+gParams.runlength)
+   FilePrint(report,"Number of times through deck: "+gParams.repeats)
    FilePrint(report,"Deck Size: "+ decksize)
   
    FilePrint_(report,"Order of Cards: Rule 1  (color): ")
@@ -760,7 +772,7 @@ define Roundoff(x,dec)
 
 define WaitForIt()
 {
-  if(gUseMouse)
+  if(gParams.UseMouse)
    {
      WaitForDownClick()
    } else {
