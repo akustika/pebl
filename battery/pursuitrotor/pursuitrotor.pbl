@@ -6,7 +6,7 @@
 ##  20th century.
 ##
 ##
-##  Typically, physical task operated at a rate of 60 RPM (1/sec). 
+##  Traditionally, physical task operated at a rate of 60 RPM (1/sec). 
 ##  This is exceedingly fast on computer with mouse control.  Control
 ##  rate with gSpeed below (.1 or .2 seems reasonable)
 ##
@@ -40,11 +40,21 @@ define Start(p)
 {
 
 
-   trialtime <- 15
-   trials <- 4
-   gSpeed   <- 1/7.5   #Rotations/second
+   ##Default parameter values, used if .par file does not exist.
 
-   gTargSize <- 25     #Radius of target
+   parpairs <- [["trialtime",15],
+             ["trials",4],
+	     ["targsize",25],
+	     ["speed",.1333333] #7.5 rotations/sec
+               ]
+   gParams <- CreateParameters(parpairs,"pursuitrotor.pbl.par")
+
+
+#   trialtime <- 15
+#   trials <- 4
+#   gTargSize <- 25     #Radius of target
+#   gSpeed   <- 1/7.5   #Rotations/second
+
 
    Init()
    Draw()
@@ -55,7 +65,7 @@ define Start(p)
    gReportOut <- FileOpenWrite("data/pursuitrotor-report-"+gSubNum+".txt")
 
    inst <- EasyTextBox("In this task, you will track a red circle moving steadily around a circular path.  Try to keep your mouse button on the path at all times.  There will be a total of " +
-     trials +" trials, each lasting "+trialtime+" seconds.  Press mouse button to initialize first trial.",200,200,gWin,15,400,200)
+     gParams.trials +" trials, each lasting "+gParams.trialtime+" seconds.  Press mouse button to initialize first trial.",200,200,gWin,15,400,200)
    Draw()
    times<- []
    trial <- 1
@@ -63,11 +73,11 @@ define Start(p)
    inst.text <- "Press Mouse button to initialize next trial"
    Hide(inst)
 
-   while(trial <= trials)
+   while(trial <= gParams.trials)
     {
      WaitForDownClick()
      Hide(inst)
-     t <- Trial(trialtime, gSubnum + " " + trial)
+     t <- Trial(gParams.trialtime, gSubnum + " " + trial)
      times <- Append(times,t)
      trial <- trial + 1
      Show(inst)
@@ -84,10 +94,10 @@ define Start(p)
    out <- out +  CR(1)+ Print("Video Width:              " + gVideoWidth)
    out <- out +  CR(1)+ Print("Video Height:             " + gVideoHeight)
    out <- out +  CR(1)+ Print("Path radius:              " + gRadius)
-   out <- out +  CR(1)+ Print("Target radius:            " + gTargSize)
-   out <- out +  CR(1)+ Print("Speed (rotations/sec):    " + gSpeed)
-   out <- out +  CR(1)+ Print("Total time per trial:     " + trialtime)
-   out <- out +  CR(1)+ Print("Number of trials:         " + trials)
+   out <- out +  CR(1)+ Print("Target radius:            " + gParams.TargSize)
+   out <- out +  CR(1)+ Print("Speed (rotations/sec):    " + gParams.Speed)
+   out <- out +  CR(1)+ Print("Total time per trial:     " + gParams.trialtime)
+   out <- out +  CR(1)+ Print("Number of trials:         " + gParams.trials)
 
    out <- out +  CR(1)+ Print("=====================================")
    out <- out +  CR(1)+ Print("Time on target:")
@@ -121,7 +131,7 @@ define Trial(timeinsecs,head)
 {
   col1 <- MakeColor("red")
   col2 <- MakeColor("darkred")
-  gTarg <- Circle(gHomeX+gRadius,gHomeY,gTargSize,col2,1)
+  gTarg <- Circle(gHomeX+gRadius,gHomeY,gParams.TargSize,col2,1)
   AddObject( gTarg,gWin)
   SetMouseCursorPosition(Round(gHomeX+gRadius),gHomeY)
   cont <- 1
@@ -143,8 +153,8 @@ define Trial(timeinsecs,head)
     tNow <- GetTime()
     tDiff <- tNow -tLast
     tElapsed <- tNow - t0 
-    gTarg.x <- gHomeX+gRadius * Cos(tElapsed/1000*2*gPi*gSpeed)
-    gTarg.y <- gHomeY+gRadius * Sin(tElapsed/1000*2*gPi*gSpeed)
+    gTarg.x <- gHomeX+gRadius * Cos(tElapsed/1000*2*gPi*gParams.Speed)
+    gTarg.y <- gHomeY+gRadius * Sin(tElapsed/1000*2*gPi*gParams.Speed)
 
 
     cont <- (tElapsed < timeinsecs*1000)
