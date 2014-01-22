@@ -47,29 +47,42 @@ define Start(p)
   ##gLanguage <- "EN"
   GetStrings(gLanguage)
 
-  gShowHand     <- 1  #Show the hand graphic?
-  gUseReverse <- 0    ## reverse the stacks. Some of the subtests do
+
+   parpairs <- [["showHand",1],    #Show the hand
+                ["useReverse",0],  #reverse the order of stacks
+                ["testtype",-1],    ##test type. 0 = choose in-script. Otherwise, set based on initial instructions.
+		["timelimit",120],
+		["allowreset",0]
+               ]
+
+
+ gParams <- CreateParameters(parpairs,"TOL.pbl.par")
+
+#  gShowHand     <- 1  #Show the hand graphic?
+#  gUseReverse <- 0    ## reverse the stacks. Some of the subtests do
                       ## this automatically.
   Init()
 
 
+gInstructions <- MakeTextBox("",gFont,760,560)
+AddObject(gInstructions,gWin)
+Move(gInstructions,20,20)
+
+if(gParams.testtype==-1)
+  {
    ##  Comment out the following lines and replace with something like 
    ##  type <- "3"
    ##  to go directly to a test configuration.
-   ## From here VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 
-  gInstructions <- MakeTextBox(gSelect,gFont,760,560)
-
-  AddObject(gInstructions,gWin)
-  Move(gInstructions,20,20)
+  gInstructions.text  <-gSelect
   Draw()
   type <- WaitForListKeyPress(["1","2","3","4","5","6","7","8","9","0","A"])
 
-   ## to here ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  
-
+  }else{
+   type <- gParams.testtype+""
+  }
 
    ##Choose which set of trials to generate based on 'type'.
-     
    if(type == "1")
    {
      stim <- ProgressiveDisks([3,4,5],8)  ## unconstrained pole height,
@@ -137,17 +150,14 @@ define Start(p)
 #   gUseTimer <- 1  ##This hard-codes use of timer. Uncomment to
                    ##override the defaults built into each particular test function.
 
-   gTimeLimit <- 120   ##default time limit, in seconds.
 #  gUseTurnLimit <- 1  ##this hard-codes turn limits, overiding
                        ## setting in original definition
 
 
 
-   gAllowReset <- 0    ## Make a 'reset' button?
-
 ##############################################################
   
-  if(gUseReverse)
+  if(gParams.UseReverse)
    {
       stim <-  ReverseStimuli(stim)
    }
@@ -207,13 +217,13 @@ define Start(p)
     ##You should run a trial if gReset is both not 0 (0 signals completion)
     ## and gReset <3 (4+ indicates you ran out of turns)
     gStartTime <- GetTime()   
-    gEndTime <- gStartTime+ gTimeLimit*1000
+    gEndTime <- gStartTime+ gParams.TimeLimit*1000
 
     while(gReset == 1 and gTries <= 3) 
       {
 
  
-      if(gAllowReset)
+      if(gParams.allowReset)
          {
           gResetLabel.text <- gResetText + " ["+(3-gTries)+"]"
          }
@@ -254,7 +264,7 @@ define Start(p)
          ##Moves ran out on a single round
          ginstructions.text <- gInstructions.text +" " + gMovesOutLab
 
-         if(gAllowReset and gTries < 3)
+         if(gParams.allowReset and gTries < 3)
            {
             ##reset the 
             gInstructions.text <- gInstructions.text +" " +gResetLab
@@ -369,18 +379,18 @@ define Trial(pair)
       ##Timegraph defaults to 120 sec.
       ##the ticks hsould be every 10 sec, unless there are less than 4
       ## ticks. then every 5, then every 1 sec
-      numticks <- gTimeLimit/10
+      numticks <- gParams.TimeLimit/10
       if(numticks < 4)
        {
-         numticks <- gTimeLimit/5
+         numticks <- gParams.TimeLimit/5
        }
       if(numticks < 3)
        {
-         numticks <- gTimeLimit
+         numticks <- gParams.TimeLimit
        }
     
 
-      gTimeGraph <- MakeGraph(gTimeLimit,gTimeLimit,710,400,gTimeLab,numticks)
+      gTimeGraph <- MakeGraph(gParams.TimeLimit,gParams.TimeLimit,710,400,gTimeLab,numticks)
     }
 
     Draw()
@@ -564,7 +574,7 @@ define InitPoles()
 
 
    ##if we have a 'reset' button, add one.
-   if(gAllowReset)
+   if(gParams.allowReset)
      {
         r0 <- Rectangle(340,gFooter.y+50,300,40,MakeColor("grey20"),0)
         AddObject(r0,gWin)
@@ -583,7 +593,7 @@ define InitPoles()
                MakeImage("png/disk3.png"),MakeImage("png/disk4.png"),
                MakeImage("png/disk5.png"),MakeImage("png/disk6.png")]
 
-  if(gShowHand)
+  if(gParams.ShowHand)
     {
      gHand   <- MakeImage("png/hand.png")
      AddObject(gHand,gWin)
@@ -732,7 +742,7 @@ define MoveDisk(config)
 {
    
    ##We need a different target set when reset button is enabled.
-   if(gAllowReset)
+   if(gParams.allowReset)
      {
        out <- Sequence(0,3,1)
      } else {
@@ -757,7 +767,7 @@ define MoveDisk(config)
                    gTimeRanOut <- 1
                    cont <- 0
                }
-              UpdateGraph(gTimegraph,Max([0,timeleft]), 710,400,gTimeLimit)
+              UpdateGraph(gTimegraph,Max([0,timeleft]), 710,400,gParams.TimeLimit)
               Draw()
 
            } else {
@@ -839,8 +849,8 @@ define MoveDisk(config)
 
          if(next=="<timeout>")
            {
-		      timeleft <- (gEndTime-GetTime())/1000
-              UpdateGraph(gTimegraph,Max([0,timeleft]), 710,400,gTimeLimit)
+	      timeleft <- (gEndTime-GetTime())/1000
+              UpdateGraph(gTimegraph,Max([0,timeleft]), 710,400,gParams.TimeLimit)
               Draw()
               if(timeleft < 0)
                {
@@ -1384,10 +1394,11 @@ define TOLDX()
 ##Functioning in Children. Archives of Clinical Neuropsychology, 13(3),
 ##285-301. doi:10.1016/S0887-6177(97)00033-4
 
- ##Don't use the timer or turn limits here.
+ ##Don't use the timer on
+## or turn limits here.
    gUseTimer <- 0  
-   gUseTurnLimit <- 1  
-   gUseReverse <- 1    ## Mirror reverse all stimuli and stacks.
+   gUseTurnLimit <- 0  ##prior to 12-2013, this was 1.
+   gParams.UseReverse <- 1    ## Mirror reverse all stimuli and stacks.
 
   gPoleHeights <- [1,2,3]
  
