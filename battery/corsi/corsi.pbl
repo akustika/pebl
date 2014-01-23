@@ -31,18 +31,34 @@ define Start(p)
 {
 
 
+   
+    ##See params/corsi.pbl.schema file for parameter definitions:
+    ##these are fallback parameters in case .schema file is lost.
+    parpairs <- [["dopractice",1],
+                   ["direction",1],
+         	     ["usecorsipoints",1],
+		     ["useKessels",1],
+		     ["startlength",2],
+		     ["timesperlength",2],
+		     ["isi",1000],
+		     ["iti",1000],
+		     ["usebeep",1]
+                     ]
 
-  gDoPractice <- 1           ##Turn on/off practice trials (useful for multi-session
-  gDirection <- 1            ##Change 1 to -1 to set forward to backward.
+   gParams <- CreateParameters(parpairs,"params/corsi.pbl.par")
+
+##parameters:
+#  doPractice <- 1           ##Turn on/off practice trials (useful for multi-session
+#  gDirection <- 1            ##Change 1 to -1 to set forward to backward.
   
-  if(gDirection == -1)
+  if(gParams.direction == -1)
    {
      dirlabel <- "backward"
    } else {
      dirlabel <- "forward"
    }
 
-  gUseCorsiPoints <- 1        ## Use standard locations or regenerate
+  #gUseCorsiPoints <- 1        ## Use standard locations or regenerate
                               ## on each trial?
 
 
@@ -51,23 +67,21 @@ define Start(p)
   ##continue to the next length whenever at least one was recalled
   ##correctly.
  
-  gUseKessels      <- 1        ## Use Kessel trials? (Should be used
-                              ## with corsi points)
+  #gUseKessels      <- 1        ## Use Kessel trials? (Should be used
+  #                            ## with corsi points)
 
 
   ##alternately, you can generate the trials at random.
 
-  gStartLength    <- 2        ## If gUseKessels <- 0, it creates a
+#  gStartLength    <- 2        ## If gUseKessels <- 0, it creates a
                               ## random stimulus sequence with these parameters
-  gEndLength      <- 9
-  gTimesPerLength <- 2        ##
+#  gEndLength      <- 9
+#  gTimesPerLength <- 2        ##
 
 
-  gISI <- 1000                ## Inter-stimulus interval in ms
-  gITI <- 1000                ## inter-trial interval.
-  gWait <- 500                ## How long to 'go to each room'
-
-  gUseBeep <- 1               ##should a beep play?
+#  gISI <- 1000                ## Inter-stimulus interval in ms
+#  gITI <- 1000                ## inter-trial interval.
+#  gUseBeep <- 1               ##should a beep play?
 
   gStimColor <- MakeColor("navy")
   gHighlightColor <- MakeColor("khaki")
@@ -82,15 +96,12 @@ define Start(p)
   gHomeY <- gVideoHeight/2
 
 
-
-
-
   if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)
    }
 
-  if(gUseBeep)
+  if(gParams.UseBeep)
    {
 ##    gBeep <- LoadSound("beep.wav")
 	  gBeep <- MakeSineWave(400,200,.8)
@@ -138,7 +149,7 @@ define Start(p)
    GetStrings(gLanguage)
 
 
-  if(gDirection == 1)
+  if(gParams.direction == 1)
    {
      inst.text <- gInstfor
    } else {
@@ -155,7 +166,7 @@ define Start(p)
   ## Should we use the original corsi locations, or choose a random set?
   ## It is probably best to use the original points unless you have a particular
   ## reason to do otherwise.
-  if(gUseCorsiPoints)
+  if(gParams.UseCorsiPoints)
    { 
 
       ##The actual points range from 15 to 195,
@@ -180,20 +191,19 @@ define Start(p)
 
    ## create the trial sequence, either from Kessels or 
    ## randomly.
-   if(gUseKessels)
+   if(gParams.UseKessels)
     {   
-       trials <- KesselsTrials(gDirection)
+       trials <- KesselsTrials(gParams.direction)
     } else {
 
-       trials <- RandomTrials(gStartLength, gEndLength, gTimesPerLength)
+       trials <- RandomTrials(gParams.StartLength, gParams.EndLength, gParams.TimesPerLength)
     }
 
 
    gType <- "P" ##practice trials
   #Do practice trials, if necessary
 
-  Print("about to practice.")
- if(gDoPractice)
+ if(gParams.DoPractice)
     {
     Show(inst)
 	
@@ -207,11 +217,11 @@ define Start(p)
     Hide(inst)
     Draw()
      gTrialNum <- -1
-     Trial(targxy,[1,3,5],gDirection)
+     Trial(targxy,[1,3,5],gParams.Direction)
      gTrialNum <- -2
-     Trial(targxy,[2,4,8],gDirection)
+     Trial(targxy,[2,4,8],gParams.Direction)
      gTrialNum <- -3
-     Trial(targxy,[6,7,9],gDirection)
+     Trial(targxy,[6,7,9],gParams.Direction)
     ##
     inst.text <- gPrompt2 
     Show(inst)
@@ -236,7 +246,7 @@ define Start(p)
    {
     
 
-      if(gUseCorsiPoints)
+      if(gParams.UseCorsiPoints)
       { 
 
       ##The actual points range from 15 to 195,
@@ -270,7 +280,7 @@ define Start(p)
       }
 
 
-     out  <-  Trial(targxy,stim,gDirection)
+     out  <-  Trial(targxy,stim,gParams.Direction)
 
      corr <- First(out)
      scoreCI <- Second(out)
@@ -344,7 +354,7 @@ define Trial(xy,stimseq, direction)
   ##Make a ready signal.
   warn <- EasyLabel(gReady,gHomeX,gHomeY,gWin,30)
   Draw()
-  Wait(gITI)
+  Wait(gParams.ITI)
   Hide(warn)
   ShowCursor(0)
   Draw()
@@ -363,7 +373,7 @@ define Trial(xy,stimseq, direction)
     
 
    Draw()
-   Wait(gISI)
+   Wait(gParams.ISI)
 
   ## Get the coordinates to present in order.
   seqxy <- ExtractListItems(xy,stimseq)	  
@@ -375,7 +385,7 @@ define Trial(xy,stimseq, direction)
      {
        Move(targ,First(i),Second(i))
        Draw()
-       Wait(gISI)
+       Wait(gParams.ISI)
      }
 
   Hide(targ)
@@ -410,7 +420,7 @@ define Trial(xy,stimseq, direction)
         Show(targ)
         Draw()
 
-       if(gUseBeep)
+       if(gParams.UseBeep)
        {
   	    PlayBackground(gBeep)
        }
@@ -420,7 +430,7 @@ define Trial(xy,stimseq, direction)
         resps <- Append(resps,resp)
         rts <- Append(rts,(time2-time1))
 
-       FilePrint(gFileOutClick,gSubNum+","+gDirection+","+gType+","+gTrialNum+","+i +","+time0+","+time2+","+(time2-time0)+","+(time2-time1)+","+resp+","+pos.x+","+pos.y)
+       FilePrint(gFileOutClick,gSubNum+","+gParams.Direction+","+gType+","+gTrialNum+","+i +","+time0+","+time2+","+(time2-time0)+","+(time2-time1)+","+resp+","+pos.x+","+pos.y)
        i <- i +1 
       }
    }
@@ -444,7 +454,7 @@ define Trial(xy,stimseq, direction)
       warn.text <- gInCorrect
    }
 
-  outline <-  gSubNum+","+gDirection+","+gType+","+gTrialNum+","+time0+","+
+  outline <-  gSubNum+","+gParams.Direction+","+gType+","+gTrialNum+","+time0+","+
      len +","+ListToString(stimseq)+","+ListToString(resps)+","+First(score)+","+Second(score)+","+ corr+","+(GetTime()-time0)
  FilePrint(gFileOutTrial, outline)
  FilePrint(gPooled,outline)
