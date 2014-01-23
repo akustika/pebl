@@ -34,15 +34,26 @@
 define Start(p)
 {
 
- 
-     gAllowAutoPump <- 0   ##Does the balloon continue to pump up while holding the button down?
 
-     gStartBalloonSize <- 10
-     gMoneyPerPump <- .05  #How much money do you get per pump
+     ##Set initial values to use if .par file does not exist.
+     parpairs <- [["allowAutoPump",0],##Does the balloon continue to pump up while holding the button down?
+                  ["startBalloonSize",10],
+		  ["moneyPerPump",.05],
+		  ["life1",8],
+		  ["life2,16],
+		  ["life3",128],
+		  ["trialsperset",10]
+                 ]
+     gParams <- CreateParameters(parpairs,"params/bart.pbl.par")
+
+
+ 
+  ##   gAllowAutoPump <- 0   ##Does the balloon continue to pump up while holding the button down?
+  ##   gStartBalloonSize <- 10
+  ##   gMoneyPerPump <- .05  #How much money do you get per pump
 
      ##Get the translation text
      GetStrings(gLanguage)
-
 
     gWin <- MakeWindow("black")
 
@@ -63,7 +74,7 @@ define Start(p)
 
     ##Define the balloon types:
      btypes <- [1,2,3]  
-     lifes <- [8,16,128]
+     lifes <- [gParams.life1,gParams.life2,gParams.life3]
      cols <- [MakeColor("darkorange"),Makecolor("gold"),MakeColor("darkslateblue")]
 
      MakeDirectory("data")
@@ -77,16 +88,17 @@ define Start(p)
 	  Hide(inst)
 	  Draw()
 
+	  tps <- gParams.trialsperset
 	  ##Each one of these can take a few seconds
-	  set1 <- Transpose([SampleBreakPointSet(8,10),Repeat(First(cols),10),Repeat(1,10)])
-	  set2 <- Transpose([SampleBreakPointSet(16,10),Repeat(Second(cols),10),Repeat(2,10)])
-	  set3 <- Transpose([SampleBreakPointSet(128,10),Repeat(Third(cols),10),Repeat(3,10)])
-	  set4 <- Transpose([SampleBreakPointSet(8,10),Repeat(First(cols),10),Repeat(1,10)])
-	  set5 <- Transpose([SampleBreakPointSet(8,10),Repeat(First(cols),10),Repeat(1,10)])
-	  set6 <- Transpose([SampleBreakPointSet(16,10),Repeat(Second(cols),10),Repeat(2,10)])
-	  set7 <- Transpose([SampleBreakPointSet(16,10),Repeat(Second(cols),10),Repeat(2,10)])
-	  set8 <- Transpose([SampleBreakPointSet(128,10),Repeat(Third(cols),10),Repeat(3,10)])
-	  set9 <- Transpose([SampleBreakPointSet(128,10),Repeat(Third(cols),10),Repeat(3,10)])
+	  set1 <- Transpose([SampleBreakPointSet(gParams.life1,tps),Repeat(First(cols),10),Repeat(1,tps)])
+	  set2 <- Transpose([SampleBreakPointSet(gParams.life2,tps),Repeat(Second(cols),10),Repeat(2,tps)])
+	  set3 <- Transpose([SampleBreakPointSet(gParams.life3,tps),Repeat(Third(cols),10),Repeat(3,tps)])
+	  set4 <- Transpose([SampleBreakPointSet(gParams.life1,tps),Repeat(First(cols),10),Repeat(1,tps)])
+	  set5 <- Transpose([SampleBreakPointSet(gParams.life1,tps),Repeat(First(cols),10),Repeat(1,tps)])
+	  set6 <- Transpose([SampleBreakPointSet(gParams.life2,tps),Repeat(Second(cols),10),Repeat(2,tps)])
+	  set7 <- Transpose([SampleBreakPointSet(gParams.life2,tps),Repeat(Second(cols),10),Repeat(2,tps)])
+	  set8 <- Transpose([SampleBreakPointSet(gParams.life3,tps),Repeat(Third(cols),10),Repeat(3,tps)])
+	  set9 <- Transpose([SampleBreakPointSet(gParams.life3,tps),Repeat(Third(cols),10),Repeat(3,tps)])
 
 	  group1 <- Shuffle(FlattenN([set1,set2,set3],1))
 	  group2 <- Merge(set4,set5)
@@ -100,18 +112,18 @@ define Start(p)
 
       ##  Set up some global data here.
       ##
-      gTimes <- []
+          gTimes <- []
 	  gClicks <- []
 	  gBursts <- []
 
 	  trial <- 1
 	  loop(i,trials)
-      {
-		  FilePrint_(gFileOut,gSubNum+","+trial+","+Third(i)+",")
-          Trial(First(i),Second(i))
-		  trial <- trial + 1
+           {
+  	     FilePrint_(gFileOut,gSubNum+","+trial+","+Third(i)+",")
+             Trial(First(i),Second(i))
+             trial <- trial + 1
       }
-      Show(inst)
+          Show(inst)
 	  inst.text <- gDebrief	
 	  Draw()
 	  WaitForAnyKeyPress()
@@ -125,22 +137,22 @@ define Trial(life,color)
 {
 
 
-	  radius <- gStartBalloonSize
-	  gBalloon	  <-Circle(gVideoWidth/2,GetY(radius),radius,color,1)
+	  radius <- gParams.StartBalloonSize
+	  gBalloon <-Circle(gVideoWidth/2,GetY(radius),radius,color,1)
 	  AddObject(gBalloon,gWin)
 	  temp <- 0
    	  UpdateScreen(radius)
 	  Hide(gCollectLab)   ##Don't show the hide message on the
 	  Hide(gCollectBox)       ##	  first click
 	  Draw()
-      cont <- 1
+          cont <- 1
 	  pumps <- 0
 
 	  startTime <- GetTime()
 
 	  burst <- 0
 
-      while(cont)
+        while(cont)
 	   {
 		   ##Accept a click or a pump
 
@@ -151,18 +163,18 @@ define Trial(life,color)
              clickon <- [gpumpbox,gcollectbox]
            }
 
-	          if(gAllowAutoPump) 
-                   {
-                     time1 <- GetTime()
-					 mousestate <- GetMouseState()
-					 if(Inside(mousestate,gPumpBox) and   Third(mousestate))
-					 {
-						resp <- 1
-                        Wait(250)
-  					 } else
-                     {
+	    if(gParams.AllowAutoPump) 
+                 {
+                   time1 <- GetTime()
+  		   mousestate <- GetMouseState()
+		   if(Inside(mousestate,gPumpBox) and   Third(mousestate))
+			 {
+		          resp <- 1
+                          Wait(250)
+  			 } else
+                         {
           	            resp <- WaitForClickOnTarget(clickon, Sequence(1,Length(clickon),1))
-                     }
+                          }
    		             time2 <- GetTime()
                                
      
@@ -191,14 +203,14 @@ define Trial(life,color)
 							AnimateBalloon(170,6)
 							cont <- 0
 							temp <- 0
-							radius <- gStartBalloonSize
+							radius <- gParams.StartBalloonSize
 							gLast <- 0
 							UpdateCash(radius)
 							burst <- 1
 
 						}else{
 						
- 				        temp <- temp + gMoneyPerPump
+ 				        temp <- temp + gParams.MoneyPerPump
 						radius <- radius + 2
 
 						}
@@ -211,9 +223,9 @@ define Trial(life,color)
 						gTotal <- gTotal + temp
 						gLast <- temp
 						UpdateCash(radius)
-						#AnimateBalloon(gStartBalloonSize,10)
+						#AnimateBalloon(gParams.StartBalloonSize,10)
 						temp <- 0
-						radius <- gStartBalloonSize
+						radius <- gParams.StartBalloonSize
 			  			cont <- 0
 
 						
@@ -248,15 +260,14 @@ define SampleBreakpointSet(life, num)
    set <- []
    loop(i,Sequence(1,num,1))
     {
-		set <- Append(set,SampleBreakpoint(life))
+	set <- Append(set,SampleBreakpoint(life))
     }
 
    sum <-Sum(set)
 
    while(Abs(sum/num - life/2)>.1)
     {
-
-	  
+  
 	  candidate <- SampleBreakPoint(life)
 	  sum <- sum - First(set) + candidate
 	  set <- Append(Rest(set),candidate)
@@ -391,7 +402,7 @@ define UpdateCash(radius)
 	moneysequence <- Sequence( gTotal-gLast, gTotal, step)
 
 
-	balloonstep <-  (gStartBalloonSize-radius)  /(Length(moneysequence)-1)
+	balloonstep <-  (gParams.StartBalloonSize-radius)  /(Length(moneysequence)-1)
 
 	loop(i,moneysequence)
      {
@@ -408,8 +419,8 @@ define UpdateCash(radius)
 
   	gTotalLab2.text <- MakeMoney(gTotal)
 	gLastLab2.text <- MakeMoney(gLast)
-	gballoon.R <- gStartBalloonSize
-	gballoon.y <- GetY(gStartBalloonSize)
+	gballoon.R <- gParams.StartBalloonSize
+	gballoon.y <- GetY(gParams.StartBalloonSize)
 
 	Draw()
 
