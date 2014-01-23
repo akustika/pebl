@@ -26,10 +26,17 @@
 
 define Start(p)
 {
-  pskip <- .4  #proportion of trials that jump
-  gRad <- 240  #radius, in pixels, of clock circle
-  gSize <- 9   #size of target
-  trials <- 60 #Number of 1-second trials
+
+
+     ##Set initial values to use if .par file does not exist.
+     parpairs <- [["pskip",0.4],
+                  ["radius",240], ##radius in pixels of clock
+                  ["size",9],  ##size of target
+    	          ["trials",60] ##number of 1-sec trials
+                 ]
+
+
+  gParams <- CreateParameters(parpairs,"params/clocktest.pbl.par")
 
   gWin <- MakeWindow("black")
   gBasecolor <- MakeColor("white")
@@ -47,7 +54,7 @@ define Start(p)
 
   #Get starting position and put red target there.
   xy <- GetXY(1)
-  targ <- Circle(First(xy),Second(xy),gSize,gTargcol,1)
+  targ <- Circle(First(xy),Second(xy),gParams.Size,gTargcol,1)
   AddObject(targ,gWin)
   
 
@@ -59,7 +66,7 @@ define Start(p)
   {
      xy <- GetXY(i)
      pos <- Append(pos,xy)
-     circ <-  Circle(First(xy), Second(xy),gSize,gBaseColor,0)
+     circ <-  Circle(First(xy), Second(xy),gParams.Size,gBaseColor,0)
      AddObject(circ,gWin)
 	 circs <- Append(circs,circ)
 
@@ -83,7 +90,7 @@ define Start(p)
   doskip <- 0
   lastend <- GetTime()
 
-  while(trial <= trials)
+  while(trial <= gParams.trials)
   {
    ##compute seconds/clock position, and move there.
     second <- Mod(ticker,60)
@@ -122,7 +129,7 @@ define Start(p)
 	       "," + resp +"," + corr + "," + rtime + "," + (rtime - curtime) + "," + GetTime())
     lastend <- GetTime()
     ##Determine if we should skip on this trial.
-    if(Random() < pskip)
+    if(Random() < gParams.pskip)
      {
        doskip <- 1
 
@@ -150,7 +157,7 @@ define Start(p)
 define GetXY(minute)
 {
      angle <- 2*3.14159/360 * (minute * 6 -90)
-     x <- gRad * Cos(angle) + gHomeX
-     y <- gRad * Sin(angle) + gHomeY
+     x <- gParams.radius * Cos(angle) + gHomeX
+     y <- gParams.radius * Sin(angle) + gHomeY
   return [x,y]
 }
