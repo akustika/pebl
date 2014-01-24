@@ -39,27 +39,57 @@
  ## German translation by Corinne Vonlaufen
  ## Dutch translation by Alien van der Sluis
  ## Spanish translation by  Jorge Castañeda
+ ## Portuguese translation by Marco Moniz
 
 define Start(lPar)
 {
 
+
+    ##Set initial values to use if .par file does not exist.
+     parpairs <- [["numtrials",100],
+                  ["DelayBetweenTrials",500],
+		  ["DelayWithBeep",0],  ##audio feedback
+		  ["UseMouse",1],  ##Should we use the mouse or the keyboard?
+		  ["shuffledecks",0], ##whether decks should be shuffled default is off
+		  ["startvalue",2000]
+                 ]
+
+
+    gParams <- CreateParameters(parpairs,"params/iowa.pbl.par")
+
+
+
+
   ##How many trials?
-  numtrials <- 100
+#  numtrials <- 100
 
-  ##Should we use the mouse or the keyboard?
+#  gDelayBetweenTrials <- 800  ##set to 0 for no delay.
+#  gDelayWithBeep <- 1
 
-  gUseMouse <- 1
-  if(gUseMouse)
+
+  if(gParams.DelayWithBeep)
+  {
+     gSuccess <- LoadSound("kaching.wav")
+     gFail <- LoadSound("buzz500ms.wav")
+  }
+
+
+
+  if(gParams.UseMouse)
    {
     tag <-"-mouse"
    }else{
     tag <-"-keyboard"
    }
 
+
+
+
+
    ##program will crash if you specify something which doesn't have a
    ##   translation file
-
    gLanguage <- Lowercase(gLanguage)
+
    textlist <- FileReadList(Lowercase("translations/labels-"+gLanguage+tag+".txt"))
 
 
@@ -82,7 +112,7 @@ define Start(lPar)
  
  
   ##Controls whether the decks are shuffled. Default is as in Bechera et al.
-  shuffleDecks <-  0
+#  shuffleDecks <-  0
 
 
   ## results are stored in tmpresults.dat
@@ -120,7 +150,7 @@ define Start(lPar)
   deck3Rew <- 50
   deck4Rew <- 50
 
-  if(shuffleDecks)
+  if(gParams.shuffleDecks)
    {
       deck1Pen <- EpochShuffle(deck1Pen)
       deck2Pen <- EpochShuffle(deck2Pen)
@@ -239,7 +269,7 @@ define Start(lPar)
    gHeader.text <- Nth(textlist,8)
    Show(gHeader)
 
-   gTotal <- 2000
+   gTotal <- gParams.startvalue
    totstring <-Nth(textlist,9)
    gTotalLabel <- MakeLabel(totstring+gTotal,gHeaderFont)
    AddObject(gTotalLabel,gWin)
@@ -266,12 +296,12 @@ define Start(lPar)
  
 
   trialnum <- 1
-   while(trialnum <= numtrials)
+   while(trialnum <= gParams.numtrials)
     {
 
       time0 <- GetTime()
 
-     if(gUseMouse)
+     if(gParams.UseMouse)
       { 
 
         resp <- WaitForClickOnTarget([deck1,deck2,deck3,deck4],["1","2","3","4"])
@@ -286,7 +316,7 @@ define Start(lPar)
       rt <- time1 - time0
        Draw()
 
- 
+
       if(resp == "1")
       {
          reward <- deck1rew
@@ -295,7 +325,7 @@ define Start(lPar)
 
          if(net < 0)
          {
-               deckX <- deck1l
+            deckX <- deck1l
          }else{
            deckX <- deck1g
          }
@@ -336,7 +366,7 @@ define Start(lPar)
          {
                deckX <- deck3l
          }else{
-           deckX <- deck3g
+               deckX <- deck3g
          }
 
              ##Update the remainder of the deck.
@@ -363,11 +393,26 @@ define Start(lPar)
       }
       }
       }
+
+
+       if(gParams.DelayWithBeep)
+       {
+         if(net<0)
+	 {
+           PlayBackground(gFail)
+	 } else{
+           PlayBackground(gSuccess)
+         }
+       }
+
+
+
        Show(deckX)
        Hide(gFooter)
-       Draw()
-       Wait(200)
-       Hide(deckX)
+
+
+
+
 
       ##Figure out the +/- sign
 
@@ -393,8 +438,15 @@ define Start(lPar)
       RemoveComplex(earnings)
       earnings <- MakeEarningsGraph(gTotal)
       Draw()
- #    Wait(4000)      
-#Wait(400)
+       
+       if(gParams.DelayBetweenTrials>0)
+       {
+           Wait(gParams.DelayBetweenTrials)
+       }
+
+       Hide(deckX)
+       Draw()
+
 #imname <- First(SampleN(gImNames,1))
 #backing <- Rectangle(gVideoWidth/2,gVideoHeight/2,   gVideoWidth,gVideoHeight,MakeColor("white"),1)
 #img <- MakeImage(imname)
@@ -580,7 +632,7 @@ define RemoveComplex(x)
 
 define WaitForIt()
 {
-  if(gUseMouse)
+  if(gParams.UseMouse)
   {
      Draw()
      WaitForDownClick()
