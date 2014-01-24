@@ -2,7 +2,7 @@
 ##   This is a basic version of a 'trail making' task.
 ##   The goal is to connect the dots.
 ##
-##
+##  Version 0.3; 2013.  Add letter trials, and practice rounds as options.
 ##
 ##  Version 0.2, January 2010:  Added crude TSP solver to give
 ##   shortened paths, similar to original.
@@ -11,33 +11,45 @@
 
 define Start(p)
 {
+        parpairs <- [["useReitan",0],  ##Whether to use Reitan's points in the mix.
+
+                      ["useShortPath",1], ## Whether to shorten the path so points tend to
+                                          ## be adjacent.
+
+		      ["numtrials",2], ##total number of trials per condition (A and B)
+                            ##if usereitan == 1, 2 of them will be the Reitan configurations
+
+		      ["useLetters",1],  ##Should you also include a letter set?  Note that 
+                                         ##this adds a third time through the same problem; this
+					 ## time reflected top-bottom.
+
+		      ["doPractice",1],  ##Do a short practice round between each round, using 4 items,
+                                         ## to let them see how to do it.
+    
+		      ["targsize",25],  ##Size in pixels of targets (radius)
+		      ["TargclickSize",25], ##Size of click zone; may be smaller or larger
+		      ["pointtolerance",2]  # #minimum number of pixels of separation between targets 
+                                            ## (soft constraint that will be violated if proper
+                                            ## configuration cannot be found)
+		      ["NumTargs", 26 ],     #Number of targets
+		      ["DrawLines", 1 ],     #Whether to draw lines
+                     ]
+
+       gParams <- CreateParameters(parpairs,"params/ptrails.pbl.par")
 
 
 #  SeedRng(304)
 
-
-  useReitan  <- 0    ##Whether to use Reitan's points in the mix.
-  useShortPath <- 1  ## Whether to shorten the path so points tend to
-                     ## be adjacent.
-
-  numtrials <- 5    ##total number of trials per condition (A and B)
-  			    	 ##if usereitan == 1, 2 of them will be the Reitan configurations
-
-
-  gTargSize <- 25      ##Size in pixels of targets (radius)
-  gTargclickSize <- 25 ##Size of click zone; may be smaller or larger
-                       ##than target
-  gNumTargs <- 26      #Number of targets
-  gDrawLines <- 1      #Whether to draw lines
   gSleepEasy <- 1
   
   ##Parameters controlling printable area for dots
-  gxmin <- 50
-  gxmax <- 750
-  gymin <- 50
-  gymax <- 550  
+  
+  gxmin <- gVideoWidth/2 - 350
+  gxmax <- gVideoWidth/2 + 350
+  gymin <- gVideoHeight/2 - 250
+  gymax <- gVideoWidth/2 + 250  
 
-  gtol <- gTargSize*2+2     #tolerance, in pixels, between points
+  gtol <- gParams.TargSize*2+gParams.pointtolerance     #tolerance, in pixels, between points
 
 
   gWin <- MakeWindow()
@@ -70,6 +82,7 @@ After the display appears, you can examine the circles as long as you want.  Tim
 
    ptA <- []
    ptB <- []
+   ptC <- []
    tmp <- ""  
 
    Draw()
@@ -80,16 +93,27 @@ After the display appears, you can examine the circles as long as you want.  Tim
       Draw()
 
       ##Use each form twice, in both situations.
-      pts <- MakePoints(gxmin, gxmax, gymin, gymax, gtol, gNumTargs)       
-      if(useShortPath)
+      pts <- MakePoints(gxmin, gxmax, gymin, gymax, gtol, gParams.NumTargs)       
+      if(gParams.useShortPath)
       {
          mat <- DistMatrix(pts)
-		 tour <- ShortenPathInsert(Sequence(1,gNumTargs,1),pts,mat)
+	 tour <- ShortenPathInsert(Sequence(1,gParams.NumTargs,1),pts,mat)
          pts <- SortBy(pts,(Order(tour)))  #re-sort the original points
 
       }
-      ptA <- Append(ptA,pts)
-      ptB <- Append(ptB,Flip(pts))  #Points should be reflected here.
+
+     if(gParams.useLetters)
+     {
+        ##We need three versions; shuffle randomly so there is no systematic bias.
+          ptset <- Shuffle([pts,Flip(pts),FlipVert(pts)])
+          ptA <- Append(ptA,First(ptset))
+          ptB <- Append(ptB,Second(ptset))
+          ptC <- Append(ptC,Third(ptset))
+      }else{
+         ptA <- Append(ptA,pts)
+         ptB <- Append(ptB,Flip(pts))  #Points should be reflected here.
+
+      }
     }
 
    gFooter.text <- "Initialization complete.  Press mouse button to begin."
@@ -99,25 +123,51 @@ After the display appears, you can examine the circles as long as you want.  Tim
    Hide(tb)
    Draw()
 
-   if(useReitan) 
+
+   if(gParams.UseLetters)
+    {
+      pts <- FlattenN(Transpose([Shuffle(ptA),Shuffle(ptB),Shuffle(ptC)]),1)
+      types <- Flatten(Repeat([1,3,2],gParams.numtrials))
+
+    }else{
+      pts  <- FlattenN(Transpose([Shuffle(ptA),Shuffle(ptB)]),1)
+      types <- Flatten(Repeat([1,2],gParams.numtrials))
+    }
+
+   if(gParams.useReitan) 
    {
-     pts <- Merge([ReitanPoints("A"),ReitanPoints("B"),ReitanPoints("B"),ReitanPoints("A")],
-         	      FlattenN(Transpose([Shuffle(ptA),Shuffle(ptB)]),1) )
-
-   } else { 
-     pts <- FlattenN(Transpose([Shuffle(ptA),Shuffle(ptB)]),1)
-   }
-
-
+     pts <- Merge([ReitanPoints("A"),ReitanPoints("B"),ReitanPoints("B"),ReitanPoints("A")], pts)
+     types <- Merge([1,2,1,2],types)
+   } 
 
   FilePrint(gSumFile,"sub,type,distance,studytime,totaltime,mediantime,targs,clicks,acc")
-   type <- 1
-   gTrial <- 1
-   loop(i,pts)
+
+   trial <- 1
+   gHeader <- EasyLabel("",gVideoWidth/2,20,gWin,40)
+   typeLabels <- ["numbers","alternating numbers and letters","letters"]
+
+
+   Print(pts)
+
+   loop(i,Sequence(1,Length(pts),1))
     {
-      Trial(i,type)
-      type <- 3-type
-      gTrial <- gTrial + 1
+
+     ##Do a little practice round.
+      if(gParams.DoPractice)
+      {
+        
+        tmppts <- MakePoints(gVideoWidth/2-100,gVideoWidth/2+100,gVideoHeight/2-100,gVideoHeight/2+100, gtol, 4)
+	gHeader.text <- "Click to begin practice round of "+Nth(typeLabels,(Nth(types,i)))
+	Show(gHeader)
+	Draw()
+	gTrial <- trial + "P"
+        Trial(tmppts,Nth(types,i))
+        Hide(gHeader)
+      }
+
+      gTrial <- trial
+      Trial(Nth(pts,i),Nth(types,i))
+      trial <- trial + 1
     }
 
 
@@ -146,7 +196,6 @@ define ReitanPoints(type)
 		   [365,485],[258,533],[312,276],[263,390],[242,112],
 		   [266,323],[311,110],[463,104],[575,70],[542,438],
 		   [569,555],[221,558],[220,368],[243,497],[217,80]]
-
    }
   return pts
 }
@@ -156,7 +205,8 @@ define Trial(pts,type)
 
   num <- Length(pts)
   if(type==1)
-  {
+  { 
+    ##Numbers!!!
     stim <- Sequence(1,num,1)
 
   } elseif(type==2) {
@@ -164,24 +214,30 @@ define Trial(pts,type)
     nums <- Sequence(1,26,1)
     lets <- ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
     stim <- SubList(Flatten(Transpose([nums, lets])),1,num)
-  }
+  } elseif(type==3){
 
+    stim <-SubList( ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"],1,num)
+  }
+  
 
 
    
-   if(type==1 or type==3)
+   if(type==1)
     {
      msg <-     "Click on each number consecutively. (1-2-3-4)"
 
-    } else {
+    } elseif(type==2){
      msg <- "Click alternately on each number and letter in order. (1-A-2-B)."
-    }
+    }else{
+     msg <- "Click alternately on each letter in order. (A-B-C-D)."
+   }
 
    gFooter.text <- "Press mouse to begin. " + msg
    Draw()
    WaitForDownClick()
    gFooter.text <- msg
-   stimObjects <-  PlotTargets(pts,gTargSize,stim)
+
+   stimObjects <-  PlotTargets(pts,gParams.TargSize,stim)
    stimLines <- []
    Draw()
    starttime <- GetTime()
@@ -236,7 +292,7 @@ define Trial(pts,type)
 
            corr <- 1 
 
-           if(gDrawLines)
+           if(gParams.DrawLines)
            {
 
                 x0 <- First(last)
@@ -311,7 +367,7 @@ define ClickedOn(pos,targets)
    id <- 0
    loop(i,targets)
    {
-      if(Dist(click,i)<=gTargClickSize)
+      if(Dist(click,i)<=gParams.TargClickSize)
       {
          id <- index
          break          
@@ -637,9 +693,6 @@ define WaitForDownClick()
  
 
 
-##  This doesn't work well
-##
-
 define ShortenPathNN(tour,pts,mat)
 {
 
@@ -647,30 +700,31 @@ define ShortenPathNN(tour,pts,mat)
   cur <- First(tour)
   toura <- [cur]
   rest <- Rest(tour)
-  while(Length(rest)>1)
-   {
+   while(Length(rest)>1)
+    {
  
-    distances <- ExtractListItems(Nth(mat,cur),rest)
-    ##find closest neighbor.
+     distances <- ExtractListItems(Nth(mat,cur),rest)
+     ##find closest neighbor.
      order <- Sortby(rest, distances)
      cur <- First(order)
      rest<- Rest(order)
      toura <- Append(toura,  cur)
 
-	}
+    }
 
    return Merge(toura,rest)
 }
 
 
-
+##this will shorten a path to be more regular.  Note that this makes
+##the PEBL version somewhat easier than the Reitan version, apparently.
 define ShortenPathInsert(tour,pts,mat)
 {
   watch <- 0
   if(watch)
    {
 
-      xxxobj <- PlotTargets(pts,gTargSize,tour)
+      xxxobj <- PlotTargets(pts,gParams.TargSize,tour)
       Draw()
 
    }
@@ -852,6 +906,16 @@ define Flip(pts)
   loop(i, pts)
   {
     newpts <- Append(newpts, [gxmax - (First(i)-gxmin),Second(i)])
+  }
+  return newpts
+}
+
+define FlipVert(pts)
+{
+  newpts <- []
+  loop(i, pts)
+  {
+    newpts <- Append(newpts, [First(i), gymax - (Second(i)-gymin)])
   }
   return newpts
 }
