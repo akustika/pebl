@@ -26,8 +26,12 @@
 
 define Start(p)
 {
+     parpairs <- [["numreps",20],  ##number of repeats of the 2x3 design
+                  ["practicereps",2]
+                  ]
 
-   numreps <- 20  ##number of repeats of the 2x3 design
+
+    gParams <- CreateParameters(parpairs,"params/flanker.pbl.par")
 
    gWin <- MakeWindow("black")
 
@@ -72,10 +76,10 @@ define Start(p)
    design <- CrossFactors([[-1,1],[-1,0,1]])
    
    ##Practice uses 12 trials
-   practrials <- Shuffle(RepeatList(design,2))
+   practrials <- Shuffle(RepeatList(design,gParams.practicereps))
   
    ##real trials each use the complete design, 
-   trials <- Shuffle(RepeatList(design,numreps))
+   trials <- Shuffle(RepeatList(design,gParams.numreps))
 
 
     ##Set up some data holders
@@ -106,7 +110,7 @@ define Start(p)
     loop(trial,trials)
     {
       Trial(trial,0)
-	  gTrial <- gTrial + 1
+      gTrial <- gTrial + 1
     }    
 
 
@@ -315,11 +319,11 @@ define MakeStim(dirs)
     col <- MakeColor("white")
     ##x positions relevative to center
     xpos <- [-2*skip,-skip,0,skip,2*skip]
-	tmp <- Transpose([xpos,dirs])
+    tmp <- Transpose([xpos,dirs])
     arrows <- []
 
-	loop(i,tmp)
-    {
+     loop(i,tmp)
+       {
 	 arrow <-  Arrow(Second(i),col)
      AddObject(arrow,canv)
 
