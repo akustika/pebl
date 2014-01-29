@@ -58,30 +58,44 @@ define Start(lPar)
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
 
-  GetStrings(gLanguage)
+   parpairs <- [["testtype",1],
+                ["cycles",6],
+		["blocksize",20],
+		["prestime",250],
+		["targprob",0.1],
+		["givefeedback",0],
+		["pausebetweenblocks",0],
+		["proportionalfoil",1]
+   #if set to 1, will use exactly 90% foils; 
+   #if set to 0, will generate a foil with 90% probability on each trial
+             ]
 
-  ##Note that test types other than 1 are not implemented.
-  testType <- 1    ##Set test type here
 
 
+   gParams <- CreateParameters(parpairs,"params/pcpt.pbl.par")
+   GetStrings(gLanguage)
+
+
+  testType <- gParams.testType
+
+   ##Note that test types other than 1 are not implemented.
    if(testType == 1)
    {
 
+      cycles   <-  gParams.cycles          ## Number of times the ISI cycle is repeated
+      blockSize <- gParams.blocksize      ## Number of trials per block 
+      presTime  <- gParams.prestime       ## Presentation time in ms.
+      isiVals   <- [1000,2000,4000]       ## isi values;
+      probX     <- gParams.targprob
 
-      cycles   <-  6          ## Number of times the ISI cycle is repeated
-      blockSize <- 20         ## Number of trials per block 
-      presTime  <- 250        ## Presentation time in ms.
-      isiVals   <- [1000, 2000, 4000]   ##isi values;
-      probX     <- 0.1
       letters     <- ["A","B","C","D","E","F","G","H","I",
 	               "J","L","M","O","P","Q","R","S","U"]
       numBlocks <- cycles * Length(isiVals)
  
-      giveFeedback <- 0
-      pauseBetweenBlocks <- 0
+      giveFeedback <- gParams.givefeedback
+      pauseBetweenBlocks <- gParams.pausebetweenblocks
 
-      proportionalFoil <- 1   #if set to 1, will use exactly 90% foils; 
-                              #if set to 0, will generate a foil with 90% probability on each trial
+      proportionalFoil <- gParams.proportionalfoil
 
      ################################################
      ##  Create the randomized block structure stimuli.
@@ -94,11 +108,9 @@ define Start(lPar)
 
      targnum <- Round(blocksize*.9)
 
-
-
+   } else {
+    SignalfatalError("Test type unimplemented")
    }
-
-
 
 
 
@@ -176,26 +188,12 @@ define Start(lPar)
 
      ##Create a new blockstim for each round
      blockstim <-  Shuffle(Merge(SampleN(letters,targnum),Repeat("X",blocksize-targnum)))
+     Print(blockstim)
 
      while(blocktrial <= blocksize)   
      {
 
 
-     if(proportionalFoil==1)  ##exactly 90% should be foils
-      {
-   
-	  ##Pick the first stimulus off and rotate the stimulus pool.
-          stim  <-First(blockstim)
-     	  blockstim <- Rotate(blockstim,1)
-
-      } else{
-
-    	  stim <- First(SampleN(letters,1))
-
-      } 
-       
-
-  
 
        trialNum <- trialNum + 1
        blocktrial<- blocktrial + 1
@@ -214,8 +212,6 @@ define Start(lPar)
     	  stim <- First(SampleN(letters,1))
 
       } 
-       
-
 
 
       ## See if we should stop at the end of the block.
