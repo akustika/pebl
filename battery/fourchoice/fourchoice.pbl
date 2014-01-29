@@ -19,9 +19,19 @@ define Start(p)
 {
 
   gSleepEasy <- 1
-  gUseSound <- 1
-  gNumTrials <- 50
-  isi <- 200
+
+  parpairs <- [["usesound",1],
+               ["numtrials",50],
+	       ["isi",200],
+	       ["responsetype",2]
+              ]
+  gParams <- CreateParameters(parpairs,"params/fourchoice.pbl.params")
+
+  
+  gUseSound <- gParams.usesound
+  gNumTrials <- gParams.numtrials
+  isi <- gParams.isi
+
   gWin <- MakeWindow("black")
   ##Get subject code if we need to:    
     if(gSubNum+""=="0")
@@ -34,11 +44,6 @@ define Start(p)
 
   gBeep <- LoadSound("tone.wav")
 
-  ##response type defaults to keypad
-  gRtype <- "2"
-
-  askKeyBoard <- 1  #ask to set response type?
-
 
   ShowCursor(0)
 
@@ -47,12 +52,14 @@ define Start(p)
  gKPInst <- "  Keypad"+CR(1)+"     4  5" + CR(1) + "     1  2"
 
 
- if(askKeyBoard)
+ if(gParams.responsetype==0)
   {
     gRtype <-  GetResponseKeys()
+  }else{
+    gRtype <- gParams.responsetype
   }
 
- if(gRtype == "1")
+ if(gRtype == 1)
   {
     gKeys <- ["F","J","V","N"]
     gMatch <- ["f","j","v","n"]
@@ -243,7 +250,7 @@ define GetResponseKeys ()
   tb2 <- EasyTextBox(gKPInst,gVideoWidth/2+100,200,gWin,22,120,80)
  
   Draw()
-  resp <-  WaitForListKeyPress(["1","2"])
+  resp <-  ToNumber(WaitForListKeyPress(["1","2"]))
 
   RemoveObject(lab1,gWin)
   RemoveObject(lab2,gWin)
