@@ -5,11 +5,25 @@
 define Start(p)
 {
 
+
+  parpairs <- [["test1","consonants-av"],
+               ["test2","squares"],
+               ["nMin",1],
+	       ["nMax",3],
+	       ["isi",3000],
+	       ["dim1targs",4],
+	       ["dim2targs",4],
+	       ["bothtargs",2],
+	       ["trialsperblock",20]
+	       ]
+
+    gParams <- CreateParameters(parpairs,"params/nback.pbl.par")
+
     gConsonants <- ["C","H","K","N","R","W","X","Y"]
-    #gNumbers    <- ["1","2","3","4","5","6","8","9"]
+    gNumbers    <- ["1","2","3","4","5","6","8","9"]
 
   gConsonantSounds <- LoadSounds(gConsonants)
-  gNumberSounds <- LoadSounds(gConsonants)
+  gNumberSounds <- LoadSounds(gNumbers)
 
   gWin <- MakeWindow("black")
   gSleepEasy <- 1
@@ -25,15 +39,16 @@ define Start(p)
   ##Pick single dual here.
 
    ShowCursor(0)
- 
-#   DoNBackSequence("consonants-av","none",1,3000,4,4,2,20)
-#   DoNBackSequence("none","squares",1,3000,4,4,2,20)
-   gBlock <- "p1"
-   DoNBackSequence("consonants-av","squares",1,3000,4,4,2,20)
-   gBlock <- "p2"
-   DoNBackSequence("consonants-av","squares",2,3000,4,4,2,20)
-   gBlock <- "p3"
-   DoNBackSequence("consonants-av","squares",3,3000,4,4,2,20)
+
+   lengths <- Sequence(gParams.nmin,gParams.nmax,1)
+   loop(i,lengths)
+    {
+     gBlock <- "p"+i
+     DoNBackSequence(gParams.test1,gParams.test2,1,gParams.isi,
+                     gParams.dim1targs,gParams.dim2targs,gParams.bothtargs,
+		     gParams.trialsperblock)
+    }
+
 
    ShowCursor(1)
    MessageBox("Thanks.",gWin)
@@ -257,7 +272,7 @@ define DoNBackSequence(dim1,dim2, n, isi,
 	{
 	  dim1audio <- gConsonantSounds
         }else{
- 	 dim1Audio <- gNumeralSounds
+ 	 dim1Audio <- gNumberSounds
 	}
       } else {
           dim1audio <- Repeat(0,8)
@@ -271,13 +286,15 @@ define DoNBackSequence(dim1,dim2, n, isi,
   
     respfilter <- [doAudio or doText, doSpatial]
 
+  keyLabelLeft <- Easylabel("",gVideoWidth/2-300, gVideoHeight/2+230,gWin,30)
+    keyLabelRight <- Easylabel("",gVideoWidth/2+300, gVideoHeight/2+230,gWin,30)
     if(First(respfilter))
     {  
-     keylabelLeft <- EasyLabel("(left shift) "+typelabel1 ,gVideoWidth/2-300, gVideoHeight/2+230,gWin,30)
+     keylabelLeft.text  <- "(left shift) "+typelabel1 
     }
     if(Second(respFilter))
     {
-      keyLabelRight<- Easylabel(typeLabel2+" (right shift)", gVideoWidth/2+300, gVideoHeight/2+230,gWin,30)
+      keyLabelRight.text <- typeLabel2+" (right shift)"
     }
 
     footer <- EasyLabel("press when match occurs", gVideoWidth/2, gVideoHeight/2+260,gWin,30)
