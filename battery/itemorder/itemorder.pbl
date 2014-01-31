@@ -1,12 +1,24 @@
+
+
 define Start(p)
 {
+
+  parpairs <- [["numSame",20],
+               ["numDiffItem",10],
+	       ["numDiffOrder",10],
+	       ["stimsize",7],
+	       ["prestime",2000],
+	       ["delaytime",2500]]
+
+  gParams <- CreateParameters(parpairs,"params/itemorder.pbl.par")
+
   Init()
 
   MakeDirectory("data")
   gFileOut <- FileOpenWrite("data/itemorder-"+gSubNum+".csv")
   
   giveFeedback <- 1
-  trials <-Shuffle(Flatten([Repeat(0,20),Repeat(1,10),Repeat(2,10)]))
+  trials <-Shuffle(Flatten([Repeat(0,gParams.numSame),Repeat(1,gParams.numDiffItem),Repeat(2,gParams.numDiffOrder)]))
 
   trial <- 1
   loop(cond, trials)
@@ -25,8 +37,8 @@ define Start(p)
 
 define Init()
 {
-  gVideoWidth <- 800
-  gVideoHeight <- 600
+#  gVideoWidth <- 800
+#  gVideoHeight <- 600
   gWin <- MakeWindow("black")
 
   ShowCursor(0)
@@ -68,14 +80,14 @@ define Trial(type)
    {
 
      pos <- 0
-     target <- ListToString(SampleN(gLetters,7))
+     target <- ListToString(SampleN(gLetters,gParams.stimsize))
      compare <- target
    }elseif(type == 1)  ## item replace
    {
 
-      letters <- SampleN(gLetters,8)
-      base  <- SubList(letters,2,8)
-      pos <- RandomDiscrete(7)-1  ##rotate between 0 and 6 items
+      letters <- SampleN(gLetters,gParams.stimsize+1)
+      base  <- SubList(letters,2,gParams.stimsize+1)
+      pos <- RandomDiscrete(gParams.stimsize)-1  ##rotate between 0 and 6 items
       target <- Rotate(base,-pos)
       addA <- First(letters)
       addB <- Second(letters)
@@ -88,8 +100,8 @@ define Trial(type)
    } else {  #swap adjacent elements.
 
 
-      target  <- SampleN(gLetters,7)
-      pos <- RandomDiscrete(6)
+      target  <- SampleN(gLetters,gParams.stimsize)
+      pos <- RandomDiscrete(gParams.stimsize-1)
 
       swapA <- Nth(target,pos)
       swapB <- Nth(target,pos+1)
@@ -104,11 +116,12 @@ define Trial(type)
   Hide(gFooter1)
   Hide(gFooter2)
   Draw()
-  Wait(2000)
+  Wait(gParams.prestime)
   Hide(gTarget)
 
   Draw()
-  Wait(2500)
+
+  Wait(gParams.delaytime)
   Show(gTarget)
   Show(gFooter1)
   Show(gFooter2)
