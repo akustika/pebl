@@ -57,13 +57,29 @@ define Start(lPar)
    ## gLanguage <- "EN"
    GetStrings(gLanguage)
 
+   ##set default variable values in case .par file is unavailable.
+
+   parpairs <- [["testtype",3],
+                ["usecontinuous",1],
+		["givefeedback",1],
+                ["fixationtime", 400],    ## How long the fixation cross remains
+   ["numBlocks", 12],           ## Number of  repetitions of the interval set
+   ["numTrials",120],           ## Number of total trials. (120 =~ 10 minutes)
+   ["totalTime",600],     ## total time of the test in milliseconds    
+   ["TooFast",150],           ## trial is marked too fast if rt < 150 ms
+   ["Lapse", 500],             ## trial is marked lapse if it is > 500 ms
+   ["Sleepattack", 30000]           ## trial is 'sleep attack' if > 30 s
+               ]
+
+
+    gParams <- CreateParameters(parpairs,"params/ppvt.pbl.par")
    ##Type: 1 indicates a total time limit   (time is in totalTime);
    ##Type: 2 indicates a block-number limit (Number is in numBlocks);
    ##Type: 3 indicates a trial-number limit (number is numTrials)
-   testType <- 3
+   testType <- gParams.testtype
 
    ## Determines whether the time presentation should be continuous or interval
-   useContinuous <- 1
+   useContinuous <- gParams.useContinuous
 
    ## If we are using a continuous stimulus delay spec, we can't
    ## use a block-type test.
@@ -73,12 +89,12 @@ define Start(lPar)
     }
    
    ## Designates whether to provide RT feedback after each trial.
-   giveFeedback <- 1
+   giveFeedback <- gParams.givefeedback
 
-   fixationtime <- 400         ## How long the fixation cross remains
-   numBlocks <- 12             ## Number of  repetitions of the interval set
-   numTrials <- 120            ## Number of total trials. (120 =~ 10 minutes)
-   totalTime <- 10*60*1000     ## total time of the test in milliseconds    
+   fixationtime <- gParams.fixationtime      ## How long the fixation cross remains
+   numBlocks <- gParams.numblocks            ## Number of  repetitions of the interval set
+   numTrials <- gParams.numtrials            ## Number of total trials. (120 =~ 10 minutes)
+   totalTime <- gParams.totaltime*1000       ## total time of the test in milliseconds    
 
    ## Set of presentation times.  Sampled in epochs without 
    ## replacement for both test types.
@@ -89,9 +105,9 @@ define Start(lPar)
 
 
    ##These instrument automated data coding 
-   gTooFast <- 150             ## trial is marked too fast if rt < 150 ms
-   gLapse   <- 500             ## trial is marked lapse if it is > 500 ms
-   gSleep   <- 30000           ## trial is 'sleep attack' if > 30 s
+   gTooFast <- gParams.toofast             ## trial is marked too fast if rt < 150 ms
+   gLapse   <- gParams.lapse             ## trial is marked lapse if it is > 500 ms
+   gSleep   <- gParams.sleepattack       ## trial is 'sleep attack' if > 30 s
 
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
@@ -204,7 +220,6 @@ define Start(lPar)
 
          if(giveFeedback)
            {
-
             Show(gFeedback)
             Draw()
             Wait(1500)
