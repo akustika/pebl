@@ -23,16 +23,27 @@
  define Start(p)
 {
 
+  parpairs <- [["size",4],
+               ["autorun",1],
+	       ["prestime",1000],
+               ["givefeedback",1],
+	       ["numtrials",30],
+	       ["delay",3500]
+               ]
 
-  gSize <- 4  #Number of rows/columns in the matrix
-  giveFeedback <- 1  
-  numtrials <- 30
-  delay <- 3500        ## Time between study and test
+  gParams <- CreateParameters(parpairs,"params/matchtosample.pbl.par")
+
+  gSize <- gParams.size  #Number of rows/columns in the matrix
+  giveFeedback <- gParams.givefeedback  
+  numtrials <-  gParams.numtrials
+  delay <- gParams.delay           ## Time between study and test
+
+
   gSleepEasy <- 1
 
   gWin <- MakeWindow()
 
-   ##Get subject code if we need to:    
+   ##Get subject code if we need to:   
     if(gSubNum+""=="0")
     {
 	  gSubNum <- GetSubNum(gWin)
@@ -52,10 +63,12 @@
 
 Press any key to begin"
 
+
   inst1 <- "Press any key to view test matrix"
+
   inst2 <- "LEFT     Use shift keys to select option     RIGHT"
 
-  gFooter <- EasyLabel(inst2,gVideoWidth/2,gVideoHeight-20,gWin,24) 
+  gFooter <- EasyLabel(inst2,gVideoWidth/2,gVideoHeight-100,gWin,24) 
   gFeedback <- EasyLabel("",gVideoWidth/2,gVideoHeight/2,gWin,40) 
   Hide(gFeedback)
 
@@ -88,12 +101,24 @@ Press any key to begin"
    FilePrint_(gFileOut,ListToString(Flatten(foil))+ ",")
 
    
- ##Present the study matrix
-    gFooter.text <- inst1
-    x <- DisplayMatrix(targ,400)
+    ##Present the study matrix
+
+    x <- DisplayMatrix(targ,gVideoWidth/2)
     t0 <- GetTime()
-    Draw()  
-    WaitForAnyKeyPress()
+
+    ##either wait for click or present for fixed time:   
+    if(gParams.autorun)
+     { 
+       gFooter.text <- ""   
+       Draw()  
+       Wait(gParams.prestime)
+
+     } else {
+       gFooter.text <- inst1
+       Draw()  
+       WaitForAnyKeyPress()
+     }
+
     RemoveComplex(x,gWin)
     Hide(gFooter)
     Draw()
@@ -109,11 +134,11 @@ Press any key to begin"
     
      if(order)
      {
-       x1 <- DisplayMatrix(targ,200)
-       x2 <- DisplayMatrix(foil,600)
+       x1 <- DisplayMatrix(targ,gVideoWidth/2-200)
+       x2 <- DisplayMatrix(foil,gVideoWidth/2+200)
      } else {
-       x1 <- DisplayMatrix(targ,600)
-       x2 <- DisplayMatrix(foil,200)
+       x1 <- DisplayMatrix(targ,gVideoWidth/2+200)
+       x2 <- DisplayMatrix(foil,gVideoWidth/2-200)
      }
     
 
