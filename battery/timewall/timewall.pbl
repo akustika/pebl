@@ -27,12 +27,26 @@
 define Start(p)
 {
 
-  numTrials <- 20           #Number of trials
-  feedback <- 1             #Whether or not to give feedback
-  mintime <- 2000           #Minimum transit time
-  maxtime <- 10000          #Maximumu transit time
+
+  parpairs <- [   ["numTrials", 20 ],       #Number of trials
+  ["feedback", 1 ],      #Whether or not to give feedback
+  ["mintime", 2000  ],     #Minimum transit time
+  ["maxtime", 10000],        #Maximumu transit time
+  ["spaceheight",600],
+  ["spacewidth",800],
+  ["bgcol","lightblue"],
+  ["wallcol","darkred"], 
+  ["targcol","darkgreen"]  ]  
+
+  gParams <- CreateParameters(parpairs,"params/timewall.pbl.par")
+
+  numTrials <- gParams.numtrials           #Number of trials
+  feedback <- gParams.feedback             #Whether or not to give feedback
+  mintime <- gParams.mintime           #Minimum transit time
+  maxtime <- gParams.maxtime         #Maximumu transit time
   gSleepEasy <- 1
-  gWin <- MakeWindow("lightblue")
+  gWin <- MakeWindow("black")
+
 
    if(gSubNum+""=="0")
    {
@@ -54,19 +68,35 @@ Press any key to begin."
   WaitForAnyKeyPress()
   Hide(instruct)
    
-  bgcol <- gWin.bgcolor
-  wallcol <- MakeColor("darkred")
-  targcol <- MakeColor("darkgreen")
+  bgcol <- MakeColor(gParams.bgcol)
+  wallcol <- MakeColor(gParams.wallcol)
+  targcol <- MakeColor(gParams.targcol)
 
-  gWallheight <- gVideoHeight*.333
-  gWallpos    <- gVideoHeight-gWallheight
+  ##let's fix the size of the task to be 800x600, regardless of screen size.
+
+  gSpacewidth <- gParams.spacewidth
+  gSpaceheight <- gParams.spaceheight
+
+  bg  <- Rectangle(gVideoWidth/2,gVideoHeight/2,
+                   gSpacewidth,gSpaceheight,bgCol,1)
+  AddObject(bg,gWin)
+
+
+  gWallheight <- Ceiling(gSpaceHeight*.333)
+  #Position of wall on screen
+  gWallpos    <- gVideoHeight/2 + gSpaceheight/2 -gWallheight
+
+
+  gStartY <- gVideoHeight/2-gSpaceHeight/2
 
   gTarg <- Square(gVideoWidth/2,4,8,targcol,1)
-  wall <- Rectangle(gVideoWidth/2,gVideoHeight-gWallheight/2,
-                     gVideoWidth,gWallheight,wallcol,1)
-  notch <-Square(gVideoWidth/2,gVideoHeight-4,8,bgcol,1)
+  wall <- Rectangle(gVideoWidth/2,
+  gVideoHeight/2 + gSpaceHeight/2-gWallheight/2,
+      gSpacewidth, gwallheight,wallcol,1)
 
-  gFeedback <- EasyLabel("",gVideoWidth/2,50,gWin,28)
+  notch <-Square(gVideoWidth/2,gVideoHeight/2+gSpaceHeight/2-4,8,bgcol,1)
+
+  gFeedback <- EasyLabel("",gVideoWidth/2,gVideoHeight/2-gSpaceheight/2+50,gWin,28)
   Hide(gFeedback)
 
   AddObject(gTarg,gWin)
@@ -105,12 +135,13 @@ Press any key to begin."
     }
        msg <-  msg + "  " + Round(resp/1000,2) + "s for " +  Round(targ/1000,2) + "s"
    }
+
    gFeedback.text <- msg
    shortlong <-  Sign(resp-targ)
-
-  Show(gFeedback)
-  Draw()
-
+   Show(gFeedback)
+   Draw()
+   Print(gFeedback)
+   PrintProperties(gFeedBack)
   FilePrint(gFileOut,gSubNum + "," + trial +"," + targ + "," + resp + "," + acc +
                       "," + shortlong)
   WaitForAnyKeyPress()
@@ -131,10 +162,15 @@ Press any key to begin."
 define Trial()
 {
    Show(gTarg)  
+
+   ##Compute how long the target should take to reach the cutout:
+
    traveltime <- (Random()*8+2)*1000
    start <- GetTime()
    endtime <- start + traveltime
    disappeartime <- start + traveltime * .66667   
+
+   moverate <- gSpaceHeight/traveltime
 
    time <- start
    
@@ -142,7 +178,7 @@ define Trial()
    {
 
      time <- GetTime()
-     ypos <- (time - start)*gVideoHeight/traveltime
+     ypos <- gStartY+(time - start)* moverate
      gTarg.y <- ypos
      Draw()
      Wait(10)
