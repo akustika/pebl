@@ -1,10 +1,18 @@
 define Start(p)
 {
 
+
+   parPairs <- [["trials",12],
+                ["fieldwidth",400],
+		["fieldheight",400]]
+
+   gParams <- CreateParameters(parPairs,"params/switcher.pbl.par")
+
+
 #   gCols <- [MakeColor("red"),MakeColor("darkblue"),MakeColor("yellow"),MakeColor("grey"),MakeColor("darkgreen")]
 
    ##Number of clicks per trial.
-   triallength <- 12
+   triallength <- gParams.trials
    
    ##These should be basically color-blind safe:
    gCols <- [MakeColorRGB(230,159,0),  #orange
@@ -38,7 +46,7 @@ define Start(p)
    shapetmplt <- [1,2,1,3,2,4,3,5,4,5]
    FilePrint(gFileOutSum,"gSubNum,timestamp,testtype,numcues,numerr,matchlast,matchany,tooslow,waittime,perftime,medtime")   
 
-   FilePrint(gFileOut,"gSubNum,block,type,try,successes,rule,lastrule,curid,currentval,correct,matchColor,matchLetter,matchShape,matchLast,curcolor,curletter,curshape,targcolor,targletter,targshape,clickcolor,clickletter,clickshapetargx,targy,targid,corsum,incsum,time,rt")
+   FilePrint(gFileOut,"gSubNum,block,type,try,successes,rule,lastrule,curid,currentval,correct,matchColor,matchLetter,matchShape,matchLast,curcolor,curletter,curshape,targcolor,targletter,targshape,clickcolor,clickletter,clickshapetargx,targx,targy,targid,corsum,incsum,time,rt")
 
 ################################################################
 ## Instructions:
@@ -52,7 +60,8 @@ define Start(p)
    gUpper <- 350
    gLower <- gVideoHeight-50
 
-
+  ##Generate a single layout for practice:
+  gPoints <- NonOverlapLayout(gLeft,gRight,gUpper,glower,80,10)
   gType <- 0
   gBlock <- 0
   Draw()
@@ -63,10 +72,17 @@ define Start(p)
  
    gInst.text <- "Great. In the first three trials, there will be only two rules, and the rules will alternate between the two rules.  Click mouse to begin."
   Draw()
-   gLeft <- 150
-   gRight <- gVideoWidth-gLeft
-   gUpper <- 100
-   gLower <- gVideoHeight-gUpper 
+
+  #originally, assuming 800x600 screen, the display area would be 500 x 400. Let's 
+  ##hard-code a centered 400x400 area:
+
+   gLeft <- gVideoWidth/2-gParams.fieldwidth/2
+   gRight <- gVideoWidth/2+gParams.fieldwidth/2
+   gUpper <- gVideoHeight-100-gParams.fieldheight
+   gLower <- gVideoHeight-100
+
+  ##Generate a single global layout:
+  gPoints <- NonOverlapLayout(gLeft,gRight,gUpper,glower,80,10)
 
   WaitFordownClick()
   Hide(gInst)
@@ -222,7 +238,7 @@ define Trial(setup,cues)
    first <- -1
 
    black <- MakeColor("black")
-   points <- NonOverlapLayout(gLeft,gRight,gUpper,glower,80,10)
+   points <- gPoints
    stim <- PasteTables(setup,points)
    stim <- PasteTables(stim,Transpose([Sequence(1,10,1)]))
    labels <- SampleN(gStim,6)
