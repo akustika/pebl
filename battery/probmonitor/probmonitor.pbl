@@ -1,10 +1,17 @@
 define Start(p)
 {
 
+  parpairs <- [["delay",50],
+               ["signals",10],
+	       ["triallength",300],
+	       ["minMonitors",3],
+	       ["maxMonitors",4]]
 
-  gDelay <- 50                   ## ms for each update
-  gSignals <- 10                 ## number of updates per trial
-  gTriallength <- 300 * 1000     ## max length of trial (longer than in UTC)
+  gParams <- CreateParameters(parpairs,"params/probmonitor.pbl.par")
+
+  gDelay <- gParams.delay                   ## ms for each update
+  gSignals <-gParams.signals                 ## number of updates per trial
+  gTriallength <- gParams.triallength * 1000     ## max length of trial (longer than in UTC)
 
   gWin <- MakeWindow()
   if(gSubNum+""=="0")
@@ -34,22 +41,19 @@ Press any key to begin"
   cue <- EasyLabel(cuetext,gVideoWidth/2,100,gWin,25)
   Draw()
 
-  Trial(1)
+  trialsequence <- Sequence(gParams.minMonitors,gParams.MaxMonitors,1)
+  loop(i,trialsequence)
+   {
+    cue.text <- "Press any key to begin next trial"
+    Draw()
+    WaitForAnyKeyPress()
+    cue.text <- cuetext
 
-  cue.text <- "Press any key to begin next trial"
-  Draw()
-  WaitForAnyKeyPress()
-  cue.text <- cuetext
+    Trial(i)
 
-  Trial(2)
-  cue.text <- "Press any key to begin next trial"
-  Draw()
-  WaitForAnyKeyPress()
-  cue.text <- cuetext
+   }
 
-  Trial(3)
-
-
+  
   Hide(cue)
   tb.text <- "Thank you for taking part in the experiment.  Please alert the experimenter"
   Show(tb)
