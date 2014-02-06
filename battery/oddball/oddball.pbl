@@ -7,9 +7,9 @@
 ##
 ##
 ##
-##Huettel, S. A., & McCarthy, G. (2004). What is odd in the oddball
-## task?:: Prefrontal cortex is activated by dynamic changes in
-## response strategy. Neuropsychologia, 42(3), 379-386.
+## Huettel, S. A., & McCarthy, G. (2004). What is odd in the oddball
+##   task?:: Prefrontal cortex is activated by dynamic changes in
+##   response strategy. Neuropsychologia, 42(3), 379-386.
 ##
 ##
 ##
@@ -22,8 +22,13 @@
 define Start(p)
 {
 
-   numreps <- 1      ##this many reps of the 20-trial design
-   soa <- 3000    ##Fix the stimulus-onset asynchrony.
+  parpairs <- [["numreps",1],     ##this many reps of the 20-trial design
+               ["soa",3000] ##Fix the stimulus-onset asynchrony.
+               ]
+
+   gParams <- CreateParameters(parpairs,"params/oddball.pbl.par")
+   numreps <- gParams.numreps
+   soa <- gParams.soa   
 
    gWin <- MakeWindow("black")
    Initialize()
@@ -76,7 +81,8 @@ define Start(p)
 
 
    ##Practice uses just a few trials
-    practrials <- Shuffle(RepeatList([[1,-1],[1,-1],[2,1],[2,1],[1,1],[2,-1]],2))
+    practrials <- Shuffle(RepeatList([[1,-1],[1,-1],[2,1],
+                                      [2,1],[1,1],[2,-1]],2))
 
     ##Set up some data holders
     gOddball    <- []
@@ -85,7 +91,7 @@ define Start(p)
 
     ###########################################
     ## Do the practice round
-	gTrial <- 1
+    gTrial <- 1
     gBlock <- 0
     CountDown(gWin)
 
@@ -95,7 +101,7 @@ define Start(p)
     {
       endtime  <- endtime+soa
       Trial(trial,1,endtime)
-	  gTrial <- gTrial + 1
+      gTrial <- gTrial + 1
     }
 
     MessageKeyBox(gInterblock)
