@@ -20,19 +20,36 @@
 define Start(p)
 {
 
-  gVideoWidth <- 1440
-  gVideoHeight <- 900
+ # gVideoWidth <- 1440
+ # gVideoHeight <- 900
+ #  SeedRNG(300)
 
-#  SeedRNG(300)
-  gshowTime <- 750
-  gwaitTime <- 750
+  ##Default values in case .par file doesn't exist
+  parpairs <- [["showtime",750],
+               ["waittime",750],
+  	       ["TargRadius", 150], ##Size in pixels of targets
+  	       ["MinAngle" , 5],     ##smallest angle
+  	       ["MaxAngle" , 175],   ##largest ange
+  	       ["MinLength", 10],   ##Shortest edge
+  	       ["NumTrials", 25],
+	       ["minZoom",0.5],
+	       ["maxZoom",1.5],
+	       ["mincorners",8],
+	       ["maxcorners",8],
+	       ["shapepert",       20] #Max pixel distance of shape perturbation
+                ]   #Number of trials
 
-  gTargRadius <- 150 ##Size in pixels of targets
-  gMinAngle <- 5     ##smallest angle
-  gMaxAngle <- 175   ##largest ange
-  gMinLength <- 10   ##Shortest edge
+  gParams <- CreateParameters(parpairs,"params/objectjudgment-inv.pbl.par")
 
-  gNumTrials <- 25   #Number of trials
+  gshowTime <- gParams.showtime
+  gwaitTime <- gParams.waittime
+
+  gTargRadius <- gParams.targradius ##Size in pixels of targets
+  gMinAngle <- gParams.minangle     ##smallest angle
+  gMaxAngle <- gParams.maxangle     ##largest ange
+  gMinLength <- gParams.minlength   ##Shortest edge
+
+  gNumTrials <- gParams.numtrials   #Number of trials
   gSleepEasy <- 1
   
   ##Parameters controlling printable area for dots
@@ -49,7 +66,7 @@ define Start(p)
   while(0)
    {
 
-  angle <- Random()*2*3.14159
+   angle <- Random()*2*3.14159
 
   shape <- Transpose(MakeAttneave(200,10,5,175))
   shape2 <- RotatePoints(ZoomPoints(shape,1.1,1.1),angle)
@@ -101,18 +118,18 @@ Press any key to begin"
   WaitForAnyKeyPress()
   Hide(inst)
   Draw()
-  gFooter <- EasyLabel("",gVideoWidth/2,gVideoHeight-25,gWin,25)
+  gFooter <- EasyLabel("",gVideoWidth/2,gVideoHeight-125,gWin,25)
   gFeedback <- EasyLabel("",gHomeX, gHomeY,gWin,50)
   deg <- 2*3.14159/360  #one degree in radians
 
   ##Experimental conditions
 
 
-  mincorners <- 8
-  maxcorners <- 8
+  mincorners <- gParams.mincorners
+  maxcorners <- gParams.maxcorners
 
   shape    <- [0,0,0,2,4,8]         ##How many edges to perturb?
-  shapepert <- 20
+  shapepert <- gParams.shapepert
 
   design2 <- Shuffle(RepeatList(shape, 10))
   numtrials <- Length(design2)
@@ -122,10 +139,10 @@ Press any key to begin"
      gHeader.text <- "Trial ["+trial+"] out of ["+numtrials+"]"
      #choose random angle
      angle <- (Random()*360-180)*deg
-     size <- Random() +.5  #.50 to 1.5
+     size <- gParams.minzoom + Random() *(gParams.maxzoom-gParams.minzoom) 
 
      #First, create the shape
-     shape <- MakeAttneave(gTargRadius,minCorners,5,175)
+     shape <- MakeAttneave(gTargRadius,minCorners,gMinangle,gMaxAngle)
      pts <- Transpose(shape) ##This actually makes a copy of it.
 
      if(cond == 0)   #same

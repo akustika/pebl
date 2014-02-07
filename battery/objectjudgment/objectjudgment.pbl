@@ -9,18 +9,28 @@
 define Start(p)
 {
 #  SeedRNG(3100)
+  parpairs <- [["showtime",750],
+               ["waittime",750],
+  	       ["TargRadius", 150], ##Size in pixels of targets
+  	       ["MinAngle" , 5],     ##smallest angle
+  	       ["MaxAngle" , 175],   ##largest ange
+  	       ["MinLength", 10],   ##Shortest edge
+  	       ["NumTrials", 25],
+	       ["mincorners",5],
+	       ["maxcorners",8],
+	       ["shapepert", 10] #Max pixel distance of shape perturbation
+                ]   #Number of trials
 
-  gVideoWidth <- 1440
-  gVideoHeight <- 900
+  gParams <- CreateParameters(parpairs,"params/objectjudgment.pbl.par")
 
-  gshowTime <- 750
-  gwaitTime <- 750
+  gshowTime <- gParams.showtime
+  gwaitTime <- gParams.waittime
 
-  gTargRadius <- 150 ##Size in pixels of targets
-  gMinAngle <- 5
-  gMaxAngle <- 175
+  gTargRadius <- gParams.targradius ##Size in pixels of targets
+  gMinAngle <- gParams.minangle
+  gMaxAngle <- gParams.maxangle
 
-  gNumTrials <- 25   #Number of trials
+  gNumTrials <- gParams.numtrials   #Number of trials
   gSleepEasy <- 1
   
   ##Parameters controlling printable area for dots
@@ -57,15 +67,15 @@ In this test, you will be show a study shape, followed shortly afterwards by a p
   WaitForAnyKeyPress()
   Hide(inst)
   Draw()
-  gFooter <- EasyLabel("",gVideoWidth/2,gVideoHeight-25,gWin,25)
+  gFooter <- EasyLabel("",gVideoWidth/2,gVideoHeight-125,gWin,25)
   gFeedback <- EasyLabel("",gHomeX, gHomeY,gWin,50)
   deg <- 2*3.14159/360  #one degree in radians
 
   ##Experimental conditions
 
   
-  minCorners <- 5
-  maxCorners <- 8
+  minCorners <- gParams.mincorners
+  maxCorners <- gParams.maxcorners
 
   reps <- 5
 
