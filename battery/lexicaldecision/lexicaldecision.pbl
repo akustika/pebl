@@ -15,8 +15,12 @@ define Start(lPar)
  ##
  ##
 
-  gWin <- MakeWindow("GREY")
 
+   parpairs <- [["delay",500]] ##how long to wait before presentation
+
+   gparams<- CreateParameters(parpairs,"params/lexicaldecision.pbl.par")
+
+  gWin <- MakeWindow("GREY")
   ##Get subject code if we need to:    
     if(gSubNum+""=="0")
     {
@@ -100,8 +104,8 @@ define Trial(stim)
   Draw(gWin)
 
   #Wait a little while
-  Wait(500)
 
+  Wait(gParams.delay)
   Hide(fixation)
   Show(text)
   time1<-GetTime()
