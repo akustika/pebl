@@ -16,8 +16,8 @@
 ##
 ##  See original versions by Phillips (1974) and Damos & Lyall (1984).
 ##
-##  Phillips, W. A. (1974.) On the Distinction Between Sensory Storage
-##    and Short Term Visuel Memory, Perception and Psychophysics, 16,
+##  Phillips, W. A. (1974). On the Distinction Between Sensory Storage
+##    and Short Term Visual Memory, Perception and Psychophysics, 16,
 ##     283-290.
 ##
 ##  Damos, D. L. and E. A. Lyall. (1984). The Effect of Asymmetric 
@@ -32,9 +32,19 @@
 {
 
 
-  gSize <- 6  #Number of rows/columns in the matrix
-  giveFeedback <- 1  
-  condsize <- 10
+  parpairs <- [["size",6], #Number of rows/columns in the matrix
+               ["givefeedback",1], ##whether to give feedback
+	       ["condsize",10], ##number of trials of each same/different
+	       ["squaresize",300]] ##size of display square, in pixels.
+
+
+  gParams <-CreateParameters(parpairs,"params/matrixrotation.pbl.par")
+
+
+
+  gSize <- gParams.size
+  giveFeedback <- gParams.givefeedback
+  condsize <- gParams.condsize
 
   gSleepEasy <- 1
 
@@ -60,7 +70,7 @@ Press any key to begin"
   inst1 <- "Press any key to view test matrix"
   inst2 <- "SAME        respond using shift keys      DIFFERENT"
 
-  gFooter <- EasyLabel(inst2,gVideoWidth/2,gVideoHeight-20,gWin,24) 
+  gFooter <- EasyLabel(inst2,gVideoWidth/2,gVideoHeight-120,gWin,24) 
 
   ##Provide initial instructions
   inst <- EasyTextBox(instruc,50,50,gWin,16,gVideoWidth-100,gVideoHeight-200)
@@ -147,8 +157,8 @@ define DisplayMatrix(mat)
    xcenter <- gVideoWidth/2
    ycenter <- gVideoHeight/2
 
-   xsize <- 300
-   ysize <- 300
+   xsize <- gParams.squaresize
+   ysize <- gParams.squaresize
 
    upper <- ycenter-ysize/2
    lower <- ycenter+ysize/2
