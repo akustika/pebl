@@ -118,6 +118,7 @@ Press any key to begin"
   WaitForAnyKeyPress()
   Hide(inst)
   Draw()
+
   gFooter <- EasyLabel("",gVideoWidth/2,gVideoHeight-125,gWin,25)
   gFeedback <- EasyLabel("",gHomeX, gHomeY,gWin,50)
   deg <- 2*3.14159/360  #one degree in radians
