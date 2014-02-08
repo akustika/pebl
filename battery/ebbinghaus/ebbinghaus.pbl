@@ -7,11 +7,19 @@
  
 define Start(p)
 {
-  ##How many lists? (each repeated twice)
-  numlists <- 2
-  
-  length <- 8  ##Should be 8, 12, or maybe 16
 
+
+  parpairs <- [["numlists",2],
+               ["length",8], ##Should be 8, 12, or maybe 16
+	       ["cond","choose"] ##choose, cvcs, or words
+              ]
+
+  gParams <- CreateParameters(parpairs,"params/ebbinghaus.pbl.par")
+
+  ##How many lists? (each repeated twice)
+  numlists <- gParams.numlists
+  
+  length <- gParams.length
 
    gSleepEasy <- 1
    gWin <- MakeWindow("black")
@@ -20,8 +28,10 @@ define Start(p)
       gSubNum <- GetSubNum(gWin)
    }
 
-   cond <- GetEasyChoice("Select stimulus set to use:",["Nonsense CVS","3-letter Words"],["cvcs","words"],gWin)
-
+   if(gParams.cond=="choose")
+    {
+      gParams.cond <- GetEasyChoice("Select stimulus set to use:",["Nonsense CVS","3-letter Words"],["cvcs","words"],gWin)
+    }
 
 
    MakeDirectory("data")
