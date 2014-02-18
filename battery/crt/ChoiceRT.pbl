@@ -5,11 +5,37 @@
 define Start(lPar)
 {
 
-  reps <- 5      #How many reps of the stimuli
-  gSoa <- 2000   #how long between stimil?
+
+  parpairs <- [["reps",5],      #How many reps of the stimuli
+               ["soa",2000],    #how long between stimili?
+               ["numstim",6],
+               ["stim1","a"],
+               ["stim2","d"],
+               ["stim3","c"],
+               ["stim4","e"],
+               ["stim5","o"],
+               ["stim6","n"],
+               ["stim7","b"],
+               ["stim8","g"],
+               ["stim9","s"],
+               ["stim10","q"],
+	       ["timeout",1500]
+              ]
+
+  gParams <- CreateParameters(parpairs,"params/ChoiceRT.pbl.par")
+
+  reps <- gParams.reps
+  gSoa <- gParams.soa
   
   ##Stimuli to choose from:
-  basestim <- ["a", "d", "c", "e", "o", "n"]
+
+  stimkeys <- [gParams.stim1, gParams.stim2, gParams.stim3,
+               gParams.stim4, gParams.stim5, gParams.stim6,
+	       gParams.stim7, gParams.stim8, gParams.stim9,
+	       gParams.stim10]
+
+  numstim <- Min([gparams.numstim,10])
+  baseStim <- SubList(stimkeys,1,numstim)
 
 
   gSleepEasy <- 1
@@ -18,7 +44,7 @@ define Start(lPar)
 
   if(gSubNum+""=="0")
    {
-      gSubNum <- GetSubNum(gWin)
+      gSubNum <- GetSubNum(gWindow)
    }
 
   ShowCursor(0)
@@ -100,7 +126,7 @@ define Trial(lStim)
   Draw()
   start <- GetTime()
   ##This turns off the stimulus after 00 ms
-  resp <- WaitForListKeyPressWithTimeOut(["<lshift>","<rshift>"],1500,1)
+  resp <- WaitForListKeyPressWithTimeOut(["<lshift>","<rshift>"],gParams.timeout,1)
   #Get the response time.
   end <- GetTime()
   
