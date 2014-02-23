@@ -132,9 +132,10 @@ define Start(p)
 
    ########################################################
    ## Begin experiment
-   gInstructions.text <- "You are about to be tested regarding how
-   well you can read words and the colors they appear in. We will
-   start with a practice round.
+   gInstructions.text <- "You are about to be tested regarding how well you can read words and the colors they appear in.  You will see a series of words written in different colors.  At the bottom of the screen is a key that shows  which color goes with which keys on the keyboard.  Press the key associated with the color of the word.  Sometimes, the word might be a color itself.  Be sure to ignor the word, and respond only to the color (even if the color is a color itself).
+
+We will start with a practice round.
+
    Press any key to begin." 
 
 
@@ -618,10 +619,10 @@ define Block(stim, btype, colorresp)
    feet <- [foot1,foot2,foot3,foot4]
    AddObject(foot1,gWin);   AddObject(foot2,gWin);   
    AddObject(foot3,gWin);   AddObject(foot4,gWin);
-   Move(foot1, gVideoWidth/2-300, gVideoHeight-100)
-   Move(foot2, gVideoWidth/2-100, gVideoHeight-100)
-   Move(foot3, gVideoWidth/2+100, gVideoHeight-100)
-   Move(foot4, gVideoWidth/2+300, gVideoHeight-100)
+   Move(foot1, gVideoWidth/2-300, gVideoHeight-150)
+   Move(foot2, gVideoWidth/2-100, gVideoHeight-150)
+   Move(foot3, gVideoWidth/2+100, gVideoHeight-150)
+   Move(foot4, gVideoWidth/2+300, gVideoHeight-150)
    Draw()
 
 
@@ -751,8 +752,9 @@ define ScoreTrial(resp,wordname,colorname,btype)
 ##  objects used in experiments.
 define Initialize()
 {
-  gVideoWidth  <-800
-  gVideoHeight <- 600
+
+#  gVideoWidth  <-800
+#  gVideoHeight <- 600
 
   ##Initialize Window, etc.
   gWin <- MakeWindow("grey40")   
