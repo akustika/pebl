@@ -55,46 +55,63 @@ define Start(p)
    ## gResponseType <- "audio"
    ## gResponseType <- "keypad"
 
+
+   parpairs <- [["responsetype","choose"],
+                ["scorerealtime",0],   ##for audio, set this to 1 to score real-time with keyboard.  
+                                        ##otherwise, you need to go back through and code responses afterward.
+
+                 ["usepreset",1],   ## If set to 1, it will use the same sequence of stimuli every time.
+                                    ## If set to 0, it will regenerate randomly on each run.
+
+                 ["fixationTime",1000],    #time for the fixation cross   
+                 ["responseTimeout",2000], #Time limit given for responding
+
+                  ## The voice key will trip when 55% of the last 
+                  ## gVoiceKeyDuration 1-ms bins are above the threshold.
+                  ## Based on input power and microphone noise, you may 
+                  ## need to adjust these parameters.
+                ["voicekeythreshold",.35],
+		["voiceKeyDuration", 200],
+   		["saveAudio",1],   ##Should the audio buffer be saved?
+
+   		["compressAudio", 0],   ##command to compress audio
+   		["compressor","oggenc "]
+               ]
+
+   gParams <- CreateParameters(parpairs,"params/number-stroop.pbl.par")
+
    Initialize()
 
-   gResponseType <- GetEasyChoice("Select input type ",
+   gResponseType <- gParams.responsetype
+   if(gResponseType == "choose")
+   {
+      gResponseType <- GetEasyChoice("Select input type ",
                                ["1-2-3 Number Line on keyboard",
                                 "1-2-3 numbers on keypad",
-	 						   "Vocal input from microphone"],
-							   ["keyboard","keypad","audio"], gWin)
+                                 "Vocal input from microphone"],
+ 			         ["keyboard","keypad","audio"], gWin)
+    }
 
-
-   ##for audio, set this to 1 to score real-time with keyboard.  
-   ##otherwise, you need to go back through and code responses afterward.
-   gScoreRealtime <- 0
-
-
-
-   ## The voice key will trip when 55% of the last 
-   ## gVoiceKeyDuration 1-ms bins are above the threshold.
-   ## Based on input power and microphone noise, you may 
-   ## need to adjust these parameters.
+   gScoreRealtime <- gParams.scorerealtime
  
-   gVoiceKeyThreshold <- .35
-   gVoiceKeyDuration  <- 200
+   gVoiceKeyThreshold <- gParams.voicekeythreshold
+   gVoiceKeyDuration  <- gParams.voicekeyduration
 
    ##Should the audio buffer be saved?
-   gSaveAudio <- 1
+   gSaveAudio <- gParams.saveaudio
 
    ##command to compress audio
-   gCompressAudio <- 0
-   gCompressor <- "oggenc "
+   gCompressAudio <- gParams.compressaudio
+   gCompressor <- gParams.compressor
 
 
-   ## If set to 1, it will use the same sequence of stimuli every time.
-   ## If set to 0, it will regenerate randomly on each run.
-   usePreset <- 1
-   
-   gFixationTime <- 1000  #time for the fixation cross
-   gResponseTimeout <- 2000 #Time limit given for responding
+   usePreset <- gParams.usepreset
+   gFixationTime <- gParams.fixationtime
+   gResponseTimeout <- gParams.ResponseTimeout
+
 
    ##Set gLanguage here to hard code
-    gLanguage <- "ES"
+   ## gLanguage <- "ES"
 
    GetStrings(gLanguage)
 

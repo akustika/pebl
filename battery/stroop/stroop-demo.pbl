@@ -1,7 +1,6 @@
 define Start(p)
 {
 
-
 #"sub","block","trial","type","colorresp","cond","cond2","shade","word","resp","corr","respnum","start","rt"
 
 # sub is the subject code entered at startup
@@ -33,10 +32,12 @@ define Start(p)
 # start is the absolute time (in ms) of the start of trial rt is the time (in ms) of the response
 #Note that every trial must be finished "correctly", which means if you make an error, the data line can get logged every time until you get it right.
 
+   parpairs <- [["blocklength",50] ]
 
+   gParams <- CreateParameters(parpairs,"params/stroop-demo.pbl")
 
    ##The number of trials per block (and condition)
-   blocklength <- 50
+   blocklength <- gParams.blocklength
    Initialize()
 
    ## Uncomment to eliminate busy-wait (mostly for older machines or

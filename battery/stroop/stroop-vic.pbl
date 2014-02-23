@@ -11,9 +11,14 @@ define Start(p)
 ##  Dutch by Alien Van der Sluis
 ##  Turkish by Zeynel Baran
 
- ##The number of trials per block (and condition)
 
-   reps <- 6 #reps*4 is the number of items per test (6=24 items)
+
+   parpairs <- [["reps",6]]#reps*4 is the number of items per test (6=24 items)
+   gParams <- CreateParameters(parpairs,"params/stroop-vic.pbl.par")
+     
+
+   ##The number of trials per block (and condition)
+   reps <- gParams.reps
 
    ## Uncomment to eliminate busy-wait (mostly for older machines or
    ## laptops that might overheat.)
