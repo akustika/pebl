@@ -1,3 +1,4 @@
+
 #################################################################
 ##  PEBL Pattern Comparison Task Version 0.1
 ## 
@@ -21,18 +22,27 @@
  define Start(p)
 {
 
-  gSimilarFoil <- 1
-  gfoildiff    <- 3  #Number of changes between target and foil
 
-  gSize <- 4  #Number of rows/columns in the matrix
-  giveFeedback <- 1  
-  condsize <- 30
+  parpairs <- [["similarfoil",1], ##should foil be similar to target
+               ["foildiff",3], #Number of changes between target and foil
+               ["size",4],
+ 	       ["givefeedback",1],
+ 	       ["condsize",30]
+              ]
+
+  gParams <- CreateParameters(parpairs,"params/patterncomparison.pbl.par")
+
+  gSimilarFoil <- gParams.similarfoil
+  gfoildiff    <- gParams.foildiff  
+
+  gSize <- gParams.size  #Number of rows/columns in the matrix
+  giveFeedback <- gParams.givefeedback  
+  condsize <-gParams.condsize
 
   gSleepEasy <- 1
   ShowCursor(0)
 
   gWin <- MakeWindow()
-
   if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(gWin)

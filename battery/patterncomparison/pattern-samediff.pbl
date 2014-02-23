@@ -21,17 +21,31 @@
  define Start(p)
 {
 
-  gSimilarFoil <- 1
-  gfoildiff    <- 3  #Number of changes between target and foil
 
-  gSize <- 4  #Number of rows/columns in the matrix
-  giveFeedback <- 1  
-  condsize <- 10  ##total trials will be 12 x condsize
-                  ## 2 response conditions x
-                  ## 4 levels of difference; 0x3 + 1,2,3
-                  ## (There are an equal number of same and different trials)
+  parpairs <- [["similarfoil",1], ##should foil be similar to target
+               ["foildiff",3], #Number of changes between target and foil
+               ["size",4],
+ 	       ["givefeedback",1],
+ 	       ["condsize",10],
+	       ["deadline",1500]
+              ]
 
-  gDeadline <- 1500
+  gParams <- CreateParameters(parpairs,"params/pattern-samediff.pbl.par")
+
+
+  gSimilarFoil <- gParams.similarfoil
+  gfoildiff    <- gParams.foildiff  
+
+  gSize <- gParams.size  #Number of rows/columns in the matrix
+  giveFeedback <- gParams.givefeedback  
+  condsize <-gParams.condsize
+
+    ##total trials will be 12 x condsize
+    ## 2 response conditions x
+    ## 4 levels of difference; 0x3 + 1,2,3
+    ## (There are an equal number of same and different trials)
+
+  gDeadline <- gParams.deadline
 
   gSleepEasy <- 1
   ShowCursor(0)
