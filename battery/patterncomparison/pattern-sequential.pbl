@@ -21,15 +21,28 @@
  define Start(p)
 {
 
-  gSimilarFoil <- 1
-  gfoildiff    <- 3  #Number of changes between target and foil
-  gSize <- 4  #Number of rows/columns in the matrix
-  giveFeedback <- 1  
-  condsize <- 30
+  parpairs <- [["similarfoil",1], ##should foil be similar to target
+               ["foildiff",3], #Number of changes between target and foil
+               ["size",4],
+ 	       ["givefeedback",1],
+ 	       ["condsize",30],
+	       ["prestime",1500],
+	       ["delay",3500]
+              ]
+
+  gParams <- CreateParameters(parpairs,"params/pattern-sequential.pbl.par")
+
+  gSimilarFoil <- gParams.similarfoil
+  gfoildiff    <- gParams.foildiff  
+
+  gSize <- gParams.size  #Number of rows/columns in the matrix
+  giveFeedback <- gParams.givefeedback  
+  condsize <-gParams.condsize
 
 
-  prestime <- 1500   ##stimulus presentation time
-  delay   <- 3500    ##delay between patterns
+
+  prestime <- gParams.prestime   ##stimulus presentation time
+  delay   <- gParams.delay       ##delay between patterns
 
   gSleepEasy <- 1
   ShowCursor(0)
@@ -47,7 +60,7 @@ Press any key to begin"
 
 
   inst2 <- "SAME        respond using shift keys      DIFFERENT"
-  gFooter <- EasyLabel(inst2,gVideoWidth/2,gVideoHeight-20,gWin,24) 
+  gFooter <- EasyLabel(inst2,gVideoWidth/2,gVideoHeight-120,gWin,24) 
 
   gFontcorr <- MakeFont(gPEBLBaseFont,0,40,MakeColor("darkgreen"),MakeColor("grey"),1)
   gFontinc <-MakeFont(gPEBLBaseFont,0,40,MakeColor("red"),MakeColor("grey"),1)

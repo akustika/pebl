@@ -71,7 +71,7 @@ Press any key to begin"
 
   gInstsame <- "Press space bar if stimuli are THE SAME"
   gInstdiff <- "Press space bar if stimuli are DIFFERENT"
-  gFooter <- EasyLabel(gInstSame,gVideoWidth/2,gVideoHeight-20,gWin,24) 
+  gFooter <- EasyLabel(gInstSame,gVideoWidth/2,gVideoHeight-120,gWin,24) 
 
   gFontcorr <- MakeFont(gPEBLBaseFont,0,40,MakeColor("darkgreen"),MakeColor("grey"),1)
   gFontinc <-MakeFont(gPEBLBaseFont,0,40,MakeColor("red"),MakeColor("grey"),1)
