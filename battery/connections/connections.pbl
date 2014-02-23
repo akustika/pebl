@@ -17,17 +17,30 @@
 
 define Start(p)
 {
-   ##Could be 'mouse' or 'touch', currently no differences.
-   ##a 'keypad' method should also be implemented.
-   gInputDevice <- "mouse"
+
+   parPairs <- [["inputdevice","mouse"],
+                ["width",7],  ##Now, use 7x7 as the test size:
+		["height",7],
+                ["timelimit",20] ##time limit in seconds. Use -1 for no time limit
+               ]
+
+   gParams <- CreateParameters(parPairs,"params/connections.pbl.par")
 
 
-  ##Now, use 7x7 as the test size:
-  wide <- 7
-  high <- 7
+
+   ## Could be 'mouse' or 'touch', currently no differences.
+   ## a 'keypad' method should also be implemented.
+   gInputDevice <- gParams.inputdevice
+   wide <- gParams.width
+   high <- gParams.height
+
 
    ##Time limit in seconds.   Use -1 for no time limit.
-   timelimit <- 20
+   gTimelimit <- gParams.timelimit
+
+
+   gLanguage <- Uppercase(gLanguage)
+   GetStrings(gLanguage)
 
    gWin <- MakeWindow("black")
 
@@ -40,7 +53,13 @@ define Start(p)
     gYrange <- [gVideoHeight/2 -220, gVideoHeight/2+270]
 
 
-   gFont <- MakeFont(gPEBLBaseFontMono,3,18,MakeColor("white"),Makecolor("black"),0)
+  if(gLanguage == "HE")
+    {
+        gFont <- MakeFont("DejaVuSans.ttf",3,18,MakeColor("white"),Makecolor("black"),0)
+     }else{
+        gFont <- MakeFont(gPEBLBaseFontMono,3,18,MakeColor("white"),Makecolor("black"),0)
+     }
+
    Draw()
    gSleepEasy <- 1
 
@@ -54,7 +73,7 @@ define Start(p)
   fileout <- FileOpenWrite("data/connections-"+gSubNum+".csv")
 
   FilePrint_(fileout, "subnum,type,trial,width,height,length,sumdist,anglesum,sumoptions,entropy,numclicks,lastclick,rt,time")
-  seq <- Sequence(1,wide*high,1)
+  seq <- Sequence(1,gwide*ghigh,1)
   loop(i,seq)
   {
     FilePrint_(fileout,",s"+ZeroPad(i,3))
@@ -68,22 +87,14 @@ define Start(p)
 
  instbox <- EasyTextBox("Generating paths",25,40,gWin,18,gVideoWidth-50,220)
  Draw()
- paths <-[MakePath(wide,high,0),MakePath(wide,high,0),
-   	   MakePath(wide,high,0),MakePath(wide,high,0)]
+ paths <-[MakePath(gwide,ghigh,0),MakePath(gwide,ghigh,0),
+   	   MakePath(gwide,ghigh,0),MakePath(gwide,ghigh,0)]
 
 
 
    practicepath <- MakePath(4,4,0)
 
-   if(timelimit>0)
-   {
-     timelimitinst <- "There will be a time limit to complete this test. You will have "+timelimit+" s to complete as much of the path as you can in that time.  The time will countdown to the right side of the screen."
-   } else {
-    timelimitinst <- ""
-  }
-
-
-   instbox.text <- "In this task, you will need to connect a set of circles that are labeled with numbers and letters. In different versions of the task, you will connect them based on a sequence of numbers (1-2-3-4), letters (A-B-C-D), or an alternating sequence (1-A-2-B).  For trials using letters, it will go through the alphabet twice, putting a * beside each letter the second time through.  The next circle in the sequence will always be next to the previous one, either above, below, left, right, or diagonally.  "+timelimitinst+" Practice the short test below, in which you will follow the numbers 1-2-3-4-5.  Click the highlighted '1' circle to begin."
+   instbox.text <- gInst1
 
     #Temporarily change the display range.
     gXrange0 <- gXRange
@@ -93,21 +104,21 @@ define Start(p)
     gYrange <- [290, 590]
 
     gTrial <- "P1"
-    dat <-  CollectPath(practicepath,"num",4,4, timelimit) 
+    dat <-  CollectPath(practicepath,"num",4,4, gTimelimit) 
    Print(dat)
 
-    instbox.text <- "Sometimes, the test will require you to use an alternating pattern of letters and numbers, either A-1-B-2 etc., or 1-A-2-B etc.  The type of test will be labeled at the bottom of the screen.  Try a second trial with the alternating letters."
+    instbox.text <-gInst2
 
    practicepath <- MakePath(4,4,0)
     gTrial <- "P2"
-   dat <-  CollectPath(practicepath,"numletter",4,4, timelimit) 
+   dat <-  CollectPath(practicepath,"numletter",4,4, gTimelimit) 
    Print(dat)
 
     gXRange <- gXrange0
     gYRange <- gYrange0
    Draw()
 
-   instbox.text <- "Now, you will do the real test, which contains a "+wide+"x"+high+" grid.  Before each test, you will see the instructions at the bottom of the screen.  Click the screen to begin."
+   instbox.text <- gInst3
   Draw()
   WaitForDownClick()
   Hide(instbox)
@@ -120,7 +131,7 @@ define Start(p)
   tpaths <- []
   loop(i,paths)
   {
-    tpaths <- Append(tPaths,TransposePath(i,wide,high))
+    tpaths <- Append(tPaths,TransposePath(i,gwide,ghigh))
   }
 
 
@@ -147,23 +158,23 @@ define Start(p)
        if(type=="num")
        {
          
-         foot <- "Connect circles 1 - 2 - 3 - 4"
+         foot <- gFoot1
        }elseif(type=="numletter")
        {
-          foot <- "Connect circles 1 - A - 2 - B"
+          foot <- gFoot2
        }elseif(type=="letternum")
        {
-          foot <- "Connect circles A - 1 - B - 2"
+          foot <- gFoot3
        }else{
-          foot <- "Connect circles A - B - C - D"
+          foot <- gFoot4
        }
 
-       footer.text <- foot +  " Trial: ["+gTrial+"/"+Length(trials)+ "] Click screen to begin"
+       footer.text <- foot +  gFootX1 +gTrial+"/"+Length(trials)+ gFootX2
        Draw()
-       footer.text <- foot+" Trial: ["+gTrial+"/"+Length(trials)+"]"
+       footer.text <- foot+gTrialText+gTrial+"/"+Length(trials)+"]"
 
        time0 <- GetTime()
-       dat <-  CollectPath(path,type,wide,high,timelimit) 
+       dat <-  CollectPath(path,type,gwide,ghigh,gTimelimit) 
 
        ##dat returns [numclicks, id-at-finish, time-to-finish]
 
@@ -171,7 +182,7 @@ define Start(p)
        ##Get some specific stats.
 
        mypath <- SubList(path,1,Second(dat))
-       stats <- GetStats(mypath,wide,high)
+       stats <- GetStats(mypath,gwide,ghigh)
        
        datalist <- Flatten([gSubNum,type, gTrial, stats, 
                              dat,(time1-time0),path])
@@ -213,7 +224,7 @@ define Start(p)
   out <- out +  Print("Clicks:      "+singleClicks+"    " + switchClicks + "   " + (switchClicks-singleClicks))+CR(1)
   out <- out +  Print("OverClicks:  "+singleOverClicks+"    " + switchOverClicks + "   " + (switchOverClicks -singleOverClicks))+CR(1)
   out <- out +  Print("--------------------------------------")+CR(1)
-  MessageBox("Thank you for participating"+out,gWin)
+  MessageBox(gThanks+out,gWin)
 
 
   report <- FileOpenWrite("data/connections-report-"+gSubNum+".txt")
@@ -224,8 +235,8 @@ define Start(p)
   FilePrint(report,"  Based on connections test by Salthouse et al. (2000) ")
   FilePrint(report,"-------------------------------------------------------")
   FilePrint(report,TimeStamp())
-  FilePrint(report,"Gridsize:          "+wide +"x"+high) 
-  FilePrint(report,"Time limit:        "+timelimit)
+  FilePrint(report,"Gridsize:          "+gwide +"x"+ghigh) 
+  FilePrint(report,"Time limit:        "+gTimelimit)
   FilePrint(report,"Participant code:  " +gSubNum)
   FilePrint(report,out)
   FilePrint(report,"-------------------------------------------------------")
@@ -322,11 +333,19 @@ define CollectPath(path,style,w,h,timelimit)
    {
      ucase <- FileReadList("Uppercase.txt")
      lcase <- FileReadList("Lowercase.txt")
+
+     if(gLanguage=="HE")
+     { 
+     ucase <- ["א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ", "ק", "ר", "ש", "ת"]
+     lcase <- ucase
+     }
+
      stim <- ucase
      loop(i,ucase)
      {
         stim <- Append(stim,"*"+i)
      }
+
      stim <- Merge(stim,lcase)
      loop(i,lcase)
      {
@@ -336,8 +355,13 @@ define CollectPath(path,style,w,h,timelimit)
      vals <- SortBy(SubList(stim,1,Length(path)),path)
    }elseif(style=="letternum")
    {
+   if(glanguage=="HE")
+     {
+      letters1 <- ["א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ", "ק", "ר", "ש", "ת"]
+     }else{
 
-     letters1 <- FileReadList("Uppercase.txt")
+       letters1 <- FileReadList("Uppercase.txt")
+     }
 
      letters <- letters1
      loop(i,letters1)
@@ -354,18 +378,25 @@ define CollectPath(path,style,w,h,timelimit)
    }elseif(style=="numletter")
    {
 
-     letters1 <- FileReadList("Uppercase.txt")
+
+    if(gLanguage =="HE")
+      {
+        letters1 <- ["א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ", "ק", "ר", "ש", "ת"]
+      }else{
+        letters1 <- FileReadList("Uppercase.txt")
+      }
 
      letters <- letters1
+
+     ##add *ed letters to the end.
      loop(i,letters1)
-     {
+      {
         letters <- Append(letters,"*"+i)
-     }
+      }
 
      nums <- Sequence(1,Length(letters),1)
-
      stim <- Flatten(Transpose([nums,letters]))
-     
+    
      vals <- SortBy(SubList(stim,1,Length(path)),path)
 
    }else{
@@ -1092,3 +1123,71 @@ define MakeTime(msecs)
    return secs+"."+tenths
 }
 
+
+define GetStrings(lang)
+{
+
+if(lang=="EN")
+ {
+
+
+  gTimeInst <- "There will be a time limit to complete this test. You will have "+gTimelimit+" s to complete as much of the path as you can in that time.  The time will countdown to the right side of the screen."
+
+  if(gTimelimit>0)
+   {
+     timelimitinst <- gTimeInst
+   } else {
+     timelimitinst <- ""
+  }
+
+ gInst1 <-"In this task, you will need to connect a set of circles that are labeled with numbers and letters. In different versions of the task, you will connect them based on a sequence of numbers (1-2-3-4), letters (A-B-C-D), or an alternating sequence (1-A-2-B).  For trials using letters, it will go through the alphabet twice, putting a * beside each letter the second time through.  The next circle in the sequence will always be next to the previous one, either above, below, left, right, or diagonally.  "+timelimitinst+" Practice the short test below, in which you will follow the numbers 1-2-3-4-5.  Click the highlighted '1' circle to begin."
+
+
+gInst2 <- "Sometimes, the test will require you to use an alternating pattern of letters and numbers, either A-1-B-2 etc., or 1-A-2-B etc.  The type of test will be labeled at the bottom of the screen.  Try a second trial with the alternating letters."
+
+gInst3 <- "Now, you will do the real test, which contains a "+gwide+"x"+ghigh+" grid.  Before each test, you will see the instructions at the bottom of the screen.  Click the screen to begin."
+
+gFoot1 <-"Connect circles 1 - 2 - 3 - 4"
+gFoot2 <-"Connect circles 1 - A - 2 - B"
+gFoot3 <-"Connect circles A - 1 - B - 2"
+gFoot4 <-"Connect circles A - B - C - D"
+
+gFootX1 <- " Trial: ["
+gFootX2 <-"] Click screen to begin"
+gTrialtext <- " Trial: ["
+gThanks <- "Thank you for participating"
+
+}elseif(lang=="HE")
+{
+  gTimeInst <- "There will be a time limit to complete this test. You will have "+gTimelimit+" s to complete as much of the path as you can in that time.  The time will countdown to the right side of the screen."
+
+  if(gTimelimit>0)
+   {
+     timelimitinst <- gTimeInst
+   } else {
+     timelimitinst <- ""
+  }
+
+ gInst1 <-"In this task, you will need to connect a set of circles that are labeled with numbers and letters. In different versions of the task, you will connect them based on a sequence of numbers (1-2-3-4), letters (A-B-C-D), or an alternating sequence (1-A-2-B).  For trials using letters, it will go through the alphabet twice, putting a * beside each letter the second time through.  The next circle in the sequence will always be next to the previous one, either above, below, left, right, or diagonally.  "+timelimitinst+" Practice the short test below, in which you will follow the numbers 1-2-3-4-5.  Click the highlighted '1' circle to begin."
+
+
+gInst2 <- "Sometimes, the test will require you to use an alternating pattern of letters and numbers, either A-1-B-2 etc., or 1-A-2-B etc.  The type of test will be labeled at the bottom of the screen.  Try a second trial with the alternating letters."
+
+gInst3 <- "Now, you will do the real test, which contains a "+gwide+"x"+ghigh+" grid.  Before each test, you will see the instructions at the bottom of the screen.  Click the screen to begin."
+
+gFoot1 <-"Connect circles 1 - 2 - 3 - 4"
+gFoot2 <-"Connect circles 1 - A - 2 - B"
+gFoot3 <-"Connect circles A - 1 - B - 2"
+gFoot4 <-"Connect circles A - B - C - D"
+
+gFootX1 <- " Trial: ["
+gFootX2 <-"] Click screen to begin"
+gTrialtext <- " Trial: ["
+gThanks <- "Thank you for participating"
+
+
+}else{
+ GetStrings("EN")
+}
+
+}
