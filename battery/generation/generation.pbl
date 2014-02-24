@@ -2,18 +2,24 @@
 ## (See Slamecka & Graf, 1978)
 ## Words and basic paradigm taken from:
 ##  Hirshman & Bjork (1986). The Generation Effect: Support for a 
-##  two-factor theory. JEP:LMC, 14, 484-494o
+##  two-factor theory. JEP:LMC, 14, 484-494
 
 define Start(p)
 {
 
-  gWin <- MakeWindow("black")
+
+  parpairs <- [["bgcolor","black"]]
+
+  gParams <- CreateParameters(parpairs,"params/generation.pbl.par")
+
+
+  gWin <- MakeWindow(gParams.bgcolor)
+
   gSleepEasy <- 1
   if(gSubNum+""=="0")
     {
      gSubNum <- GetSubNum(gWin)
     }
-
 
   MakeDirectory("data")
   fname <- "data/generation-"+gSubNum+".csv"
@@ -21,7 +27,8 @@ define Start(p)
   gFileOut <- FileOpenWrite(fname)
   FilePrint(gFileOut,"subnum,dum,de,dum")
 
-
+  
+  ## These are arrange as cue-firstassociate-third associate (easier and harder)
   words <- Shuffle([["Sickness","Health","Illness"],
      	   ["Rough","Smooth","Hard"],
 	   ["Eating","Food","Hungry"],
@@ -36,6 +43,7 @@ define Start(p)
    	   ["Dark","Light","Room"],
    	   ["Quickly","Fast","Run"],
    	   ["Chair","Table","Soft"]])
+
 
 
   types <- Merge(Repeat("gen",7),
