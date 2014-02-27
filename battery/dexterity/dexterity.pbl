@@ -6,17 +6,45 @@ define Start(par)
 ##  test
 
 
-    gVideoWidth <- 600
-    gVideoHeight <- 600
+#    gVideoWidth <- 600
+#    gVideoHeight <- 600
 
-    gTolerance <- 5      #How close you have to get to the target.
-    gCursorSize <- 5     #Size of the cursor
-    gNoise <- 12         #noise on each sample.
-    gDrift <- .3         #drift back toward center
+    
+parpairs <- [["tolerance",5],
+             ["cursorsize",5],
+             ["drift",.3],
+            ["mindist",100],
+            ["maxdist",280],
+	    ["timeout",10000],
+	    ["minnoise",1],
+	    ["maxnoise",20],
+	    ["noisestep",3],
+	    ["trialspercond",10]
+           ]
+
+                  
+
+ 
+   gParams <- CreateParameters(parpairs,"params/dexterity.pbl.par")
+
+    gTolerance <- gParams.tolerance
+    gCursorSize <- gParams.cursorSize
+    gDrift <- gParams.drift
+    gMinDist <- gParams.mindist
+    gMaxDist <- gParams.maxdist
+    gTimeOut <- gParams.timeout
+
+
+    noiseCond <- Sequence(gParams.minnoise,gParams.maxnoise,gParams.noisestep)
+    condsize <- gParams.trialspercond         ##trials per condition
+
+
+
     gSleepEasy <- 1
 
   
-    gTimeOut <-  10000  #maximum time allowed to hit target
+
+
     
     gWin <- MakeWindow()
 
@@ -29,16 +57,12 @@ define Start(par)
     gHomeX <- Round(gVideoWidth/2)   # center position
     gHomeY <- Round(gVideoHeight/2)  #
 
-    gMinDist <- 100                    # Minimum distance to target
-    gMaxDist <- (gVideoHeight-20)/2    # Maximum distance to target
 
     MakeDirectory("data")
     fileout <- FileOpenWrite("data/dext-"+gSubNum+".csv")
 
 
 
-    noiseCond <- [1,3,5,7,9,12,15,20]  ##three noise conditions; blocked
-    condsize <- 10         ##trials per condition
     conds <- Shuffle(RepeatList(noiseCond,condsize))
     Print(conds)
 
