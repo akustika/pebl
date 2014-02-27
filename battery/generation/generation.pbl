@@ -25,7 +25,8 @@ define Start(p)
   fname <- "data/generation-"+gSubNum+".csv"
 
   gFileOut <- FileOpenWrite(fname)
-  FilePrint(gFileOut,"subnum,dum,de,dum")
+
+  FilePrint(gFileOut,"subnum,stage,trial,type,easyhard,trial2,hint,stim,pair2,resp,correct,abstime,rt")
 
   
   ## These are arrange as cue-firstassociate-third associate (easier and harder)
