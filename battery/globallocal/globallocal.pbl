@@ -15,7 +15,7 @@ define Start(p)
 	       ["globalsize",200],
 	       ["reps",	10],
 	       ["showcache",1],
-	       ["scalestamp",1],
+	       ["scalestamp",0],
 	       ["stampongrid",1],
 	       ["stim1","H"],
 	       ["stim2","S"],
