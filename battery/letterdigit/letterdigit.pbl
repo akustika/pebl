@@ -11,9 +11,16 @@
 
 define Start(p)
 {
+
+  parpairs <- [["numtrials",30],
+               ["usefeedback",0]]    
   
-   numtrials <- 30
-   gFeedback <- 0
+
+   gParams <- CreateParameters(parpairs,"params/letterdigit.pbl.par")
+
+   numtrials <- gParams.numtrials
+   gFeedback <- gParams.usefeedback
+
 
   gSleepEasy <- 1
   gWin <- MakeWindow()
@@ -88,7 +95,6 @@ define Start(p)
   ##make 9 letter, 9 number stimuli.
 
   stimObjects <- MakeStim(map)
-
   Draw()
 
 
@@ -153,10 +159,13 @@ define Start(p)
 define MakeStim(map)
 {
 
+   mapWidth <- 500
+
   stimobjects <- []
-  left <- 50
-  right <- gVideoWidth-50
-  jump <- (right-left)/8
+  left <- gVideoWidth/2-mapWidth/2
+  right <-gVideoWidth/2+mapWidth/2
+  jump <- mapwidth/8
+
   loop(i,map)
    {
  
