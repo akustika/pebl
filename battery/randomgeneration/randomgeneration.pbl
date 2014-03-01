@@ -2,16 +2,29 @@ define Start(p)
 {
 
 
+  parpairs <- [["numtrials",162],
+	       ["practicetrials",15],
+	       ["isi",800],
+	       ["usebeep",1],
+	       ["useflash",1],
+               ]
+
+   gParams <- CreateParameters(parpairs,"params/randomgeneration.pbl.par")
+
+   ##Here are the tokens to accept and the keys to use:
+   ##you should be able to change these, plus some instructions, and 
+   ##use a smaller set.
+
    tokens <- Sequence(0,9,1)
+   keys <- ["0","1","2","3","4","5","6","7","8","9",  
+           "<kp_1>","<kp_2>","<kp_3>","<kp_4>","<kp_5>","<kp_6>",
+            "<kp_7>","<kp_8>","<kp_9>","<kp_0>"]
 
-   numBeeps <- 162
-   numBeeps <- 15
-   practice <- 10  ##how many practice beeps
-   isi <- 800    
-
-
-   useBeep <- 1
-   useFlash <- 1
+   numBeeps <- gParams.numtrials
+   practice <- gParams.practicetrials  ##how many practice beeps  
+   isi <- gParams.isi
+   useBeep <- gParams.useBeep
+   useFlash <- gParams.useFlash
 
    gSleepEasy <- 1
    gwin <- MakeWindow("black")
@@ -21,7 +34,6 @@ define Start(p)
 
    ##Here is the tone:
    beep <- MakeSineWave(300,200,.9)
-
    flash <- Circle(gVideoWidth/2,gVideoHeight/2,100,MakeColor("red"),1)
    AddObject(flash,gWin)
    responded <- Circle(gVideoWidth/2,gVideoHeight/2,100,MakeColor("white"),0)
@@ -32,21 +44,34 @@ define Start(p)
   log <- FileOpenAppend("data/runlog.txt")
   FilePrint(log, gSubNum + "," + TimeStamp() + ",Random generation started")
  
-  MessageBox("In this task, you should press a keyboard number (0-9) repeatedly, once for each beep. Try to make the numbers you press in as random an order as possible. For example, think about picking a number out of a hat, typing that number, putting it back, and then picking another.  Keep a consistent response rhythm, responding once per beep.  The first few beeps do not count, and are just for practice.  Press OK to begin.",gWin)
+  MessageBox("In this task, you should press a keyboard number (0-9) repeatedly, once for each beep and flash. Try to make the numbers you press in as random an order as possible. For example, think about picking a number out of a hat, typing that number, putting it back, and then picking another.  Keep a consistent response rhythm, responding once per beep and flash.  
 
-  keys <- ["0","1","2","3","4","5","6","7","8","9",  
-           "<kp_1>","<kp_2>","<kp_3>","<kp_4>","<kp_5>","<kp_6>",
-            "<kp_7>","<kp_8>","<kp_9>","<kp_0>"]
+There will be a red circle that flashes on the screen to help you keep time.  When the computer registers your response, the red circle will be replaced by white empty circle.  Try to make a response for each flash.
+
+To take part, place you fingers on the number line at the top of the keyboard, with your index finders on 4 and 7.  Although 5 and 6 will not be directly below a finger, use all ten numbers equally often.
+
+First, you will do a short practice set. Press OK to begin.",gWin)
+
    test <- []
    times <-[]
 	    
- doTest <- 0
- if(doTest)
+  header.text <- "Place hands on 1234 7890.  Hit any number key to begin"
+  ShowCursor(0)
+  Draw()
+  Hide(header)
+  WaitForListKeyPress(keys)
+  Draw()
+  
+  ##Turn this to 0 to check the RNG stat calculation without doing the 
+  ## actual test.
+  doTest <- 1
+  if(doTest)
   {
   CountDown(gWin)
   trial <- 1
   type <- "Practice"
-  totaltrials <- numBeeps + practice
+  ##Let's do an initial practice, then a second 'hidden' practice
+  totaltrials <- numBeeps + practice*2
 
   time0 <- GetTime()
   while(trial <= totaltrials)
@@ -54,8 +79,22 @@ define Start(p)
  
    trialEnd <- time0 + trial * isi
 
-   if(trial==(practice+1))
+
+   if(trial == practice+1)
+   {
+       ShowCursor(1)
+      MessageBox("Now, you will be tested for real, and your responses will be recorded.  Remember to enter one number for each flash on the screen.  Hit OK to begin.",gWin)
+       ShowCursor(0)
+       Show(header)
+       Draw()
+       Hide(header)
+       WaitForListKeyPress(keys)
+       Draw()
+       
+   }
+   if(trial==(practice*2+1))
      {
+       
        type <- "test"
      }
  
@@ -100,14 +139,18 @@ define Start(p)
     }
 
 
-    Print(test)
-
  }  else {
-  test <- [1, 1, 2, 7, 0, 9, 8, 6, 7, 8, 9, 0, 1, 3, 4]
-  times <- [1, 1, 2, 7, 0, 9, 8, 6, 7, 8, 9, 0, 1, 3, 4]
+
+   test <- [1, 1, 2, 7, 0, 9, 8, 6, 7, 8, 9, 0, 1, 3, 4]
+   times <- [1, 1, 2, 7, 0, 9, 8, 6, 7, 8, 9, 0, 1, 3, 4]
 
  }
 
+   ShowCursor(1)
+   Hide(responded)
+   Show(header)
+   header.text <- "Calculating results"
+   Draw()
 
    ##Compute a bunch of statistics:
 
@@ -176,7 +219,7 @@ define Start(p)
 
  out <- out+CR(1) +   Print("Repetition gap Mean:                        " + meanRepGap)
  out <- out+CR(1) +   Print("Repetition gap Median:                      " + medRepGap)
- out <- out+CR(1) +   Print("Repetition gap Median:                      " + modeRepGap)
+ out <- out+CR(1) +   Print("Repetition gap Mode:                        " + modeRepGap)
  out <- out+CR(1) +   Print("First order distance:")
 
   foddist <- FOD(test,tokens)
@@ -213,7 +256,7 @@ define Start(p)
            coupon + "," + redun + "," + rng + "," + nsq+","+First(adj)+","+
            Second(adj)+","+tpi+","+meanrepgap+","+medrepgap+","+moderepgap+","+rng2)
 
-   
+   MessageBox("Thank you for taking part in this study. The results are saved in data\"+gSubNum+" folder.",gWin)   
   FilePrint(log, gSubNum + "," + TimeStamp() + ",Random generation ended")
 }
 
