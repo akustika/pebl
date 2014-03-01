@@ -14,9 +14,19 @@
 define Start(p)
 {
 
+
+  parpairs <- [["doweightings",0],
+               ["taskname",""],
+	       ["scaleheight",300]
+               ]
+
+   gParams <- CreateParameters(parpairs,"params/tlx.pbl.par")
+
+
    ##Should you collect the pairwise weights?
-   gDoWeightings <- 1
-   gScaleHeight <- 300
+   gDoWeightings <- gParams.doweightings
+   gScaleHeight <- gParams.scaleheight
+
    gWin <- MakeWindow("black")
    gSleepEasy <- 1
    if(gSubNum+"" == "0")
@@ -24,16 +34,10 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
    }
 
-  ##We should specify the task too???
-  if(First(p)==0)
-   {
-     taskname <- "Unspecified"
-   } else {
-     taskname <- First(p)
-   }
 
+   taskname <- gParams.taskname
 
-  labelmain <- EasyLabel("Weights for Task: "+taskname,gVideoWidth/2,20,gWin,24)
+   labelmain <- EasyLabel("Weights for Task: "+taskname,gVideoWidth/2,20,gWin,24)
 
   scales <- [["   Mental"+CR(1)+"  Demand", "Very Low","Very High","How mentally demanding was the task?"],
   		   	 ["   Physical"+CR(1)+"   Demand", "Very Low","Very High","How physically demanding was the task?"],
