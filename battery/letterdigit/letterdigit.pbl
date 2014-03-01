@@ -34,7 +34,8 @@ define Start(p)
   gstimFont <- MakeFont(gPEBLBaseFontMono,0,24,MakeColor("black"),MakeColor("grey"),1)
   gProbeFont <-MakeFont(gPEBLBaseFontMono,0,80,MakeColor("black"),MakeColor("grey"),1)
 
-  gfileout <- FileOpenWrite("letterdigit-"+gSubNum+".txt")
+  CreateDirectory("data")
+  gfileout <- FileOpenWrite("data/letterdigit-"+gSubNum+".csv")
 
   gDatCorr <- []
   gDatRT  <- []
@@ -65,7 +66,7 @@ define Start(p)
 
 
   ##Add the taurget characters:
-  FilePrint(gFileOut,"subnum block trial letter cresp resp corr rt")
+  FilePrint(gFileOut,"subnum,block,trial,letter,cresp,resp,corr,rt")
 
 
 
@@ -76,7 +77,7 @@ define Start(p)
    loop(stim,stimuli)
    {
 
-    FilePrint_(gFileOut,gsubnum + " " + type + " " + trialnum + " " + First(stim) +  " " + Nth(stim,2)+ " ")
+    FilePrint_(gFileOut,gsubnum + "," + type + "," + trialnum + "," + First(stim) +  "," + Nth(stim,2)+ ",")
     Trial(stim,type)
     trialnum <- trialnum +1
   }
@@ -105,7 +106,7 @@ define Start(p)
    loop(stim,stimuli)
    {
 
-    FilePrint_(gFileOut,gsubnum + " " +type+ " " + trialnum + " " + First(stim) +  " " + Nth(stim,2)+ " ")
+    FilePrint_(gFileOut,gsubnum + "," +type+ "," + trialnum + "," + First(stim) +  "," + Nth(stim,2)+ ",")
     Trial(stim,type)
     trialnum <- trialnum +1
   }
@@ -123,7 +124,7 @@ define Start(p)
   sd <- StdDev(gDatRT)
   var <- sd^2
 
-  sumfile <- FileOpenWrite("letterdigit-summary-"+gSubNum+".txt")
+  sumfile <- FileOpenWrite("data/letterdigit-summary-"+gSubNum+".txt")
   FilePrint(sumfile,"----------------------------------------------")
   FilePrint(sumfile,"Summary for the PEBL letter-digit Task, Version 0.1")
   FilePrint(sumfile,"Released into public domain 2008 by Shane T. Mueller, Ph.D. (smueller at obereed dot net)")
@@ -229,7 +230,7 @@ define Trial(map,type)
      gDatRT <- Append(gDatRT,(time1-time0))
    }
 
-   FilePrint(gFileOut,resp + " " + corr + " "+ (time1-time0))
+   FilePrint(gFileOut,resp + "," + corr + ","+ (time1-time0))
    RemoveObject(probe,gWin)
    Draw()
    Wait(500)
