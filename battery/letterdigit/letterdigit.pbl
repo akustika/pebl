@@ -34,7 +34,7 @@ define Start(p)
   gstimFont <- MakeFont(gPEBLBaseFontMono,0,24,MakeColor("black"),MakeColor("grey"),1)
   gProbeFont <-MakeFont(gPEBLBaseFontMono,0,80,MakeColor("black"),MakeColor("grey"),1)
 
-  CreateDirectory("data")
+  MakeDirectory("data")
   gfileout <- FileOpenWrite("data/letterdigit-"+gSubNum+".csv")
 
   gDatCorr <- []
