@@ -16,14 +16,22 @@
 define Start(p)
 {
 
-  ## The time of each trial
-  trialtime <- 10*1000   #number of seconds * 1000 = ms
-  maxTrials <- 8
+  parpairs <- [["trialtime",10],
+               ["maxtrials",8],
+               ["usekeypad",0]  #Change useKeyPad from 0 to 1 to use the keyboard number pad.
+                ]
 
-  #Change useKeyPad from 0 to 1 to use the keyboard number pad.
-  useKeypad <- 0
+
+  gParams <- CreateParameters(parpairs,"params/tapping.pbl.par")
+  ## The time of each trial
+  trialtime <- gParams.trialtime*1000   #number of seconds * 1000 = ms
+  maxTrials <- gParams.maxtrials
+
+
+  useKeypad <- gParams.usekeypad
 
   
+
   GetStrings(gLanguage,trialtime, maxTrials,usekeypad)
 
   if(useKeyPad == 1)
@@ -42,8 +50,8 @@ define Start(p)
 
   ShowCursor(0)
   gSleepEasy <- 1
-  gVideoWidth <- 800
-  gVideoHeight <- 600
+##  gVideoWidth <- 800
+##  gVideoHeight <- 600
   gWin <- MakeWindow("black")
 
   if(gSubNum==0)
@@ -51,7 +59,8 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
    }
 
-  gFileOut <-FileOpenWrite("tapping-"+gSubNum+".csv")
+  MakeDirectory("data")
+  gFileOut <-FileOpenWrite("data/tapping-"+gSubNum+".csv")
   FilePrint(gFileOut,"sub,trial,domhand,hand,tap,sumtime,trialtime,rt")
   font <-  MakeFont(gPEBLBaseFontMono,0,24,MakeColor("white"),MakeColor("black"),1)
   
@@ -98,7 +107,7 @@ define Start(p)
 
 
 
-   reportfile <-  FileOpenWrite("tapping-summary-"+gSubNum+".txt")
+   reportfile <-  FileOpenWrite("data/tapping-summary-"+gSubNum+".txt")
    FilePrint(reportfile,"--------------------------------------------------------")
    FilePrint(reportfile, gSummaryFile1)
    FilePrint(reportfile, " http://pebl.sf.net")
