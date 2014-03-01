@@ -11,13 +11,54 @@
 
 define Start(p)
 {
+
+
+  parpairs <- [["boxwidth",600],
+               ["boxheight",400],
+	       ["targ1","O"],
+	       ["targ2","X"],
+	       ["foil1","U"],
+	       ["foil2","D"],
+	       ["foil3","G"],
+	       ["foil4","C"],
+	       ["foil5","Q"],
+	       ["search1size",10],
+	       ["search2size",20],
+	       ["search3size",30],
+	       ["numtargs1",0],
+	       ["numtargs2",1],
+	       ["numtargs3",5],
+	       
+               ["targcol1","white"],#
+	       ["targcol2","green"],#
+	       ["foilcolor","white"],#
+	       ["reps", 5]
+              ]
+
+  gParams <- CreateParameters(parpairs,"params/vsearch.pbl.par")
+
   gWin <- MakeWindow("black")
   gSleepEasy <- 1
   gHomeX <- Round(gVideoWidth/2)
   gHomeY <- Round(gVideoHeight/2)
 
-  gDisplayBoxSizeX <- 600  ##400 pixels/side,centered
-  gDisplayBoxSizeY <- 400  ##400 pixels/side,centered
+  gDisplayBoxSizeX <- gParams.boxwidth   ##pixels/side,centered
+  gDisplayBoxSizeY <- gParams.boxheight  ##pixels/side,centered
+
+
+   ##The following specify the conditions of the experiment.
+   targs  <- [gParams.targ1,gParams.targ2]
+   foils <- [gParams.foil1,gParams.foil2,
+             gParams.foil3,gParams.foil4,gParams.foil5]
+
+
+   foilcolor <- MakeColor(gParams.foilcolor)
+   searchsize <- [gParams.search1size,gParams.search2size,gParams.search3size]
+
+   numtargs <- [gParams.numtargs1,gParams.numtargs2,gParams.numtargs3]
+   targcols <- [gParams.targcol1,gParams.targcol2]
+   reps  <- gParams.reps
+   
 
   ##get subject code if you don't have one.
   if(gSubNum+"" == "0") 
@@ -29,17 +70,12 @@ define Start(p)
    gFileOut <- FileOpenWrite("data/vsearch-"+gsubnum+".csv")
    FilePrint(gFileOut,"sub,trial,time,numtargs,size,targchar,targcol,stim,resp,corr,rt1,rt2")
 
+
+
+
   MessageBox("You are about to take part in a study where you see a screen with many letters on it, and are searching for a particular target.  At the start of each trial, you will be shown the target.  Then, a screen will appear, and you will need to search for the target.  On some trials, the target will be present; on other trials it will be absent.  When you find the target or determine that it is absent, click the mouse button.  Following the mouse click, At this point, the targets will all be replaced by boxes so that you can no longer see what they were.  When this is done, click on the location of the target or the 'None' button.",gWin)
 
-   ##The following specify the conditions of the experiment.
-   targs  <- ["O","X"]
-   foils <- ["U","D","G","C","Q"]
-   foilcolor <- MakeColor("white")
-   searchsize <- [10,20,30]
-   numtargs <- [0,1,5]
-   targcols <- ["white","green"]   
-   reps  <- 5
-   
+
    ##These aggregate the conditions into a single design list.
    sizes  <- (DesignFullCounterbalance(numtargs,searchsize))
    bytargs <- DesignFullCounterbalance(targs,targcols)
