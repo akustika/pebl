@@ -1,8 +1,24 @@
 define Start(p)
 {
 
-  lengths <- [2,4,6]
-  trialBase <- 25  ##how many targets and foils per block.
+   ##fallback parameters
+   parpairs <- [["length1",2],
+                ["length2",4],
+		["length3",6],
+                ["trialsperblock",25],
+                ["stimset","BCDFGHJKLMNPQRSTVWZ"],
+		["rounds",2],
+		["samestim",1]]
+
+
+
+  gParams <- CreateParameters(parpairs,"params/sternberg.pbl.par")
+
+  stimulusSet <- SplitString(gParams.stimset,"")
+
+  lengths <- [gParams.length1,gParams.length2,gParams.length3]
+  trialBase <- gParams.trialsperblock  ##how many targets and foils per block.
+
 
   gSleepEasy <- 1
   gwin <- MakeWindow("black")
@@ -21,6 +37,7 @@ define Start(p)
 
  if(not needsubnum)
   {
+    MakeDirectory("data/"+gSubNum)
     gFileOut <- FileOpenAppend("data/"+gSubNum+"/sternberg-"+gSubNum+".csv")   
   }
 
@@ -53,28 +70,59 @@ define Start(p)
   MessageBox("In this task, you will first see and memorize a short list of letters.  For example BN.  Once you have memorized the list, you will see a sequence of letters, and be asked to judge whether each one was or was not on the list.  Letters on the list should be indicated with the left shift key, letters not on the list with a right shift key.  Click below when you are ready to begin.",gWin)
 
   ShowCursor(0)  
-  ##The 'stimuli' should be a sampling of N consonants
 
   datAcc <- []
   datRT <- []
   datCond <- []
   datTF  <- []
 
-  cons <- FileReadList("UppercaseConsonants.txt")
-  trial <- 1
-  loop(length,lengths)
-  {
-
+  stimsets <- []
+  nonsets <- []
+  ##precreate the stimuli
+  if(gParams.samestim)
+   {
+    loop(length,lengths)
+    {
       #Pick the letters--both the target set and the nonset
-      letters <- Shuffle(cons)
+      letters <- Shuffle(stimulusSet)
       stim <- SubList(letters,1,length)
       nonset <- SubList(letters, length+1,Length(letters))
+     PushOnEnd(stimsets,stim)
+     PushOnEnd(nonsets, nonset)      
+
+    }
+
+    stimsets <- RepeatList(stimsets,gParams.rounds)
+    nonsets <- RepeatList(nonsets,gParams.rounds)
+
+   }else{
+    loop(i,Sequence(1,gParams.rounds,1))
+    {
+     loop(length,lengths)
+     {
+      #Pick the letters--both the target set and the nonset
+      letters <- Shuffle(stimulusSet)
+      stim <- SubList(letters,1,length)
+      nonset <- SubList(letters, length+1,Length(letters))
+     PushOnEnd(stimsets,stim)
+     PushOnEnd(nonsets, nonset)      
+    }
+   }
+
+   }
+
+  rounds <- Sequence(1,Length(stimsets),1)
+  trial <- 1
+  loop(i,rounds)
+  {
+      length<-Length(Nth(stimsets,i))
+
+      stim <- Nth(stimsets,i)
+      nonset <-Nth(nonsets,i)
       
       ##now create the stimulus sets
       targs <- SampleNWithReplacement(stim,trialBase)
       foils <- SampleNWithReplacement(nonset,trialBase)
-
-
 
       ##Create a stimulus sequence in random order      
       stimbase <- Merge(targs,foils)
@@ -123,7 +171,7 @@ define Start(p)
 
   ##Compute stats
   levs <- Levels(datCond)
-  Print(levs)
+
 
   out <- TimeStamp() +CR(1) + "Participant: "+ gSubNum +CR(2)
   datall <- Transpose([datRT,datAcc,datTF])
