@@ -28,7 +28,12 @@
 define Start(lPar)
 {
 
-  gInputDevice <- "mouse"   ##mouse or keybard are valid.
+  parpairs <- [["inputdevice","mouse"]]   ##mouse or keyboard are valid.
+     
+  gParams<-CreateParameters(parpairs,"params/donkey.pbl.par")
+
+
+  gInputDevice <- gParams.inputdevice
 
   ## results are stored in tmpresults.dat
   MakeDirectory("data")
