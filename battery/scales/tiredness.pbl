@@ -4,9 +4,12 @@
 define Start(p)
 {
 
+  parpairs <- [["scaleheight",300]]
+  gParams <- CreateParameters(parpairs,"params/tiredness.pbl.par")
+               
    ##Should you collect the pairwise weights?
-   gDoWeightings <- 1
-   gScaleHeight <- 300
+
+   gScaleHeight <- gParams.scaleheight
    gWin <- MakeWindow("black")
    gSleepEasy <- 1
    if(gSubNum == 0)
@@ -14,13 +17,6 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
    }
 
-  ##We should specify the task too???
-  if(First(p)==0)
-   {
-     taskname <- "Unspecified"
-   } else {
-     taskname <- First(p)
-   }
 
 
   labelmain <- EasyLabel("How likely would you be to fall asleep right now if you were: ",gVideoWidth/2,20,gWin,24)

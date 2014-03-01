@@ -4,9 +4,6 @@
 define Start(p)
 {
 
-   ##Should you collect the pairwise weights?
-
-   gScaleHeight <- 300
    gWin <- MakeWindow("white")
    gSleepEasy <- 1
    if(gSubNum == 0)
