@@ -26,8 +26,35 @@
 define Start(p)
 {
 
+  parpairs <- [["repsperblock",25],
+                ["numblocks",4],
+               ["resetthresh",1],  ##reset threshold to average threshold on each block.
+               ["prestime",-1],
+               ["base1",6],
+	       ["base2",20],
+	       ["base3",50],
+	       ["base4",100],
+	       ["thresh1",4],
+	       ["thresh2",4],
+	       ["thresh3",4],
+	       ["thresh4",4],
+	       ["errorAdj",1],
+	       ["correctAdj",-.25],
+               ["fieldsize",450],
+	       ["border",100],
+	       ["dotcolor","red"],
+	       ["dotfilled",1],
+	       ["dotradius",10],
+	       ["useAudioFeedback",1],
+               ["responsetype","keyboard"]  ##currently, changing this has no effect.
+              ]
 
-   numReps <- 50  ##
+
+   gParams <- CreateParameters(parpairs,"params/dotjudgment.pbl.par")
+
+
+    base <- [gParams.base1,gParams.base2,gParams.base3,gParams.base4]
+    thresholds <-[gParams.thresh1,gParams.thresh2,gParams.thresh3,gParams.thresh4]
 
    gWin <- MakeWindow("black")
 
@@ -36,7 +63,7 @@ define Start(p)
    ##Get subject code if we need to:    
    if(gSubNum==0)
     {
-	  gSubNum <- GetSubNum(gWin)
+      gSubNum <- GetSubNum(gWin)
     }
 
    ##Make data files   
@@ -67,40 +94,66 @@ define Start(p)
 
 
 
-
-     
-    trials <- Sequence(2,60,1)  
+   if(gParams.UseAudioFeedback)
+   {
+     gCorrectSound <- LoadSound("correct.wav")
+     gIncorrectSound <-LoadSound("buzz500ms.wav")
+   }
 
     ##Set up some data holders
-    gBlocknum <-   []
+    dataBaseVals <-   []
+    dataThresh <- []
     gRTs        <- []
     gCorr <- []
     gRunningCorr <- []
-    gCorr10     <- []
-    gCorr20     <- []
-    gCorr30     <- []
-    gCorr40     <- []
 
 
-    base <- [10,20,40,80]
-    thresholds <- [3,3,3,3]
     gTrial <- 1
-    gBlock <- 0
 
+    ##Run several blocks, between which you get a break and 
+    ##can reset threshold
 
-    design <- Shuffle(RepeatList([1,2,3,4],numReps))
-    loop(type,design)
+    loop(gBlock,Sequence(1,gParams.numblocks,1))
     {
+
+     design <- Shuffle(RepeatList([1,2,3,4],gParams.repsperblock))
+     blockBaseVals <- []
+     blockThresh  <- []
+     loop(type,design)
+     {
 
       thresh <- Nth(thresholds,type)	  
       newthresh <- Trial(Nth(base,type),thresh,1)
-      thresholds <- SpliceList(thresholds,newthresh,type)		
-	  gTrial <- gTrial + 1
+      SetElement(thresholds,type,newthresh)		
+      PushOnEnd(blockBaseVals, Nth(base,type))
+      PushOnEnd(blockThresh, thresh)
+      gTrial <- gTrial + 1
 
-    }    
+     }    
+
+   Print(thresholds)
+    ##Reset threshold to average of previous threshold for each base value
+   if(gParams.resetthresh)
+    {  
+        thresholds <- []
+        loop(i,base)
+        { 
+
+             tmpthresh <- Filter(blockThresh,Match(blockBaseVals,i))
+             PushOnEnd(thresholds, Median(tmpthresh))
+        }
+     }
+
+    dataBaseVals <- Merge(dataBaseVals,blockBaseVals)
+    dataThresh <- Merge(dataThresh,blockThresh)
 
 
-
+    if(gBlock <gParams.numblocks)
+     {
+         MessageBox("You may take a short break before continuing.", gWin)
+     }
+   }
+  
 
    FilePrint(gSumFileOut,"-----------------------------------------------")
    FilePrint(gSumFileOut,"PEBL Dots Task, Version 1.0")
@@ -109,24 +162,54 @@ define Start(p)
    FilePrint(gSumFileOut, GetPEBLVersion())
    FilePrint(gSumFileOut, GetSystemType())
    FilePrint(gSumFileOut,"-----------------------------------------------")
-   FilePrint(gSumFileOut,"Screen width x height: " +gVideoWidth+ "x"+gVideoHeight)
-   FilePrint(gSumFileOut,"Offset used: "+gOffset)
+
+
    FilePrint(gSumFileOut, "Subject code: "+gSubNum)
    FilePrint(gSumFileOut, "Time:         "+TimeStamp())
+   FilePrint(gSumFileOut,"Reps per block: "+gParams.repsPerBlock  )
+   FilePrint(gSumFileOut,"Blocks:      "+gParams.numBlocks  )
+
+   FilePrint(gSumFileOut,"fieldsize:   "+gParams.fieldsize)
+   FilePrint(gSumFileOut,"dotcolor:   "+gParams.dotcolor)
+   FilePrint(gSumFileOut,"dotfilled:   "+gParams.dotfilled)
+   FilePrint(gSumFileOut,"dotradius:   "+gParams.dotradius)
+   FilePrint(gSumFileOut,"-----------------------------------------------")
+   FilePrint(gSumFileOut,"                      Thresholds  ")
+   FilePrint(gSumFileOut,"Base value       Mean     Last half     Final " )
    FilePrint(gSumFileOut,"-----------------------------------------------")
 
+   meanthreshs <- []
+   ##compute average threshold for each base value
+   loop(i,base)
+   {
+     filter <- Match(dataBaseVals,i)
+     threshs <- Filter(dataThresh,filter)
+     lasthalf <- SubList(threshs,Floor(Length(threshs)/2),Length(threshs))
+     FilePrint(gSumFileOut,i+ "               " + Mean(threshs)+ "      "+Mean(lasthalf)+"             "+ Last(threshs))
+     PushOnEnd(meanThreshs,Mean(threshs))
+   }
+   FilePrint(gSumFileOut,"-----------------------------------------------")
 
    datalist <- Flatten([Mean(gCorr),Mean(gRTS)])
-              
-   FilePrint(gPooledSummary,gSubNum+","+TimeStamp()+datalist)
+   FilePrint(gSumFileOut,datalist)           
+
+   FilePrint_(gPooledSummary,gSubNum+","+TimeStamp())
+   loop(i,meanthreshs)
+      {  
+        FilePrint_(gPooledSummary,","+i)
+      }
+
    FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+",dots ,"+gResponseType+",EXPERIMENT COMPLETE") 
 
   MessageKeyBox(gDebrief)
 
 }
 
-define Trial (stim,thresh,practice)
+define Trial(stim,thresh,practice)
 {
+
+  
+   ClearEventLoop()
    time0 <- GetTime()
    ##add the fixation right away.
    header <- EasyLabel("Which field has more dots?",gVideoWidth/2,22,gWin,30)
@@ -134,39 +217,62 @@ define Trial (stim,thresh,practice)
 
    order <- Sample([1,-1])
 
-   border <- 45
-   tol <- 3
+   fieldsize <- gParams.fieldsize
+   border <- gParams.border
+
    if(order==1)
       {  ##higher on right
-       layoutl <- NonOverlapLayout(border,gVideoWidth/2-border,border,gVideoHeight-150,tol,stim+thresh)
-       layoutr <- NonOverlapLayout(gVideoWidth/2+border,gVideoWidth-border,border,gVideoHeight-150,tol,stim)
+
+
+       layoutl <- LayoutPoints(gVideoWidth/2-fieldsize-border/2,
+                                    gVideoWidth/2-border/2,
+                                    border,
+                                    fieldsize+border,Floor(stim+thresh))
+
+       layoutr <- LayoutPoints(gVideoWidth/2+border/2,
+                                     gVideoWidth/2+fieldsize+border/2,
+                                     border,
+                                     fieldsize+border,Floor(stim))
 
 
      } else {
 
-         layoutl <- NonOverlapLayout(border,gVideoWidth/2-border,border,gVideoHeight-150,tol,stim)
-         layoutr <- NonOverlapLayout(gVideoWidth/2+border,gVideoWidth-border,border,gVideoHeight-150,tol,stim+thresh)
+
+        layoutl <- LayoutPoints(gVideoWidth/2-fieldsize-border/2,gVideoWidth/2-border/2,border,fieldsize+border,stim)
+       layoutr <- LayoutPoints(gVideoWidth/2+border/2,gVideoWidth/2+fieldsize+border/2,border,fieldsize+border,Floor(stim+thresh))
 
      }
 
-	 back1 <-Rectangle(gVideoWidth/2/2,(gVideoHeight-150)/2+border/2,(gVideoWidth-border)/2+15,(gVideoheight-150-border)+15,MakeColor("darkgrey"),1)
-	 back2 <-Rectangle(gVideoWidth*3/4,(gVideoHeight-150)/2+border/2,(gVideoWidth-border)/2+15,(gVideoheight-150-border)+15,MakeColor("darkgrey"),1)
+	 back1 <-Rectangle(gVideoWidth/2-border/2-fieldsize/2,
+                           border+fieldsize/2,
+            fieldsize+gParams.dotradius*2,fieldsize+gParams.dotradius*2,MakeColor("darkgrey"),1)
+  	 back2 <-Rectangle(gVideoWidth/2+border/2+fieldsize/2,border+fieldsize/2,
+            fieldsize+gParams.dotradius*2,fieldsize+gParams.dotradius*2,MakeColor("darkgrey"),1)
 
 	 AddObject(back1,gWin)
 	 AddObject(back2,gWin)
 	 dots <- []
 	 loop(i,Merge(layoutl,layoutr))
-      {
+         {
 
-	     dot <-  Circle(First(i),Second(i),8,MakeColor("red"),1)
-		 AddObject(dot,gWin)
-		 dots <- Append(dots,dot)
-      }
+	      dot <-  Circle(First(i),Second(i),gParams.dotradius,MakeColor(gParams.dotcolor),gParams.dotfilled)
+	      AddObject(dot,gWin)
+	      dots <- Append(dots,dot)
+         }
+
+        timeb <- GetTime()
+        elapsed <- timeb-time0
+	##make the timing pre-presentation more similar
+        Wait(200-elapsed)
 
 	Draw()
     time2 <- GetTime()
     gStimOn <- 1
-    RegisterEvent("<TIMER>", 1, time2+1500,"<GEQ>","HIDEME", [dots])
+
+    if(gParams.prestime>0)
+    {
+      RegisterEvent("<TIMER>", 1, time2+gParams.prestime,"<GEQ>","HIDEME", [dots])
+    }
 	resp <- WaitForListKeyPress(["<lshift>","<rshift>"])
 	time3 <- GetTime()
 	
@@ -180,20 +286,29 @@ define Trial (stim,thresh,practice)
      gRunningcorr <- SubList(gRunningCorr,2,11)
    }
 
-
-    if(practice)
-     {
-         if(corr)
-		    {  
+     if(corr)
+      {  
               header.text  <- "Correct   ["+rt+"] "+ thresh
             } else {
               header.text  <- "Incorrect ["+rt+"] "+ thresh
             }
-			Show(header)
-			Draw()
-			Wait(400)
+	Show(header)
+	Draw()
 
-     } 
+     if(gParams.UseAudioFeedback)
+      {
+       if(corr)
+        {
+          PlayForeground(gCorrectSound)
+        }else{
+          PlayForeground(gIncorrectSound)
+        }
+      }else{
+	Wait(400)
+      }
+
+
+
    Draw()
    dataline <- gSubNum + ","+ gBlock + "," +gTrial+","+practice + ","+  stim +","+thresh+","+order+","+
    corr + ","+time2+","+rt
@@ -201,21 +316,21 @@ define Trial (stim,thresh,practice)
    FilePrint(gFileOut,dataline)
    FilePrint(gPooledFileOut,dataline)
 
-
-   gBlocknum   <- Append(gBlockNum,gBlock)
-   gRTs        <- Append(gRTS,rt)
-   gCorr       <- Append(gCorr,corr)
-
+   PushOnEnd(gRTs,rt)
+   PushOnEnd(gCorr,corr)
+   
   RemoveObjects(dots,gWin)
 
-
-  if(corr)
-   {
-    newthresh <- Max([1,(thresh -1)])
+   ##In this staircase, we have a probability of staying regardless of
+   ##correct/incorrect.  Set to 0 if you want to ignore it.
+   if(corr)
+      {
+     newthresh <- Max([1,(thresh +gParams.correctAdj)])
    } else {
-    newthresh <- thresh+2
+     newthresh <- thresh+gParams.errorAdj
    }
-  return newthresh
+
+ return newthresh
 }
 
 
@@ -290,44 +405,12 @@ define Initialize()
 {
 
 
-  gResponseType <-"shiftkeys"  ##currently, changing this has no effect.
+  gResponseType <-gParams.responsetype  ##currently, changing this has no effect.
   gSleepEasy <- 1
   GetStrings(gLanguage) 
   ShowCursor(0)
 
-  ##  The screen re
-  ##
-
-  ## the yoffset is supposed to be 1.06 degrees above offset.
-  ##
-  ##-\                                       X
-  ##  \                                      |
-  ##  #|          tan(1.06) = rise/distance  |
-  ##  #|-------------------------------------X
-  ##  #|
-  ##  /           rise = tan(1.06)*distance
-  ##_/
-  ##
-   
-  ##default to 17" 3x4 screen.  Adjust to suit.
-  screenheight <- 10.2   ## 10.2 inches high
-  eyedistance  <- 30     ##assume 30" from screen.
-  pixelsperunit <- gVideoHeight/screenheight
-  eyepixeldistance <- eyedistance * pixelsperunit
-
-  ##this is the vertical offset
-  gOffset <-  Round(Tan(DegToRad(1.06)) * eyepixeldistance)
-  Print("using offset of "+gOffset)
-   
-   if(not FileExists("data"))
-    {
-       MakeDirectory("data")
-
-    } elseif(not IsDirectory("data"))
-    {
-       SignalFatalError("File named 'data' exists.  Remove so data directory can be created.")    
-    }
-
+  MakeDirectory("data")
    
 
 }
@@ -388,4 +471,71 @@ define SpliceList(list,item,pos)
    i <- i + 1
   }
   return tmp
+}
+
+
+
+# ##  Make num points within region xmin.xmax,ymin.ymax
+# ##  and be sure that no two are identical.
+# ##
+define LayoutPoints(xmin, xmax, ymin, ymax,  num)
+ {
+ 
+    ##Note that it is possible to arrange the situation 
+    ## so that the distribution will never be satisfied.  So, lets
+    ## set up a 'limit' at which point we give up and return the best
+    ## we have so far.
+    limit <- 10
+
+    ## First, just initialize num points.
+    pts <- []
+
+    tries <- 1
+    while(Length(pts)<num and tries <limit)
+    {
+
+     i <- Length(pts)+1
+     while(i <= num)
+     {
+
+      x <- Round(xmin + Random()*(xmax-xmin))
+      y <- Round(ymin + Random()*(ymax-ymin))
+      PushOnEnd(pts,[x,y])
+      i <- i + 1
+     }
+     pts <- RemoveDuplicates(pts)
+     tries <- tries  + 1
+    }
+
+   return Shuffle(pts)
+ }
+
+
+define RemoveDuplicates(pts)
+{
+  tp <- Transpose(pts)
+  pts <- SortBy(pts,Second(tp))
+  tp <- Transpose(pts)
+  pts <- SortBy(pts,First(tp))
+
+  newPts <- [First(pts)]
+  loop(i,Sequence(2,Length(pts),1))
+    {
+     if(PairEqual(Nth(pts,i),Nth(pts,i-1)))
+      {
+       #skip
+      }else {
+        PushOnEnd(newpts,Nth(pts,i))
+      }
+
+    }
+
+  return newpts
+
+}
+
+
+define PairEqual(p1,p2)
+{
+   return (First(p1)==First(p2)) and (Second(p1)==Second(p2))
 }
