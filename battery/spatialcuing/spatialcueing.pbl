@@ -26,6 +26,17 @@
 define Start(par)
 {
 
+
+    parPairs <- [["numValid",15],
+                 ["numInvalid",5],
+		 ["numNeutral",5],
+		 ["fontsize",22],
+		 ["reps",4]
+                ]
+    
+    gParams <- CreateParameters(parpairs,"params/spatialcueing.pbl.par")
+
+
     gWin <- MakeWindow("grey")
     if(gSubNum+""=="0")
     {
@@ -42,14 +53,14 @@ define Start(par)
 #######################################################################
 
  ##The left stimuli:
-    leftC <- 15    #Correct Cue
-    leftI <- 5    #Invalid Cue
-    leftN <- 5    #Neutral Cue
+    leftC <- gParams.numvalid     #Correct Cue
+    leftI <- gParams.numInvalid   #Invalid Cue
+    leftN <- gParams.numNeutral  #Neutral Cue
 
  ##The right stimuli:
-    rightC <- 15   #Correct Cue
-    rightI <- 5   #Invalid Cue
-    rightN <- 5   #Neutral Cue
+    rightC <- gParams.numValid     #Correct Cue
+    rightI <- gParams.numInvalid   #Invalid Cue
+    rightN <- gParams.numNeutral  #Neutral Cue
 
 #############################################
 ## Randomize the stimuli for presentation.
@@ -62,14 +73,18 @@ define Start(par)
    ##Generate the cues: -1 means left, 0 means center, 1 means right
    cues <- Flatten([Repeat(-1,leftC),  Repeat(0,leftN), Repeat(1,leftI),
                     Repeat(-1, rightI), Repeat(0,rightN), Repeat(1,rightC)])
-   stimSequence <- Shuffle(Transpose([stim,cues]))
+
+   stim1 <- Transpose([stim,cues])
+   stim2 <- RepeatList(stim1,gParams.reps)
+   Print(stim2)
+   stimSequence <- Shuffle(stim2)
 
 ######################################
 ## Set up the basic  display stuff.
 ######################################
 
   
-    font <- MakeFont(gPEBLBaseFontMono,0,22,MakeColor("black"), MakeColor("white"),0)
+    font <- MakeFont(gPEBLBaseFontMono,0,gParams.fontsize,MakeColor("black"), MakeColor("white"),0)
 
 
 #################################################################
@@ -95,20 +110,22 @@ define Start(par)
 ###########################################
 
 
-        font2 <-MakeFont(gPEBLBaseFont, 0, 16, MakeColor("black"), 
-MakeColor("grey"), 1)
+    font2 <-MakeFont(gPEBLBaseFont, 0, 16, MakeColor("black"), 
+                       MakeColor("grey"), 1)
 
-    inst <-  "The following task will involve " + ( leftC + leftI + rightC + rightI + leftN + rightN ) + " trials.  At the beginning of each trial, a fixation cross will appear, accompanied by a left arrow ([<+]), a right arrow ([ +>]), or both ([<+>]).  The stimulus 'X' will appear a short time later either to the left or to the right of the fixation area.  The arrow will usually tell you where the stimulus will appear (" + Round(100*((rightC +leftC )/(leftC+leftI + rightC + rightI))) + "% of the time the stimulus 'X' will appear in the direction of the arrow.  If the arrows point both ways, there is an equal chance the stimulus will appear to the left or right.  Your goal is to fixate on the +, without moving your eyes from it, and respond by pressing the 'A' key as soon as you see the stimulus X.  Press any key to begin."
+    numTrials <- ( leftC + leftI + rightC + rightI + leftN + rightN )*gParams.reps
+    inst <-  "The following task will involve " + (numTrials) + " trials.  At the beginning of each trial, a fixation cross will appear, accompanied by a either:" +CR(2)+
+              "             a left arrow:"+CR(1)+ "               [<+ ]" + CR(1)+
+              "             a right arrow:"+CR(1)+"               [ +>]" + CR(1)+
+              "             or both:      "+CR(1)+"               [<+>]"+CR(2)+
+"The stimulus 'X' will appear a short time later either to the left or to the right of the fixation area.  The arrow will usually tell you where the stimulus will appear (" + Round(100*((rightC +leftC )/(leftC+leftI + rightC + rightI))) + "% of the time the stimulus 'X' will appear in the direction of the arrow.  If the arrows point both ways, there is an equal chance the stimulus will appear to the left or right.  Your goal is to fixate on the +, without moving your eyes from it, and respond by pressing the 'A' key as soon as you see the stimulus."
 
-    tb <- MakeTextBox( inst, font2, 700, 350)
+    MessageBox(inst,gWin)
+
+    tb <- MakeTextBox("", font2, 700, 350)
     AddObject(tb, gwin)
     Move(tb,70,75)
-    Draw()
-    WaitForAnyKeyPress()
-
     Hide(tb)
-    Draw()
-    Wait(2000 + RandomDiscrete(1000))
 
 
 ########################################
