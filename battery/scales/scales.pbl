@@ -1,5 +1,13 @@
 define Start(p)
 {
+
+  parpairs <- [["docomfort",1],
+               ["dohotcold",1],
+	       ["dowetdry",1],
+	       ["dotemp",1]]
+
+  gParams <- CreateParameters(parpairs,"params/scales.pbl.par")
+
   gSleepEasy <- 1
   gWin <- MakeWindow()
 
@@ -8,10 +16,29 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
    }
 
-  comf     <- ( Comfort(gWin))
-  hotcold  <- ( HotCold(gWin))
-  wetdry   <- ( WetDry(gWin))
-  temp     <- ( TempChange(gWin))
+  comf <- "NA"
+  hothold <- "NA"
+  wetdry <- "NA"
+  temp <- "NA"
+
+  if(gParams.docomfort)
+   {
+     comf     <- ( Comfort(gWin))
+   }
+ if(gParams.dohotcold)
+   {
+     hotcold  <- ( HotCold(gWin))
+   }
+
+  if(gParams.dowetdry)
+   {
+     wetdry   <- ( WetDry(gWin))
+   }
+
+  if(gParams.dotemp)
+   {
+    temp     <- ( TempChange(gWin))
+   }
 
   MakeDirectory("data")
   fileout <- FileOpenWrite("data/comfort-"+gSubNum+".csv")
@@ -43,7 +70,7 @@ define Comfort(win)
    nums <- Sequence(-100,100,20)
    lnums <- Length(nums)   
    top <- 100
-   bottom <- gVideoHeight-50
+   bottom <- gVideoHeight-200
 
    skip <- (bottom-top)/(lnums-1)
    i <- bottom
@@ -96,11 +123,11 @@ define Comfort(win)
 
   ## Make a 'continue' button
 
-  back <- Rectangle(170,bottom+30,140,30,MakeColor("grey60"),0)
+  back <- Rectangle(270,bottom+30,140,30,MakeColor("grey60"),0)
   AddObject(back,win)
   cont <- MakeLabel("CONTINUE",font)
   AddObject(cont,win)
-  Move(cont,170,bottom + 30)
+  Move(cont,270,bottom + 30)
   Draw()
   continue <- 1
   while(continue)
@@ -150,7 +177,7 @@ define WetDry(win)
    nums <- Sequence(0,6,1)
    lnums <- Length(nums)   
    top <- 100
-   bottom <- gVideoHeight-50
+   bottom <- gVideoHeight-200
 
    skip <- (bottom-top)/(lnums-1)
    i <- bottom
@@ -247,7 +274,7 @@ define HotCold(win)
    nums <- Sequence(-4,4,1)
    lnums <- Length(nums)   
    top <- 100
-   bottom <- gVideoHeight-50
+   bottom <- gVideoHeight-200
 
    skip <- (bottom-top)/(lnums-1)
    i <- bottom
@@ -349,7 +376,7 @@ define TempChange(win)
    nums <- Sequence(0,6,1)
    lnums <- Length(nums)   
    top <- 100
-   bottom <- gVideoHeight-50
+   bottom <- gVideoHeight-200
 
    skip <- (bottom-top)/(lnums-1)
    i <- bottom
