@@ -20,26 +20,43 @@
 define Start(par)
 {
 
+  parpairs <- [["numrepeats",2],
+               ["bgcolor","black"],
+	       ["fgcolor","red4"],
+	       ["xoffset",300]
+               ]
 
-  ##gLanguage defaults to 'en', but can be set at command line.  
-  ##using the --language flag.
-  ## uncomment to hard-code a language extension here:
-  ##gLanguage <- "EN"
 
-   GetStrings(gLanguage)
+  gParams <- CreateParameters(parpairs,"params/Rotation.pbl.par")
+
+    ##Create a couple polygon stimuli. Specify others here:
+
+      stim1 <- [[-20,  0,  0, 20,20, 0, 0,-20],
+	  		 [-80,-80,10,10,80,80,30, 30]]
+
+      stim2 <- [[-80, 80, 80,-50,-50,-80],
+			 [-40,-40,-20,-20,40,40]]
+
+     stims <- [stim1,stim2]
+
+
+
 
    ## Number of times through the design.
-   numRepeats <- 2
+   numRepeats <- gParams.numrepeats
 
+  ##gLanguage defaults to 'en', but can be set at command line.  
+  ##using the --language flag, or via the launcher
+   GetStrings(gLanguage)
 
   ##Set default video resolution.
-  gVideoWidth <- 800
-  gVideoHeight <- 600
+#  gVideoWidth <- 800
+#  gVideoHeight <- 600
 
  
   gSleepEasy <- 1
 
-  win <- MakeWindow("grey")
+  win <- MakeWindow(gParams.bgcolor)
 
   if(gSubNum==0)
    {
@@ -56,10 +73,6 @@ define Start(par)
   head <- EasyLabel(gHeader,gVideoWidth/2,gVideoHeight/2+200,win,22)
   Draw()
   
-  red <- MakeColor("red4")
-  col <- MakeColor("grey") 
-  col2 <- MakeColor("darkgreen")
-  black <- MakeColor("black")
 
   MakeDirectory("data")
   fileout <- FileOpenWrite("data/rotate-"+gSubNum+".csv")
@@ -70,16 +83,7 @@ define Start(par)
 
    gPI <- 3.14159
 
-    ##Create a couple polygon stimuli:
-
-      stim1 <- [[-20,  0,  0, 20,20, 0, 0,-20],
-	  		 [-80,-80,10,10,80,80,30, 30]]
-
-      stim2 <- [[-80, 80, 80,-50,-50,-80],
-			 [-40,-40,-20,-20,40,40]]
-
-     stims <- [stim1,stim2]
-
+     ##Set up basic design:
      stim <- [1,2]
      angles <-[-3,-2,-1,0,1,2,3,4]
      condition <- [1,0]
@@ -96,14 +100,15 @@ define Start(par)
 
      stimid <-First(i)
      pts  <- Nth(stims,stimid)
-	 rot  <- Nth(i,2)
+     rot  <- Nth(i,2)
      cond <- Nth(i,3)
 
+    fgcolor <- MakeColor(gParams.fgcolor)
      ##Pick a random base rotation.
      anglebase <- Random() * 2 *gPI
 
      stm<- RotatePoints(pts, anglebase)
-     poly1 <- Polygon(300,gVideoHeight/2,First(stm),Nth(stm,2),red,1)
+     poly1 <- Polygon(gVideoWidth/2-gParams.xoffset/2,gVideoHeight/2,First(stm),Nth(stm,2),fgcolor,1)
      AddObject(poly1, win)
 
     ##Condition  1 is the reversed, where correct is "D".     
@@ -114,7 +119,7 @@ define Start(par)
 
 
     stm<- RotatePoints(pts,angleBase + gPI*rot/4)
-    poly2 <- Polygon(500,gVideoHeight/2,First(stm),Nth(stm,2),red,1)
+    poly2 <- Polygon(gVideoWidth/2+gParams.xoffset/2,gVideoHeight/2,First(stm),Nth(stm,2),fgcolor,1)
     AddObject(poly2, win)
     Draw()
     t1 <- GetTime()
