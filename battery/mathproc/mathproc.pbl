@@ -1,14 +1,40 @@
 define Start(p)
 {
 
-  blocktime <- 1000 * 180    # Duration of block in ms (default should be  3 min)
-  lengths <-    [2,3,4]
-  deadlines <-  [1500,3000,4000]
-  
-  sums <-[1,2,3,4,6,7,8,9]
-  gFeedback <- 1
+
+parpairs <- [["blocktime",180],# Duration of block in sec (default should be  3 min)
+    ["uselength1",0],
+    ["uselength2",1],
+    ["uselength3",1],
+    ["uselength4",1],
+    ["uselength5",0],
+    ["deadline1",1500],
+    ["deadline2",1500],
+    ["deadline3",3000],
+    ["deadline4",4000],
+    ["deadline5",5000],
+    ["minsum",1],
+    ["maxsum",9],
+    ["givefeedback",1],
+    ["randomizeblocks",0]]
+
+
+  gParams <- CreateParameters(parpairs,"params/mathproc.pbl.par")
+  sums <-Sequence(gParams.minsum,gParams.maxsum,1)
+  gFeedback <- gParams.givefeedback
+
+
   gSleepEasy <- 1
 
+  lengthfilter <- [gParams.uselength1,gparams.uselength2,
+                   gParams.uselength3,gParams.uselength4,
+		   gParams.uselength5]
+
+  lengths <-    Filter([1,2,3,4,5],lengthfilter)
+  deadlines <-  Filter([gParams.deadline1,gParams.deadline2,
+                        gParams.deadline3,gParams.deadline4,
+                         gParams.deadline5]  ,lengthfilter)
+  blocktime <- 1000 * gParams.blocktime
 
   gWin <- MakeWindow()
 
@@ -21,8 +47,8 @@ define Start(p)
     MakeDirectory("data")
     gFileOut <- FileOpenWrite("data/mathproc-"+gSubNum+".txt")
 
-  footer1 <- EasyLabel("Left Shift                                 Right Shift",gVideoWidth/2,gVideoHeight-80,gWin,30)
-  footer2 <- EasyLabel("Sum less than 5                        Sum greater than 5",gVideoWidth/2,gVideoHeight-30,gWin,30)
+  footer1 <- EasyLabel("Left Shift                                 Right Shift",gVideoWidth/2,gVideoHeight-120,gWin,30)
+  footer2 <- EasyLabel("Sum less than 5                        Sum greater than 5",gVideoWidth/2,gVideoHeight-150,gWin,30)
 
    inst <- "In this task, you must solve a number of simple addition and subtraction problems to determine whether the correct answer is greater or less than 5. The two possible reponses on the task are 'greater than' (>) and 'less than' (<).  Less-than responses are made by pressing the left shift key on the keyboard, and greater-than responses are made by pressing the right shift key on  the keyboard. No problem will ever have the value 5 as the correct answer.
 
@@ -32,7 +58,7 @@ The number of additions and subtractions to be performed in each problem will va
 
     Press any key to begin."
 
-    tb  <- EasyTextBox(inst,0,0,gWin,18,gVideoWidth,gVideoHeight)
+    tb  <- EasyTextBox(inst,50,30,gWin,22,gVideoWidth-100,gVideoHeight-250)
     Draw()
     WaitForAnyKeyPress()   
 
@@ -44,8 +70,12 @@ The number of additions and subtractions to be performed in each problem will va
 
   FilePrint(gFileOut, "subnum,trial,feedback,val,length,stim,resp,corr,tooslow,time,rt")
 
-
-  blockdat <- Shuffle(Transpose([lengths,deadlines]))
+  ##present in random order
+  blockdat <- (Transpose([lengths,deadlines]))
+  if(gParams.randomizeblocks)
+  {
+      blockdat <- Shuffle(blockdat)
+  }
 
   ##Data should include condition(length), correct, time
   gDat <- []
@@ -261,7 +291,6 @@ define MakeStimString(list)
 define MakeProblem(answer,length)
 {
   ##Make a series of digits to add that satisfies the requirements:
-
 
  
   list <- []
