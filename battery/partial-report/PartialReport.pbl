@@ -28,25 +28,39 @@
 
 define Start(lPar)
 {
-  #Print(TimeStamp())
- # x <- [[0, 56, 1, 4.1], [116, 58, 0.603448, 1.54876], [137, 58, 0.568966, 1.41228], [179, 58, 0.758621,
-# 2.25376], [326, 60, 0.583333, 1.46859], [621, 57, 0.649123, 1.73789], [1210, 53, 0.566038, 1.40089]]
-
 
 
   ####################################
   ##
   ## Parameters/Variables controlling experiment
   ##
-   
-  blocks <- 9              ## The number of trial blocks
-  blocklength <-  50       ## The number of trials per block
 
+  ##default values.  Override in PartialReport.pbl.par
+   
+  parpairs <- [["blocks",9],
+               ["blocklength",50],
+	       ["deltaX",15],
+	       ["deltaY",15],
+	       ["soa",0],
+	       ["soa",116],
+	       ["soa",137],
+	       ["soa",179],
+	       ["soa",326],
+	       ["soa",621],
+ 	       ["soa",1210]]
+
+  gParams <- CreateParameters(parpairs,"params/PartialReport.pbl")
+
+  blocks <-gParams.blocks              ## The number of trial blocks
+  blocklength <-  gParams.blocklength      ## The number of trials per block
 
   numtrials <- blocks * blocklength 
 	
-  ## SOA in ms.
-  soas <- [0,116,137,179,326,621,1210]
+  ## SOA in ms. These are really chosen to match screen updates, so
+  ## there should be a parameter in the future to support that.
+  soas <- gParams.soa
+  PrintProperties(gParams)
+  Print(gParams.soa)
 
   ####################################
   ##
@@ -59,8 +73,9 @@ define Start(lPar)
   rts     <- []
   delayCond <- []
 
-  deltaX <- 15
-  deltaY <- 15
+  deltaX <- gParams.deltaX
+  deltaY <- gParams.deltaY
+
   ##These dictate where the stimuli will appear.
   gPosX <- [-3*deltax, -deltax, deltax,3*deltax, 3*deltax, deltax,-deltax,-3*deltax]
   gPosY <- [deltay, 3*deltay,3*deltay,deltay,-deltay, -3*deltay,-3*deltay,-deltay]
@@ -184,6 +199,7 @@ define Initialize()
 ##Take video screen size from launcher/environment.
 #  gVideoWidth <- 1024
 #  gVideoHeight <- 768
+  gSleepEasy <- 1
 
   ##Initialize Window, etc.
   gWin <- MakeWindow("grey")   
@@ -203,18 +219,18 @@ define Initialize()
    bg2 <- MakeColor("white")
    
 
-   gInstructionsFont <- MakeFont(gPEBLBaseFont,0,18, gFG,bg2,1)  
+   gInstructionsFont <- MakeFont(gPEBLBaseFont,0,22, gFG,bg2,1)  
    gStimFont         <- MakeFont(gPEBLBaseFontMono, 0,24,gFG,bg,1)       
    
    gFooter <- MakeLabel("Respond using D F J K",gStimFont)
    AddObject(gFooter,gWin)
-   Move(gFooter, gVideoWidth/2,gVideoHeight-80)
+   Move(gFooter, gVideoWidth/2,gVideoHeight-120)
    
 
    ## Make and place the instruction box, then hide it  
-   gInstructions <- MakeTextBox("", gInstructionsFont, 600,300)
+   gInstructions <- MakeTextBox("", gInstructionsFont, 700,400)
    AddObject(gInstructions, gWin)
-   Move(gInstructions, gVideoWidth/2-300, gVideoHeight/2-150)
+   Move(gInstructions, gVideoWidth/2-350, gVideoHeight/2-200)
    Hide(gInstructions)
 
  
