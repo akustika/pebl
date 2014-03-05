@@ -815,7 +815,7 @@ define MakeGabor(size,freq,sd, angle,phase,bglev)
 
       x <- xmin + Random()*(xmax-xmin)
       y <- ymin + Random()*(ymax-ymin)
-      pts <- Append(pts, [x,y])
+      PushOnEnd(pts,[x,y])
       i <- i + 1
     }
 
