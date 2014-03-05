@@ -534,8 +534,8 @@ define MessageBox(text,win)
    Move(bg,gVideoWidth/2,gVideoHeight/2)
    AddObject(bg,win)
 
-   box <- EasyTextBox(text,100,100, win,20,gVideoWidth-200,gVideoHeight-200)
-   ok <- EasyLabel("OK",gVideoWidth/2,gVideoHeight-50,win,44)
+   box <- EasyTextBox(text,100,50, win,20,gVideoWidth-200,gVideoHeight-200)
+   ok <- EasyLabel("OK",gVideoWidth/2,gVideoHeight-100,win,44)
 
    ##Get foreground color
    ##HSV val is the max of RGB
@@ -549,7 +549,7 @@ define MessageBox(text,win)
       fgcol <- MakeColor("black")
     }
 
-   back <- Rectangle(gVideoWidth/2,gVideoHeight-50,80,40,fgcol,0)
+   back <- Rectangle(gVideoWidth/2,gVideoHeight-100,80,40,fgcol,0)
    AddObject(back,win)
    Draw()
    ShowCursor(1)
@@ -1054,3 +1054,83 @@ define CountDown(win)
    RemoveObject(label,win)
 }
 
+
+
+define CreateParameters(defaults,file)
+{
+  parameters <- MakeCustomObject("parameters")
+
+ if(IsList(defaults))
+ {
+  ##Set the defaults. 
+  loop(i,defaults)
+    {
+      if(Length(i)>=2)
+       {
+         val <- Second(i) ##use the format here directly; these were set in-script
+
+	 ##multiple parameters with the same name get turned
+	 ##into a list:
+	 if(PropertyExists(parameters,First(i)))
+	 {
+	   if(IsList(GetProperty(parameters,First(i))))
+	   {
+	     ##Put it on the end of the list here.
+               PushOnEnd(GetProperty(parameters,First(i)),val)
+	   } else {
+	     ##Make a list if it isn't one already.
+	     tmp <- [GetProperty(parameters,First(i))]
+	     PushOnEnd(tmp,val)
+	     SetProperty(parameters,First(i),tmp)
+           }
+	 }else{
+	 ##otherwise, just set the thing:
+          SetProperty(parameters,First(i),val)
+	 }
+       }
+    }
+  }
+
+  ##############################
+  ##Now, read in values from file
+  if(FileExists(file))
+   {
+    paramfile <- ReadCSV(file)
+    loop(i, paramfile)
+     {
+     
+      val <- Second(i)
+       ##convert to a number, if it will work
+       valstring <- ToNumber(val)+""
+       if(valstring==val or valstring=="0"+val) 
+          { 
+            val <- ToNumber(val)
+          } else {
+
+              Print("numberized value and value differ.")
+	      Print("["+ToNumber(val)+"]["+val+"]")
+	  }
+	  
+
+	  ##Now, go ahead and set the property, making a list
+	  ##if needed.
+         if(PropertyExists(parameters,First(i)))
+	 {
+	   if(IsList(GetProperty(parameters,First(i))))
+	   {
+	     ##Put it on the end of the list here.
+               PushOnEnd(GetProperty(parameters,First(i)),val)
+	   } else {
+	     ##Make a list if it isn't one already.
+	     tmp <- [GetProperty(parameters,First(i))]
+	     PushOnEnd(tmp,val)
+	     SetProperty(parameters,First(i),tmp)
+           }
+	 }else{
+	 ##otherwise, just set the thing:
+          SetProperty(parameters,First(i),val)
+	 }
+     }
+    }
+  return parameters
+}
