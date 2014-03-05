@@ -2,7 +2,7 @@
 #//    Name:       src/pebl-lib/Math.pbl
 #//    Purpose:    Contains PEBL functions used for math
 #//    Author:     Shane T. Mueller, Ph.D.
-#//    Copyright:  (c) 2005-2010 Shane T. Mueller <smueller@obereed.net>
+#//    Copyright:  (c) 2005-2013 Shane T. Mueller <smueller@obereed.net>
 #//    License:    GPL 2
 #//
 #//
@@ -319,7 +319,7 @@ define SDTDPrime(hr,far)
 	  SignalFatalError("Second argument of function [SDTDPrime(<hr>,<far>)] is not a number")
 	}
 
-   return CumNormInv(far)-CumNormInv(hr)
+   return CumNormInv(hr)-CumNormInv(far)
 }
 
 
@@ -334,8 +334,8 @@ define SDTBeta(hr,far)
 	{
 	SignalFatalError("Second argument of function [SDTBeta(<hr>,<far>)] is not a number")
 	}
-
-  return NormalDensity(hr)/NormalDensity(far)
+   beta <- NormalDensity(CumNormInv(far))/NormalDensity(CumNormInv(hr))
+  return beta
 }
 
 
