@@ -8,4 +8,4 @@ trialspersize|5|Select number of trials per length. Choose up to 15
 chooserandomtrials|0|Whether to choose random trials or the first N
 inputlabel|click|i.e., click or touch
 doflash|0|should the circle flash when you click it?  Good for touchscreen, where fingure covers the circle and you still want feedback.
-dobeep|0|Should a beep play when clicks made?
+dobeep|1|Should a click play when clicks made?

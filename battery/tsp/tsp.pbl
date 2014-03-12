@@ -13,7 +13,7 @@ define Start (p)
                ["xoffset",70],  ## Field area upper left
                ["yoffset",70],  ## 
 	       ["trialspersize",5], ##choose up to 15
-	       ["chooserandomtrials",1],
+	       ["chooserandomtrials",0],
                ["width",500],
                ["height",500],
 	       ["inputlabel","click"], ##i.e., click or touch
@@ -56,7 +56,12 @@ define Start (p)
      trials <- Shuffle(DesignFullCounterBalance(sizes,subs)) 
    }
 
-   Print(trials)
+
+  if(gParams.dobeep)
+  {
+    gCorrect <- LoadSound("tick.wav")
+  }
+
     trial <- 1
    ## This is the stuff on the screen.
    gLines <- []
@@ -188,7 +193,7 @@ Condition Trials   Time (s)  Effic.   # Perfect
    gMessage.text <- out
    Show(gMessage)
 
-   tb.text <- "The experiment is complete.  Thank you for participating.  You can "+gParams.inputlabel+" continue to exit."
+   tb.text <- "The experiment is complete.  Thank you for participating."
    Show(tb)
    Draw()
 
@@ -434,6 +439,10 @@ define UpdateState()
   ret <- 1
   x <- WaitForClickOnTarget(gUnvisited, Sequence(1,Length(gUnvisited),1))
 
+  if(gParams.dobeep)
+  {
+   PlayBackground(gCorrect)
+  }
   #x tells you the the element of gUnvisited that was clicked upon.
 
 
