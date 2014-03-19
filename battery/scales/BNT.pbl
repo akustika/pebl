@@ -18,7 +18,7 @@ define Start(p)
     GetQuestions(gLanguage)
 
     gWin <- MakeWindow("black")
- 
+    gSleepEasy <- 1 
     if(gSubNum+""=="0")
     {
      gSubNum <- GetSubNum(gWin)
