@@ -1,22 +1,19 @@
 ###########################################################
 ##  Berg's Card Sorting Task, Version 0.6
 ##  (better known as the Wisconsin Card Sorting Test (tm)).
-##  For use with PEBL 0.10 or later
 ##  http://pebl.sf.net
 ##  Part of  The PEBL Psychological Testing Battery
 ##  2010 Released into Public Domain
 ##  by Shane T. Mueller, Ph.D. (smueller at obereed dot net)
 ##
-##  as found in:
-##  BCST-64 developed in conjunction with Arthur Kummer, 
+##  BCST-64 developed in conjunction with Arthur Kummer
 ##
-## 
-##  
 ##
 ## Polish translation contributed by Artur Pilacinski
 ## Korean translation contributed by Hyunsoo ra ma 
 ## Chinese translation contributed by Yu-Hsiang Wu 
 ## Portuguese translation contributed by Arthur Kummer
+
 ###########################################################
 ##  Raw data file outputs:
 ##  subnum, trialnum, category count, color, shape, number, response, accuracy
@@ -26,16 +23,20 @@ define Start(lPar)
 
 
   ## This is how long of a run is required before switching categories.
-  runlength <- 10
 
-  gSleepEasy <- 1
-  gUseMouse <- 1  #0 for keyboard 1-4, 1 for mouse entry.
+  parpairs <- [["runlength",10],
+               ["usemouse",1]]  #0 for keyboard 1-4, 1 for mouse entry.
+
+
+
+  gParams <- CreateParameters(parpairs,"params/bcst-64.pbl.par")
+  runlength <- gParams.runlength
+  gUseMouse <- gParams.usemouse
 
   if(gUseMouse)
    {
     tag <- "-mouse"
-   }else {
-
+    }else {
     tag <- "-keyboard"
    }
  
@@ -63,6 +64,8 @@ define Start(lPar)
   persrunflag <- 1
 
   ## Initialize global objects for use later. Defined at end of file
+
+  gSleepEasy <- 1
   Initialize()
 
 

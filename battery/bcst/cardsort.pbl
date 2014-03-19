@@ -1,7 +1,6 @@
 ###########################################################
 ##  Berg's Card Sorting Task, Version 0.6
 ##  (better known as the Wisconsin Card Sorting Test (tm)).
-##  For use with PEBL 0.10 or later
 ##  http://pebl.sf.net
 ##  Part of  The PEBL Psychological Testing Battery
 ##  2006-03 Released into Public Domain
@@ -18,6 +17,7 @@
 ## Portuguese translation contributed by Arthur Kummer
 ## Spanish translation contributed by Nuria Carriedo
 ## French translation contributed by Elise Branchereau
+## Lithuanian translation contributed by Sigita Cinciute
 ###########################################################
 ##  Raw data file outputs:
 ##  subnum, trialnum, category count, color, shape, number, response, accuracy
@@ -35,7 +35,7 @@ define Start(lPar)
                ["rulefeedback",0],
                ["usemouse",1]]
 
-  gParams <- CreateParameters(parpairs,"cardsort.pbl.par")
+  gParams <- CreateParameters(parpairs,"params/cardsort.pbl.par")
 
   ## repeats is the number of times you go through the deck (deck size 
   ## depends on whether useReduced is 0 or 1).
