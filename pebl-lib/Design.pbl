@@ -260,7 +260,7 @@ define SampleN(list, number)
 	}
     if(not IsNumber(number))
 	{
-	    SignalFatalError("First argument of function [SampleN(<list>,<number>)] is not an number.")
+	    SignalFatalError("Second argument of function [SampleN(<list>,<number>)] is not an number:"+number)
 	}
 
   return Shuffle(ChooseN(list, number))
@@ -556,35 +556,46 @@ define ListBy(vals,cond)
 {
   newlist <- []
   condlist <- []
-  valsort <- SortBy(vals,cond)
-  csort   <- Sort(cond)
 
-  last <- First(csort)
-  dat <- Transpose([csort,valsort])
+  condlist <- Levels(cond)
 
-  tmp <- []     
-  loop(i, dat)
+  loop(i, condlist)
    { 
-     if(First(i) != last)
-     {
-       newlist <- Append(newlist,tmp)
-       condlist <- Append(condlist,last)
-       tmp <- [Nth(i,2)]
-     } else {
-
-       ##Add the value to the current inner list
-       tmp <- Append(tmp,Nth(i,2))
-
-     }
-       last <- First(i)
+     subset <- Filter(vals,Match(cond,i))
+     PushOnEnd(newlist,subset)
    }
-   newlist <- Append(newlist,tmp)
-   condlist <- Append(condlist,last)
-
 
  return ([condlist, newlist])
 }
 
+
+## Extract the distinct levels of a list.
+##
+
+define Levels(list)
+{
+   if(not IsList(list))
+     {
+	   SignalFatalError("Argument of 'Levels(list)' is not a list")
+     }
+
+   levellist <- []
+   tmp <- Sort(list)
+   loop(i,tmp)
+   {
+    if(not IsMember(i,levellist))
+     {
+       PushOnEnd(levellist,i)
+     } 
+   }
+  ##this has trouble with mixed-form lists. Sort in lexicographical order
+  llist2 <- []
+  loop(i,levellist)
+  {
+   llist2 <- PushOnEnd(llist2,i+"")
+  }
+   return SortBy(levellist,llist2)
+}
 
 
 

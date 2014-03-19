@@ -399,28 +399,6 @@ define Dist(a,b)
 
 
 
-## This returns a sorted list with one copy of each token in the list
-
-define Levels(list)
-{
-   if(not IsList(list))
-     {
-	   SignalFatalError("Argument of 'Levels(list)' is not a list")
-     }
-
-   tmp <- Sort(list)
-   last <- First(tmp)
-   out <- [last]
-   loop(i,tmp)
-   {
-     if(not( i==last))
-      {
-	    out <- Append(out,i)
-		last <- i
-      }
-   }
-   return out
-}
 
 ##This returns a list of 0/1, for each element of list that matches item.
 define Match(list,item)

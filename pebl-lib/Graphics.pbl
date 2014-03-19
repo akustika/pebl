@@ -467,7 +467,7 @@ define InsertAttneavePointRandom(path, point,minangle,maxangle)
 
      #try inserting at the beginning of the path
 	 prev <- Second(path2)
-     a <-First(path2)
+         a <-First(path2)
 	 b <- Nth(path2,Length(path2))
 	 next <- Nth(path2,Length(path2)-1)
 
@@ -797,9 +797,6 @@ define MakeGabor(size,freq,sd, angle,phase,bglev)
  define NonOverlapLayout(xmin, xmax, ymin, ymax, tol, num)
  {
 
-    ##should you watch the points evolve?
-    watch <- 0
-   
 
     ##Note that it is possible to arrange the situation 
     ## so that the distribution will never be satisfied.  So, lets
@@ -836,13 +833,7 @@ define MakeGabor(size,freq,sd, angle,phase,bglev)
       pt2 <- Nth(pts,pt2id)
 
 
-     #resample the 'bad' points
-
-      ##Half the time, try to move a little bit away from 
-      ##the closest. Otherwise, do it randomly.
-
-  
- 
+      #resample one 'bad' points
       pt1 <-   [ xmin + Random()*(xmax-xmin),
                    ymin + Random()*(ymax-ymin) ]
 

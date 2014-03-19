@@ -1071,8 +1071,9 @@ define CreateParameters(defaults,file)
 
 	 ##multiple parameters with the same name get turned
 	 ##into a list:
-	 if(PropertyExists(parameters,First(i)))
+	 if(IsProperty(parameters,UpperCase(First(i))))
 	 {
+
 	   if(IsList(GetProperty(parameters,First(i))))
 	   {
 	     ##Put it on the end of the list here.
@@ -1114,7 +1115,7 @@ define CreateParameters(defaults,file)
 
 	  ##Now, go ahead and set the property, making a list
 	  ##if needed.
-         if(PropertyExists(parameters,First(i)))
+         if(IsProperty(parameters,First(i)))
 	 {
 	   if(IsList(GetProperty(parameters,First(i))))
 	   {
@@ -1133,4 +1134,11 @@ define CreateParameters(defaults,file)
      }
     }
   return parameters
+}
+
+##PropertyExists doesn't currecly work, so use this workaround
+define IsProperty(object,prop)
+{
+   list <- GetPropertyList(object)
+   return(IsMember(prop,list))
 }
