@@ -43,7 +43,15 @@
 define Start(lPar)
 {
 
+
+  parpairs <- [["numRare",72],
+              ["numCommon",248],
+	      ["doheader",0]]
  
+  gParams <- CreateParameters(parpairs,"params/toav.pbl.par")
+
+
+
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
   gSleepEasy <- 1
@@ -69,11 +77,9 @@ define Start(lPar)
   ##  Now, generate stimuli/conditions
   ####################################################
 
-   firsthalf <- Shuffle(Merge(Repeat(1,72), Repeat(0,248)))
-   secondhalf <- Shuffle(Merge(Repeat(0,72), Repeat(1,248)))
+   firsthalf <- Shuffle(Merge(Repeat(1,gParams.numRare), Repeat(0,gParams.numcommon)))
+   secondhalf <- Shuffle(Merge(Repeat(0,gparams.numrare), Repeat(1,gParams.numCommon)))
 
-   #firsthalf <- Shuffle(Merge(Repeat(1,7), Repeat(0,10)))
-   #secondhalf <- Shuffle(Merge(Repeat(0,7), Repeat(1,10)))
    stim <- Merge(firsthalf,secondhalf)
 
   ####################################################
@@ -136,6 +142,10 @@ define Start(lPar)
    Hide(gInstructions)
    Draw()
 
+  if(gParams.doheader)
+  {
+    header <- EasyLabel("Press space bar for box with square on top",gVideoWidth/2,100,gWin,25)
+  }
   MakeDirectory("data")
   datafile   <- FileOpenWrite("data/toav-"+ gSubNum + ".csv")
   reportfile <- FileOpenWrite("data/toav-report-" + gSubNum + ".txt")
@@ -176,7 +186,7 @@ define Start(lPar)
     {
 
      ## The regime changes halfway through--keep track of this.
-     if(trialnum == 320)
+     if(trialnum == gParams.numCommon+gParams.numRare)
      { 
         half <- 2
      } 
