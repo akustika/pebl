@@ -23,22 +23,36 @@
 
 define Start(lPar)
 {
+
+  parpairs <- [["numblocks",3],
+               ["numtrials",20],
+	       ["runthresh",10],
+	       ["givefeedback",1],
+	       ["symA1","#"],
+	       ["symA2","@"],
+	       ["symB1","&"],
+	       ["symB2","%"],
+	       ["toofastthresh",150 ],
+	       ["tooslowthresh",3000]]
+
+  gParams <- Createparameters(parpairs,"params/SymbolCounter.pbl.par")
+
   ##
-   numblocks <- 3          ## blocks after practice round.
-   numtrials <- 20         ## Trials per block
-   runthresh <- 10         ## Number of correct trial run needed to get
+   numblocks <- gParams.numblocks      ## blocks after practice round.
+   numtrials <- gParams.numtrials     ## Trials per block
+   runthresh <- gParams.runthresh     ## Number of correct trial run needed to get
    			 			   ## through practice.
 
-  gGiveFeedback <-  1      ##Whether you should give feedback in
+  gGiveFeedback <-  gParams.givefeedback    ##Whether you should give feedback in
                            ##  non-practice blocks
   ##Symbols for A and B
-  symA <- ["#","@"]
-  symB <- ["&","%"]
+  symA <- [gParams.symA1,gParams.symA2]
+  symB <- [gParams.symB1,gParams.symB2]
 
   ## These are threshold for rts considered too fast and too slow,
   ## and are not used in the RT stats computations
-  toofastThresh <- 150
-  tooslowThresh <- 3000
+  toofastThresh <- gParams.toofastthresh
+  tooslowThresh <- gParams.tooslowthresh
   
   ##Counters that keep track of the number of these responses
   toofast <- 0
@@ -53,19 +67,17 @@ define Start(lPar)
   ##
 
   Initialize()
-
-  datafile   <- FileOpenWrite("symbolcount-"+ gSubNum + ".txt")
-  reportfile <- FileOpenWrite("symbolcount-report-" + gSubNum + ".txt")
-
+  MakeDirectory("data")
+  datafile   <- FileOpenWrite("data/symbolcount-"+ gSubNum + ".csv")
+  reportfile <- FileOpenWrite("data/symbolcount-report-" + gSubNum + ".csv")
  
   gInstructions.text <- "You are about to take part in a simple task.  "+
     "In this task, you will see a series of symbols and you will need to keep track of " +
-	"how many you see.  You will keep two counts, the first for the symbols " +
-	"'@' and '#', and a second for the symbols '&' and '%'. We will start with a practice task." +
+	"how many you see.  You will keep two counts, the first for the symbols '" +gParams.symA2+"' and '"+gParams.symA1+"', and a second for the symbols '"+gParams.symB1+"' and '"+gParams.symB2+"'. We will start with a practice task." +
 	" In the practice task, you will see the symbols and press either
     the left or right shift keys.  Press the "+
-    " left shift key whenever you see '#' or '@'; press the right
-    shift key whenever you see '&' or '%'.  Press any key to begin the practice."
+    " left shift key whenever you see '"+gparams.symA1+"' or '"+gParams.symA2+"'; press the right
+    shift key whenever you see '"+gParams.symB1+"' or '"+gParams.symB2+"'.  Press any key to begin the practice."
 
   #####################################
   ## Begin Experiment with Instructions
@@ -85,13 +97,16 @@ define Start(lPar)
 
    Show(gFooter)
  
-    mapping <- [["#","<lshift>"],["@","<lshift>"],["&","<rshift>"],["%","<rshift>"]]
+    mapping <- [[gParams.symA1,"<lshift>"],[gParams.symA2,"<lshift>"],
+                [gParams.symB1,"<rshift>"],[gParams.symB2,"<rshift>"]]
+
     stimuli <- Merge(RepeatList(symA,4), RepeatList(symB,4))
     thresh <- 0
     corrun <- 0
     block <- "P"
     trial <- 1
-  ##Repeat until we get a run of 20 trials correct.
+
+   ##Repeat until we get a run of thresh trials correct.
    while(thresh == 0)
    {
      stim <- First(SampleN(stimuli,1))
@@ -137,8 +152,8 @@ define Start(lPar)
  
       Wait(200)
    
-     FilePrint(datafile,gSubNum + " " + block + " " + trial + " " + stim + " " +
-          resp + " " + corr +  " " +  corrun + " "+  time1 + " " + rt)
+     FilePrint(datafile,gSubNum + "," + block + "," + trial + "," + stim + "," +
+          resp + "," + corr +  "," +  corrun + ","+  time1 + "," + rt)
 
      if(corrun >= runthresh) 
      {
@@ -201,8 +216,8 @@ define Start(lPar)
       Wait(200)
    
 
-     FilePrint(datafile,gSubNum + " " + block + " " + trial + " "  + stim + " " +
-          resp + " " + corr +  " " +  corrun + " "+  time1 + " " + rt)
+     FilePrint(datafile,gSubNum + "," + block + "," + trial + ","  + stim + "," +
+          resp + "," + corr +  "," +  corrun + ","+  time1 + "," + rt)
 
     trial <- trial + 1
     }
