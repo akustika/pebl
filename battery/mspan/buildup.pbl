@@ -12,20 +12,31 @@
 define Start(p)
 {
 
-  gVideoWidth <- 1024
-  gVideoHeight <- 768
+  parpairs <- [["upperbound", 9],      ## The longest list length
+               ["lowerbound", 3],      ## The shortest list length
+               ["staircasestart", 4],  ## starting point for staircasestart.
+               ["numtrials", 10],      ## Number of staircase trials.
+               ["ISI", 1000],           ## Inter-stimulus interval in ms
+               ["ITI",1500],           ## inter-trial interval.
+               ["Wait",500],           ## How long to 'go to each room'
+               ["DoWait", 0]]          ## Whether there should be a 'blow-up'
+                                       ## of the screen
+
+
+  gParams <- CreateParameters(parpairs,"params/buildup.pbl.par")
   gHomeX <- gVideoWidth/2
   gHomeY <- gVideoHeight/2
 
+  ##extract parameters
+  upperbound <- gParams.upperbound     
+  lowerbound <- gParams.lowerbound    
+  staircasestart  <- gParams.staircasestart  
+  numtrials <- gParams.numtrials
+  gISI <- gParams.isi      
+  gITI <- gParams.ITI      
+  gWait <- gParams.wait    
+  gDoWait <- gParams.dowait
 
-  upperbound <- 9             ## The longest list length
-  lowerbound <- 3             ## The shortest list length
-  staircasestart  <- 4        ## starting point for staircasestart.
-  numtrials <- 10             ## Number of staircase trials.
-  gISI <- 500                 ## Inter-stimulus interval in ms
-  gITI <- 1500                ## inter-trial interval.
-  gWait <- 500                ## How long to 'go to each room'
-  gDoWait <- 0                ## Whether there should be a 'blow-up' of the screen
 
   gSleepEasy <- 1
   gWin <- MakeWindow("white")
@@ -44,7 +55,7 @@ define Start(p)
   ShowCursor(0)
   Draw()
   
-  inst <- EasyTextBox("",212,100,gWin,20,600,400) 
+  inst <- EasyTextBox("",(gVideoWidth-700)/2,100,gWin,24,700,400) 
   inst.text <- "You are about to take part in a test that measures your ability to remember a sequence of words. You will be shown a sequence of named images to remember.  Immediately afterward, you will see a screen with nine named images arrayed in a grid.  Click on all the images you were shown, IN THE SAME ORDER THEY WERE GIVEN.  If you cannot remember the order of the words but can remember the words, click them in as close the the original order as you can.  When you have clicked on all the words you were shown, click done.
    
 If you are correct, your next list will have all the same words as the previous list, but will be one word longer; otherwise it will start over with a list of two words.
@@ -61,8 +72,8 @@ If you are correct, your next list will have all the same words as the previous 
 
 
    names <- ["apple","bus","deer",
-   		 	 "pear", "tree", 
-			 "bird", "chipmunk", "fish", "plane"]
+    	     "pear", "tree", "bird", 
+            "chipmunk", "fish", "plane"]
 
 
   gFont <- MakeFont("Vera.ttf",1,25,MakeColor("black"),MakeColor("white"),1)
@@ -142,8 +153,8 @@ define Trial(stimid,rooms)
    loop(i, stim)
    {
       tmp <- MakeImage(Second(i))
-	  AddObject(tmp,gWin)
-	  Move(tmp,gHomeX, gHomeY)
+      AddObject(tmp,gWin)
+      Move(tmp,gHomeX, gHomeY)
       Resize(tmp,250)
 
       lab <- MakeLabel(First(i),gFont)
@@ -317,10 +328,10 @@ define WaitForResponse(targetlist,keylist)
 define MakeTargets(stim)
 {
 
-  left <-  0
   top <-   -40
   xskip <- 250
   yskip <- 200
+  left <-  gVideoWidth/2 - xskip*2
 
   xpos <- [1,2,3,1,2,3,1,2,3]
   ypos <- [1,1,1,2,2,2,3,3,3]
@@ -347,8 +358,8 @@ define MakeTargets(stim)
 
   done <- MakeLabel("DONE",gFont)
   AddObject(done,gWin)
-  Move(done,gHomeX,gVideoHeight-25)
-  box <- Rectangle(gHomeX,gVideoHeight-25,140,40,MakeColor("grey60"),0)
+  Move(done,gHomeX,25)
+  box <- Rectangle(gHomeX,25,140,40,MakeColor("grey60"),0)
   AddObject(box,gWin)
 
   clickon <- Append(clickon, box)

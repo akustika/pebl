@@ -5,8 +5,10 @@
 ##
 ## This is based on the task shown in the 'chimps make monkeys out of humans
 ## video.
-##
-##
+## Possibly see Inoue & Matsuzawa, 2007
+## Inoue, S. & Matsuzawa, T. (20070. Working memory of numerals in chimpanzees. Current
+Biology, 17, R1004-R1005.
+
 
 define Start(p)
 {
