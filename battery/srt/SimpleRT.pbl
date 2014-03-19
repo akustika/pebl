@@ -34,19 +34,31 @@ define Start(lPar)
   ## Parameters/Variables controlling experiment
   ##
    
+  parpairs <- [["blocks",4],       ## The number of trial blocks
+               ["blocklength",50], ## The number of trials per block
+	       ["delayMin",250],   ## Smallest delay
+	       ["delayMax",2500],  ## longest delay
+	       ["delayStep",250],  ## Step between small and longest
+	       ["stimulus","X"],    ##Stimulus character
+	       ["toofastThresh",150], ##too fast
+	       ["tooslowThresh",3000],  ##Too slow time
+	       ["responsekey","X"]]         ##Response key to use.
 
-  blocks <- 4              ## The number of trial blocks
-  blocklength <-  50       ## The number of trials per block
+  gParams <- CreateParameters(parpairs,"params/SimpleRT.pbl.par")
+
+  blocks <- gParams.blocks       
+  blocklength <- gParams.blocklength      
   numtrials <- blocks * blocklength 
 
 
-  delays <- [250, 500,750, 1000,1250,1500,1750,2000,2250,2500]
-  stimulus <- "X"          ## Character to use as stimulus.
+  delays <- Sequence(gParams.delayMin,gParams.delayMax,gParams.delayStep)
+  ##[250, 500,750, 1000,1250,1500,1750,2000,2250,2500]
+  stimulus <- gParams.stimulus        ## Character to use as stimulus.
 
   ## These are threshold for rts considered too fast and too slow,
   ## and are not used in the RT stats computations
-  toofastThresh <- 150
-  tooslowThresh <- 3000
+  toofastThresh <- gParams.toofastThresh
+  tooslowThresh <- gParams.tooslowThresh
   
   ##Counters that keep track of the number of these responses
   toofast <- 0
@@ -121,10 +133,10 @@ define Start(lPar)
   time0 <- GetTime()
 
   Draw()
-  resp1 <- WaitForListKeyPressWithTimeout(["X"], delay,1)
+  resp1 <- WaitForListKeyPressWithTimeout([gParams.responsekey], delay,1)
   time1 <- GetTime()
 
-  if(resp1 == "x" )
+  if(resp1 == LowerCase(gParams.responsekey))
   {  
     Wait(delay - (time1-time0))
   }
@@ -132,7 +144,7 @@ define Start(lPar)
   Show(gStim)
   Draw()
   time2 <- GetTime()
-  resp2 <- WaitForKeyPress("X")
+  resp2 <- WaitForKeyPress(gParams.responsekey)
   time3 <- GetTime()
   Hide(gStim)
   Draw()
@@ -171,6 +183,7 @@ define Start(lPar)
    FilePrint(reportfile,"Finished at: " +TimeStamp())
    FilePrint(reportfile," http://pebl.sf.net")
    FilePrint(reportfile, " Participant Code: " + gSubNum)
+   FilePrint(reportfile,"Stimulus:" + gParams.stimulus)
    FilePrint(reportfile,"------------------------------------------------------")
    FilePrint(reportfile,"Statistic                 Value")
    FilePrint(reportfile,"------------------------------------------------------")
@@ -211,7 +224,7 @@ define Start(lPar)
    FileClose(datafile)
 
   ##Now, show debriefing info.
-   SetText(gInstructions, "Thank you for participating in the experiment.  You may now leave.  (Press secret key 'X' to finish experiment)")
+   SetText(gInstructions, "Thank you for participating in the experiment.  You may now leave.  (Press 'X' key to finish experiment)")
    Show(gInstructions)
    Draw()
    WaitForKeyPress("X")
