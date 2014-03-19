@@ -26,34 +26,43 @@ define Start(p)
 ##
 ##
 
+   parpairs <- [["showhand",1],
+                ["problemset","random3"], ##currently random3 or bishop
+                ["numtrials",10],         ##number of trials for random sets
+                ["usetimer",0],
+                ["timelimit",120],
+		["useturnlimit",0]]
+
+
+   gParams <- CreateParameters(parpairs,"params/TOH.pbl.par")
+
    GetStrings(gLanguage)
 
   gShowHand     <- 1  #Show the hand graphic?
   Init()
 
-   ##  Comment out the following lines and replace with something like 
-   ##  type <- "3"
-   ##  to go directly to a test configuration.
-   ## From here VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
-
-
   gInstructions <- MakeTextBox("",gFont,gVideoWidth-100,560)
   AddObject(gInstructions,gWin)
   Move(gInstructions,50,20)
 
+  if(gParams.problemset=="random3") 
+   {
+    ##Make random trials:
+   stim <- MakeProblems3(gParams.numtrials) 
+  }elseif(gParams.problemset=="bishop")
+  {
+   stim <- MakeBishopProblems()
+  } else {
 
-   stim <- MakeProblems3(10)  ## unconstrained pole height,
-                              ## with number of disks in
-  			      ## order specified by first argument
-
- #   stim <- MakeBishopProblems()
-
-   gUseTimer <- 0  ##This hard-codes use of timer. Uncomment to
+    SignalFatalError("Unknown test type: " +gParams.problemset)
+  }
+  
+   gUseTimer <- gParams.usetimer  ##This hard-codes use of timer. Uncomment to
                    ##override the defaults built into each particular test function.
 
-   gTimeLimit <- 120   ##default time limit, in seconds.
-   gUseTurnLimit <- 0  ##this hard-codes turn limits, overiding
-                       ## setting in original definition
+   gTimeLimit <- gParams.timelimit  ##default time limit, in seconds.
+   gUseTurnLimit <- gParams.useturnlimit  ##this hard-codes turn limits, overiding
+
   
   gInstructions.text <- gInstText1
 
