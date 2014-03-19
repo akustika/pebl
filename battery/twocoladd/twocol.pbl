@@ -12,14 +12,23 @@
 
 define Start(p)
 {
- gSleepEasy <- 1
-  numPracticeTrials <- 10
-  numTrials         <- 45
-  isi <- 5
-  gTimeout <- 15000
 
-  win <- MakeWindow()
+  parpairs <- [["numpractice",10],
+               ["numtrials",45],
+	       ["isi",250],
+               ["timeout",15000]]
 
+  gParams <- CreateParameters(parpairs,"params/twocol.pbl.par")
+
+  numPracticeTrials <- gPramas.numpractice
+  numTrials         <- gParams.numtrials
+  isi <- gParams.isi
+  gTimeout <- gParams.timeout
+
+
+
+   win <- MakeWindow()
+   gSleepEasy <- 1
    if(gSubNum+""=="0")
    {
      gSubNum <- GetSubNum(win)
@@ -267,11 +276,10 @@ define GetNumberResponse(timeleft)
 {
 
    x <-   WaitForListKeyPressWithTimeOut(["1","2","3","4","5","6","7","8","9","0",
-                   "<KP_1>","<KP_2>","<KP_3>","<KP_4>","<KP_5>","<KP_6>","<KP_7>","<KP_8>","<KP_9>","<KP_0>",
-				     "<backspace>", "<return>","<kp_enter>"], 
+            "<KP_1>","<KP_2>","<KP_3>","<KP_4>","<KP_5>","<KP_6>","<KP_7>","<KP_8>","<KP_9>","<KP_0>",
+	     "<backspace>", "<return>","<kp_enter>"], 
               timeleft,1)
-
- return x
+  return x
 }
 
 
