@@ -26,26 +26,25 @@
 
 define Start(p)
 {
-     parpairs <- [["numreps",20],  ##number of repeats of the 2x3 design
-                  ["practicereps",2]
-                  ]
-
+     parpairs <- [["numreps",2],  ##20:number of repeats of the 2x3 design
+                  ["practicereps",1], #2
+		  ["includedashtrials",1], ##whether -->-- and --<-- trials should be included
+                  ["includeemptytrials",1], ##whether [  >  ] and [  <  ] trials should be used
+                  ["arrowsize",40],
+		  ["gap",2]
+                 ]
 
     gParams <- CreateParameters(parpairs,"params/flanker.pbl.par")
-
-   gWin <- MakeWindow("black")
-
-   Initialize()
+    gWin <- MakeWindow("black")
+    Initialize()
 
    ##Get subject code if we need to:    
    if(gSubNum+""=="0")
     {
-	  gSubNum <- GetSubNum(gWin)
+       gSubNum <- GetSubNum(gWin)
     }
 
-
    ##Make data files   
-
    MakeDirectory("data")
    gFileOut <- FileOpenWrite("data/flanker-"+gSubNum+".csv")
    gPooledFileOut <- FileOpenAppend("data/flanker-pooled.csv")
@@ -73,11 +72,22 @@ define Start(p)
    ##Create the stimuli blocks.  Each trial consists of:
    ##  - a target direction (left or right)
    ##  - a flanker condition (consistent, inconsistent, neutral)
-   design <- CrossFactors([[-1,1],[-1,0,1]])
-   
+
+   base <- [-1,1]
+  
+   if(gParams.includedashtrials)
+   {
+     PushOnEnd(base,0)
+   }
+   if(gParams.includeemptytrials)
+   {
+    PushOnEnd(base,"NA")
+   }
+   design <- CrossFactors([[-1,1],base])
    ##Practice uses 12 trials
    practrials <- Shuffle(RepeatList(design,gParams.practicereps))
   
+
    ##real trials each use the complete design, 
    trials <- Shuffle(RepeatList(design,gParams.numreps))
 
@@ -135,14 +145,24 @@ define Start(p)
    FilePrint(gSumFileOut,"Total Errors:           "+(Length(gCorr)-Sum(gCorr)))
    FilePrint(gSumFileOut,"Mean Accuracy:          "+Mean(gCorr))
    FilePrint(gSumFileOut,"Mean response time:     "+Mean(gRTs))
+
+   tdat <- Transpose(aggRTCong)
+   conds <- First(tdat)
+   rtmeans <- Fourth(tdat)
    
-   conflict  <- (Fourth(First(aggRTCong)) - Fourth(Third(aggRTCong)))
-   FilePrint(gSumFileOut,"Conflict Cost:    "+ conflict)
+   incong <- Mean(Filter(rtmeans,Match(conds,-1)))
+   cong <- Mean(Filter(rtmeans,Match(conds,1)))
+   
+   conflict  <- incong-cong
+   FilePrint(gSumFileOut,"Congruent mean (ms):                               "+ cong)
+   FilePrint(gSumFileOut,"Incongruest mean (ms):                             "+ incong)   
+   FilePrint(gSumFileOut,"Conflict Cost (incongruent mean - congruent mean): "+ conflict)
 
 
    FilePrint(gSumFileOut,"Congruence types:")
    FilePrint(gSumFileOut,"   -1:  Opposing arrows")
-   FilePrint(gSumFileOut,"    0:  No arrows")
+   FilePrint(gSumFileOut,"    0:  Dashes")
+   FilePrint(gSumFileOut,"    NA:  No arrows")
    FilePrint(gSumFileOut,"    1:  Consistent arrows")
    FilePrint(gSumFileOut,CR(3))
    FilePrint(gSumFileOut,"----------------------------------------")
@@ -193,7 +213,7 @@ define Start(p)
 
 }
 
-define Trial (stim,practice)
+define Trial(stimpair,practice)
 {
    time0 <- GetTime()
    ##add the fixation right away.
@@ -202,14 +222,20 @@ define Trial (stim,practice)
 
    Draw()
 
-   targdir <- First(stim)
-   flankercoherence <- Second(stim)
-   flankerdir <- flankercoherence * targdir    
+   targdir <- First(stimpair)
+   flankercoherence <- Second(stimpair)
 
+   if(flankercoherence=="NA")
+     {
+        flankerdir <- "NA"
+     }else{
+        flankerdir <- flankercoherence * targdir    
+     }
 
     stim <- MakeStim([flankerdir,flankerdir,targdir,flankerdir,flankerdir])
+
     AddObject(stim,gWin)
-	Move(stim,gVideoWidth/2,gVideoHeight/2)
+    Move(stim,gVideoWidth/2,gVideoHeight/2)
 
 	Hide(stim)
     ##Now, how the trial sequence.
@@ -309,7 +335,7 @@ define MakeStim(dirs)
 {
 
     ##Make a canvas to attach the arrows to:
-    skip <- 42
+    skip <- gParams.arrowsize + gParams.gap
     xsize <- skip*5
 	color <- MakeColor("black")  ##dummy color; we later blank it.
 
@@ -325,7 +351,7 @@ define MakeStim(dirs)
      loop(i,tmp)
        {
 	 arrow <-  Arrow(Second(i),col)
-     AddObject(arrow,canv)
+         AddObject(arrow,canv)
 
 	 Move(arrow,xsize/2+First(i),10)
 	 Draw(arrow)
@@ -335,22 +361,30 @@ define MakeStim(dirs)
   return canv
 }
 
+
+##direction can be  -1 or 1, indicating an arrow in either direction.
+## or "NA", indicating nothing,
+## or 0, indicating a headless arrow (a dash)
 define Arrow(direction,fg)
 {
 
-    xsize <- 40
+    xsize <- gParams.arrowsize
     xmid <- xsize/2
-	color <- MakeColor("black")
-	color.alpha <- 0
+    color <- MakeColor("black")
+    color.alpha <- 0
 
     canv <- MakeCanvas(xsize,20,color)
-	
-	if(not direction==0)
+
+    if(not direction=="NA")
     {
-	
         line <- Rectangle(xmid,10,xsize-10,2,fg,1)
     	AddObject(line,canv)
     	Draw(line)
+    }	
+
+    if(direction==1 or direction==-1)
+    {
+	
 
         trix <- [direction*5,-direction*5,-direction*5]
     	triy <- [0,5,-5]
@@ -358,8 +392,6 @@ define Arrow(direction,fg)
     	AddObject(head,canv)
     	Draw(head)
     }
-
-
 	return canv
 }
 
@@ -446,20 +478,36 @@ define MessageKeyBox(message)
 define DoInstructions()
 {
 
-   tb <- EasyTextbox(gInst1text,100,50,gWin,16,gVideoWidth-200,200)
-   s1 <- MakeStim([1,1,1,1,1]);      AddObject(s1,gWin);Move(s1,gVideoWidth/2,300)
-   s2 <- MakeStim([-1,-1,-1,-1,-1]); AddObject(s2,gWin);Move(s2,gVideoWidth/2,340)
-   s3 <- MakeStim([0,0,1,0,0]);      AddObject(s3,gWin);Move(s3,gVideoWidth/2,380)
-   s4 <- MakeStim([0,0,-1,0,0]);     AddObject(s4,gWin);Move(s4,gVideoWidth/2,420)
-   s5 <- MakeStim([-1,-1,1,-1,-1]);  AddObject(s5,gWin);Move(s5,gVideoWidth/2,460)
-   s6 <- MakeStim([1,1,-1,1,1]);     AddObject(s6,gWin);Move(s6,gVideoWidth/2,500)
+   yval <- 300
 
-   l1 <- EasyLabel(gFooterR,gVideoWidth/2+200,300,gWin,15)
-   l2 <- EasyLabel(gFooterL,gVideoWidth/2-200,340,gWin,15)
-   l3 <- EasyLabel(gFooterR,gVideoWidth/2+200,380,gWin,15)
-   l4 <- EasyLabel(gFooterL,gVideoWidth/2-200,420,gWin,15)
-   l5 <- EasyLabel(gFooterR,gVideoWidth/2+200,460,gWin,15)
-   l6 <- EasyLabel(gFooterL,gVideoWidth/2-200,500,gWin,15)
+   tb <- EasyTextbox(gInst1text,100,50,gWin,16,gVideoWidth-200,200)
+   s1 <- MakeStim([1,1,1,1,1]);      AddObject(s1,gWin);Move(s1,gVideoWidth/2,yval)
+   l1 <- EasyLabel(gFooterR,gVideoWidth/2+200,yval,gWin,15); yval <- yval+40
+   s2 <- MakeStim([-1,-1,-1,-1,-1]); AddObject(s2,gWin);Move(s2,gVideoWidth/2,yval)
+   l2 <- EasyLabel(gFooterL,gVideoWidth/2-200,yval,gWin,15); yval <- yval+40
+if(gParams.includedashtrials)
+  {
+   s3 <- MakeStim([0,0,1,0,0]);      AddObject(s3,gWin);Move(s3,gVideoWidth/2,yval)
+   l3 <- EasyLabel(gFooterR,gVideoWidth/2+200,yval,gWin,15); yval <- yval+40
+   s4 <- MakeStim([0,0,-1,0,0]);     AddObject(s4,gWin);Move(s4,gVideoWidth/2,yval)
+   l4 <- EasyLabel(gFooterL,gVideoWidth/2-200,yval,gWin,15);yval <- yval+40
+
+  }
+if(gParams.includeemptytrials)
+{
+   s5 <- MakeStim(["NA","NA",1,"NA","NA"]);    AddObject(s5,gWin);Move(s5,gVideoWidth/2,yval)
+   l5 <- EasyLabel(gFooterR,gVideoWidth/2+200,yval,gWin,15); yval <- yval+ 40
+   s6 <- MakeStim(["NA","NA",-1,"NA","NA"]);   AddObject(s6,gWin);Move(s6,gVideoWidth/2,yval)
+   l6 <- EasyLabel(gFooterL,gVideoWidth/2-200,yval,gWin,15); yval <- yval+ 40
+
+}
+
+   s7 <- MakeStim([-1,-1,1,-1,-1]);  AddObject(s7,gWin);Move(s7,gVideoWidth/2,yval)
+   l7 <- EasyLabel(gFooterR,gVideoWidth/2+200,yval,gWin,15); yval <- yval+ 40
+
+
+   s8 <- MakeStim([1,1,-1,1,1]);     AddObject(s8,gWin);Move(s8,gVideoWidth/2,yval)
+   l8 <- EasyLabel(gFooterL,gVideoWidth/2-200,yval,gWin,15)
 
    Draw()
    WaitForAnyKeyPress()
