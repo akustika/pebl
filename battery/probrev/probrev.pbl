@@ -29,16 +29,26 @@
 define Start(lPar)
 {
 
+   parpairs <- [["numblocks",4],   #Each block is around 150 trials.
+                ["numstages",10],
+		["stagemin",10],
+		["stagemax",15],
+		["errorMin",0],
+		["errorMax",5]]
+
+   gParams <- CreateParameters(parpairs,"params/probrev.pbl.par")
+
+
+   numblocks <- gParams.numblocks
+   numStages <- gparams.numstages
+   stageMin  <- gParams.stagemin
+   stageMax  <- gParams.stagemax
+   pErrorMin <- gParams.errorMin
+   pErrorMax <- gParams.errorMax
  
   ## Initialize global objects for use later. Defined at end of file
    Initialize()
    ShowCursor(0)
-   numblocks <- 4    #Each block is around 150 trials.
-   numStages <- 10
-   stageMin  <- 10
-   stageMax  <- 15
-   pErrorMin <- 0
-   pErrorMax <- 5
 
    ##Create lists containing the possible error and stage sizes for later sampling.
    stageSizes <- Sequence(stageMin,stageMax,1)
