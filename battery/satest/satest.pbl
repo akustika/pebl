@@ -9,9 +9,26 @@
 
 define Start(p)
 {
-#   gLanguage <- "TR"   
+
+   parpairs <- [["UseTracking",0],  #Should a predator follow a  prey around?
+   ["numPred", 2],
+   ["numPrey", 3],
+   ["numtojump", 10],  ##Number of updates after a bug gets eaten before
+                      ##  an interruption can happen
+   ["Drift",25],   #Number of degrees off you might get on each update.
+
+   ["Rate", .1],   ## How many pixels you can travel per time step (ms.) this
+                   ## should be adjusted so it does not depend on refresh rate
+  ["minwait",1500],
+  ["maxwait",4000]]
+
+   gParams <- CreateParameters(parpairs,"params/satest.pbl.par")
+
    Init()
    GetStrings(gLanguage)
+
+
+
 
   if(gSubNum+""=="0")
    {
@@ -24,23 +41,24 @@ define Start(p)
    gFileOut <- FileOpenWrite("data/satest-"+gSubNum+".csv")
    FilePrint(gLogFile,"SATEST start " +GetTime() + " " + TimeStamp() + "  " + gSubNum )
 
-   gUseTracking <- 0  #Should a predator follow a  prey around?
-   numPred <- 2
-   numPrey <- 3
+   gUseTracking <- gParams.usetracking  #Should a predator follow a  prey around?
+   numPred <- gParams.numpred
+   numPrey <- gParams.numprey
 
-   numtojump <- 10  ##Number of updates after a bug gets eaten before
+   numtojump <- gParams.numtojump  ##Number of updates after a bug gets eaten before
                    ##  an interruption can happen
 
-   gDrift <- 25   #Number of degrees off you might get on each update.
-   gRate <- .1   ## How many pixels you can travel per time step (ms.) this
+   gDrift <- gParams.drift   #Number of degrees off you might get on each update.
+   gRate <- gParams.rate   ## How many pixels you can travel per time step (ms.) this
                 ## should be adjusted so it does not depend on refresh rate.
 
 
    basePrey <- ["ant.png","fly_01.png","spider.png"]#,"ladybug.png"]  
    basePred <- ["lizard1.png","lizard2.png"]  
    
-   minwait <-  1500
-   maxwait <- 4000
+   minwait <-  gParams.minwait
+   maxwait <- gparams.maxwait
+
    gLastTime <- GetTime()  ##Keeps track of the current ticker, so that
    gTime <- gLastTime+1    ## movement is not tied to the refresh rate.
 
@@ -664,6 +682,8 @@ define GetResponsesL3(outputhead)
 
   ##Make replacement points for one of the targets
   targID <- RandomDiscrete(Length(gPred)+Length(gPrey))
+
+
   target1 <- Nth(Merge(gPred,gPrey),targID)
   plotpoints <- First(GetPositions([target1]))
   targCol <- MakeColor("grey")
