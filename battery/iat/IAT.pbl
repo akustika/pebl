@@ -52,15 +52,27 @@ define Start(lPar)
     }
 
 
+  parpairs <- [["PosWordtitle","Verbs"],
+               ["NegWordtitle","Adjectives"],
+	       ["pospictitle","Living things"],
+	       ["negpictitle","Man-made things"],
+	       ["pospicsfile","picnames-good.txt"],
+	       ["negpicsfile","picnames-bad.txt"],
+	       ["poswordsfile","words-good.txt"],
+	       ["negwordsfile","words-bad.txt"],
+	       ["numstim",40]]
+
+   gParams <- CreateParameters(parpairs,"params/IAT.pbl.par")
+
 ##############################################
 ## To change the stimuli, change the following
 ## labels.  The changes will be propogated in
 ## the instructions and the response labels.
 ##############################################
-  goodWordTitle <- "Verbs"
-  badWordTitle  <- "Adjectives"
-  goodPicTitle  <- "Living Things "
-  badPicTitle   <- "Man-made Things"
+  goodWordTitle <- gParams.poswordtitle
+  badWordTitle  <- gParams.negwordtitle
+  goodPicTitle  <- gParams.pospictitle
+  badPicTitle   <- gParams.negpictitle
 
   goodWordText <- Lowercase(goodWordTitle)
   badWordText  <- Lowercase(badWordTitle)
@@ -88,7 +100,7 @@ define Start(lPar)
 
   gCorr <- 0
 
-  numStim <- 40
+  numStim <- gParams.numstim
   
   MakeDirectory("data")
   gFileOut <- FileOpenWrite("data/iat-" + gSubNum + ".csv")
@@ -108,8 +120,8 @@ define Start(lPar)
 
   ShowCursor(0)
 
-  picNamesGood <- FileReadList("picnames-good.txt")
-  picNamesBad  <- FileReadList("picnames-bad.txt")
+  picNamesGood <- FileReadList(gParams.posPicsfile)
+  picNamesBad  <- FileReadList(gParams.negPicsfile)
 
  #read in the pictures
   goodpix <-[]
@@ -119,7 +131,9 @@ define Start(lPar)
     goodpix <- Append(goodpix, [x,i])
   }
   #Add type/valence tags.
-  goodPicStim <- Transpose(Merge(Transpose(goodpix),[Repeat(1,Length(goodpix)), Repeat(1,Length(goodpix))]))
+  goodPicStim <- Transpose(Merge(Transpose(goodpix),
+                       [Repeat(1,Length(goodpix)), 
+                        Repeat(1,Length(goodpix))]))
 
 
  #read in the pictures
@@ -130,13 +144,15 @@ define Start(lPar)
     badpix <- Append(badpix, [x,i])
   }
   #Add type/valence tags.
-  badPicStim <- Transpose(Merge(Transpose(badpix), [Repeat(1,Length(badpix)), Repeat(2,Length(badpix))]))
+  badPicStim <- Transpose(Merge(Transpose(badpix), 
+                        [Repeat(1,Length(badpix)), 
+                         Repeat(2,Length(badpix))]))
 
 
 
  #Create Word Labels
-  goodWords <- FileReadList("words-good.txt")
-  badWords  <- FileReadList("words-bad.txt")
+  goodWords <- FileReadList(gParams.poswordsfile)
+  badWords  <- FileReadList(gParams.negwordsfile)
 
   goodLabels <-[]
   loop(i,goodWords)
@@ -161,14 +177,6 @@ define Start(lPar)
    gRightInst <- MakeTextBox("", fontInst,150,250)
 
 
-   ###########################################################################
-   ## Uncomment the following if you want to collect NIMH demographics.
-   ##demoFile <- "iat-demo.dat"
-   ##GetNIHMDemographics(gWin,demoFile)
-   ###########################################################################
-
-
-
    AddObject(gLeftInst, gWin)
    AddObject(gRightInst, gWin)
    Move(gLeftInst,40,100)
@@ -180,9 +188,8 @@ define Start(lPar)
    round <- 1
 
 
-
   ################################################
-  ##   BLOCK 1:  Clean vs Dirty PICTURES
+  ##   BLOCK 1:  positive vs negative PICTURES
   ################################################
 
    instructions <- "First, you will be asked to categorize two sets of pictures.  Some will be " + goodPicText +
@@ -225,7 +232,7 @@ define Start(lPar)
    }
 
   ################################################
-  ##   BLOCK 2:  GOOD VS BAD Words
+  ##   BLOCK 2:  Positive vs negative Words
   ################################################
 
     SetText(instructBox, "Next, you will do a different categorization task.  This time, you will be asked to categorize two sets of words. " +
@@ -556,7 +563,7 @@ define MisMatchTrial(stim, text, type, lgoodness)
 ##
 define FixString(words)
 {
-   out <- ReplaceChar(word," ","_")
+   out <- ReplaceChar(words," ","_")
    return out
 }
 
