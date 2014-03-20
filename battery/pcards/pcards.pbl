@@ -14,40 +14,36 @@ define Start(p)
 {
 
 
+  parpairs <- [["trials",300],  ##number of trials
+               ["practice",0],
+               ["timeout",-1], ##timeout; use negative number for no time limit
+	       ["shift",9], ##number of correct trials needed for shift
+               ["numrulesets",1], ##how many times through the rule sets?
+	       ["leftresp","<lshift>"],
+	       ["rightresp","<rshift>"],
+	       ["leftlabel","left shift"],
+	       ["rightlabel","right shift"]
+	       ]
 
-  ##use pebl -V P pcards.pbl to do a practice round.
-  ##
-  if(Length(p)>0)
-   {
-       
-      if(First(p)+"" == "practice" or Uppercase(First(p)+"") == "P")
-       {
-          practice <- 1
-          cond <- "P"
-       } else {
-          practice <- 0
-         cond <- Uppercase(First(p)+"")
-       }
-   }
+  gParams <- CreateParameters(parpairs,"params/pcards.pbl.par")
+  gTimeout <- gParams.timeout
 
 
-  gTimeout <- 2000
-  gShift   <- 9     ## how many corrects are needed before the shift.
-                    ## 2^7 is 128, so fewer than 1% of sets will be
-                    ## matched 'by chance' at shift=7
-                    ## But, if we go a bit larger, the subject will be
-				    ##likely to 'know' the rule and thus see the shift.
+     ## how many corrects are needed before the shift.
+     ## 2^7 is 128, so fewer than 1% of sets will be
+     ## matched 'by chance' at shift=7
+     ## But, if we go a bit larger, the subject will be
+     ##likely to 'know' the rule and thus see the shift.
+  gShift   <- gParams.shift
 
-  gcount<-1         ## used for recording video
 
- if(cond=="P")
- {
-  maxTrials <- 100  ## The most number of trials you will do
- }else{
-  maxTrials <- 300  ## The most number of trials you will do
- }
+ maxtrials <- gParams.trials
+ practice <- gParams.practice
 
-  numrulesets <- 1  ## How many times do you go the the 10-rule sets?
+ ## How many times do you go the the 10-rule sets?
+ numrulesets <- gParams.numrulesets
+
+ gcount<-1         ## used for recording video
 
 
  ## The features, in order are:
@@ -70,13 +66,12 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
    }
 
-
-   MakeDirectory("data")
+    MakeDirectory("data")
    gFileOut <- FileOpenWrite("data/pcards-"+gSubNum+".csv")
    gLogFile <- FileOpenAppend("data/pcards-log.txt")
-   FilePrint(gLogFile,"pcards start " +GetTime() + " " + TimeStamp() +  " " + gSubNum + " " + cond)
+   FilePrint(gLogFile,"pcards start " +GetTime() + " " + TimeStamp() +  " " + gSubNum + " " + practice)
 
-  inst <- "In this task, you will see a series of cards at the center of the screen.  Your goal is to sort them into either the left pile (using the left right keys) or the right pile (using the right shift key).  The correct pile is determined by a rule that we will not tell you.  At any given time, one of ten rules will be valid:
+  inst <- "In this task, you will see a series of cards at the center of the screen.  Your goal is to sort them into either the left pile (using the "+gParams.rightlabel+" key) or the right pile (using the "+gParams.rightlabel+" key).  The correct pile is determined by a rule that we will not tell you.  At any given time, one of ten rules will be valid:
    shape,                        
    card size, 
    card color,                   
@@ -92,8 +87,8 @@ Once you figure out a rule and categorize a number of cards correctly, the rule 
 
 Press any key to begin."
 
-  labl <- EasyLabel("left shift",gHomeX-250,400,gWin,22)
-  labr <- EasyLabel("right shift",gHomeX+250,400,gWin,22)
+  labl <- EasyLabel(gParams.leftlabel,gHomeX-250,400,gWin,22)
+  labr <- EasyLabel(gParams.rightlabel,gHomeX+250,400,gWin,22)
 
   tb <- EasyTextBox(inst,240,100,gWin,15,gVideoWidth-240*2,600)
   DrawMe()
@@ -132,9 +127,9 @@ Font Color (red or blue) |    Underlined or Plain   | Uppercase or Lowercase Let
  hintfont <- MakeFont("VeraMono.ttf",0,12,MakeColor("black"),MakeColor("grey"),1)
  gHintbox <- MakeTextBox(hints,hintfont, 600,140)
  AddObject(gHintbox,gWin)
- Move(gHintBox,280,100)
+ Move(gHintBox,(gVideoWidth-gHintBox.width)/2,100)
 
-   FilePrint(gFileOut,"subnum,cond,practice,set,trial,card,word,rule,desc,parity,correctResp,lastrule,lastparity,lastcorresp,resp,late,corr,lastcorr,allcorr,time,run,cardnum,errs")
+   FilePrint(gFileOut,"subnum,practice,set,trial,card,word,rule,desc,parity,correctResp,lastrule,lastparity,lastcorresp,resp,late,corr,lastcorr,allcorr,time,run,cardnum,errs")
 
    
    lstack <- [] ##two stacks exist.
@@ -216,9 +211,9 @@ Try to figure how to sort the deck according to that rule."
 
      balance <- balance + (corresp*2-1)
 
-##   Print(balance+" " + run)
 
-     FilePrint_(gFileOut,gSubNum + "," + cond + "," + practice + ","  + set + "," + trial + "," +  Enquote(ListToString(SubList(card,1,10)))+ "," + Nth(card,11) +  "," )
+
+     FilePrint_(gFileOut,gSubNum + "," + practice + ","  + set + "," + trial + "," +  Enquote(ListToString(SubList(card,1,10)))+ "," + Nth(card,11) +  "," )
 
      x <- MakeStim(card,gHomeX,gHomeY)
      AddObjects(x,gWin)
@@ -231,16 +226,24 @@ Try to figure how to sort the deck according to that rule."
       time1 <- GetTime()
 
 	  ##We could do this with a time limit.
-#     resp <- WaitForListKeyPressWithTimeout(["<kp_0>","<KP_PERIOD>"],gtimeout,1)
-#      resp <- WaitForListKeyPress(["<KP_0>","<KP_PERIOD>"])
-      resp <- WaitForListKeyPress(["<lshift>","<rshift>"])
+
+   if(gTimeOut>0)
+   {
+     resp <- WaitForListKeyPressWithTimeout([gParams.leftresp,gParams.rightresp],gtimeout,1)
+   }else{
+  
+     resp <- WaitForListKeyPress([gParams.leftresp,gParams.rightresp])
+  }
+
       time2 <- GetTime()
 
-     if(resp == "<unknown>")
+     if(IsList(resp))
       { 
          late <- 1
+	 resp <- "<TIMEOUT>"
       } else {
          late <- 0
+	 resp <- "<TIMEOUT>"
       }
 
      ##Determine whether response was correct    
@@ -253,7 +256,7 @@ Try to figure how to sort the deck according to that rule."
          fb <- gCorr
        }else{
          fb <- gIncorr
-		 balance <- 0  ##reset balance when an error is made.x
+	 balance <- 0  ##reset balance when an error is made.x
        }            
      Show(fb)
  
@@ -288,10 +291,9 @@ Try to figure how to sort the deck according to that rule."
 
        } else { 
         run <- 0       #Reset runs to 0
-        # run <- run - 1
         errs <- errs + 1
-  
        }
+
      run <- Max([run,0])
 
      FilePrint(gFileOut, run + "," + cardnum + "," + errs )
@@ -300,10 +302,8 @@ Try to figure how to sort the deck according to that rule."
      
      if(run > gShift ) 
        {
-
-
 	##Check to see if we are out of rules.
-      if(Length(rules) == 0)
+        if(Length(rules) == 0)
      	  { 
              cont <- 0
           } else {
@@ -357,7 +357,7 @@ Try to figure how to sort the deck according to that rule."
       }
      }
     
-   FilePrint(gLogFile,"pcards end " +GetTime() + " " + TimeStamp() + " " + gSubNum + " " + cond)
+   FilePrint(gLogFile,"pcards end " +GetTime() + " " + TimeStamp() + " " + gSubNum)
 
 
    tb.text <- "Thank you for completing the test.  Please alert the
@@ -443,7 +443,7 @@ define ScoreByRules(line,resp)
  {
 
    #left is 1, right is 2
-   coded <- (resp == "<lshift>") + 2 * (resp=="<rshift>")
+   coded <- (resp == gParams.leftresp) + 2 * (resp==gParams.rightresp)
    cor <- []
    feats <- SubList(line,1,10)
    loop(i,feats)
@@ -494,8 +494,8 @@ define Init()
 {
 
    gSleepEasy <- 1
-   gVideoWidth <- 1152
-   gVideoHeight <- 864
+#   gVideoWidth <- 1152
+#   gVideoHeight <- 864
 
    gHomeX <- gVideoWidth/2
    gHomeY <- gVideoHeight/2
@@ -651,9 +651,9 @@ define Score(resp,corresp)
 {
     if(corresp == 1)
      {
-        corr <- (resp == "<lshift>")
+        corr <- (resp == gParams.leftresp)
      } else {
-        corr <- (resp == "<rshift>")
+        corr <- (resp == gParams.rightresp)
      }
   return corr
 }
