@@ -1,0 +1,15 @@
+fieldWidth|400|Width of field in pixels
+fieldheight|400|height of field in pixels
+squaresize|50|size of square stimuli
+prestime|300|presentation time
+delaytime|1000|delay blank
+length|1|size of problem
+length|2|size of problem
+length|3|size of problem
+length|4|size of problem
+length|8|size of problem
+length|12|size of problem
+trialsperlength|5|Number of trials for each length for both match and mismatch
+givefeedback|1|Whether trial-by-trial feedback should be given.
+blocksize|50|Pause for a rest after this many blocks
+useaudiofeedback|1|Whether to give audio feedback
