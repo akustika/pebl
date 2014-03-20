@@ -20,18 +20,17 @@
 ##  because they were described incorrectly in the pdf.
 ##
 ##  Part of the PEBL Test Battery.
+##  Version 0.2 
 ##  Version 0.1 Released Sept 2008, Shane T. Mueller (smueller@obereed.net)
 ##
 
 ##Initialize many of the 
 define Init()
 {
-#  gVideoWidth <- 800
-#  gVideoHeight <- 600
 
   ##restrict the bounds of the cursor.
-  boundsW <- Min([800,gVideoWidth])
-  boundsH <- Min([600,gVideoHeight])
+  boundsW <- Min([gParams.width,gVideoWidth])
+  boundsH <- Min([gParams.height,gVideoHeight])
 
   gBoundsMinX <- -(boundsw)/2
   gBoundsMaxX <- (boundsw)/2
@@ -43,14 +42,14 @@ define Init()
   gHomeY <- Round(gVideoHeight/2)
 
   gPI <- 3.141597
-  gRadius <- 10           #Radius of disc
+  gRadius <- gParams.radius           #Radius of disc
   gGutter <- 2 * gRadius  #Radius of 2nd ring
   gOuterRadius <- 20*gRadius  
 
   ## For the 'pencil eraser' mice, this should be small (.05)
   ## For other devices, it might need to be larger.
 
-  gMouseSensitivity <- .4
+  gMouseSensitivity <- gParams.sensitivity
 
   gAngles <- []
   i <- 1
@@ -62,16 +61,16 @@ define Init()
  
 
 
-   gTimeStep <- .015    # in seconds
+   gTimeStep <- gParams.timestep    # in seconds
 
-   mass     <- 1       # mass of object
-   c        <- 3       # Screen friction
-   k        <- .5      # users spring constant. A higher
+   mass     <- gParams.mass       # mass of object
+   c        <- gParams.c       # Screen friction
+   k        <- gParams.k      # users spring constant. A higher
                        # k value gives the user stronger
                        # pull on the target.
 
-   bfscale <- .44
-   inscale <- 250
+   bfscale <- .44 ##not used
+   inscale <- 250 ##not used
 
   gDamping <- 1/(mass + c*gTimestep + k*gTimestep^2)
 
@@ -79,6 +78,24 @@ define Init()
 
 define Start(p)
 {
+
+
+  parpairs <- [["numtrials",4],
+              ["timepertrial",20],
+              ["width",800],
+              ["height",600],
+	      ["radius",10],
+	      ["sensitivity",.4],
+	      ["timestep",0.015],
+	      ["mass",1],
+	      ["c",3], #screen friction
+  	      ["k",0.5]] # users spring constant. A higher
+                        # k value gives the user stronger
+                        # pull on the target.
+
+   
+  gParams <- CreateParameters(parpairs,"params/ptracker.pbl.par")
+
 
   Init()
 
@@ -94,11 +111,20 @@ define Start(p)
    }
 
   MakeDirectory("data")
-  gFileOut <- FileOpenWrite("data/ptracker-"+gSubNum+".csv")
+
+  fname <- "data/ptracker-"+gSubNum+".csv"
+
+  needsHeader <- (not FileExists(fname))
+
+  gFileOut <- FileOpenWrite(fname)
+  if(needsheader)
+  {
+    FilePrint(gFileOut,"subnum,time,posX,posY,userdeltaX,userdeltaY,timeDelta,targetDeltaX,targetDeltaY,deviation,mouseD1,mouseD2")
+  }
 
   inst <- EasyTextBox("Your goal in this task is to keep the ball near
   the target using your mouse or pointing device.  The test lasts
-  three minutes.  To stop early, hit the <esc> key.
+  "+gParams.timepertrial+" seconds.
 
 Press any key to begin", 20,20,gwin, 18,gVideoWidth-40,250)
   Draw()
@@ -113,20 +139,54 @@ Press any key to begin", 20,20,gwin, 18,gVideoWidth-40,250)
 
   target <- Circle(gHomeX,gHomeY,gRadius,MakeColor("white"),1)
   AddObject(target,gWin)
-  t <- GetTime()
-  SetMouseCursorPosition(gHomeX,gHomeY)
-  Wait(10)
-  Draw()
-  lastpos <- [0,0]
-  newpos <- lastpos
 
-  endtime <- 1* 1000*60 + GetTime()
-  timelab <- EasyLabel(GetRemaining(endtime,GetTime()),gHomeX,10,gWin,24)
+  timelab <- EasyLabel("",gHomeX,10,gWin,24)
   lasttime <- 0
 
   Draw()
 
+
+  loop(trial,Sequence(1,gParams.numtrials,1))
+  {
+
+
+  timelab.text <- ""
+  lastpos <- [0,0]
+  newpos <- lastpos
+  Move(target, gHomeX, gHomeY)
+  SetMouseCursorPosition(gHomeX,gHomeY)
+  ShowCursor(0)  
+  Draw()
+  Wait(2000)
+  lastpos <- [0,0]
+  newpos <- lastpos
+  Move(target, gHomeX, gHomeY)
+  SetMouseCursorPosition(gHomeX,gHomeY)
+  t <- GetTime()
+  endtime <- 1* 1000*gParams.timepertrial + GetTime()
+  timelab.text <-GetRemaining(endtime,GetTime())
   cont <- 1
+
+  prevTime <- GetTime()
+  tdelta <- 0
+  deviation <- 0
+  prevMouse <- [0,0] 
+  prevMouseVel <- 0
+  mouseVel <- 0
+  mouseAccel <- 0
+  mouseD1 <- 0
+  mousePrevD1 <- 0
+
+  dataCount <- 0
+  prevUserDelta <- 0
+  targetDelta <- 0
+
+  dataTimeSteps <- []
+  dataAbsDeviations <- []
+  dataMouseVelocity <- []
+  dataMouseAccel <- []
+  dataTargetDeltas <- []
+  
   while(cont)
   {
      t<- GetTime()
@@ -146,20 +206,45 @@ Press any key to begin", 20,20,gwin, 18,gVideoWidth-40,250)
        }
 
 
-     lastpos <- newpos
-     dat <- Flatten([t, newpos, userdelta])
+
+     ##Compute running stats:
+     tdelta <- t-prevTime
+     targetdelta <- AddVectors(newPos, ScaleVector(lastPos,-1))
+     deviation <- Sqrt(First(newpos)^2 + Second(newpos)^2)
+     mouseD1 <- Sqrt(First(userDelta)^2+Second(userDelta)^2)
+
+     mouseD2 <- mouseD1 - mousePrevD1
+     
+  
+    dataCount  <- dataCount + 1
+
+    PushOnEnd(dataTimeSteps,tdelta)
+    PushOnEnd(dataTargetDeltas,targetDelta)
+    PushOnEnd(dataAbsDeviations,deviation)
+    PushOnEnd(dataMouseVelocity,mouseD1)
+    PushOnEnd(dataMouseAccel,mouseD2)
+
+
+     dat <- Flatten([gSubNum,trial,t, newpos, userdelta,tDelta,targetDelta,deviation,mouseD1,mouseD2])
      FilePrint(gFileOut,ListToCSV(dat))
-
-
      Draw()
 
-	 Wait((t + gTimeStep*1000)-GetTime())
-     if(t  > endtime or IsKeyDown("<esc>"))
+    lastPos <- newPos
+    prevDeviation <- deviation
+    prevTime <- t
+    prevUserDelta <- userDelta
+    mousePrevD1 <- mouseD1
+     Wait((t + gTimeStep*1000)-GetTime())
+     if(t  > endtime )
      {
      cont <- 0
      }
 
   }
+ 
+   MessageBox("You may take a short break before continuing",gWin)
+
+}
  FileClose(gFileOut)
 
 }
@@ -183,7 +268,7 @@ define GetRemaining(endtime,curtime)
   mins <-    Floor(timeleft)
   secs <-    Ceiling((timeleft - mins)*60)
 
-  return  mins + " minutes " + secs + "secs remaining"
+  return  mins + " minutes " + secs + " secs remaining"
 }
 
 define Buffet(t)
@@ -247,7 +332,7 @@ define NewPos(pos1, pos0,userinput)
   x <- Min([Max([gBoundsMinX,First(newpos)]),gBoundsMaxX])
   y <- Min([Max([gBoundsMinY,Second(newpos)]),gBoundsMaxY])
 
-  Print(gBoundsMinX+"<"+x+"<"+gBoundsMaxX +"   "+gBoundsMinY+"<"+y+"<"+gBoundsMaxY )
+#  Print(gBoundsMinX+"<"+x+"<"+gBoundsMaxX +"   "+gBoundsMinY+"<"+y+"<"+gBoundsMaxY )
  return [x,y]
 
 }
