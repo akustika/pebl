@@ -194,9 +194,7 @@ Try to figure how to sort the deck according to that rule."
        deck <- Rotate(deck,1)
      }
 
-	 ##get card.
-
-
+     ##get card.
      card <- First(deck)     
      corresp <- Correct(card,rule,parity)       #see what the correct response is,
 
@@ -243,7 +241,6 @@ Try to figure how to sort the deck according to that rule."
 	 resp <- "<TIMEOUT>"
       } else {
          late <- 0
-	 resp <- "<TIMEOUT>"
       }
 
      ##Determine whether response was correct    
@@ -655,6 +652,7 @@ define Score(resp,corresp)
      } else {
         corr <- (resp == gParams.rightresp)
      }
+
   return corr
 }
 
