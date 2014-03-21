@@ -43,17 +43,14 @@ define Start(p)
    ##Default parameter values, used if .par file does not exist.
 
    parpairs <- [["trialtime",15],
-             ["trials",4],
-	     ["targsize",25],
-	     ["speed",.1333333] #7.5 rotations/sec
+                ["trials",4],
+	        ["targsize",25],
+		["radius",253], ##RADIUS USED IN ORIGINAL
+	        ["speed",.1333333] #7.5 rotations/sec
                ]
-   gParams <- CreateParameters(parpairs,"pursuitrotor.pbl.par")
 
+   gParams <- CreateParameters(parpairs,"params/pursuitrotor.pbl.par")
 
-#   trialtime <- 15
-#   trials <- 4
-#   gTargSize <- 25     #Radius of target
-#   gSpeed   <- 1/7.5   #Rotations/second
 
 
    Init()
@@ -65,7 +62,8 @@ define Start(p)
    gReportOut <- FileOpenWrite("data/pursuitrotor-report-"+gSubNum+".txt")
 
    inst <- EasyTextBox("In this task, you will track a red circle moving steadily around a circular path.  Try to keep your mouse button on the path at all times.  There will be a total of " +
-     gParams.trials +" trials, each lasting "+gParams.trialtime+" seconds.  Press mouse button to initialize first trial.",200,200,gWin,15,400,200)
+     gParams.trials +" trials, each lasting "+gParams.trialtime+" seconds.  Press mouse button to initialize first trial.",
+            gVideoWidth/2-200,gVideoHeight/2-100,gWin,15,400,200)
    Draw()
    times<- []
    trial <- 1
@@ -78,11 +76,14 @@ define Start(p)
      WaitForDownClick()
      Hide(inst)
      t <- Trial(gParams.trialtime, gSubnum + " " + trial)
+     Print("trialdon")
      times <- Append(times,t)
      trial <- trial + 1
      Show(inst)
      Draw()
     }
+
+
 
    out  <-    Print("=====================================")
    out <- out +  CR(1)+ Print("PEBL Pursuit Rotor task, Version 0.1")
@@ -117,11 +118,13 @@ define Start(p)
    inst.x <- 50
    inst.height <- 500
    inst.y <- 50
-   Draw()
-   
+   Print(out)
    FilePrint(gReportOut,out)
    FileClose(gFileOut)
    FileClose(gReportOut)
+
+   Draw()
+   
    WaitForAnyKeyPress()
 }
 
@@ -191,10 +194,8 @@ define Trial(timeinsecs,head)
 define Init()
 {
   gPi <- 3.141596
-  gVideoWidth <- 800
-  gVideoHeight <- 600
-  gHomeX <-  400
-  gHomeY <- 300
+  gHomeX <-  Round(gVideoWidth/2)
+  gHomeY <- Round(gVideoHeight/2)
 
   gWin <- MakeWindow()
 
@@ -205,23 +206,16 @@ define Init()
    }
 
 
-  ##if (a3)^2+(a4)^2 = 17^2, then 
-  ##    9a^2 + 16a^2 = 17^2
-  ##    25 a^2 = 17^2
-  ##    a^2 = (17/5)^2, a = 17/5
-  ## this assumes 17" screen with 3x4 aspect ratio
-  screenWidth <- (17/5) * 4
-  screenHeight <- (17/5) *3 
-  gScale <- gVideoWidth/screenWidth
   ##These dimensions were taken from description of physical PR task:
-  radiusInches <- (10.04-1.44)/2  #radius in inches
-  gRadius <- radiusInches * gScale
+
+
+  gRadius <- gParams.radius
 
   gback1 <- Circle(gHomeX,gHomeY,gRadius+10,MakeColor("grey40"),1)
   AddObject(gback1,gWin)  
   gback2 <- Circle(gHomeX,gHomeY,gRadius-10,MakeColor("grey"),1)
   AddObject(gback2,gWin)  
-  # gTargSize <- .75 * gScale/2
+
 
   ##How many revolutions per second
 
