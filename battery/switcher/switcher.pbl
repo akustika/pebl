@@ -19,7 +19,10 @@ define Start(p)
    	    MakeColorRGB(86,180,233),  #skyblue
 	    MakeColorRGB(0,158,115),   #blue-green
       	    MakeColorRGB(240,228,66),  #yellow
-	    MakeColorRGB(213,94,0)]   #vermillion (red)
+	    MakeColorRGB(213,94,0)    #vermillion (red)
+                                   ]  
+#            MakeColorRGB(255,255,255),  #white
+#            MakeColorRGB(0,0,0)         #Black
 
    gColNames <- ["orange","skyblue","bluegreen","yellow","red"]
    gShapeNames <- ["circle","square","plus","ellipse","star"]
@@ -215,9 +218,10 @@ define Start(p)
       i <- i + 1
 
     }
-
-   Print(GetTime()/1000/60)
-   Print(TimeStamp())
+ gInst.text <- "Thank you for participating. Click the mouse to continue."
+ Show(gInst)
+  Draw()
+  WaitForAnyKeyPress() 
 
 }
 
@@ -302,14 +306,19 @@ define Trial(setup,cues)
      cont <- 1
      while(cont)
       {
+
        respa <- WaitForClickOnTarget(backs,stim)
        time <- GetTime()
+
+
+       SetMouseCursorPosition(Round(Nth(respa,4)+7),Round(Nth(respa,5)+7))
+
        ##respa is the clicked-on stim string.
-      try <- try + 1
-     if(Nth(respa,rule) == currentval and 
+       try <- try + 1
+       if(Nth(respa,rule) == currentval and 
          Nth(respa,6) <> curid)
-      { 
-    ###Correct
+        { 
+       ###Correct
         rt <- (time-lasttime)
         rts <- Append(rts, rt)
         tooslow <- tooslow + (rt > 2000)
