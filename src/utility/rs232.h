@@ -29,7 +29,7 @@
 ***************************************************************************
 */
 
-
+#ifdef PEBL_USEPORTS
 
 #ifndef rs232_INCLUDED
 #define rs232_INCLUDED
@@ -75,3 +75,4 @@ int IsCTSEnabled(int);
 #endif
 
 
+#endif

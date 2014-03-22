@@ -81,6 +81,7 @@ public:
 
     counted_ptr (const counted_ptr<X> &r)
     {
+        //std::cout << r.ptr << std::endl;
         ptr=r.ptr;
         count=r.count;
         acquire();
@@ -113,7 +114,7 @@ public:
 
     void PrintCounts()
     {
-        std::cout << "Object has "<< *count << " copies" <<std::endl;
+        std::cout << "Object "<< ptr<<" has "<< *count << " copies" <<std::endl;
     }
 
 protected:
@@ -130,14 +131,17 @@ protected:
 
     void release()
     {
-        //        PrintCounts();
-        //        std::cout << ptr << std::endl;
+        //debugging printouts:
+
         if (count)
             {
+                //PrintCounts();
+                //std::cout << ptr <<"----"<<  std::endl;
+
                 (*count)--;
                 if((*count)==0)
                     {              
-
+                        //std::cout << "Deleting: "<< ptr<<std::endl;
                         delete ptr;
                         delete count;
                         ptr = NULL;

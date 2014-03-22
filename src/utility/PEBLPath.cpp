@@ -3,7 +3,7 @@
 //    Name:       src/utility/PEBLPath.cpp
 //    Purpose:    Utility class storing search path and searching for files there
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -54,7 +54,9 @@ PEBLPath::PEBLPath()
 void PEBLPath::Initialize(std::list<std::string> files)
 {
     //	std::cout << "Initializing path\n";
-#if defined PEBL_LINUX
+
+
+#if defined( PEBL_LINUX) 
     //On unix, add the following paths:
     //current working directory,
     AddToPathList("./");
@@ -109,6 +111,49 @@ void PEBLPath::Initialize(std::list<std::string> files)
 
     //library functions
     AddToPathList(MergePathAndFile(basedir, "pebl-lib/"));
+#elif defined (PEBL_EMSCRIPTEN)
+    AddToPathList("./");
+
+    //Look for absolute pathnames
+    AddToPathList("");
+    //The directories of each file on the command-line.
+    string tmp;
+    std::list<string>::iterator i=files.begin();
+    i++;  //skip over the command name in UNIX.
+    while(i != files.end())
+        {
+            //For each commandline argument, strip the filename and add it.
+            tmp = PEBLUtility::StripFile(*i);
+            if(tmp != "")
+                {
+                    AddToPathList(tmp);
+                }
+            i++;
+        }
+
+
+    //in emscripten, everything goes in the root of the base directory.
+    string basedir = "";
+
+    //Add a blank root directory, but just for emscripten.
+    AddToPathList("");
+
+    //media subdirectories of execution directory.
+    //fonts
+    AddToPathList(MergePathAndFile(basedir, "media/fonts/"));
+
+    //Sounds
+    AddToPathList(MergePathAndFile(basedir, "media/sounds/"));
+
+    //images
+    AddToPathList(MergePathAndFile(basedir, "media/images/"));
+
+    //text
+    AddToPathList(MergePathAndFile(basedir, "media/text/"));
+
+    //library functions
+    AddToPathList(MergePathAndFile(basedir, "pebl-lib/"));
+
 
 #elif defined PEBL_OSX
 
@@ -255,27 +300,29 @@ string  PEBLPath::FindFile(const string & filename)
     int lengthp;
     int lengthfilename;
     string tmp;
-   while(p != mPathList.end())
-       {
-           lengthp = (*p).size();
-           lengthfilename = filename.size();
+    while(p != mPathList.end())
+        {
+            lengthp = (*p).size();
+            lengthfilename = filename.size();
+            
+            tmp = (*p) + filename;
+            
+            
+            //Check to see if the file exists.
+            cout << "Checking:" << tmp.c_str() << "|" << stat(tmp.c_str(), &st)<< endl;
+            if(stat(tmp.c_str(), &st)==0)
+                {
+                    cout << "file ["<<tmp<<"] exists\n";
 
-           tmp = (*p) + filename;
-
-
-               //Check to see if the file exists.
-               //cout << "Checking:" << tmp.c_str() << stat(tmp.c_str(), &st)<< endl;
-               if(stat(tmp.c_str(), &st)==0)
-                   {
-                       //The file exists, so return it
-                       return tmp;
-                   }
-
-           //otherwise, increment and try again.
-           p++;
-       }
-   //If everything fails, return "".
-   return "";
+                    //The file exists, so return it
+                    return tmp;
+                }
+            
+            //otherwise, increment and try again.
+            p++;
+        }
+    //If everything fails, return "".
+    return "";
 }
 
 
@@ -294,6 +341,8 @@ bool PEBLPath::IsDirectory(const string & pathname)
     char separator = '\\';
 #elif defined WIN32
 	char separator = '\\';
+#elif defined PEBL_EMSCRIPTEN
+    char separator = '/';
 #endif
 
 

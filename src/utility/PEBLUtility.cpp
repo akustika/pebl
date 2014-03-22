@@ -3,7 +3,7 @@
 //    Name:       utility/PEBLUtility.cpp
 //    Purpose:    Miscellaneous Utility Functions used in PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -32,6 +32,7 @@
 #include "../base/PList.h"
 #include "../devices/PKeyboard.h"
 #include "../apps/Globals.h"
+#include "md5.h"
 
 #include <errno.h>
 #include <ctype.h>
@@ -41,6 +42,7 @@
 #include <iostream>
 #include <strstream>
 #include <algorithm>
+
 #if !defined(PEBL_OSX)
 #include <png.h>
 #endif
@@ -59,17 +61,23 @@
 #include <unistd.h>
 #include <bits/types.h>
 #include <pwd.h>
+#elif defined (PEBL_EMSCRIPTEN)
+#include <sys/stat.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
 #elif defined (PEBL_OSX)
 #include <unistd.h>
 #include <pwd.h>
 #endif
 
 #include <unistd.h>
-
-
 #include <sys/stat.h>
-
 #include <stdio.h>
+#include <fcntl.h> //For md5file O_RDONLY
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
 
 //Some math libraries contain this, but let's not take any chances.
 #define PI 3.141592653589793238462643383279502884197169399375
@@ -200,80 +208,76 @@ Variant PEBLUtility::Tokenize(const char* line, char separator)
 }
 
 
-
-long double PEBLUtility::StringToLongDouble(const char * mystring)
+pDouble PEBLUtility::StringToPDouble(const char * mystring)
 {
 #if defined(strold)
     return strtold(mystring,0);
 #else
-    return (long double)strtod(mystring,0);
+    return (pDouble)strtod(mystring,0);
 #endif
 }
 
 
 
-double PEBLUtility::RandomUniform()
+pDouble PEBLUtility::RandomUniform()
 {
-    return (double)rand() / RAND_MAX;
+    return (pDouble)rand() / RAND_MAX;
 }
 
 
 /// It will return a floating-
 /// point number which is a sample from the N(0,1) distribution.
 /// Values are calculated using the Box-Mueller technique.
-double PEBLUtility::RandomNormal()
+pDouble PEBLUtility::RandomNormal()
 {
 
-    double x1 = RandomUniform();
-    double x2 = RandomUniform();
+    pDouble x1 = RandomUniform();
+    pDouble x2 = RandomUniform();
 
     return sqrt(-2 * log(x1)) * cos(2 * PI * x2);
 }
 
-long double PEBLUtility::Log2(long double val)
+pDouble PEBLUtility::Log2(pDouble val)
 {
-#if defined(log2l)
+#if defined(log2)
+    return (pDouble)log2((pDouble)val);
+#elif defined(log2l)
     return log2l(val);
-#elif defined(log2)
-    return (long double)log2((double)val);
 #else
     return logl(val) / logl(2);
 #endif
 }
 
-long int PEBLUtility::Round(long double val)
+pInt PEBLUtility::Round(pDouble val)
 {
-#if defined(roundl)
+#if defined(round)
+    return round((pDouble)val);
+#elif defined(roundl)
     return roundl(val);
-#elif defined(round)
-    return round((double)val);
 #else
-    return (long int) floor(val+.5);
+    return (pInt) floor(val+.5);
 #endif
 }
 
-long double PEBLUtility::Round(long double val, long int prec)
+pDouble PEBLUtility::Round(pDouble val, pInt prec)
 {
-    double off = pow(10,prec);
+    pDouble off = pow(10,prec);
     //cout << "Rounding " << val <<" to : " << off << endl;
-#if defined(roundl)
-
-    return (long double)roundl(val*off)/off;
-#elif defined(round)
-
-    return (long double)round((double)val*off)/off;
+#if defined(round)
+    return (pDouble)round((pDouble)val*off)/off;
+#elif defined(roundl)
+    return (pDouble)roundl(val*off)/off;
 #else
-
-    return (long double) ((long int)(floor(val*off+.5))/off);
+    return (pDouble) ((pInt)(floor(val*off+.5))/off);
 #endif
 }
 
-long int PEBLUtility::Truncate(long double val)
+pInt PEBLUtility::Truncate(pDouble val)
 {
 #if defined(truncl)
     return truncl(val);
 #elif defined(trunc)
-    return trunc((double)val);
+    return trunc((pDouble)val);
 #else
     int sign = val < 0 ? -1: 1;
     return sign * Round(sign * val);
@@ -399,7 +403,9 @@ PEBLKey PEBLUtility::TranslateString(const std::string & let)
 std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
 {
 
-//            cout << "translating [" << key << "]\n";
+
+
+    cout << "translating [" << key << "]\n";
 
     //These are tailored to US keyboard.
     switch(key)
@@ -1018,6 +1024,8 @@ Variant PEBLUtility::FileExists(std::string path)
 
 Variant PEBLUtility::GetDirectoryListing(std::string path)
 {
+
+    cout << "Getting directory listing\n";
     DIR *dirp;
     struct dirent *entry;
     PList * plist = new PList();
@@ -1030,6 +1038,7 @@ Variant PEBLUtility::GetDirectoryListing(std::string path)
             //not this is an assignment, not an equality
             while((entry = readdir(dirp)))
                 {
+                    cout << entry->d_name << endl;
                     plist->PushBack(Variant(entry->d_name));
                 }
         } else {
@@ -1059,7 +1068,7 @@ Variant PEBLUtility::GetDirectoryListing(std::string path)
 					codes = "Not enough memory available. (ENOMEM)";
 					break;
 				default:
-					codes ="Unknown error" + Variant(errno);
+					codes =Variant("Unknown error") + Variant(errno);
 					break;
 			}
 
@@ -1070,10 +1079,11 @@ Variant PEBLUtility::GetDirectoryListing(std::string path)
 
         closedir(dirp);
 
-        counted_ptr<PEBLObjectBase> pob = counted_ptr<PEBLObjectBase>(plist);
-        pcd = new PComplexData(pob);
-
-        return Variant(pcd);
+        counted_ptr<PEBLObjectBase> tmplist = counted_ptr<PEBLObjectBase>(plist);
+        pcd = new PComplexData(tmplist);
+        Variant tmp = Variant(pcd);
+        delete pcd;
+        return tmp;
 }
 
 
@@ -1128,10 +1138,14 @@ Variant PEBLUtility::GetHomeDirectory()
     {
         PError::SignalFatalError("Unable to find user's home directory!");
     }
-#else
+#elif defined(PEBL_LINUX)
 
   struct passwd *p=getpwuid(getuid());
   std::string path = p->pw_dir;
+#elif defined( PEBL_EMSCRIPTEN)
+
+  //this may be wrong?
+  std::string path ="~/";
 
 #endif
 
@@ -1147,10 +1161,12 @@ Variant PEBLUtility::GetWorkingDirectory()
     size_t size = 0;
     path=getcwd(path,size);
 
-#else
+#elif defined(PEBL_UNIX) //linux/osx
 
     char* path = get_current_dir_name();
 
+#elif defined (PEBL_EMSCRIPTEN) 
+    const char* path = ""; //maybe this won't work
 #endif
 
  return Variant(path);
@@ -1235,9 +1251,9 @@ Variant PEBLUtility::SystemCall(std::string call, std::string args)
 
 
 #if defined( PEBL_UNIX )
-
+    
     std::string tmp = call + " " + args;
-
+    
     const char* call2 = tmp.c_str();
     int x = system(call2);  //do a system call with the argument string.
 
@@ -1258,6 +1274,9 @@ Variant PEBLUtility::SystemCall(std::string call, std::string args)
         cout << GetLastError() << std::endl;
     }
     int x=0;
+#elif defined (PEBL_EMSCRIPTEN)
+    std::cerr << "Cannot perform system call in web mode\n";
+    int x = 0;
 #endif
 
     return Variant(x);
@@ -1372,4 +1391,58 @@ std::string PEBLUtility::strrev_utf8(std::string p)
 //                     }
 //             }
 //     return q;
+}
+
+// Get the size of the file by its file descriptor
+unsigned long get_size_by_fd(int fd) {
+    struct stat statbuf;
+    if(fstat(fd, &statbuf) < 0) exit(-1);
+    return statbuf.st_size;
+}
+
+std::string PEBLUtility::MD5File(const std::string & filename)
+{
+
+    if(FileExists(filename))
+        {
+            
+            int file_descript;
+            unsigned long file_size;
+            char* file_buffer;
+            
+            //printf("using file:\t%s\n", filename);
+            
+            file_descript = open(filename.c_str(), O_RDONLY);
+            if(file_descript < 0) 
+                {
+                    PError::SignalFatalError("File does not exist in MD5file\n");
+                    return "";
+                }
+                        
+            file_size = get_size_by_fd(file_descript);
+            printf("file size:\t%lu\n", file_size);
+            
+            file_buffer = (char*)mmap(0, file_size, PROT_READ, MAP_SHARED, 
+                               file_descript, 0);
+            
+            
+            MD5 *md5 = new MD5();
+            md5->update((unsigned char*)file_buffer,file_size);
+            //std::string result =  md5((unsigned char*) file_buffer);
+            md5->finalize();
+            std::string hex = md5->hexdigest();
+            delete md5;
+            md5=NULL;
+            return hex;
+        }else{
+        
+        return "0";
+    }
+
+}
+
+
+std::string PEBLUtility::MD5String(const std::string & text)
+{
+    return md5(text);
 }

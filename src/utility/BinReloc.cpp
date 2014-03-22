@@ -10,7 +10,6 @@
  * more information and how to use this.
  */
 
-
 #ifndef __BINRELOC_C__
 #define __BINRELOC_C__
 

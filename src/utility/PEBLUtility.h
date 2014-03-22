@@ -33,7 +33,7 @@
 /// or do a 'using namespace PEBLUtility', or 'using PEBLUtility::FunctionName;'.
 #include "../devices/PKeyboard.h"
 #include "../apps/Globals.h"
-
+#include "Defs.h"
 #include <string>
 
 class Variant;
@@ -47,12 +47,12 @@ namespace PEBLUtility
 
     /// This does its best, with the available libraries, to convert
     /// a string to a long double.
-    long double StringToLongDouble(const char * mystring);
+    pDouble StringToPDouble(const char * mystring);
 
-    long double Log2(long double val);
-    long int Round(long double val);
-    long double Round(long double val, long int prec);
-    long int Truncate(long double val);
+    pDouble Log2(pDouble val);
+    pInt Round(pDouble val);
+    pDouble Round(pDouble val, pInt prec);
+    pInt Truncate(pDouble val);
 
     Variant Tokenize(const char* line, char separator);
 
@@ -60,13 +60,11 @@ namespace PEBLUtility
     std::string TranslateKeyCode(const PEBLKey key, int modkeys);
 
 
-
-
     /// These functions are used frequently enough that it is good to have
     /// our own definition.
 
-    double RandomUniform();
-    double RandomNormal();
+    pDouble RandomUniform();
+    pDouble RandomNormal();
 
     std::string ShiftSwitch(int modkeys, std::string lower, std::string upper);
 
@@ -92,6 +90,10 @@ namespace PEBLUtility
     void strrev_utf8(char*p);
     std::string strrev(std::string p);
     std::string strrev_utf8(std::string p);
+
+
+    std::string MD5File(const std::string & filename);
+    std::string MD5String(const std::string & text);
 
 }
 
