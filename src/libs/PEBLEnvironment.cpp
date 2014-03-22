@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLEnvironment.cpp
 //    Purpose:    General Environment Function Library for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -30,7 +30,11 @@
 #include "../base/Variant.h"
 #include "../base/PList.h"
 #include "../base/PComplexData.h"
+#ifdef PEBL_EMSCRIPTEN
+#include "../base/Evaluator2.h"
+#else
 #include "../base/Evaluator.h"
+#endif
 
 #include "../utility/PError.h"
 #include "../utility/PEBLUtility.h"
@@ -110,10 +114,10 @@ Variant  PEBLEnvironment::Wait(Variant v)
     //NULL,NULL will terminate the looping
     string funcname = "";
 
-    Evaluator::mEventLoop.RegisterState(state, funcname, Variant(0));
-    PEvent returnval = Evaluator::mEventLoop.Loop();
+    Evaluator::mEventLoop->RegisterState(state, funcname, Variant(0));
+    PEvent returnval = Evaluator::mEventLoop->Loop();
     //Now, clear the event loop tests
-    Evaluator::mEventLoop.Clear();
+    //Evaluator::mEventLoop->Clear();
     delete device;
 
     return Variant(returnval.GetDummyEvent().value);
@@ -219,11 +223,11 @@ Variant PEBLEnvironment::WaitForKeyDown(Variant v)
     string  funcname = "";
 
 
-    Evaluator::mEventLoop.RegisterState(state,funcname, Variant(0));
-    PEvent returnval = Evaluator::mEventLoop.Loop();
+    Evaluator::mEventLoop->RegisterState(state,funcname, Variant(0));
+    PEvent returnval = Evaluator::mEventLoop->Loop();
 
     //Now, clear the event loop tests
-    Evaluator::mEventLoop.Clear();
+    //Evaluator::mEventLoop->Clear();
 
     return Variant(returnval.GetDummyEvent().value);
 }
@@ -249,11 +253,11 @@ Variant PEBLEnvironment::WaitForKeyUp(Variant v)
 
     //NULL,NULL will terminate the looping
     string funcname = "";
-    Evaluator::mEventLoop.RegisterState(state, funcname, Variant(0));
-    PEvent returnval = Evaluator::mEventLoop.Loop();
+    Evaluator::mEventLoop->RegisterState(state, funcname, Variant(0));
+    PEvent returnval = Evaluator::mEventLoop->Loop();
 
-    //Now, clear the event loop tests
-    Evaluator::mEventLoop.Clear();
+    //Now, clear the event loop tests (this is now done in-loop).
+    //Evaluator::mEventLoop->Clear();
 
     return Variant(returnval.GetDummyEvent().value);
 
@@ -277,11 +281,11 @@ Variant PEBLEnvironment::WaitForAnyKeyDown(Variant v)
     //NULL,NULL will terminate the looping
     string  funcname = "";
 
-    Evaluator::mEventLoop.RegisterState(state, funcname, Variant(0));
-    PEvent returnval = Evaluator::mEventLoop.Loop();
+    Evaluator::mEventLoop->RegisterState(state, funcname, Variant(0));
+    PEvent returnval = Evaluator::mEventLoop->Loop();
 
     //Now, clear the event loop tests
-    Evaluator::mEventLoop.Clear();
+    //Evaluator::mEventLoop->Clear();
 
     return Variant(returnval.GetDummyEvent().value);
 }
@@ -310,11 +314,12 @@ Variant PEBLEnvironment::WaitForKeyPress(Variant v)
     //NULL,NULL will terminate the looping
     string funcname = "";
 
-    Evaluator::mEventLoop.RegisterEvent(state,funcname, Variant(0));
-    PEvent returnval = Evaluator::mEventLoop.Loop();
+    Evaluator::mEventLoop->RegisterEvent(state,funcname, Variant(0));
+    PEvent returnval = Evaluator::mEventLoop->Loop();
 
+    cout << "ABOUT TO CLEAR KEYPRESS\n";
     //Now, clear the event loop tests
-    Evaluator::mEventLoop.Clear();
+    //Evaluator::mEventLoop->Clear();
 
     return Variant(PEBLUtility::TranslateKeyCode(returnval.GetKeyboardEvent().key,0));
 }
@@ -341,11 +346,11 @@ Variant PEBLEnvironment::WaitForKeyRelease(Variant v)
     //NULL,NULL will terminate the looping
     string funcname = "";
 
-    Evaluator::mEventLoop.RegisterEvent(state, funcname, Variant(0));
-    PEvent returnval = Evaluator::mEventLoop.Loop();
+    Evaluator::mEventLoop->RegisterEvent(state, funcname, Variant(0));
+    PEvent returnval = Evaluator::mEventLoop->Loop();
 
     //Now, clear the event loop tests
-    Evaluator::mEventLoop.Clear();
+    //Evaluator::mEventLoop->Clear();
 
 
     return Variant(PEBLUtility::TranslateKeyCode(returnval.GetKeyboardEvent().key,0));
@@ -368,11 +373,11 @@ Variant PEBLEnvironment::WaitForAnyKeyPress(Variant v)
     //NULL,NULL will terminate the looping
     string  funcname = "";
 
-    Evaluator::mEventLoop.RegisterEvent(state, funcname, Variant(0));
-    PEvent returnval = Evaluator::mEventLoop.Loop();
+    Evaluator::mEventLoop->RegisterEvent(state, funcname, Variant(0));
+    PEvent returnval = Evaluator::mEventLoop->Loop();
 
     //Now, clear the event loop tests
-    Evaluator::mEventLoop.Clear();
+    //Evaluator::mEventLoop->Clear();
 
     return Variant(PEBLUtility::TranslateKeyCode(returnval.GetKeyboardEvent().key,0));
 
@@ -394,11 +399,11 @@ Variant PEBLEnvironment::WaitForAllKeysUp(Variant v)
 
     //NULL,NULL will terminate the looping
     string  funcname = "";
-    Evaluator::mEventLoop.RegisterState(state,funcname, Variant(0));
-    PEvent returnval = Evaluator::mEventLoop.Loop();
+    Evaluator::mEventLoop->RegisterState(state,funcname, Variant(0));
+    PEvent returnval = Evaluator::mEventLoop->Loop();
 
     //Now, clear the event loop tests
-    Evaluator::mEventLoop.Clear();
+    //Evaluator::mEventLoop->Clear();
 
 
     return Variant(returnval.GetDummyEvent().value);
@@ -431,12 +436,12 @@ Variant PEBLEnvironment::WaitForAnyKeyDownWithTimeout(Variant v)
 
     //NULL,NULL will terminate the looping
     string  funcname = "";
-    Evaluator::mEventLoop.RegisterState(state,funcname, Variant(0));
-    Evaluator::mEventLoop.RegisterState(timestate, funcname, Variant(0));
-    PEvent returnval = Evaluator::mEventLoop.Loop();
+    Evaluator::mEventLoop->RegisterState(state,funcname, Variant(0));
+    Evaluator::mEventLoop->RegisterState(timestate, funcname, Variant(0));
+    PEvent returnval = Evaluator::mEventLoop->Loop();
 
     //Now, clear the event loop tests
-    Evaluator::mEventLoop.Clear();
+    //Evaluator::mEventLoop->Clear();
 
     return Variant(returnval.GetDummyEvent().value);
 
@@ -474,13 +479,13 @@ Variant PEBLEnvironment::WaitForAnyKeyPressWithTimeout(Variant v)
     //NULL,NULL will terminate the looping
     string  funcname = "";
 
-    Evaluator::mEventLoop.RegisterState(state,funcname, Variant(0));
-    Evaluator::mEventLoop.RegisterState(timestate, funcname, Variant(0));
-    PEvent returnval = Evaluator::mEventLoop.Loop();
+    Evaluator::mEventLoop->RegisterState(state,funcname, Variant(0));
+    Evaluator::mEventLoop->RegisterState(timestate, funcname, Variant(0));
+    PEvent returnval = Evaluator::mEventLoop->Loop();
 
      std::cout << "Returnval: "<<returnval.GetType() << std::endl;
     //Now, clear the event loop tests
-    Evaluator::mEventLoop.Clear();
+     //Evaluator::mEventLoop->Clear();
     //    return Variant(returnval.GetDummyEvent().value);
 
     return Variant(PEBLUtility::TranslateKeyCode(returnval.GetKeyboardEvent().key,0));
@@ -532,7 +537,7 @@ Variant PEBLEnvironment::WaitForListKeyPressWithTimeout(Variant v)
             key = PEBLUtility::TranslateString(*p);
             state = new ValueState(PEBL_PRESSED, DT_EQUAL, key, gEventQueue, PDT_KEYBOARD);
             //NULL,NULL will terminate the looping
-            Evaluator::mEventLoop.RegisterEvent(state,funcname, Variant(0));
+            Evaluator::mEventLoop->RegisterEvent(state,funcname, Variant(0));
             p++;
         }
 
@@ -545,11 +550,11 @@ Variant PEBLEnvironment::WaitForListKeyPressWithTimeout(Variant v)
 
 
     //NULL,NULL will terminate the looping
-    Evaluator::mEventLoop.RegisterState(timestate, funcname, Variant(0));
-    PEvent returnval = Evaluator::mEventLoop.Loop();
+    Evaluator::mEventLoop->RegisterState(timestate, funcname, Variant(0));
+    PEvent returnval = Evaluator::mEventLoop->Loop();
 
     //Now, clear the event loop tests
-    Evaluator::mEventLoop.Clear();
+    //Evaluator::mEventLoop->Clear();
 
     //    return Variant(PEBLUtility::TranslateKeyCode(returnval.GetKeyboardEvent().key,0));
     Variant ret;
@@ -605,16 +610,16 @@ Variant PEBLEnvironment::WaitForKeyListDown(Variant v)
             key = PEBLUtility::TranslateString(*p);
             state = new ValueState(1, DT_EQUAL, key, device, PDT_KEYBOARD);
             //NULL,NULL will terminate the looping
-            Evaluator::mEventLoop.RegisterState(state,funcname, Variant(0));
+            Evaluator::mEventLoop->RegisterState(state,funcname, Variant(0));
             p++;
         }
 
 
     //Start the event loop.
-    PEvent returnval = Evaluator::mEventLoop.Loop();
+    PEvent returnval = Evaluator::mEventLoop->Loop();
 
 
-    Evaluator::mEventLoop.Clear();
+    //Evaluator::mEventLoop->Clear();
     Variant ret;
     if(returnval.GetType() == PDT_KEYBOARD)
         {
@@ -670,14 +675,14 @@ Variant PEBLEnvironment::WaitForListKeyPress(Variant v)
             //            std::cout<< "Key:" << *p << "|"<<key<< std::endl;
             state = new ValueState(PEBL_PRESSED, DT_EQUAL, key, gEventQueue, PDT_KEYBOARD);
             //NULL,NULL will terminate the looping
-            Evaluator::mEventLoop.RegisterEvent(state,funcname, Variant(0));
+            Evaluator::mEventLoop->RegisterEvent(state,funcname, Variant(0));
             p++;
         }
 
 
     //Start the event loop.
-    PEvent returnval = Evaluator::mEventLoop.Loop();
-    Evaluator::mEventLoop.Clear();
+    PEvent returnval = Evaluator::mEventLoop->Loop();
+    //Evaluator::mEventLoop->Clear();
 
     return Variant(PEBLUtility::TranslateKeyCode(returnval.GetKeyboardEvent().key,0));
 }
@@ -702,7 +707,7 @@ Variant PEBLEnvironment::GetInput(Variant v)
     //type = plist->First()->GetType();
 
     PError::AssertType(plist->Nth(2), PEAT_STRING, "Argument error in function [GetInput(<textbox>,<key-string>)]: ");
-    string  myString = plist->Nth(2); //plist->PopFront();
+    string  exitString = plist->Nth(2); //plist->PopFront();
 
 
     //Create a keyboard test correspending to escape keydown.
@@ -722,10 +727,11 @@ Variant PEBLEnvironment::GetInput(Variant v)
 
 
 
-    //Evaluator::mEventLoop.Clear();
-    Evaluator::mEventLoop.RegisterEvent(keypressstate, funcname, Variant(0));
+    //Evaluator::mEventLoop->Clear();
+    Evaluator::mEventLoop->RegisterEvent(keypressstate, funcname, Variant(0));
 
-    //Evaluate the last list item, if it exists
+    //Evaluate the last list item, if it exists.
+    //This is the optional command that specifies mouse click events.
     if(plist->Length() > 2)
         {
             Variant tmp = plist->Nth(3);
@@ -733,20 +739,22 @@ Variant PEBLEnvironment::GetInput(Variant v)
                 {
                     //add a mouse click as an exit too.
                     ValueState  * state2 = new ValueState(PEBL_PRESSED, DT_TRUE, 1, gEventQueue, PDT_MOUSE_BUTTON);
-                    Evaluator::mEventLoop.RegisterEvent(state2,funcname, Variant(0));
+                    Evaluator::mEventLoop->RegisterEvent(state2,funcname, Variant(0));
                 }
         }
 
     bool ignore = false;
 
 
-    //This handles mouseclick events
-    PEvent keypress =  Evaluator::mEventLoop.Loop();
+    //This gets the first click/keypress:
+    PEvent keypress =  Evaluator::mEventLoop->Loop();
+
+    //handle special if it is a mouse click:
     if(keypress.GetType()==PDT_MOUSE_BUTTON )
         {
             if(keypress.GetMouseButtonEvent().state==PEBL_PRESSED)
                 {
-                    Evaluator::mEventLoop.Clear();
+                    //Evaluator::mEventLoop->Clear();
                     textbox->SetEditable(false);
                     gEventQueue->PushEvent(keypress);
                     return Variant(textbox->GetText());
@@ -763,12 +771,16 @@ Variant PEBLEnvironment::GetInput(Variant v)
 
     PEBL_KeyboardEvent pke = keypress.GetKeyboardEvent();
     //match on lowercase matches to trigger character.
-    //    while(pke.key != PEBLUtility::TranslateString(myString))
-    while(PEBLUtility::TranslateKeyCode(pke.key, pke.modkeys) != PEBLUtility::ToLower(myString))
+    //  while(pke.key != PEBLUtility::TranslateString(exitString))
+
+    while(PEBLUtility::TranslateKeyCode(pke.key, pke.modkeys) != PEBLUtility::ToLower(exitString))
         {
-            //std::cout << pke.key << "|" << pke.modkeys << std::endl;
+            cout << "----------------------------\n";
+            cout <<PEBLUtility::TranslateKeyCode(pke.key, pke.modkeys)<<std::endl;
+
+            std::cout <<"Tensting: " << pke.key << "|" << pke.modkeys << std::endl;
             //Process the input and redraw the textbox.
-            if(!ignore)
+            if(!ignore) 
                 textbox->HandleKeyPress(pke.key, pke.modkeys,pke.unicode);
 
             if(myEnv)
@@ -777,7 +789,11 @@ Variant PEBLEnvironment::GetInput(Variant v)
                 }
 
             //Wait for the next keystroke..
-            keypress =  Evaluator::mEventLoop.Loop();
+
+            //reregistere the state to look for, which is always cleared when loop returns.
+            Evaluator::mEventLoop->RegisterEvent(keypressstate, funcname, Variant(0));
+            keypress =  Evaluator::mEventLoop->Loop();
+
             ignore=false;
 
             if(keypress.GetType()==PDT_MOUSE_BUTTON)
@@ -786,7 +802,7 @@ Variant PEBLEnvironment::GetInput(Variant v)
                     if(keypress.GetMouseButtonEvent().state==PEBL_PRESSED)
                         {
 
-                            Evaluator::mEventLoop.Clear();
+                            //Evaluator::mEventLoop->Clear();
                             textbox->SetEditable(false);
                             //We should probably recycle keypress.
                             gEventQueue->PushEvent(keypress);
@@ -797,10 +813,11 @@ Variant PEBLEnvironment::GetInput(Variant v)
                 }
 
             pke = keypress.GetKeyboardEvent();
+
         }
 
 
-    Evaluator::mEventLoop.Clear();
+    //Evaluator::mEventLoop->Clear();
     textbox->SetEditable(false);
     myEnv->SetKeyRepeat(false);
     return Variant(textbox->GetText());
@@ -846,11 +863,11 @@ Variant PEBLEnvironment::WaitForMouseButton(Variant v)
 
     //NULL,NULL will terminate the looping
     string funcname = "";
-    Evaluator::mEventLoop.RegisterEvent(state,funcname, Variant(0));
-    PEvent returnval = Evaluator::mEventLoop.Loop();
+    Evaluator::mEventLoop->RegisterEvent(state,funcname, Variant(0));
+    PEvent returnval = Evaluator::mEventLoop->Loop();
 
     //Now, clear the event loop tests
-    Evaluator::mEventLoop.Clear();
+    //Evaluator::mEventLoop->Clear();
 
     PList * newlist = new PList();
 
@@ -913,16 +930,16 @@ Variant PEBLEnvironment::WaitForMouseButtonWithTimeout(Variant v)
 
     //NULL,NULL will terminate the looping
     string funcname = "";
-    Evaluator::mEventLoop.RegisterEvent(state,funcname, Variant(0));
-    Evaluator::mEventLoop.RegisterState(timestate, funcname, Variant(0));
+    Evaluator::mEventLoop->RegisterEvent(state,funcname, Variant(0));
+    Evaluator::mEventLoop->RegisterState(timestate, funcname, Variant(0));
 
-    PEvent returnval = Evaluator::mEventLoop.Loop();
+    PEvent returnval = Evaluator::mEventLoop->Loop();
 
 
 
 
     //Now, clear the event loop tests
-    Evaluator::mEventLoop.Clear();
+    //Evaluator::mEventLoop->Clear();
 
     PList *newlist = new PList();
 
@@ -1443,12 +1460,12 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
 
     if(devicetype == PDT_TIMER)
         {
-            Evaluator::mEventLoop.RegisterState(state,funcname, parameters);
+            Evaluator::mEventLoop->RegisterState(state,funcname, parameters);
 
         }
     else
         {
-            Evaluator::mEventLoop.RegisterEvent(state,funcname, parameters);
+            Evaluator::mEventLoop->RegisterEvent(state,funcname, parameters);
         }
 
 
@@ -1460,7 +1477,7 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
 Variant  PEBLEnvironment::StartEventLoop(Variant v)
 {
 
-    PEvent returnval = Evaluator::mEventLoop.Loop();
+    PEvent returnval = Evaluator::mEventLoop->Loop();
     return Variant(returnval.GetDummyEvent().value);
 
 }
@@ -1469,7 +1486,7 @@ Variant  PEBLEnvironment::StartEventLoop(Variant v)
 Variant  PEBLEnvironment::ClearEventLoop(Variant v)
 {
 
-    Evaluator::mEventLoop.Clear();
+    Evaluator::mEventLoop->Clear();
     return Variant(0);
 }
 
@@ -1544,7 +1561,7 @@ Variant PEBLEnvironment::GetVideoModes(Variant v)
 Variant  PEBLEnvironment::GetPEBLVersion(Variant v)
 {
 
-    return Variant("PEBL Version 0.13");
+    return Variant("PEBL Version 0.14");
 }
 
 
@@ -1969,24 +1986,26 @@ Variant PEBLEnvironment::PlayMovie(Variant v)
     PDevice * timer = new PlatformTimer(PEBLEnvironment::myTimer);
     ValueState  * timestate = new ValueState(movietime, DT_GREATER_THAN_OR_EQUAL, 1, timer, PDT_TIMER);
     string funcname = "";
-    Evaluator::mEventLoop.RegisterState(timestate, funcname, Variant(0));
+    Evaluator::mEventLoop->RegisterState(timestate, funcname, Variant(0));
     ValueState  * state = new ValueState(1, DT_EQUAL, true, myMovie, PDT_MOVIE_END);
     //NULL,NULL will terminate the looping
 
 
     //Loop (play movie) until you get the end-of-movie event.
-    Evaluator::mEventLoop.RegisterEvent(state, funcname, Variant(0));
+    Evaluator::mEventLoop->RegisterEvent(state, funcname, Variant(0));
 
     myMovie->StartPlayback();
-    PEvent returnval = Evaluator::mEventLoop.Loop();
+    PEvent returnval = Evaluator::mEventLoop->Loop();
 
 
     //Now, clear the event loop tests
-    Evaluator::mEventLoop.Clear();
+    //Evaluator::mEventLoop->Clear();
 
     return Variant(returnval.GetDummyEvent().value);
 #else
     PError::SignalFatalError("Movie playing capabilities not supported in this version.");
+    return Variant(0);
 #endif
+
 }
 

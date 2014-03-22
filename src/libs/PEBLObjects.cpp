@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLObjects.cpp
 //    Purpose:    Function Library for managing PEBL Objects
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -30,7 +30,11 @@
 #include "../base/Variant.h"
 #include "../base/PList.h"
 #include "../base/PComplexData.h"
+#ifdef PEBL_EMSCRIPTEN
+#include "../base/Evaluator2.h"
+#else
 #include "../base/Evaluator.h"
+#endif
 #include "../base/PEBLObject.h"
 
 #include "../devices/DeviceState.h"
@@ -42,7 +46,8 @@
 #include "../objects/PDrawObject.h"
 #include "../objects/PCustomObject.h"
 #include "../utility/PError.h"
-
+#include "../utility/PEBLUtility.h"
+#include "../utility/Defs.h"
 
 #include "../platforms/sdl/PlatformEnvironment.h"
 #include "../platforms/sdl/PlatformWindow.h"
@@ -80,11 +85,14 @@ void PEBLObjects::MakeEnvironment(PEBLVideoMode mode, PEBLVideoDepth depth,
                                   bool windowed,bool unicode)
 {
 
+    cout << "A---\n";
     myEnv = new PlatformEnvironment(mode, depth, windowed,unicode);
+    cout << "B---\n";
     myEnv->Initialize();
-
+    cout << "C---\n";
     //Initialize the event queue.
     gEventQueue = new PlatformEventQueue();
+    cout << "D---\n";
 }
 
 
@@ -357,13 +365,18 @@ Variant PEBLObjects::MakeFont(Variant v)
     //Make the font and wrap it up in a Variant to return it.
     PlatformFont * tmpFont = new PlatformFont(name, style, size, fgcolor, bgcolor, aa);
     counted_ptr<PEBLObjectBase> myFont = counted_ptr<PEBLObjectBase>(tmpFont);
+
     PComplexData *  pcd = new PComplexData(myFont);
     
-
-
     Variant tmp = Variant(pcd);
+
     //delete pcd;  //without deleting here, fonts will leak memory
-    //pcd=NULL;    //But deleting causes a segfault I haven't figured out.
+    pcd=NULL;    //But deleting causes a segfault I haven't figured out.
+    //that appears to be due to an SDL issue.  Loading font file using RWOps
+    //helps increase the number of fonts we can have, but there is
+    // still a memory leak; fonts cannot get destroyed in SDL 1.2
+
+    //NOTE: the crash happens when the font object is being destroyed,
     return tmp;
 
 }
@@ -624,6 +637,87 @@ Variant PEBLObjects::PrintProperties(Variant v)
     return Variant(true);
 }
 
+
+Variant PEBLObjects::GetPropertyList(Variant v)
+{
+    //v[1] could be a widget, or an PEBLObject in general.
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First();// plist->PopFront();
+    //This should also work for PEBLObjectBase things.
+    //It should also work for devices and the like; 
+    //it probably does not currently do so.
+
+    PError::AssertType(v1, PEAT_OBJECT, "Argument error in function [GetPropertyList(<object>)]: "); 
+    
+    //PlatformWidget * widget = dynamic_cast<PlatformWidget*>(v1.GetComplexData()->GetObject().get());
+    PEBLObjectBase* obj = dynamic_cast<PEBLObjectBase*>(v1.GetComplexData()->GetObject().get());
+
+    return obj->GetPropertyList();
+}
+
+
+Variant PEBLObjects::SetProperty(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First();
+    PError::AssertType(v1, PEAT_OBJECT, "Argument error in first parameter of function [SetProperty(<object>,<property>,<value>)]:  ");    
+
+
+    Variant v2 = plist->Nth(2);
+    PError::AssertType(v2, PEAT_STRING, "Argument error in second parameter of function [SetProperty(<object>,<property>,<value>)]:  ");    
+
+
+    Variant v3 = plist->Nth(3);
+    //No need to check v3 for type.
+
+    v1.GetComplexData()->SetProperty(PEBLUtility::ToUpper(v2),v3);
+
+    return Variant(true);
+}
+
+
+Variant PEBLObjects::GetProperty (Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    
+
+    //v[1] should be a list
+    Variant v1 = plist->First(); //plist->PopFront();
+    PError::AssertType(v1, PEAT_OBJECT, "Argument error in first parameter of function [GetProperty(<object>, <property>)]:  ");    
+    
+    
+    Variant prop =PEBLUtility::ToUpper( plist->Nth(2));
+
+
+    //v[2] should be an integer
+    PError::AssertType(prop, PEAT_STRING, "Argument error in second parameter of function [Nth(<object>, <property>)]: ");    
+    return v1.GetComplexData()->GetProperty(prop);
+
+}
+
+
+Variant PEBLObjects::PropertyExists (Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    
+
+    //v[1] should be a list
+    Variant v1 = plist->First(); //plist->PopFront();
+    PError::AssertType(v1, PEAT_OBJECT, "Argument error in first parameter of function [PropertyExists(<object>, <property>)]:  ");    
+    
+    
+    Variant prop =PEBLUtility::ToUpper( plist->Nth(2));
+
+
+    //v[2] should be an integer
+    PError::AssertType(prop, PEAT_STRING, "Argument error in second parameter of function [PropertyExists(<object>, <property>)]: ");    
+
+    return v1.GetComplexData()->PropertyExists(prop);
+
+}
+
+
+
 Variant PEBLObjects::Show(Variant v)
 {
 
@@ -705,7 +799,7 @@ Variant PEBLObjects::DrawFor(Variant v)
 
     unsigned int count =static_cast<long unsigned int>(( plist->First()));
         
-    return Variant(window->DrawFor(count));
+    return Variant((pInt)(window->DrawFor(count)));
 
 }
 
@@ -732,6 +826,7 @@ Variant PEBLObjects::Move(Variant v)
 
     PWidget * widget = dynamic_cast<PWidget*>(v1.GetComplexData()->GetObject().get());
 
+    //This uses the widget setposition, rather than the child classes overridden version.  
     widget->SetPosition(x , y);  
     
     return Variant(true);
@@ -856,13 +951,13 @@ Variant PEBLObjects::MakeSineWave(Variant v)
     Variant v3 = plist->Nth(3);// plist->PopFront();
     PError::AssertType(v3, PEAT_NUMBER, "Argument error in third parameter of function [MakeSineWave(<freq>,<length>,<amplitude>)]: "); 
 
-    if((((long double)v3>1.0 )| ((long double)v3<-1.0)))
+    if((((pDouble)v3>1.0 )| ((pDouble)v3<-1.0)))
         {
             PError::SignalWarning("amplitude in MakeSineWave(<freq>,<length>,<amplitude> will produce clipping if greater than 1.0"); 
         }
 
     PlatformAudioOut * myAudio = new PlatformAudioOut();
-    myAudio->CreateSineWave((long double)v1,(int)v2, (long double)v3);
+    myAudio->CreateSineWave((pDouble)v1,(int)v2, (pDouble)v3);
     myAudio->Initialize();
     
     counted_ptr<PEBLObjectBase> audio2 = counted_ptr<PEBLObjectBase>(myAudio);
@@ -894,7 +989,7 @@ Variant PEBLObjects::MakeAudioInputBuffer(Variant v)
      AudioInfo * tmp= myAudio->ReleaseAudioOutBuffer();
      delete myAudio;
 
-     //Variant out = myAudio->VoiceKey(v,(long double)v1,(int)v2);
+     //Variant out = myAudio->VoiceKey(v,(pDouble)v1,(int)v2);
      PlatformAudioOut * myOut = new PlatformAudioOut();
      myOut->LoadSoundFromData((tmp->audio),tmp->audiolen,&(tmp->spec));
      myOut->Initialize();
@@ -907,6 +1002,7 @@ Variant PEBLObjects::MakeAudioInputBuffer(Variant v)
      return tmpv;
 #else
      PError::SignalFatalError("Audio Input not available on this version of PEBL.");
+     return false;
 #endif
 
 }
@@ -952,7 +1048,7 @@ Variant PEBLObjects::GetVocalResponseTime(Variant v)
      Variant v3 = plist->Nth(3); //plist->PopFront();
 //     PError::AssertType(v3, PEAT_NUMBER, "Argument error in third parameter of function [MakeSineWave(<freq>,<length>,<amplitude>)]: "); 
 
-//     if((((long double)v3>1.0 )| ((long double)v3<-1.0)))
+//     if((((pDouble)v3>1.0 )| ((pDouble)v3<-1.0)))
 //         {
 //             PError::SignalWarning("amplitude in MakeSineWave(<freq>,<length>,<amplitude> will produce clipping if greater than 1.0"); 
 //         }
@@ -968,13 +1064,15 @@ Variant PEBLObjects::GetVocalResponseTime(Variant v)
      //delete tmp;
      //     tmp= NULL;
 
-     Variant out = myAudio->VoiceKey((long double)v2,(int)v3);
+     Variant out = myAudio->VoiceKey((pDouble)v2,(int)v3);
      
      return out;
 
 #else
      PError::SignalFatalError("Audio Input not available on this version of PEBL.");
+     return false;
 #endif
+
 }
 
 Variant PEBLObjects::MakeSquareWave(Variant v)
@@ -1288,7 +1386,7 @@ Variant PEBLObjects::RotoZoom(Variant v)
     PError::AssertType(plist->Nth(5), PEAT_NUMBER, "Argument error in fifth parameter of function [ROTOZOOM(<widget>,<rotation>,<xzoom>, <yzoom>, <smooth>)]: "); 
     int smooth = plist->Nth(5);// plist->PopFront();
 
-    bool result = widget->RotoZoom((long double)r,(long double)x,(long double)y,smooth);
+    bool result = widget->RotoZoom((pDouble)r,(pDouble)x,(pDouble)y,smooth);
 
     
     //if(!result)PError::SignalFatalError("Rotozoom failed.");
@@ -1382,7 +1480,10 @@ Variant PEBLObjects::LoadMovie(Variant v)
     delete pcd;
     pcd=NULL;
     return tmp;
+#else
+    return false;
 #endif
+
 }
 
 
@@ -1410,6 +1511,8 @@ Variant PEBLObjects::LoadAudioFile(Variant v)
     delete pcd;
     pcd=NULL;
     return tmp;
+#else
+    return false;
 #endif
 }
 
@@ -1425,7 +1528,8 @@ Variant PEBLObjects::StartPlayback(Variant v)
     Variant v1 = plist->First();
     PlatformMovie * myMovie = dynamic_cast<PlatformMovie*>(v1.GetComplexData()->GetObject().get());
     myMovie->StartPlayback();
-
+#else
+    return false;
 #endif    
 }
 
@@ -1443,6 +1547,8 @@ Variant PEBLObjects::PausePlayback(Variant v)
     PlatformMovie * myMovie = dynamic_cast<PlatformMovie*>(v1.GetComplexData()->GetObject().get());
     myMovie->PausePlayback();
     return Variant(true);
+#else
+    return false;
 #endif
 }
 

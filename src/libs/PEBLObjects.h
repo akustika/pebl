@@ -64,6 +64,11 @@ namespace PEBLObjects
     Variant SetFont(Variant v);
 
     Variant PrintProperties(Variant v);
+    Variant GetPropertyList(Variant v);
+    Variant SetProperty(Variant v);
+    Variant GetProperty(Variant v);
+    Variant PropertyExists (Variant v);
+
     Variant Show(Variant v);
     Variant Hide(Variant v);
 

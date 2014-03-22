@@ -3,7 +3,7 @@
 //    Name:       libs/PEBLStream.h
 //    Purpose:    Stream-based Function Library for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -89,7 +89,7 @@ namespace PEBLStream
 
 
     // The following control TCP/IP connections and communications.
-
+#ifdef PEBL_NETWORK
     Variant ConnectToIP(Variant v);
     Variant ConnectToHost(Variant v);
 
@@ -108,10 +108,20 @@ namespace PEBLStream
     Variant GetIPAddress(Variant v);
     Variant GetMyIPAddress(Variant v);
     //This writes a 'screenshot' to a png file.
+#endif
+
+#ifdef PEBL_HTTP
+    Variant GetHTTPFile(Variant v);
+    Variant PostHTTP(Variant v);
+#endif
+    Variant MD5Sum(Variant v);
+    Variant MD5File(Variant v);
+
     Variant WritePNG(Variant v);
 
-    
 
+
+#ifdef PEBL_USEPORTS    
     //These functions open, send, receive, and close
     //a parallel port object.
     Variant OpenPPort(Variant v);
@@ -120,13 +130,19 @@ namespace PEBLStream
     Variant SetPPortMode(Variant v);
 
 
+
+
+
     //These functions open, send, receive, and close
     //a serial (com) port; also usb-mounted comport devices
     //ala ftdi chips and the dlp-io8 and relatives.
+
     Variant OpenComPort(Variant v);
     Variant ComPortSendByte(Variant v);
     Variant ComPortGetByte(Variant v);
     Variant ComPortGetBytes(Variant v);
+
+#endif
 
 
 }

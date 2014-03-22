@@ -3,7 +3,7 @@
 //    Name:       src/libs/Functions.h
 //    Purpose:    Defines function tables
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -143,8 +143,7 @@ namespace PEBLStream
             {(char*)"ENDOFFILE",            EndOfFile,        1, 1},
             {(char*)"APPENDFILE",           AppendFile,       2, 2},
 
-
-
+#ifdef PEBL_NETWORK
             {(char*)"CONNECTTOIP", ConnectToIP,               2, 2},
             {(char*)"CONNECTTOHOST", ConnectToHost,           2, 2},
 
@@ -159,10 +158,20 @@ namespace PEBLStream
             {(char*)"SENDDATA", SendData,                     2,2},
             {(char*)"GETDATA", GetData,                       2,2},
             {(char*)"GETMYIPADDRESS", GetMyIPAddress,         1,1},
+#endif
+
+#ifdef PEBL_HTTP
+            {(char*)"GETHTTPFILE", GetHTTPFile,                     3,3},
+            {(char*)"POSTHTTP", PostHTTP,                     5,5},
+#endif
+
+            {(char*)"MD5SUM", MD5Sum,                         1,1},
+            {(char*)"MD5FILE", MD5File,                        1,1},
 
 
             {(char*)"WRITEPNG", WritePNG,                     2,2},
 
+#ifdef PEBL_USEPORTS
             {(char*)"OPENPPORT",OpenPPort,                   1,1},
             {(char*)"SETPPORTSTATE",SetPPortState,           2,2},
             {(char*)"GETPPORTSTATE",GetPPortState,           1,1},
@@ -171,7 +180,7 @@ namespace PEBLStream
             {(char*)"OPENCOMPORT",      OpenComPort,          2,2},
             {(char*)"COMPORTSENDBYTE",  ComPortSendByte,      2,2},
             {(char*)"COMPORTGETBYTE",   ComPortGetByte,       1,1},
-
+#endif
 
 
             {0,            0,  0, 0}
@@ -206,7 +215,13 @@ namespace PEBLObjects
             {(char*)"GETTEXT",           GetText,      1,1},
             {(char*)"SETFONT",           SetFont,      2,2},
             {(char*)"SHOW",              Show,       1, 1},
+
             {(char*)"PRINTPROPERTIES",   PrintProperties,  1, 1},
+            {(char*)"GETPROPERTYLIST",   GetPropertyList,  1, 1},
+            {(char*)"SETPROPERTY",       SetProperty,  3, 3},
+            {(char*)"GETPROPERTY",       GetProperty,  2, 2},
+            {(char*)"PROPERTYEXISTS",    PropertyExists,  2, 2},
+            
             {(char*)"HIDE",              Hide,       1, 1},
             {(char*)"DRAW",              Draw,       0, 1},
             {(char*)"DRAWFOR",           DrawFor,    2, 2},

@@ -993,6 +993,7 @@ Variant PEBLList::SubList(Variant v)
             i++;
             //If i is big enough, consider adding it to the list
             if(i>=start)
+                {
                 if( i <=end)  //But only if it isn't too big
                     {
                         returnList->PushBack(*p);
@@ -1001,6 +1002,7 @@ Variant PEBLList::SubList(Variant v)
                     {   
                         break;
                     }
+                }
             p++;
         }
     tmpObj = counted_ptr<PEBLObjectBase>(returnList);

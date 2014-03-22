@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLMATH.cpp
 //    Purpose:    Built-in math functions for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -30,10 +30,12 @@
 #include "../base/PComplexData.h"
 #include "../utility/PEBLUtility.h"
 #include "../utility/PError.h"
+#include "../utility/Defs.h"
 #include "../base/PEBLObject.h"
 
 #include <stdlib.h>          //Used for random numbers
-#include <math.h>
+//#include <math.h>
+#include <cmath>
 #include <list>
 #include <string>
 #include <strstream>
@@ -184,13 +186,17 @@ Variant PEBLMath::Log10(Variant v)
 //    std::cout << "v1: " << v1 << std::endl;
     if(v1.IsNumber())
         {
-            return Variant(log10l(v1.GetFloat()));
+            //return Variant((pDouble)log10l(v1.GetFloat()));
+            return Variant((pDouble)log10(v1.GetFloat()));
+
         }
+#ifndef PEBL_EMSCRIPTEN
     else if(v1.GetComplexData()->IsList())
         {
             return Recurse(v1, Log10);
 
         }
+#endif
     else
         {
             PError::SignalFatalError("Non-numeric argument in Log10");
@@ -202,7 +208,7 @@ Variant PEBLMath::Log10(Variant v)
 Variant PEBLMath::Log2(Variant v)
 {
     
-    std::cout <<"Log2: " << v << std::endl;
+    //std::cout <<"Log2: " << v << std::endl;
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First();
     if(v1.IsNumber())
@@ -230,7 +236,8 @@ Variant PEBLMath::Ln(Variant v)
     Variant v1 = plist->First();
     if(v1.IsNumber())
         {
-            return Variant(logl(v1.GetFloat()));
+            //return Variant((pDouble)logl(v1.GetFloat()));
+            return Variant((pDouble)log(v1.GetFloat()));
         }
     else if(v1.GetComplexData()->IsList())
         {
@@ -261,7 +268,8 @@ Variant PEBLMath::LogN(Variant v)
     
 if(number.IsNumber())
         {                  
-                return Variant(logl(number.GetFloat())/ logl(base.GetFloat()));
+            //return Variant((pDouble)(logl(number.GetFloat())/ logl(base.GetFloat())));
+            return Variant((pDouble)(log(number.GetFloat())/ log(base.GetFloat())));
         }
     else if(number.GetComplexData()->IsList())
         {
@@ -290,7 +298,8 @@ Variant PEBLMath::Exp(Variant v)
     Variant v1 = plist->First();
     if(v1.IsNumber())
         {
-            return Variant(expl(v1.GetFloat()));
+            //return Variant((pDouble)expl(v1.GetFloat()));
+            return Variant((pDouble)exp(v1.GetFloat()));
         }
     else if(v1.GetComplexData()->IsList())
         {
@@ -320,7 +329,8 @@ Variant PEBLMath::Pow(Variant v)
     if(base.IsNumber())
         {                  
             Variant power = plist->Nth(2); //plist->PopFront();   //Get the base argument
-            return powl(base, power);
+            //return (pDouble)powl((pDouble)base, (pDouble)power);
+            return (pDouble)pow((pDouble)base, (pDouble)power);
         }
     else if(base.GetComplexData()->IsList())
         {
@@ -349,7 +359,8 @@ Variant PEBLMath::Sqrt(Variant v)
     Variant v1 = plist->First();
     if(v1.IsNumber())
         {
-            return Variant(sqrtl(v1.GetFloat()));
+            //return Variant((pDouble)sqrtl(v1.GetFloat()));
+            return Variant((pDouble)sqrt(v1.GetFloat()));
         }
     else if(v1.GetComplexData()->IsList())
         {
@@ -378,7 +389,8 @@ Variant PEBLMath::NthRoot(Variant v)
     if(number.IsNumber())
         {                  
             Variant root = plist->Nth(2);// plist->PopFront();   //Get the base argument
-            return powl(number, 1 / root.GetFloat());
+            //return (pDouble)powl((pDouble)number,(pDouble)( 1 / root.GetFloat()));
+            return (pDouble)pow((pDouble)number,(pDouble)( 1 / root.GetFloat()));
         }
     else if(number.GetComplexData()->IsList())
         {
@@ -413,7 +425,8 @@ Variant PEBLMath::Tan(Variant v)
     Variant v1 = plist->First();
     if(v1.IsNumber())
         {
-            return Variant(tanl(v1.GetFloat()));
+            //return Variant((pDouble)tanl(v1.GetFloat()));
+            return Variant((pDouble)tan(v1.GetFloat()));
         }
     else if(v1.GetComplexData()->IsList())
         {
@@ -440,7 +453,8 @@ Variant PEBLMath::Sin(Variant v)
     Variant v1 = plist->First();
     if(v1.IsNumber())
         {
-            return Variant(sinl(v1.GetFloat()));
+            //return Variant((pDouble)sinl(v1.GetFloat()));
+            return Variant((pDouble)sin(v1.GetFloat()));
         }
     else if(v1.GetComplexData()->IsList())
         {
@@ -465,7 +479,8 @@ Variant PEBLMath::Cos(Variant v)
     Variant v1 = plist->First();
     if(v1.IsNumber())
         {
-            return Variant(cosl(v1.GetFloat()));
+            //return Variant((pDouble)cosl(v1.GetFloat()));
+            return Variant((pDouble)cos(v1.GetFloat()));
         }
     else if(v1.GetComplexData()->IsList())
         {
@@ -488,7 +503,8 @@ Variant PEBLMath::ATan(Variant v)
     Variant v1 = plist->First();
     if(v1.IsNumber())
         {
-            return Variant(atan(v1.GetFloat()));
+
+            return Variant((pDouble)atan(v1.GetFloat()));
         }
     else if(v1.GetComplexData()->IsList())
         {
@@ -512,7 +528,8 @@ Variant PEBLMath::ASin(Variant v)
     Variant v1 = plist->First();
     if(v1.IsNumber())
         {
-            return Variant(asinl(v1.GetFloat()));
+            return Variant((pDouble)asin(v1.GetFloat()));
+            //return Variant((pDouble)asinl(v1.GetFloat()));
         }
     else if(v1.GetComplexData()->IsList())
         {
@@ -535,7 +552,8 @@ Variant PEBLMath::ACos(Variant v)
     Variant v1 = plist->First();
     if(v1.IsNumber())
         {
-            return Variant(acosl(v1.GetFloat()));
+            //            return Variant((pDouble)acosl(v1.GetFloat()));
+            return Variant((pDouble)acos(v1.GetFloat()));
         }
     else if(v1.GetComplexData()->IsList())
         {
@@ -562,7 +580,7 @@ Variant PEBLMath::DegToRad(Variant v)
 
     if(v1.IsNumber())
         {
-            return Variant(v1.GetFloat() * PI / 180);
+            return Variant((pDouble)(v1.GetFloat() * PI / 180));
         }
     else if(v1.GetComplexData()->IsList())
         {
@@ -649,7 +667,8 @@ Variant PEBLMath::Floor(Variant v)
     Variant v1 = plist->First();
     if(v1.IsNumber())
         {
-            return Variant((long int)(floorl(v1.GetFloat())));
+            //return Variant((pInt)(floorl(v1.GetFloat())));
+            return Variant((pInt)(floor(v1.GetFloat())));
         }
     else if(v1.GetComplexData()->IsList())
         {
@@ -671,7 +690,8 @@ Variant PEBLMath::Ceiling(Variant v)
     Variant v1 = plist->First();
     if(v1.IsNumber())
         {
-            return Variant((long int)(ceill(v1.GetFloat())));
+            //return Variant((pInt)(ceill(v1.GetFloat())));
+            return Variant((pInt)(ceil(v1.GetFloat())));
         }
     else if(v1.GetComplexData()->IsList())
         {
@@ -717,18 +737,18 @@ Variant PEBLMath::Mod(Variant v)
 
     
     PError::AssertType( plist->First(), PEAT_NUMBER, "Argument error in first parameter of Mod(<number>,<number>)");
-    long int v1 = plist->First(); //plist->PopFront(); 
+    pInt v1 = plist->First(); //plist->PopFront(); 
 
 
     PError::AssertType( plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of Mod(<number>,<number>)");
-    long int v2 = plist->Nth(2); //plist->PopFront(); 
+    pInt v2 = plist->Nth(2); //plist->PopFront(); 
 
  
-    double remainder =((double)v1/v2 - (v1/v2)); 
+    double remainder =((pDouble)v1/v2 - (v1/v2)); 
     if( remainder < 0 ) remainder += 1.0;
     if(remainder >= 1.0) remainder = 0;
     
-    return Variant((long int)(remainder *  v2 + .00001));
+    return Variant((pInt)(remainder *  v2 + .00001));
 }
 
 
@@ -837,7 +857,7 @@ Variant PEBLMath::Abs(Variant v)
     Variant v1 = plist->First();
     if(v1.IsNumber())
         {
-            return Variant(fabsl(v1.GetFloat()));
+            return Variant((pDouble)fabsl(v1.GetFloat()));
         }
     else if(v1.GetComplexData()->IsList())
         {
@@ -962,7 +982,7 @@ Variant  PEBLMath::SeedRNG(Variant v)
 
     PError::AssertType(plist->First().GetInteger(), PEAT_NUMBER, "Argument error in function [SeedRNG(<number>)]:  ");    
     
-    long int seed = plist->First();
+    pInt seed = plist->First();
     srand(seed);
     
     return Variant(true);
@@ -1006,7 +1026,7 @@ Variant  PEBLMath::RandomDiscrete (Variant v)
             
     //Since the most-significant digits are a bit predictable, use the remainder function
     unsigned int r = rand();
-    return Variant((long int)(r % v1)+ 1 );
+    return Variant((pInt)(r % v1)+ 1 );
     
 }
 
@@ -1024,7 +1044,7 @@ Variant  PEBLMath::RandomUniform(Variant v)
 
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in function [RandomUniform(<number>)]:  ");    
     
-    long double upperbound = plist->First(); //plist->PopFront();
+    pDouble upperbound = plist->First(); //plist->PopFront();
     if(upperbound < 0)
         {
             std::ostrstream  message;
@@ -1051,10 +1071,10 @@ Variant  PEBLMath::RandomNormal(Variant v)
     //v[1] should be mean, v[2] should be standard deviation.
 
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [RandomNormal(<mean>, <stdev>)]:  ");    
-    long double mean = plist->First(); //plist->PopFront();
+    pDouble mean = plist->First(); //plist->PopFront();
 
     PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter function [RandomNormal(<mean>, <stdev>)]:  ");    
-    long double stdev = plist->Nth(2);// plist->PopFront();
+    pDouble stdev = plist->Nth(2);// plist->PopFront();
  
     if(stdev < 0)  PError::SignalFatalError("Standard Deviation parameter of function [RandomNormal(<mean>,<stdev>)] must be positive.");
 
@@ -1072,7 +1092,7 @@ Variant  PEBLMath::RandomExponential(Variant v)
 
 
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in function [RandomExponential(<number>)]:  ");    
-    long double lambda = plist->First(); //plist->PopFront();
+    pDouble lambda = plist->First(); //plist->PopFront();
        
     //The value of lambda may not be able to vary freely--It may not be able to be negative.
     //This should be checked for.
@@ -1103,10 +1123,10 @@ Variant  PEBLMath::RandomLogNormal(Variant v)
 
     //v[1] should be median, v[2] should be the spread
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter function [RandomLogNormal(<median>, <spread>)]:  ");    
-    long double median = plist->First(); //plist->PopFront();
+    pDouble median = plist->First(); //plist->PopFront();
     
     PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter function [RandomLogNormal(<median>, <spread>)]:  ");    
-    long double spread = plist->Nth(2);// plist->PopFront();
+    pDouble spread = plist->Nth(2);// plist->PopFront();
     
     return Variant(median * exp(spread * PEBLUtility::RandomNormal()));
 }
@@ -1121,11 +1141,11 @@ Variant  PEBLMath::RandomBinomial(Variant v)
    //v[1] should have the parameter
 
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter function [RandomBinomial(<p>, <N>)]:  ");    
-    long double p = plist->First();// plist->PopFront();
+    pDouble p = plist->First();// plist->PopFront();
     PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter function [RandomBinomial(<p>, <N>)]:  ");    
-    long int N = plist->Nth(2); //plist->PopFront();
+    pInt N = plist->Nth(2); //plist->PopFront();
     
-    long int count = 0;
+    pInt count = 0;
     for(int i = 0; i < N; i++)
         {
             if(PEBLUtility::RandomUniform() < p) count++;
@@ -1146,7 +1166,7 @@ Variant  PEBLMath::RandomBernoulli(Variant v)
    //v[1] should have the parameter
 
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter function [RandomBinomial(<p>, <N>)]:  ");    
-    long double p = plist->First();// plist->PopFront();
+    pDouble p = plist->First();// plist->PopFront();
     
     if(PEBLUtility::RandomUniform() < p) 
         return Variant(1);

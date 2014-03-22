@@ -1,9 +1,9 @@
 //* -*- mode:C++; tab-width:4; c-basic-offset:4; indent-tabs-mode:nil -*- */
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 //    Name:       libs/PEBLStream.cpp
 //    Purpose:    Built-in stream functions for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -22,24 +22,42 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with PEBL; if not, write to the Free Software
-//    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-////////////////////////////////////////////////////////////////////////////////
+//    Foundation, Inc., 59 Temple Place, Suite 330, 
+//    Boston, MA  02111-1307  USA
+///////////////////////////////////////////////////////////////////////////
 #include "PEBLStream.h"
 #include "../base/Variant.h"
 #include "../base/PComplexData.h"
 #include "../base/PList.h"
+#include "../base/PEBLObject.h"
+
+#ifdef PEBL_EMSCRIPTEN
+#include "../base/Evaluator2.h"
+#else
 #include "../base/Evaluator.h"
+#endif
 
 #include "../devices/PStream.h"
 #include "../utility/PError.h"
 #include "../utility/PEBLPath.h"
 #include "../utility/PEBLUtility.h"
+
+#ifdef PEBL_HTTP
+#include "../utility/PEBLHTTP.h"
+#endif
+
+
 #include "../devices/PParallelPort.h"
+
+#include "../platforms/sdl/SDLUtility.h"
+#include "../platforms/sdl/PlatformNetwork.h"
+
 
 
 #include <list>
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 //This is for pport stuff used for testing.
 #include <stdio.h>
@@ -103,6 +121,8 @@ Variant PEBLStream::FileOpenRead(Variant v)
 
     ///v1 contains the name of a file to open.
     counted_ptr<PEBLObjectBase> mystream = counted_ptr<PEBLObjectBase>(new PStream(v1,sdRead, stASCII));
+    mystream->SetProperty("FILENAME",v1);
+    mystream->SetProperty("DIRECTION","READ");
     PComplexData * pcd = new PComplexData(mystream);
     Variant tmp = Variant(pcd);
     delete pcd;
@@ -164,6 +184,8 @@ Variant PEBLStream::FileOpenWrite(Variant v)
         }
     ///v1 contains the name of a file to open.
     counted_ptr<PEBLObjectBase> mystream = counted_ptr<PEBLObjectBase>(new PStream(v11,sdWrite, stASCII));
+    mystream->SetProperty("FILENAME",v11);
+    mystream->SetProperty("DIRECTION","WRITE");
     PComplexData * pcd = new PComplexData(mystream);
     Variant tmp = Variant(pcd);
     delete pcd;
@@ -190,9 +212,11 @@ Variant PEBLStream::FileOpenOverwrite(Variant v)
     Variant v1 = plist->First(); //plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in function FileOpenOverWrite(<string>)]: ");
 
-
     ///v1 contains the name of a file to open.
     counted_ptr<PEBLObjectBase> mystream = counted_ptr<PEBLObjectBase>(new PStream(v1,sdWrite, stASCII));
+    mystream->SetProperty("FILENAME",v1);
+    mystream->SetProperty("DIRECTION","WRITE");
+
     PComplexData * pcd = new PComplexData(mystream);
     Variant tmp = Variant(pcd);
     delete pcd;
@@ -208,9 +232,13 @@ Variant PEBLStream::FileOpenAppend(Variant v)
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); //plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in function FileOpenAppend(<string>)]: ");
+    
 
     ///v1 contains the name of a file to open.
     counted_ptr<PEBLObjectBase> mystream = counted_ptr<PEBLObjectBase>(new PStream(v1,sdAppend, stASCII));
+    mystream->SetProperty("FILENAME",v1);
+    mystream->SetProperty("DIRECTION","WRITE");
+
     PComplexData * pcd = new PComplexData(mystream);
     Variant tmp = Variant(pcd);
     delete pcd;
@@ -565,8 +593,7 @@ Variant PEBLStream::AppendFile(Variant v)
 
 
 
-
-
+#ifdef PEBL_NETWORK
 
 Variant PEBLStream::ConnectToIP(Variant v)
 {
@@ -869,6 +896,101 @@ Variant PEBLStream::GetMyIPAddress(Variant v)
     return add;
 }
 
+#endif
+
+
+#ifdef PEBL_HTTP
+
+//This gets text via http.
+Variant PEBLStream::GetHTTPFile(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); 
+    PError::AssertType(v1, PEAT_STRING, "Error in first argument of function [GetHTTPFile(<host>,<fileurl>,<savename>)]: ");
+
+    Variant v2 = plist->Nth(2);
+    PError::AssertType(v2, PEAT_STRING, "Error in second argument of function [GetHTTPFile(<host>,<fileurl>,<savename>)]: ");
+
+    Variant v3 = plist->Nth(3);
+    PError::AssertType(v3, PEAT_STRING, "Error in third argument function [GetHTTPFile(<host>,<fileurl>,<savename>)]: ");
+
+    PEBLHTTP http(v1);
+    bool result =  http.GetHTTPFile(v2,v3);
+
+    return Variant(result);
+}
+
+
+Variant PEBLStream::PostHTTP(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); //plist->PopFront();
+    PError::AssertType(v1, PEAT_STRING, "Error in first argument of function [PostHTTP(<host>,<page>,[<headers>],<body-args>,<savename>)]: ");
+
+    Variant v2 = plist->Nth(2);
+    PError::AssertType(v2, PEAT_STRING, "Error in first argument of function [PostHTTP(<host>,<page>,[<headers>],<body-args>,<savename>)]: ");
+
+
+    Variant v3 = plist->Nth(3);
+    PError::AssertType(v3, PEAT_LIST, "Error in Third argument of function [PostHTTP(<host>,<page>,[<headers>],<body-args>,<savename>)]: ");
+
+    Variant v4 = plist->Nth(4);
+    PError::AssertType(v4, PEAT_STRING, "Error in Fourth argument of function [PostHTTP(<host>,<page>,[<headers>],<body-args>,<savename>)]: ");
+
+    Variant v5 = plist->Nth(5);
+    PError::AssertType(v5, PEAT_STRING, "Error in Fifth argument of function [PostHTTP(<host>,<page>,[<headers>],<body-args>,<savename>)]: ");
+
+    //v3 is a header/value list.  It needs to be
+    //translated into a char* vector, with a null-termination.
+    
+
+    PList * dataList = (PList*)(v3.GetComplexData()->GetObject().get());
+    std::vector<Variant>::iterator p1 = dataList->Begin();
+    std::vector<Variant>::iterator p1end = dataList->End();
+
+    std::vector<string> headers;
+    int numargs = dataList->Length()*2+1;
+
+    while(p1 != p1end)
+        {
+
+            headers.push_back((string)(*p1));
+            p1++;
+
+        }
+
+    headers.push_back(NULL);
+    PEBLHTTP http(v1);
+
+    //this does not work right now:
+    bool result=  http.PostHTTP(v2,v1,v4);
+
+    //Should return 0 on failure:
+    return Variant((int)result);
+}
+
+#endif
+
+
+Variant PEBLStream::MD5Sum(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First();// plist->PopFront();
+    PError::AssertType(v1, PEAT_STRING, "Argument error in first parameter of function [MD5Sum(<text>)]:");
+    std::string sum = PEBLUtility::MD5String(v1);
+    return Variant(sum);
+}
+
+
+Variant PEBLStream::MD5File(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First();// plist->PopFront();
+    PError::AssertType(v1, PEAT_STRING, "Argument error in first parameter of function [MD5File(<fname>)]:");
+    std::string sum = PEBLUtility::MD5File(v1);
+    return Variant(sum);
+}
+
 
 Variant PEBLStream::WritePNG(Variant v)
 {
@@ -890,14 +1012,14 @@ Variant PEBLStream::WritePNG(Variant v)
 
     if(result==0)
         {
-            PError::SignalFatalError("Failed to write png file " + v2);
+            PError::SignalFatalError(Variant("Failed to write png file ") + v2);
         }
 
     return Variant(1);
 }
 
 
-
+#ifdef PEBL_USEPORTS
 Variant PEBLStream::OpenPPort(Variant v)
 {
     //v[1] should have a text string indicating
@@ -1224,3 +1346,7 @@ Variant PEBLStream::ComPortSendByte(Variant v)
 }
 
 
+
+
+
+#endif
