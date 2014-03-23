@@ -24,8 +24,7 @@ define Start(p)
 	       ["delay10",0]
               ]
   gUseBeep <- 1
-  gParams <- CreateParameters(parpairs,"params/brownpeterson.pbl.par")
-
+  gParams <- CreateParameters(parpairs,gParamFile)
 
 
   ##Instrumentation variables:
@@ -47,12 +46,12 @@ define Start(p)
     gSubNum <- GetSubNum(gWin)
   }  
 
-  MakeDirectory("data")
-  gFileOut <- FileOpenWrite("data/brownpeterson-"+gSubNum+".csv")
+
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"brownpeterson","csv")
   FilePrint(gFileOut,"subcode,trial,ccc,number,delay,resp,corr,rt")
 
   consonants <- FileReadList("UppercaseConsonants.txt")
-
 
   ##Make a unique stimulus list
   cccs <- []

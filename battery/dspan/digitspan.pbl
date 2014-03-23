@@ -63,11 +63,9 @@ define Start(lPar)
                    ]
 
 
-   gParams <- CreateParameters(parpairs,"params/digitspan.pbl.params")
+   gParams <- CreateParameters(parpairs,gParamFile)
 
-
-
-  gDirection <- gParams.direction
+   gDirection <- gParams.direction
 
 
   ## currently, three devices are supported:
@@ -76,11 +74,11 @@ define Start(lPar)
   ## mouse, which creates a screen ala virtualkeyboard.
   gInputDevice <- gParams.input
 
-  MakeDirectory("data") ##make the data directory if it doesn't exist.
-  Print("Data are saved in [data/"+"dspan-"+gDirection+"-" + gSubNum +".csv]")
 
-  gFileOut <-FileOpenWrite("data/dspan-"+gDirection+"-" + gSubNum +".csv")
-  gReportFile <- FileOpenWrite("data/dspan-report"+gDirection+"-" + gSubNum +".txt")
+
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"dspan-"+gDirection,"csv")
+  gReportFile <- FileOpenWrite(gSubNum,gWin,"dspan-report"+gDirection,"txt")
   gPooledFile <- FileOpenAppend("data/pooled-dspan-"+gDirection+"-" + gSubNum +".csv")
 
   ShowCursor(1)

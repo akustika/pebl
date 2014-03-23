@@ -34,7 +34,7 @@ define Start(p)
 		  ["gap",2]
                  ]
 
-    gParams <- CreateParameters(parpairs,"params/flanker.pbl.par")
+    gParams <- CreateParameters(parpairs,gParamFile)
     gWin <- MakeWindow("black")
     Initialize()
 
@@ -46,9 +46,12 @@ define Start(p)
 
    ##Make data files   
    MakeDirectory("data")
-   gFileOut <- FileOpenWrite("data/flanker-"+gSubNum+".csv")
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"flanker","csv")	
+
    gPooledFileOut <- FileOpenAppend("data/flanker-pooled.csv")
-   gSumFileOut <- FileOpenWrite("data/flanker-summary-"+ gSubNum+".txt")
+   gSumFileOut <-  GetNewDataFile(gSubNum,gWin,"flanker-report","txt")	
+
+
    gLog <- FileOpenAppend("data/flanker-log.csv")
    gPooledSummary <- FileOpenAppend("data/flanker-all.csv")
 

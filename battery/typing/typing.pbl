@@ -1,13 +1,32 @@
 define Start(p)
 {
 
+
+  parpairs <- [["duration","short"],
+               ["wordtype","words"],
+	       ["set",1],
+	       
+
+  gParams <- CreateParameters(parpairs,"params/typing.pbl.par")
+
+
+
+ 
+  duration <- gparams.duration  ##short or long
+  wordtype <- gParams.wordtype  ##words or lorem
+  version <- gParams.set        ##1 through 4
+
+
  gWin <- MakeWindow("black")
  gSleepEasy <- 1
+ gCR <- "
+"
 
- if(gSubNum + "" == "") 
+ if(gSubNum + "" == "0") 
   {
     gSubnum <- GetSubNum(gWin)
   }
+
 
  MakeDirectory("data")
  fname <- "data/typing-"+gsubnum+".csv"
@@ -18,33 +37,74 @@ define Start(p)
    gFileOut <- FileOpenAppend(fname)     
    } else {
    gFileOut <- FileOpenWrite(fname)     
+   FilePrint(gFileOut,"sub,timestamp,condition,duration,wordtype,file,time,time2,wpm,cpm,tpm,completed,error")
+   }
+  cont <- 1
+  while(cont)
+   {
+
+   ### Select time length or use passed-in argument.
+   ### 
+   if(duration == "short")
+   {
+     time <- 60000
+   }elseif(duration=="long")
+   {
+   
+     time <- 180000
+   }else{
+      time <- GetEasyChoice("Select time limit",["60 seconds","180 seconds"],
+                           [60000,180000],gWin)
+   }
+
+   ##Select words or loremipsum:
+   if( wordtype== "words")
+   {
+     root <- "random"
+    } elseif(wordtype =="nonwords")
+    {
+     root <- "lorem"    
+    }else{
+
+    root <- GetEasyChoice("Select material type ",
+                         ["Words", "Nonsense words"],
+                         ["random","lorem"],gWin)
+
+    }
+
+   ##Select stimulus version
+   if(IsMember(version,[1,2,3,4]))
+   {
+      file <- root + version   + ".txt"
+   }else{
+
+      version <- GetEasyChoice("Select text version",
+                         ["1","2","3","4"],
+                         ["1","2","3","4"],gWin)
+
+      file <- root + version   + ".txt"
    }
 
 
+   problem <- Uppercase(FileReadText(file))
 
-##Note: use | for linebreaks:
- problems <- [Uppercase("What if that is what order actually looks like.|We're here to bring order, but what if this mess is|the natural state, and what if what we're doing is|ridiculous."),
- Uppercase("Ut tellus ipsum, pharetra vel, sagittis eu,|scelerisque ut, ligula. Proin pellentesque, nisl|sed porta lobortis, ante nisl faucibus libero, sit|amet blandit neque erat a diam. Mauris quis ipsum.|Phasellus massa dui, faucibus nec, euismod congue,|sagittis ut, dui. Maecenas a nulla."),
-Uppercase("On Mondays Wednesdays and Fridays while the rest of|the week it was the Organon. The governess was always|getting muddled with her astrolabe, and when she got|especially muddled she would take it out of the Wart.|She did not rap Kay's knuckles, because when Kay grew|older he would be Sir Kay, the master of the estate.|The Wart was called the Wart because it more or less|rhymed with Art, which was short for his real name.")]
-
- gCR <- "
-"
- time <- 60*1000 ##40 secs to finish.
-
-   MessageBox("Instructions go here", gWin)
- loop(problem, Shuffle(problems))
-  {
    stats <- Trial(problem,time)
    Print(stats)
    timeM <- Third(stats)/1000/60   ##time in minutes	
-   wpm <- First(stats)/timeM
    cpm <- Second(stats)/timeM
+   wpm <- cpm/5  ##more uniform wpm
+   tpm <- First(stats)/timeM
+
    errs <- Fourth(stats)/Second(stats)
    problemlength <- Fifth(stats)
    finished <- Nth(stats,6)
-report <- "Time:             " + timeM + " min.
+
+report <- "Materials:         " + file+"
+Time:             " + time + "
+Actual Time:      " + timeM + " min.
 Words per min:    " + wpm + "
 Char. per min:    " + cpm + " 
+Tokens per min:   " + tpm + "
 Completed:        " + Second(stats) + " of " +problemlength +"
 Accuracy:         " + (1-errs) +CR(1)
 
@@ -56,23 +116,44 @@ Accuracy:         " + (1-errs) +CR(1)
    }
 
 
+##Log this data to a file
+FilePrint(gFileOut,gSubNum+","+TimeStamp()+","  +conditiontag + ","+
+            duration+","+root+","+file+","+time+","+
+	    timeM +","+ wpm+","+cpm+","+tpm+"," + Second(stats)+","+(1-errs))
+
    Print(report)
    MessageBox(report, gWin)
 
-  }
+   ##reset the hard-coded values
+   duration  <- ""
 
+   ##This could be adapted to continue running in loops.
+   cont <- 0
+  }
 }
 
 
-define Trial(problem,time)
+define Trial(probtext,time)
 {
 
-
-  #First, read in the text into a list of lines:
-  textlist <- Merge([""],SplitString(problem,"|"))
+   font <- MakeFont(gPEBLBaseFontMono,0,22,MakeColor("white"),MakeColor("grey5"),0)
+   tbupper <- MakeTextBox("", font, 700, 110)
+   AddObject(tbupper,gWin)
+  # read in the text into a list of lines, based on the textbox.
 
 #   probtext <- ReplaceChar(problem,"|",CR(1))
-   font <- MakeFont(gPEBLBaseFontMono,0,22,MakeColor("white"),MakeColor("grey5"),0)
+  textlist1 <- ParseText(probtext,tbupper)
+  textlist <- Merge([""],textlist1)
+  
+  ##Now, make the actual problem text out of the split text.
+  problem <- ""
+  sep <- ""
+  loop(i,textlist1)
+  {
+    problem <- problem + sep + i
+    sep <- "|"
+  }
+#   Print(problem)
    opts <- Merge(FileReadList("Uppercase.txt"),
                  [" ",",",".","'",";","-",gQuote])
 
@@ -83,8 +164,8 @@ define Trial(problem,time)
    AddObject(bgtimer,gWin)
 
    ##Upper text box where the stimulus text appears.
-   tbupper <- MakeTextBox("", font, 700, 100)
-   AddObject(tbupper,gWin)
+#   tbupper <- MakeTextBox("", font, 700, 110)
+
    Move(tbupper,(gVideoWidth-tbupper.width)/2,80)
    SetEditable(tbupper,1)
 
@@ -162,15 +243,16 @@ define Trial(problem,time)
 
    ##This might be tough on a CR/LF text
    ##correct for CR() so so it won't autowrap.
+#   Print(target+"=="+resp)
 
-   if(target == "|" and resp == " ")
+   if(target == "|")
    {
     target <- " "
+    correct <- (target == resp)
     resp <- gCR
     line <- line + 1
-    correct <- 1
-   ##Update the text 
 
+    ##Update the text 
 
     startline <- Max([1,line-1])
     endline  <- Min([line+1,Length(textlist)])
@@ -194,11 +276,13 @@ define Trial(problem,time)
     boxpos <- StringLength(First(sub))
 
     tbupper.text <- text
-   } else {
-    correct <- target == resp
+    
+   }else{
+    correct <- (target == resp)
    }
 
-   #Count word breaks here.
+
+   #Now, count word breaks here.
    if(target == " " )
    {
      words <- words + 1
@@ -207,9 +291,10 @@ define Trial(problem,time)
      ##light up immediate feedback.
     if(not correct)
     {
-#      problem <- SubString(problem,1,pos-1) + "-" + 
-#                 SubString(problem,pos+1, (StringLength(problem)-pos))
-#      tbupper.text <- problem       
+     #update <- SubString(problem,1,pos-1) + "-" + 
+     #            SubString(problem,pos+1, (StringLength(problem)-pos))
+   #   tbupper.text <- problem       
+
       Show(bad)
       Hide(good)
       errors <- errors + 1
@@ -239,7 +324,7 @@ define Trial(problem,time)
       finished <- 1
       cont <- 0
     }
-  }
+ } 
  time2 <- GetTime()
 
   return [words,pos,(time2-time1),errors,StringLength(problem),finished]
@@ -252,4 +337,42 @@ define FormatTime(time)
    secs <- "   "+Floor(time)
    rem <- (time-Floor(time))+"000"
    return SubString(secs,StringLength(secs)-3,4)  + "."+ SubString(rem,3,2)
+}
+
+
+      ##place cursor in the right place:
+
+
+define ParseText(text,textbox)
+{
+
+   textlist <- []
+   pos <- 1
+   end <- StringLength(text)
+   
+   rest <- SubString(text,pos,end)
+   while(pos < end)
+   { 
+      textbox.text <- rest
+      Draw(textbox)
+#      Draw()
+
+      newpos <-  GetTextBoxCursorFromClick(textbox,textbox.width,1)
+      pos <- pos + newpos
+
+
+      candidatetext <-  SubString(rest,1,newpos)
+      ##let's make sure no spaces appear at the end of the text.
+      l <- StringLength(candidatetext)
+      while(l>0 and SubString(candidatetext,l,l)==" ")
+      {
+        candidatetext <- SubString(candidatetext,1,l-1)
+	l <- l -1
+      }
+
+      textlist <- Append(textlist, candidatetext)
+      rest <- SubString(text,pos,end)
+
+   }
+   return textlist
 }

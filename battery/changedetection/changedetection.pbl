@@ -40,9 +40,7 @@ define Start(par)
                 ["condsize", 5]        ##Number of trials per condition
                 ]
 
-    gParams <- CreateParameters(parpairs,"params/changedetection.pbl.par")
-
-
+    gParams <- CreateParameters(parpairs,gParamFile)
 
     gTolerance <- gParams.tolerance       ##How close you have to get to count as correct
     gUseBackground  <- gParams.usebackground   ##Whether to use a faked background with many circles
@@ -79,7 +77,7 @@ define Start(par)
 
 
     MakeDirectory("data")
-    gFileOut <- FileOpenWrite("data/change-"+gSubNum+".csv")
+    gFileOut <- GetNewDataFile(gSubNum,gWin,"change","csv")
 
     if(guseBackground)
     {

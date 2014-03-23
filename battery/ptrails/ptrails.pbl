@@ -15,9 +15,11 @@ define Start(p)
 
                       ["useShortPath",1], ## Whether to shorten the path so points tend to
                                           ## be adjacent.
-
-		      ["numtrials",2], ##total number of trials per condition (A and B)
-                            ##if usereitan == 1, 2 of them will be the Reitan configurations
+		      ["shorteningtries",30],
+		      ["lengthenPath",0],
+		      ["pathScaleThresh",1.5],
+		      ["numtrials",4], ##total number of trials per condition (A and B)
+                      ##if usereitan == 1, 2 of them will be the Reitan configurations
 
 		      ["useLetters",1],  ##Should you also include a letter set?  Note that 
                                          ##this adds a third time through the same problem; this
@@ -28,26 +30,31 @@ define Start(p)
     
 		      ["targsize",25],  ##Size in pixels of targets (radius)
 		      ["TargclickSize",25], ##Size of click zone; may be smaller or larger
-		      ["pointtolerance",2]  # #minimum number of pixels of separation between targets 
+		      ["pointtolerance",2],  # #minimum number of pixels of separation between targets 
                                             ## (soft constraint that will be violated if proper
                                             ## configuration cannot be found)
 		      ["NumTargs", 26 ],     #Number of targets
 		      ["DrawLines", 1 ],     #Whether to draw lines
+		      ["targetcomplexxity",1.2]
                      ]
 
        gParams <- CreateParameters(parpairs,"params/ptrails.pbl.par")
 
-
 #  SeedRng(304)
-
-  gSleepEasy <- 1
-  
+  gFile <- Round(Random()*10000)
+  gTmpFile <- FileOpenAppend("traillength"+gFile+".csv")
+  gSleepEasy <- 0
+  gWatch <- 0  ##for debugging; watch path layout
+   
   ##Parameters controlling printable area for dots
   
-  gxmin <- gVideoWidth/2 - 350
-  gxmax <- gVideoWidth/2 + 350
-  gymin <- gVideoHeight/2 - 250
-  gymax <- gVideoWidth/2 + 250  
+   fieldWidth <- 700
+   fieldHeight <- 500
+
+  gxmin <- gVideoWidth/2 - fieldWidth/2
+  gxmax <- gVideoWidth/2 + fieldWidth/2
+  gymin <- gVideoHeight/2 - fieldHeight/2
+  gymax <- gVideoHeight/2 + fieldHeight/2
 
   gtol <- gParams.TargSize*2+gParams.pointtolerance     #tolerance, in pixels, between points
 
@@ -68,7 +75,7 @@ define Start(p)
   gSumFile <- FileOpenWrite("data/ptrails-summary-"+gSubNum+".csv")
 
 
-    inst <- "In this experiment, your goal is to click on each circle, in sequence, as quickly as you can.  When you click on the correct circle, its number will change to boldface, and a line will be drawn from the previous circle to the new circle.  On some trials, the circles will be numbered from 1 to 26, and you should click on them in numerical order (1-2-3-4, and so on).   On other trials, the circles will have both numbers (1 to 13) and letters (A through L), and you should click on them in an alternating order (1-A-2-B-3-C and so on).  If you click the wrong circle, no line will be drawn.  The trial will continue until you have successfully clicked on all of the circles in the correct order. 
+    inst <- "In this study, your goal is to click on each circle, in sequence, as quickly as you can.  When you click on the correct circle, its number will change to boldface, and a line will be drawn from the previous circle to the new circle.  On some trials, the circles will be numbered from 1 to 26, and you should click on them in numerical order (1-2-3-4, and so on).   On other trials, the circles will have both numbers (1 to 13) and letters (A through L), and you should click on them in an alternating order (1-A-2-B-3-C and so on).  If you click the wrong circle, no line will be drawn.  The trial will continue until you have successfully clicked on all of the circles in the correct order. 
 
 After the display appears, you can examine the circles as long as you want.  Timing will not begin until you click on the first circle, which is labeled '1' on every trial.
 
@@ -84,23 +91,90 @@ After the display appears, you can examine the circles as long as you want.  Tim
    ptB <- []
    ptC <- []
    tmp <- ""  
-
+   trial <- 1
    Draw()
-   while(Length(ptA) < numtrials)
+   while(Length(ptA) < gParams.numtrials)
     {
       tmp <- tmp + "*"
-      gFooter.text <- "Initializing ["+Format(tmp,numtrials)+"]"
+      gFooter.text <- "Initializing ["+Format(tmp,gParams.numtrials)+"]"
       Draw()
 
-      ##Use each form twice, in both situations.
-      pts <- MakePoints(gxmin, gxmax, gymin, gymax, gtol, gParams.NumTargs)       
-      if(gParams.useShortPath)
-      {
-         mat <- DistMatrix(pts)
-	 tour <- ShortenPathInsert(Sequence(1,gParams.NumTargs,1),pts,mat)
-         pts <- SortBy(pts,(Order(tour)))  #re-sort the original points
+      ##create the points first
+      pts <- NonOverlapLayout(gxmin, gxmax, gymin, gymax, gtol, gParams.NumTargs)       
 
-      }
+      ##Instead of a random path, use the 'shortest' path?:      
+      if(gParams.useShortPath)
+       {
+
+         mat <- DistMatrix(pts)
+	 tours <- []
+	 lengths <- []
+
+     
+	 loop(i,Sequence(1,gParams.shorteningtries,1))
+	 {
+	   ##always pick 1-2 as start-end (these are arbitrary anyway)
+	    seq <- Merge([1,2],Shuffle(Sequence(3,gParams.numtargs,1)))
+	    tour <- GrowPathInsert(seq,pts,mat)
+
+
+            ##Save a copy of this one so we can have some more complex solutions
+	    tourlength <- PathDist(tour,mat)
+	    PushOnEnd(tours,tour)
+	    PushOnEnd(lengths,tourlength)
+
+	    Print(TimeStamp()+ ","+gFile+","+ trial+","+i+","+tourlength)
+            ###
+            ##We have a grown the tour.  But to get a more consistent 'shortest' path,
+            ##let's go through each element one-at-atime, remove it from the path, and re-add it.
+            ##do it in semi-random order:
+            loop(position, Sequence(1,Length(tour),1))
+               {
+
+	            posID <-  Lookup(position,tour,Sequence(1,Length(tour),1))
+ 	            tour <-  RemoveSubset(tour,[posID]) ##remove the next point.
+		    tour <- InsertPointOnPath(tour,position,pts,mat) ##add it back.     
+               }
+
+           ##do it once more in order of the path:
+            loop(position, tour)
+               {
+                    posID <-  Lookup(position,tour,Sequence(1,Length(tour),1))
+                    tour <-  RemoveSubset(tour,[posID]) ##remove the next point.
+                    tour <- InsertPointOnPath(tour,position,pts,mat) ##add it back.     
+               }
+
+
+	    tourlength <- PathDist(tour,mat)
+	    PushOnEnd(tours,tour)
+	    PushOnEnd(lengths,tourlength)
+
+	    FilePrint(gTmpFile,gFile+","+trial+","+i+","+tourlength)
+	    Print(TimeStamp()+ ","+gFile+","+ trial+","+i+","+tourlength)
+	 }
+
+
+	 ##Choose the best one as the min-length standard:
+
+	 minLength <- Min(lengths)
+	 standard <- minlength * gParams.pathscalethresh
+	 deltas <- []
+         loop(i,lengths)
+         {
+   	   Print(i+"--"+standard+":"+(Abs(i-standard))/standard)
+  	   PushOnEnd(deltas, Abs(i-standard))
+         }
+
+	 Print(deltas)
+	 
+	 ##pick the tour that is closest to the target
+	 tour <- Nth(tours,ArgMin(deltas))
+         pts <- SortBy(pts,(Order(tour)))  #re-sort the original points
+	 
+       }
+
+
+      
 
      if(gParams.useLetters)
      {
@@ -114,6 +188,8 @@ After the display appears, you can examine the circles as long as you want.  Tim
          ptB <- Append(ptB,Flip(pts))  #Points should be reflected here.
 
       }
+
+      trial<- trial + 1
     }
 
    gFooter.text <- "Initialization complete.  Press mouse button to begin."
@@ -156,7 +232,7 @@ After the display appears, you can examine the circles as long as you want.  Tim
       if(gParams.DoPractice)
       {
         
-        tmppts <- MakePoints(gVideoWidth/2-100,gVideoWidth/2+100,gVideoHeight/2-100,gVideoHeight/2+100, gtol, 4)
+        tmppts <- NonOverlapLayout(gVideoWidth/2-100,gVideoWidth/2+100,gVideoHeight/2-100,gVideoHeight/2+100, gtol, 4)
 	gHeader.text <- "Click to begin practice round of "+Nth(typeLabels,(Nth(types,i)))
 	Show(gHeader)
 	Draw()
@@ -217,12 +293,11 @@ define Trial(pts,type)
   } elseif(type==3){
 
     stim <-SubList( ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"],1,num)
-  }
-  
 
+  }
 
    
-   if(type==1)
+  if(type==1)
     {
      msg <-     "Click on each number consecutively. (1-2-3-4)"
 
@@ -301,9 +376,6 @@ define Trial(pts,type)
                 y1 <- Nth(next,2)
 
                 l <- ThickLine(x0,y0,x1,y1,5,gStimColor)
-                Print(l)
-                Print(last)
-                Print([x0,y0])
 
 
         #        l <- Line(First(last),Nth(last,2),xdiff,ydiff,gStimColor)
@@ -397,11 +469,12 @@ define PlotTargets(pts,size,labels)
 }
 
 
+## This was moved to Graphics.pbl and is not used here
 define MakePoints(xmin, xmax, ymin, ymax, tol, num)
 {
 
    ##should you watch the points evolve?
-   watch <- 0
+
    
 
    ##Note that it is possible to arrange the situation 
@@ -432,7 +505,7 @@ define MakePoints(xmin, xmax, ymin, ymax, tol, num)
    ##Move one point at a time
    while(First(minpair) < tol and tries < limit)
    {
-     if(watch) 
+     if(gWatch) 
      {
 
       xxxobj <- PlotTargets(pts,tol/2,Sequence(1,num,1))
@@ -446,15 +519,13 @@ define MakePoints(xmin, xmax, ymin, ymax, tol, num)
      pt1 <- Nth(pts,pt1id)
      pt2 <- Nth(pts,pt2id)
 
-     if(watch)
+     if(gWatch)
       {
        line <- Line(First(pt1),Second(pt1),  
                      First(pt2)-First(pt1),
 					 Second(pt2)-Second(pt1), MakeColor("orange"))
        AddObject(line,gWin)
- 	   Draw()
-       Wait(100)
-
+       Draw()
 
       }
 
@@ -476,9 +547,9 @@ define MakePoints(xmin, xmax, ymin, ymax, tol, num)
            dist <- Random() * tol
            diff <- [First(pt2) - First(pt1),Second(pt2)-Second(pt1)]     
            pt1 <- VecSum(pt2,VecTimes(diff,[dist,dist]))
-           if(watch)
+           if(gWatch)
            {
-		     Print("watch this")
+	     Print("watch this")
            }
          }
 
@@ -509,7 +580,7 @@ define MakePoints(xmin, xmax, ymin, ymax, tol, num)
         pts <- testpts
      }
      tries <- tries + 1
-     if(watch)
+     if(gWatch)
      {
          RemoveObjects(xxxobj,gWin)
          RemoveObject(line,gWin)
@@ -682,7 +753,7 @@ define WaitForDownClick()
    continue <- 1
    while(continue) 
     {
-		x <- WaitForMouseButton()
+	x <- WaitForMouseButton()
         if(Nth(x,4) == "<pressed>")
         { 
          continue <- 0
@@ -696,7 +767,7 @@ define WaitForDownClick()
 define ShortenPathNN(tour,pts,mat)
 {
 
-##nearest-neighbor method.
+ ##nearest-neighbor method.
   cur <- First(tour)
   toura <- [cur]
   rest <- Rest(tour)
@@ -718,71 +789,136 @@ define ShortenPathNN(tour,pts,mat)
 
 ##this will shorten a path to be more regular.  Note that this makes
 ##the PEBL version somewhat easier than the Reitan version, apparently.
-define ShortenPathInsert(tour,pts,mat)
+define GrowPathInsert(tour,pts,mat)
 {
-  watch <- 0
-  if(watch)
-   {
 
+  if(gWatch)
+   {
       xxxobj <- PlotTargets(pts,gParams.TargSize,tour)
       Draw()
-
    }
+
   toura <- SubList(tour,1,2)
   rest <- SubList(tour,3,Length(tour))
     
    loop(next, rest)
       {
+         tourA <- InsertPointOnPath(tourA,next,pts,mat)
+      }
+
+
+
+   if(gWatch) 
+   {
+    xxx2 <-  DrawPath(toura,pts)
+    Draw()
+
+    RemoveObjects(xxx2,gWin)
+    RemoveObjects(xxxobj,gWin)
+#    WaitForDownClick()  
+    }
+
+  return   toura
+}
+
+##insterts a single point to the closest location on a path.
+define InsertPointOnPath(path,newpoint,pts,mat)
+{
+
        ##For the next item, look at the cost incurred by adding it to
        ##each of the parts.
-      if(watch)
+      if(gWatch)
        {
 
-        ptssub <- Subset(pts,toura)
-        xxx2 <-  DrawPath(toura,ptssub)
-
+        ptssub <- Subset(pts,path)
+        xxx2 <-  DrawPath(path,ptssub)
         Draw()
      
-        WaitForDownClick()  
+        #WaitForDownClick()  
         RemoveObjects(xxx2,gWin)
        }
-      links <- Transpose([toura, Rotate(toura,1)])
+  
+
+      links <- Transpose([path, Rotate(path,1)])
       dists <- []
 
-  	  loop(i,links)
+     loop(i,links)
       {
         ## compute the cost to inserting between the two elements of i
-        cost <- M(mat,First(i),next) + M(mat,next,Second(i)) - M(mat,First(i),Second(i))
+        cost <- M(mat,First(i),newpoint) + M(mat,newpoint,Second(i)) - M(mat,First(i),Second(i))
 
-        dists <- Append(dists, cost)
+        PushOnEnd(dists,cost)
 
       }
 
        ##we went through all the links
-	   d2 <- SortBy(Sequence(1,Length(toura),1),dists)
-      ##The first element of d2 gives the location to insert
-       toura <- Insert(toura, next,First(d2))
-       #toura now is the growing tour
+       d2 <- SortBy(Sequence(1,Length(path),1),dists)
+       ##The first element of d2 gives the location to insert
+       path <- Insert(path, newpoint,First(d2))
 
-	}
-   if(watch) 
-   {
 
-    xxx2 <-  DrawPath(toura,pts)
-    Draw()
-    RemoveObjects(xxx2,gWin)
-    RemoveObjects(xxxobj,gWin)
-    WaitForDownClick()  
-   
-    }
-  return   toura
+  return path
 }
 
 
+##this will shorten a path to be more regular.  Note that this makes
+##the PEBL version somewhat easier than the Reitan version, apparently.
+define LengthenPath(tour,pts,mat,scalethresh)
+{
+
+  ids <- Sequence(3,Length(tour)-1,1)
+
+  if(gWatch)
+   {
+      xxxobj <- PlotTargets(pts,gParams.TargSize,tour)
+      Draw()
+   }
+
+   ##minlength is the length of the shortest path
+   pathlength <- PathDist(tour,mat)
+   thresh <- scalethresh * pathlength
+   while(pathlength<thresh)
+   {
+     id2 <- Sample(ids)
+     id1 <- id2-1
+
+     Print(tour)
+     Print(id1+"--"+id2)
+     ptA <- Nth(pts,Nth(tour,id1-1))
+     ptB <- Nth(pts,Nth(tour,id1))
+     ptC <- Nth(pts,Nth(tour,id2))
+     ptD <- Nth(pts,Nth(tour,id2+1))
+
+     ##right now, the path goes ABCD. 
+     ##we want to go ACBD, but only if there are no crossings involved.
+     ##at least, AC should not cross BD.
+
+
+    if(not SegmentsIntersect(First(ptA),Second(ptA),
+                             First(ptC),Second(ptC),
+			     First(ptB),Second(ptB),
+			     First(ptD),Second(ptD)))
+     {
+
+     tmp <- Nth(tour,id1)
+     SetElement(tour,id1,Nth(tour,id2))
+     SetElement(tour,id2,tmp)
+     pathlength <- PathDist(tour,mat)    
+
+     if(gWatch)
+      {
+        xxx2 <-  DrawPath(tour,pts)
+        Draw()
+      }
+     }
+   }
+  return tour
+}
 
 
 define DrawPath(path,pts)
 {
+
 
       ##Path is a sequence of targets
       ##pts is a list of [x,y] points
@@ -800,13 +936,19 @@ define DrawPath(path,pts)
 
         xdiff <- First(i) - x0
         ydiff <- Nth(i,2) - y0
-#        l <- Line(First(last),Nth(last,2),xdiff,ydiff,gStimColor)
-        l <- ThickLine(First(last),Second(last),x0,y0,4,gStimColor)
+        l <- Line(First(last),Nth(last,2),xdiff,ydiff,gStimColor)
+#        l <- ThickLine(First(last),Second(last),x0,y0,4,gStimColor)
         AddObject(l,gWin)
         stimObjects <- Append(stimObjects,l)
         last <- i
        }
 
+   if(gWatch)
+   { 
+
+     Draw()
+#     Wait(250)
+   }
   return stimObjects
 }
 
@@ -919,3 +1061,13 @@ define FlipVert(pts)
   }
   return newpts
 }
+
+
+define ArgMin(list)
+{
+   indexes <- Sequence(1,Length(list),1)
+   return Nth(SortBy(indexes, list), Length(list))
+}
+
+
+

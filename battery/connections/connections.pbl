@@ -24,15 +24,14 @@ define Start(p)
                 ["timelimit",20] ##time limit in seconds. Use -1 for no time limit
                ]
 
-   gParams <- CreateParameters(parPairs,"params/connections.pbl.par")
-
+   gParams <- CreateParameters(parPairs,gParamFile)
 
 
    ## Could be 'mouse' or 'touch', currently no differences.
    ## a 'keypad' method should also be implemented.
    gInputDevice <- gParams.inputdevice
-   wide <- gParams.width
-   high <- gParams.height
+   gWide <- gParams.width
+   gHigh <- gParams.height
 
 
    ##Time limit in seconds.   Use -1 for no time limit.
@@ -69,8 +68,8 @@ define Start(p)
     gSubNum <- GetSubNum(gWin)
   }
 
-  MakeDirectory("data")
-  fileout <- FileOpenWrite("data/connections-"+gSubNum+".csv")
+
+  fileOut <- GetNewDataFile(gSubNum,gWin,"connections","csv")
 
   FilePrint_(fileout, "subnum,type,trial,width,height,length,sumdist,anglesum,sumoptions,entropy,numclicks,lastclick,rt,time")
   seq <- Sequence(1,gwide*ghigh,1)
@@ -81,18 +80,34 @@ define Start(p)
   FilePrint(fileout,"")
 
   ##create a log for each click we do.
-  gPathfileout <- FileOpenWrite("data/connections-path-practice"+gSubNum+".csv")
+   gPathfileOut <- GetNewDataFile(gSubNum,gWin,"connections-path-practice","csv")
+
 
  ##Create 4 paths total
 
- instbox <- EasyTextBox("Generating paths",25,40,gWin,18,gVideoWidth-50,220)
+ instbox <- EasyTextBox("Generating 5 paths: ",25,40,gWin,18,gVideoWidth-50,220)
  Draw()
- paths <-[MakePath(gwide,ghigh,0),MakePath(gwide,ghigh,0),
-   	   MakePath(gwide,ghigh,0),MakePath(gwide,ghigh,0)]
 
+   
+ paths <-[]
+  
 
+  instbox.text <- instbox.text + "1";Draw()
+  path <- MakePath(gwide,ghigh,0)
+  PushOnENd(paths,path)
+  instbox.text <- instbox.text + "2";Draw()
+  path <- MakePath(gwide,ghigh,0)
+  PushOnENd(paths,path)
+  instbox.text <- instbox.text + "3";Draw()
+  path <- MakePath(gwide,ghigh,0)
+  PushOnENd(paths,path)
+  instbox.text <- instbox.text + "4";Draw()
+  path <- MakePath(gwide,ghigh,0)
+  PushOnENd(paths,path)
 
+   instbox.text <- instbox.text + "5";Draw()
    practicepath <- MakePath(4,4,0)
+
 
    instbox.text <- gInst1
 
@@ -126,7 +141,7 @@ define Start(p)
 
   ##close the practice log and reopen.
   FileClose(gPathFileout)
-  gPathfileout <- FileOpenWrite("data/connections-path-"+gSubNum+".csv")
+  gPathfileOut <- GetNewDataFile(gSubNum,gWin,"connections-path","csv")
 
   tpaths <- []
   loop(i,paths)

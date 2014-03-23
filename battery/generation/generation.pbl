@@ -10,7 +10,7 @@ define Start(p)
 
   parpairs <- [["bgcolor","black"]]
 
-  gParams <- CreateParameters(parpairs,"params/generation.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
 
   gWin <- MakeWindow(gParams.bgcolor)
@@ -21,10 +21,7 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
     }
 
-  MakeDirectory("data")
-  fname <- "data/generation-"+gSubNum+".csv"
-
-  gFileOut <- FileOpenWrite(fname)
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"generation","csv")
 
   FilePrint(gFileOut,"subnum,stage,trial,type,easyhard,trial2,hint,stim,pair2,resp,correct,abstime,rt")
 

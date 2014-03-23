@@ -55,7 +55,7 @@ define Start(p)
 		["numtrials",20], ##How many trials per block?
 		["usemouse",1]]##Use mouse/touch input (1) versus keyboard (0)
 
-   gparams <- CreateParameters(parpairs,"params/BST.pbl.par")
+   gparams <- CreateParameters(parpairs,gParamFile)
 
 
    ##Control parameters. Change the following values to
@@ -89,8 +89,9 @@ define Start(p)
     {
        gSubNum <- GetSubNum(gWin)
     }
-   MakeDirectory("data")
-   fileout <- FileOpenWrite("data/BST-"+gSubNum+".csv")
+
+   fileOut <- GetNewDataFile(gSubNum,gWin,"BST","csv")
+
    FilePrint(fileout,"subnum,type,block,congruency,trial,stim,resp,corr,rt,tooslow")
    inst <- EasyTextBox("",50,50,gWin,30,gVideoWidth-100,gVideoHeight-200)
 

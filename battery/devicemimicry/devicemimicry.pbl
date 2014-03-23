@@ -5,6 +5,8 @@ define Start(p)
   gVideoWidth <- 800
   gVideoHeight<- 600
 
+  canvassizeX <- 800
+  canvassizeY <- 600
 
   gStepSize <- .2  #small number specifying hom many rads/ms the
                      #apparatus moves
@@ -12,9 +14,10 @@ define Start(p)
   ShowCursor(0)
 
   gWin <- MakeWindow("black")
-  gCanvas <- MakeCanvas(800,600,MakeColor("black"))
+  gCanvas <- MakeCanvas(canvasSizeX,canvasSizeY,MakeColor("black"))
+
   AddObject(gCanvas,gWin)
-  Move(gCanvas,400,300)
+  Move(gCanvas,gVideoWidth/2,gVideoHeight/2)
 
   gridcol <- MakeColor("grey20")
   gTargetcolor <- MakeColor("salmon")
@@ -28,8 +31,7 @@ define Start(p)
   gSubNum <- GetSubNum(gWin)
   }
 
-  MakeDirectory("data")
-  gFileOut <- FileOpenWrite("data/device-"+gSubNum+".csv")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"device","csv")
 
   ##device colors
    gArm1Col <- MakeColor("red")

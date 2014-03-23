@@ -17,9 +17,9 @@ define Start(p)
 	       ["length",4],
 	       ["length",8],
 	       ["length",12],
-	       ["trialsperlength",5],
+	       ["trialsperlength",10], ##per length and same/diff condition
 	       ["givefeedback",1],
-	       ["blocksize",50],
+	       ["blocksize",40],
 	       ["useAudiofeedback",1]
               ]
 

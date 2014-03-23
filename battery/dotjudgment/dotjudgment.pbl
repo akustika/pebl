@@ -50,8 +50,7 @@ define Start(p)
               ]
 
 
-   gParams <- CreateParameters(parpairs,"params/dotjudgment.pbl.par")
-
+   gParams <- CreateParameters(parpairs,gParamFile)
 
     base <- [gParams.base1,gParams.base2,gParams.base3,gParams.base4]
     thresholds <-[gParams.thresh1,gParams.thresh2,gParams.thresh3,gParams.thresh4]
@@ -68,10 +67,10 @@ define Start(p)
 
    ##Make data files   
 
-   MakeDirectory("data")
-   gFileOut <- FileOpenWrite("data/dots-"+gSubNum+".csv")
+
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"dots","csv")
    gPooledFileOut <- FileOpenAppend("data/dots-pooled.csv")
-   gSumFileOut <- FileOpenWrite("data/dots-summary-"+ gSubNum+".txt")
+   gSumFileOut <- GetNewDataFile(gSubNum,gWin,"dots-summary","txt")
    gLog <- FileOpenAppend("data/dots-log.csv")
    gPooledSummary <- FileOpenAppend("data/dots-all.csv")
 

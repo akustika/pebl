@@ -62,7 +62,7 @@ define Start(lPar)
 	       ["negwordsfile","words-bad.txt"],
 	       ["numstim",40]]
 
-   gParams <- CreateParameters(parpairs,"params/IAT.pbl.par")
+   gParams <- CreateParameters(parpairs,gParamFile)
 
 ##############################################
 ## To change the stimuli, change the following
@@ -102,9 +102,9 @@ define Start(lPar)
 
   numStim <- gParams.numstim
   
-  MakeDirectory("data")
-  gFileOut <- FileOpenWrite("data/iat-" + gSubNum + ".csv")
-  reportFile <- FileOpenWrite("data/iat-report-" + gSubNum + ".txt")
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"iat","csv")
+  reportfile <- GetNewDataFile(gSubNum,gWin,"iat-report","txt")
 
   grey <- MakeColor("GREY")
   red <- MakeColor("RED")

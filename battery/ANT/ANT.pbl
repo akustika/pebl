@@ -48,7 +48,7 @@ define Start(p)
                      ]
 
 
-        gParams <- CreateParameters(parpairs,"ANT.pbl.par")
+        gParams <- CreateParameters(parpairs,gParamFile)
 	gCueChar <- "✶"     ## This might not work well because of unicode stuff.	
 
 
@@ -61,9 +61,11 @@ define Start(p)
 	 }
 
 	## Make data files   
-	gFileOut <- FileOpenWrite("data/ANT-"+gSubNum+".csv")
+
+        gFileOut <- GetNewDataFile(gSubNum,gWin,"ANT","csv")
 	gPooledFileOut <- FileOpenAppend("data/ANT-pooled.csv")
-	gSumFileOut <- FileOpenWrite("data/ANT-summary-"+ gSubNum+".txt")
+	gSumFileOut <- GetNewDataFile(gSubNum,gWin,"ANT-summary","csv")
+
 	gLog <- FileOpenAppend("data/ANT-log.csv")
 	gPooledSummary <- FileOpenAppend("data/ANT-all.csv")
 

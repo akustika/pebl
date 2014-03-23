@@ -30,14 +30,14 @@ define Start(lPar)
 
   parpairs <- [["inputdevice","mouse"]]   ##mouse or keyboard are valid.
      
-  gParams<-CreateParameters(parpairs,"params/donkey.pbl.par")
+  gParams<-CreateParameters(parpairs,gParamFile)
 
 
   gInputDevice <- gParams.inputdevice
 
   ## results are stored in tmpresults.dat
-  MakeDirectory("data")
-  gFileOut <-FileOpenWrite("data/donkey-" + gSubNum +".csv")
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"donkey","csv")
 
   ##File header:
   FilePrint(gFileOut, "sub,trial,resp,reward,penalty,net,total,abstime,rt")

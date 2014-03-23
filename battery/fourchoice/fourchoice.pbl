@@ -25,7 +25,7 @@ define Start(p)
 	       ["isi",200],
 	       ["responsetype",2]
               ]
-  gParams <- CreateParameters(parpairs,"params/fourchoice.pbl.params")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
   
   gUseSound <- gParams.usesound
@@ -40,7 +40,7 @@ define Start(p)
     }
 
   MakeDirectory("data")
-  gFileOut <- FileOpenWrite("data/fourchoice-"+gSubNum+".csv")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"fourchoice","csv")
 
   gBeep <- LoadSound("tone.wav")
 

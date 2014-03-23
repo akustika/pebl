@@ -45,7 +45,7 @@ define Start(p)
 		     ["usebeep",1]
                      ]
 
-   gParams <- CreateParameters(parpairs,"params/corsi.pbl.par")
+   gParams <- CreateParameters(parpairs,gParamFile)
 
 ##parameters:
 #  doPractice <- 1           ##Turn on/off practice trials (useful for multi-session
@@ -116,6 +116,8 @@ define Start(p)
   gFileOutClick <- FileOpenWrite(root+"/corsi-"+dirlabel+"-detail"+ gSubNum + ".csv") ##individual subject data, each line is a click
   gFileOutTrial <- FileOpenWrite(root+"/corsi-"+dirlabel+"-trial"+ gSubNum + ".csv") ##individual subject data,each line is a trial
   gSumFile <- FileOpenWrite(root+"/corsi-"+dirlabel+"-data-summary_"+ gSubNum + ".txt") ##Individual summary
+
+
   gLogFile <- FileOpenAppend("data/corsi-log.txt")             ##Basic start/end log
 
 
@@ -321,7 +323,7 @@ define Start(p)
                gPromptFinal2 + msp +CR(1) + 
                gPromptFinal3 + totalscore+ CR(1) +
                gPromptFinal4 + totalcorrect +CR(1)+
-			   gPromptFinal5 +Round((2+totalcorrect)/2,2)+CR(3)
+               gPromptFinal5 +Round((gParams.startlength+totalcorrect)/gParams.timesperlength,2)+CR(3)
 
    Draw()
 
@@ -334,7 +336,7 @@ http://pebl.sourceforge.net/battery.html.
 
 FilePrint(gPooledSummary,gSubNum+","+TimeStamp()+","+dirlabel+","+
       gTrialNum+","+msp+","+totalscore+","+totalcorrect+","+
-     Round((2+totalcorrect)/2,2))
+     Round((gParams.startlength+totalcorrect)/gParams.timesperlength,2))
 
 
 

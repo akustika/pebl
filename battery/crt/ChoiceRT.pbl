@@ -22,7 +22,7 @@ define Start(lPar)
 	       ["timeout",1500]
               ]
 
-  gParams <- CreateParameters(parpairs,"params/ChoiceRT.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
   reps <- gParams.reps
   gSoa <- gParams.soa
@@ -61,8 +61,8 @@ define Start(lPar)
 
   stimuli <- Shuffle(RepeatList(CrossFactorWithoutDuplicates(basestim),reps))
 
-  MakeDirectory("data")
-  fileout <- FileOpenWrite("data/CRT-"+gSubNum+".csv")
+
+  fileOut <- GetNewDataFile(gSubNum,gWin,"CRT","csv")
   FilePrint(fileout,"subnum,targ,foil,time,delay,resp,corr,mask,presstart,respend,prestime,rt")
 
   loop(i, stimuli)

@@ -29,7 +29,7 @@ define Start(lPar)
 
 
 
-  gParams <- CreateParameters(parpairs,"params/bcst-64.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
   runlength <- gParams.runlength
   gUseMouse <- gParams.usemouse
 
@@ -50,8 +50,8 @@ define Start(lPar)
   ## results are stored in this file
 
 
-  MakeDirectory("data")
-  gFileOut <-FileOpenWrite("data/bcst64-" + gSubNum +".csv")
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"bcst64","csv")
 
   gSleepEasy <- 1
   persevs <- []

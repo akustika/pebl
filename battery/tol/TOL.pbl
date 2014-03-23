@@ -50,7 +50,7 @@ define Start(p)
 
    parpairs <- [["showHand",1],    #Show the hand
                 ["useReverse",0],  #reverse the order of stacks
-                ["testtype",-1],    ##test type. 0 = choose in-script. Otherwise, set based on initial instructions.
+                ["testtype",-1],    ##test type==-1: choose in-script. Otherwise, set based on initial instructions.
 		["timelimit",120],
 		["allowreset",0]
                ]

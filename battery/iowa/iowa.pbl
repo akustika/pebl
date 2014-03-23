@@ -58,8 +58,7 @@ define Start(lPar)
     gParams <- CreateParameters(parpairs,"params/iowa.pbl.par")
 
 
-
-
+#   gParams.startvalue <- ToNumber(gParams.startvalue)
   ##How many trials?
 #  numtrials <- 100
 
@@ -411,13 +410,12 @@ define Start(lPar)
        Hide(gFooter)
 
 
-
-
-
       ##Figure out the +/- sign
+
 
       gTotal <- gTotal + net
       gTotalLabel.text <- totstring  +gTotal
+
       gFooter.text <- textchoice + resp + CR(1) +
      textreward +  reward + CR(1) +
      textpenalty + "-" + penalty + CR(1) +

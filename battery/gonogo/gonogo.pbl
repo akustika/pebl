@@ -16,7 +16,7 @@ define Start(p)
 	       ["numR", 1]]  ##Number of 'R' trials per block
 
  Print(parpairs)
- gParams <- CreateParameters(parpairs,"params/gonogo.pbl.par")
+ gParams <- CreateParameters(parpairs,gParamFile)
 
  reps <-gParams.reps   ##number of repetitions of the PPPPR design
  gisi <- gParams.isi  ##inter-stimulus interval
@@ -36,18 +36,11 @@ define Start(p)
     }
 
 
-   if(not FileExists("data"))
-    {
-       MakeDirectory("data")
 
-    } elseif(not IsDirectory("data"))
-    {
-       SignalFatalError("File named 'data' exists.  Remove so data directory can be created.")    
-    }
-
-   gFileOut <- FileOpenWrite("data/gonogo-"+gSubNum+".csv")
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"gonogo","csv")
    gPooledFileOut <- FileOpenAppend("data/gonogo-pooled.csv")
-   gSumFileOut <- FileOpenWrite("data/gonogo-summary-"+ gSubNum+".txt")
+   gSumFileOut <-GetNewDataFile(gSubNum,gWin,"gonogo-report","txt")
+
    gLog <- FileOpenAppend("data/gonogo-log.csv")
    gPooledSummary <- FileOpenAppend("data/gonogo-all.csv")
    FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+",GONOGO,INITIATED") 

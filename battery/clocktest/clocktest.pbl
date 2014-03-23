@@ -36,7 +36,7 @@ define Start(p)
                  ]
 
 
-  gParams <- CreateParameters(parpairs,"params/clocktest.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
   gWin <- MakeWindow("black")
   gBasecolor <- MakeColor("white")
@@ -80,8 +80,8 @@ define Start(p)
 
   tb.text <-  "Watch the red target. "+CR(2)+"Hit space bar when red circle skips a position."
  
-  MakeDirectory("data")
-  fileOut <- FileOpenWrite("data/clock-"+gSubNum+".csv")
+  fileOut <- GetNewDataFile(gSubNum,gWin,"clock","csv")
+
   FilePrint(fileout,"subnum,trial,ticker,sec,skip,resp,corr,starttime,rt,curtime")  
 
   trial <- 1

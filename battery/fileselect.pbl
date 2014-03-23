@@ -223,7 +223,8 @@ define Start(p)
    AddObject(description,win)
    Move(description,570,115)
 
-   title <- EasyLabel(gPEBLTitle+ GetPEBLVersion(),gVideoWidth/2,20,win,30)
+#   title <- EasyLabel(gPEBLTitle+ GetPEBLVersion(),gVideoWidth/2,20,win,30)
+   title <- EasyLabel(gPEBLTitle+ "0.14",gVideoWidth/2,20,win,30)
 
    screenshotbase <- Rectangle(780,530-adjust,420,320,MakeColor("black"),1)
    screenshotdummy <- Rectangle(780,530-adjust,400,300,MakeColor("white"),1)

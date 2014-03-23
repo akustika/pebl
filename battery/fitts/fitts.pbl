@@ -6,11 +6,39 @@ define Start(p)
 ## testtype == 2: move graphical cursor, stop when you click; record xy stream
 ## testtype == 3: trial ends when you stop moving; logs xy stream
 
-  testtype <- 2
 
-  targdist <- [50,75,100,200,350,500,700]
-  targsize <- [10,20,40]
-  reps     <- 10       ##Number of times through list
+  parpairs <- [["testtype",2],
+
+              ["reps",10],
+	      ["allowYMovement",1],
+              ["targheight",50],
+	      ["startx",50],
+              ["ShowPreview", 0],    ##Can you see the target before you move?
+
+
+              ["dist1",50],
+              ["dist2",75],
+              ["dist3",100],
+              ["dist4",200],
+              ["dist5",350],
+              ["dist6",500],
+              ["dist7",700],
+
+              ["size1",10],
+              ["size2",20],
+              ["size3",40]
+	      ]
+
+  gParams<-CreateParameters(parpairs,gParamFile)
+
+  testtype <- gParams.testtype
+
+  targdist <- [gParams.dist1,gParams.dist2,gParams.dist3,
+               gParams.dist4,gParams.dist5,gParams.dist6,
+	       gParams.dist7]
+
+  targsize <- [gParams.size1,gParams.size2,gParams.size3]
+  reps     <- gParams.reps       ##Number of times through list
 
   gWin <- MakeWindow()
 
@@ -22,16 +50,17 @@ define Start(p)
 
 
   MakeDirectory("data")
-  gFileOut <- FileOpenWrite("data/fitts-"+gSubNum+".csv")
-  gPointFile <- FileOpenWrite("data/fittspoints-"+gSubNum+".csv")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"fitts","csv")
+  gPointFile <-  GetNewDataFile(gSubNum,gWin,"fittspoints","csv")
 
   ShowCursor(0)
   gTargCol  <- MakeColor("red")
-  gStartx <- 50
+
+  gStartx <- gParams.startx
   gHomeX <- Round(gVideoWidth/2)
   gHomeY <- Round(gVideoHeight/2)
-  gTargHeight <- 50
-  gShowPreview <- 0         ##Can you see the target before you move?
+  gTargHeight <- gParams.targheight
+  gShowPreview <- gParams.showpreview    ##Can you see the target before you move?
   gSleepEasy <- 1
   gMessage <- EasyLabel("",gHomeX,gHomeY-100,gWin,22)
   gCounter <- EasyLabel("",gHomeX,gHomeY-150,gWin,22)
@@ -271,10 +300,10 @@ define WaitForMouseMovement()
    continue <- 1
    while(ListEqual(lastpos,pos)) 
     {
-        Wait(10)
+
     	Draw()
-		lastpos <- pos
-        pos <- GetMouseCursorPosition()
+	lastpos <- pos
+        pos <- WaitForMouseMovement()
     }
 }
 
@@ -284,11 +313,16 @@ define MoveCursor(pos)
 {
   gCursor.x <- First(pos)
 
-##Use this to lock the y position
- ## gCursor.y <- gHomeY
 
-## Use this to allow any y position.
-   gCursor.y <- Nth(pos,2)
+
+ if(gParams.allowyMovement and gParams.testtype>1)
+   {
+    ## Use this to allow any y position.
+    gCursor.y <- Nth(pos,2)
+   }else{
+     ##Use this to lock the y position
+     gCursor.y <- gHomeY
+  }
   Draw()
 }
 
