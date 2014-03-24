@@ -34,7 +34,8 @@
 
 ## Special thanks to Adam Thomas of NIH/NIMH for implementing the
 ##    TOL-R trials.
- 
+## Polish translation from Magda Piorkowska
+
 define Start(p)
 {
 
@@ -1872,6 +1873,39 @@ define GetStrings(language)
     gDebriefing <- "Gracias por participar. El experimento ya está completa. Pulse cualquier tecla para salir."
     gContinueFail <- " Haga clic en el ratón para continuar a la siguiente prueba. "
 
+    } elseif(Uppercase(lang) == "PL") 
+     {
+    gSelect <- "Type number of test to use:"+ CR(2) +
+     "[1] Unconstrained pile heights, {3,4,5} disks, progressive difficulty, 24 trials"+CR(2)+
+     "[2] Unconstrained pile heights, {3,4,5} disks, Random presentation, 24 trials"+CR(2)+
+     "[3] Shallice test ([1,2,3] pile heights, 3 disks, Shallice's 12 problems."+CR(2)+
+     "[4] Shallice pile heights [1,2,3], 3 disks, 30  random trials."+CR(2)+
+     "[5] Phillips (1999) trials A (unconstrained piles, 5 disks, progressive difficulty, 8 trials)"+CR(2)+
+     "[6] Phillips (1999) trials B (unconstrained piles, 5 disks, progressive difficulty, 8 trials)"+CR(2)+
+     "[7] Phillips (1999) trials C (unconstrained piles, 5 disks, progressive difficulty, 8 trials)"+CR(2)+
+     "[8] Fimbel et al (2009) old: [1,2,3] pile heights, 3 disks, progressive difficulty, 15 trials)"+CR(2)+
+     "[9] Fimbel et al (2009) young: [1,2,3] pile heights, 3 disks, progressive difficulty, 35 trials)"+CR(2)+
+     "[0] TOL-R (Schnirman et al, 1998). [1,2,3] pile heights, 3 disks, 30 problems, time and move limit)"+CR(2)+
+     "[a] TOL-DX (Culbertson & Zillmer, 1998). [1,2,3] pile heights, 3 discs, 15 problems)"+CR(3)+
+     "Edit TOL.pbl directly to specify a test configuration automatically."
+
+    gHeaderLab <- "Target"+CR(1)+"Stacks:"
+    gFooterLab <- "Kliknij na stercie aby podnieść i upuścić dysk"
+
+    gInstText1 <- " Za chwilę weźmiesz udział w zadaniu 'Tower of London'.  Twoim celem będzie przeniesienie sterty dysków z oryginalnej konfiguracji tak,aby uzyskać konfigurację ukazaną na górze ekranu.  Możesz podnieść jeden dysk na raz, i nie możesz przenieść dysku na stertę, gdzie nie ma już miejsca (co będzie wskazywane przez wielkość szarego prostokąta).By przemieścić dysk, kliknij na stertę, z której chcesz zabrać dysk, zostanie wtedy podniesiony ponad stertę. Następnie kliknij na kolejną stertę, wtedy dysk zostanie ułożony na niej."
+    gInstText2 <- " Będziesz mieć limit czasu, aby zakończyć każdy problem. Spróbuj zakończyć każdy problem w wyznaczonym czasie."
+    gInstText3 <- " Będziesz mieć ograniczoną liczbę ruchów do rozwiązania każdego problemu. Zanim podejmiesz pierwszy krok, pomyśl o problemie, aby upewnić się, że można go rozwiązać w ramach limitu ruchów. Jeśli nie zakończysz problemu w ramach limitu, etap zakończy się i przejdziesz do następnego problemu."
+    gBegin <-  "Kliknij myszką, aby rozpocząć."
+    gContinue <- "Problem rozwiązany. "+CR(2)+ "Kliknij myszką, aby przejść do kolejnego problemu."
+    gIncomplete <- "Problem nierozwiązany. "
+    gClickLab <- "Liczba ruchów"
+    gTimeLab <-  "Czas (s)"
+    gMovesOutLab <-  "Nie udało się zakończyć problemu w liczbie ruchów wymaganych."
+    gResetText   <- "Zresetuj problem"
+    gResetLab    <- "Click screen to restart problem."
+    gTimeOutLab <-  "Przekroczyłeś limit czasu."
+    gDebriefing <- "Dziękuję za udział w badaniu. Eksperyment jest już skończony. Naciśnij dowolny klawisz, aby zakończyć."
+    gContinueFail <- "Kliknij na ekranie aby przejść do kolejnego problemu."
     } else{
      Print("Language: ["+lang+"] unknown.  Falling back on English translations.")
      GetStrings("en")
