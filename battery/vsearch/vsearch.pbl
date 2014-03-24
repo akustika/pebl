@@ -35,7 +35,7 @@ define Start(p)
 	       ["reps", 5]
               ]
 
-  gParams <- CreateParameters(parpairs,"params/vsearch.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
   gWin <- MakeWindow("black")
   gSleepEasy <- 1
@@ -66,8 +66,8 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
    }
 
-   MakeDirectory("data")
-   gFileOut <- FileOpenWrite("data/vsearch-"+gsubnum+".csv")
+
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"vsearch","csv")
    FilePrint(gFileOut,"sub,trial,time,numtargs,size,targchar,targcol,stim,resp,corr,rt1,rt2")
 
 

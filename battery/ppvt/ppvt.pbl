@@ -72,7 +72,8 @@ define Start(lPar)
                ]
 
 
-    gParams <- CreateParameters(parpairs,"params/ppvt.pbl.par")
+    gParams <- CreateParameters(parpairs,gParamFile)
+
    ##Type: 1 indicates a total time limit   (time is in totalTime);
    ##Type: 2 indicates a block-number limit (Number is in numBlocks);
    ##Type: 3 indicates a trial-number limit (number is numTrials)
@@ -129,8 +130,8 @@ define Start(lPar)
   ## Set up the basic  environment 
   ##
 
-   datafile   <- FileOpenWrite("ppvt-"+ gSubNum + ".txt")
-   reportfile <- FileOpenWrite("ppvt-report-" + gSubNum + ".txt")
+   datafile <- GetNewDataFile(gSubNum,gWin,"ppvt","csv")
+   reportfile <- GetNewDataFile(gSubNum,gWin,"ppvt-report","txt")
 
 
 
@@ -141,7 +142,7 @@ define Start(lPar)
    isis  <- []
    
    ##The data file header:
-   FilePrint(datafile,"sub block trial ISI ISIbin abstime rt type")
+   FilePrint(datafile,"sub,block,trial,ISI,ISIbin,abstime,rt,type")
 
     Wait(1000)
     trialNum <- 0
@@ -233,7 +234,7 @@ define Start(lPar)
         types <- Append(types,type)    
         isis  <- Append(isis, isibin)
 
-        FilePrint(datafile, gSubNum + " " + block + " " + trialNum + " " + isi + " " + isibin + " " + timeStart + " " + rt + " " + type)
+        FilePrint(datafile, gSubNum + "," + block + "," + trialNum + "," + isi + "," + isibin + "," + timeStart + "," + rt + "," + type)
     ##Determine whether we should continue.
       if(testType == 1)
       {

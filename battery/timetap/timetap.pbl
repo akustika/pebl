@@ -22,7 +22,7 @@ define Start(p)
                ["trainingflashes",10],
 	       ["maxtaptime",1000]]
 
-  gParams <- CreateParameters(parpairs,"params/timetap.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
   ## The time of each trial
 
   numtrials <- gParams.numtrials
@@ -35,8 +35,9 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
    }
 
-  MakeDirectory("data")
-  gFileOut <- FileOpenWrite("data/timetap-"+gsubnum+".csv")
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"timetap","csv")
+
   tb <- EasyTextBox("In this task, you are asked to tap the keyboard
   at the specified rate for "+ numtrials +" trials of " +
   trialtime/1000 + " seconds each.  You will see the fixation cross

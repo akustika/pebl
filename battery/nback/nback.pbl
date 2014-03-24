@@ -17,7 +17,8 @@ define Start(p)
 	       ["trialsperblock",20]
 	       ]
 
-    gParams <- CreateParameters(parpairs,"params/nback.pbl.par")
+    gParams <- CreateParameters(parpairs,gParamFile)
+
 
     gConsonants <- ["C","H","K","N","R","W","X","Y"]
     gNumbers    <- ["1","2","3","4","5","6","8","9"]
@@ -32,8 +33,7 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
    }
   
-   MakeDirectory("data")
-   gFileOut <- FileOpenWrite("data/nback-"+gSubNum+".csv")
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"nback","csv")
 
   ##Do some basic  instructions. If you use this test, please edit the following, and provide your instructions back to the PEBL project.
 

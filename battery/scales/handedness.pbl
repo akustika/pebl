@@ -159,9 +159,9 @@ Please try to answer all the questions and only leave a blank if you have no exp
     outline <- outline + "," + Sum(lefts) + "," + Sum(rights) + "," + quotient
    outline <- outline + ","+GetTime()+","+TimeStamp()
 
+
    MakeDirectory("data")
    out <- FileOpenAppend("data/handedness-data.csv")
-
    FilePrint(out,outline)
 
    Messagebox("Right-Handedness quotient (-1=left; +1 = right): " + quotient,gWin)

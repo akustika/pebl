@@ -10,12 +10,12 @@ define Start(p)
 	       ["prestime",2000],
 	       ["delaytime",2500]]
 
-  gParams <- CreateParameters(parpairs,"params/itemorder.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
   Init()
 
-  MakeDirectory("data")
-  gFileOut <- FileOpenWrite("data/itemorder-"+gSubNum+".csv")
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"itemorder","csv")
   
   giveFeedback <- 1
   trials <-Shuffle(Flatten([Repeat(0,gParams.numSame),Repeat(1,gParams.numDiffItem),Repeat(2,gParams.numDiffOrder)]))

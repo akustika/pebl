@@ -27,7 +27,7 @@ define Start(par)
                ]
 
 
-  gParams <- CreateParameters(parpairs,"params/Rotation.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
     ##Create a couple polygon stimuli. Specify others here:
 
@@ -74,12 +74,10 @@ define Start(par)
   Draw()
   
 
-  MakeDirectory("data")
-  fileout <- FileOpenWrite("data/rotate-"+gSubNum+".csv")
+
+  fileOut <- GetNewDataFile(gSubNum,win,"rotate","csv")
+
   data <- []
-
-
-
 
    gPI <- 3.14159
 

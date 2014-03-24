@@ -12,7 +12,7 @@ define Start(p)
 	       ["responsetype","mouse"]
               ]
 
-  gParams <- CreateParameters(parpairs,"params/priming.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
   delta    <- gParams.delta    ##Space between square centers
   stimsize <- gParams.stimsize #Size of the squares
@@ -28,9 +28,8 @@ define Start(p)
     gSubNum <- GetSubNum(gWin)
   }
 
-  MakeDirectory("data")
-  fileout <- FileOpenWrite("data/priming-"+gSubNum+".csv")
-  FilePrint(fileout,"subnum,responstype,trial,targcell,targrow,targcol,primecond,primerow,primecol,resp,corr,intrusion,abstime,rt")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"priming","csv")
+  FilePrint(gfileout,"subnum,responstype,trial,targcell,targrow,targcol,primecond,primerow,primecol,resp,corr,intrusion,abstime,rt")
   report <- FileOpenWrite("data/priming-report-"+gSubNum+".txt")
 
   stimColor <- MakeColor("royalblue")
@@ -264,7 +263,7 @@ define Start(p)
     Draw()
 
 
-     FilePrint(fileout,gSubNum+","+gResponseType+","+trial+","+
+     FilePrint(gfileout,gSubNum+","+gResponseType+","+trial+","+
                targcell+","+ First(targloc) +","+ Second(targloc)+","+
                primecond +","+ pRow + ","+pCol + "," +
                resp+","+correct+","+intrusion+","+time2+","+(time2-time1))

@@ -12,9 +12,8 @@ define Start(p)
                ["logofilename","images/logo.png"],  #change to your own logo file. (400x80)
                ["questionfile","questions.csv"]]
 
-  gParams <- CreateParameters(parpairs,"params/survey.pbl.par") 
+  gParams <- CreateParameters(parpairs,gParamFile)
 
-  
 
   gSurveyLabel <- gParams.surveylabel
   gLogoFileName <- gParams.logofilename

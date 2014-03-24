@@ -26,7 +26,8 @@ define Start(p)
                ["soa",3000] ##Fix the stimulus-onset asynchrony.
                ]
 
-   gParams <- CreateParameters(parpairs,"params/oddball.pbl.par")
+   gParams <- CreateParameters(parpairs,gParamFile)
+
    numreps <- gParams.numreps
    soa <- gParams.soa   
 
@@ -42,9 +43,13 @@ define Start(p)
    ##Make data files   
 
    MakeDirectory("data")
-   gFileOut <- FileOpenWrite("data/oddball-"+gSubNum+".csv")
+
+
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"oddball","csv")
    gPooledFileOut <- FileOpenAppend("data/oddball-pooled.csv")
-   gSumFileOut <- FileOpenWrite("data/oddball-summary-"+ gSubNum+".txt")
+
+
+   gSumFileOut <- GetNewDataFile(gSubNum,gWin,"oddball-report","txt")
    gLog <- FileOpenAppend("data/oddball-log.csv")
    gPooledSummary <- FileOpenAppend("data/oddball-all.csv")
 

@@ -22,7 +22,7 @@ define Start(p)
   ["minwait",1500],
   ["maxwait",4000]]
 
-   gParams <- CreateParameters(parpairs,"params/satest.pbl.par")
+   gParams <- CreateParameters(parpairs,gParamFile)
 
    Init()
    GetStrings(gLanguage)
@@ -38,7 +38,7 @@ define Start(p)
    MakeDirectory("data")
 
    gLogFile <- FileOpenAppend("data/satest-log.txt")
-   gFileOut <- FileOpenWrite("data/satest-"+gSubNum+".csv")
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"satest","csv")
    FilePrint(gLogFile,"SATEST start " +GetTime() + " " + TimeStamp() + "  " + gSubNum )
 
    gUseTracking <- gParams.usetracking  #Should a predator follow a  prey around?
@@ -338,8 +338,8 @@ define Start(p)
   
   ##Dat should contain summarized data now.
 
-  Print(dat)
-  fileout <- FileOpenWrite("data/SAsummary-"+gSubNum+".txt")
+
+  fileOut <- GetNewDataFile(gSubNum,gWin,"SAsummary","txt")
   PrintSAStats(dat,fileout)
   FileClose(fileout)
 

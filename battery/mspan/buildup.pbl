@@ -23,7 +23,7 @@ define Start(p)
                                        ## of the screen
 
 
-  gParams <- CreateParameters(parpairs,"params/buildup.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
   gHomeX <- gVideoWidth/2
   gHomeY <- gVideoHeight/2
 
@@ -46,8 +46,8 @@ define Start(p)
     gSubNum <- GetSubNum(gWin)
    }
 
-   MakeDirectory("data")
-  gFileOut <- FileOpenWrite("data/buildup-" + gSubNum + ".txt")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"buildup","csv")
+
   gLogFile <- FileOpenAppend("data/buildup-log.txt")
   FilePrint(gLogFile,"BUILDUP start " +GetTime() + " " + TimeStamp() +  " " + gSubNum )
 
@@ -147,7 +147,7 @@ define Trial(stimid,rooms)
   
 
   stim <- ExtractListItems(rooms,stimid)
-  FilePrint_(gFileOut, gSubNum + " " + gTrialNum + " "  +  ListToString(stimid)+ " ") 
+  FilePrint_(gFileOut, gSubNum + "," + gTrialNum + ","  +  ListToString(stimid)+ ",") 
 
   ##First, display the stimuli, at appropriate rate
    loop(i, stim)
@@ -222,7 +222,7 @@ define Trial(stimid,rooms)
 
   }
 
-  FilePrint_(gFileOut, ListToString(responses) + " " )
+  FilePrint_(gFileOut, ListToString(responses) + ",")
 
   RemoveObjects(Second(tmp),gWin)
   Draw()
@@ -238,19 +238,19 @@ define Trial(stimid,rooms)
    Draw()
    Wait(500)
    RemoveObject(warn,gWin)
-   FilePrint_(gFileOut, corr + " " )
+   FilePrint_(gFileOut, corr + "," )
 
    ##print out RTs
    i <- 1
    loop(t,times)
     {
-      FilePrint_(gFileOut,t+ " " )
+      FilePrint_(gFileOut,t+ "," )
       i <- i + 1
     }
    #Pad the end with Xs
    while(i <= 9)
    {
-    FilePrint_(gFileOut,"X ")
+    FilePrint_(gFileOut,"X,")
      i <- i + 1
    }
     FilePrint(gFileOut,"")

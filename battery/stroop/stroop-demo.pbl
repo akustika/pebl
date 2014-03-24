@@ -34,7 +34,7 @@ define Start(p)
 
    parpairs <- [["blocklength",50] ]
 
-   gParams <- CreateParameters(parpairs,"params/stroop-demo.pbl")
+   gParams <- CreateParameters(parpairs,gParamFile)
 
    ##The number of trials per block (and condition)
    blocklength <- gParams.blocklength
@@ -78,9 +78,7 @@ define Start(p)
 
 
 
-
-  gFileOut <- FileOpenWrite("stroop-"+gSubNum+".txt")
-
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"stroop","csv")
 
   gTrial <- 0
   gBlock <- 0
@@ -315,8 +313,7 @@ We will start with a practice round.
    gErr  <- []; gRT   <- []; gCond <- []
 
     
-
-   reportfile <- FileOpenWrite("stroop-report-"+gSubNum+".txt")
+   reportfile <- GetNewDataFile(gSubNum,gWin,"stroop-report","txt")
    ##Print out report
    PrintMe(reportfile,"--------------------------------------------------------")
    PrintMe(reportfile," Report for PEBL Stroop Test, Version 0.2")

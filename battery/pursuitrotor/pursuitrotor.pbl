@@ -49,17 +49,15 @@ define Start(p)
 	        ["speed",.1333333] #7.5 rotations/sec
                ]
 
-   gParams <- CreateParameters(parpairs,"params/pursuitrotor.pbl.par")
-
-
+   gParams <- CreateParameters(parpairs,gParamFile)
 
    Init()
    Draw()
 
    ##create the output files.
-   MakeDirectory("data")
-   gFileOut <- FileOpenWrite("data/pursuitrotor-"+gSubNum+".csv")   
-   gReportOut <- FileOpenWrite("data/pursuitrotor-report-"+gSubNum+".txt")
+
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"pursuitrotor","csv")
+   gReportOut <- GetNewDataFile(gSubNum,gWin,"pursuitrotor-report","csv")
 
    inst <- EasyTextBox("In this task, you will track a red circle moving steadily around a circular path.  Try to keep your mouse button on the path at all times.  There will be a total of " +
      gParams.trials +" trials, each lasting "+gParams.trialtime+" seconds.  Press mouse button to initialize first trial.",

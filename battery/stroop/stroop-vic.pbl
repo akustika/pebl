@@ -14,7 +14,7 @@ define Start(p)
 
 
    parpairs <- [["reps",6]]#reps*4 is the number of items per test (6=24 items)
-   gParams <- CreateParameters(parpairs,"params/stroop-vic.pbl.par")
+   gParams <- CreateParameters(parpairs,gParamFile)
      
 
    ##The number of trials per block (and condition)
@@ -70,9 +70,9 @@ define Start(p)
 
 
   MakeDirectory("data")
-  gFileOut <- FileOpenWrite("data/vstroop-"+gSubNum+".csv")
-  gSumFileOut <- FileOpenWrite("data/vstroop-summary-"+gSubNum+".txt")
 
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"vstroop","csv")
+  gSumFileOut <- GetNewDataFile(gSubNum,gWin,"vstroop-report","txt")
 
   FilePrint(gFileOut,"subnum,block,trial,word,color,part,xpos,ypos,resp,rname,correct,intrusion,numresponses,time0,timea,timeend,trialtime,responsetime")
 

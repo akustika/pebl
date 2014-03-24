@@ -22,7 +22,7 @@ define Start(p)
                 ]
 
 
-  gParams <- CreateParameters(parpairs,"params/tapping.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
   ## The time of each trial
   trialtime <- gParams.trialtime*1000   #number of seconds * 1000 = ms
   maxTrials <- gParams.maxtrials
@@ -60,8 +60,10 @@ define Start(p)
    }
 
   MakeDirectory("data")
-  gFileOut <-FileOpenWrite("data/tapping-"+gSubNum+".csv")
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"tapping","csv")
   FilePrint(gFileOut,"sub,trial,domhand,hand,tap,sumtime,trialtime,rt")
+
   font <-  MakeFont(gPEBLBaseFontMono,0,24,MakeColor("white"),MakeColor("black"),1)
   
   inst <-  gInst1

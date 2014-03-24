@@ -56,7 +56,7 @@ define Start(p)
                ]
 
 
- gParams <- CreateParameters(parpairs,"TOL.pbl.par")
+ gParams <- CreateParameters(parpairs,gParamFile)
 
 #  gShowHand     <- 1  #Show the hand graphic?
 #  gUseReverse <- 0    ## reverse the stacks. Some of the subtests do
@@ -611,11 +611,13 @@ define InitPoles()
   ##Keep track of the image complex:
   gComplex <- []
 
-  MakeDirectory("data")
-  gFileOut <- FileOpenWrite("data/tol-"+gsubnum+".csv")
-  gFileOutSum <- FileOpenWrite("data/tol-summary-"+gsubnum+".csv")
+
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"tol","csv")
+  gFileOutSum <- GetNewDataFile(gSubNum,gWin,"tol-summary","csv")
+  gReportFile <- GetNewDataFile(gSubNum,gWin,"tol-report","txt")
+
   gPooledFile <- FileOpenAppend("data/pooled-tol.csv")
-  gReportFile <- FileOpenWrite("data/tol-report-"+gSubNum+".txt")
 
  }
 

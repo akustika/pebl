@@ -16,7 +16,7 @@ define Start(p)
                ["usefeedback",0]]    
   
 
-   gParams <- CreateParameters(parpairs,"params/letterdigit.pbl.par")
+   gParams <- CreateParameters(parpairs,gParamFile)
 
    numtrials <- gParams.numtrials
    gFeedback <- gParams.usefeedback
@@ -35,8 +35,7 @@ define Start(p)
   gProbeFont <-MakeFont(gPEBLBaseFontMono,0,80,MakeColor("black"),MakeColor("grey"),1)
 
   MakeDirectory("data")
-  gfileout <- FileOpenWrite("data/letterdigit-"+gSubNum+".csv")
-
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"letterdigit","csv")
   gDatCorr <- []
   gDatRT  <- []
 

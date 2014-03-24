@@ -18,7 +18,7 @@ define Start(lPar)
 
    parpairs <- [["delay",500]] ##how long to wait before presentation
 
-   gparams<- CreateParameters(parpairs,"params/lexicaldecision.pbl.par")
+   gparams<- CreateParameters(parpairs,gParamFile)
 
   gWin <- MakeWindow("GREY")
   ##Get subject code if we need to:    
@@ -29,7 +29,7 @@ define Start(lPar)
 
  #open a file for writing to.
   MakeDirectory("data")
-  gFileOut <- FileOpenWrite("data/ld-"+ gSubnum +".csv")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"ld","csv") 
   FilePrint(gFileOut,"subnum,trial,stim,type,resp,corr,rt")
   #Read in the words/nonwords.  
   words <- FileReadList("words.txt")

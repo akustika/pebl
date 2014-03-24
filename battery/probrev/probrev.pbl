@@ -36,7 +36,7 @@ define Start(lPar)
 		["errorMin",0],
 		["errorMax",5]]
 
-   gParams <- CreateParameters(parpairs,"params/probrev.pbl.par")
+   gParams <- CreateParameters(parpairs,gParamFile)
 
 
    numblocks <- gParams.numblocks
@@ -90,10 +90,8 @@ Press any key to begin.")
   ## Set up the basic  environment 
   ##
 
-   MakeDirectory("data")
-   datafile   <- FileOpenWrite("data/probrev-"+ gSubNum + ".csv")
-   reportfile <- FileOpenWrite("data/probrev-report-" + gSubNum + ".txt")
-
+   datafile <- GetNewDataFile(gSubNum,gWin,"probrev","csv")
+   reportfile <- GetNewDataFile(gSubNum,gWin,"probrev-report","txt")
 
 
    ## Global data structures which save data for analysis and

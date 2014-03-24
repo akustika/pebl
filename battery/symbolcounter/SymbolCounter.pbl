@@ -8,9 +8,9 @@
 ##
 ##
 ##  Modeled after task in:
-## WILLIAM J. GEHRING,a RICHARD L. BRYCK,b JOHN JONIDES,
-## ROGER L. ALBIN,c and
-## DAVID BADRE The mind's eye, looking inward? In search of executive
+## WILLIAM J. GEHRING, RICHARD L. BRYCK, JOHN JONIDES,
+## ROGER L. ALBIN, and DAVID BADRE
+##  The mind's eye, looking inward? In search of executive
 ## control in internal attention shifting. Psychophysiology,
 ##  40 (2003), 572 - 585. 
 ##
@@ -35,7 +35,7 @@ define Start(lPar)
 	       ["toofastthresh",150 ],
 	       ["tooslowthresh",3000]]
 
-  gParams <- Createparameters(parpairs,"params/SymbolCounter.pbl.par")
+  gParams <- Createparameters(parpairs,gParamFile)
 
   ##
    numblocks <- gParams.numblocks      ## blocks after practice round.
@@ -44,7 +44,7 @@ define Start(lPar)
    			 			   ## through practice.
 
   gGiveFeedback <-  gParams.givefeedback    ##Whether you should give feedback in
-                           ##  non-practice blocks
+  ##  non-practice blocks
   ##Symbols for A and B
   symA <- [gParams.symA1,gParams.symA2]
   symB <- [gParams.symB1,gParams.symB2]
@@ -67,9 +67,9 @@ define Start(lPar)
   ##
 
   Initialize()
-  MakeDirectory("data")
-  datafile   <- FileOpenWrite("data/symbolcount-"+ gSubNum + ".csv")
-  reportfile <- FileOpenWrite("data/symbolcount-report-" + gSubNum + ".csv")
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"symbolcounter","csv")
+  gReportFile <- GetNewDataFile(gSubNum,gWin,"symbolcounter-report","txt")
  
   gInstructions.text <- "You are about to take part in a simple task.  "+
     "In this task, you will see a series of symbols and you will need to keep track of " +
@@ -152,7 +152,7 @@ define Start(lPar)
  
       Wait(200)
    
-     FilePrint(datafile,gSubNum + "," + block + "," + trial + "," + stim + "," +
+     FilePrint(gFileOut,gSubNum + "," + block + "," + trial + "," + stim + "," +
           resp + "," + corr +  "," +  corrun + ","+  time1 + "," + rt)
 
      if(corrun >= runthresh) 
@@ -216,7 +216,7 @@ define Start(lPar)
       Wait(200)
    
 
-     FilePrint(datafile,gSubNum + "," + block + "," + trial + ","  + stim + "," +
+     FilePrint(gFileOut,gSubNum + "," + block + "," + trial + ","  + stim + "," +
           resp + "," + corr +  "," +  corrun + ","+  time1 + "," + rt)
 
     trial <- trial + 1
@@ -229,20 +229,20 @@ define Start(lPar)
   ##Experiment is finished; print out summary stats
 
 
-   FilePrint(reportfile,"------------------------------------------------------")
-   FilePrint(reportfile," Report for PEBL Symbol-counter task Task Version 0.1")
-   FilePrint(reportfile, " "+GetPEBLVersion())
-   FilePrint(reportfile, " "+TimeStamp())
-   FilePrint(reportfile," http://pebl.sf.net")
-   FilePrint(reportfile, " Participant Code: " + gSubNum)
-   FilePrint(reportfile,"------------------------------------------------------")
-   FilePrint(reportfile,"------------------------------------------------------")
-   FilePrint(reportfile,"No data computed at this time.")
-   FilePrint(reportfile,"------------------------------------------------------")
+   FilePrint(gReportFile,"------------------------------------------------------")
+   FilePrint(gReportFile," Report for PEBL Symbol-counter task Task Version 0.1")
+   FilePrint(gReportFile, " "+GetPEBLVersion())
+   FilePrint(gReportFile, " "+TimeStamp())
+   FilePrint(gReportFile," http://pebl.sf.net")
+   FilePrint(gReportFile, " Participant Code: " + gSubNum)
+   FilePrint(gReportFile,"------------------------------------------------------")
+   FilePrint(gReportFile,"------------------------------------------------------")
+   FilePrint(gReportFile,"No data computed at this time.")
+   FilePrint(gReportFile,"------------------------------------------------------")
 
 
-   FileClose(reportfile)
-   FileClose(datafile)
+   FileClose(gReportFile)
+   FileClose(gFileOut)
 
   ##Now, show debriefing info.
    SetText(gInstructions, "Thank you for participating in the experiment.  You may now leave.  (Press secret key 'X' to finish experiment)")

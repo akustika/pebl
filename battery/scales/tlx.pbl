@@ -20,7 +20,7 @@ define Start(p)
 	       ["scaleheight",300]
                ]
 
-   gParams <- CreateParameters(parpairs,"params/tlx.pbl.par")
+   gParams <- CreateParameters(parpairs,gParamFile)
 
 
    ##Should you collect the pairwise weights?
@@ -178,9 +178,9 @@ define Start(p)
     }
    outline <- outline + ","+GetTime()
 
+
    MakeDirectory("data")
-   out <- FileOpenWrite("data/tlx-data.csv")
-   #PrinT(outline)
+   out <- FileOpenAppend("data/tlx-data.csv")
    FilePrint(out,outline)
 }
 

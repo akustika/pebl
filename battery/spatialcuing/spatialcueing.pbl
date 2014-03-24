@@ -34,7 +34,7 @@ define Start(par)
 		 ["reps",4]
                 ]
     
-    gParams <- CreateParameters(parpairs,"params/spatialcueing.pbl.par")
+    gParams <- CreateParameters(parpairs,gParamFile)
 
 
     gWin <- MakeWindow("grey")
@@ -43,10 +43,7 @@ define Start(par)
       gSubNum <- GetSubNum(gWin)
     }
 
-
-    MakeDirectory("data")
-    gFileOut <-FileOpenWrite("data/spatialcueing-" +gSubNum+ ".csv")
-
+    gFileOut <- GetNewDataFile(gSubNum,gWin,"spatialcueing","csv")
 
 #######################################################################
 ## Specify the number of times each type of stimulus is presented.

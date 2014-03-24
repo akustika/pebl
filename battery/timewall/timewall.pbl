@@ -29,16 +29,16 @@ define Start(p)
 
 
   parpairs <- [   ["numTrials", 20 ],       #Number of trials
-  ["feedback", 1 ],      #Whether or not to give feedback
-  ["mintime", 2000  ],     #Minimum transit time
-  ["maxtime", 10000],        #Maximumu transit time
-  ["spaceheight",600],
-  ["spacewidth",800],
-  ["bgcol","lightblue"],
-  ["wallcol","darkred"], 
-  ["targcol","darkgreen"]  ]  
+   ["feedback", 1 ],      #Whether or not to give feedback
+   ["mintime", 2000  ],     #Minimum transit time
+   ["maxtime", 10000],        #Maximumu transit time
+   ["spaceheight",600],
+   ["spacewidth",800],
+   ["bgcol","lightblue"],
+   ["wallcol","darkred"], 
+   ["targcol","darkgreen"]  ]  
 
-  gParams <- CreateParameters(parpairs,"params/timewall.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
   numTrials <- gParams.numtrials           #Number of trials
   feedback <- gParams.feedback             #Whether or not to give feedback
@@ -50,14 +50,13 @@ define Start(p)
 
    if(gSubNum+""=="0")
    {
-     gSubNum <- GetSubNum(gWin)
-   }
+      gSubNum <- GetSubNum(gWin)
+    }
 
   ##Hide the mouse:
   Showcursor(0)
 
-  MakeDirectory("data")
-  gFileOut <- FileOpenWrite("data/timewall-"+gSubNum+".csv")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"timewall","csv")
 
 inst <- "This is an experiment to see how well you can estimate the speed of a moving square target.  The target will always start at the top of the screen and descend at a constant rate toward the bottom.  After the target is two-thirds of the way down, it    will pass behind a wall and become invisible.    Your task is to press a button at the exact moment the moving target would pass through the notch marked at the very bottom of the display.  In making this judgement, you are not to count or use any other rhythm method to facilitate your judgement.     Instead, follow the target with your eyes and imagine it continuing straight down behind the wall to the notch. After you have pressed the button, you will receive feedback as to where the target actually was and whether you over or underestimated the time interval.   When you are ready, press a key on the keyboard and the next target shall emerge from the top.   The task continues for "+numtrials + " trials.  
 

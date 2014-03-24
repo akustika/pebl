@@ -3,7 +3,7 @@ define Start(p)
 
   parpairs <- [["stepsize",0.2]]  #small number specifying hom many rads/ms the
                                   #apparatus moves                
-  gParams <- CreateParameters(parpairs,"params/pathmemory.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 				  
   ##Currently designed for 800x600:
   gVideoWidth <- 800
@@ -30,10 +30,8 @@ define Start(p)
     gSubNum <- GetSubNum(gWin)
   }
 
-  MakeDirectory("data")
-  gFileOut <- FileOpenWrite("data/pathmemory-"+gSubNum+".csv")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"pathmemory","csv")
 
-  ##device colors
 
   grid <-[]
   x <- Sequence(0,800,100)

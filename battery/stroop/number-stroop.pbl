@@ -78,7 +78,7 @@ define Start(p)
    		["compressor","oggenc "]
                ]
 
-   gParams <- CreateParameters(parpairs,"params/number-stroop.pbl.par")
+   gParams <- CreateParameters(parpairs,gParamFile)
 
    Initialize()
 

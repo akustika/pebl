@@ -13,7 +13,7 @@ define Start(p)
                 ["domultiplechoice",1]] 
 
 
-   gParams <- CreateParameters(parpairs,"params/BNT.pbl.par")
+    gParams <- CreateParameters(parpairs,gParamFile)
 
     GetQuestions(gLanguage)
 

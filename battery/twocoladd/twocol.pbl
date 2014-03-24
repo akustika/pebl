@@ -18,9 +18,9 @@ define Start(p)
 	       ["isi",250],
                ["timeout",15000]]
 
-  gParams <- CreateParameters(parpairs,"params/twocol.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
-  numPracticeTrials <- gPramas.numpractice
+  numPracticeTrials <- gParmas.numpractice
   numTrials         <- gParams.numtrials
   isi <- gParams.isi
   gTimeout <- gParams.timeout
@@ -34,9 +34,9 @@ define Start(p)
      gSubNum <- GetSubNum(win)
    }
 
-   MakeDirectory("data")
-   gFileOut <- FileOpenWrite("data/twocol-"+gsubnum+".csv")
-   gSummaryFile <- FileOpenWrite("data/twocol-summary-"+gsubnum+".txt")
+
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"twocol","csv")
+   gSummaryFile <- GetNewDataFile(gSubNum,gWin,"twocol-summary","txt")
 
   ##The sound file to play:
   gBuzz <- LoadSound("buzz500ms.wav")

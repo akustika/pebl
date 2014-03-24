@@ -12,7 +12,7 @@ define Start(p)
 
 
 
-  gParams <- CreateParameters(parpairs,"params/sternberg.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
   stimulusSet <- SplitString(gParams.stimset,"")
 
@@ -22,6 +22,7 @@ define Start(p)
 
   gSleepEasy <- 1
   gwin <- MakeWindow("black")
+
   MakeDirectory("data")
   
   needsubnum <- 0

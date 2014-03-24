@@ -19,7 +19,7 @@ parpairs <- [["blocktime",180],# Duration of block in sec (default should be  3 
     ["randomizeblocks",0]]
 
 
-  gParams <- CreateParameters(parpairs,"params/mathproc.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
   sums <-Sequence(gParams.minsum,gParams.maxsum,1)
   gFeedback <- gParams.givefeedback
 
@@ -45,7 +45,7 @@ parpairs <- [["blocktime",180],# Duration of block in sec (default should be  3 
     }
 
     MakeDirectory("data")
-    gFileOut <- FileOpenWrite("data/mathproc-"+gSubNum+".txt")
+    gFileOut <- GetNewDataFile(gSubNum,gWin,"mathproc","csv")
 
   footer1 <- EasyLabel("Left Shift                                 Right Shift",gVideoWidth/2,gVideoHeight-120,gWin,30)
   footer2 <- EasyLabel("Sum less than 5                        Sum greater than 5",gVideoWidth/2,gVideoHeight-150,gWin,30)
@@ -140,7 +140,7 @@ The problems in this block will all have " + length + " numbers. You have a dead
   nerrs  <- VecSum(ntrials, VecTimes(ncorr,[-1,-1,-1]))
   ncomm <-  VecSum(nerrs,VecTimes(nslow,[-1,-1,-1]))
 
-  sumfile <- FileOpenWrite("mathproc-summary-"+gSubNum+".txt")
+  sumfile <- FileOpenWrite("mathproc-report-"+gSubNum+".txt")
   FilePrint(sumfile,"----------------------------------------------")
   FilePrint(sumfile,"Summary for the PEBL Mathematical Processing Task, Version 0.1")
   FilePrint(sumfile,"Released into public domain 2008 by Shane T. Mueller, Ph.D. (smueller at obereed dot net)")

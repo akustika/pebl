@@ -1,16 +1,18 @@
+##A simple math test for practec or 
+##
+##
+
 define Start(p)
 {
-
-
 
   parpairs <- [["duration",60],   ##time duration  of test in seconds
                ["block","a"],      ##add all types that you want to use
                ["block","A"],      ##ASMD = hard addition/subtr/mult/div
                ["block","aA"],     ##asmd = easy add/sub/mult/div
-               ["block","m"],      ##Add as many as you want.
-               ["block","M"],      ##Examples: Aa mixes easy and hard addition
-               ["block","mM"],     ##          ad mixes easy addition and division
-               ["block","aAmM"], 
+#               ["block","m"],      ##Add as many as you want.
+#               ["block","M"],      ##Examples: Aa mixes easy and hard addition
+#               ["block","mM"],     ##          ad mixes easy addition and division
+#               ["block","aAmM"], 
                ["requirecorrect",1], 
 	       ["givefeedback",1],
 	       ["shuffleblocks",1],
@@ -18,7 +20,7 @@ define Start(p)
                ]
 
 
-  gParams <- CreateParameters(parpairs,"params/mathtest.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
 
   gDuration <- gParams.duration  
@@ -49,7 +51,6 @@ define Start(p)
    FilePrint(gFileOutD,"sub,timestamp,condition,duration,testtype,endtime,problem,correctanswer,answer,correct,try,rt")
 
    }
-
 
  if(FileExists(fnameS))
    {

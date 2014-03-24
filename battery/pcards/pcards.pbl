@@ -25,9 +25,9 @@ define Start(p)
 	       ["rightlabel","right shift"]
 	       ]
 
-  gParams <- CreateParameters(parpairs,"params/pcards.pbl.par")
-  gTimeout <- gParams.timeout
+  gParams <- CreateParameters(parpairs,gParamFile)
 
+  gTimeout <- gParams.timeout
 
      ## how many corrects are needed before the shift.
      ## 2^7 is 128, so fewer than 1% of sets will be
@@ -66,8 +66,7 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
    }
 
-    MakeDirectory("data")
-   gFileOut <- FileOpenWrite("data/pcards-"+gSubNum+".csv")
+    gFileOut <- GetNewDataFile(gSubNum,gWin,"pcards","csv")
    gLogFile <- FileOpenAppend("data/pcards-log.txt")
    FilePrint(gLogFile,"pcards start " +GetTime() + " " + TimeStamp() +  " " + gSubNum + " " + practice)
 

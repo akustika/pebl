@@ -94,7 +94,7 @@ define Start(p)
                         # pull on the target.
 
    
-  gParams <- CreateParameters(parpairs,"params/ptracker.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
 
   Init()
@@ -110,17 +110,9 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
    }
 
-  MakeDirectory("data")
 
-  fname <- "data/ptracker-"+gSubNum+".csv"
-
-  needsHeader <- (not FileExists(fname))
-
-  gFileOut <- FileOpenWrite(fname)
-  if(needsheader)
-  {
-    FilePrint(gFileOut,"subnum,time,posX,posY,userdeltaX,userdeltaY,timeDelta,targetDeltaX,targetDeltaY,deviation,mouseD1,mouseD2")
-  }
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"ptracker","csv")
+  FilePrint(gFileOut,"subnum,time,posX,posY,userdeltaX,userdeltaY,timeDelta,targetDeltaX,targetDeltaY,deviation,mouseD1,mouseD2")
 
   inst <- EasyTextBox("Your goal in this task is to keep the ball near
   the target using your mouse or pointing device.  The test lasts

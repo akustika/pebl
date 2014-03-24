@@ -23,7 +23,7 @@ define Start(p)
 	       ["useAudiofeedback",1]
               ]
 
-  gParams <- CreateParameters(parpairs,"params/luckvogel.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
 
 
@@ -62,8 +62,9 @@ define Start(p)
 
 
   MakeDirectory("data")
-  outfile <- FileOpenWrite("data/luckvogel-"+gSubNum+".csv")
-  FilePrint(outfile,"subnum,trial,prestime,delay,size,same,resp,corr,rt")
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"luckvogel","csv")
+  FilePrint(gFileOut,"subnum,trial,prestime,delay,size,same,resp,corr,rt")
   gHeader <- EasyLabel("",gVideoWidth/2,gVideoHeight/2-gParams.fieldheight/2-30,gWin,30)
 
   bgField <- Rectangle(gVideoWidth/2,gVideoHeight/2,
@@ -170,7 +171,7 @@ define Start(p)
    loop(i,stim)
     {
       out <-  TrialSquares(First(i),Second(i))
-      FilePrint(outfile,gSubNum+","+trial+","+gParams.prestime+","+gParams.delaytime+","+
+      FilePrint(gfileOut,gSubNum+","+trial+","+gParams.prestime+","+gParams.delaytime+","+
                 First(i)+","+First(out)+","+Second(out)+","+Third(out)+","+Fourth(out))
 
      if(Mod(trial,gParams.blocksize)==0)

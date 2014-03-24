@@ -7,11 +7,9 @@ define Start(p)
 	       ["set",1],
 	       
 
-  gParams <- CreateParameters(parpairs,"params/typing.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
 
-
- 
   duration <- gparams.duration  ##short or long
   wordtype <- gParams.wordtype  ##words or lorem
   version <- gParams.set        ##1 through 4
@@ -28,17 +26,10 @@ define Start(p)
   }
 
 
- MakeDirectory("data")
- fname <- "data/typing-"+gsubnum+".csv"
 
- if(FileExists(fname))
-   {
-     ##File exists; see which ones they've used.
-   gFileOut <- FileOpenAppend(fname)     
-   } else {
-   gFileOut <- FileOpenWrite(fname)     
-   FilePrint(gFileOut,"sub,timestamp,condition,duration,wordtype,file,time,time2,wpm,cpm,tpm,completed,error")
-   }
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"typing","csv")
+  FilePrint(gFileOut,"sub,timestamp,condition,duration,wordtype,file,time,time2,wpm,cpm,tpm,completed,error")
+
   cont <- 1
   while(cont)
    {

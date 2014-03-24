@@ -26,7 +26,7 @@ define Start(p)
                ["DoWait", 0]]          ## Whether there should be a 'blow-up'
                                        ## of the screen
 
-  gParams <- CreateParameters(parpairs,"params/buildup.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
   gHomeX <- gVideoWidth/2
   gHomeY <- gVideoHeight/2
@@ -58,10 +58,10 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
    }
 
-  MakeDirectory("data")
-  gFileOut <- FileOpenWrite("data/instruc-" + gSubNum + ".txt")
-  gLogFile <- FileOpenAppend("data/instruc-log.txt")
-  FilePrint(gLogFile,"INSTRUC start " +GetTime() + " " + TimeStamp() +  " " + gSubNum + " " + cond)
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"msp-staircase","csv")
+  gLogFile <- FileOpenAppend("data/msp-staircase-log.txt")
+  FilePrint(gLogFile,"MSP,start," +GetTime() + "," + TimeStamp() +  "," + gSubNum + "," + cond)
   ShowCursor(0)
   Draw()
   
@@ -125,7 +125,7 @@ If you are correct, your next list will be one longer; otherwise it will be one 
  Memory Span: "+Mean(lengths)
   Draw()
 
-  FilePrint(gLogFile,"INSTRUC END " +GetTime() + " " + TimeStamp() + " " + gSubNum + " "+ cond)
+  FilePrint(gLogFile,"MSP,END," +GetTime() + "," + TimeStamp() + "," + gSubNum + ","+ cond)
 
   WaitForAnyKeyPress()
 
@@ -147,8 +147,8 @@ define Trial(len,rooms)
   stimid <- Shuffle(ChooseN(Sequence(1,9,1),len))
   stim <- ExtractListItems(rooms,stimid)
 
-  FilePrint_(gFileOut, gSubNum + " " + gTrialNum + " " + len + " "  +
-      ListToString(stimid)+ " ") 
+  FilePrint_(gFileOut, gSubNum + "," + gTrialNum + "," + len + ","  +
+      ListToString(stimid)+ ",") 
 
 
   ##First, display the stimuli, at appropriate rate
@@ -224,7 +224,7 @@ define Trial(len,rooms)
 
   }
 
-  FilePrint_(gFileOut, ListToString(responses) + " " )
+  FilePrint_(gFileOut, ListToString(responses) + "," )
 
 
   RemoveObjects(Second(tmp),gWin)
@@ -242,19 +242,19 @@ define Trial(len,rooms)
    Wait(500)
    RemoveObject(warn,gWin)
 
-   FilePrint_(gFileOut, corr + " " )
+   FilePrint_(gFileOut, corr + "," )
 
    ##print out RTs
    i <- 1
    loop(t,times)
     {
-      FilePrint_(gFileOut,t+ " " )
+      FilePrint_(gFileOut,t+ "," )
       i <- i + 1
     }
    #Pad the end with Xs
    while(i <= 9)
    {
-    FilePrint_(gFileOut,"X ")
+    FilePrint_(gFileOut,"X,")
      i <- i + 1
    }
     FilePrint(gFileOut,"")

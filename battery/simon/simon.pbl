@@ -15,7 +15,7 @@ define Start(p)
 	       ["rightcolor","blue"]
                 ]
 
-  gParams <- CreateParameters(parpairs,"params/simon.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
    
 
    gInstructions <-EasyTextBox("",50,20,gWin,18,gVideoWidth-100,200)
@@ -28,7 +28,8 @@ Practice now by hitting the shift keys to see which stimulus the map onto.  Hit 
    gSleepEasy <- 1
    
    MakeDirectory("data")
-   gFileout <-FileOpenWrite("data/simon-"+gSubNum+".csv")
+
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"simon","csv")
 
    ##This controls how many times through the 10-stimulus trial set we go
    reps <- gParams.reps

@@ -72,7 +72,7 @@ define Start(lPar)
 
 
 
-   gParams <- CreateParameters(parpairs,"params/pcpt.pbl.par")
+   gParams <- CreateParameters(parpairs,gParamFile)
    GetStrings(gLanguage)
 
 
@@ -137,10 +137,11 @@ define Start(lPar)
   ## Set up the basic  environment 
   ##
 
-  MakeDirectory("data")
-   datafile   <- FileOpenWrite("data/pcpt-"+ gSubNum + ".csv")
+
+   datafile <- GetNewDataFile(gSubNum,gWin,"pcpt","csv")
    masterdatafile <- FileOpenAppend("data/pooled-pcpt.csv")
-   reportfile <- FileOpenWrite("data/pcpt-report-" + gSubNum + ".txt")
+   reportfile <- GetNewDataFile(gSubNum,gWin,"pcpt-report","txt")
+
    
    log <- FileOpenAppend("data/pcpt-log.txt")
    FilePrint(log,"PCPT Started:  " + gSubNum + " " + TimeStamp())

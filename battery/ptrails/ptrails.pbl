@@ -38,11 +38,14 @@ define Start(p)
 		      ["targetcomplexxity",1.2]
                      ]
 
-       gParams <- CreateParameters(parpairs,"params/ptrails.pbl.par")
+   gParams <- CreateParameters(parpairs,gParamFile)
 
 #  SeedRng(304)
   gFile <- Round(Random()*10000)
-  gTmpFile <- FileOpenAppend("traillength"+gFile+".csv")
+
+
+
+  gTmpFile <- GetNewDataFile(gSubNum,gWin,"traillength","csv")
   gSleepEasy <- 0
   gWatch <- 0  ##for debugging; watch path layout
    
@@ -70,10 +73,9 @@ define Start(p)
   gAccentColor <- MakeColor("yellow")
   gstimFont <-  MakeFont(gPEBLBaseFontMono,0,18,gAccentColor,gStimColor,1)
   gclickedFont <- MakeFont(gPEBLBaseFontMono,1,18,MakeColor("grey35"),gStimColor,1)
-  MakeDirectory("data")
-  gFileOut <- FileOpenWrite("data/ptrails-"+gSubNum+".csv")
-  gSumFile <- FileOpenWrite("data/ptrails-summary-"+gSubNum+".csv")
 
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"ptrails","csv")
+  gSumFile <- GetNewDataFile(gSubNum,gWin,"ptrails-summary","csv")
 
     inst <- "In this study, your goal is to click on each circle, in sequence, as quickly as you can.  When you click on the correct circle, its number will change to boldface, and a line will be drawn from the previous circle to the new circle.  On some trials, the circles will be numbered from 1 to 26, and you should click on them in numerical order (1-2-3-4, and so on).   On other trials, the circles will have both numbers (1 to 13) and letters (A through L), and you should click on them in an alternating order (1-A-2-B-3-C and so on).  If you click the wrong circle, no line will be drawn.  The trial will continue until you have successfully clicked on all of the circles in the correct order. 
 

@@ -55,7 +55,7 @@ define Start(lPar)
                  ]
 
 
-    gParams <- CreateParameters(parpairs,"params/iowa.pbl.par")
+    gParams <- CreateParameters(parpairs,gParamFile)
 
 
 #   gParams.startvalue <- ToNumber(gParams.startvalue)
@@ -115,9 +115,7 @@ define Start(lPar)
 
 
   ## results are stored in tmpresults.dat
-  MakeDirectory("data")
-  gFileOut <-FileOpenWrite("data/igt-" + gSubNum +".csv")
-
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"igt","csv")
 
 
   ####################################################

@@ -6,7 +6,7 @@ define Start(p)
                 ["fieldwidth",400],
 		["fieldheight",400]]
 
-   gParams <- CreateParameters(parPairs,"params/switcher.pbl.par")
+   gParams <- CreateParameters(parPairs,gParamFile)
 
 
 #   gCols <- [MakeColor("red"),MakeColor("darkblue"),MakeColor("yellow"),MakeColor("grey"),MakeColor("darkgreen")]
@@ -39,9 +39,8 @@ define Start(p)
    }
 
    
-   MakeDirectory("data")
-   gFileOutSum <- FileOpenWrite("data/switch-summary-"+gSubNum+".csv")
-   gFileOut <- FileOpenWrite("data/switch-"+gSubNum+".csv")
+   gFileOutSum <- GetNewDataFile(gSubNum,gWin,"switch-summary","csv")
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"switch","csv")
 
    gRuleNames <- ["color","letter","shape","NA"]
    coltmplt <-   [1,1,2,2,3,3,4,4,5,5]

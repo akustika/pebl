@@ -44,7 +44,7 @@ define Start(lPar)
 	       ["tooslowThresh",3000],  ##Too slow time
 	       ["responsekey","X"]]         ##Response key to use.
 
-  gParams <- CreateParameters(parpairs,"params/SimpleRT.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
   blocks <- gParams.blocks       
   blocklength <- gParams.blocklength      
@@ -85,9 +85,7 @@ define Start(lPar)
   ## like sequential dependencies, distributions, fixed delays, etc.
   delayseq <- Shuffle(DesignBalancedSampling(delays, numtrials))
 
-  MakeDirectory("data")
-  datafile   <- FileOpenWrite("data/srt-"+ gSubNum + ".csv")
-
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"srt","csv")
 
  
   gInstructions.text <- "You are about to take part in a simple task.  In this task, you will see the symbol  '" +
@@ -149,7 +147,7 @@ define Start(lPar)
   Hide(gStim)
   Draw()
 
-  FilePrint(datafile, gSubNum + "," + block + "," + trial + "," +  time0 +"," + delay + "," + (time1-time0) + "," + (time3-time2) + "," + resp1 + "," + resp2) 
+  FilePrint(gFileOut, gSubNum + "," + block + "," + trial + "," +  time0 +"," + delay + "," + (time1-time0) + "," + (time3-time2) + "," + resp1 + "," + resp2) 
 
 
   ####################
@@ -176,6 +174,7 @@ define Start(lPar)
   ##Experiment is finished; print out summary stats
 
   reportfile <- FileOpenWrite("data/srt-report-" + gSubNum + ".txt")
+
    FilePrint(reportfile,"------------------------------------------------------")
    FilePrint(reportfile," Report for PEBL Simple Response Time Task Version 0.2")
    FilePrint(reportfile, " "+GetPEBLVersion())
@@ -221,7 +220,7 @@ define Start(lPar)
 
 
    FileClose(reportfile)
-   FileClose(datafile)
+   FileClose(gFileOut)
 
   ##Now, show debriefing info.
    SetText(gInstructions, "Thank you for participating in the experiment.  You may now leave.  (Press 'X' key to finish experiment)")

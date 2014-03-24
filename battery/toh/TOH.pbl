@@ -34,7 +34,7 @@ define Start(p)
 		["useturnlimit",0]]
 
 
-   gParams <- CreateParameters(parpairs,"params/TOH.pbl.par")
+   gParams <- CreateParameters(parpairs,gParamFile)
 
    GetStrings(gLanguage)
 
@@ -393,9 +393,8 @@ define InitPoles()
   gRect <- Rectangle(gbaseX+310,80,460,140,MakeColor("white"),1)
   AddObject(gRect,gWin)
 
-  MakeDirectory("data")
-  gFileOut <- FileOpenWrite("data/toh-"+gsubnum+".csv")
-  gFileOutSum <- FileOpenWrite("data/toh-summary-"+gsubnum+".csv")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"toh","csv")
+  gFileOutSum <- GetNewDataFile(gSubNum,gWin,"toh-summary","csv")
 
  }
 

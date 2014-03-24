@@ -39,7 +39,7 @@ define Start(p)
 	       ["shapepert",       20] #Max pixel distance of shape perturbation
                 ]   #Number of trials
 
-  gParams <- CreateParameters(parpairs,"params/objectjudgment-inv.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
   gshowTime <- gParams.showtime
   gwaitTime <- gParams.waittime
@@ -94,9 +94,7 @@ define Start(p)
     gSubNum <- GetSubNum(gWin)
   }
 
-  MakeDirectory("data")
-  gFileOut <- FileOpenWrite("data/objjudgeinv-"+gSubNum+".csv")
-
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"objjudgeinv","csv")
 
   gstimFont <-  MakeFont("VeraMono.ttf",0,18,MakeColor("yellow"),gStimColor,1)
   gclickedFont <- MakeFont("VeraMono.ttf",1,18,MakeColor("yellow"),gStimColor,1)

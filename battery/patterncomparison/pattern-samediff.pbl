@@ -30,8 +30,7 @@
 	       ["deadline",1500]
               ]
 
-  gParams <- CreateParameters(parpairs,"params/pattern-samediff.pbl.par")
-
+  gParams <- CreateParameters(parpairs,gParamFile)
 
   gSimilarFoil <- gParams.similarfoil
   gfoildiff    <- gParams.foildiff  
@@ -60,8 +59,7 @@
   gbackground  <-  MakeColor("navyblue")
   gDotColor    <-  MakeColor("white")
 
-  MakeDirectory("data")
-  gFileOut <- FileOpenWrite("data/patcompsd-"+gSubNum+".csv")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"patcompsd","csv")
 
   instruc <- "This test examines your ability to compare two patterns simultaneously.  The computer will present two patterns of dots to you, side by side on the screen.  You must decide, as quickly and accurately as possible, if  the two patterns are the same. You will indicate your answer by pressing the left or right shift keys on the keyboard. Press the left shift key  if the patterns on the screen are identical, or  the right shift key if the patterns are different. Once you press a key, the patterns will disappear, so it is important that you know your answer before you press either button. 
 

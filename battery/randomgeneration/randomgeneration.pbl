@@ -9,7 +9,7 @@ define Start(p)
 	       ["useflash",1]
                ]
 
-   gParams <- CreateParameters(parpairs,"params/randomgeneration.pbl.par")
+   gParams <- CreateParameters(parpairs,gParamFile)
 
    ##Here are the tokens to accept and the keys to use:
    ##you should be able to change these, plus some instructions, and 
@@ -29,8 +29,9 @@ define Start(p)
    gSleepEasy <- 1
    gwin <- MakeWindow("black")
    MakeDirectory("data")
-   gFileOut <- GetNewFile(gSubNum,gWin,"randomgen","csv")  
 
+
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"randomgen","csv")
 
    ##Here is the tone:
    beep <- MakeSineWave(300,200,.9)

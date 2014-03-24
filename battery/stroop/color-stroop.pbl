@@ -52,7 +52,7 @@ define Start(p)
 
                ]
 
-   gParams<- CreateParameters(parpairs,"params/color-stroop.pbl.par")
+   gParams<- CreateParameters(parpairs,gParamFile)
 
    gStimSize <- gParams.stimsize
 

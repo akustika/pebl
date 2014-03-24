@@ -14,7 +14,7 @@ define Start(p)
               ]
 
 
-  gParams <- CreateParameters(parpairs,"params/wpt.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
   numtrials <- gParams.numtrials
 
@@ -26,10 +26,8 @@ define Start(p)
   }
 
 
-
-  MakeDirectory("data")
-  fileout <- FileOpenWrite("data/wpt-"+gSubNum+".csv")
-  FilePrint(fileout,"subnum,trial,config,c1,c2,c3,c4,sampleprob,rainprob,time,rt,resp,outcome,correct")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"wpt","csv")
+  FilePrint(gFileout,"subnum,trial,config,c1,c2,c3,c4,sampleprob,rainprob,time,rt,resp,outcome,correct")
 
 
 #Table 2.
@@ -129,7 +127,7 @@ You will a point for every prediction you get correct, and lose a point for ever
     line <- Nth(stimtable,i)
     out <-     Trial(SubList(line,2,5),Nth(line,7))
 
-    FilePrint(fileout,MakeCSVLine(Flatten([[gSubNum,trial],line,out])))
+    FilePrint(gfileout,MakeCSVLine(Flatten([[gSubNum,trial],line,out])))
 
     if(Nth(out,6)==1)
     {

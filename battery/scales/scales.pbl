@@ -6,7 +6,7 @@ define Start(p)
 	       ["dowetdry",1],
 	       ["dotemp",1]]
 
-  gParams <- CreateParameters(parpairs,"params/scales.pbl.par")
+  gParams <- CreateParameters(parpairs,gParamFile)
 
   gSleepEasy <- 1
   gWin <- MakeWindow()
@@ -40,8 +40,8 @@ define Start(p)
     temp     <- ( TempChange(gWin))
    }
 
-  MakeDirectory("data")
-  fileout <- FileOpenWrite("data/comfort-"+gSubNum+".csv")
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"comfort","csv")
   filepool <- FileOpenAppend("data/comfort-pooled.csv")
 
   FilePrint(fileout, gSubNum + "," + TimeStamp() +","+ comf + "," + hotcold + ","+ wetdry + "," + temp)
