@@ -1221,3 +1221,107 @@ define GetNewDataFile(subnum,win,basename,extension,header)
 
   return fileout
 }
+
+
+
+
+
+define CombineDataFiles(directory,mergefilename,filter,exclude,headerMatch,
+                       addFileLine)
+{
+  ##first, get a listing of the files.
+  list <- GetDirectoryListing(directory)
+  header <- ""
+  fileLines <- []
+
+
+  id <- 1
+  while(id < Length(list))
+   {
+
+    i <- Nth(list,id)
+    if(not IsDotFile(i))
+      {
+    
+       ##First check if its a directory.
+      if(IsDirectory(directory+"/"+i))
+       {
+           sublist <- GetDirectoryListing(directory+"/"+i)
+	   loop(sfile,sublist)	
+            {
+
+	      if(not IsdotFile(sfile))	
+	      {
+                  PushOnEnd(list, directory+"/"+i+"/"+sfile)
+	      }
+            }
+       }else {
+
+      ##otherwise, its a file..
+       if(FindInString(i,filter,1) or filter=="")
+       {
+          ##We have a filter match to the filename.
+          if(not FindInString(i,exclude,1) or exclude=="")
+             {
+               fileIn <- FileReadList(i)
+ 	      ##detect a match to header and remove.
+              if(FindInString(First(filein),headermatch,1))
+		 {
+		    header <- First(filein)
+ 		    fileIn<-SubList(filein,2,Length(filein))
+
+ 
+                      if(addFileLine)
+                      {
+                         out <- []
+                             loop(line,fileIn)
+			      {
+                               PushOnEnd(out,i +","+line)
+                              }
+                        fileIn <- out
+
+                      }
+
+		 } 
+               PushOnEnd(fileLines,fileIn)
+                 
+
+	     }
+       }
+    } 
+  }
+   id <- id + 1
+ }
+
+
+
+  fileout <- FileOpenOverwrite(mergefilename)
+  if(not header=="") 
+     {
+     if(addFileLine)
+        {
+          header <- "FILE,"+header
+        }
+        FilePrint(fileout,header)
+      }
+   loop(i,Flatten(fileLines))
+     {
+
+        FilePrint(fileout,i)
+     }
+
+}
+
+##checks to see if a filename is .. or .
+define IsDotFile(i)
+{
+  
+  isdot <-   SubString(i,StringLength(i),1) == "."
+
+
+  if(StringLength(i)>1)
+  {
+    isdot <- isdot or (SubString(i,StringLength(i)-1,2) == "..")
+  }
+ return isdot
+}
