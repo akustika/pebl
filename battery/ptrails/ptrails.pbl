@@ -15,9 +15,9 @@ define Start(p)
 
                       ["useShortPath",1], ## Whether to shorten the path so points tend to
                                           ## be adjacent.
-		      ["shorteningtries",30],
-		      ["lengthenPath",0],
-		      ["pathScaleThresh",1.5],
+		      ["shorteningtries",1],   ##how many attempts do you make to shorten the path?  Default is 1, which is the original way
+
+
 		      ["numtrials",4], ##total number of trials per condition (A and B)
                       ##if usereitan == 1, 2 of them will be the Reitan configurations
 
@@ -31,28 +31,26 @@ define Start(p)
 		      ["targsize",25],  ##Size in pixels of targets (radius)
 		      ["TargclickSize",25], ##Size of click zone; may be smaller or larger
 		      ["pointtolerance",2],  # #minimum number of pixels of separation between targets 
-                                            ## (soft constraint that will be violated if proper
-                                            ## configuration cannot be found)
+                                             ## (soft constraint that will be violated if proper
+                                             ## configuration cannot be found)
 		      ["NumTargs", 26 ],     #Number of targets
 		      ["DrawLines", 1 ],     #Whether to draw lines
-		      ["targetcomplexxity",1.2]
+		      ["fieldwidth",700],
+		      ["fieldheight",500]
                      ]
 
    gParams <- CreateParameters(parpairs,gParamFile)
+   gParams.pathscalethresh <- 2 ##This isn't really used.
 
 #  SeedRng(304)
-  gFile <- Round(Random()*10000)
 
-
-
-  gTmpFile <- GetNewDataFile(gSubNum,gWin,"traillength","csv")
   gSleepEasy <- 0
   gWatch <- 0  ##for debugging; watch path layout
    
   ##Parameters controlling printable area for dots
   
-   fieldWidth <- 700
-   fieldHeight <- 500
+   fieldWidth <- gParams.fieldwidth
+   fieldHeight <- gParams.fieldheight
 
   gxmin <- gVideoWidth/2 - fieldWidth/2
   gxmax <- gVideoWidth/2 + fieldWidth/2
@@ -74,8 +72,12 @@ define Start(p)
   gstimFont <-  MakeFont(gPEBLBaseFontMono,0,18,gAccentColor,gStimColor,1)
   gclickedFont <- MakeFont(gPEBLBaseFontMono,1,18,MakeColor("grey35"),gStimColor,1)
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"ptrails","csv")
-  gSumFile <- GetNewDataFile(gSubNum,gWin,"ptrails-summary","csv")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"ptrails","csv",
+     "subnum,trial,clicks,hits,clicktime,posx,posy,corr,id,rt,rt2")
+
+
+  gSumFile <- GetNewDataFile(gSubNum,gWin,"ptrails-summary","csv",
+              "sub,type,distance,studytime,totaltime,mediantime,targs,clicks,acc")
 
     inst <- "In this study, your goal is to click on each circle, in sequence, as quickly as you can.  When you click on the correct circle, its number will change to boldface, and a line will be drawn from the previous circle to the new circle.  On some trials, the circles will be numbered from 1 to 26, and you should click on them in numerical order (1-2-3-4, and so on).   On other trials, the circles will have both numbers (1 to 13) and letters (A through L), and you should click on them in an alternating order (1-A-2-B-3-C and so on).  If you click the wrong circle, no line will be drawn.  The trial will continue until you have successfully clicked on all of the circles in the correct order. 
 
@@ -112,7 +114,8 @@ After the display appears, you can examine the circles as long as you want.  Tim
 	 tours <- []
 	 lengths <- []
 
-     
+         ##Try multiple times to shorten the path, to get a more consistent path.
+	 ##distance/complexity.
 	 loop(i,Sequence(1,gParams.shorteningtries,1))
 	 {
 	   ##always pick 1-2 as start-end (these are arbitrary anyway)
@@ -125,7 +128,6 @@ After the display appears, you can examine the circles as long as you want.  Tim
 	    PushOnEnd(tours,tour)
 	    PushOnEnd(lengths,tourlength)
 
-	    Print(TimeStamp()+ ","+gFile+","+ trial+","+i+","+tourlength)
             ###
             ##We have a grown the tour.  But to get a more consistent 'shortest' path,
             ##let's go through each element one-at-atime, remove it from the path, and re-add it.
@@ -151,23 +153,20 @@ After the display appears, you can examine the circles as long as you want.  Tim
 	    PushOnEnd(tours,tour)
 	    PushOnEnd(lengths,tourlength)
 
-	    FilePrint(gTmpFile,gFile+","+trial+","+i+","+tourlength)
-	    Print(TimeStamp()+ ","+gFile+","+ trial+","+i+","+tourlength)
+	   # FilePrint(gTmpFile,gFile+","+trial+","+i+","+tourlength)
+	   # Print(TimeStamp()+ ","+gFile+","+ trial+","+i+","+tourlength)
 	 }
 
 
 	 ##Choose the best one as the min-length standard:
-
 	 minLength <- Min(lengths)
 	 standard <- minlength * gParams.pathscalethresh
 	 deltas <- []
          loop(i,lengths)
          {
-   	   Print(i+"--"+standard+":"+(Abs(i-standard))/standard)
   	   PushOnEnd(deltas, Abs(i-standard))
          }
 
-	 Print(deltas)
 	 
 	 ##pick the tour that is closest to the target
 	 tour <- Nth(tours,ArgMin(deltas))
@@ -218,7 +217,7 @@ After the display appears, you can examine the circles as long as you want.  Tim
      types <- Merge([1,2,1,2],types)
    } 
 
-  FilePrint(gSumFile,"sub,type,distance,studytime,totaltime,mediantime,targs,clicks,acc")
+
 
    trial <- 1
    gHeader <- EasyLabel("",gVideoWidth/2,20,gWin,40)
@@ -823,7 +822,7 @@ define GrowPathInsert(tour,pts,mat)
   return   toura
 }
 
-##insterts a single point to the closest location on a path.
+##inserts a single point to the closest location on a path.
 define InsertPointOnPath(path,newpoint,pts,mat)
 {
 
