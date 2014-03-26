@@ -90,9 +90,9 @@ define Start(p)
        gSubNum <- GetSubNum(gWin)
     }
 
-   fileOut <- GetNewDataFile(gSubNum,gWin,"BST","csv")
+   fileOut <- GetNewDataFile(gSubNum,gWin,"BST","csv",
+     "subnum,type,block,congruency,trial,stim,resp,corr,rt,tooslow")
 
-   FilePrint(fileout,"subnum,type,block,congruency,trial,stim,resp,corr,rt,tooslow")
    inst <- EasyTextBox("",50,50,gWin,30,gVideoWidth-100,gVideoHeight-200)
 
    if(gUseMouse)
