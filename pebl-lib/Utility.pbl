@@ -1142,3 +1142,82 @@ define IsProperty(object,prop)
    list <- GetPropertyList(object)
    return(IsMember(prop,list))
 }
+
+
+## This will attempt to get an unused data file, with specified parameters; if it fails,
+## it query for a new subject code.
+##
+
+define GetNewDataFile(subnum,win,basename,extension,header)
+{
+  MakeDirectory("data")
+  MakeDirectory("data/"+subnum)
+  
+  fname <- "data/"+subNum+"/"+ basename +"-"+gSubNum+"."+extension
+
+  if(not FileExists(fname))
+  {
+      fileOut <- FileOpenWrite(fname)
+      if(not header=="")
+         {
+            FilePrint(fileOut,header)
+         }
+  
+  
+   }else { 	     
+
+   ##the file already exists!!!
+   ##skip the ask of we have reset the subnum previously.
+   ##that is, if we are saving multiple files and have already agreed
+   ##to append, a previous file, we should append this file too.
+
+
+   cont <- 1
+   while(cont)
+   {
+
+     ##loop until we either append or make a new file.
+      Print("greset:" + gResetSubNum)
+      if(gresetSubNum)   
+       {
+        opt <- "add"
+       }else 
+      {
+      opt <- GetEasychoice("Subject code ["+subnum+"] already in use for file ["+fname+"].  Choose new code or add session?",
+          ["Choose new code","Add Session"], ["new","add"],win)
+      }
+
+
+      if(opt == "add")
+      {
+        cont <- 0
+	fileOut <- FileOpenAppend(fname)
+	gResetSubNum <- 1
+      } else {
+
+        needsubcode <- 1
+        while(needsubcode)
+        {
+          ##Choose new code
+          gSubNum <- GetSubNum(gWin)
+          fname <- "data/"+gSubNum+"/"+ basename +"-"+gSubNum+"."+extension
+          if(not FileExists(fname))
+          {
+	    Print("file does not exist. creating it.")
+            MakeDirectory("data/"+gSubnum)
+            fileOut <- FileOpenWrite(fname)
+	    if(not header=="")
+              {
+               FilePrint(fileOut,header)
+   	      }
+           needsubcode <- 0
+           cont <- 0
+
+          }
+
+         }
+   }
+}}
+
+  return fileout
+}
