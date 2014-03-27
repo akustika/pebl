@@ -475,7 +475,7 @@ define FileSelect(p)
 
 	      ##update selection rectangle here
 	      clicky <- Second(gClick)
-		  newselected <- Floor((clicky-gPortal.y)/yheight)+1 + offset
+	      newselected <- Floor((clicky-gPortal.y)/yheight)+1 + offset
 
 		  ##if we click past the last entry, don't adjust selection
 		  if(newselected > Length(gFlatFileList))
@@ -1079,7 +1079,7 @@ define FileSelect(p)
       } elseif(tmp==34)
       {
         PushButton(combineData)
-        CombineDataDialog(gDirChain,Nth(gFlatFileList,gselected),win)
+        CombineDataDialog(gDirChain,Nth(gFlatFileList,gselected),logfile)
       }
 
 
@@ -1092,39 +1092,9 @@ define FileSelect(p)
 
 }
 
-
-define CombineDataDialog(dirchain,selected,win)
+define CombineDataDialog(dirChain,filename,logfile)
 {
-
-  ##Create background over current window.
-  rect <- Rectangle(gVideoWidth/2+110,gVideoHeight/2,gVideoWidth-200,gVideoheight,MakeColor("grey80"),1)
-  AddObject(rect,win)
-  Draw()
-
-    Print(dirchain)
-    Print(selected)
- ##we need:
-   ##directory: (dirchain)
-   ##mergfilename (create it)
-   ##file filter:
-   ##exclusion filter:
-   ##header match:
-   ##whether to add a file line:
-
-
-    
- directory <- DirListToText(dirchain)
-   mergefilename <- "data-pooled.csv"
-   filter <- "csv"
-   exclude <- "pooled"
-   header <- "sub"
-   addfileLine <- 1
-   
-     
-   CombineDataFiles(directory,mergefilename,filter,exclude,header,
-                       addFileLine)
-
-
+  RunScript(dirchain, "combinedatafiles.pbl",0,gLanguage, logfile,0,"")
 }
 
 
