@@ -2,16 +2,33 @@
 ## needs.
 ##
 
+## This has been imported into launcher directly, but it shuold still work if used in the script directory.
+##
 define Start(p)
 {
 
   scriptname <- First(p)
   win <- MakeWindow()
-  schema <- "params/"+scriptname+".schema"
-  paramsfile <- "params/"+scriptname+".par"
+  SetParameters(scriptname,"./",win)
+
+}
+
+define SetParameters(dirChain,scriptname,win)
+{
+ 
 
 
-  header <- EasyLabel("Editing parameters for "+scriptname,gVideoWidth/2,40,win,20)
+  ##Create background over current window.
+  rect <- Rectangle(gVideoWidth/2,gVideoHeight/2,gVideoWidth,gVideoheight,MakeColor("grey"),1)
+  AddObject(rect,win)
+
+
+  path <- DirListToText(dirchain) +"/params/"
+
+  schema <- path+scriptname+".schema"
+  paramsfile <- path+scriptname+".par"
+
+  header <- EasyLabel("Editing parameters for "+path+scriptname,gVideoWidth/2,40,win,20)
   schemas <- ReadSchemaFile(schema)
   ts <- Transpose(schemas)
   defaults <- Transpose([First(ts),Second(ts)])

@@ -1,0 +1,441 @@
+## This function will search for and combine data files within 
+## the directory you are running in.
+##
+
+define Start(p)
+{
+  gVideoWidth <- 800
+  gVideoHeight <- 600
+  gSleepEasy <- 1
+  gWin <- MakeWindow()
+
+  directory <- "."
+  filter <- ".csv"
+  exclude <- ""
+  filename <- "pooled.csv"
+
+  fontsize <- 12
+  gSelected <- 1
+
+  head <- EasyLabel("PEBL Data File Merge", gVideoWidth/2,20,gWin,30)
+
+
+
+  gFileWindow <- EasyTextBox("",300,50,gWin,fontsize,450,400)
+  gFileWindow.linewrap <-0
+
+  windowhead <- Easylabel("Files identified:",gfileWindow.x+gfilewindow.width/2,
+                           gfilewindow.y-8,gWin,fontsize)
+  gyHeight <- windowhead.height 
+
+  gfilepreview <- EasyTextBox("",300,470,gWin,fontsize,450,100)
+  gfilepreview.linewrap <- 0
+
+  gSelection <- Rectangle(gfileWindow.x+gfileWindow.width/2,0,
+                      gfileWindow.width,gyheight,MakeColor("black"),0)
+
+  AddObject(gSelection,gWin)
+
+  cb1 <- MakeCheckBox("Add filename to data",40,130,gWin,200)
+  cb2 <- MakeCheckBox("Files contain header",40,155,gWin,200)
+
+  filterBox <- EasyTextbox(filter,40,180,gWin,12,200,15)
+  excludeBox <- EasyTextbox(exclude,40,205,gWin,12,200,15)
+  filenamebox <-EasyTextbox(filename,40,230,gWin,12,200,15)
+
+
+  runfilter <- MakeButton(140,335,200,gWin,"Run filter")
+  combine   <- MakeButton(140,355,200,gWin,"Combine Files")
+  exit      <- MakeButton(140,375,200,gWin,"Exit")
+  
+  gfileList <- GetFileListing(directory,filter,exclude)
+  gfilewindow.text <- ListToText(gfilelist)
+
+
+  Draw()
+  objs <- [cb1,cb2]
+   cont <- 1
+   while (cont)
+   {
+
+
+
+     Draw()
+
+     out <- WaitForClickOnTarget([cb1,cb2,runfilter,filterbox,
+                                   excludebox,gfilewindow,filenamebox,
+				   combine,exit],
+                                      [1,2,3,4,5,6,7,8,9])
+     if(out==1)
+     {
+          ClickCheckBox(cb1)
+	  Draw()
+     }elseif(out==2)
+     {	
+          ClickCheckBox(cb2)
+	  Draw()
+     }elseif(out==3)
+     {
+        PushButton(runfilter)
+        gfilewindow.text <- ListToText(GetFileListing(directory,filter,exclude))
+         Draw()
+     } elseif(out==4)
+     {
+
+	   relx <- First(gClick) - (filterBox.x )
+	   rely <- Second(gClick) - (filterBox.y )
+
+  	   filterBox.cursorpos <-  GetTextBoxCursorFromClick(filterBox,relx,rely)
+
+	   filter <- GetInput(filterbox,"<return>",1)
+
+           gfilewindow.text <- ListToText(GetFileListing(directory,filter,exclude))
+	   SetSelected(1)
+	   Draw()
+     }elseif(out==5)
+     {  ##excludebox
+
+	   relx <- First(gClick) - (excludeBox.x )
+	   rely <- Second(gClick) - (excludeBox.y )
+
+  	   excludeBox.cursorpos <-  GetTextBoxCursorFromClick(excludeBox,relx,rely)
+
+	   exclude <- GetInput(excludebox,"<return>",1)
+	   gfileList <- GetFileListing(directory,filter,exclude)
+           gfilewindow.text <- ListToText(gfileList)
+	   SetSelected(1)
+	   Draw()
+     }elseif(out==6)
+     {  ##click on box
+        clicky <- Second(gClick)
+        SetSelected(Min([Floor((clicky-gfilewindow.y)/gyheight)+1 ,Length(gfilelist)]))
+
+	Draw()
+      } elseif(out==7)
+      {
+
+	   relx <- First(gClick) - (filenameBox.x )
+	   rely <- Second(gClick) - (filenameBox.y )
+
+  	   filenameBox.cursorpos <-  GetTextBoxCursorFromClick(filenameBox,relx,rely)
+	   filename <- GetInput(filenamebox,"<return>",1)
+	   Draw()
+     }elseif(out==8)
+     {
+     PushButton(combine)
+
+     CombineDataFiles(directory,filename,filter,exclude,"",cb1.state)
+
+     
+     }elseif(out==9)
+     {
+       PushButton(exit)
+       cont <- 0
+     }
+   }   
+
+}
+
+
+
+define GetFileListing(directory,filter,exclude)
+{
+
+  
+  filters <- SplitString(filter," ")
+  excludes <- SplitString(exclude," ")
+
+  ##first, get a listing of the files.
+  list <- GetDirectoryListing(directory)
+  header <- ""
+  fileListing <- []
+
+  id <- 1
+  while(id < Length(list))
+   {
+
+    i <- Nth(list,id)
+    if(not IsDotFile(i))
+      {
+    
+       ##First check if its a directory.
+      if(IsDirectory(directory+"/"+i))
+       {
+           sublist <- GetDirectoryListing(directory+"/"+i)
+	   loop(sfile,sublist)	
+            {
+
+	      if(not IsdotFile(sfile))	
+	      {
+                  PushOnEnd(list, directory+"/"+i+"/"+sfile)
+	      }
+            }
+       }else {
+
+      ##otherwise, its a file, so start filtering...
+      good <- 0
+      Print("FILTERS:")
+      Print(filters)
+  
+      if(Length(filters) == 0)
+       {
+         good <- 1
+       }
+  
+      if(Length(filters)>0)      
+      {
+       loop(filter,filters)
+        {
+          
+          if(FindInString(i,filter,1) or filter=="*")
+           {
+             good <- 1
+           }
+        }   
+       }
+
+       Print("EXCLUDES")
+       Print(excludes)
+       Print(Length(excludes))
+	if(Length(excludes)>0)
+        {
+         loop(exclude,excludes)
+	  {
+
+              if(not exclude=="")
+	      {
+ 	        Print("checking" + i + "\\" + exclude)
+                if(FindInString(i,exclude,1))
+   	        {
+	          Print("BADE")
+ 	          good <- 0
+                 }
+              }
+          }
+        }
+       if(good)
+       {
+        PushOnEnd(fileListing ,i)
+       }
+       }
+    }
+
+   id <- id + 1
+ }
+  return fileListing
+}
+
+## This will find .csv files and combine them,
+## removing the header if necessary.
+
+define CombineDataFiles(directory,mergefilename,filter,exclude,headerMatch,
+                       addFileLine)
+{
+
+      list <- GetFileListing(directory,filter,exclude)
+     fileLines <- []
+      loop(i,list)
+       {
+
+              fileIn <- FileReadList(i)
+ 	      ##detect a match to header and remove.
+              if(FindInString(First(filein),headermatch,1))
+		 {
+		    header <- First(filein)
+ 		    fileIn<-SubList(filein,2,Length(filein))
+
+ 
+                      if(addFileLine)
+                      {
+                         out <- []
+                             loop(line,fileIn)
+			      {
+                               PushOnEnd(out,i +","+line)
+                              }
+                        fileIn <- out
+
+                      }
+
+		 } 
+               PushOnEnd(fileLines,fileIn)
+                 
+
+	     }
+ 
+
+  fileout <- FileOpenOverwrite(mergefilename)
+  if(not header=="") 
+     {
+     if(addFileLine)
+        {
+          header <- "FILE,"+header
+        }
+        FilePrint(fileout,header)
+      }
+   loop(i,Flatten(fileLines))
+     {
+
+        FilePrint(fileout,i)
+     }
+
+}
+
+##checks to see if a filename is .. or .
+##this is just a helper for CombineDataFiles
+define IsDotFile(i)
+{
+  
+  isdot <-   SubString(i,StringLength(i),1) == "."
+
+
+  if(StringLength(i)>1)
+  {
+    isdot <- isdot or (SubString(i,StringLength(i)-1,2) == "..")
+  }
+ return isdot
+}
+
+
+define MakeButton(x,y,width,win,label)
+{
+
+
+   col <- MakeColor("grey70")
+   button <-MakeCanvas(width,20,col)
+
+   
+
+   font<- MakeFont(gPEBLBaseFont,0,15,MakeColor("black"),MakeColor("white"),0)
+   label <- MakeLabel(label,font)
+
+   ##If the label is bigger than the button, shrink it.
+   if(label.width > (button.width-6))
+    {
+	   label.zoomx <- (button.width-6)/(label.width)
+    }
+
+   AddObject(label,button)
+   Move(label,width/2,9)
+   Draw(button)
+   
+   rect <-Rectangle(Floor(button.width/2),Floor(button.height/2),button.width,button.height,MakeColor("grey25"),0)
+   AddObject(rect,button)
+   Draw(rect)
+   Move(rect,rect.x-1,rect.y-1)
+   Draw(rect)
+   Move(rect,rect.x-1,rect.y-1)
+   Draw(rect)
+#   Move(rect,rect.x-1,rect.y-1)
+#   Draw(rect)
+   RemoveObject(rect,button)
+
+   AddObject(button,win)
+   
+   Move(button,x,y)
+   
+   return button
+}
+
+define SetSelected(index)
+{
+   gSelected <- index
+   gSelection.y <- gfileWindow.y+gyheight*(gselected-.5)
+
+   file <- Nth(gfileList,gSelected)
+
+   if(FileExists(file))
+ 	{
+
+           gfilepreview.text <- FileReadText(file)
+         }else{
+           gfilepreview.text <- "File does not exist"
+         }
+
+}
+
+
+define PushButton(tmp)
+{
+	     Move(tmp,tmp.x+2,tmp.y+2)
+		 Draw()
+		 Wait(100)
+		 Move(tmp,tmp.x-2,tmp.y-2)
+		 Draw()
+}
+
+
+## xy is the center of the checkbox
+##
+define MakeCheckBox(label,x,y,win,width)
+{
+
+   col <- MakeColor("grey80")
+   back <-MakeCanvas(width,20,col)
+  
+   font<- MakeFont(gPEBLBaseFont,0,15,MakeColor("black"),MakeColor("white"),0)
+   label <- MakeLabel(label,font)
+
+   ##If the label is bigger than the button, shrink it.
+   if(label.width > (back.width-6))
+    {
+        label.zoomx <- (back.width-18)/(label.width)
+    }
+
+   AddObject(label,back)
+   Move(label,width/2+5,9)
+   Draw(label)
+   Hide(label)
+
+   check <- EasyTextBox("",4,4,back,10,12,12)
+   AddObject(check,back)
+
+   
+   rect <-Rectangle(back.x,back.y,back.width-1,back.height-1,MakeColor("grey25"),0)
+   AddObject(rect,back)
+   Move(rect,back.width/2,back.height/2)
+   Draw(rect)
+
+   AddObject(back,win)
+   Move(back,x+back.width/2+5,y+9)
+   
+   checkbox <- MakeCustomObject("checkbox")
+
+   checkbox.name <- "<CUSTOMOBJECT>"
+   checkbox.x <- back.x
+   checkbox.y <- back.y
+   checkbox.width <- back.width
+   checkbox.height <- back.height
+   checkbox.back <- back
+   checkbox.label <- label
+   checkbox.check <- check
+   checkbox.state <- 0
+   return checkbox
+}
+
+
+define ClickCheckBox(cb)
+{
+
+ cb.state <- 1- cb.state
+ check <- cb.check
+ if(cb.state)
+ {
+ 
+   check.text <-"X"
+ }else{
+   check.text <- ""
+ }
+ Draw(check)
+}
+
+define ListToText(list)
+{
+ text <- ""
+ sep <- ""
+ loop(i,list)
+ {
+    text <- text + sep +i
+    sep <- CR(1)
+ }
+return text
+}
