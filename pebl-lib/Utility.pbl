@@ -691,8 +691,9 @@ define Inside(click,object)
     
 
    if(IsImage(object) or IsLabel(object) or  IsCanvas(object) or
-      object.name == "<RECTANGLE>" or object.name == "<SQUARE>")
-   {
+      object.name == "<RECTANGLE>" or object.name == "<SQUARE>" or 
+      Uppercase(object.name) == "<CUSTOMOBJECT>")
+    {
 	##First, determine object limits
 	xlow <- object.x - object.width/2
 	xhigh <- object.x + object.width/2
@@ -716,7 +717,7 @@ define Inside(click,object)
           inside  <- (d <= object.r)
 
    } else {
-       SignalFatalError("Second argument of Inside(<click>,<object>) must either be an image, label, textbox, rectangle, square, or circle.")
+       SignalFatalError("Second argument of Inside(<click>,<object>) must either be an image, label, textbox, rectangle, square, or circle, or <CUSTOMOBJECT>.")
    }
 
 	return inside
@@ -943,7 +944,7 @@ define WaitForClickOnTarget(targetlist,keylist)
 
              if(Inside(pos,First(i)))
              {
-			    wait1 <- 0
+	        wait1 <- 0
                 ret <- Nth(i,2)
                 break
              }
@@ -1226,102 +1227,3 @@ define GetNewDataFile(subnum,win,basename,extension,header)
 
 
 
-define CombineDataFiles(directory,mergefilename,filter,exclude,headerMatch,
-                       addFileLine)
-{
-  ##first, get a listing of the files.
-  list <- GetDirectoryListing(directory)
-  header <- ""
-  fileLines <- []
-
-
-  id <- 1
-  while(id < Length(list))
-   {
-
-    i <- Nth(list,id)
-    if(not IsDotFile(i))
-      {
-    
-       ##First check if its a directory.
-      if(IsDirectory(directory+"/"+i))
-       {
-           sublist <- GetDirectoryListing(directory+"/"+i)
-	   loop(sfile,sublist)	
-            {
-
-	      if(not IsdotFile(sfile))	
-	      {
-                  PushOnEnd(list, directory+"/"+i+"/"+sfile)
-	      }
-            }
-       }else {
-
-      ##otherwise, its a file..
-       if(FindInString(i,filter,1) or filter=="")
-       {
-          ##We have a filter match to the filename.
-          if(not FindInString(i,exclude,1) or exclude=="")
-             {
-               fileIn <- FileReadList(i)
- 	      ##detect a match to header and remove.
-              if(FindInString(First(filein),headermatch,1))
-		 {
-		    header <- First(filein)
- 		    fileIn<-SubList(filein,2,Length(filein))
-
- 
-                      if(addFileLine)
-                      {
-                         out <- []
-                             loop(line,fileIn)
-			      {
-                               PushOnEnd(out,i +","+line)
-                              }
-                        fileIn <- out
-
-                      }
-
-		 } 
-               PushOnEnd(fileLines,fileIn)
-                 
-
-	     }
-       }
-    } 
-  }
-   id <- id + 1
- }
-
-
-
-  fileout <- FileOpenOverwrite(mergefilename)
-  if(not header=="") 
-     {
-     if(addFileLine)
-        {
-          header <- "FILE,"+header
-        }
-        FilePrint(fileout,header)
-      }
-   loop(i,Flatten(fileLines))
-     {
-
-        FilePrint(fileout,i)
-     }
-
-}
-
-##checks to see if a filename is .. or .
-define IsDotFile(i)
-{
-  
-  isdot <-   SubString(i,StringLength(i),1) == "."
-
-
-  if(StringLength(i)>1)
-  {
-    isdot <- isdot or (SubString(i,StringLength(i)-1,2) == "..")
-  }
- return isdot
-}
