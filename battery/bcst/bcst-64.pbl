@@ -50,8 +50,13 @@ define Start(lPar)
   ## results are stored in this file
 
 
+  gSleepEasy <- 1
+  Initialize()
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"bcst64","csv")
+
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"bcst64","csv",
+      "subnum,trial,run,rule,lastrule,color,shape,number,resp,corr,last_corr,corr_col,corr_shape,corr_num,persev,persev_err,abstime,rt")
 
   gSleepEasy <- 1
   persevs <- []
@@ -65,8 +70,7 @@ define Start(lPar)
 
   ## Initialize global objects for use later. Defined at end of file
 
-  gSleepEasy <- 1
-  Initialize()
+
 
 
   if(gUseMouse==0)
@@ -119,19 +123,20 @@ define Start(lPar)
    AddObject(comp2,gWin)
    AddObject(comp3,gWin)
    AddObject(comp4,gWin)
-   Move(comp1, 28 + 125/2, 105)
-   Move(comp2, 28*2 + 125 + 125/2,105)
-   Move(comp3, 28*3 + 125*2 + 125/2,105)
-   Move(comp4, 28*4 + 125*3 + 125/2,105)
+   Move(comp1, gVideoWidth/2 - 450 +28 + 125/2, 105)
+   Move(comp2, gVideoWidth/2 - 450+ 28*2 + 125 + 125/2,105)
+   Move(comp3, gVideoWidth/2 - 450+ 28*3 + 125*2 + 125/2,105)
+   Move(comp4,  gVideoWidth/2 - 450+28*4 + 125*3 + 125/2,105)
 
    if(gUseMouse == 0)
    {
      gHeader.text <- "1           2            3            4"
    }
-   Move(gHeader,320,220)
+
+   Move(gHeader,gVideoWidth/2-80,220)
    Show(gHeader)
 
-	gInstructions.text <- Nth(textlist,2)
+   gInstructions.text <- Nth(textlist,2)
    Draw()
    WaitForIt()
 
@@ -145,19 +150,19 @@ define Start(lPar)
                  
    tableau <- MakeCanvas(600,220,MakeColor("grey20"))
    AddObject(tableau,gWin)
-   Move(tableau,320,350)
+
 
   ##add the click-on boxes
 
-   box1 <- Rectangle(28+125/2,350,130,210,MakeColor("white"),0);AddObject(box1,gWin)
-   box2 <- Rectangle(28*2+125+125/2,350,130,210,MakeColor("white"),0);AddObject(box2,gWin)
-   box3 <- Rectangle(28*3+125*2+125/2,350,130,210,MakeColor("white"),0);AddObject(box3,gWin)
-   box4 <- Rectangle(28*4+125*3+125/2,350,130,210,MakeColor("white"),0);AddObject(box4,gWin)
+   box1 <- Rectangle(gVideoWidth/2 - 450 +28 + 125/2,340,130,210,MakeColor("white"),0);AddObject(box1,gWin)
+   box2 <- Rectangle(gVideoWidth/2 - 450 +28*2 +125+ 125/2,340,130,210,MakeColor("white"),0);AddObject(box2,gWin)
+   box3 <- Rectangle(gVideoWidth/2 - 450 +28*3 +125*2+ 125/2,340,130,210,MakeColor("white"),0);AddObject(box3,gWin)
+   box4 <- Rectangle(gVideoWidth/2 - 450 +28*4 +125*3+ 125/2,340,130,210,MakeColor("white"),0);AddObject(box4,gWin)
    Hide(box1)
    Hide(box2)
    Hide(box3)
    Hide(box4)
-
+   Move(tableau, (box2.x + box3.x)/2,340)
 
    Show(box1);Show(box2);Show(box3);Show(box4)
 
@@ -168,7 +173,7 @@ define Start(lPar)
   ## Begin presenting and collecting data
   ####################################################
  
-  FilePrint(gFileOut, "Subnum,trial,run,rule,lastrule,color,shape,number,resp,corr,last_corr,corr_col,corr_shape,corr_num,persev,persev_err,abstime,rt")
+
 ####################################################
 ##  Start the experimental trials.
 ## 
@@ -204,8 +209,8 @@ define Start(lPar)
       #Display the card
       card <- Nth(s,4)
       AddObject(card,gWin)
-      Move(card,700,480)
- 	  Draw()
+      Move(card,gVideoWidth/2+300,300)
+      Draw()
       time0 <- GetTime()
 
 	  ## Get the response
@@ -236,8 +241,10 @@ define Start(lPar)
       ##animate the card location.
 
       #Get end location
-      x <- 125/2 + 28*ToNumber(resp) + 125*(ToNumber(resp)-1)
-      y <- 350
+      clickon <- Nth([box1,box2,box3,box4],ToInteger(resp))
+      x <- clickon.x
+      y <- clickon.y
+
       ##compute distance to travel to scale frames to distance.
       dist <- Sqrt((y-card.y)^2 + (x-card.x)^2)
       #Increase stepsize to animate faster
@@ -256,8 +263,9 @@ define Start(lPar)
       }
 
       RemoveObject(card,gWin)
+      ##imprint the card on the tableau to keep it there.
       AddObject(card,tableau)
-      Move(card,x-20,110)
+      Move(card,x  - tableau.x + tableau.width/2+1,110)
       Draw(tableau)
       RemoveObject(card,tableau)
       Draw()
@@ -603,7 +611,7 @@ define Initialize()
    colRed   <- MakeColor("red")
  
  
-   gStimFont         <- MakeFont(gPEBLBaseFontMono, 0, 24,fg,bg,0)       
+   gStimFont         <- MakeFont(gPEBLBaseFontMono, 0, 35,fg,bg,0)       
    gCorrFont         <- MakeFont(gPEBLBaseFontMono, 0, 30,colGreen, bg,0)
    gIncorrFont       <- MakeFont(gPEBLBaseFontMono, 0, 30,colRed,   bg,0)
 
@@ -626,18 +634,17 @@ define Initialize()
    #Create the insturctions cue
    gPrompt <- MakeLabel(gPromptText,gStimFont)
    AddObject(gPrompt,gWin)
-   Move(gPrompt,350,gVideoHeight-80)
+   Move(gPrompt,gVideoWidth/2,gVideoHeight/2-440)
    Hide(gPrompt)
-
 
    gCorrect <- MakeLabel(gCorrectText,gCorrFont)
    AddObject(gCorrect,gWin)
-   Move(gCorrect,gVideoWidth/2,gVideoHeight-40)
+   Move(gCorrect,gVideoWidth/2,gVideoHeight-180)
    Hide(gCorrect)
   
    gIncorrect <- MakeLabel(gIncorrectText,gIncorrFont)
    AddObject(gIncorrect,gWin)
-   Move(gIncorrect,gVideoWidth/2,gVideoHeight-40)
+   Move(gIncorrect,gVideoWidth/2,gVideoHeight-180)
    Hide(gIncorrect)
 
  }

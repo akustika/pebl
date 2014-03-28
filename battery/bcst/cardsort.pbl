@@ -89,8 +89,8 @@ define Start(lPar)
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"bcst","csv")
-
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"bcst","csv",
+        "subnum,trial,run,rule,lastrule,color,shape,number,resp,corr,last_corr,corr_col,corr_shape,corr_num,persev,persev_err,abstime,rt")
   gSleepEasy <- 1
   persevs <- []
   totCorr <- 0
@@ -227,7 +227,7 @@ define Start(lPar)
   ## Begin presenting and collecting data
   ####################################################
  
-  FilePrint(gFileOut,"Subnum,trial,run,rule,lastrule,color,shape,number,resp,corr,last_corr,corr_col,corr_shape,corr_num,persev,persev_err,abstime,rt")
+
 ####################################################
 ##  Start the experimental trials.
 ## 
