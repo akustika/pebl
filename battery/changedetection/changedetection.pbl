@@ -27,9 +27,9 @@ define Start(par)
 
 
     parpairs <- [["Tolerance", 30],        ##How close you have to get to count as correct
-                ["UseBackground" 0],       ##Whether to use a faked background with many circles
-                ["numCircles, 50],         #Number of circles in field
-                                           ##  20 is pretty easy; 50 is a bigger challenge
+                 ["UseBackground", 0],       ##Whether to use a faked background with many circles
+                 ["numCircles", 50],         #Number of circles in field
+                                            ##  20 is pretty easy; 50 is a bigger challenge
 
                 ["RadMin", 10],   ## Minimum circle radius
                 ["RadMax", 30],   ## Maximum circle radius
@@ -76,8 +76,8 @@ define Start(par)
     }
 
 
-    MakeDirectory("data")
-    gFileOut <- GetNewDataFile(gSubNum,gWin,"change","csv")
+    gFileOut <- GetNewDataFile(gSubNum,gWin,"change","csv",
+            "subnum,trial,cond,x1,y1,r1,col1,x2,y2,r2,col2,blanks,shows,blanktime,showtime,corr,rt,clickx,clicky")
 
     if(guseBackground)
     {
@@ -148,7 +148,7 @@ Press any key to begin."
     Hide(tb)
     Draw()
     Wait(1000)
-    FilePrint(gFileOut,"subnum,trial,cond,x1,y1,r1,col1,x2,y2,r2,col2,blanks,shows,blanktime,showtime,corr,rt,clickx,clicky")
+
 
     i <- 1
     trials <- Shuffle(RepeatList([1,2,3,4],condsize))
