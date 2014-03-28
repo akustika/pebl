@@ -35,11 +35,12 @@ define Start(p)
 
 
 	
-   gFileOut <- GetNewDataFile(gSubNum,gWin,"ebbing-"+cond,"csv")
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"ebbing-"+gParams.cond,"csv",
+      "subNum,trial,corr,list,resplist,corrorder,resp,rounds,abstime,rt")
 
    MessageBox("In this task, you will see a list of "+length+" meaningless syllables.  Afterwards, you will be shown a screen with all of the syllables and be asked to choose the original order.  Choose all syllables, and when you are complete, the computer will determine whether you were correct.  Each list will repeat until you correctly remember the entire list twice in a row.  Once you do this, you will move to the next list.  You will learn a total of "+numlists+ " lists." ,gWin)
 
-   stim <- FoldList(MakeStimList(length*numlists,cond+".txt"),length)
+   stim <- FoldList(MakeStimList(length*numlists,gParams.cond+".txt"),length)
    gTrial <- 1
    learning1 <- []
    loop(i, stim)

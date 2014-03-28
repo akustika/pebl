@@ -101,35 +101,28 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
    }
 
+
+
   if(gParams.UseBeep)
    {
 ##    gBeep <- LoadSound("beep.wav")
-	  gBeep <- MakeSineWave(400,200,.8)
+      gBeep <- MakeSineWave(400,200,.8)
    }
-
-
-  MakeDirectory("data")  ##Make sure data exists
-  root <- "data/"+gSubNum
-  MakeDirectory(root)
-  MakeDirectory("data/summary")
-
-  gFileOutClick <- FileOpenWrite(root+"/corsi-"+dirlabel+"-detail"+ gSubNum + ".csv") ##individual subject data, each line is a click
-  gFileOutTrial <- FileOpenWrite(root+"/corsi-"+dirlabel+"-trial"+ gSubNum + ".csv") ##individual subject data,each line is a trial
-  gSumFile <- FileOpenWrite(root+"/corsi-"+dirlabel+"-data-summary_"+ gSubNum + ".txt") ##Individual summary
-
-
-  gLogFile <- FileOpenAppend("data/corsi-log.txt")             ##Basic start/end log
-
-
-  gPooled <- FileOpenAppend("data/summary/corsi-"+dirlabel+"-pooled.csv")              ##all data, pooled across subjects (one line per trial)
-  gPooledSummary <- FileOpenAppend("data/summary/corsi-"+dirlabel+"-pooled-sum.csv")   ##pooled summary, one line per subject run.
-
 
   head1 <- "subnum,direction,type,trialnum,order,trialstart,itemstart,itemend,abstime,rt,posx,posy"
   head2 <- "subnum,direction,type,trialnum,trialstart,length,stim,resp,numcorr,nummiss,allcorr,time"
 
-  FilePrint(gFileOutClick,head1)
-  FilePrint(gFileOutTrial,head2)
+
+   gFileOutClick <- GetNewDataFile(gSubNum,gWin,"corsi-detail","csv",head1)
+   gFileOutTrial <- GetNewDataFile(gSubNum,gWin,"corsi-trial","csv",head2)
+   gSumFile <-  GetNewDataFile(gSubNum,gWin,"corsi-summary","csv","")
+
+  MakeDirectory("data/summary")
+  gLogFile <- FileOpenAppend("data/corsi-log.txt")             ##Basic start/end log
+  gPooled <- FileOpenAppend("data/summary/corsi-"+dirlabel+"-pooled.csv")              ##all data, pooled across subjects (one line per trial)
+  gPooledSummary <- FileOpenAppend("data/summary/corsi-"+dirlabel+"-pooled-sum.csv")   ##pooled summary, one line per subject run.
+
+
 
    ##Add header to pooled file if we are blank
   if(Length(FileReadList("data/summary/corsi-"+dirlabel+"-pooled-sum.csv"))==0)
@@ -139,7 +132,6 @@ define Start(p)
    }
 
    FilePrint(gLogFile, gSubNum + "," + gLanguage + "," + TimeStamp()+",CORSI,"+dirlabel+",INITIATED") 
-
   Draw()
   
   inst <- EasyTextBox("",gHomeX-350,50,gWin,20,700,500) 

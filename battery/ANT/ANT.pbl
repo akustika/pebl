@@ -59,19 +59,19 @@ define Start(p)
 	 {
 	   gSubNum <- GetSubNum(gWin)
 	 }
-
+	header <- "subnum,block,trial,practice,cue,topbottom,targdir,flankercoherence,flankerdir,time0,delay,resp,corr,rt"
 	## Make data files   
 
-        gFileOut <- GetNewDataFile(gSubNum,gWin,"ANT","csv")
+        gFileOut <- GetNewDataFile(gSubNum,gWin,"ANT","csv",header)
 	gPooledFileOut <- FileOpenAppend("data/ANT-pooled.csv")
-	gSumFileOut <- GetNewDataFile(gSubNum,gWin,"ANT-summary","csv")
+	gSumFileOut <- GetNewDataFile(gSubNum,gWin,"ANT-summary","csv","")
 
 	gLog <- FileOpenAppend("data/ANT-log.csv")
 	gPooledSummary <- FileOpenAppend("data/ANT-all.csv")
 
 	## Add headers onto files.
 	flen <- Length(FileReadList("data/ANT-pooled.csv"))
-	header <- "subnum,block,trial,practice,cue,topbottom,targdir,flankercoherence,flankerdir,time0,delay,resp,corr,rt"
+
 	if(flen==0)
 	 {
 	   Print("Empty pooled data file.  Adding header")

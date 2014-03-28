@@ -37,15 +37,13 @@ define Start(lPar)
 
   ## results are stored in tmpresults.dat
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"donkey","csv")
-
   ##File header:
-  FilePrint(gFileOut, "sub,trial,resp,reward,penalty,net,total,abstime,rt")
-
   gSleepEasy <- 1 
 
   ## Initialize global objects for use later. Defined at end of file
   Initialize()
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"donkey","csv",
+              "sub,trial,resp,reward,penalty,net,total,abstime,rt")
 
 
 

@@ -68,9 +68,9 @@ define Start(p)
    ##Make data files   
 
 
-   gFileOut <- GetNewDataFile(gSubNum,gWin,"dots","csv")
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"dots","csv", "subnum,block,trial,practice,standard,thresh,side,corr,abstime,rt")
    gPooledFileOut <- FileOpenAppend("data/dots-pooled.csv")
-   gSumFileOut <- GetNewDataFile(gSubNum,gWin,"dots-summary","txt")
+   gSumFileOut <- GetNewDataFile(gSubNum,gWin,"dots-summary","txt","")
    gLog <- FileOpenAppend("data/dots-log.csv")
    gPooledSummary <- FileOpenAppend("data/dots-all.csv")
 

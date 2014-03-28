@@ -62,8 +62,8 @@ define Start(lPar)
   stimuli <- Shuffle(RepeatList(CrossFactorWithoutDuplicates(basestim),reps))
 
 
-  fileOut <- GetNewDataFile(gSubNum,gWin,"CRT","csv")
-  FilePrint(fileout,"subnum,targ,foil,time,delay,resp,corr,mask,presstart,respend,prestime,rt")
+  fileOut <- GetNewDataFile(gSubNum,gWin,"CRT","csv",
+  "subnum,targ,foil,time,delay,resp,corr,mask,presstart,respend,prestime,rt")
 
   loop(i, stimuli)
   {

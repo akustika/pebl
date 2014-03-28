@@ -69,9 +69,8 @@ define Start(p)
   }
 
 
-  fileOut <- GetNewDataFile(gSubNum,gWin,"connections","csv")
-
-  FilePrint_(fileout, "subnum,type,trial,width,height,length,sumdist,anglesum,sumoptions,entropy,numclicks,lastclick,rt,time")
+  fileOut <- GetNewDataFile(gSubNum,gWin,"connections","csv",
+            "subnum,type,trial,width,height,length,sumdist,anglesum,sumoptions,entropy,numclicks,lastclick,rt,time")
   seq <- Sequence(1,gwide*ghigh,1)
   loop(i,seq)
   {
@@ -80,8 +79,7 @@ define Start(p)
   FilePrint(fileout,"")
 
   ##create a log for each click we do.
-   gPathfileOut <- GetNewDataFile(gSubNum,gWin,"connections-path-practice","csv")
-
+   gPathfileOut <- GetNewDataFile(gSubNum,gWin,"connections-path-practice","csv","")
 
  ##Create 4 paths total
 
@@ -141,7 +139,7 @@ define Start(p)
 
   ##close the practice log and reopen.
   FileClose(gPathFileout)
-  gPathfileOut <- GetNewDataFile(gSubNum,gWin,"connections-path","csv")
+  gPathfileOut <- GetNewDataFile(gSubNum,gWin,"connections-path","csv","")
 
   tpaths <- []
   loop(i,paths)

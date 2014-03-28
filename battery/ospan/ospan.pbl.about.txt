@@ -1,3 +1,9 @@
+The PEBL Operation Span task
+ By: Hegarty, Simon O'Cahan and Hegarty, David Lawrence (2nd author)
+ Updated and maintained by Shane Mueller
+
+ Licensed under GPLv3
+
 -v distract=distraction.txt -v run=rundefn.txt
 
 feedbacktimeout: timeout for feedback - if <= 0 click for next

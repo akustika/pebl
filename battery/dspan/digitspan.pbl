@@ -77,8 +77,10 @@ define Start(lPar)
 
 
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"dspan-"+gDirection,"csv")
-  gReportFile <- FileOpenWrite(gSubNum,gWin,"dspan-report"+gDirection,"txt")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"dspan-"+gDirection,"csv",
+               "subnum,version,direction,endearly,trialnum,length,try,input,response,correct,resptime")
+
+  gReportFile <- GetNewDataFile(gSubNum,gWin,"dspan-report"+gDirection,"txt","")
   gPooledFile <- FileOpenAppend("data/pooled-dspan-"+gDirection+"-" + gSubNum +".csv")
 
   ShowCursor(1)
@@ -188,7 +190,7 @@ three lists at a specific length completely correctly."
    Draw()
 
 
-  FilePrint(gFileOut, "subnum,version,direction,endearly,trialnum,length,try,input,response,correct,resptime")
+
  
 ####################################################
 ####################################################

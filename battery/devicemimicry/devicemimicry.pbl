@@ -31,7 +31,10 @@ define Start(p)
   gSubNum <- GetSubNum(gWin)
   }
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"device","csv")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"device","csv",
+ "subNum,pathname,showarms,target,targetlength,targetdist,targetCrit,subLength,subDist,subCrit,stat1,stat2,stat3,stat4,score")
+
+
 
   ##device colors
    gArm1Col <- MakeColor("red")

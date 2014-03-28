@@ -80,9 +80,8 @@ define Start(p)
 
   tb.text <-  "Watch the red target. "+CR(2)+"Hit space bar when red circle skips a position."
  
-  fileOut <- GetNewDataFile(gSubNum,gWin,"clock","csv")
-
-  FilePrint(fileout,"subnum,trial,ticker,sec,skip,resp,corr,starttime,rt,curtime")  
+  fileOut <- GetNewDataFile(gSubNum,gWin,"clock","csv",
+               "subnum,trial,ticker,sec,skip,resp,corr,starttime,rt,curtime")  
 
   trial <- 1
   ticker <- 1

@@ -40,10 +40,11 @@ define Start(p)
                   ["startBalloonSize",10],
 		  ["moneyPerPump",.05],
 		  ["life1",8],
-		  ["life2,16],
+		  ["life2",16],
 		  ["life3",128],
 		  ["trialsperset",10]
                  ]
+
      gParams <- CreateParameters(parpairs,gParamFile)
 
 
@@ -77,9 +78,9 @@ define Start(p)
      lifes <- [gParams.life1,gParams.life2,gParams.life3]
      cols <- [MakeColor("darkorange"),Makecolor("gold"),MakeColor("darkslateblue")]
 
-     gFileOut <- GetNewDataFile(gSubNum,gWin,"bart","csv")
+     gFileOut <- GetNewDataFile(gSubNum,gWin,"bart","csv","subnum,trial,type,life,pumps,total,collected,burst,time")
       ##Do the instructions
-      inst <- EasyTextBox(gInstructions, 10,10,gWin,18,gVideoWidth-20,gVideoHeight-20)
+      inst <- EasyTextBox(gInstructions, gVideoWidth/2-400,10,gWin,18,800,400)
 
 	  Draw() 
 	  WaitForAnyKeyPress()
@@ -106,7 +107,7 @@ define Start(p)
 	  trials <- FlattenN([group1,group2,group3,group4],1)
 
 	  
-	  FilePrint(gFileOut,"subnum,trial,type,life,pumps,total,collected,burst,time")
+
 
       ##  Set up some global data here.
       ##
@@ -322,7 +323,7 @@ define Init()
 	  gSleepEasy <- 1
 
 	  gXB <- gVideoWidth/2
-	  gYB <- gVideoHeight-100
+	  gYB <- gVideoHeight-150
 		
     glabfont <- MakeFont(gPEBLBaseFont,0,18,MakeColor("white"),MakeColor("black"),0)	  
 	  gcollectLab <- MakeTextBox(gCollectMessage,glabfont,158,52)
