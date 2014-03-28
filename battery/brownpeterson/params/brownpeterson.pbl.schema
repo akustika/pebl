@@ -1,6 +1,7 @@
 usebeep|1|
 reps|8|
 repsintrial|1|
+beeptime|500|Beep time for counting, in ms.
 numdelays|6|Number of distinct delays to use.  Up to ten are possible. Relevant delays delay1..delay10 will be used. Default values are ones used by Peterson & Peterson, 1959.
 delay1|3|Time in seconds of first delay
 delay2|6|Time in seconds of 2nd delay
