@@ -12,6 +12,7 @@ define Start(p)
                ["reps",8],
 	       ["repsintrial",1],
 	       ["numdelays",6],
+	       ["beeptime",500],
 	       ["delay1",3],
 	       ["delay2",6],
 	       ["delay3",9],
@@ -48,8 +49,8 @@ define Start(p)
 
 
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"brownpeterson","csv")
-  FilePrint(gFileOut,"subcode,trial,ccc,number,delay,resp,corr,rt")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"brownpeterson","csv",
+       "subcode,trial,ccc,number,delay,resp,corr,rt")
 
   consonants <- FileReadList("UppercaseConsonants.txt")
 
@@ -176,7 +177,7 @@ define Trial(ccc,number,delay,reps)
    
    ##after 500 ms, Hide stimulus:
    tick <- time1
-   nexttick <- time1 + 1000
+   nexttick <- time1 + gParams.beeptime*2
 
    loop(i,Sequence(1,reps,1))
     {
@@ -187,7 +188,7 @@ define Trial(ccc,number,delay,reps)
       }
       Draw()
 
-      WaitUntil(tick + 500)
+      WaitUntil(tick + gParams.beeptime)
 
       Draw()
       if(gParams.UseBeep)
@@ -199,11 +200,11 @@ define Trial(ccc,number,delay,reps)
       Draw()
 
       tick <- nexttick
-      nexttick <- tick + 1000
+      nexttick <- tick + gParams.beeptime*2
     }
         
    ##After next tick,  start counting backward.
-   WaitUntil(tick+500)
+   WaitUntil(tick+gParams.beeptime)
    Show(stim)
    stim.text <- number
    Draw()
@@ -217,7 +218,7 @@ define Trial(ccc,number,delay,reps)
 
    ##beep/flash until time limit.
    id <- 1
-   while(GetTime()<countstart+delay*1000)
+   while(GetTime()<countstart+delay*gParams.beeptime*2)
    {
 
     WaitUntil(nexttick)
@@ -232,7 +233,7 @@ define Trial(ccc,number,delay,reps)
     Show(back)
     Draw()    
 
-    nexttick <- nexttick + 500
+    nexttick <- nexttick + gParams.beeptime
     Draw()
    }
     
