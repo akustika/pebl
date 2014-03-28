@@ -285,28 +285,37 @@ define GetFileListing(directory,filter,exclude)
 ## This will find .csv files and combine them,
 ## removing the header if necessary.
 
-define CombineDataFiles(directory,mergefilename,filter,exclude,headerMatch,
+define CombineDataFiles(directory,mergefilename,filter,
+                       exclude,headerMatch,
                        addFileLine)
 {
 
     header <- ""
-      list <- GetFileListing(directory,filter,exclude)
-     fileLines <- []
-      loop(i,list)
+    list <- GetFileListing(directory,filter,exclude)
+    fileLines <- []
+
+    loop(i,list)
        {
 
               fileIn <- FileReadList(i)
 
               if(headerMatch)
 	      {
+               ##We need to handle special-case emptyfiles that have
+ 	       ##only headers.
 
-	      if(Length(filein)>0)
+                
+ 	      if(Length(filein)>0)
 	         {
 		    header <- First(filein)
   	         }
+
 	      if(Length(filein)>1)
    	         {
              	    fileIn<-SubList(filein,2,Length(filein))
+		 }else{
+		    ##We have a header-only file.
+		    filein <- []
 		 }
               }
 
