@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformAudioOut.cpp
 //    Purpose:    Contains platform-specific audio playing routines
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -30,7 +30,13 @@
 
 #include "../../utility/PEBLPath.h"
 #include "../../utility/PError.h"
+
+
+#ifdef PEBL_EMSCRIPTEN
 #include "../../base/Evaluator.h"
+#else
+#include "../../base/Evaluator2.h"
+#endif
 
 #include "SDL/SDL.h"
 #include "SDL/SDL_audio.h"

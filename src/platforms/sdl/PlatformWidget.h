@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformWidget.h
 //    Purpose:    Contains SDL-specific interface for GUI Objects
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -61,8 +61,6 @@ public:
 
     //Draws a pixel on the widget.
     bool SetPoint(int x, int y, PColor col);
-
-   
     PColor GetPixel(int x, int y);
 
 

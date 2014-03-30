@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformFont.cpp
 //    Purpose:    Contains SDL-specific Font Classes
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -31,14 +31,20 @@
 
 #include "../../utility/PEBLPath.h"
 #include "../../utility/PError.h"
+#ifdef PEBL_EMSCRIPTEN
 #include "../../base/Evaluator.h"
+#else
+#include "../../base/Evaluator2.h"
+#endif
 
-#ifdef PEBL_OSX
+#if defined(PEBL_OSX) | defined(PEBL_EMSCRIPTEN)
 #include "SDL.h"
 #include "SDL_ttf.h"
+#include "SDL_rwops.h"
 #else
 #include "SDL/SDL.h"
 #include "SDL/SDL_ttf.h"
+#include "SDL/SDL_rwops.h"
 #endif
 
 #include <stdio.h>
@@ -54,6 +60,8 @@ using std::endl;
 
 bool is_utf8(std::string str)
 {
+
+
     if(str.length()==0)
         return false;
 
@@ -133,12 +141,58 @@ bool is_utf8(std::string str)
 
 
 
+//Stolen from
+// http://stackoverflow.com/questions/5134404/c-read-binary-file-to-memory-alter-buffer-write-buffer-to-file
+
+
+unsigned int getFileSize(FILE **file){
+    unsigned int size;
+    if(fseek(*file, 0, SEEK_END) == -1){ return -1; }
+    size = ftell(*file);
+    fseek(*file, 0, SEEK_SET);
+    return size;
+}
+
+
+
+char * getFileBuffer(FILE **file, unsigned int fileSize){
+    char *buffer = (char*)malloc(fileSize + 1);
+    fread(buffer, sizeof(char),fileSize,*file);
+    return buffer;
+}
+
+unsigned int readFileToMemory(const char path[], char ** buffr){
+
+    unsigned int fileSize;
+    FILE *file = fopen(path, "rb");
+    if(file != NULL){
+        fileSize = getFileSize(&file);
+        cout << "FIlesize: " << fileSize << endl;
+        char* buff = getFileBuffer(&file,fileSize);
+       
+
+        (*buffr) = buff;
+
+
+        fclose(file);
+        return fileSize;
+    }else{
+        *buffr = NULL;
+        return -1;
+    }
+}
+
+
+
 ///Convenience constructor of PlatformFont:
 PlatformFont::PlatformFont(const std::string & filename, int style, int size, PColor fgcolor, PColor bgcolor, bool aa):
     PFont(filename, style, size, fgcolor, bgcolor, aa)
 
 {
 
+
+
+    cout << "CREATING FONT 1\n";
     //    cout << "Path:" << Evaluator::gPath << endl;
     string fontname = Evaluator::gPath.FindFile(mFontFileName);
     if(fontname == "")
@@ -146,8 +200,44 @@ PlatformFont::PlatformFont(const std::string & filename, int style, int size, PC
 
     //These convert above properties to sdl-specific font
     //Open the font.  Should do error checking here.
-    mTTF_Font = TTF_OpenFont(fontname.c_str(), mFontSize);
+
+    int tries = 0;
+    mTTF_Font = NULL;
+
+    while(!mTTF_Font & tries < 10)
+        {
+
+
+            unsigned int size =  readFileToMemory(fontname.c_str(), &mBuffer);
+
+            SDL_RWops *rw = SDL_RWFromMem(mBuffer,size);
+            //            SDL_RWops * src = NULL;
+
+            //            if (rw != NULL) {
+            //
+            //                SDL_RWread(rw, src, sizeof (buf));
+            //                SDL_RWclose(rw);
+            //            }
+            //            SDL_RWops * src = SDL_RWFromFile(fontname.c_str(),"r");
+
+            //src->close();
+
+            mTTF_Font = TTF_OpenFontRW(rw,0,mFontSize); //0 indicates to leave the RW memory stream open 
+            //SDL_RWclose(rw);  //close the memory stream immediately. file when we are done.
+            //free( buffr);
+            tries++;
+        }
+
+    if(!mTTF_Font)
+        {
+
+            printf("Oh My Goodness, an error : [%s]\n", TTF_GetError());
+            PError::SignalFatalError("Failed to create font\n");
+        }
+
+#ifndef PEBL_EMSCRIPTEN
     TTF_SetFontStyle(mTTF_Font, mFontStyle);
+#endif
 
    //Translate PColor to SDLcolor for direct use in rendering.
     mSDL_FGColor = SDLUtility::PColorToSDLColor(mFontColor);
@@ -158,9 +248,10 @@ PlatformFont::PlatformFont(const std::string & filename, int style, int size, PC
 
 
 ///Copy constructor of PlatformFont:
-PlatformFont::PlatformFont(const PlatformFont & font)
+ PlatformFont::PlatformFont(const PlatformFont & font)
 
 {
+    cout << "CREATING FONT 2\n";
     mFontFileName    = font.GetFontFileName();
     mFontStyle       = font.GetFontStyle();
     mFontSize        = font.GetFontSize();
@@ -181,15 +272,18 @@ PlatformFont::PlatformFont(const PlatformFont & font)
 }
 
 
-
+///Fonts are not geting cleaned up, I think.
 ///Standard destructor of PlatformFont
 PlatformFont::~PlatformFont()
 {
 
-
+    std::cout << "Deleting font\n";
     TTF_CloseFont(mTTF_Font);
     mTTF_Font = NULL;
 
+    std::cout << "Freeing font buffer\n";
+    free( mBuffer);
+    mBuffer=NULL;
 }
 
 
@@ -221,7 +315,7 @@ void PlatformFont::SetBackgroundColor(PColor color)
 SDL_Surface * PlatformFont::RenderText(const std::string & text)
 {
 
-    #if 0
+#if 0
     cout << "About to render text [" << text  << "] with font " << *this << endl;
 
     int i  = 0;
@@ -234,6 +328,7 @@ SDL_Surface * PlatformFont::RenderText(const std::string & text)
 
     cout << endl;
 #endif
+
     //If there is no text, return a null surface.
     if(text=="") return NULL;
 
@@ -250,9 +345,16 @@ SDL_Surface * PlatformFont::RenderText(const std::string & text)
     //Using the RenderUTF8 stuff below has a hard time with 'foreign' characters; possibly because
     //the toberendered needs to be converted to UTF-8????
 
+    
+#ifdef PEBL_EMSCRIPTEN
+    tmpSurface =  TTF_RenderText_Blended(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor);
+#else
 
+    //Note, renderUTF paths are not available in EMSCRIPTEN.
     if(mAntiAliased)
         {
+
+
 
             // toBeRendered might need to be converted to UTF8
              if(is_utf8(toBeRendered))
@@ -275,7 +377,7 @@ SDL_Surface * PlatformFont::RenderText(const std::string & text)
                 tmpSurface =  TTF_RenderText_Blended(mTTF_Font, toBeRendered.c_str(), mSDL_FGColor);
              }
         }
-
+#endif
     //
     //TTF_RenderText_Blended(
     //TTF_Font *font, // This is the TTF_Font to use.

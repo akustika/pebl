@@ -28,6 +28,8 @@
 #include "../../devices/PNetwork.h"
 #include "../../utility/PError.h"
 
+#ifdef PEBL_NETWORK
+
 #ifdef PEBL_OSX
 #include "SDL.h"
 #include "SDL_net.h"
@@ -416,3 +418,5 @@ std::ostream& PlatformNetwork::SendToStream(std::ostream& out)const
   out << "<Network Connection: " << mHostName << ">";
 	return out;
 }
+
+#endif

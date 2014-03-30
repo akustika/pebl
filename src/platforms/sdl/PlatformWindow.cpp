@@ -30,6 +30,10 @@
 #include "../../base/Evaluator.h"
 #include "../../base/VariableMap.h"
 
+#ifdef PEBL_EMSCRIPTEN
+#include "emscripten.h"
+#endif
+
 #include "SDL/SDL.h"
 #include <stdio.h>
 
@@ -102,7 +106,7 @@ int PlatformWindow::GetVideoFlags()
             videoFlags |= SDL_HWACCEL;
         }
         }else{
-        cerr << "Guessing hardward available";
+        cerr << "Guessing hardware available";
             videoFlags  = SDL_HWSURFACE;
             videoFlags |= SDL_DOUBLEBUF; 
             videoFlags |= SDL_HWPALETTE;
@@ -112,6 +116,7 @@ int PlatformWindow::GetVideoFlags()
     }
 	return videoFlags;
 }
+
 
 
 
@@ -318,6 +323,7 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
             cerr << "--------------------------------------------------------------------------------\n\n";
 
             SDL_WM_SetCaption("PEBL Experiment","PEBL Experiment");
+
             return true;
         }
     return false;
@@ -326,6 +332,8 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
 
 bool PlatformWindow::Draw()
 {
+
+    //if (SDL_MUSTLOCK(mSurface)) SDL_LockSurface(mSurface);
  
     //First, draw the background       
     SDL_FillRect(mSurface, NULL, SDL_MapRGBA(mSurface->format, 
@@ -338,10 +346,16 @@ bool PlatformWindow::Draw()
     //Now, draw the subwidgets.
     PlatformWidget::Draw();
 
+    //    if (SDL_MUSTLOCK(mSurface)) SDL_UnlockSurface(mSurface);
     ///maybe we could use this on windows:
     ///IDirectDraw::WaitForVerticalBlank"    
+
+#ifdef PEBL_EMSCRIPTEN
+    int result = SDL_Flip(mSurface);    
+#else
     int result = SDL_Flip(mSurface);
-    
+#endif
+
     if(result == -2)
         {
             cerr << "Lost Video Memory; reload everything" ;

@@ -105,6 +105,7 @@ bool PlatformWidget::Draw()
             if (mParentSurface)
                 {        
                     
+                    //cout << "PRE mdrawxy" << mDrawX << "," << mDrawY << endl;
                     //Set a tmp surface to mSurface. If we are not rotozooming, it gets used 
                     //directly; otherwise, tmp will be a morphed version of the original.
                     SDL_Surface * tmp = mSurface;
@@ -133,9 +134,9 @@ bool PlatformWidget::Draw()
                             PWidget::SetProperty("ZOOMX",mZoomX);
                             PWidget::SetProperty("ZOOMY",mZoomY);
                             
-
-                            SetPosition(mX,mY); //Reset position so
-                            //images get centered properly
+                            
+                            //SetPosition(mX,mY); //Reset position so
+                            //objects get centered properly
                         }
                     else
                         {
@@ -158,12 +159,17 @@ bool PlatformWidget::Draw()
                             PWidget::SetProperty("HEIGHT", mHeight);
                             PWidget::SetProperty("ZOOMX",1);
                             PWidget::SetProperty("ZOOMY",1);
-                            SetPosition(mX,mY);
+                            //cout << "PRE2 mdrawxy" << mDrawX << "," << mDrawY << endl;
+                            //SetPosition(mX,mY);
+                            //cout << "POST1 mdrawxy" << mDrawX << "," << mDrawY << endl;
                         }
+
+                    //cout << "POST2 mdrawxy" << mDrawX << "," << mDrawY << endl;
 
                     SDL_Rect  fromRect = {0,0,mWidth,mHeight};
                     SDL_Rect  toRect   = {mDrawX,mDrawY,mWidth,mHeight};
                     //  unsigned long int start =SDL_GetTicks();
+                    //cout << "blitting to: " <<mDrawX << "," << mDrawY << endl;
                     SDL_BlitSurface(tmp, &fromRect, mParentSurface, &toRect);
                     //  unsigned long int end =SDL_GetTicks();
                     //     cout << "Time to BlitSurface:  " << end - start << endl;

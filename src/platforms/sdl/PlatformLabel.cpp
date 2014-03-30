@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformLabel.cpp
 //    Purpose:    Contains SDL-specific visual representation of a word
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -103,7 +103,8 @@ PlatformLabel::PlatformLabel(PlatformLabel & label):
 ///Standard Destructor
 PlatformLabel::~PlatformLabel()
 {
-
+    //cout << "Label destructor\n";
+ 
 }
 
 
@@ -215,10 +216,14 @@ bool PlatformLabel::Draw()
     if(mTextChanged)
         {
 
+            //cout << "Rendinging platform label\n";
             RenderText();
             //Reposition.  This just recalculates so things are centered
             //correctly; labels are positioned based on their center.
+            //cout << "Setting PL position\n";
             SetPosition(mX, mY);
+
+            //cout << "Initializing height/width properties\n";
             InitializeProperty("HEIGHT",mHeight);
             InitializeProperty("WIDTH",mWidth);
             //   mTextChanged = false;

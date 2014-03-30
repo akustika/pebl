@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformEventQueue.cpp
 //    Purpose:    Interface to platform-specific event queue.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004-2012 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -57,18 +57,20 @@ void PlatformEventQueue::Prime()
 	SDL_Event test_event;
     unsigned long int time = SDL_GetTicks();
 
+
 	//Get the next event in the queue. SDL_PollEvent returns 0
     //when there are no pending events available.
     while(SDL_PollEvent(&test_event))
         {
             
-
+            //cout << time << endl;
             //cout << "Event [" << (int)(test_event.type) << "]\n";
 
             //first, check to see if the event is the 'magic' abort event: ctrl-alt-shift-X.
 
             if(test_event.type == SDL_KEYDOWN)
                 {
+
                     if(test_event.key.keysym.sym == SDLK_BACKSLASH)
                         {
                             if((test_event.key.keysym.mod & KMOD_SHIFT )
@@ -82,21 +84,22 @@ void PlatformEventQueue::Prime()
                 }
 
             //Create a PEBL event from the SDL event, if possible.
-
+            //cout<<"type:" << test_event.type << endl;
             switch(test_event.type)
                 {
+
 
                 case SDL_KEYDOWN:
                     {
                         //Determine which key is being used.
-
+                        
                         PEvent evt(PDT_KEYBOARD, time);
                         PEBL_KeyboardEvent pke;
-  //                         cout <<  "PRESSED->[" << SDL_GetKeyName(test_event.key.keysym.sym)<<"] ";
-  //                          cout << test_event.key.keysym.unicode << "=|=" << (test_event.key.keysym.unicode & 0x7F)
-  //                         << "||" << test_event.key.keysym.scancode << "|\n";
+                        //cout <<  "PRESSED->[" << SDL_GetKeyName(test_event.key.keysym.sym)<<"] ";
+                        //cout << test_event.key.keysym.unicode << "=|=" << (test_event.key.keysym.unicode & 0x7F)
+                        //<< "||" << test_event.key.keysym.scancode << "|\n";
 
-                 //       cout << SDL_GetScancodeName(test_event.key.keysym.scancode) <<"\n";
+                        //cout << SDL_GetScancodeName(test_event.key.keysym.scancode) <<"\n";
 
 
                         pke.key = (PEBLKey)(test_event.key.keysym.sym);
@@ -212,10 +215,11 @@ void PlatformEventQueue::Prime()
                     break;
 #endif
                 default:
+                    cout << "Unknown event\n";
                     ;
                 }
-
+            //cout << "Loop active\n";
             time =  SDL_GetTicks();
-
+            //cout << "time: " << time << endl;
         }
 }

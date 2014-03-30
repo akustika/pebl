@@ -58,8 +58,15 @@ using std::ostream;
 PlatformKeyboard::PlatformKeyboard()
     //    mCDT(CDT_KEYBOARD)
 {
+ 
+    //EMSCRIPTEN uses sdl 2, which replaces getkeystat with getkeyboardstate
+#if defined PEBL_EMSCRIPTEN
+    mKeyboardState = SDL_GetKeyboardState(NULL);  
+    SDL_PumpEvents();
+#else
     mKeyboardState = SDL_GetKeyState(NULL);  
     SDL_PumpEvents();
+#endif
 }
 
 

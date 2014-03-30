@@ -32,7 +32,14 @@
 
 #include "../../utility/PEBLPath.h"
 #include "../../utility/PError.h"
+
+
+#ifdef PEBL_EMSCRIPTEN
 #include "../../base/Evaluator.h"
+#else
+#include "../../base/Evaluator2.h"
+#endif
+
 #include "../../base/PList.h"
 #include "../../base/PComplexData.h"
 

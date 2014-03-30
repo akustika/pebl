@@ -30,12 +30,12 @@
 #include "../../devices/DeviceState.h"
 
 
+#include <sys/time.h>
+#if defined(PEBL_UNIX) || defined(PEBL_EMSCRIPTEN)
 
-#ifdef PEBL_UNIX
 
- #include <sys/time.h>
 
-#else
+#elif defined( PEBL_WINDOWS) 
 
  #include <windows.h>
  #include <iostream>
@@ -140,7 +140,7 @@ int PlatformTimer::GetState(int iface) const
 
 void PlatformTimer::GetTimeOfDay(unsigned long & secs, unsigned long & msecs)
 {
-#ifdef PEBL_UNIX
+#if defined( PEBL_UNIX) || defined(PEBL_EMSCRIPTEN)
       struct timeval * tp=NULL;
        gettimeofday(tp,NULL);
 

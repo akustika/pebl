@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformFont.h
 //    Purpose:    Contains platform-specific font class.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -77,7 +77,8 @@ protected:
 private:
     
     std::string StripText(const std::string & text);
-  
+
+    char* mBuffer;  //buffer to hold font cached memory.
     TTF_Font * mTTF_Font;
     SDL_Color mSDL_FGColor;
     SDL_Color mSDL_BGColor;  

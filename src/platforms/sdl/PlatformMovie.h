@@ -4,7 +4,7 @@
 //    Purpose:    Contains SDL platform-specific movie playing
 //                code (using waave library)
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2012 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2012-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -84,7 +84,7 @@ public:
     virtual void SetWidth(int w);
     virtual void SetHeight(int h);
 
-    virtual void SetPlaybackPosition(unsigned long int x);
+    virtual void SetPlaybackPosition(unsigned long int  x);
     virtual void SetVolume(long double vol);
 
     virtual Variant GetProperty(std::string name)const;
@@ -101,6 +101,9 @@ private:
     SDL_Overlay * mOverlay;
     WVStream * mStream;
     WVStreamingObject* mStreamObj;
+
+
+
 
 };
 

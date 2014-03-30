@@ -27,14 +27,17 @@
 #ifndef __PLATFORM_NETWORK_H__
 #define __PLATFORM_NETWORK_H__
 
-#include "../../devices/PNetwork.h"
-#ifdef PEBL_OSX
+
+#if defined(PEBL_NETWORK)
+
+#if defined(PEBL_OSX)
 #include "SDL.h"
 #include "SDL_net.h"
 #else
 #include "SDL/SDL.h"
 #include "SDL/SDL_net.h"
 #endif
+#include "../../devices/PNetwork.h"
 
 class PlatformNetwork: public PNetwork
 {
@@ -75,6 +78,8 @@ public:
 
 
 protected:
+
+
     virtual Variant ConvertAddress(IPaddress* address);
 
     //Inheritable printing Method.
@@ -82,13 +87,15 @@ protected:
 
 private:
 
+
 	//pointer to a TCPSocket object used by SDL_net.
 	IPaddress * mAddress;  //Address I'm connected to
     IPaddress * mMyAddress; //My address (if known)
 	TCPsocket  mSocket;
     TCPsocket mListener; //Listening socket
-    
+
+
 };
 
-
+#endif
 #endif

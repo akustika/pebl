@@ -29,7 +29,12 @@
 #include "../../utility/PEBLPath.h"
 #include "../../utility/PError.h"
 #include "../../utility/PEBLUtility.h"
+#ifdef PEBL_EMSCRIPTEN
 #include "../../base/Evaluator.h"
+#else
+#include "../../base/Evaluator2.h"
+#endif
+
 #include "../../base/PEBLObject.h"
 
 //#include "SDL/SDL.h"
@@ -206,6 +211,8 @@ bool PlatformMovie::LoadMovie(const std::string &  moviefilename, PlatformWindow
     
 
 
+
+
     int streamType = WV_getStreamType(mStream);
     
 
@@ -217,12 +224,21 @@ bool PlatformMovie::LoadMovie(const std::string &  moviefilename, PlatformWindow
             location.x = 0;
             location.y = 0;
 
-
+#if 0
             mStreamObj = WV_getStreamOverlayObj(window->GetSDL_Surface(),&location);
             WV_setStreamingMethod(mStream, mStreamObj);
 
-            WV_loadStream(mStream);
+#else
+	    // mStreamObj = WV_getStreamOverlayObj(window->GetSDL_Surface(),&location);
+	    mStreamObj = WV_getStreamSurfaceObj (window->GetSDL_Surface(), &location,1);
+	    //  WV_resetStreamSurfaceOutput (mStreamObj, window->GetSDL_Surface(),&location);
+            WV_setStreamingMethod(mStream, mStreamObj);
+
+#endif
             //WVStreamingObject * 	WV_getStreamOverlayObj (SDL_Surface *targetSurface, SDL_Rect *destRect)
+
+            WV_loadStream(mStream);
+
 
             mLength = WV_getStreamDuration(mStream); 
             
@@ -282,7 +298,7 @@ bool PlatformMovie::LoadAudioFile(const std::string &  audiofilename)
     
     if(streamType == WV_STREAM_TYPE_VIDEO || streamType ==WV_STREAM_TYPE_AUDIOVIDEO)
         {
-	  std::cerr << "Waring: trying to load video file using LoadAudioFile\n";
+	  std::cerr << "Warning: trying to load video file using LoadAudioFile\n";
 
         }else if(streamType == WV_STREAM_TYPE_AUDIO )
       {

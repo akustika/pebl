@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformEnvironment.cpp
 //    Purpose:    Contains SDL-specific interface for the main environment.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -23,7 +23,7 @@
 //    You should have received a copy of the GNU General Public License
 //    along with PEBL; if not, write to the Free Software
 //    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 #include "PlatformEnvironment.h"
 
 #include "../../objects/PEnvironment.h"
@@ -31,9 +31,14 @@
 #include "../../base/PList.h"
 #include "../../base/PComplexData.h"
 
-#ifdef PEBL_OSX
+#ifdef PEBL_OSX 
 #include "SDL.h"
 #include "SDL_ttf.h"
+#elif defined(PEBL_EMSCRIPTEN)
+#include "SDL.h"
+#include "SDL_ttf.h"
+#include "SDL/SDL.h"
+#include "SDL/SDL_ttf.h"
 #else
 #include "SDL/SDL.h"
 #include "SDL/SDL_ttf.h"
@@ -103,36 +108,53 @@ void PlatformEnvironment::Initialize()
 //   freopen( "CON", "w", stderr );
 
     mIsInitialized = true;
-    if ( SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO| SDL_INIT_TIMER | SDL_INIT_NOPARACHUTE ) < 0 )
+
+#ifdef PEBL_EMSCRIPTEN
+#define SDLINIT_FLAGS SDL_INIT_VIDEO
+#else
+#define SDLINIT_FLAGS SDL_INIT_VIDEO|SDL_INIT_AUDIO|SDL_INIT_TIMER|SDL_INIT_NOPARACHUTE
+#endif
+    if ( SDL_Init(SDLINIT_FLAGS) < 0 )
         {
 
             cerr << "Unable to init SDL: " <<  SDL_GetError() << endl;;
             mIsInitialized = false;
         }
-    else if ( TTF_Init() < 0 )
-        {
-            /* Initialize the TTF library */
-            cerr <<  "Couldn't initialize TTF: " << SDL_GetError() << endl;
-            mIsInitialized = false;
-        }
-    else
-        {
-           // freopen( "CON", "w", stdout );
-           // freopen( "CON", "w", stderr );
+    else{
+        
+        std::cerr << "SDL INITIALIZED\n";
 
-            //SDL_EnableUNICODE(mUnicode);
-            SDL_EnableUNICODE(1);
-            cerr << "Successfully UNICODED" << endl;
-            cerr << "Successfully initialized SDL Graphics" << endl;
-            char name[32];
-            //I get a bad text here and essentially crash cerr???
-            //cerr  << "Using audio driver: " <<  SDL_AudioDriverName(name, 32) << endl;
+#ifdef PEBL_EMSCRIPTEN
+        if (TTF_Init() < 0 )
+#else
+        if (!TTF_WasInit() && TTF_Init() < 0 )
+#endif
+            {
+                /* Initialize the TTF library */
+                cerr <<  "Couldn't initialize TTF: " << SDL_GetError() << endl;
+                mIsInitialized = false;
+            } else
+            {
+                // freopen( "CON", "w", stdout );
+                // freopen( "CON", "w", stderr );
+                cerr <<"Unicode: " << mUnicode << endl;
+                SDL_EnableUNICODE(mUnicode);
+                //SDL_EnableUNICODE(1);
+                cerr << "Successfully UNICODED" << endl;
+                cerr << "Successfully initialized SDL Graphics" << endl;
+                char name[32];
+                //I get a bad text here and essentially crash cerr???
+                //cerr  << "Using audio driver: " <<  SDL_AudioDriverName(name, 32) << endl;
+                
+            }
+        
+        
 
-        }
-
+    }
     //This shouldn't be neded, if platformenvironment gets cleaned up alright,
     //but let's do it anyway.
     //atexit(SDL_Quit);
+    std::cerr << "SDL INITIALIZATION COMPLETE\n";
 }
 
 

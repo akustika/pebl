@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformWindow.h
 //    Purpose:    Contains platform-specific Main window
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -45,6 +45,7 @@
 
 class PlatformWindow: virtual public PWindow, virtual public PlatformWidget
 {
+
 public:
   
     PlatformWindow();
