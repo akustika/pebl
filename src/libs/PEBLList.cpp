@@ -947,7 +947,7 @@ Variant PEBLList::SubList(Variant v)
     PError::AssertType(v1, PEAT_LIST, "Argument error in first parameter of function [SubList(<list>, <int>, <int>)]:  ");    
 
     PList * tmpList = (PList*)(v1.GetComplexData()->GetObject().get());
-   vector<Variant>::iterator pstart = tmpList->Begin();    
+    vector<Variant>::iterator pstart = tmpList->Begin();    
     vector<Variant>::iterator p;
     vector<Variant>::iterator pend   = tmpList->End();
 
@@ -964,14 +964,12 @@ Variant PEBLList::SubList(Variant v)
        || end > (int)(tmpList->Length())
        || start > end )
         {
-            std::stringstream message;
-            
-            message << "[SubList] tried to extract items " << start << " to "  << end;
-            message <<  " of a " <<  tmpList->Length() << " item list.";
-            
-            std::string tmp;
-            message >> tmp;
-            PError::SignalFatalError(tmp);
+            Variant message;
+            message =   Variant("[SubList] tried to extract items ")+
+                Variant((int)start)+ Variant(" to ") + Variant((int)end) + 
+                Variant(" of a ")  + Variant((int)(tmpList->Length())) + Variant( " item list.");
+
+            PError::SignalFatalError(message);
         }
 
 
@@ -979,7 +977,6 @@ Variant PEBLList::SubList(Variant v)
     //There is now an iterator p, and an end to compare it to, and
     //an iterator to the pstart for resetting.
     //Make a new list to return.
-
 
     PList * returnList = new PList();
     Variant tmpVariant;
