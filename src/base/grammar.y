@@ -1,8 +1,6 @@
 %{
   
 #include "PNode.h"
-
-
 #include <stdio.h>
 #include <iostream>
 #include <cctype>
@@ -10,7 +8,15 @@
 #include <vector>
 #include <stack>
 
-  
+//This is taken directly from Defs.h  
+#ifdef PEBL_EMSCRIPTEN
+#define pDouble double
+#define pInt int
+#else
+#define pDouble long double
+#define pInt long int
+#endif
+
   // Prototypes to keep the compiler happy
   void yyerror (char *error);
   int  yylex ();
@@ -29,8 +35,8 @@
 
 %union {
   
-  long int    iValue;  /* For the lexical analyser. NUMBER tokens */
-  long double fValue;
+  pInt    iValue;  /* For the lexical analyser. NUMBER tokens */
+  pDouble fValue;
   char        *strValue; 
   PNode       *exp;    /* For expressions. */
   char        *symbol; /* The name of a variable*/
@@ -85,6 +91,39 @@
 %token   PEBL_VARLIST
 %token   PEBL_WHILE
 
+ /*These 'tokens' are never created by the parser; they are used  */
+ /* 
+   to create a non-recursive evaluator, but are defined here to allow them to 
+   be in the same numeric sequence. Not all will probably be used.
+*/
+%token   PEBL_AND_TAIL 
+%token   PEBL_ADD_TAIL 
+%token   PEBL_ASSIGN_TAIL 
+%token   PEBL_BREAK_TAIL 
+%token   PEBL_DIVIDE_TAIL 
+%token   PEBL_EQ_TAIL
+%token   PEBL_GE_TAIL 
+%token   PEBL_GT_TAIL 
+%token   PEBL_IF_TAIL 
+%token   PEBL_LE_TAIL 
+%token   PEBL_LISTITEM_TAIL 
+%token   PEBL_LOOP_TAIL1    
+%token   PEBL_LOOP_TAIL2
+%token   PEBL_LT_TAIL 
+%token   PEBL_MULTIPLY_TAIL 
+%token   PEBL_NE_TAIL 
+%token   PEBL_NOT_TAIL 
+%token   PEBL_OR_TAIL 
+%token   PEBL_POWER_TAIL 
+%token   PEBL_RETURN_TAIL 
+%token   PEBL_SUBTRACT_TAIL 
+%token   PEBL_STATEMENTS_TAIL1    
+%token   PEBL_STATEMENTS_TAIL2    
+%token   PEBL_WHILE_TAIL          
+%token   PEBL_WHILE_TAIL2         
+%token   PEBL_FUNCTION_TAIL1         
+%token   PEBL_FUNCTION_TAIL2         
+%token   PEBL_FUNCTION_TAIL_LIBFUNCTION
 
 %token  <fValue>      PEBL_FLOAT
 %token  <iValue>      PEBL_INTEGER
@@ -140,21 +179,31 @@ function:	/*Syntax allows there to be a newline between the varlist and the bloc
 		$$ = new OpNode(PEBL_FUNCTION, tmpNode, tmpFN, sourcefilename, yylineno);
 
         }
-
+               /*empty argument list:*/
 	       /******************************************************************************/
 	|	PEBL_DEFINE PEBL_FUNCTIONNAME PEBL_LPAREN PEBL_RPAREN  nlornone functionblock    { ;
 		PNode * tmpFN = new OpNode(PEBL_LAMBDAFUNCTION, NULL, $6, sourcefilename, yylineno);  
 		PNode * tmpNode = new DataNode(Variant($2, P_DATA_FUNCTION), sourcefilename, yylineno);
 		$$ = new OpNode(PEBL_FUNCTION, tmpNode, tmpFN, sourcefilename, yylineno);
-        free($2);
+                free($2);
 		  }
 	;	
 
 
 functionblock:	/*============================================================================*/
 		/******************************************************************************/
-		/*A functionblock can either be a block or a block with a return token at the end*/
-		block                                               {$$ = $1;}
+		/*A functionblock can either be a block or a block with a return token at end*/
+
+                /*In the case of just a block of code, we need an implicit return value (of 0)*/
+		block {
+		   /*When no return value is provided, return 1 (true)*/
+                  DataNode* retval  = new DataNode (Variant(1), sourcefilename, yylineno);
+		  OpNode *tmpReturn = new OpNode(PEBL_RETURN, retval, NULL, sourcefilename, yylineno);
+    	           $$ = new OpNode(PEBL_STATEMENTS,$1,tmpReturn,sourcefilename,yylineno);
+                 }
+		 /*$$ = $1;}*/
+
+
 	|	PEBL_LBRACE nlornone functionsequence PEBL_RBRACE   {$$ = $3;}
 ;
 
@@ -167,8 +216,8 @@ functionsequence:   returnstatement  nlornone          { $$ = $1;}
 block:		PEBL_LBRACE nlornone sequence nlornone PEBL_RBRACE   { $$ = $3;}
 |           PEBL_LBRACE nlornone endstatement {$$ = $3;}
 |           PEBL_LBRACE nlornone sequence nlornone  endstatement {
-  $$  = new OpNode(PEBL_STATEMENTS, $3, $5, sourcefilename, yylineno)}
-|       PEBL_LBRACE nlornone PEBL_RBRACE { $$ = new DataNode (Variant(0), sourcefilename, yylineno)}  //why can't we allow null expressions?
+  $$  = new OpNode(PEBL_STATEMENTS, $3, $5, sourcefilename, yylineno);}
+|       PEBL_LBRACE nlornone PEBL_RBRACE { $$ = new DataNode (Variant(0), sourcefilename, yylineno);}  //why can't we allow null expressions?
 ;
 
 
@@ -261,6 +310,7 @@ returnstatement: PEBL_RETURN statement    {$$ = new OpNode(PEBL_RETURN, $2, NULL
 		
 	;
 
+
 elseifseq:   PEBL_ELSE nlornone block {
 
 		$$ = $3; }
@@ -337,7 +387,7 @@ varlist:	/*=====================================================================
 exp:	        datum                   { $$ = $1;}
 		/******************************************************************************/
 
-	|	PEBL_LPAREN nlornone exp nlornone PEBL_RPAREN    {$$ = $3}
+        |	PEBL_LPAREN nlornone exp nlornone PEBL_RPAREN    {$$ = $3;}
 
 		/******************************************************************************/
 	|        PEBL_SUBTRACT exp %prec PEBL_UMINUS    {
@@ -397,7 +447,11 @@ exp:	        datum                   { $$ = $1;}
 		*** by its list of arguments in parentheses.  This does not check for
 		*** legality; this type of checking is done later by the loader.*/
 		PEBL_FUNCTIONNAME arglist {
-		PNode * tmpNode = new DataNode(Variant($1, P_DATA_FUNCTION), sourcefilename, yylineno);
+
+
+		  /*Memory leak here, by electricfence*/
+		Variant v = Variant($1,P_DATA_FUNCTION);
+		PNode * tmpNode = new DataNode(v, sourcefilename, yylineno);
 		$$ = new OpNode(PEBL_FUNCTION, tmpNode, $2, sourcefilename, yylineno);
 		free($1);
 		}

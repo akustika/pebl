@@ -1,10 +1,8 @@
+/* A Bison parser, made by GNU Bison 2.5.  */
 
-/* A Bison parser, made by GNU Bison 2.4.1.  */
-
-/* Skeleton interface for Bison's Yacc-like parsers in C
+/* Bison interface for Yacc-like parsers in C
    
-      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
-   Free Software Foundation, Inc.
+      Copyright (C) 1984, 1989-1990, 2000-2011 Free Software Foundation, Inc.
    
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -86,14 +84,42 @@
      PEBL_VARIABLEDATUM = 302,
      PEBL_VARLIST = 303,
      PEBL_WHILE = 304,
-     PEBL_FLOAT = 305,
-     PEBL_INTEGER = 306,
-     PEBL_STRING = 307,
-     PEBL_SYMBOL = 308,
-     PEBL_LOCALVAR = 309,
-     PEBL_GLOBALVAR = 310,
-     PEBL_FUNCTIONNAME = 311,
-     PEBL_UMINUS = 312
+     PEBL_AND_TAIL = 305,
+     PEBL_ADD_TAIL = 306,
+     PEBL_ASSIGN_TAIL = 307,
+     PEBL_BREAK_TAIL = 308,
+     PEBL_DIVIDE_TAIL = 309,
+     PEBL_EQ_TAIL = 310,
+     PEBL_GE_TAIL = 311,
+     PEBL_GT_TAIL = 312,
+     PEBL_IF_TAIL = 313,
+     PEBL_LE_TAIL = 314,
+     PEBL_LISTITEM_TAIL = 315,
+     PEBL_LOOP_TAIL1 = 316,
+     PEBL_LOOP_TAIL2 = 317,
+     PEBL_LT_TAIL = 318,
+     PEBL_MULTIPLY_TAIL = 319,
+     PEBL_NE_TAIL = 320,
+     PEBL_NOT_TAIL = 321,
+     PEBL_OR_TAIL = 322,
+     PEBL_POWER_TAIL = 323,
+     PEBL_RETURN_TAIL = 324,
+     PEBL_SUBTRACT_TAIL = 325,
+     PEBL_STATEMENTS_TAIL1 = 326,
+     PEBL_STATEMENTS_TAIL2 = 327,
+     PEBL_WHILE_TAIL = 328,
+     PEBL_WHILE_TAIL2 = 329,
+     PEBL_FUNCTION_TAIL1 = 330,
+     PEBL_FUNCTION_TAIL2 = 331,
+     PEBL_FUNCTION_TAIL_LIBFUNCTION = 332,
+     PEBL_FLOAT = 333,
+     PEBL_INTEGER = 334,
+     PEBL_STRING = 335,
+     PEBL_SYMBOL = 336,
+     PEBL_LOCALVAR = 337,
+     PEBL_GLOBALVAR = 338,
+     PEBL_FUNCTIONNAME = 339,
+     PEBL_UMINUS = 340
    };
 #endif
 
@@ -103,12 +129,12 @@
 typedef union YYSTYPE
 {
 
-/* Line 1676 of yacc.c  */
-#line 30 "src/base/grammar.y"
+/* Line 2068 of yacc.c  */
+#line 36 "src/base/grammar.y"
 
   
-  long int    iValue;  /* For the lexical analyser. NUMBER tokens */
-  long double fValue;
+  pInt    iValue;  /* For the lexical analyser. NUMBER tokens */
+  pDouble fValue;
   char        *strValue; 
   PNode       *exp;    /* For expressions. */
   char        *symbol; /* The name of a variable*/
@@ -116,8 +142,8 @@ typedef union YYSTYPE
 
 
 
-/* Line 1676 of yacc.c  */
-#line 121 "src/base/grammar.tab.hpp"
+/* Line 2068 of yacc.c  */
+#line 147 "src/base/grammar.tab.hpp"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

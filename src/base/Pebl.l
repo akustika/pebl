@@ -2,7 +2,7 @@
 //    Name:       src/base/Pebl.l
 //    Purpose:    Defines lexer for use with Flex
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -30,6 +30,8 @@ It identifies lexemes in a PEBL program.
 
 */
 %option yylineno
+%option noinput
+%option nounput 
 %{
 #include <stdlib.h>
 #include "PNode.h"            //This needed because PNode isn't defined in grammar.tab.hpp
@@ -37,6 +39,7 @@ It identifies lexemes in a PEBL program.
 #include "../utility/PEBLUtility.h"
 #include <string.h>
 #include <math.h>
+
 
 void yyerror(char *);
 
@@ -74,7 +77,7 @@ bomF      \xff\xfe
                  return PEBL_INTEGER;
                };
 
-{float}        { yylval.fValue = PEBLUtility::StringToLongDouble(yytext);
+{float}        { yylval.fValue = PEBLUtility::StringToPDouble(yytext);
                  return PEBL_FLOAT;
                };
 
