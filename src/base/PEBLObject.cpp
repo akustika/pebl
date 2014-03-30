@@ -3,7 +3,7 @@
 //    Name:       src/base/PEBLObjectBase.cpp
 //    Purpose:    Contains a simple list class, part of the Variant Class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -29,7 +29,7 @@
 #include "../base/PComplexData.h"
 #include "../utility/PError.h"
 #include <stdio.h>
-
+ 
 using std::cout;
 using std::cerr;
 using std::endl;
@@ -58,6 +58,7 @@ PEBLObjectBase::PEBLObjectBase(const PEBLObjectBase & pob)
 PEBLObjectBase::~PEBLObjectBase()
 {
     mProperties.clear();  
+    //  cout << "Deleting pob\n";
 }
 
 
@@ -148,6 +149,36 @@ ostream & PEBLObjectBase::PrintProperties(ostream& out)
     return out;
 
 }
+
+
+Variant PEBLObjectBase::GetPropertyList()
+{
+
+    //Create a plist to put the properties in
+    
+    PList * newlist = new PList();
+
+
+
+    std::map<std::string, Variant>::const_iterator i;
+    i = mProperties.begin();
+    while(i != mProperties.end())
+        {
+            newlist->PushBack(i->first);
+            i++;
+        }
+
+    counted_ptr<PEBLObjectBase> tmpObj;
+    tmpObj = counted_ptr<PEBLObjectBase>(newlist);
+    PComplexData * tmpPCD = (new PComplexData(tmpObj));
+    Variant tmp = Variant(tmpPCD);
+    delete tmpPCD;
+    tmpPCD=NULL;
+    return tmp;
+
+}
+
+
 
 // Inheritable function that is called by friend method << operator of PComplexData
 ostream & PEBLObjectBase::SendToStream(ostream& out) const

@@ -100,7 +100,7 @@ class PEBLObjectBase
 
     virtual std::string ObjectName() const;
     virtual std::ostream & PrintProperties(std::ostream& out);
-
+    virtual Variant GetPropertyList();
  protected:
     virtual std::ostream & SendToStream(std::ostream& out) const;
     ComplexDataType mCDT;  

@@ -79,7 +79,12 @@ public:
     Variant Last();
     counted_ptr<PEBLObjectBase> SortBy(const PList & key);
 
-    unsigned int Length(){return mList.size();}
+    //For some unknown reason emscripten produces an off-by-one error here.
+    //#ifdef PEBL_EMSCRIPTEN
+    //    unsigned int Length()const; //full definition in .cpp file
+    //#else
+    //#endif
+    unsigned int Length()const{return mList.size();}
 
     bool IsMember(Variant v);
 

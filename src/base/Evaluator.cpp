@@ -3,7 +3,7 @@
 //    Name:       src/base/Evaluator.cpp
 //    Purpose:    Defines an class that can evaluate PNodes
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003--2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003--2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -36,6 +36,7 @@
 #include "../utility/PEBLUtility.h"
 #include "../utility/PError.h"
 #include "../utility/rc_ptrs.h"
+#include "../utility/Defs.h"
 
 #include <iostream>
 #include <string>
@@ -60,10 +61,10 @@ Evaluator::Evaluator():
 #ifdef PEBL_DEBUG_PRINT 
     cout << "Creating Evaluator: " << mScope << endl;
 #endif
-
-
+    
+    mEventLoop = new PEventLoop();
     gCallStack.Push(gEvalNode);
-
+    
 }
  
 
@@ -78,6 +79,8 @@ Evaluator::Evaluator(Variant & stacktop, string scope):
 
     //add everything in callstack onto mCallStack
     //mCallStack = callstack;
+
+    mEventLoop = new PEventLoop();
 
     //Push the current evalnode onto the stack, if
     //it exists.
@@ -112,6 +115,10 @@ Evaluator::~Evaluator()
 
 bool Evaluator::Evaluate(const PNode * node)
 {
+
+
+
+
 
 
     if(node == NULL) PError::SignalFatalError("Trying to evaluate null node\n");
@@ -151,7 +158,8 @@ bool Evaluator::Evaluate(const PNode * node)
 ///  This method evaluates OpNodes
 bool Evaluator::Evaluate(const OpNode * node)
 {
-
+    
+    int numargs = -1;
     if(node == NULL) PError::SignalFatalError("Trying to evaluate null node\n");
     //Set up the globally-accessible structure to allow
     //better error reporting.
@@ -321,7 +329,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                 Variant v2 = Pop();	
                 Variant v1 = Pop();
 
-                Push(Variant(pow((long double)v1,(long double)v2)));
+                Push(Variant(pow((pDouble)v1,(pDouble)v2)));
             }
             break;
 
@@ -558,9 +566,11 @@ bool Evaluator::Evaluate(const OpNode * node)
                 Evaluate(node2);
             }
             break;
+           
             
         case PEBL_LIBRARYFUNCTION:
             {
+                //cout << "Calling PEB_LIBRARYFUNCTION\n";
 
                 // This type of function is built in and precompiled.  The loader examines
                 // the parse tree and
@@ -577,7 +587,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                 int min = ((DataNode*)(node0->GetLeft()))->GetValue();
                 int max = ((DataNode*)(node0->GetRight()))->GetValue();
 
-
+                //cout<< "FNAME:"<< name << ":"<< endl;
                 //The right child of a PEBL_LIBRARYFUNCTION contains a datanode which
                 //has a function pointer in it.
 
@@ -590,40 +600,53 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //cout << "Parameter list:" << v2 << endl;
 
                 //Before we execute, check to see if v2 has a length  between min and max.
-                int numargs=0;
-                
+
+
+                PList * tmp = NULL;
                 if (v2.IsStackSignal())
                     numargs = 0;
                 else
                     {
                         if(v2.IsComplexData())
-                            if((v2.GetComplexData())->IsList())
-                                {
-                                    PList * tmp = (PList*)(v2.GetComplexData()->GetObject().get());
-                                    numargs = tmp->Length();
-                                    //cout << "Examining : " << *tmp << endl;
-                                }
-                            else
-                                {
-                                    
-                                }
+                            {
+                                if((v2.GetComplexData())->IsList())
+                                    {
+                                        //#if !defined(PEBL_EMSCRIPTEN)
+                                        
+                                        //Dont check parameter numbers in EMSCRIPTEN
+                                        //cout << "[[[<"<<v2<<">]]]\n";
+                                        tmp = (PList*)(v2.GetComplexData()->GetObject().get());
+                                        numargs = tmp->Length();
+                                        //cout << "((("<<v2<<")))\n";
+                                        //cout << "Examining: " << *tmp << "with (" << numargs << ") elements"<< endl;
+                                        //#endif
+                                    }
+                                else
+                                    {
+                                        cout << "UNHANDLED ELSE CASE. NOT A LIST\n" ;
+                                    }
+                            }
+                        //cout << "numargs now: " << numargs << endl;
                     }
 
+                //cout << "numargs now 2: " << numargs << endl;
+                //#if !defined(PEBL_EMSCRIPTEN)
                 if(numargs < min || numargs > max)
                     {
 
                         Variant message = Variant("In scope [") + mScope + Variant("]:") +
                             Variant("function [") +name+Variant("]:")+
-                            Variant("Incorrect number of arguments.  Wanted between ")+
+                            Variant("Incorrect number of arguments..  Wanted between ")+
                             Variant(min) + Variant(" and ") +Variant( max) + Variant(" but got ") + Variant( numargs);
-
-
+                        
+                        
                         cout << message << endl;
                         PError::SignalFatalError(message);
                     }
-
+                //#endif
                 
                 //Execute the functionpointer and push the results onto the stack.
+                //cout << "EXECUTING\n";
                 Push((v1.GetFunctionPointer())(v2));
             }
 
@@ -815,7 +838,8 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //To do this efficiently and avoid recreating lists iteratively, the bottom
                 //item does this in a while loop.  to signal the end of the while loop, the
                 //PEBL_LISTHEAD must put a dummy item on the stack so the bottom item
-                //knows when the front of the list has been reached.  This is a variant of type STACK_LIST_HEAD
+                //knows when the front of the list has been reached.  
+                //This is a variant of type STACK_LIST_HEAD
                 
                 //Create the stack signal variant and push it onto the stack.
                 Variant v1 = Variant(STACK_LIST_HEAD);
@@ -1042,9 +1066,11 @@ bool Evaluator::Evaluate(const OpNode * node)
                         if(v1.GetDataType() == P_DATA_STACK_SIGNAL &&
                            v1 == Variant(STACK_BREAK))
                             {
+                                cout << "STACKBREAKING ON RIGHT\n";
+                                
                                 //If this is a stack signal, and if 
                                 //it is a break, we should just back out
-                                Push(Variant(0));
+                                Push(Variant(0));  //why isn't this stack_break?
                                 break;
                             }
                     }
@@ -1058,6 +1084,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                         if(v1.GetDataType() == P_DATA_STACK_SIGNAL &&
                            v1 == Variant(STACK_BREAK))
                             {
+                                cout << "STACKBREAKING ON LEFT\n";
                                 //If this is a stack signal, and if 
                                 //it is a break, we should just back out
                                 Push(Variant(STACK_BREAK));
@@ -1078,6 +1105,9 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //it works by adding a STACK_BREAK stacksignalevent onto the top of the stack.
                 //all relevant loops look for this type of event and 
                 //cleanly abort when that times comes.
+
+                cout << "PEBL_BREAK HANDLER\n";
+
                 Variant v1 = Variant(STACK_BREAK);
                 Push(v1);
                 Push(v1);
@@ -1283,11 +1313,13 @@ void Evaluator::CallFunction(const OpNode * node)
                     {
                         //Add '1' to the stack as the default return value for a function (i.e., one without
                         //an explicit return value.)
+                        cout << "Adding dummy value to end of null function\n";
                         Push(1);
                     }
                 else if (myEval.GetStackDepth() == 2)
                     {
                         //Get the top of the function evaluator and push it onto the current evaluator.
+                        //cout << "Adding real value of subfunction to end of null function\n";
                         Variant v1 = myEval.Pop();
                         Push(v1);
                     }

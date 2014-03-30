@@ -608,7 +608,7 @@ char *yytext;
 //    Name:       src/base/Pebl.l
 //    Purpose:    Defines lexer for use with Flex
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -635,7 +635,8 @@ The following source defines a lexer for use with the GNU tool flex.
 It identifies lexemes in a PEBL program.
 
 */
-#line 34 "src/base/Pebl.l"
+#define YY_NO_INPUT 1
+#line 36 "src/base/Pebl.l"
 #include <stdlib.h>
 #include "PNode.h"            //This needed because PNode isn't defined in grammar.tab.hpp
 #include "grammar.tab.hpp"
@@ -643,9 +644,10 @@ It identifies lexemes in a PEBL program.
 #include <string.h>
 #include <math.h>
 
+
 void yyerror(char *);
 
-#line 649 "src/base/lex.yy.c"
+#line 651 "src/base/lex.yy.c"
 
 #define INITIAL 0
 
@@ -704,8 +706,6 @@ extern int yywrap (void );
 #endif
 #endif
 
-    static void yyunput (int c,char *buf_ptr  );
-    
 #ifndef yytext_ptr
 static void yy_flex_strncpy (char *,yyconst char *,int );
 #endif
@@ -832,7 +832,7 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 69 "src/base/Pebl.l"
+#line 72 "src/base/Pebl.l"
 
 #line 838 "src/base/lex.yy.c"
 
@@ -929,12 +929,12 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 70 "src/base/Pebl.l"
+#line 73 "src/base/Pebl.l"
 ;       /* ignore byte-order-marks*/
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 71 "src/base/Pebl.l"
+#line 74 "src/base/Pebl.l"
 ;       /* ignore whitespace*/
 	YY_BREAK
 case 3:
@@ -942,196 +942,196 @@ case 3:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 72 "src/base/Pebl.l"
+#line 75 "src/base/Pebl.l"
 ;       /* ignore comments  */
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 73 "src/base/Pebl.l"
+#line 76 "src/base/Pebl.l"
 { yylval.iValue = strtol(yytext,0,10);
                  return PEBL_INTEGER;
                };
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 77 "src/base/Pebl.l"
-{ yylval.fValue = PEBLUtility::StringToLongDouble(yytext);
+#line 80 "src/base/Pebl.l"
+{ yylval.fValue = PEBLUtility::StringToPDouble(yytext);
                  return PEBL_FLOAT;
                };
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 81 "src/base/Pebl.l"
+#line 84 "src/base/Pebl.l"
 return  PEBL_ADD;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 82 "src/base/Pebl.l"
+#line 85 "src/base/Pebl.l"
 return  PEBL_ASSIGN;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 83 "src/base/Pebl.l"
+#line 86 "src/base/Pebl.l"
 return  PEBL_COMMA;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 84 "src/base/Pebl.l"
+#line 87 "src/base/Pebl.l"
 return  PEBL_DIVIDE;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 85 "src/base/Pebl.l"
+#line 88 "src/base/Pebl.l"
 return  PEBL_POWER;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 86 "src/base/Pebl.l"
+#line 89 "src/base/Pebl.l"
 return  PEBL_DOT;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 87 "src/base/Pebl.l"
+#line 90 "src/base/Pebl.l"
 return  PEBL_EQ;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 88 "src/base/Pebl.l"
+#line 91 "src/base/Pebl.l"
 return  PEBL_GE;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 89 "src/base/Pebl.l"
+#line 92 "src/base/Pebl.l"
 return  PEBL_GT;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 90 "src/base/Pebl.l"
+#line 93 "src/base/Pebl.l"
 return  PEBL_LPAREN;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 91 "src/base/Pebl.l"
+#line 94 "src/base/Pebl.l"
 return  PEBL_LBRACE;
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 92 "src/base/Pebl.l"
+#line 95 "src/base/Pebl.l"
 return  PEBL_LBRACKET;
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 93 "src/base/Pebl.l"
+#line 96 "src/base/Pebl.l"
 return  PEBL_LE;
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 94 "src/base/Pebl.l"
+#line 97 "src/base/Pebl.l"
 return  PEBL_LT;
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 95 "src/base/Pebl.l"
+#line 98 "src/base/Pebl.l"
 return  PEBL_MULTIPLY;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 96 "src/base/Pebl.l"
+#line 99 "src/base/Pebl.l"
 return  PEBL_NE;
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 97 "src/base/Pebl.l"
+#line 100 "src/base/Pebl.l"
 return  PEBL_NE;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 98 "src/base/Pebl.l"
+#line 101 "src/base/Pebl.l"
 return  PEBL_NE;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 99 "src/base/Pebl.l"
+#line 102 "src/base/Pebl.l"
 return  PEBL_RBRACE;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 100 "src/base/Pebl.l"
+#line 103 "src/base/Pebl.l"
 return  PEBL_RBRACKET;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 101 "src/base/Pebl.l"
+#line 104 "src/base/Pebl.l"
 return  PEBL_RPAREN;
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 102 "src/base/Pebl.l"
+#line 105 "src/base/Pebl.l"
 return  PEBL_SUBTRACT;
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 103 "src/base/Pebl.l"
+#line 106 "src/base/Pebl.l"
 return  PEBL_NEWLINE;
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 104 "src/base/Pebl.l"
+#line 107 "src/base/Pebl.l"
 return  PEBL_IF;
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 105 "src/base/Pebl.l"
+#line 108 "src/base/Pebl.l"
 return  PEBL_LOOP;
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 106 "src/base/Pebl.l"
+#line 109 "src/base/Pebl.l"
 return  PEBL_RETURN;
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 107 "src/base/Pebl.l"
+#line 110 "src/base/Pebl.l"
 return  PEBL_ELSE;
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 108 "src/base/Pebl.l"
+#line 111 "src/base/Pebl.l"
 return  PEBL_ELSEIF;
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 109 "src/base/Pebl.l"
+#line 112 "src/base/Pebl.l"
 return  PEBL_WHILE;
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 110 "src/base/Pebl.l"
+#line 113 "src/base/Pebl.l"
 return  PEBL_DEFINE;
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 111 "src/base/Pebl.l"
+#line 114 "src/base/Pebl.l"
 return PEBL_AND;
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 112 "src/base/Pebl.l"
+#line 115 "src/base/Pebl.l"
 return PEBL_OR;
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 113 "src/base/Pebl.l"
+#line 116 "src/base/Pebl.l"
 return  PEBL_NOT;
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 114 "src/base/Pebl.l"
+#line 117 "src/base/Pebl.l"
 return PEBL_BREAK;
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 116 "src/base/Pebl.l"
+#line 119 "src/base/Pebl.l"
 {   /*Make a deep copy of the variable*/
                yylval.symbol = strdup(yytext);
                return PEBL_LOCALVAR;
@@ -1139,7 +1139,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 121 "src/base/Pebl.l"
+#line 124 "src/base/Pebl.l"
 {   /*Make a deep copy of the variable*/
                yylval.symbol = strdup(yytext);
                return PEBL_GLOBALVAR;
@@ -1147,7 +1147,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 126 "src/base/Pebl.l"
+#line 129 "src/base/Pebl.l"
 { /*Make a deep copy of the function name*/
                 yylval.function =strdup(yytext);
                 return PEBL_FUNCTIONNAME;
@@ -1156,7 +1156,7 @@ YY_RULE_SETUP
 case 43:
 /* rule 43 can match eol */
 YY_RULE_SETUP
-#line 131 "src/base/Pebl.l"
+#line 134 "src/base/Pebl.l"
 {          /*Make a deep copy of the string*/
   yylval.strValue = strdup(yytext+1); /*skip open quote*/
 
@@ -1173,23 +1173,23 @@ if(yylval.strValue[yyleng-2] != '"')     /*"*/
 case 44:
 /* rule 44 can match eol */
 YY_RULE_SETUP
-#line 144 "src/base/Pebl.l"
+#line 147 "src/base/Pebl.l"
 {return PEBL_NEWLINE;}
 	YY_BREAK
 case 45:
 /* rule 45 can match eol */
 YY_RULE_SETUP
-#line 145 "src/base/Pebl.l"
+#line 148 "src/base/Pebl.l"
 {return PEBL_NEWLINE;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 146 "src/base/Pebl.l"
+#line 149 "src/base/Pebl.l"
 {return PEBL_NEWLINE;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 147 "src/base/Pebl.l"
+#line 150 "src/base/Pebl.l"
 {
             char message[151];
             snprintf(message,150,"\n  File appears to be in UTF-16 Unicode format.\n  PEBL can only read UTF-8 or ASCII formats. Resave file as UTF-8 or ASCII and try again.");
@@ -1198,7 +1198,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 153 "src/base/Pebl.l"
+#line 156 "src/base/Pebl.l"
 { char message[100];
                  snprintf(message,99,"\nUnknown characters in line %d: [%s]\n",yylineno,yytext);
                  yyerror(message);
@@ -1206,7 +1206,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 157 "src/base/Pebl.l"
+#line 160 "src/base/Pebl.l"
 ECHO;
 	YY_BREAK
 #line 1213 "src/base/lex.yy.c"
@@ -1536,47 +1536,6 @@ static int yy_get_next_buffer (void)
 	yy_is_jam = (yy_current_state == 146);
 
 	return yy_is_jam ? 0 : yy_current_state;
-}
-
-    static void yyunput (int c, register char * yy_bp )
-{
-	register char *yy_cp;
-    
-    yy_cp = (yy_c_buf_p);
-
-	/* undo effects of setting up yytext */
-	*yy_cp = (yy_hold_char);
-
-	if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
-		{ /* need to shift things up to make room */
-		/* +2 for EOB chars. */
-		register int number_to_move = (yy_n_chars) + 2;
-		register char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
-					YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
-		register char *source =
-				&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move];
-
-		while ( source > YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
-			*--dest = *--source;
-
-		yy_cp += (int) (dest - source);
-		yy_bp += (int) (dest - source);
-		YY_CURRENT_BUFFER_LVALUE->yy_n_chars =
-			(yy_n_chars) = YY_CURRENT_BUFFER_LVALUE->yy_buf_size;
-
-		if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
-			YY_FATAL_ERROR( "flex scanner push-back overflow" );
-		}
-
-	*--yy_cp = (char) c;
-
-    if ( c == '\n' ){
-        --yylineno;
-    }
-
-	(yytext_ptr) = yy_bp;
-	(yy_hold_char) = *yy_cp;
-	(yy_c_buf_p) = yy_cp;
 }
 
 #ifndef YY_NO_INPUT
@@ -2219,7 +2178,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 157 "src/base/Pebl.l"
+#line 160 "src/base/Pebl.l"
 
 
 int yywrap(void) {

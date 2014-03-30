@@ -32,8 +32,11 @@
 #include "grammar.tab.hpp"
 #include "Variant.h"
 #include "FunctionMap.h"
+#ifdef PEBL_EMSCRIPTEN
+#include "Evaluator2.h"
+#else
 #include "Evaluator.h"
-
+#endif
 #include "../utility/PEBLUtility.h"
 #include "../utility/PError.h"
 

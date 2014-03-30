@@ -53,8 +53,9 @@ VariableMap::VariableMap()
 VariableMap::~VariableMap()
 {
 
-    //    cout << "Deleting variablemap\n";
-    //    DumpValues();
+    //cout << "Deleting variablemap\n";
+    //cout << "contains " << mVariableMap.size() << " values\n";
+    //DumpValues();
     //Delete mVariableMap if necessary.
     //Erase things by hand, for debugging's sake
     //    std::map<std::string, Variant>::iterator i = mVariableMap.begin();

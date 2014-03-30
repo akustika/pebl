@@ -59,6 +59,7 @@ FunctionMap::FunctionMap()
 FunctionMap::~FunctionMap()
 {
 
+    //cout << "Detelitng functionmap\n";
     //Delete mFunctionMap if necessary.
     //go through each function and delete the opnode,  because
     //it is a pointer that is held nowhere else.

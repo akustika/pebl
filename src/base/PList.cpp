@@ -179,6 +179,29 @@ Variant PList::Nth(unsigned int n)
     return mList[n-1];
 }
 
+
+
+#if 0
+unsigned int PList::Length() const
+{
+    unsigned int length = 0;
+    
+    std::vector<Variant>::const_iterator p;
+    p = mList.begin();
+  
+    //Print out the first item, so comma-ing works out ok.
+    while( p != mList.end())
+        {
+            length++;
+            p++;
+        }
+
+    return length;
+}
+#endif
+
+
+
 void PList::SetElement(unsigned int n,Variant value)
 {
 
@@ -267,8 +290,8 @@ ostream & PList::SendToStream(ostream& out) const
     std::vector<Variant>::const_iterator p;
     p = mList.begin();
   
-    out << "[" ;
-    //out << mList.size() << ":";
+    out << "[size" ;
+    out << this->Length() << ":";
 
     //Print out the first item, so comma-ing works out ok.
     if( p != mList.end())
@@ -283,7 +306,6 @@ ostream & PList::SendToStream(ostream& out) const
                 }
         }
     out << "]" ;
-
+    
     return out;
 }
-

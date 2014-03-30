@@ -3,7 +3,7 @@
 //    Name:       src/base/PNode.cpp
 //    Purpose:    Primary data structure for code
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2008 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -26,7 +26,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "PNode.h"
 #include "grammar.tab.hpp"
-
+#include "../utility/Defs.h"
 #include <iostream>
 #include <string>
 #include <stdlib.h>
@@ -262,6 +262,38 @@ std::string  OpNode::GetOpName() const
         case PEBL_SYMBOL:     return "PEBL_SYMBOL";
         case PEBL_FUNCTIONNAME:  return "PEBL_FUNCTIONNAME";
 
+
+
+        case   PEBL_AND_TAIL: return "PEBL_AND_TAIL";
+        case   PEBL_ADD_TAIL: return "PEBL_ADD_TAIL";
+        case   PEBL_ASSIGN_TAIL: return "PEBL_ASSIGN_TAIL";
+        case   PEBL_BREAK_TAIL : return "PEBL_BREAK_TAIL";
+        case   PEBL_DIVIDE_TAIL : return  "PEBL_DIVIDE_TAIL";
+        case   PEBL_EQ_TAIL: return   "PEBL_EQ_TAIL";
+        case   PEBL_GE_TAIL : return   "PEBL_GE_TAIL";
+        case   PEBL_GT_TAIL : return   "PEBL_GT_TAIL";
+        case   PEBL_IF_TAIL : return "PEBL_IF_TAIL";
+        case   PEBL_LE_TAIL : return "PEBL_LE_TAIL";
+        case   PEBL_LISTITEM_TAIL : return   "PEBL_LISTITEM_TAIL";
+        case   PEBL_LOOP_TAIL1  : return    "PEBL_LOOP_TAIL1";
+        case   PEBL_LOOP_TAIL2: return  "PEBL_LOOP_TAIL2";
+        case   PEBL_LT_TAIL: return  "PEBL_LT_TAIL";
+        case   PEBL_MULTIPLY_TAIL: return  "PEBL_MULTIPLY_TAIL";
+        case   PEBL_NE_TAIL: return    "PEBL_NE_TAIL";
+        case   PEBL_NOT_TAIL: return    "PEBL_NOT_TAIL";
+        case   PEBL_OR_TAIL: return    "PEBL_OR_TAIL";
+        case   PEBL_POWER_TAIL: return    "PEBL_POWER_TAIL";
+        case   PEBL_RETURN_TAIL: return    "PEBL_RETURN_TAIL";
+        case   PEBL_SUBTRACT_TAIL: return    "PEBL_SUBTRACT_TAIL";
+        case   PEBL_STATEMENTS_TAIL1: return       "PEBL_STATEMENTS_TAIL1";   
+        case   PEBL_STATEMENTS_TAIL2: return      "PEBL_STATEMENTS_TAIL2";
+        case   PEBL_WHILE_TAIL: return             "PEBL_WHILE_TAIL";
+        case   PEBL_WHILE_TAIL2: return            "PEBL_WHILE_TAIL2";
+        case   PEBL_FUNCTION_TAIL1: return            "PEBL_FUNCTION_TAIL1";
+        case   PEBL_FUNCTION_TAIL2: return           "PEBL_FUNCTION_TAIL2";
+        case   PEBL_FUNCTION_TAIL_LIBFUNCTION: return "PEBL_FUNCTION_TAIL_LIBFUNCTION";
+
+
         default:              return "UNKNOWN PEBL OPERATION";
      
         }
@@ -329,7 +361,7 @@ DataNode::DataNode(const string &  filename, int linenumber):
 
 
 /*
-DataNode::DataNode(long int ivalue):
+DataNode::DataNode(pInt ivalue):
     PNode(PEBL_DATA_NODE)
 {
     mValue = ivalue;
@@ -342,7 +374,7 @@ DataNode::DataNode(long int ivalue):
 */
 
 
-DataNode::DataNode(long int ivalue, const string & filename, int linenumber):
+DataNode::DataNode(pInt ivalue, const string & filename, int linenumber):
     PNode(PEBL_DATA_NODE, filename, linenumber)
 {
     mValue = ivalue;
@@ -354,7 +386,7 @@ DataNode::DataNode(long int ivalue, const string & filename, int linenumber):
 }
 
 /*
-DataNode::DataNode(long double fvalue):
+DataNode::DataNode(pDouble fvalue):
     PNode(PEBL_DATA_NODE)
 {
     mValue = fvalue;
@@ -365,7 +397,7 @@ DataNode::DataNode(long double fvalue):
 */
 
 
-DataNode::DataNode(long double fvalue, const string & filename, int linenumber):
+DataNode::DataNode(pDouble fvalue, const string & filename, int linenumber):
     PNode(PEBL_DATA_NODE, filename, linenumber)
 {
     mValue = fvalue;

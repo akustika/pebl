@@ -29,12 +29,11 @@
 
 #include "Variant.h"         //This contains definition for enum VariantDataType
 #include <string>
-
+#include "../utility/Defs.h"
 enum PNODE_TYPE {
     PEBL_OP_NODE,
     PEBL_DATA_NODE
 };
-
 
 
 /// PNode is a simple class.  It just contains constructors and destructors
@@ -134,12 +133,12 @@ class DataNode: public PNode
 public:
     //    DataNode(const Variant value);
     //    DataNode();
-    //    DataNode(long int ivalue);
-    //    DataNode(long double fvalue);
+    //    DataNode(pInt ivalue);
+    //    DataNode(pDouble fvalue);
     DataNode(const Variant value, const  std::string & filename, int linenumber);
     DataNode(const std::string & filename, int linenumber);
-    DataNode(long int ivalue, const std::string & filename, int linenumber);
-    DataNode(long double fvalue, const std::string & filename, int linenumber);
+    DataNode(pInt ivalue, const std::string & filename, int linenumber);
+    DataNode(pDouble fvalue, const std::string & filename, int linenumber);
 
 
     virtual ~DataNode();

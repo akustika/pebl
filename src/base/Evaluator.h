@@ -3,7 +3,7 @@
 //    Name:       src/base/Evaluator.h
 //    Purpose:    Defines an class that can evaluate PNodes
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003--2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003--2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -29,6 +29,9 @@
 #ifndef __EVALUATOR_H__
 #define __EVALUATOR_H__
 
+
+
+
 #include <stack>
 #include <list>
 //#include "PNode.h"
@@ -38,7 +41,7 @@
 #include "../utility/PEBLPath.h"
 #include "VariableMap.h"
 #include "../utility/PError.h"
-//#include "../devices/PEventLoop.h"
+#include "../devices/PEventLoop.h"
 
 
 class PNode;
@@ -47,7 +50,7 @@ class DataNode;
 class Variant;
 class FunctionMap;
 class VariableMap;
-class PEventLoop;
+//class PEventLoop;
 
 
 
@@ -74,6 +77,9 @@ public:
 
     int GetStackDepth(){return mStack.size();};
 
+    PEventLoop * GetEventLoop(){return mEventLoop;};
+
+
     /// This holds a pointer to a FunctionMap, which 
     /// is loaded from the initial PNode tree by the loader.
     /// It is static and public, which means that all Evaluators
@@ -86,7 +92,7 @@ public:
     /// is done in the main program file.
     static VariableMap gGlobalVariableMap;
     
-    static PEventLoop mEventLoop;
+    static PEventLoop * mEventLoop;
 
     static PEBLPath gPath;
 

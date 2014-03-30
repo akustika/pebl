@@ -63,9 +63,20 @@ PComplexData::~PComplexData()
 ///This is a generic copy constructor
 PComplexData::PComplexData(const PComplexData & pcd )
 {
+    
     mPEBLObject = pcd.GetObject();
 
 }
+
+///This is a generic copy constructor
+PComplexData::PComplexData(const PComplexData *pcd )
+{
+
+    mPEBLObject = pcd->GetObject();
+
+}
+
+
 
 //Overload of the << operator
 ostream & operator << ( ostream & out, const PComplexData & pcd )
@@ -172,6 +183,12 @@ Variant PComplexData::GetProperty( std::string prop )const
 }
 
 
+bool PComplexData::PropertyExists( std::string prop )const
+{
+    return mPEBLObject->ValidateProperty(prop);
+}
+
+
 
 bool PComplexData::IsList() const
 {
@@ -273,7 +290,6 @@ bool PComplexData::IsNetworkConnection() const
 {
   return GetType() == CDT_NETWORKCONNECTION;
 }
-
 
 
 bool PComplexData::IsParallelPort() const

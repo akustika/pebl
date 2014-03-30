@@ -3,7 +3,7 @@
 //    Name:       src/base/Variant.cpp
 //    Purpose:    Contains the Variant Class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -31,6 +31,7 @@
 #include "PComplexData.h"
 #include "../utility/PEBLUtility.h"
 #include "../utility/PError.h"
+#include "../utility/Defs.h"
 
 #include <iostream>
 #include <sstream>
@@ -58,7 +59,7 @@ Variant::Variant():
 
 
 //Constructor
-Variant::Variant(const long int i):
+Variant::Variant(const pInt i):
     mComplexData(NULL),
     mDataType(P_DATA_NUMBER_INTEGER)
 
@@ -68,24 +69,58 @@ Variant::Variant(const long int i):
 }
 
 
+#ifndef PEBL_EMSCRIPTEN
+//Constructor
+Variant::Variant(int i):
+    mComplexData(NULL),
+    mDataType(P_DATA_NUMBER_INTEGER)
+
+{
+    mData.iNumber = (pInt)i;
+
+}
+#endif
+
+
 
 //Constructor
 Variant::Variant(const long unsigned int i):
     mComplexData(NULL),
     mDataType(P_DATA_NUMBER_INTEGER)
 {
-    mData.iNumber = static_cast<long int>(i);
+    mData.iNumber = static_cast<pInt>(i);
 
 }
 
 
 
 //Constructor
-Variant::Variant(const long double f):
+Variant::Variant(const pDouble f):
     mComplexData(NULL),
     mDataType(P_DATA_NUMBER_FLOAT)
 {
     mData.fNumber = f;
+}
+
+#ifndef PEBL_EMSCRIPTEN
+//Constructor
+Variant::Variant(double f):
+    mComplexData(NULL),
+    mDataType(P_DATA_NUMBER_FLOAT)
+
+{
+    mData.fNumber=(pDouble)f;
+}
+#endif
+
+//Constructor
+Variant::Variant(float f):
+    mComplexData(NULL),
+    mDataType(P_DATA_NUMBER_FLOAT)
+
+{
+    mData.fNumber = (pDouble)f;
+
 }
 
 
@@ -95,6 +130,8 @@ Variant::Variant(const char *  mystring):
     mDataType(P_DATA_STRING)
 {
 
+    //cout << "creating " << *mystring << " of type ";
+    //cout << P_DATA_STRING << endl;
     mData.String = strdup(mystring);
     if(!mData.String)
         PError::SignalFatalError("Failed to copy string.");
@@ -131,6 +168,7 @@ Variant::Variant(const char* mystring, VariantDataType type):
     mDataType(type)
 
 {
+    //cout << "creating variant ["<< mystring << "] of type " << type << endl;
     switch(type)
         {
         case P_DATA_FUNCTION:
@@ -153,21 +191,10 @@ Variant::Variant(const char* mystring, VariantDataType type):
         }
 }
 
-//Constructor
-Variant::Variant(int i):
-    mComplexData(NULL),
-    mDataType(P_DATA_NUMBER_INTEGER)
-
-{
-    mData.iNumber = (long int)i;
-
-}
-
-
 Variant::Variant(const PComplexData * pcd):
     mDataType(P_DATA_COMPLEXDATA)
 {
-    mComplexData = new PComplexData(*pcd);
+    mComplexData = new PComplexData(pcd);
 }
 
 
@@ -190,25 +217,6 @@ Variant::Variant(pFunc pfunc ):
 }
 
 
-//Constructor
-Variant::Variant(double f):
-    mComplexData(NULL),
-    mDataType(P_DATA_NUMBER_FLOAT)
-
-{
-    mData.fNumber=(long double)f;
-}
-
-
-//Constructor
-Variant::Variant(float f):
-    mComplexData(NULL),
-    mDataType(P_DATA_NUMBER_FLOAT)
-
-{
-    mData.fNumber = (long double)f;
-
-}
 
 //Constructor
 Variant::Variant(bool b):
@@ -216,7 +224,7 @@ Variant::Variant(bool b):
     mDataType(P_DATA_NUMBER_INTEGER)
 
 {
-    mData.iNumber = (long int)b;
+    mData.iNumber = (pInt)b;
 }
 
 
@@ -228,9 +236,9 @@ Variant::Variant(const Variant &v):
     mComplexData(NULL)
 {
 
-
+    
     //This should behave differently depending on what type of variant v is
-    //    cout << "Q: " << v << endl;
+    //   cout << "coping variant: " << v << endl;
     mDataType = v.GetDataType();
 
     switch(mDataType)
@@ -254,6 +262,7 @@ Variant::Variant(const Variant &v):
             break;
 
         case P_DATA_FUNCTION:
+            //Memory problem here, diagnosed by efence:
             mData.Function = strdup(v.GetFunctionName().c_str());
             break;
 
@@ -302,6 +311,7 @@ Variant::Variant(const Variant &v):
 /// up after data subtypes that put stuff on the stack.
 Variant::~Variant()
 {
+    //Is this really needed?
     free_mData();
 }
 
@@ -310,8 +320,8 @@ Variant::~Variant()
 ///for strings, this concatenates them.
 Variant Variant::operator +(const Variant & rhs) const
 {
-    long int i;
-    long double f;
+    pInt i;
+    pDouble f;
 
     if(this->IsInteger()  && rhs.IsInteger())
         {
@@ -342,8 +352,8 @@ Variant Variant::operator +(const Variant & rhs) const
 ///This overloads the - operator for Variants
 Variant Variant::operator -(const Variant & rhs) const
 {
-    long int i;
-    long double f;
+    pInt i;
+    pDouble f;
 
     if(this->IsInteger()  && rhs.IsInteger())
         {
@@ -368,8 +378,8 @@ Variant Variant::operator -(const Variant & rhs) const
 ///This overloads the * operator for Variants
 Variant Variant::operator *(const Variant & rhs) const
 {
-    long int i;
-    long double f;
+    pInt i;
+    pDouble f;
 
     if(this->IsInteger()  && rhs.IsInteger())
         {
@@ -393,8 +403,8 @@ Variant Variant::operator *(const Variant & rhs) const
 ///This overloads the / operator for Variants
 Variant Variant::operator /(const Variant & rhs) const
 {
-    long int i;
-    long double f;
+    pInt i;
+    pDouble f;
 
     if(this->IsNumber() && rhs.IsNumber())
         {
@@ -415,6 +425,7 @@ Variant Variant::operator /(const Variant & rhs) const
 ///
 bool Variant::Equal(const Variant & rhs) const
 {
+    //std::cout << "variant equal: "<< *this << "==" << rhs << endl;
     //If they are both integers, make equality be exact.
     //If one is a float, make equality be with some tolerance.
 
@@ -570,7 +581,7 @@ Variant Variant::operator = (const Variant & value)
     return (*this);
 }
 
-Variant Variant::operator = (const long double & value)
+Variant Variant::operator = (const pDouble & value)
 {
     //First, clean up 'this' if it contains data on free store
     // (e.g., a Variable or a string)
@@ -582,7 +593,7 @@ Variant Variant::operator = (const long double & value)
 }
 
 
-Variant Variant::operator = (const long int & value)
+Variant Variant::operator = (const pInt & value)
 {
     //First, clean up 'this' if it contains data on free store
     // (e.g., a Variable or a string)
@@ -607,7 +618,7 @@ Variant Variant::operator = (const long unsigned int & value)
     return *this;
 }
 
-
+#ifndef PEBL_EMSCRIPTEN
 Variant Variant::operator = (const int & value)
 {
     //First, clean up 'this' if it contains data on free store
@@ -615,7 +626,7 @@ Variant Variant::operator = (const int & value)
     free_mData();
 
     mDataType = P_DATA_NUMBER_INTEGER;
-    mData.iNumber = (long int)value;
+    mData.iNumber = (pInt)value;
     return *this;
 }
 
@@ -626,10 +637,10 @@ Variant Variant::operator = (const double & value)
     free_mData();
 
     mDataType = P_DATA_NUMBER_FLOAT;
-    mData.fNumber = (long double)value;
+    mData.fNumber = (pDouble)value;
     return *this;
 }
-
+#endif
 
 Variant Variant::operator = (const float & value)
 {
@@ -638,7 +649,7 @@ Variant Variant::operator = (const float & value)
     free_mData();
 
     mDataType = P_DATA_NUMBER_FLOAT;
-    mData.fNumber = (long double)value;
+    mData.fNumber = (pDouble)value;
     return *this;
 }
 
@@ -669,6 +680,7 @@ Variant Variant::operator = (const  std::string  value)
     mData.String = strdup(dummy);
     return *this;
 }
+
 
 
 ///overload operator<<
@@ -710,7 +722,7 @@ ostream & operator << (ostream& out, const Variant& v)
             break;
 
         case P_DATA_STACK_SIGNAL:
-            out << v.GetSignal();
+            out << v.GetSignalName();
             break;
 
 
@@ -725,15 +737,18 @@ ostream & operator << (ostream& out, const Variant& v)
 
 
 //Casting operators
-Variant::operator long int()
+Variant::operator pInt()
 {
     return GetInteger();
 }
 
+#ifndef PEBL_EMSCRIPTEN
 Variant::operator int()
 {
     return static_cast<int>(GetInteger());
 }
+
+#endif
 
 Variant::operator long unsigned int()
 {
@@ -742,7 +757,7 @@ Variant::operator long unsigned int()
 
 
 
-Variant::operator long double()
+Variant::operator pDouble()
 {
     return GetFloat();
 }
@@ -766,8 +781,8 @@ Variant::operator const std::string () const
 
 Variant::operator bool ()
 {
-    if((*this) == Variant((long int)0) ||
-       (*this) == Variant((long double)0.0) ||
+    if((*this) == Variant((pInt)0) ||
+       (*this) == Variant((pDouble)0.0) ||
        (*this) == Variant("") ||
        (*this) == Variant("F") ||
        (*this) == Variant("FALSE")
@@ -895,7 +910,7 @@ bool Variant::IsStackSignal() const
 
 
 
-long int Variant::GetInteger() const
+pInt Variant::GetInteger() const
 {
     switch(mDataType)
         {
@@ -903,7 +918,7 @@ long int Variant::GetInteger() const
             return mData.iNumber;
 
         case P_DATA_NUMBER_FLOAT:   // a float
-            return (long int)mData.fNumber;
+            return (pInt)mData.fNumber;
 
         case P_DATA_STRING:
             return strtol(mData.String,0,10);
@@ -916,26 +931,26 @@ long int Variant::GetInteger() const
         case P_DATA_UNDEFINED:      // undefined, error
         default:
             PError::SignalWarning("Erroneous Data type in Variant::GetInteger(); returning 0");
-            return (long int)0;
+            return (pInt)0;
             break;
         }
 
 }
 
 
-long double Variant::GetFloat() const
+pDouble Variant::GetFloat() const
 {
     switch(mDataType)
         {
         case P_DATA_NUMBER_INTEGER: // an integer
-            return (long double)mData.iNumber;
+            return (pDouble)mData.iNumber;
 
         case P_DATA_NUMBER_FLOAT:   // a float
             return mData.fNumber;
 
         case P_DATA_STRING:
 
-            return PEBLUtility::StringToLongDouble(mData.String);
+            return PEBLUtility::StringToPDouble(mData.String);
 
         case P_DATA_STACK_SIGNAL:
         case P_DATA_LOCALVARIABLE:
@@ -945,7 +960,7 @@ long double Variant::GetFloat() const
         case P_DATA_UNDEFINED:      // undefined, error
         default:
             PError::SignalWarning("Erroneous Data type in Variant::GetFloat(); returning 0");
-            return (long double)0;
+            return (pDouble)0;
 
         }
 
@@ -1128,14 +1143,42 @@ std::string   Variant::GetFunctionName() const
 
 
 //This returns a pointer to the name of the function.
+Variant  Variant::GetSignalName() const
+{
+    
+    if( mDataType == P_DATA_STACK_SIGNAL)
+        {
+            
+            int val = GetSignal();
+            switch (val)
+                {
+                case STACK_LIST_HEAD:
+                    return Variant(val)+Variant("|STACK_LIST_HEAD");
+                case STACK_RETURN_DUMMY:
+                    return Variant(val)+Variant("|STACK_RETURN_DUMMY");
+                case STACK_TERMINATE_EVENT_LOOP:
+                    return Variant(val)+Variant("|STACK_TERMINATE_EVENT_LOOP");
+                case STACK_BREAK:
+                    return Variant(val)+Variant("|STACK_BREAK");
+                case STACK_UNDEFINED:
+                default:
+                    return Variant(val)+Variant("STACK_UNDEFINED");
+                    
+                }
+        }else{
+            return STACK_UNDEFINED;
+    }
+}
+
+
+
 StackSignalType  Variant::GetSignal() const
 {
 
     if( mDataType == P_DATA_STACK_SIGNAL)
         {
             return mData.Signal;
-        }
-    else
+        }else
         {
             return STACK_UNDEFINED;
         }
@@ -1191,7 +1234,9 @@ void Variant::free_mData()
     if(mComplexData)
      {
 
-         delete mComplexData;
+         if(mComplexData)
+             delete mComplexData;
+         
          mComplexData =NULL;
          //mDataType=P_DATA_UNDEFINED;
      } else

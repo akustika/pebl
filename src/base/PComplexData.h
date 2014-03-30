@@ -3,7 +3,7 @@
 //    Name:       src/base/PComplexData.h
 //    Purpose:    Contains definition for the complex data type, held by the Variant Class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -36,13 +36,13 @@
 #include "../platforms/sdl/PlatformEnvironment.h"
 #include "../platforms/sdl/PlatformWindow.h"
 #include "../platforms/sdl/PlatformImageBox.h"
-#include "../platforms/sdl/PlatformFont.h"
-#include "../platforms/sdl/PlatformLabel.h"
-#include "../platforms/sdl/PlatformTextBox.h"
-#include "../platforms/sdl/PlatformKeyboard.h"
-#include "../platforms/sdl/PlatformDrawObject.h"
-#include "../platforms/sdl/PlatformCanvas.h"
-#include "../platforms/sdl/PlatformMovie.h"
+//#include "../platforms/sdl/PlatformFont.h"
+//#include "../platforms/sdl/PlatformLabel.h"
+//#include "../platforms/sdl/PlatformTextBox.h"
+//#include "../platforms/sdl/PlatformKeyboard.h"
+//#include "../platforms/sdl/PlatformDrawObject.h"
+//#include "../platforms/sdl/PlatformCanvas.h"
+//#include "../platforms/sdl/PlatformMovie.h"
 #include "../devices/PStream.h"
 #include "../platforms/sdl/PlatformAudioOut.h"
 #include "../platforms/sdl/PlatformNetwork.h"
@@ -100,7 +100,7 @@ public:
     ///Copy Constructors
     PComplexData(const PComplexData & pcd);
 
-    //PComplexData(const PComplexData * pcd);
+    PComplexData(const PComplexData * pcd);
 
 
     ///Destructor. Does not destroy the pointed-to contents.
@@ -166,11 +166,13 @@ public:
     bool IsParallelPort() const;
     bool IsComPort() const;
     bool IsMovie() const;
+    bool IsCustomObject()const;
 
 
 
     void SetProperty(std::string, Variant v);
     Variant GetProperty(std::string prop) const;
+    bool PropertyExists(std::string prop)const;
 
 protected:
     //Inheritable function for use by << operator.

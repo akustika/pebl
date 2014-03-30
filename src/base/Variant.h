@@ -3,7 +3,7 @@
 //    Name:       src/base/Variant.h
 //    Purpose:    Contains the Variant Class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003--2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003--2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -30,7 +30,7 @@
 //#include "PComplexData.h"
 #include <iostream>
 #include "../utility/rc_ptrs.h"
-
+#include "../utility/Defs.h"
 
 class PComplexData;
 class Variant;
@@ -67,18 +67,26 @@ public:
 
     Variant();
     ///Standard constructors
-    Variant(const long int i);
+
+    Variant(const pInt i);
+#ifndef PEBL_EMSCRIPTEN
+    Variant(int i);
+#endif
+
     Variant(const long unsigned int i);
-    Variant(const long double f);
+    Variant(pDouble f);
+#ifndef PEBL_EMSCRIPTEN
+    Variant(const double f);
+#endif
+    Variant(float f);
+
+
     Variant(const char* mystring);
     Variant(const char character);
     Variant(const char* mystring, VariantDataType type);
     Variant(const StackSignalType);
     Variant(pFunc);  //This one takes a function-pointer as an argument.
     Variant(const PComplexData * pcd);
-    Variant(int i);
-    Variant(double f);
-    Variant(float f);
     Variant(bool b);
     Variant(const std::string  s);
 
@@ -111,11 +119,15 @@ public:
 
     //Assignment Operators
     Variant operator = (const Variant & value);
-    Variant operator = (const long double & value);
-    Variant operator = (const long int & value);
+    Variant operator = (const pDouble & value);
+    Variant operator = (const pInt & value);
     Variant operator = (const long unsigned int & value);
+
+#ifndef PEBL_EMSCRIPTEN
     Variant operator = (const int & value);
     Variant operator = (const double & value);
+#endif
+
     Variant operator = (const float & value);
     Variant operator = (const char * value);
     Variant operator = (const std::string value);
@@ -124,11 +136,15 @@ public:
     friend std::ostream& operator<<(std::ostream& out, const Variant& v);
 
     /// Typecast Operators
-    operator long double();
-    operator long int();
+    operator pDouble();
+    operator pInt();
     operator long unsigned int();
+
+#ifndef PEBL_EMSCRIPTEN
     operator int();
     //    operator const char*();
+#endif
+
     operator const std::string() const;
     //operator char*();
     operator bool();
@@ -148,8 +164,8 @@ public:
     bool IsComplexData() const;
     bool IsStackSignal() const;
 
-    long int GetInteger() const;
-    long double GetFloat() const;
+    pInt GetInteger() const;
+    pDouble GetFloat() const;
     std::string GetVariableName() const;
     std::string GetVariableBaseName() const;
     std::string GetVariablePropertyName() const;
@@ -157,6 +173,7 @@ public:
     std::string  GetFunctionName() const;
     std::string GetString() const;
     StackSignalType GetSignal()const;
+    Variant  GetSignalName()const;
     pFunc GetFunctionPointer() const;
     PComplexData * GetComplexData() const;
 
@@ -178,8 +195,8 @@ private:
     VariantDataType  mDataType;          // number, string or array
 
     union PValue {
-        long int     iNumber;
-        long double  fNumber;      /* number */
+        pInt     iNumber;
+        pDouble  fNumber;      /* number */
         char       * String;
         char       * Variable;     /* The name of a variable */
         char       * Function;
