@@ -1072,7 +1072,7 @@ define CreateParameters(defaults,file)
 
 	 ##multiple parameters with the same name get turned
 	 ##into a list:
-	 if(IsProperty(parameters,UpperCase(First(i))))
+	 if(PropertyExists(parameters,UpperCase(First(i))))
 	 {
 
 	   if(IsList(GetProperty(parameters,First(i))))
@@ -1116,7 +1116,7 @@ define CreateParameters(defaults,file)
 
 	  ##Now, go ahead and set the property, making a list
 	  ##if needed.
-         if(IsProperty(parameters,First(i)))
+         if(PropertyExists(parameters,First(i)))
 	 {
 	   if(IsList(GetProperty(parameters,First(i))))
 	   {
@@ -1138,11 +1138,11 @@ define CreateParameters(defaults,file)
 }
 
 ##PropertyExists doesn't currecly work, so use this workaround
-define IsProperty(object,prop)
-{
-   list <- GetPropertyList(object)
-   return(IsMember(prop,list))
-}
+#define IsProperty(object,prop)
+#{
+#   list <- GetPropertyList(object)
+#   return(IsMember(prop,list))
+#}
 
 
 ## This will attempt to get an unused data file, with specified parameters; if it fails,
