@@ -3,7 +3,7 @@
 //    Name:       src/objects/PCustomObject.cpp
 //    Purpose:     Contains generic specs for all objects containing text
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2013 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2013-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -86,14 +86,26 @@ ObjectValidationError PCustomObject::ValidateProperty(std::string name, Variant 
 ObjectValidationError PCustomObject::ValidateProperty(std::string name)const
 {
  
+
    ObjectValidationError ove = PEBLObjectBase::ValidateProperty(name);
     
     if(ove == OVE_VALID)
         return ove;
-
-    else if(true)
-        return OVE_VALID;
     else
         return OVE_INVALID_PROPERTY_NAME;
 
+}
+
+
+/// This sends the color descriptions to the specified stream.
+std::ostream & PCustomObject::SendToStream(std::ostream& out) const
+{
+    out << ObjectName()<< std::flush;
+    return out;
+}
+
+
+std::string PCustomObject::ObjectName() const
+{
+    return mName;
 }
