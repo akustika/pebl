@@ -309,11 +309,10 @@ string  PEBLPath::FindFile(const string & filename)
             
             
             //Check to see if the file exists.
-            cout << "Checking:" << tmp.c_str() << "|" << stat(tmp.c_str(), &st)<< endl;
+            //cout << "Checking:" << tmp.c_str() << "|" << stat(tmp.c_str(), &st)<< endl;
             if(stat(tmp.c_str(), &st)==0)
                 {
-                    cout << "file ["<<tmp<<"] exists\n";
-
+                    //cout << "file ["<<tmp<<"] exists\n";
                     //The file exists, so return it
                     return tmp;
                 }

@@ -31,10 +31,11 @@
 
 #include "../../utility/PEBLPath.h"
 #include "../../utility/PError.h"
+
 #ifdef PEBL_EMSCRIPTEN
-#include "../../base/Evaluator.h"
-#else
 #include "../../base/Evaluator2.h"
+#else
+#include "../../base/Evaluator.h"
 #endif
 
 #if defined(PEBL_OSX) | defined(PEBL_EMSCRIPTEN)
@@ -167,7 +168,7 @@ unsigned int readFileToMemory(const char path[], char ** buffr){
     FILE *file = fopen(path, "rb");
     if(file != NULL){
         fileSize = getFileSize(&file);
-        cout << "FIlesize: " << fileSize << endl;
+        //cout << "FIlesize: " << fileSize << endl;
         char* buff = getFileBuffer(&file,fileSize);
        
 
@@ -190,10 +191,6 @@ PlatformFont::PlatformFont(const std::string & filename, int style, int size, PC
 
 {
 
-
-
-    cout << "CREATING FONT 1\n";
-    //    cout << "Path:" << Evaluator::gPath << endl;
     string fontname = Evaluator::gPath.FindFile(mFontFileName);
     if(fontname == "")
         PError::SignalFatalError(string("Unable to find font file [")  + mFontFileName + string("]."));
@@ -251,7 +248,7 @@ PlatformFont::PlatformFont(const std::string & filename, int style, int size, PC
  PlatformFont::PlatformFont(const PlatformFont & font)
 
 {
-    cout << "CREATING FONT 2\n";
+
     mFontFileName    = font.GetFontFileName();
     mFontStyle       = font.GetFontStyle();
     mFontSize        = font.GetFontSize();
@@ -277,11 +274,10 @@ PlatformFont::PlatformFont(const std::string & filename, int style, int size, PC
 PlatformFont::~PlatformFont()
 {
 
-    std::cout << "Deleting font\n";
+
     TTF_CloseFont(mTTF_Font);
     mTTF_Font = NULL;
 
-    std::cout << "Freeing font buffer\n";
     free( mBuffer);
     mBuffer=NULL;
 }
