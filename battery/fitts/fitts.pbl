@@ -49,9 +49,12 @@ define Start(p)
     }
 
 
-  MakeDirectory("data")
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"fitts","csv")
-  gPointFile <-  GetNewDataFile(gSubNum,gWin,"fittspoints","csv")
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"fitts","csv",
+       "subnum,trial,type,pos,size,ShowPreview,mousex,mousey,clicks,time")
+
+  gPointFile <-  GetNewDataFile(gSubNum,gWin,"fittspoints","csv",
+                                 "trial,size,pos,time,mouseX,mouseY")
 
   ShowCursor(0)
   gTargCol  <- MakeColor("red")
@@ -298,12 +301,13 @@ define WaitForMouseMovement()
    pos <-GetMouseCursorPosition()
     
    continue <- 1
+   Print("checkign equality of: "+ lastpos + " == "+ pos)
    while(ListEqual(lastpos,pos)) 
     {
 
     	Draw()
 	lastpos <- pos
-        pos <- WaitForMouseMovement()
+        pos <- GetMouseCursorPosition()
     }
 }
 
