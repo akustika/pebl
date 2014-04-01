@@ -3,7 +3,7 @@
 //    Name:       src/objects/PWindow.cpp
 //    Purpose:    Contains generic specification for a main window class.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -44,8 +44,6 @@ PWindow::~PWindow()
 
 bool PWindow::SetProperty(std::string name, Variant v)
 {
-
-    cout <<"Setting property:" << name << "+" << v<<endl;
 
 
     if(PWidget::SetProperty(name,v))

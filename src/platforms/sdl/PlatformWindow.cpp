@@ -151,7 +151,7 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
     int height = vHeight;
     int depth  = vDp;    
 
-    cout << width << "----" << height << " in platformwindow\n";
+    //    cout << width << "----" << height << " in platformwindow\n";
 
 
     //As of Version 0.13, the PVM_ mode stuff is completely unused,
@@ -334,11 +334,14 @@ bool PlatformWindow::Draw()
 {
 
     //if (SDL_MUSTLOCK(mSurface)) SDL_LockSurface(mSurface);
- 
+
+    
+    Variant backgroundColor = PEBLObjectBase::GetProperty("BGCOLOR");
+
     //First, draw the background       
     SDL_FillRect(mSurface, NULL, SDL_MapRGBA(mSurface->format, 
-                                             mBackgroundColor.GetRed(),
-                                             mBackgroundColor.GetGreen(),
+                                            mBackgroundColor.GetRed(),
+                                            mBackgroundColor.GetGreen(),
                                              mBackgroundColor.GetBlue(),
                                              mBackgroundColor.GetAlpha()));
 

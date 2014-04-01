@@ -3,7 +3,7 @@
 //    Name:       src/objects/PWidget.cpp
 //    Purpose:    Contains methods for primary GUI element
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -58,7 +58,7 @@ PWidget::PWidget():
     
 }
 
-PWidget::PWidget(int x, int y, int width, int height, bool visible):
+PWidget::PWidget(pInt x, pInt y, pInt width, pInt height, bool visible):
     mX(x),
     mY(y),
     mDrawX(x),
@@ -88,14 +88,14 @@ PWidget::~PWidget()
 
 }
 
-bool PWidget::RotoZoom(double angle, double zoomx, double zoomy, int smooth)
+bool PWidget::RotoZoom(pDouble angle, pDouble zoomx, pDouble zoomy, pInt smooth)
 {
     
     return false;
 }
 
 
-bool PWidget::SetPoint(int x, int y, PColor col)
+bool PWidget::SetPoint(pInt x, pInt y, PColor col)
 {
     //This should go straight to PlatforwWidget::SetPoint
 
@@ -103,7 +103,7 @@ bool PWidget::SetPoint(int x, int y, PColor col)
 }
 
 
-PColor PWidget::GetPixel(int x, int y)
+PColor PWidget::GetPixel(pInt x, pInt y)
 {
     //This should go straight to PlatforwWidget::GetPixel
 
@@ -121,15 +121,15 @@ bool PWidget::SetProperty(std::string name, Variant v)
         {
             if (name == "X") SetPosition(v,mY);
             else if (name == "Y") SetPosition(mX,v);
-            else if (name == "ZOOMX") SetZoomX((long double)v);
-            else if (name == "ZOOMY") SetZoomY((long double)v);
-            else if (name == "ROTATION") SetRotation((long double)v);
-            else if (name == "WIDTH") SetWidth((int)v);
-            else if (name == "HEIGHT") SetHeight((int)v);
+            else if (name == "ZOOMX") SetZoomX(( pDouble)v);
+            else if (name == "ZOOMY") SetZoomY(( pDouble)v);
+            else if (name == "ROTATION") SetRotation(( pDouble)v);
+            else if (name == "WIDTH") SetWidth((pInt)v);
+            else if (name == "HEIGHT") SetHeight((pInt)v);
             else if (name == "BGCOLOR") 
-                {
 
-                    SetBackgroundColor(*((PColor*)(v.GetComplexData())));
+                {
+                    PColor bgcolor = *((PColor*)(v.GetComplexData()->GetObject().get()));                    SetBackgroundColor(bgcolor);
                 }
             else if (name == "VISIBLE")
                 {
@@ -186,8 +186,11 @@ Variant  PWidget::GetProperty(std::string name)const
 
 
 ///This sets the widget's position on its parent widget.
-void PWidget::SetPosition(int x, int y)
+
+void PWidget::SetPosition(pInt x, pInt y)
 {
+
+    //cout << "Setting widget position in PWidget\n";
     mX = x;
     mY = y;
     mDrawX = x;
@@ -197,29 +200,36 @@ void PWidget::SetPosition(int x, int y)
     PEBLObjectBase::SetProperty("Y",mY);
 }
 
+
+
 ///This sets the widget's position on its parent widget.
-void PWidget::SetZoomX(double x)
+void PWidget::SetZoomX(pDouble x)
 {
+
     mZoomX = x;
     PEBLObjectBase::SetProperty("ZOOMX",mZoomX);
+    SetProperty("X",mX); //reset X as it matters for images/labels
 }
 ///This sets the widget's position on its parent widget.
-void PWidget::SetZoomY(double y)
+void PWidget::SetZoomY(pDouble y)
 {
+
     mZoomY = y;
     PEBLObjectBase::SetProperty("ZOOMY",mZoomY);
+    SetProperty("Y",mY);//reset y as it matters for images/labels
+
 }
 
 
 
-void PWidget::SetHeight(int h)
+void PWidget::SetHeight(pInt h)
 {
     mHeight = h;
     PEBLObjectBase::SetProperty("HEIGHT",mHeight);
 
 }
 
-void PWidget::SetWidth(int w)
+void PWidget::SetWidth(pInt w)
 {
     mWidth = w;
     PEBLObjectBase::SetProperty("WIDTH",mWidth);
@@ -227,7 +237,7 @@ void PWidget::SetWidth(int w)
 }
 
 ///This sets the widget's position on its parent widget.
-void PWidget::SetRotation(double x)
+void PWidget::SetRotation(pDouble x)
 {
     mRotation = x;
     PEBLObjectBase::SetProperty("ROTATION",x);
@@ -241,13 +251,20 @@ std::ostream & PWidget::SendToStream(std::ostream& out) const
 }
 
 
-void PWidget::SetBackgroundColor(PColor color)
+void PWidget::SetBackgroundColor(const PColor & color)
 {
-    mBackgroundColor = color;  
-    counted_ptr<PEBLObjectBase> pob = counted_ptr<PEBLObjectBase>(&mBackgroundColor);
+
+    PColor * pc = new PColor(color);
+
+    counted_ptr<PEBLObjectBase> pob = counted_ptr<PEBLObjectBase>(pc);
     PComplexData * pcd = new PComplexData(pob);
     Variant col = Variant(pcd);
-    InitializeProperty("BGCOLOR", col);
+
+
+    PEBLObjectBase::SetProperty("BGCOLOR",col);
+    mBackgroundColor = PColor(color);  
+    //    InitializeProperty("BGCOLOR", col);
+    
 }
 
 
