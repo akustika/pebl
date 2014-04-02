@@ -86,8 +86,6 @@ define Start(p)
  
   InitPoles()
 
-  FilePrint(gFileOut,"sub,trial,size,current,end,step,abstime,trialtime,clicktime,done")
-  FilePrint(gFileOutSum,"sub,trial,size,shortest,startlab,endlab,startconf,endconf,steps,time")
 
   gInstructions.width <- 220
   gInstructions.height <- 520
@@ -200,6 +198,8 @@ define TrialTOH(pair)
       config <- MoveDisk(config)
       time <- GetTime()
       FilePrint_(gfileout, gSubNum + "," + gTrial + "," + numdisks + "," +
+                  MakeStateString(config) + "," +
+                  MakeStateString(config1) +","+
                  step + "," + time +
                   "," + (time - starttime) +"," + (time-lasttime))
 
@@ -393,8 +393,13 @@ define InitPoles()
   gRect <- Rectangle(gbaseX+310,80,460,140,MakeColor("white"),1)
   AddObject(gRect,gWin)
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"toh","csv")
-  gFileOutSum <- GetNewDataFile(gSubNum,gWin,"toh-summary","csv")
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"toh","csv",
+    "sub,trial,size,current,end,step,abstime,trialtime,clicktime,done")
+
+  gFileOutSum <- GetNewDataFile(gSubNum,gWin,"toh-summary","csv",
+      "sub,trial,size,shortest,startlab,endlab,startconf,endconf,success,steps,time")
+
 
  }
 
