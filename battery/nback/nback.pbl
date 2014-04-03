@@ -33,7 +33,8 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
    }
   
-   gFileOut <- GetNewDataFile(gSubNum,gWin,"nback","csv")
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"nback","csv",
+   "subnum,block,trial,dim1,dim2,nDim,n,isi,d1,d2,d3,d4,dotext,doaudio,dospatial,timestart,resp1,corr1,time2,rta,resp2,corr2,time3,rtb")
 
   ##Do some basic  instructions. If you use this test, please edit the following, and provide your instructions back to the PEBL project.
 
@@ -45,8 +46,8 @@ define Start(p)
    ShowCursor(0)
    DoNBackSequence(gParams.test1,"none",1,gParams.isi,2,2,2,10)
 
-  MessageBox("Great.  Now, you will try to do the same thing, but ignore the immediately previous trial, and match the stimulus you saw TWO back.  For example, the following stimuli are the ones you should respond to: "+CR(1)+ "1 (NO)"+CR(1)+
-"2 (NO)"+CR(1)+ "1 (YES)"+CR(1)+ "1 (NO)"+CR(1)+ "1 (YES)"+CR(2)+"To repeat, respond when the stimulus matches the one TWO Back." ,gWin)
+  MessageBox("Great.  Now, you will try to do the same thing, but ignore the immediately previous trial, and match the stimulus you saw TWO back.  For example, the following stimuli are the ones you should respond to: "+CR(1)+ "A (NO)"+CR(1)+
+"C (NO)"+CR(1)+ "A (YES)"+CR(1)+ "A (NO)"+CR(1)+ "A (YES)"+CR(2)+"To repeat, respond when the stimulus matches the one TWO Back." ,gWin)
 
    ShowCursor(0)
    gBlock <- "p2"
@@ -383,7 +384,7 @@ define DoNBackSequence(dim1,dim2, n, isi,
 
       timestart <- GetTime()     
       offtime <- timestart + ontime
-      endtrialtime <- timeStart + isi
+      endtrialtime <- timeStart + isi - 250
 
       if(doText)
       {
@@ -463,7 +464,14 @@ define DoNBackSequence(dim1,dim2, n, isi,
        }
      Draw()
 
-     WaitUntil(offtime)
+     WaitUntil(endtrialtime)
+
+
+     Hide(respRight)
+     Hide(respLeft)
+
+     Draw()
+     Wait(250)
 
 
      Draw()
