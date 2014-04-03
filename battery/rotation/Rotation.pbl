@@ -20,11 +20,11 @@
 define Start(par)
 {
 
-  parpairs <- [["numrepeats",2],
+  parpairs <- [["numrepeats",4],
                ["bgcolor","black"],
 	       ["fgcolor","red4"],
 	       ["xoffset",300]
-               ]
+              ]
 
 
   gParams <- CreateParameters(parpairs,gParamFile)
@@ -32,15 +32,13 @@ define Start(par)
     ##Create a couple polygon stimuli. Specify others here:
 
       stim1 <- [[-20,  0,  0, 20,20, 0, 0,-20],
-	  		 [-80,-80,10,10,80,80,30, 30]]
+  		 [-80,-80,10,10,80,80,30, 30]]
 
       stim2 <- [[-80, 80, 80,-50,-50,-80],
-			 [-40,-40,-20,-20,40,40]]
+		 [-40,-40,-20,-20,40,40]]
 
      stims <- [stim1,stim2]
-
-
-
+     stimnames <- ["bigl","zbolt"] ##for output purposes
 
    ## Number of times through the design.
    numRepeats <- gParams.numrepeats
@@ -75,7 +73,10 @@ define Start(par)
   
 
 
-  fileOut <- GetNewDataFile(gSubNum,win,"rotate","csv")
+  fileOut <- GetNewDataFile(gSubNum,win,"rotate","csv",
+                "subNum,trialnum,cond,stimid,rot,resp,cor,rt")
+
+  reportfile <- GetNewDataFile(gSubNum,win,"rotate-report","txt", "")
 
   data <- []
 
@@ -97,9 +98,9 @@ define Start(par)
      {
 
      stimid <-First(i)
-     pts  <- Nth(stims,stimid)
-     rot  <- Nth(i,2)
-     cond <- Nth(i,3)
+     pts  <- Nth(stims,stimid)  ##actual points
+     rot  <- Nth(i,2)           ##rotation angle
+     cond <- Nth(i,3)           ##same v. diff
 
     fgcolor <- MakeColor(gParams.fgcolor)
      ##Pick a random base rotation.
@@ -134,7 +135,7 @@ define Start(par)
                "," +  rot + "," + resp + "," + cor + "," + (t2-t1))
 
 
-    data <- Append(data,[cond,rot,(t2-t1)])
+    data <- Append(data,[cond,rot,(t2-t1),stimid])
     
     RemoveObject(poly1,win)
     RemoveObject(poly2,win)
@@ -143,9 +144,34 @@ define Start(par)
 
     }
 
-   dd <- Transpose(data)
-   AggBy2(Nth(dd,3),Nth(dd,2),Nth(dd,1))
 
+   dd <- Transpose(data)
+
+   out <- ""
+   loop(i,stim) 
+   {
+     out <- out + "Stimulus object: " + Nth(stimnames,i) + CR(1)
+
+     filter <- Match(Nth(dd,4),i)
+     sub <- Filter(data,filter)
+     tsub <- Transpose(sub)
+
+     out <- out + CR(1)+   AggBy2(Nth(tsub,3),Nth(tsub,2),Nth(tsub,1))
+     out <- out + CR(1)
+   }
+
+
+   FilePrint(reportfile,"-----------------------------------")
+   FilePrint(reportfile,"PEBL Mental Rotation Task")
+   FilePrint(reportfile,"PEBL Version: " +GetPEBLVersion())
+   FilePrint(reportfile, "Participant code: " +gSubNum)
+   FilePrint(reportfile, TimeStamp())
+   FilePrint(reportfile,"-----------------------------------")
+   FilePrint(reportfile,out)
+   FilePrint(reportfile,"-----------------------------------")
+   FileClose(reportfile)
+
+  MessageBox("Thank you for taking participating.  Click OK to continue",win)
 }
 
 
@@ -153,42 +179,49 @@ define AggBy2(val,c1,c2)
 {
    valsort <- ListBy(val,c2)
    c1sort  <- ListBy(c1,c2)
-   
+
+   out <- ""   
+ 
    loop(i,Transpose([Nth(c1sort,1),
-					Nth(c1sort,2),
+ 	            Nth(c1sort,2),
                     Nth(valsort,2)]))
    {
 
-     Print("Condition " + Nth(i,1))
+    out <- out + CR(1)+     Print("Condition: " + Nth(i,1))
 
-     Print("-----------------------------------")
-     Print("Angle  N    Median   Mean    SD")
-     Print("-----------------------------------")
-     PrintTable(1,Aggregate(Nth(i,3),Nth(i,2)))
-     Print("-----------------------------------")
+    out <- out + CR(1)+     Print("-----------------------------------")
+    out <- out + CR(1)+     Print("Angle  N    Median   Mean    SD")
+    out <- out + CR(1)+     Print("-----------------------------------")
+    out <- out + CR(1)+     PrintTable(Aggregate(Nth(i,3),Nth(i,2)))
+    out <- out + CR(1)+     Print("-----------------------------------")
 
    } 
+
+ return out
 }
 
-define PrintTable(file,table)
+define PrintTable(table)
 {
+   out <- ""
    loop(i,table)
    { 
        loop(j,i)
          {
-            PrintMe_(file,Rnd(j,1) + Tab(1))
+          out <-  out + PrintMe_(Rnd(j,1) + Tab(1))
          }
-      PrintMe(file,"")
+        out <-  out + CR(1)+   PrintMe("")
    }
+ return out
 }
 
-define PrintMe(file,val)
+define PrintMe(val)
 {
-  Print(val)
+  return Print(val)
 }
-define PrintMe_(file,val)
+
+define PrintMe_(val)
 {
-  Print_(val)
+  return Print_(val)
 }
 
 ## This finds mean and SD RT for 
@@ -216,8 +249,6 @@ define Aggregate(data, cond)
 
  return stats
 }
-
-
 
 
 define ScoreTrial(resp, cond)
