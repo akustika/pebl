@@ -1,7 +1,9 @@
 ﻿#!/usr/bin/env pebl
 ##  This is a PEBL script that acts as a cross-platform 
 ##  launcher for PEBL.
-## Version 0.3: Adds parameter setting (version 0.14).
+## Version 0.3: Adds parameter setting (version 0.14), 
+## data file combining, http version check.
+##
 ##  Version 0.2: Initial release, to accompany PEBL 0.13.
 ##  (c) 2011-2014 Shane T. Mueller, Ph.D. smueller@obereed.net
 ##
@@ -11,10 +13,14 @@ define Start(p)
 
     gdebug <- 1
   
-	  gsystemType <- GetSystemType()
-  	  ghome <- GetHomeDirectory()
+    gsystemType <- GetSystemType()
+    ghome <- GetHomeDirectory()
     
-	
+    parPairs <- [["checkfornew",1],
+                 ["newest","0.14"]
+                 ]
+
+    gParams  <- CreateParameters(parpairs,"launcher.pbl.par")
 		
       if(gSystemtype == "WINDOWS")
 	   {
@@ -171,10 +177,10 @@ define FileSelect(p)
     randomizeChainText <- ""
    }
 
-   ##keep track of the offset/select pairs when you move to new directories.
+   ##keep track of the gOffset/select pairs when you move to new directories.
    selectStack <- []
    gselected <-1     #Which item is selected in the fileview
-   offset <- 0      #offset in the fileview
+   gOffset <- 0      #gOffset in the fileview
 
 
 
@@ -218,8 +224,9 @@ define FileSelect(p)
    params     <- MakeButton(xbase+100,ybase-40,200,win,gEditParams)
 
    edit       <- MakeButton(xbase+55,ybase+height+20,120,win,gOpenText)
-   exit       <- MakeButton(xbase+55,ybase+height+45,120,win,gExitText)
-   combinedata <- MakeButton(xbase+55,ybase+height+70,120,win,gCombineDataText)
+   combinedata <- MakeButton(xbase+55,ybase+height+45,120,win,gCombineDataText)
+   exit       <- MakeButton(xbase+55,ybase+height+70,120,win,gExitText)
+
    viewoutput <- MakeButton(xbase+200,ybase+height+20,150,win,gViewDebugText)
    viewerror  <- MakeButton(xbase+200,ybase+height+45,150,win,gViewErrorText)
 
@@ -386,42 +393,78 @@ define FileSelect(p)
 
 
 
-   gPortal.text <- DirToText(First(gfilelist),Second(gfilelist),offset,gDirChain)
+   gPortal.text <- DirToText(First(gfilelist),Second(gfilelist),gOffset,gDirChain)
 
    gSelection.y <- gPortal.y+yheight*(gselected-.5)
+
+
+
+
+   if(gparams.checkfornew)
+   {
+     newestlabel <- Easylabel("checking for new version", xbase+250, ybase+height+62-80,win,fontsize)
+
+     MoveCorner(newestlabel,xbase+135,ybase+height+65)
+     Draw()
+
+        newest <- GetHTTPText("www.obereed.net","/latestpeblversion.txt")
+	Print(newest)
+        if(First(newest)==200)
+	{
+	  newestversion <- Second(newest)
+	  if(newestversion == "0.14"+CR(1))
+           {
+                newlab <- "PEBL Up-to-date: Version:"+newestversion
+           } else {
+                newlab <- "PEBL Out-of-date: Version "+newestversion+" available."
+           }
+         } else{
+              newlab <- "Version check failed.  Using Version 0.14"
+         }
+   }else{
+
+    newlab <-"PEBL Version 0.14"
+   }
+
+   newestlabel.text  <- newlab
+   MoveCorner(newestlabel,xbase+135,ybase+height+65)
+
    Draw()
    cont <- 1
    while(cont)
     { 
 
+     
+    ###update the portal:
 
+     gSelection.y <- gPortal.y+yheight*(gselected-.5-gOffset)
+     thumby <- (gOffset / (Length(gflatfilelist)-gPortalNum-1))*(portalHeight-gutter*2)
+     gPortal.text <- DirToText(First(gfilelist),Second(gfilelist),gOffset,gDirChain)
 
-     gSelection.y <- gPortal.y+yheight*(gselected-.5-offset)
-     thumby <- (offset / (Length(gflatfilelist)-gPortalNum-1))*(portalHeight-gutter*2)
-     gPortal.text <- DirToText(First(gfilelist),Second(gfilelist),offset,gDirChain)
 
      ##find out if there is a text description of the selected text.
 
-	 ##Make sure selected didn't get off the end of the list because
-	 ##of filtering or whatnot.
-	 gSelected<- Min([gSelected,Length(gFlatFileList)])
+     ##Make sure selected didn't get off the end of the list because
+     ##of filtering or whatnot.
+     gSelected<- Min([gSelected,Length(gFlatFileList)])
       
-	 descname <- DirListToText(gDirChain)+Nth(gflatfilelist,gselected)+".about.txt"
-	 path.text <- DirListToText(gDirChain)
-  	 MoveCorner(path,xbase+2,ybase-18)
+     descname <- DirListToText(gDirChain)+Nth(gflatfilelist,gselected)+".about.txt"
+     path.text <- DirListToText(gDirChain)
+     MoveCorner(path,xbase+2,ybase-18)
 
-	 if(FileExists(descname))
+     if(FileExists(descname))
       {
 
-	     text <- FileReadText(descname)
-		 description.text <-  text 
+         text <- FileReadText(descname)
+	 description.text <-  text 
       } else {
          description.text <- gNoDesc
       }
 
      screenname <-DirListToText(gDirChain)+Nth(gFlatFileList,gselected)+".png"
 
-	 if(FileExists(screenname))
+     Print("checking: " + screenname)
+     if(FileExists(screenname))
       {
 
 	     RemoveObject(screenshot,win)
@@ -441,18 +484,51 @@ define FileSelect(p)
 
       } else {
 	  
+          ##try to find any .png file, provided it is a  subdirectory
+            if(IsDirectory( DirListToText(gDirChain)+Nth(gFlatFileList,gselected)))
+	    {
+	     list <- GetDirectoryListing( DirListToText(gDirChain)+Nth(gFlatFileList,gselected))
+	     Print("directory listing:")
+             Print(list)
+	     pngs <- Second(FilterDir(list,gDirChain,"*.png"))
+             if(Length(pngs)>0)
+	     {
+
+              Print("Candidate PNG FILES:"+pngs)
+       	      RemoveObject(screenshot,win)
+              screenname <- DirListToText(gDirChain)+Nth(gFlatFileList,gselected)+"/"+First(pngs)
+             Print("attempting:" +screenname)
+	      screenshot <- MakeImage(screenname)
+
+	     AddObject(screenshot,win)
+
+ 	     ##scale to 400x300
+	     scalew <- 400/screenshot.width  
+	     scaleh <- 300/screenshot.height
+	     scale <- Min([scalew,scaleh])
+
+	     screenshot.zoomX <- scale
+	     screenshot.zoomY <- scale
+
+	     Move(screenshot,780,530-adjust)
+
+	     }
+	     
+	    }else{
+
 	     RemoveObject(screenshot,win)
 	     screenshot <- screenshotdummy
 	     AddObject(screenshot,win)
-
+            }
 
       }
 	  
 
 	 #make sure thumb fits inside its channel.
-	 gThumb.y <- Max([Min([thumbY+ybase+gutter*2,slidebin.y+slidebin.height/2-gutter]),gPortal.y+gutter])
+##	 gThumb.y <- Max([Min([thumbY+ybase+gutter*2,slidebin.y+slidebin.height/2-gutter]),gPortal.y+gutter])
 
      Draw()
+
 
      tmp <-	 WaitForClickOnTarget([gPortal,upbg,downbg,exit,slidebin,
 				   run,subjectbox,fullscreenbox,expbox,langbox,
@@ -475,7 +551,7 @@ define FileSelect(p)
 
 	      ##update selection rectangle here
 	      clicky <- Second(gClick)
-	      newselected <- Floor((clicky-gPortal.y)/yheight)+1 + offset
+	      newselected <- Floor((clicky-gPortal.y)/yheight)+1 + gOffset
 
 		  ##if we click past the last entry, don't adjust selection
 		  if(newselected > Length(gFlatFileList))
@@ -493,9 +569,9 @@ define FileSelect(p)
                {	
 
 			      ##we are backing up.
-				  last <- Nth(selectstack,Length(selectstack))
-				  gselected <- 	First(last)
-			      offset <- Second(last)
+			      last <- Nth(selectstack,Length(selectstack))
+			      gselected <- 	First(last)
+			      gOffset <- Second(last)
 
 
 				  ##Remove the last item.
@@ -512,8 +588,8 @@ define FileSelect(p)
  		      }elseif(Length(gDirChain)>Length(selectstack))
                          {
 			     #We opened a new subdirectory.
-                        selectStack <- Append(selectstack,[gselected, offset])
-                        offset <- 0
+                        selectStack <- Append(selectstack,[gselected, gOffset])
+                        gOffset <- 0
 			
         	        gfilelist <-  FilterDir(GetDirectoryListing(DirlistToText(gDirChain)),gDirChain,First(gFilters))
          	        gFlatFileList <- Flatten(gfilelist)
@@ -533,21 +609,21 @@ define FileSelect(p)
            }
       }elseif(tmp==2)  ## up arrow
       {
-	    offset <- Max([offset - 1,0])
+	    gOffset <- Max([gOffset - 1,0])
 
-        if(gselected<=offset)
+        if(gselected<=gOffset)
           {
-		    gselected <- offset + 1
+	    gselected <- gOffset + 1
           }
-        if(gselected > offset+gPortalNum)
+        if(gselected > gOffset+gPortalNum)
           {
-		    gselected <- offset+gPortalNum
+		    gselected <- gOffset+gPortalNum
           }
 
       }elseif(tmp==3) ## down arrow
       {
-	    offset <- Min([offset+1, Length(gFlatFileList)-gPortalNum])
-		gselected <- Max([offset+1,gselected])
+	    gOffset <- Min([gOffset+1, Length(gFlatFileList)-gPortalNum])
+		gselected <- Max([gOffset+1,gselected])
 
 
       }elseif(tmp == 5) ##click on the slider bin
@@ -555,35 +631,52 @@ define FileSelect(p)
 	    
 
 
-		filelen <- Length(gFlatFileList)
-		if(filelen <= gPortalNum)
+	filelen <- Length(gFlatFileList)
+	if(filelen <= gPortalNum)
          {
-           offset <- 0
+           gOffset <- 0
 
          } else {
-
-         clicky  <- Second(gClick)
-		 
-		 proportion <- ((clicky - gPortal.y)/gPortal.height)
-
-		 offset  <- Floor(proportion * (filelen - gPortalNum))
-		 if(gselected < offset)
-          {
-             gselected <- offset+1
-          }
-		  if(gselected>offset+gPortalNum)
-		  {
-		     gselected > offset+gPortalNum
-   		  }
+             Print("AAAAA")
+        
+            if(1)
+              {
+               clicky  <- Second(gClick)
+               proportion <- ((clicky - gPortal.y)/gPortal.height)
+               gOffset  <- Floor(proportion * (filelen - gPortalNum))
+	       if(gselected < gOffset)
+               {
+                  gselected <- gOffset+1
+               }
+	      if(gselected>gOffset+gPortalNum)
+	        {
+	         gselected <- gOffset+gPortalNum
+   	        }
 
 		  ##
 		  ##now, 'capture the thumb' until you upclick
 		  ##
- 		  #  RegisterEvent("<MOUSE_MOVEMENT>",1,1 ,"<TRUE>","UPDATECAPTUREDTHUMB", [1])
-		  #  RegisterEvent("<MOUSE_BUTTON>",1,1,"<TRUE>","CLEARTHUMBCAPTURE", [1])
-          #  out <-  StartEventLoop()
-          #  ClearEventLoop()
+               }
+  
+               UpdateCapturedThumb("dummy")
 
+  	      if(1)
+                {
+
+ 		  RegisterEvent("<MOUSE_MOVEMENT>",1,1 ,"<TRUE>","UPDATECAPTUREDTHUMB", ["mousemove-0"])
+		 
+		 ##devicetype,
+		 ##interface
+		 ##value
+		 ##test
+		 ##fname
+		 ##parameter
+ 		  RegisterEvent("<MOUSE_BUTTON>",1,1,"<EQUAL>","UPDATECAPTUREDTHUMB", ["mousebutton-1"])
+	          RegisterEvent("<MOUSE_BUTTON>",1,0,"<EQUAL>","CLEARTHUMBCAPTURE", ["mousebutton-0"])
+                  out <-  StartEventLoop()
+                  ClearEventLoop()
+
+                }
 
          }
       }elseif(tmp ==4) ##Exit
@@ -611,7 +704,7 @@ define FileSelect(p)
             {
               gselected <- 1 
             }
-		   offset <- 0
+	   gOffset <- 0
 
 
          } else {
@@ -808,18 +901,18 @@ define FileSelect(p)
          {
            #
 
-	     if(GetSystemType()=="LINUX")
+          if(GetSystemType()=="LINUX")
           {
     	   relx <- First(gClick) - (description.x )
-	       rely <- Second(gClick) - (description.y )
+           rely <- Second(gClick) - (description.y )
     	   cursorpos <-  GetTextBoxCursorFromClick(description,relx,rely)
-	       description.cursorpos <- cursorpos 
+           description.cursorpos <- cursorpos 
      	   Draw()
-  		   desctext <- GetInput(description,"<return>",1)
-         descname <- DirListToText(gDirChain)+Nth(gFlatFileList,gselected)+".about.txt"
-         outfile <- FileOpenOverWrite(descname)
-         FilePrint(outfile,desctext)
-		     FileClose(outfile)
+  	   desctext <- GetInput(description,"<return>",1)
+           descname <- DirListToText(gDirChain)+Nth(gFlatFileList,gselected)+".about.txt"
+           outfile <- FileOpenOverWrite(descname)
+           FilePrint(outfile,desctext)
+           FileClose(outfile)
 
          	#SystemCall(gViewerCommand + " " + DirListToText(gDirChain)+Nth(gFlatFileList,gselected)+".about.txt&")
           } else {
@@ -867,9 +960,6 @@ define FileSelect(p)
         chaintitle.text  <- gExpChainText+gConfigName
         chainlist.text <- MakeExpChainText(gexpchain)
 
-
-
-
       }elseif(tmp==25)  ##Visit wiki
       {
         PushButton(wiki)
@@ -891,9 +981,9 @@ define FileSelect(p)
       } elseif(tmp==26)
       { 
 
-	     gSubCode <- (ToNumber(subjectbox.text)+1)+""
-		 subjectbox.text <- gSubCode
-	     PushButton(subplusbutton)
+	    gSubCode <- (ToNumber(subjectbox.text)+1)+""
+            subjectbox.text <- gSubCode
+	    PushButton(subplusbutton)
 
       } elseif(tmp==27)
       { 
@@ -1126,13 +1216,20 @@ define FilterDir(inlist,path,type)
        } elseif(type=="data files") {
        if(IsDataFile(i))
          {
-		     tmppbl <- Append(tmppbl,i)
+	     tmppbl <- Append(tmppbl,i)
          }
 	        
        } elseif(type=="*.*"){
 	   ##no filter:
-		     tmppbl <- Append(tmppbl,i)
+	     tmppbl <- Append(tmppbl,i)
+       }elseif(type=="*.png")
+       {
+         if(IsPNGFile(i))
+	 {
+           tmppbl <- Append(tmppbl,i)
+	 }
        }
+ 
 
      }
   }
@@ -1150,7 +1247,7 @@ define DirToText(dirlist,filelist,offset,path)
   tmp <- []
   loop(i,dirlist)
   {
-    tmp <- Append(tmp,  i +"\"+ CR(1))
+     tmp <- Append(tmp,  i +"\"+ CR(1))
   }
 
   loop(i,filelist)
@@ -1158,12 +1255,10 @@ define DirToText(dirlist,filelist,offset,path)
     tmp <- Append(tmp,  i + CR(1))
   }
 
-  ##this crashes here sometimes here
-    #Print(tmp)
-	#Print(offset)
-	#Print(Length(tmp))
-   list <- SubList(tmp,offset+1,Length(tmp))
-
+  ##this crashes here sometimes here, let's be sure we access part of the list that we can.
+  offset <- Max([0,offset])
+  list <- SubList(tmp,offset+1,Length(tmp))
+  gOffset <- offset
  return ListToString(list)
 }
 
@@ -1382,6 +1477,22 @@ define IsDataFile(fname)
    return returnval
 }
 
+define IsPNGFile(fname)
+{
+
+  returnval <- 0
+  len <- StringLength(fname)	
+  if(len>4)	
+           {
+           if(Lowercase(SubString(fname,len-3,len))==".png")
+	     	{
+					  returnval <-  1
+                }
+
+          }
+   return returnval
+}
+
 
 define MakeButton(x,y,width,win,label)
 {
@@ -1520,59 +1631,80 @@ define Saveconfig(configname)
 
 define UpdateCapturedThumb(p)
 {
+   Print("Updating thumb capture"+p)
    time<- GetTime()
  
    if(time-gLastUpdate > 5)
     {
      mousexy <- GetMouseCursorPosition()
      UpdatePortal(mousexy)
+     gLastUpdate <- time
+     Draw()
     }
 
-   gLastUpdate <- time
-#   Draw()
+  
 }
 
 ##this should update the file list given mouse position
 define UpdatePortal(mousexy)
 {
 
-		mousey <- Second(mousexy)
-		filelen <- Length(gFlatFileList)
-
-
-		##compute the offset needed for the file window:
-		if(filelen <= gPortalNum)
+        Print_("updating portal:  ")
+	Print_(mousexy)
+	mousey <- Second(mousexy)
+	filelen <- Length(gFlatFileList)
+	##compute the offset needed for the file window:
+	if(filelen <= gPortalNum)
          {
-           offset <- 0
+           gOffset <- 0
          } else {
+	 
+          ##force proportion to be between 0 and 1:
+	  proportion <- Min([Max([ ((mousey - gPortal.y)/gPortal.height),0]),1.0])
 
-		 proportion <- ((mousey - gPortal.y)/gPortal.height)
-		 offset  <- Floor(proportion * (filelen - gPortalNum))
-		 if(gselected < offset)
-          {
-             gselected <- offset+1
-          }
-		  if(gselected>offset+gPortalNum)
-		  {
-		     gselected > offset+gPortalNum
-   		  }
+	  ##compute new gOffset. 
+          ##filelen is the number of files in the listing.
+          ##gportalnum is the size of the portal window in file rows.
+          ##
 
-		}
 
-	 gThumb.y <-  Max([Min([mousey, gPortal.y+gPortal.height/2-gutter*2]),gPortal.y+gutter])
-     gSelection.y <- gPortal.y+gyheight*(gselected-.5-offset)
-     gPortal.text <- DirToText(First(gfilelist),Second(gfilelist),offset,gDirChain)
 
+	  ##Figure out where the gOffset should be.  gOffset is the
+	  ##number of files down the list we actually want to display.
+	  gOffset  <- Max([0,Floor(proportion * (filelen - gPortalNum))])
+
+          Print("gOffset:"+gOffset)
+          if(gselected<=gOffset)
+           {
+  	    gselected <- gOffset + 1
+           }
+          if(gselected > gOffset+gPortalNum)
+           {
+   	    gselected <- gOffset+gPortalNum
+           }
+
+
+         ##move the thumb to the right spot.
+
+	 gThumb.y <-  Max([Min([mousey, gPortal.y+gPortal.height-gutter*2]),gPortal.y+gutter])
+         gSelection.y <- gPortal.y+gyheight*(gselected-.5-gOffset)
+         gPortal.text <- DirToText(First(gfilelist),Second(gfilelist),gOffset,gDirChain)
+             
 
 }
-
-
+}
+##this supposedly gets called on a mouse release event?
+##it should also get called when you leave the window...
 define CLEARTHUMBCAPTURE(p)
 {
-#		Print("**********************Clearing thumb capture")
+
+
+
+		Print("**********************Clearing thumb capture"+p)
 		##you should update the thumb here!
-        mousexy <- GetMouseCursorPosition()
-		UpdatePortal(mousexy)
+                mousexy <- GetMouseCursorPosition()
+		Print("MOUSE:" +mousexy)		
+		#UpdatePortal(mousexy)
 		gKeepLooping <- 0
 		Draw()
 }
@@ -2054,10 +2186,11 @@ define SetParameters(dirChain,scriptname,win)
   PushOnEnd(returns,"reset")
   PushOnEnd(returns,"quit")
   
-  cont <- 1
+   cont <- 1
    while(cont)
    {
-    resp <-   WaitForClickOnTarget(vals,returns)
+
+   resp <-   WaitForClickOnTarget(vals,returns)
 
     ##See if we need to edit something.
     if(resp == "quit")	
