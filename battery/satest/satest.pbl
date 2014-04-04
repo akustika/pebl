@@ -36,9 +36,10 @@ define Start(p)
    }
 
    MakeDirectory("data")
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"satest","csv","")
 
    gLogFile <- FileOpenAppend("data/satest-log.txt")
-   gFileOut <- GetNewDataFile(gSubNum,gWin,"satest","csv")
+
    FilePrint(gLogFile,"SATEST start " +GetTime() + " " + TimeStamp() + "  " + gSubNum )
 
    gUseTracking <- gParams.usetracking  #Should a predator follow a  prey around?
@@ -75,7 +76,7 @@ define Start(p)
 
    loop(i,basePrey)
     {
-       gPrey <- Append(gPrey,MakeImage(i))
+       gPrey <- Append(gPrey,MakeImage("images/"+i))
        gCurPrey <- Append(gCurPrey,MakeDest())
        endPrey <- Append(endPrey,MakeDest())
     }
@@ -85,7 +86,7 @@ define Start(p)
    endPred <- []
    loop(i,basePred)
     {
-       gPred <- Append(gPred,MakeImage(i))
+       gPred <- Append(gPred,MakeImage("images/"+i))
        gCurPred <- Append(gCurPred,MakeDest())
        endPred <- Append(endPred,MakeDest())
     }
@@ -339,7 +340,7 @@ define Start(p)
   ##Dat should contain summarized data now.
 
 
-  fileOut <- GetNewDataFile(gSubNum,gWin,"SAsummary","txt")
+  fileOut <- GetNewDataFile(gSubNum,gWin,"SAsummary","txt","")
   PrintSAStats(dat,fileout)
   FileClose(fileout)
 
@@ -419,7 +420,6 @@ define GetResponsesL1(outputhead)
 
         FilePrint(gFileOut,outputhead + ",Click1," + clicks + "," + resp.x + "," + resp.y + "," + GetTime() + ",NA")
         clicks <- clicks + 1
-
 
      }
 
