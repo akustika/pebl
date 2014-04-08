@@ -77,7 +77,7 @@ define Start(p)
 	   Print("Empty pooled data file.  Adding header")
 	   FilePrint(gPooledFileOut, header)
 	 }
-	FilePrint(gFileOut,header)
+
 	FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+",ANT,"+gResponseType+",INITIATED") 
 	DoInstructions()
 	FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+",ANT,"+gResponseType+",PRACTICE BEGIN") 
