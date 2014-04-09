@@ -32,9 +32,9 @@ define Start(p)
   gFileWindow <- EasyTextBox("",300,50,gWin,fontsize,450,400)
   gFileWindow.linewrap <-0
 
-  windowhead <- Easylabel("Files identified:",gfileWindow.x, gfilewindow.y-8,gWin,fontsize)
-  gyHeight <- windowhead.height 
-  windowhead.x <- gFileWindow.x+windowhead.width/2
+  gWindowhead <- Easylabel("Files identified:",gfileWindow.x, gfilewindow.y-8,gWin,fontsize)
+  gyHeight <- gWindowhead.height 
+  gWindowhead.x <- gFileWindow.x+gWindowhead.width/2
   gfilepreview <- EasyTextBox("",300,470,gWin,fontsize,450,100)
   gfilepreview.linewrap <- 0
   gPreviewHead <- Easylabel("Preview:",gfilepreview.x, gfilePreview.y-8,gWin,fontsize)
@@ -70,7 +70,8 @@ define Start(p)
   preview <- MakeButton(140,35,200,gWin,"Combine and open")
   combine   <- MakeButton(140,55,200,gWin,"Combine and save")
   exit      <- MakeButton(140,75,200,gWin,"Exit")
-
+  gStatus <- EasyLabel("",300,gVideoHeight-20,gWin,12)
+  UpdateStatus("status:")
 
   h1 <- MakeLabel("?",helpfont);Addobject(h1,gWin);Move(h1,preview.x-preview.width/2-5,preview.y)
   h2 <- MakeLabel("?",helpfont);Addobject(h2,gWin);Move(h2,combine.x-combine.width/2-5,combine.y)
@@ -79,15 +80,13 @@ define Start(p)
   h5 <- MakeLabel("?",helpfont);Addobject(h5,gWin);Move(h5,filtername.x-filtername.width/2-5,filtername.y)
   h6 <- MakeLabel("?",helpfont);Addobject(h6,gWin);Move(h6,excludename.x-excludename.width/2-5,excludename.y)
   h7 <- MakeLabel("?",helpfont);Addobject(h7,gWin);Move(h7,filenamename.x-filenamename.width/2-5,filenamename.y)  
-  h8 <- MakeLabel("?",helpfont);Addobject(h8,gWin);Move(h8,windowhead.x-windowhead.width/2-5,windowhead.y)  
+  h8 <- MakeLabel("?",helpfont);Addobject(h8,gWin);Move(h8,gWindowhead.x-gWindowhead.width/2-5,gWindowhead.y)  
   h9 <- MakeLabel("?",helpfont);Addobject(h9,gWin);Move(h9,gPreviewHead.x-gPreviewHead.width/2-5,gPreviewHead.y)  
   h10 <- MakeLabel("?",helpfont);Addobject(h10,gWin);Move(h10,help.x-5,help.y)  
 
+  UpdateFilter(directory,filter,exclude)
 
-  gfileList <- GetFilteredFiles(directory,filter,exclude)
-  gfilewindow.text <- ListToText(gfilelist)
-  SetSelected(1)  ##we get a crash here if there is no file in gFileList
-  Draw()
+  ##Put a message in the box
    objs <- [cb1,cb2]
    cont <- 1
    while (cont)
@@ -112,9 +111,9 @@ define Start(p)
      }elseif(out==3)
      {
         PushButton(preview)
-        gfileList <- GetFilteredFiles(directory,filter,exclude)
         CombineDataFiles(directory,filename,filter,exclude,cb2.state,cb1.state)
         Launchfile(filename)
+        UpdateStatus("File opened")
         Draw()
 
      } elseif(out==4)
@@ -125,10 +124,10 @@ define Start(p)
 
   	filterBox.cursorpos <-  GetTextBoxCursorFromClick(filterBox,relx,rely)
         filter <- GetInput(filterbox,"<return>",1)
-	gFileList <- GetFilteredFiles(directory,filter,exclude)
-        gfilewindow.text <- ListToText(gFileList)
-        SetSelected(1)
-        Draw()
+
+         UpdateFilter(directory,filter,exclude)
+         Draw()
+
 
      }elseif(out==5)
      {  ##excludebox
@@ -139,12 +138,9 @@ define Start(p)
   	   excludeBox.cursorpos <-  GetTextBoxCursorFromClick(excludeBox,relx,rely)
 
 	   exclude <- GetInput(excludebox,"<return>",1)
-	   gfileList <- GetFilteredFiles(directory,filter,exclude)
-           gfilewindow.text <- ListToText(gfileList)
-
-	   SetSelected(1)
-
+           UpdateFilter(directory,filter,exclude)
 	   Draw()
+
      }elseif(out==6)
      {  ##click on file window
         clicky <- Second(gClick)
@@ -163,9 +159,11 @@ define Start(p)
 	   Draw()
      }elseif(out==8)
      {
-     
+
+ 
      PushButton(combine)
      CombineDataFiles(directory,filename,filter,exclude,cb2.state,cb1.state)
+ 
      
      }elseif(out==9)
      {
@@ -190,6 +188,7 @@ txt files or csv files: txt|csv
         text <- Nth(instructions,out-10)
 	help.text <- text
 	Draw()
+	PopupMessageBox(text,gWin)
      }
    }   
 
@@ -351,8 +350,10 @@ define CombineDataFiles(directory,mergefilename,filter,
                        addFileLine)
 {
 
+
     header <- ""
-    list <- GetFilteredFiles(directory,filter,exclude)
+    UpdateFilter(directory,filter,exclude)
+    list <- gFileList
     fileLines <- []
 
     loop(i,list)
@@ -514,80 +515,6 @@ define FileReadNLines(file,n)
   return out
 }
 
-define PushButton(tmp)
-{
-	     Move(tmp,tmp.x+2,tmp.y+2)
-		 Draw()
-		 Wait(100)
-		 Move(tmp,tmp.x-2,tmp.y-2)
-		 Draw()
-}
-
-
-## xy is the center of the checkbox
-##
-define MakeCheckBox(label,x,y,win,width)
-{
-
-   col <- MakeColor("grey80")
-   back <-MakeButton(x,y,width,win,label)#Canvas(width,20,col)
-  
-
-   font<- MakeFont(gPEBLBaseFont,0,15,MakeColor("black"),MakeColor("white"),0)
-#   label <- MakeLabel(label,font)
-
-   ##If the label is bigger than the button, shrink it.
-#   if(label.width > (back.width-6))
-#    {
-#        label.zoomx <- (back.width-18)/(label.width)
-#    }
-
-#   AddObject(label,back)
-#   Move(label,width/2+5,9)
-#   Draw(label)
-#   Hide(label)
-
-   check <- EasyTextBox("",4,4,back,10,12,12)
-   AddObject(check,back)
-
-   
-   rect <-Rectangle(10,10,14,14,MakeColor("grey65"),0)
-   AddObject(rect,back)
-#   Move(rect,back.width/2,back.height/2)
-   Draw(rect)
-
-   AddObject(back,win)
-   Move(back,x+back.width/2+5,y+9)
-   
-   checkbox <- MakeCustomObject("checkbox")
-
-   checkbox.name <- "<CUSTOMOBJECT>"
-   checkbox.x <- back.x
-   checkbox.y <- back.y
-   checkbox.width <- back.width
-   checkbox.height <- back.height
-   checkbox.back <- back
-   checkbox.label <- label
-   checkbox.check <- check
-   checkbox.state <- 0
-   return checkbox
-}
-
-
-define ClickCheckBox(cb)
-{
-
- cb.state <- 1- cb.state
- check <- cb.check
- if(cb.state)
- {
- 
-   check.text <-" X"
- }else{
-   check.text <- ""
- }
- Draw(check)
-}
 
 define ListToText(list)
 {
@@ -599,4 +526,31 @@ define ListToText(list)
     sep <- CR(1)
  }
 return text
+}
+
+define UpdateStatus(message)
+{
+  box <- gStatus
+ x <- box.x-box.width/2 
+ y <- box.y-box.height/2
+ box.text<- "status: " + message
+ MoveCorner(box,x,y)
+}
+
+## This does all the stuff we need to update the filtering
+define UpdateFilter(directory,filter,exclude)
+{
+  gFileList <- ["Reading files...."]
+  gfileWindow.text <- "reading files....."
+  UpdateStatus("reading and filtering files")
+  SetSelected(1)
+  Draw()
+  gfileList <- GetFilteredFiles(directory,filter,exclude)
+  gfilewindow.text <- ListToText(gfilelist)
+  gWindowhead.text  <- "Files identified: " +Length(gFileList)
+  MoveCorner(gWindowhead,gFileWindow.x,gFileWindow.y-15)
+  SetSelected(1)  ##we get a crash here if there is no file in gFileList
+  UpdateStatus("Files read")
+  Draw()
+
 }
