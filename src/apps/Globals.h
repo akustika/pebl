@@ -27,6 +27,7 @@
 #ifndef __GLOBALS_H__
 #define __GLOBALS_H__
 
+#include "../base/Evaluator.h"
 enum PEBLVideoMode
 	{
 		PVM_512_384,
@@ -47,5 +48,8 @@ enum PEBLVideoDepth
 		PVD_32 = 32
 	};
 
+extern Evaluator * myEval;
 
+//extern PEventLoop * gEventLoop;  //Make the event loop global so we can
+                                 //write an async version.
 #endif

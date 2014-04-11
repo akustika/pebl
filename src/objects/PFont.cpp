@@ -159,7 +159,8 @@ PFont::PFont(const PFont & font)
 ///Standard destructor of PFont
 PFont::~PFont()
 {
-
+    
+    cout << "Deleting pfont\n";
 }
 
 

@@ -3,7 +3,7 @@
 //    Name:       src/devices/PEventLoop.cpp
 //    Purpose:    Primary generic timer event device
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -29,10 +29,24 @@
 #include "PEventQueue.h"
 #include "../platforms/sdl/PlatformEventQueue.h"
 #include "../base/FunctionMap.h"
+
+#include "../apps/Globals.h"
+
+#ifdef PEBL_EMSCRIPTEN
+#include "PEventLoop-es.h"
+#include "../base/Evaluator-es.h"
+#include "emscripten.h"
+#else
+#include "PEventLoop.h"
 #include "../base/Evaluator.h"
+#endif
+
+
 #include "../base/PComplexData.h"
 #include "../base/PEBLObject.h"
 #include "../base/grammar.tab.hpp"
+
+#include "../utility/Defs.h"
 
 #include "../libs/PEBLEnvironment.h"
 #include <iostream>
@@ -158,7 +172,7 @@ void PEventLoop::RegisterEvent(DeviceState * state, const std::string &  functio
 
 void PEventLoop::Clear()
 {
-
+    cout << "CLEARING EVENT LOOP VIA CLEAR\n";
 
     //When the eventloop is Clear()ed, the states should be deleted one-by-one,
     //to avoid a memory leak.
@@ -181,8 +195,12 @@ void PEventLoop::Clear()
 /// cycle through each of the devices-events registered and determine if any are 
 /// satisfied.  Whenever one is satisfied, it will follow the directive of that
 /// event.  It will continue until a STOPEVENTLOOP event is processed.
+
+
 PEvent PEventLoop::Loop()
 {
+    //cout << "starting loop.  mstates.size: " << mStates.size() <<endl;
+    
     Evaluator * myEval = new Evaluator();
     unsigned int i, result =0;
     PEvent returnval(PDT_UNKNOWN,0);
@@ -194,23 +212,23 @@ PEvent PEventLoop::Loop()
     //    cout <<"*****" <<myEval->gGlobalVariableMap.RetrieveValue("gKeepLooping") << "--"<< mStates.size() << std::endl;
 
     //while loop stops when gKeepLooping turns false or there are no more states to check for.
-    bool stop = (mStates.size()==0) ||
-        ((long int)(myEval->gGlobalVariableMap.RetrieveValue("gKeepLooping"))==(long int)0);
+    //    bool stop = (mStates.size()==0) ||
+    //        ((pInt)(myEval->gGlobalVariableMap.RetrieveValue("gKeepLooping"))==(pInt)0);
 
     while(myEval->gGlobalVariableMap.RetrieveValue("gKeepLooping"))
         {
-              //Output time for each event loop cycle.
-              //std::cerr <<  "time:"<< SDL_GetTicks() << std::endl;
-                                             
+            //Output time for each event loop cycle.
+            //std::cerr <<  "time:"<< SDL_GetTicks() << std::endl;
 
             //At the beginning of a cycle, the event queue has not yet been primed.
             gEventQueue->Prime();
             
-            //            cout << mStates.size() << "  ";
+            //cout << mStates.size() << "  ";
+            
             //Scan through each event in the event vector.         
             for(i = 0; i < mStates.size(); i++)
                 {
-                    //                    cout << i << "/"<<mStates.size() << ":"<<  mNodes[i] << " ";
+                    //cout << i << "/"<<mStates.size() << ":"<<  mNodes[i] << " ";
 
                     if(mIsEvent[i])   //The test is for an event queue-type event.
                         {
@@ -252,7 +270,7 @@ PEvent PEventLoop::Loop()
                                                             myEval->Pop();
 
                                                         }
-                                                    else                                             //If mNodes[i] is null, terminate
+                                                    else       //If mNodes[i] is null, terminate
                                                         {
                                                             myEval->gGlobalVariableMap.AddVariable("gKeepLooping", 0);
                                                             
@@ -337,7 +355,7 @@ PEvent PEventLoop::Loop()
                     //                    cout << std::endl;
                 }
 
-            //        end:
+            //end:
             //Get rid of the top item in the event queue
             gEventQueue->PopEvent();
 
@@ -369,10 +387,10 @@ PEvent PEventLoop::Loop()
 #endif
 
            //recompute the stopping criterion
-           //           stop = (mStates.size()==0) ||
-           //               !(myEval->gGlobalVariableMap.RetrieveValue("gKeepLooping"));
-
-           //           cout << mStates.size() << " " << (myEval->gGlobalVariableMap.RetrieveValue("gKeepLooping")) << "---" << stop << std::endl;
+           if(mStates.size()==0) 
+               myEval->gGlobalVariableMap.AddVariable("gKeepLooping",0);
+           //!(myEval->gGlobalVariableMap.RetrieveValue("gKeepLooping"));
+           //cout << mStates.size() << " " << (myEval->gGlobalVariableMap.RetrieveValue("gKeepLooping")) << "---" << stop << std::endl;
         }
 
     delete myEval;
@@ -387,4 +405,5 @@ std::ostream & operator <<(std::ostream & out, const PEventLoop & loop )
     out << "PEBL Event Loop:" << flush;
     
     return out;
+
 }

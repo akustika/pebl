@@ -3,7 +3,7 @@
 //    Name:       src/objects/PMovie.cpp
 //    Purpose:    Contains generic specification for a movie player widget.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2012 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2012-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -25,7 +25,9 @@
 //    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ////////////////////////////////////////////////////////////////////////////////
 
+
 #include "PMovie.h"
+#include "../utility/Defs.h"
 #include <iostream>
 
 using std::cout;
@@ -75,7 +77,7 @@ void PMovie::SetPlaybackPosition(long unsigned int pos)
 
 void PMovie::SetVolume(long double v)
 {
-    PEBLObjectBase::SetProperty("VOLUME",v);
+    PEBLObjectBase::SetProperty("VOLUME",(pDouble)v);
 }
 
 
@@ -93,7 +95,7 @@ bool PMovie::SetProperty(std::string name, Variant v)
     else if (name == "DURATION")
         PEBLObjectBase::SetProperty("DURATION",v);
     else if (name == "PLAYBACKPOSITION") SetPlaybackPosition(v);
-    else if (name == "VOLUME") SetVolume(v);
+    else if (name == "VOLUME") SetVolume((pDouble)v);
     else if (name == "FILENAME") 
         PEBLObjectBase::SetProperty("FILENAME",v);
     else if (name == "VISIBLE") 
@@ -120,10 +122,10 @@ Variant PMovie::GetProperty(std::string name)const
 ObjectValidationError PMovie::ValidateProperty(std::string name, Variant v)const
 {
     ObjectValidationError code = ValidateProperty(name);
-    if(code==OVE_VALID & name == "VOLUME")
+    if((code==OVE_VALID) & (name == "VOLUME"))
         {
             
-            if((long double)v < 0)
+            if((pDouble)v < 0)
                 {
                     code = OVE_INVALID_PROPERTY_VALUE;
                 }

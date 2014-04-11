@@ -45,6 +45,7 @@ class PlatformCanvas: virtual  public PlatformWidget, virtual public PCanvas
 public:
 
     PlatformCanvas(int width, int height, Variant bg);
+    PlatformCanvas(int width, int height);
 
     ///This copy constructor isn't const because the font is shared.
     PlatformCanvas(const PlatformCanvas & canv);

@@ -110,7 +110,7 @@ Variant PEBLMath::Recurse(Variant v, Variant (*funcname)(Variant))
     //Now, resultslist is a PList.  Put it into a PCD.
     counted_ptr<PEBLObjectBase> tmp = counted_ptr<PEBLObjectBase>(resultslist);
     PComplexData * pcd = new PComplexData(tmp);
-
+    
     Variant tmp2 = Variant(pcd);
     delete pcd;
     pcd=NULL;

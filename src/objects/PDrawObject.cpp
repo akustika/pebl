@@ -53,11 +53,23 @@ bool PDrawObject::SetProperty(std::string name, Variant v)
 {
     if(!PWidget::SetProperty(name,v))
 
-        if (name == "FILLED") SetFilled(v);
-        else if (name == "COLOR") SetColor(v);
-        else if (name == "OUTLINECOLOR")SetOutlineColor(v);
-        else return false;
-    
+        if (name == "FILLED") 
+            {
+                SetFilled(v);
+            }
+        else
+            { if (name == "COLOR") 
+                    {
+                        SetColor(v);
+                    }
+                else{
+                    if (name == "OUTLINECOLOR")
+                        {
+                            SetOutlineColor(v);
+                        }
+                    else return false;
+                }
+            }
     return true;
 }
 
@@ -97,6 +109,8 @@ void PDrawObject::SetFilled(bool filled)
 
 void PDrawObject::SetColor(Variant col)
 {
+
+
     PEBLObjectBase::SetProperty("COLOR",col);
     mColor = *dynamic_cast<PColor*>(col.GetComplexData()->GetObject().get());
 
@@ -109,7 +123,7 @@ void  PDrawObject::SetOutlineColor(Variant  ocol)
 }
 
 
-PLine::PLine(int x1, int y1, int dx, int dy, Variant col):
+PLine::PLine(pInt x1, pInt y1, pInt dx, pInt dy, Variant col):
     PDrawObject(),
     mDX(dx),
     mDY(dy)
@@ -128,7 +142,7 @@ PLine::~PLine()
 }
 
 
-void PLine::SetSize(int dx, int dy)
+void PLine::SetSize(pInt dx, pInt dy)
 {
 
     mDX = dx;
@@ -196,7 +210,7 @@ std::ostream & PLine::SendToStream(std::ostream& out)
 }
 
 
-PRectangle::PRectangle(int x1, int y1, int dx, int dy, Variant col, bool filled)
+PRectangle::PRectangle(pInt x1, pInt y1, pInt dx, pInt dy, Variant col, bool filled)
 {
     InitializeProperty("NAME",Variant("<RECTANGLE>")); 
     InitializeProperty("WIDTH",dx);
@@ -213,7 +227,7 @@ PRectangle:: ~PRectangle()
 {
 }
 
-void PRectangle::SetSize(int dx, int dy)
+void PRectangle::SetSize(pInt dx, pInt dy)
 {
     mDX = dx;
     mDY = dy;
@@ -271,7 +285,7 @@ std::ostream & PRectangle::SendToStream(std::ostream& out)
 
 
 
-PSquare::PSquare(int x, int y, int size, Variant col, bool filled):
+PSquare::PSquare(pInt x, pInt y, pInt size, Variant col, bool filled):
     PRectangle(x,y,size,size,col,filled)
 {
     InitializeProperty("NAME",Variant("<SQUARE>")); 
@@ -295,7 +309,7 @@ std::ostream & PSquare::SendToStream(std::ostream& out)
     return out;
 }
 
-void PSquare::SetSize(int size)
+void PSquare::SetSize(pInt size)
 {
     mDX = size;
     mDY = size;
@@ -357,7 +371,7 @@ ObjectValidationError PSquare::ValidateProperty(std::string name)const
 
 
 
-PEllipse:: PEllipse(int x1, int y1, int rx, int ry, Variant col, bool filled)
+PEllipse:: PEllipse(pInt x1, pInt y1, pInt rx, pInt ry, Variant col, bool filled)
 {
     SetPosition(x1,y1);
     SetFilled(filled);
@@ -372,7 +386,7 @@ PEllipse:: PEllipse(int x1, int y1, int rx, int ry, Variant col, bool filled)
 PEllipse::~PEllipse()
 {
 }
-void PEllipse::SetSize(int dx, int dy)
+void PEllipse::SetSize(pInt dx, pInt dy)
 {
     mRX = dx;
     mRY = dy;
@@ -427,7 +441,7 @@ ObjectValidationError PEllipse::ValidateProperty(std::string name)const
 }
 
 
-PCircle::PCircle(int x1, int y1, int r, Variant fg, bool filled)
+PCircle::PCircle(pInt x1, pInt y1, pInt r, Variant fg, bool filled)
 {
     
     SetPosition(x1,y1);
@@ -445,7 +459,7 @@ PCircle::~PCircle()
 
 }
 
-void PCircle::SetSize(int r)
+void PCircle::SetSize(pInt r)
 {
     mR = r;
     PEBLObjectBase::SetProperty("R",r);
@@ -498,7 +512,7 @@ ObjectValidationError PCircle::ValidateProperty(std::string name)const
 
 
 
-PPolygon::PPolygon(int x, int y, Variant xpoints, Variant ypoints, Variant fg, bool filled)
+PPolygon::PPolygon(pInt x, pInt y, Variant xpoints, Variant ypoints, Variant fg, bool filled)
 {
     
     SetPosition(x,y);
@@ -585,7 +599,7 @@ ObjectValidationError PPolygon::ValidateProperty(std::string name)const
 
 
 
-PBezier::PBezier(int x, int y, Variant xpoints, Variant ypoints, int steps, Variant fg)
+PBezier::PBezier(pInt x, pInt y, Variant xpoints, Variant ypoints, pInt steps, Variant fg)
 {
     SetPosition(x,y);
     InitializeProperty("XPOINTS",xpoints);
@@ -642,7 +656,7 @@ bool PBezier::SetYPoints(Variant v)
 bool PBezier::SetSteps(Variant v)
 {
 
-    mSteps = (int)v;
+    mSteps = (pInt)v;
     return true;
 
 }

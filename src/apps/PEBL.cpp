@@ -3,7 +3,7 @@
 //    Name:       src/apps/PEBL.cpp
 //    Purpose:    The primary PEBL run-time interpreter.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -25,7 +25,14 @@
 //    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ////////////////////////////////////////////////////////////////////////////////
 
+#ifdef PEBL_EMSCRIPTEN
+#include "../base/Evaluator-es.h"
+#include "../devices/PEventLoop-es.h"
+#else
 #include "../base/Evaluator.h"
+#include "../devices/PEventLoop.h"
+#endif
+
 #include "../base/grammar.tab.hpp"
 #include "../base/PNode.h"
 #include "../base/Loader.h"
@@ -43,7 +50,8 @@
 #include "../utility/rc_ptrs.h"
 #include "../utility/BinReloc.h"
 
-#include "../devices/PEventLoop.h"
+
+
 #include "Globals.h"
 
 #include <iostream>
@@ -78,7 +86,17 @@
 #include <CoreFoundation/CFBundle.h>
 #endif
 
+
+#ifdef PEBL_MOVIES
+#include "WAAVE.h"
+#endif
+
 #include "../platforms/sdl/PlatformEnvironment.h"
+#include "../platforms/sdl/SDLUtility.h"
+
+
+extern Evaluator * myEval = NULL;//new Evaluator(v,"Start");
+
 extern PlatformEnvironment * myEnv=NULL;
 
 
@@ -100,7 +118,7 @@ void  PrintOptions();
 
 ///Initiate some static member data.
 FunctionMap Evaluator::mFunctionMap;
-PEventLoop Evaluator::mEventLoop;
+PEventLoop *Evaluator::mEventLoop;
 VariableMap Evaluator::gGlobalVariableMap;
 const PNode * Evaluator::gEvalNode = NULL;
 PEBLPath  Evaluator::gPath;
@@ -129,10 +147,10 @@ int PEBLInterpret( int argc, char *argv[] )
 
             string prefix = br_find_prefix("/usr/local/");
             basedir = prefix + string("/share/pebl/battery/");
-            string destdir = "~/Documents/pebl-exp.0.13";
+            string destdir = "~/Documents/pebl-exp.0.14";
 
             //Now, copy everything in 'battery' to your documents directory.
-            std::cerr << "Creating Documents/pebl-exp.0.13 Directory\n";
+            std::cerr << "Creating Documents/pebl-exp.0.14 Directory\n";
             PEBLUtility::SystemCall("mkdir ~/Documents","");
             //PEBLUtility::SystemCall("mkdir "+destdir,"");
             std::cerr << "Copying files to ["+destdir+ "]\n";
@@ -167,6 +185,22 @@ int PEBLInterpret( int argc, char *argv[] )
     files.push_back("Graphics.pbl");
     //    files.push_back("Taguchi.pbl"); //not ready
 
+
+#ifdef PEBL_EMSCRIPTEN
+	std::cout << "Loading filename:[test.pbl]\n";
+	string inputfilename = Evaluator::gPath.FindFile("test.pbl");
+
+    if(inputfilename != "")
+        {
+            cerr << "Processing PEBL Source File1: " <<  inputfilename << endl;
+            head  = parse(inputfilename.c_str());
+        }
+    else
+        {
+            PError::SignalFatalError("Unable to find file: [" + inputfilename + "].");
+        }
+
+#else
     //Process the first command-line argument.
     std::list<std::string>::iterator i = files.begin();
     //Skip ahead one on the list; the first one is the executable's name
@@ -177,8 +211,9 @@ int PEBLInterpret( int argc, char *argv[] )
     //        Process all files on the command-line
     //-----------------------------------------------------------
 
-	std::cout << "Loading filename:["      << *i << "]\n";
+	std::cout << "Loading filename:[" << *i << "]\n";
 	string inputfilename = Evaluator::gPath.FindFile(*i);
+    string otherfilename;
 
     head = NULL;
     if(inputfilename != "")
@@ -199,18 +234,18 @@ int PEBLInterpret( int argc, char *argv[] )
     while(i != files.end())
         {
         	std::cerr << "Loading file name: ["      << *i <<"]"<< endl;
-            inputfilename = Evaluator::gPath.FindFile(*i);
-            std::cerr << "Resolved as: [" <<inputfilename <<"]"<< endl;
+            otherfilename = Evaluator::gPath.FindFile(*i);
+            std::cerr << "Resolved as: [" <<otherfilename <<"]"<< endl;
             if(inputfilename != "")
                 {
-                    cerr << "Processing PEBL Source File2: " <<  inputfilename << endl;
+                    cerr << "Processing PEBL Source File2: " <<  otherfilename << endl;
 
                     //A filename could be a directory (e.g., with media in it.)
                     //If so, don't parse it.
-                    if(!Evaluator::gPath.IsDirectory(inputfilename))
+                    if(!Evaluator::gPath.IsDirectory(otherfilename))
                         {
                             //Make a new node.
-                            tmp = parse(inputfilename.c_str());
+                            tmp = parse(otherfilename.c_str());
 
                             //Now, make a new node that contains head and tmp.
                             head = new OpNode(PEBL_FUNCTIONS, head, tmp, "INTERNAL PEBL STRUCTURE", -1);
@@ -218,14 +253,14 @@ int PEBLInterpret( int argc, char *argv[] )
                 }
             else
                 {
-                    PError::SignalFatalError("Unable to find file: ["+*i+"] at [" + inputfilename + "]");
+                    PError::SignalFatalError("Unable to find file: ["+*i+"] at [" + otherfilename + "]");
                 }
             i++;
        }
 
     //       Done processing files.
-    //------------------------------------------------------
-
+    //-----------------------------------------------------
+#endif
 
     cerr << "---------Loading Program---------" << endl;
     //Now, load it into the environment:
@@ -279,6 +314,10 @@ int PEBLInterpret( int argc, char *argv[] )
     bool unicode = true;
     Variant lang = "en";
     Variant subnum = 0;
+
+    //default the parameter file to ./params/SCRIPTNAME.par
+    Variant pfile = Variant("params/")+Variant(inputfilename)+Variant(".par");
+
     //Extract the command-line variables to bind
     for(int j = 1; j < argc; j++)
         {
@@ -307,7 +346,7 @@ int PEBLInterpret( int argc, char *argv[] )
                             //This now works on Windows; windib versus directx.
 #if defined(PEBL_UNIX)
                             setenv("SDL_VIDEODRIVER", argv[j] ,1);
-#else
+#elif defined(PEBL_WINDOWS) 
 
                             _putenv((std::string("SDL_VIDEODRIVER=") + std::string(argv[j])).c_str());
 #endif
@@ -340,6 +379,12 @@ int PEBLInterpret( int argc, char *argv[] )
                 {
                     lang = argv[++j];
                 }
+
+            else if(strcmp(argv[j],"--pfile")==0)
+                {
+                    pfile = Variant("params/") +Variant(argv[++j]);
+                }
+
         }
 
 
@@ -401,14 +446,13 @@ int PEBLInterpret( int argc, char *argv[] )
     //setenv()
 #endif
 
+    cout <<"About to create environment\n";
+
     // We can't use any SDL-related functions before this function is called.
     // But we may want to know current screen resolution before we set displaymode
     PEBLObjects::MakeEnvironment(displayMode, displayDepth, windowed,unicode);
 
-
-
-
-
+    cerr << "Environment created\n";
 
 
     //Seed the random number generator with time of day.
@@ -418,7 +462,12 @@ int PEBLInterpret( int argc, char *argv[] )
     //Create evaluator, because it contains a function map as a static member variable.
     //Create it with the command-line -v parameters as a list  bound to the argument.
 
-
+#if defined(PEBL_EMSCRIPTEN)
+    std::cerr <<"--------o-o-o-o-o-o--\n";
+    arglist->PushBack(Variant(0));
+    PComplexData * pcd = new PComplexData(counted_ptr<PEBLObjectBase>(arglist));
+    pList->PushBack(Variant(pcd));
+#else
     //Now, arglist should contain any values specified with the -v flag.
     if(arglist->Length()==0)
         {
@@ -431,22 +480,33 @@ int PEBLInterpret( int argc, char *argv[] )
             PComplexData * pcd = new PComplexData(counted_ptr<PEBLObjectBase>(arglist));
             pList->PushBack(Variant(pcd));
         }
+#endif
 
-    PComplexData * pcd = new PComplexData(counted_ptr<PEBLObjectBase>(pList));
-    Variant v = Variant(pcd);
+    PComplexData * pcd2 = new PComplexData(counted_ptr<PEBLObjectBase>(pList));
+    Variant v = Variant(pcd2);
 
 
     std::list<PNode> tmpcallstack;
-    Evaluator * myEval = new Evaluator(v,"Start");
 
+    //myEval is now a global, because we have moved to a single-evaluator model:
+    myEval = new Evaluator(v,"Start");
 
     //Set the default screen resolution based on the current one.
     Variant cursize = SDLUtility::GetCurrentScreenResolution();
+
+#ifdef PEBL_EMSCRIPTEN
+
+    Variant width = 800;
+    Variant height = 600;
+#else
+
     PList * plist = cursize.GetComplexData()->GetList();
     Variant width = plist->First(); //plist->PopFront();
     Variant height = plist->Nth(2);//plist->PopFront();
+#endif
     myEval->gGlobalVariableMap.AddVariable("gVideoWidth", width);
     myEval->gGlobalVariableMap.AddVariable("gVideoHeight", height);
+
 
     //displaysize may have been set at the command line.  If so, we will need to
     //override it.  It is currently a string called displaysize.
@@ -467,7 +527,7 @@ int PEBLInterpret( int argc, char *argv[] )
         }
 
 
-    if((long int)width>0  & (long int)height>0)
+    if((pInt)width>0  & (pInt)height>0)
         {
             Evaluator::gGlobalVariableMap.AddVariable("gVideoWidth",width);
             Evaluator::gGlobalVariableMap.AddVariable("gVideoHeight",height);
@@ -476,12 +536,14 @@ int PEBLInterpret( int argc, char *argv[] )
 
     //Add the subject identifier.
     Evaluator::gGlobalVariableMap.AddVariable("gSubNum",subnum);
+    //If this is set to 1, we have reset the subject code, and 
+    //it is presumably good for all future resets.
+    Evaluator::gGlobalVariableMap.AddVariable("gResetSubNum",0);
 
 
     //Translate lang to the uppercase 2-letter code
     std::string tmps =lang;
     transform(tmps.begin(),tmps.end(),tmps.begin(),toupper);
-
     Evaluator::gGlobalVariableMap.AddVariable("gLanguage",Variant(tmps));
 
 
@@ -505,6 +567,10 @@ int PEBLInterpret( int argc, char *argv[] )
             Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontMono",Variant("DejaVuSansMono.ttf"));
             Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFontSerif",Variant("DejaVuSerif.ttf"));
         }
+
+    //load the parameter file into a global variable
+    Evaluator::gGlobalVariableMap.AddVariable("gParamFile",Variant(pfile));
+    
     //Now, everything should be F-I-N-E fine.
     head = myLoader->GetMainPEBLFunction();
 
@@ -513,8 +579,36 @@ int PEBLInterpret( int argc, char *argv[] )
             cerr << "---------Evaluating Program-----" << endl;
             //Execute everything
 
-            myEval->Evaluate(head);
 
+#ifdef PEBL_EMSCRIPTEN
+
+            myEval->Evaluate1(head);
+            cout << "Finished evaluating head1\n";
+
+            //            while(myEval->GetNodeStackDepth()>0)
+            //                {
+            //                    myEval->Evaluate1();
+            //                    cout << "step complete1\n";
+            //                }
+            cout << "Evaluating first step\n";
+            myEval -> Evaluate1();
+            cerr << "Exiting main loop; going asynchronous\n";
+            return 0;
+#else
+
+#ifdef PEBL_ITERATIVE_EVAL
+
+            //This creates an iterative evaluator
+            myEval->Evaluate1(head);
+
+            while(myEval->GetNodeStackDepth()>0)
+                {
+                    myEval->Evaluate1();
+                }
+#else
+            //Use traditional recursive version.
+            myEval->Evaluate(head);
+#endif
 
             Evaluator::gGlobalVariableMap.Destroy();
 
@@ -522,18 +616,19 @@ int PEBLInterpret( int argc, char *argv[] )
             if(myEnv) delete myEnv;
             Evaluator::mFunctionMap.Destroy();
 
-
             delete myEval;
             myEval = NULL;
             //Evaluator::gGlobalVariableMap.DumpValues();
-
-            //Be sure SDL quits.  It should probably be handled elsewhere,
-            //but this seems to work.
 #ifdef PEBL_MOVIES
             //Close the wave player library.
             WV_waaveClose();
 #endif
+
+            //Be sure SDL quits.  It should probably be handled elsewhere,
+            //but this seems to work.
+
             SDL_Quit();
+#endif
 
             return 0;
         }
@@ -543,6 +638,7 @@ int PEBLInterpret( int argc, char *argv[] )
             return 1;
             delete myLoader;
         }
+
 
 }
 
@@ -746,6 +842,8 @@ if(SUCCEEDED(SHGetFolderPath(NULL,
             argv = new_argv;
 
  //         cout << argv[0] <<"|" << argv[1] <<"|" << argv[2] <<"|" << argv[3] << endl;
+#elif defined PEBL_EMSCRIPTEN
+                //Do nothing; no arguments are expected.
 #else
             PrintOptions();
             return 1;
@@ -767,7 +865,8 @@ std::list<std::string> GetFiles(int argc,  char * argv[])
                strcmp(argv[i], "-V")==0 ||
                strcmp(argv[i], "-s")==0 ||
                strcmp(argv[i], "-S") == 0 ||
-               strcmp(argv[i], "--language")==0)
+               strcmp(argv[i], "--language")==0 ||
+               strcmp(argv[i], "--pfile")==0 )
                 {
                     //This is the variable switch.  get rid of it and the next argument.
                     i++;
@@ -799,8 +898,8 @@ void PrintOptions()
 {
     cout << "-------------------------------------------------------------------------------\n";
     cout << "PEBL: The Psychology Experiment Building Language\n";
-    cout << "Version 0.13\n";
-    cout << "(c) 2003-2012 Shane T. Mueller, Ph.D.\n";
+    cout << "Version 0.14\n";
+    cout << "(c) 2003-2014 Shane T. Mueller, Ph.D.\n";
     cout << "smueller@obereed.net   http://pebl.sf.net\n";
     cout << "-------------------------------------------------------------------------------\n";
 
@@ -833,4 +932,7 @@ void PrintOptions()
     cout << "  Controls whether the script will run in a window or fullscreen.\n\n";
     cout << "--unicode\n";
     cout << "  Turns on unicode handling, with slight overhead\n";
+    cout << "--pfile <filename>\n";
+    cout << "  Specifies which parameter file to use, gets bound to variable gParamFile.\n";
+
 }

@@ -3,7 +3,7 @@
 //    Name:       src/objects/PCanvas.h
 //    Purpose:    Contains specs for a drawable canvas
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2010-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -40,6 +40,7 @@ class PCanvas: virtual public PWidget
 public:
     PCanvas();
     PCanvas(int width, int height, Variant  color);
+    PCanvas(int width, int height);
     PCanvas(PCanvas & canvas);
     virtual ~PCanvas();
 
@@ -50,17 +51,19 @@ public:
     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
     virtual ObjectValidationError ValidateProperty(std::string)const;
     
-    virtual void SetPosition(int x,int y);
+    virtual void SetPosition(pInt x, pInt y);
     virtual void SetHeight(int h);
     virtual void SetWidth(int w);
     virtual void SetColor(Variant col);
     virtual std::string ObjectName() const;
 
+    virtual bool GetDrawBackground()const{return mDrawBackground;};
 private:
 
 
 protected:
 
+    bool mDrawBackground;
     bool mReset;
     virtual std::ostream & SendToStream(std::ostream& out) const{return out;};
     

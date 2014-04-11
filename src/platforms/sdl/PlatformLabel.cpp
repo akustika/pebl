@@ -148,6 +148,7 @@ bool  PlatformLabel::RenderText()
     //If mSurface is null, then rendering failed.
     if( mSurface)
         {
+            //  SDL_SetAlpha( mSurface, 0, SDL_ALPHA_TRANSPARENT);    
             mWidth  = mSurface->w; 
             mHeight = mSurface->h;
 

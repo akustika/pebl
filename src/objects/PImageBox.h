@@ -3,7 +3,7 @@
 //    Name:       src/objects/PImageBox.h
 //    Purpose:    Contains generic specs for an ImageBox class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -56,7 +56,7 @@ public:
     ///height and width are set automatically.
     virtual bool LoadImage(const std::string  & imagefilename)=0;
 
-    virtual void SetPosition(int x, int y);
+    virtual void SetPosition(pInt x, pInt y);
     virtual void SetSize(int width, int height);
     virtual std::string ObjectName() const{return "PImageBox";};
     

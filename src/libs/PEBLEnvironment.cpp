@@ -30,6 +30,9 @@
 #include "../base/Variant.h"
 #include "../base/PList.h"
 #include "../base/PComplexData.h"
+#include "../base/PNode.h"
+#include "../base/grammar.tab.hpp"
+
 #ifdef PEBL_EMSCRIPTEN
 #include "../base/Evaluator2.h"
 #else
@@ -51,6 +54,12 @@
 #include "../platforms/sdl/PlatformTextBox.h"
 #include "../platforms/sdl/PlatformEventQueue.h"
 
+
+#ifdef PEBL_MOVIES
+#include "../platforms/sdl/PlatformMovie.h"
+#endif
+
+
 #include <ctime>
 #include <string>
 
@@ -59,6 +68,8 @@
 #include <windows.h>
 #endif
 using std::string;
+using std::endl;
+using std::cout;
 
 /// The following initiates classes used by functions in the Environment library.
 namespace PEBLEnvironment
@@ -227,7 +238,6 @@ Variant PEBLEnvironment::WaitForKeyDown(Variant v)
     PEvent returnval = Evaluator::mEventLoop->Loop();
 
     //Now, clear the event loop tests
-    //Evaluator::mEventLoop->Clear();
 
     return Variant(returnval.GetDummyEvent().value);
 }
@@ -773,13 +783,14 @@ Variant PEBLEnvironment::GetInput(Variant v)
     //match on lowercase matches to trigger character.
     //  while(pke.key != PEBLUtility::TranslateString(exitString))
 
-    while(PEBLUtility::TranslateKeyCode(pke.key, pke.modkeys) != PEBLUtility::ToLower(exitString))
+    while(PEBLUtility::TranslateKeyCode(pke.key, pke.modkeys) !=
+          PEBLUtility::ToLower(exitString))
         {
-            cout << "----------------------------\n";
-            cout <<PEBLUtility::TranslateKeyCode(pke.key, pke.modkeys)<<std::endl;
-
-            std::cout <<"Tensting: " << pke.key << "|" << pke.modkeys << std::endl;
+            //cout << "----------------------------\n";
+            //cout << ":::"<<PEBLUtility::TranslateKeyCode(pke.key, pke.modkeys)<<std::endl;
+            //std::cout <<"Tensting: " << pke.key << "|" << pke.modkeys << std::endl;
             //Process the input and redraw the textbox.
+
             if(!ignore) 
                 textbox->HandleKeyPress(pke.key, pke.modkeys,pke.unicode);
 
@@ -792,6 +803,24 @@ Variant PEBLEnvironment::GetInput(Variant v)
 
             //reregistere the state to look for, which is always cleared when loop returns.
             Evaluator::mEventLoop->RegisterEvent(keypressstate, funcname, Variant(0));
+
+
+
+            //Evaluate the last list item, if it exists.
+            //This is the optional command that specifies mouse click events.
+            if(plist->Length() > 2)
+                {
+                    Variant tmp = plist->Nth(3);
+                    if(tmp)
+                        {
+                            //add a mouse click as an exit too.
+                            ValueState  * state2 = new ValueState(PEBL_PRESSED, DT_TRUE, 1, gEventQueue, PDT_MOUSE_BUTTON);
+                            Evaluator::mEventLoop->RegisterEvent(state2,funcname, Variant(0));
+                        }
+                }
+            
+
+
             keypress =  Evaluator::mEventLoop->Loop();
 
             ignore=false;
@@ -1439,6 +1468,7 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
     switch(testtype)
         {
         case DTT_VALUESTATE:
+
             state = new ValueState((int)p, type, (int)intface, device, devicetype);
             break;
         case DTT_INTERVALSTATE:
@@ -1491,6 +1521,137 @@ Variant  PEBLEnvironment::ClearEventLoop(Variant v)
 }
 
 
+//Calls a function with the specified parameters
+Variant PEBLEnvironment::CallFunction(Variant v)
+{
+
+   //v[1] should have the key
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_STRING,
+          "Argument error in first argument of function [CallFunction(<fname>,[<paramlist>])]:  ");
+    PError::AssertType(plist->Nth(2), PEAT_LIST,
+          "Argument error in second argument of function [CallFunction(<fname>,[<paramlist>])]:  ");
+
+    Variant fname = plist->First();
+    Variant args = plist->Nth(2);
+
+
+    //we need to create a 'varlist' tree, which 
+    //is a set of opnode(varlist) nodes with the variable on
+    // the left  and another opnode on the right.
+
+    PList * arglist = args.GetComplexData()->GetList();
+
+
+    std::vector<Variant>::iterator a = arglist->End();
+    PNode * rest = NULL;
+    while(a != arglist->Begin())
+        {
+            a--;
+
+
+            Variant value = *a;
+            DataNode * valuenode = new DataNode(value,"<CALLBACK>",0);
+            rest = new OpNode(PEBL_VARLIST,valuenode,rest, "<CALLBACK>",0);
+
+        }
+
+    //now, rest is equal to the argument list.
+
+    Variant fname2 = Variant(fname.GetString().c_str(), P_DATA_FUNCTION);
+    DataNode * namenode = new DataNode(fname2,"<CALLBACK>",-1);
+
+
+    OpNode * node = (OpNode*)Evaluator::mFunctionMap.GetFunction(fname);
+
+    Variant retval;   
+ if(node->GetOp()==PEBL_LAMBDAFUNCTION)
+        {
+            //For a lambda function, the left node is
+            //a varlist, the right node is
+            // the function block.
+
+
+            PNode * arglistnode = ((OpNode*)node)->GetLeft();
+            OpNode * fnode = new OpNode(PEBL_FUNCTION, namenode, arglistnode, "user-generated", -1);
+
+    
+
+            Evaluator * eval = new Evaluator();
+
+            eval->Push(args);//add the  parameter node
+            
+
+            eval->CallFunction(fnode);
+
+            if(eval->GetStackDepth()<1)
+                {
+                    retval = Variant(0);
+                }
+            else{
+                
+                retval = eval->Pop();
+            }
+            
+
+
+            delete eval;
+            //Maybe this argument structure should be cleaned up?
+            rest->DestroyChildren();
+            delete rest;
+
+
+
+        }
+ else  if(node->GetOp()==PEBL_LIBRARYFUNCTION)
+        {
+            //For a library function, the left node is an AND with min/max arguments
+            //the right node has the function pointer.
+
+            //PNod * tmpNode = new DataNode(
+            Variant fname2 = Variant(fname.GetString().c_str(), P_DATA_FUNCTION);
+            PNode * tmpNode = new DataNode(fname2, "USER-GENERATED",-1);
+
+            PNode * arglistnode = ((OpNode*)node)->GetLeft();
+
+            OpNode * fnode = new OpNode(PEBL_FUNCTION, tmpNode, arglistnode, "user-generated", -1);
+
+
+
+
+            Evaluator * eval = new Evaluator();
+
+            eval->Push(args);//add the  parameter node
+            eval->Evaluate(node);
+           
+
+            if(eval->GetStackDepth()<1)
+                {
+                    retval = Variant(0);
+                }
+            else
+                {
+                    
+                    retval = eval->Pop();
+                }
+            
+
+
+            delete eval;
+            //Maybe this argument structure should be cleaned up?
+            rest->DestroyChildren();
+            delete rest;
+
+            
+        }
+    else
+        {
+            //Unknown type
+        }
+
+    return retval;
+}
 
 
 Variant PEBLEnvironment::SignalFatalError(Variant v)
@@ -1711,7 +1872,8 @@ Variant PEBLEnvironment::VariableExists(Variant v)
 {
    PList * plist = v.GetComplexData()->GetList();
    Variant x  = plist->First();
-   return Variant(1);
+   return Variant(true);//myEval.VariableExists(x);
+
 }
 
 

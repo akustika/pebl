@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformAudioOut.cpp
 //    Purpose:    Contains platform-specific audio playing routines
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -33,9 +33,9 @@
 
 
 #ifdef PEBL_EMSCRIPTEN
-#include "../../base/Evaluator.h"
-#else
 #include "../../base/Evaluator2.h"
+#else
+#include "../../base/Evaluator.h"
 #endif
 
 #include "SDL/SDL.h"
@@ -50,11 +50,14 @@ void PlayCallBack(void * dummy, Uint8 * stream, int len);
 extern AudioInfo *gWaveStream=NULL;
 
 
+
 using namespace std;
 using std::string;
 using std::cerr;
 using std::cout;
 using std::endl;
+
+
 
 PlatformAudioOut::PlatformAudioOut():
     PEBLObjectBase(CDT_AUDIOOUT)
@@ -102,64 +105,33 @@ bool PlatformAudioOut::LoadSoundFile(const string & soundfilename)
             return false;
         }
 
+
+
     //If gWaveStream is loaded, we already have a frequency/format/channels set.
     //we need to convert the current sound to that format.
 
+
     if(gWaveStream)
         {
-            //cout << "***********************gwavestream existeth\n";
+
             bool samefreq = mWave.spec.freq==gWaveStream->spec.freq;
             bool sameformat = mWave.spec.format==gWaveStream->spec.format;
             bool samechannels = mWave.spec.channels==gWaveStream->spec.channels;
          
+
+                {
             //Only convert if we have a different format
             if(!(samefreq & sameformat&samechannels & samechannels))
                 {
                     PError::SignalWarning("Warning: input file will be converted to new playback format.");
                     ConvertAudio(*gWaveStream);
-                }
-
-        }
-    cerr << "------------------------------------\n";
-    cerr << "Loading Sound File.  Specs:\n";
-    cerr << "Frequency:   [" << mWave.spec.freq << "]\n";
-    Variant form = "";
-    switch(mWave.spec.format)
-        {
-            
-        case AUDIO_U8:
-            form="AUDIO_U8";
-            break;
-            
-        case AUDIO_U16LSB:
-            form = "AUDIO_U16LSB";
-            break;
-
-
-        case AUDIO_S8:
-            form="AUDIO_S8";
-            break;
-
-        case AUDIO_S16:
-            form="AUDIO_S16";
-            break;
-
-           
-        default:
-            form = "UNKNOWN";
-
-
+                }}
 
         }
 
-    cerr << "Format:      [" << form << "]\n";
-    cerr << "Channels:    [" << mWave.spec.channels << "]\n";
-    cerr << "Silence:     [" << mWave.spec.silence  << "]\n";
-    cerr << "Samples:     [" << mWave.spec.samples  << "]\n";
-    cerr << "Size:        [" << mWave.spec.size     << "]\n";
-    cerr << "------------------------------------\n";
+    PrintAudioInfo();
+
     mLoaded = true;
-
 
     mWave.name = mFilename.c_str();
     mWave.spec.callback = PlayCallBack;
@@ -172,11 +144,12 @@ bool PlatformAudioOut::LoadSoundFile(const string & soundfilename)
         }
 
     return true;
-
+    
 }
 
-
-
+// This converts the given audio in mWave to the to the 
+// audio format info
+//
 bool PlatformAudioOut::ConvertAudio(AudioInfo & info)
 {
 
@@ -184,27 +157,42 @@ bool PlatformAudioOut::ConvertAudio(AudioInfo & info)
 
     SDL_AudioCVT cvt;           /* audio format conversion structure */
     SDL_AudioSpec loaded = mWave.spec;       /* format of the loaded data */
-    SDL_AudioSpec spec = info.spec;
+    SDL_AudioSpec target = info.spec;
     Uint8 *new_buf;
 
 
     /* Build a conversion structure for converting the samples.
        This structure contains the data SDL needs to quickly
        convert between sample formats. */
-    if (SDL_BuildAudioCVT(&cvt, loaded.format,
-                          loaded.channels,
-                          loaded.freq,
-                          spec.format, spec.channels, spec.freq) < 0) 
+
+    std::cerr << "Converting from " <<   loaded.format<<"|"<<(int)loaded.channels<<"|"<< loaded.freq<<"to "<<
+        target.format<<"|"<< (int)target.channels<<"|"<<target.freq<<std::endl;
+    
+    SDL_AudioSpec * desired=(SDL_AudioSpec *)malloc(sizeof(SDL_AudioSpec));
+    desired->freq=target.freq;
+    desired->format=target.format;
+    desired->channels = target.channels;
+    desired->samples=target.samples;
+    desired->callback=NULL;
+    desired->userdata=NULL;
+
+
+   if (SDL_BuildAudioCVT(&cvt, 
+                          loaded.format, loaded.channels, loaded.freq,
+                          desired->format, desired->channels, desired->freq) < 0) 
         {
             PError::SignalFatalError(Variant("Unable to convert sound: ") + Variant(SDL_GetError()));
         }
 
-    /* Since converting PCM samples can result in more data
-       (for instance, converting 8-bit mono to 16-bit stereo),
-       we need to allocate a new buffer for the converted data.
-       Fortunately SDL_BuildAudioCVT supplied the necessary
-       information. */
+    if(cvt.needed==0)
+        {
+            PError::SignalWarning(Variant("Unable to convert sound.  Be sure all of your sounds are saved in the same format.") + Variant(SDL_GetError()));
+        }
+
+    //set cvt.len to the size of the sourcedata.
     cvt.len = mWave.audiolen;
+
+    //Allocate a big enough buffer to do the conversion:
     new_buf = (Uint8 *) malloc(cvt.len * cvt.len_mult);
     if (new_buf == NULL) 
         {
@@ -216,17 +204,72 @@ bool PlatformAudioOut::ConvertAudio(AudioInfo & info)
 
     /* Perform the conversion on the new buffer. */
     cvt.buf = new_buf;
+
+
+    
+#if 0
+    cout << "Conversion information: " ;
+    std::cout <<"Needed:    "<< cvt.needed << std::endl;
+    std::cout <<"srcformat: "<< cvt.src_format << std::endl;
+    //   std::cout <<"destformat: "<< cvt.dest_format << std::endl;
+    std::cout <<"rate_incr:  "<< cvt.rate_incr << std::endl;
+    std::cout <<"len:        "<< cvt.len << std::endl;
+    std::cout <<"len_cvt:        "<< cvt.len_cvt << std::endl;
+    std::cout <<"len_mult:   "<< cvt.len_mult<< std::endl;
+    std::cout <<"ratio:      "<< cvt.len_ratio<< std::endl;
+    
+    cout << "CONVERTING\n";
+#endif
+
     if (SDL_ConvertAudio(&cvt) < 0) 
         {
             
             PError::SignalFatalError(Variant("Audio conversion error:")+ Variant(SDL_GetError()));
         }
 
+
     /* Swap the converted data for the original. */
     SDL_FreeWAV(mWave.audio);
+
+   
     mWave.audio =  new_buf;
     mWave.audiolen = mWave.audiolen * cvt.len_mult;
 
+
+   mWave.spec.freq=info.spec.freq;
+   mWave.spec.format=info.spec.format;
+   mWave.spec.channels=info.spec.channels;
+   mWave.spec.silence=info.spec.silence;
+   //   mWave.spec.samples=info.spec.samples;
+   //   mWave.spec.size=info.spec.size;
+
+
+#if 1
+   switch(mWave.spec.format)
+        {
+            
+        case AUDIO_U8:
+            mWave.bytesPerSample = 8;
+            break;
+            
+        case AUDIO_U16:
+            mWave.bytesPerSample = 2;
+            break;
+
+
+        case AUDIO_S8:
+            mWave.bytesPerSample = 1;
+            break;
+
+        case AUDIO_S16:
+            mWave.bytesPerSample = 2;
+            break;
+
+           
+        default:
+            mWave.bytesPerSample = 2;
+        }
+#endif 
     return true;
  }
                
@@ -243,7 +286,7 @@ bool PlatformAudioOut::CreateSineWave(float freq, long unsigned int mslength, lo
     if(gWaveStream)
         {
             //Use the already-available spec.
-            cout <<"using preloaded sound spec\n";
+            //cout <<"using preloaded sound spec\n";
 
             memcpy(spec,&(gWaveStream->spec),sizeof(SDL_AudioSpec));
 
@@ -315,6 +358,7 @@ bool PlatformAudioOut::CreateSineWave(float freq, long unsigned int mslength, lo
 
 
 
+
 //;unsigned int freq,int size)
 bool PlatformAudioOut::LoadSoundFromData( Uint8 *buffer, 
                                           long unsigned int size, 
@@ -363,48 +407,8 @@ bool PlatformAudioOut::LoadSoundFromData( Uint8 *buffer,
 
 
     cerr << "------------------------------------\n";
-    cerr << "Loading Sound Data.  Specs:\n";
-    cerr << "Frequency:   [" << mWave.spec.freq << "]\n";
-
-    Variant form = "";
-    switch(mWave.spec.format)
-        {
-            
-        case AUDIO_U8:
-            form="AUDIO_U8";
-            mWave.bytesPerSample = 8;
-            break;
-            
-        case AUDIO_U16:
-            form = "AUDIO_U16";
-            mWave.bytesPerSample = 2;
-            break;
-
-
-        case AUDIO_S8:
-            form="AUDIO_S8";
-            mWave.bytesPerSample = 1;
-            break;
-
-        case AUDIO_S16:
-            form="AUDIO_S16";
-            mWave.bytesPerSample = 2;
-            break;
-
-           
-        default:
-            form = "UNKNOWN";
-
-
-
-        }
-
-    cerr << "Format:      [" << form << "]\n";
-    cerr << "Channels:    [" << mWave.spec.channels << "]\n";
-    cerr << "Silence:     [" << mWave.spec.silence  << "]\n";
-    cerr << "Samples:     [" << mWave.spec.samples  << "]\n";
-    cerr << "Size:        [" << mWave.spec.size     << "]\n";
-    cerr << "------------------------------------\n";
+    cerr << "Loading Sound Data.\n";
+    PrintAudioInfo();
     mLoaded = true;
 
 
@@ -445,7 +449,6 @@ void PlatformAudioOut::SaveBufferToWave(Variant filename)
 	int numChannels = mWave.spec.channels;
 
 	int subchunk2size = mWave.audiolen;
-    cout<<"subchunk2size: "  << subchunk2size << endl;
 	int chunksize = 36+subchunk2size;
 
 
@@ -615,4 +618,53 @@ void PlayCallBack(void * udata, Uint8 * stream, int len)
             
         }
     
+}
+
+void PlatformAudioOut::PrintAudioInfo()
+{
+
+    cerr << "------------------------------------\n";
+    cerr << "Filename  : " << mFileName << endl;
+    cerr << "Audio specs:\n";
+    cerr << "Frequency:   [" << mWave.spec.freq << "]\n";
+    Variant form = "";
+    switch(mWave.spec.format)
+        {
+            
+        case AUDIO_U8:
+            form="AUDIO_U8";
+            break;
+            
+        case AUDIO_U16LSB:
+            form = "AUDIO_U16LSB";
+            break;
+
+
+        case AUDIO_S8:
+            form="AUDIO_S8";
+            break;
+
+        case AUDIO_S16:
+            form="AUDIO_S16";
+            break;
+
+           
+        default:
+            form = "UNKNOWN";
+
+        }
+
+
+
+    cerr << "Format:      [" << form << "]\n";
+    cerr << "Channels:    [" << (int)(mWave.spec.channels) << "]\n";
+    cerr << "Silence:     [" << mWave.spec.silence  << "]\n";
+    cerr << "Samples:     [" << mWave.spec.samples  << "]\n";
+    cerr << "Size:        [" << mWave.spec.size     << "]\n";
+    cerr << "Length(bytes)["<<mWave.audiolen<<"]\n";
+    cerr << "Bytes per sample: [" << mWave.bytesPerSample <<"]\n";
+    cerr << "Total samples:    [" << (double)mWave.audiolen/mWave.bytesPerSample <<"]\n";
+    cerr << "Playback:    ["<<mWave.audiopos<<"]\n";
+    cerr << "------------------------------------\n";
+
 }

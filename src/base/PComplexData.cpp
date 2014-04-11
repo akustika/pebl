@@ -185,7 +185,11 @@ Variant PComplexData::GetProperty( std::string prop )const
 
 bool PComplexData::PropertyExists( std::string prop )const
 {
-    return mPEBLObject->ValidateProperty(prop);
+
+    enum ObjectValidationError tmp =  mPEBLObject->ValidateProperty(prop);
+    bool success =  tmp == OVE_SUCCESS;
+
+    return success;
 }
 
 

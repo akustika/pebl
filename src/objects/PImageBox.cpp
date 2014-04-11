@@ -3,7 +3,7 @@
 //    Name:       src/objects/PImageBox.cpp
 //    Purpose:    Contains generic specification for a imagebox  class.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -41,23 +41,30 @@ PImageBox::PImageBox():
 ///This sets the imagebox's position on its parent widget.
 ///It overrides the parent method because images positions
 ///are set by their centers.
-void PImageBox::SetPosition(int x, int y)
+void PImageBox::SetPosition(pInt x, pInt y)
 {
-
-
-    PWidget::SetPosition(x,y);
+    //mx/my is the specified position.
+    mX = x;
+    mY = y;
+    // PWidget::SetPosition(x,y);
+    //mdrawxy is the drawn upper-left corner position.
     mDrawX = x - GetWidth()/2;
     mDrawY = y - GetHeight()/2;
+    //cout << "Setting Image position--" <<  x << ","<<y<<"|" << mDrawX << "," << mDrawY<<std::endl;
+    PEBLObjectBase::SetProperty("X",Variant(mX));
+    PEBLObjectBase::SetProperty("Y",Variant(mY));
+
 }
 
 void PImageBox::SetSize(int width, int height)
 {
+
     mWidth = width;
     mHeight = height;
     
     PEBLObjectBase::SetProperty("WIDTH",width);
     PEBLObjectBase::SetProperty("HEIGHT",height);
-    
+
 }
 
 
@@ -83,11 +90,12 @@ bool PImageBox::SetProperty(std::string name, Variant v)
             else 
                 Hide();
         }
+
+    
     else return PWidget::SetProperty(name,v);
 
     return true;
 }
-
 
 
 Variant PImageBox::GetProperty(std::string name)const

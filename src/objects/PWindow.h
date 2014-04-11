@@ -3,7 +3,7 @@
 //    Name:       src/objects/PWindow.h
 //    Purpose:    Contains generic specs for a Main Window class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //

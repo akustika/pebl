@@ -3,7 +3,7 @@
 //    Name:       src/objects/PTextBox.cpp
 //    Purpose:    Contains generic specification for a read-only text box.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -252,7 +252,8 @@ void PTextBox::SetLineWrap(bool state)
 
 void PTextBox::HandleKeyPress(int keycode, int modkeys, Uint16 unicode)
 {
- //   cout << "handlekeypressing "<< keycode << "|" << modkeys << "|" << unicode << endl;
+
+    //    cout << "handlekeypressing "<< keycode << "|" << modkeys << "|" << unicode << endl;
     //First, handle special keys
     switch(keycode)
         {
@@ -284,8 +285,9 @@ void PTextBox::HandleKeyPress(int keycode, int modkeys, Uint16 unicode)
             break;
 
         case PEBLKEY_BACKSLASH:
-            InsertText("\\");
-            break;
+            //InsertText("\\");
+            InsertText(PEBLUtility::TranslateKeyCode(PEBLKey(keycode), modkeys));
+          break;
 
         case PEBLKEY_SPACE:
         case PEBLKEY_EXCLAIM:
@@ -373,37 +375,40 @@ void PTextBox::HandleKeyPress(int keycode, int modkeys, Uint16 unicode)
         case PEBLKEY_KP_EQUALS:
 
 
-    //           if (( unicode & 0xFF80) == 0 ) {
-      if(1){
+
+            if(1){
                 InsertText(PEBLUtility::TranslateKeyCode(PEBLKey(keycode), modkeys));
-   //             cout << "((normal))\n";
+
+                
+            }
 
 
+            //This is some internationalization code that doesn't seem to work.
+ // else {
+                
+ //                wchar_t wc = unicode;
+                
+ //                char buf[4] = {0};
+ //                if (wc < 0x80)
+ //                    {
+ //                        buf[0] = wc;
+ //                    }
+ //                else if (wc < 0x800)
+ //                    {
+ //                        buf[0] = (0xC0 | wc>>6);
+ //                        buf[1] = (0x80 | wc & 0x3F);
+ //                    }
+ //                else
+ //                    {
+ //                        buf[0] = (0xE0 | wc>>12);
+ //                        buf[1] = (0x80 | wc>>6 & 0x3F);
+ //                        buf[2] = (0x80 | wc & 0x3F);
+ //                    }
+ //                cout << "[" << buf[0] << "][" << buf[1] << "]" << endl;
+ //                InsertText(std::string(buf));
+ //                cout << "((International ))))"<< buf<< endl;
+ //            }
 
-               } else {
-
-              wchar_t wc = unicode;
-
-               char buf[4] = {0};
-  if (wc < 0x80)
-  {
-    buf[0] = wc;
-  }
-  else if (wc < 0x800)
-  {
-    buf[0] = (0xC0 | wc>>6);
-    buf[1] = (0x80 | wc & 0x3F);
-  }
-  else
-  {
-    buf[0] = (0xE0 | wc>>12);
-    buf[1] = (0x80 | wc>>6 & 0x3F);
-    buf[2] = (0x80 | wc & 0x3F);
-  }
-                   cout << "[" << buf[0] << "][" << buf[1] << "]" << endl;
-                 InsertText(std::string(buf));
-                  cout << "((International ))))"<< buf<< endl;
-                  }
             break;
             /* Key state modifier keys */
         case PEBLKEY_NUMLOCK:
@@ -439,8 +444,8 @@ bool PTextBox::AtPrintableCharacter(unsigned int x)
 {
     unsigned int pos=x;
 
-    if(x<0) pos = 0;
-    if(x> mText.length() )pos = mText.length();
+    if(x> mText.length())
+        pos = mText.length();
 
     if (mText[pos] == 10
         || mText[pos] == 13

@@ -82,6 +82,7 @@ class PlatformAudioOut: virtual public PAudioOut, public PEBLObjectBase
 
     Uint8 * MixTracks();
     
+    void PrintAudioInfo();
 
 private:
   

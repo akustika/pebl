@@ -249,9 +249,9 @@ int PEvent::GetState(int iface) const
         case PDT_MOVIE_END:
         case PDT_UNKNOWN:
             return PEBL_UNKNOWN;
-             
+            
         default:
-             
+            
             cerr << mType << endl;
             PError::SignalFatalError("Unhandled device type in PEvent::GetState\n");
  

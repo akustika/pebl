@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformAudioIn.cpp
 //    Purpose:    Contains platform-specific audio recording routines
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2011-2012 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2011-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -35,9 +35,9 @@
 
 
 #ifdef PEBL_EMSCRIPTEN
-#include "../../base/Evaluator.h"
-#else
 #include "../../base/Evaluator2.h"
+#else
+#include "../../base/Evaluator.h"
 #endif
 
 #include "../../base/PList.h"

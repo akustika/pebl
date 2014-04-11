@@ -32,6 +32,7 @@
 #ifndef __PCOMPORT_H__
 #define __PCOMPORT_H__
 
+#ifdef PEBL_USEPORTS
 
 #include "PDevice.h"
 #include "../base/PEBLObject.h"
@@ -134,5 +135,5 @@ private:
 };
 
 
-
+#endif
 #endif

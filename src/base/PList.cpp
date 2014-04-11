@@ -290,8 +290,8 @@ ostream & PList::SendToStream(ostream& out) const
     std::vector<Variant>::const_iterator p;
     p = mList.begin();
   
-    out << "[size" ;
-    out << this->Length() << ":";
+     out << "[" ;
+    //out << this->Length() << ":";
 
     //Print out the first item, so comma-ing works out ok.
     if( p != mList.end())

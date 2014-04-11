@@ -405,11 +405,12 @@ std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
 
 
 
-    cout << "translating [" << key << "]\n";
+    //    cout << "translating [" << key << "]\n";
 
     //These are tailored to US keyboard.
     switch(key)
         {
+            
             /* The keyboard syms have been cleverly chosen to map to ASCII */
         case PEBLKEY_UNKNOWN:        return "<unknown>";
             //   case PEBLKEY_FIRST:         return "<>";  //same as above
@@ -461,7 +462,7 @@ std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
         case PEBLKEY_RIGHTBRACKET:    return  ShiftSwitch(modkeys,"]",  "}");
         case PEBLKEY_CARET:               return "^";
         case PEBLKEY_UNDERSCORE:          return "_";
-        case PEBLKEY_BACKQUOTE:           return "`";
+        case PEBLKEY_BACKQUOTE:           return ShiftSwitch(modkeys,"`","~");
         case PEBLKEY_a:         return ShiftSwitch(modkeys, "a","A");
         case PEBLKEY_b:         return ShiftSwitch(modkeys, "b","B");
         case PEBLKEY_c:         return ShiftSwitch(modkeys, "c","C");
@@ -1025,7 +1026,7 @@ Variant PEBLUtility::FileExists(std::string path)
 Variant PEBLUtility::GetDirectoryListing(std::string path)
 {
 
-    cout << "Getting directory listing\n";
+    //cout << "Getting directory listing\n";
     DIR *dirp;
     struct dirent *entry;
     PList * plist = new PList();
@@ -1038,7 +1039,7 @@ Variant PEBLUtility::GetDirectoryListing(std::string path)
             //not this is an assignment, not an equality
             while((entry = readdir(dirp)))
                 {
-                    cout << entry->d_name << endl;
+                    //cout << entry->d_name << endl;
                     plist->PushBack(Variant(entry->d_name));
                 }
         } else {
@@ -1107,7 +1108,7 @@ Variant PEBLUtility::MakeDirectory(std::string path)
 #elif defined(PEBL_WIN32)
     if (mkdir(path.c_str()) == -1)
         {
-            cout << strerror(errno)<<endl;
+            //cerr << strerror(errno)<<endl;
             PError::SignalFatalError("Unable to create directory: " + Variant(strerror(errno)));
         }
 
@@ -1204,7 +1205,7 @@ Variant PEBLUtility::LaunchFile(std::string file)
                                    NULL,                        // Additional parameters
                                    0,                           // Default directory
                                    SW_SHOW);
-    cout<< "LaunchFile:{" << file <<"}{"<< hInst << endl;
+    //cout<< "LaunchFile:{" << file <<"}{"<< hInst << endl;
 
    if ((int)hInst == SE_ERR_NOASSOC ||
        (int)hInst == SE_ERR_ASSOCINCOMPLETE ||
@@ -1271,7 +1272,7 @@ Variant PEBLUtility::SystemCall(std::string call, std::string args)
             CloseHandle(processInfo.hThread);
         } else {
         //        cout << "createprocess failed\n";
-        cout << GetLastError() << std::endl;
+        std::cerr << GetLastError() << std::endl;
     }
     int x=0;
 #elif defined (PEBL_EMSCRIPTEN)
@@ -1420,7 +1421,7 @@ std::string PEBLUtility::MD5File(const std::string & filename)
                 }
                         
             file_size = get_size_by_fd(file_descript);
-            printf("file size:\t%lu\n", file_size);
+            //printf("file size:\t%lu\n", file_size);
             
             file_buffer = (char*)mmap(0, file_size, PROT_READ, MAP_SHARED, 
                                file_descript, 0);

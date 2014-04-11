@@ -24,7 +24,10 @@
 //    along with PEBL; if not, write to the Free Software
 //    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ////////////////////////////////////////////////////////////////////////////////
+
+#ifdef PEBL_USEPORTS
 #include "PComPort.h"
+
 #include "../utility/rs232.h"
 #include "../utility/PError.h"
 
@@ -195,3 +198,4 @@ ostream & PComPort::SendToStream(ostream & out) const
 }
 
 
+#endif

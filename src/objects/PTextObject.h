@@ -3,7 +3,7 @@
 //    Name:       src/objects/PWord.h
 //    Purpose:    Contains generic specs for all objects containing text
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //

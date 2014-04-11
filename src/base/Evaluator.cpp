@@ -3,7 +3,7 @@
 //    Name:       src/base/Evaluator.cpp
 //    Purpose:    Defines an class that can evaluate PNodes
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003--2013 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003--2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -522,6 +522,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                     {
 
                         //Get the variable name
+                        //CRASH HERE:
                         v2 = ((DataNode*)(((OpNode*)node1)->GetLeft()))->GetValue();
 
 
@@ -570,7 +571,6 @@ bool Evaluator::Evaluate(const OpNode * node)
             
         case PEBL_LIBRARYFUNCTION:
             {
-                //cout << "Calling PEB_LIBRARYFUNCTION\n";
 
                 // This type of function is built in and precompiled.  The loader examines
                 // the parse tree and
@@ -586,18 +586,19 @@ bool Evaluator::Evaluate(const OpNode * node)
                 std::string name = node->GetFunctionName();
                 int min = ((DataNode*)(node0->GetLeft()))->GetValue();
                 int max = ((DataNode*)(node0->GetRight()))->GetValue();
-
-                //cout<< "FNAME:"<< name << ":"<< endl;
                 //The right child of a PEBL_LIBRARYFUNCTION contains a datanode which
                 //has a function pointer in it.
+
 
                 const PNode * node1 = node->GetRight();
                 Variant v1 = ((DataNode*)node1)->GetValue();
 
+
                 //All built-in functions take a single parameter: a Variant list.  
                 //This variant should be on the top of the stack right now. So get it.
+
                 Variant v2 = Pop();
-                //cout << "Parameter list:" << v2 << endl;
+
 
                 //Before we execute, check to see if v2 has a length  between min and max.
 
@@ -607,18 +608,21 @@ bool Evaluator::Evaluate(const OpNode * node)
                     numargs = 0;
                 else
                     {
+
+                        //      cout << "((("<<name<<"|"<<v2<<")))\n";
+
                         if(v2.IsComplexData())
                             {
                                 if((v2.GetComplexData())->IsList())
                                     {
                                         //#if !defined(PEBL_EMSCRIPTEN)
                                         
+                                        
                                         //Dont check parameter numbers in EMSCRIPTEN
                                         //cout << "[[[<"<<v2<<">]]]\n";
                                         tmp = (PList*)(v2.GetComplexData()->GetObject().get());
                                         numargs = tmp->Length();
-                                        //cout << "((("<<v2<<")))\n";
-                                        //cout << "Examining: " << *tmp << "with (" << numargs << ") elements"<< endl;
+
                                         //#endif
                                     }
                                 else
@@ -629,7 +633,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                         //cout << "numargs now: " << numargs << endl;
                     }
 
-                //cout << "numargs now 2: " << numargs << endl;
+
                 //#if !defined(PEBL_EMSCRIPTEN)
                 if(numargs < min || numargs > max)
                     {
@@ -646,7 +650,6 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //#endif
                 
                 //Execute the functionpointer and push the results onto the stack.
-                //cout << "EXECUTING\n";
                 Push((v1.GetFunctionPointer())(v2));
             }
 
@@ -1251,12 +1254,12 @@ void Evaluator::CallFunction(const OpNode * node)
 {
 
 
-
     // First get the right node (the argument list) and evaluate it.
     // This will end up with a list Variant on top of the stack. 
     const PNode *node1 = node->GetRight();
-
+    
     Evaluate(node1);
+
 
     // The parameters for a function are in a list on the top of the stack.
     // A function should pull the list off the stack and push it onto
@@ -1280,6 +1283,7 @@ void Evaluator::CallFunction(const OpNode * node)
     //a new scope, so need their own evaluator.  A built-in function is precompiled
     //and doesn't need its own new scope, so don't create one in that case.
     
+
 
 
     switch(((OpNode*)node2)->GetOp())
@@ -1327,8 +1331,6 @@ void Evaluator::CallFunction(const OpNode * node)
             break;
             
         case PEBL_LIBRARYFUNCTION:
-
-
             Evaluate(node2);
 
             break;
@@ -1395,3 +1397,8 @@ Variant Evaluator::Peek()
     return v;
 }
 
+
+bool Evaluator::IsVariableName(Variant v)
+{
+    return gGlobalVariableMap.Exists(v) || mLocalVariableMap.Exists(v);
+}

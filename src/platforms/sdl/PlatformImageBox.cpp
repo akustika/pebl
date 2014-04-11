@@ -31,9 +31,9 @@
 #include "../../base/PEBLObject.h"
 
 #ifdef PEBL_EMSCRIPTEN
-#include "../../base/Evaluator.h"
-#else
 #include "../../base/Evaluator2.h"
+#else
+#include "../../base/Evaluator.h"
 #endif
 
 //#include "SDL/SDL.h"
@@ -121,7 +121,10 @@ bool PlatformImageBox::LoadImage(const std::string &  imagefilename)
 
     //Checking should be done here to insure the proper color depth,
     //bpp, format, etc.
-    
+
+    //shouldn't images be opaque?
+     SDL_SetAlpha( mSurface, 0, SDL_ALPHA_TRANSPARENT);    
+
     //Now, set the height and width to be the same as the
     //initial image.
     if( mSurface)

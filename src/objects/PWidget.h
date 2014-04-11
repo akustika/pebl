@@ -3,7 +3,7 @@
 //    Name:       src/objects/PWidget.h
 //    Purpose:    Contains the Definition of the basic gui widget
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -29,6 +29,7 @@
 
 #include "../base/PEBLObject.h"
 #include "PColor.h"
+#include "../utility/Defs.h"
 
 #include <list>
 #include <iostream>
@@ -43,7 +44,7 @@ class PWidget: virtual public PEBLObjectBase
 public:
   
     PWidget();
-    PWidget(int x, int y, int width, int height, bool visible);
+    PWidget(pInt x, pInt y, pInt width, pInt height, bool visible);
     virtual ~PWidget();
   
 
@@ -53,9 +54,9 @@ public:
     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
     virtual ObjectValidationError ValidateProperty(std::string)const;
 
-    virtual bool RotoZoom(double angle, double zoomx, double zoomy, int smooth);
-    virtual bool SetPoint(int x, int y, PColor col);
-    virtual PColor GetPixel(int x, int y);
+    virtual bool RotoZoom(pDouble angle, pDouble zoomx, pDouble zoomy, pInt smooth);
+    virtual bool SetPoint(pInt x, pInt y, PColor col);
+    virtual PColor GetPixel(pInt x, pInt y);
     ///This unconditionally sets the parent widget.
     virtual void SetParent(PWidget * widget){mParent = widget;}
 
@@ -64,27 +65,27 @@ public:
     virtual bool Draw(){return false;}
 
     ///Sets the location of the upper left-hand corner of the
-    ///image on the parent widget.
-    virtual void SetPosition(int x, int y);
+    ///image on the parent widget; unless overridden
+    virtual void SetPosition(pInt x, pInt y);
     
-    virtual void SetZoomX(double x);
-    virtual void SetZoomY(double x);
-    virtual void SetRotation(double x);
+    virtual void SetZoomX(pDouble x);
+    virtual void SetZoomY(pDouble x);
+    virtual void SetRotation(pDouble x);
 
-    virtual void SetWidth(int w);
-    virtual void SetHeight(int h);
+    virtual void SetWidth(pInt w);
+    virtual void SetHeight(pInt h);
 
 
-    virtual int GetX()const {return mX;};
-    virtual int GetY()const {return mY;};
+    virtual pInt GetX()const {return mX;};
+    virtual pInt GetY()const {return mY;};
 
-    virtual int GetWidth()const {return mWidth;};
-    virtual int GetHeight()const {return mHeight;};
+    virtual pInt GetWidth()const {return mWidth;};
+    virtual pInt GetHeight()const {return mHeight;};
 
 
 
      
-    virtual void SetBackgroundColor(PColor color);
+    virtual void SetBackgroundColor(const PColor &color);
     virtual PColor  GetBackgroundColor(){return mBackgroundColor;};
     
     ///AddSubWidget takes care of adding a widget to a current parent widget, 
@@ -118,20 +119,20 @@ protected:
 
     ///The x and y coordinates, in pixels, from the upper left corner
     ///of the parent screen
-    int mX, mY;
+    pInt mX, mY;
 
     //These are the actual locations of the points to be drawn.  They differ
     //from mX and mY in labels and images, which are drawn on their center point.
-    int mDrawX;
-    int mDrawY;
+    pInt mDrawX;
+    pInt mDrawY;
 
     ///The height and width, in pixels, of the loaded widget
-    int mWidth, mHeight;
+    pInt mWidth, mHeight;
 
     //These are properties for rotation/zoom
-    double mZoomX;
-    double mZoomY;
-    double mRotation;
+    pDouble mZoomX;
+    pDouble mZoomY;
+    pDouble mRotation;
 
     /// The background color of the widget.  if alpha = 0, will not be painted.
     PColor mBackgroundColor;

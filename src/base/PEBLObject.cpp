@@ -84,7 +84,6 @@ bool PEBLObjectBase::SetProperty(std::string name, Variant v)
 
 bool PEBLObjectBase::InitializeProperty(std::string name, Variant v)
 {
-
     mProperties[name]=v;
     return true;
 }
@@ -112,10 +111,17 @@ ObjectValidationError PEBLObjectBase::ValidateProperty(std::string name, Variant
 
 ObjectValidationError PEBLObjectBase::ValidateProperty(std::string name)const
 {
+
     if(mProperties.find(name) == mProperties.end())
-        return OVE_INVALID_PROPERTY_NAME;
+        {
+
+            return OVE_INVALID_PROPERTY_NAME;
+        }
     else
-        return OVE_SUCCESS;
+        {
+
+            return OVE_SUCCESS;
+        }
 }
 
 

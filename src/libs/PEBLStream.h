@@ -112,6 +112,7 @@ namespace PEBLStream
 
 #ifdef PEBL_HTTP
     Variant GetHTTPFile(Variant v);
+    Variant GetHTTPText(Variant v);
     Variant PostHTTP(Variant v);
 #endif
     Variant MD5Sum(Variant v);

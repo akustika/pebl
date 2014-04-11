@@ -3,7 +3,7 @@
 //    Name:       src/objects/PLabel.h
 //    Purpose:    Contains generic specs for a visually-displayed text.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -56,7 +56,7 @@ public:
     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
     virtual ObjectValidationError ValidateProperty(std::string)const;
 
-    void SetPosition(int x, int y);
+    void SetPosition(pInt x, pInt y);
     //This overrides the default method, because labels are centered on their
     //Position.
     virtual std::string ObjectName() const;

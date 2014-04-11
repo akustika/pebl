@@ -238,7 +238,6 @@ Variant::Variant(const Variant &v):
 
     
     //This should behave differently depending on what type of variant v is
-    //   cout << "coping variant: " << v << endl;
     mDataType = v.GetDataType();
 
     switch(mDataType)
@@ -253,6 +252,7 @@ Variant::Variant(const Variant &v):
             break;
 
         case P_DATA_STRING:
+            //            cout << "testing case string:<" << v << ">"<<endl;
             mData.String = strdup(v.GetString().c_str());
             break;
 
@@ -1118,11 +1118,6 @@ std::string  Variant::GetVariablePropertyName() const
 
         }
 }
-
-
-
-
-
 
 
 //This returns a pointer to the name of the function.

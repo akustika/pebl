@@ -3,7 +3,7 @@
 //    Name:       src/base/Loader.cpp
 //    Purpose:    Defines an class that loads a parsed PNode tree into PEBL Environment
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -32,11 +32,13 @@
 #include "grammar.tab.hpp"
 #include "Variant.h"
 #include "FunctionMap.h"
+
 #ifdef PEBL_EMSCRIPTEN
 #include "Evaluator2.h"
 #else
 #include "Evaluator.h"
 #endif
+
 #include "../utility/PEBLUtility.h"
 #include "../utility/PError.h"
 
@@ -269,7 +271,7 @@ void Loader::LoadLibraryFunctions()
                                             
                                             // Make a new OpNode with the *NumArgs on the left and the function pointer on the right.
                                             OpNode * node2 = new OpNode(PEBL_LIBRARYFUNCTION, node0, node1,filename, linenum);
-                                            
+                                            node2->SetFunctionName(*p);
                                             Evaluator::mFunctionMap.AddFunction(*p,node2);
                                                                                         
                                             //break out of the while--we are done.

@@ -53,8 +53,8 @@ private:
 protected:
 
     std::string mName;
-    virtual std::ostream & SendToStream(std::ostream& out) const{return out;};
-    virtual std::string ObjectName() const{return "PCustomObject";};
+    virtual std::ostream & SendToStream(std::ostream& out) const;
+    virtual std::string ObjectName()const;
 
 
 };

@@ -3,7 +3,7 @@
 //    Name:       src/objects/PLabel.cpp
 //    Purpose:    Contains methods primary visual 'word' structure
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -94,12 +94,15 @@ ObjectValidationError PLabel::ValidateProperty(std::string name)const
         return OVE_INVALID_PROPERTY_NAME;
 }
 
-void PLabel::SetPosition(int x, int y)
+void PLabel::SetPosition(pInt x, pInt y)
 {
+    //Why does this get called 4x with an EasyLabel?
+
     mX = x;
     mY = y;
     mDrawX = x - GetWidth()/2;
     mDrawY = y - GetHeight()/2;
+    //    cout << "Setting label position\n" <<  x << ","<<y<<"|" << mDrawX << "," << mDrawY<<endl;
     PEBLObjectBase::SetProperty("X",Variant(mX));
     PEBLObjectBase::SetProperty("Y",Variant(mY));
 }

@@ -3,7 +3,7 @@
 //    Name:       src/objects/PCanvas.cpp
 //    Purpose:    Contains generic canvas.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2010-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -58,6 +58,21 @@ PCanvas::PCanvas(int width, int height, Variant pcol):
     SetHeight(height);
     SetWidth(width);
     mReset = false;        
+    mDrawBackground = true;
+}
+
+PCanvas::PCanvas(int width, int height):
+    PWidget(0,0,0,0,false)
+{ 
+    InitializeProperty("WIDTH",Variant(width));
+    InitializeProperty("HEIGHT",Variant(height));
+    InitializeProperty("NAME",Variant("<CANVAS>"));
+
+    SetHeight(height);
+    SetWidth(width);
+    mReset = false;        
+    mDrawBackground = false;
+    
 }
 
 
@@ -84,7 +99,7 @@ bool PCanvas::SetProperty(std::string name, Variant v)
 
 // Position of canvas is specified as its center
 //
-void PCanvas::SetPosition(int x, int y)
+void PCanvas::SetPosition(pInt x, pInt y)
 {
     mX = x;
     mY = y;

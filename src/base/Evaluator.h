@@ -79,6 +79,7 @@ public:
 
     PEventLoop * GetEventLoop(){return mEventLoop;};
 
+    bool IsVariableName(Variant v);
 
     /// This holds a pointer to a FunctionMap, which 
     /// is loaded from the initial PNode tree by the loader.
@@ -92,6 +93,7 @@ public:
     /// is done in the main program file.
     static VariableMap gGlobalVariableMap;
     
+
     static PEventLoop * mEventLoop;
 
     static PEBLPath gPath;

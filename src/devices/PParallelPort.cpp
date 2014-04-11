@@ -3,7 +3,7 @@
 //    Name:       src/devices/PParellelPort.cpp
 //    Purpose:    Class for handling parallel port
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2010-2011 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2010-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -179,6 +179,8 @@ char PParallelPort::GetStatusState()
     return inb(mPort+1);
 #elif defined (PEBL_WIN32)
     return Inp32(mPort+1); 
+#else
+    return '\0';
 #endif
     //    return (inb(mPort+1)>>3)^0x10;
 }
@@ -192,6 +194,8 @@ char PParallelPort::GetDataState()
 
 #elif defined (PEBL_WIN32)
     return Inp32(mPort); 
+#else
+    return '\0';
 #endif
     
 }

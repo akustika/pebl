@@ -3,7 +3,7 @@
 //    Name:       src/devices/PEventQueue.cpp
 //    Purpose:    Interface to platform-specific event queue.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004-2012 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -51,10 +51,11 @@ PEBL_DEVICE_TYPE PEventQueue::GetFirstEventType()
 	return  (mEventQueue.front()).GetType();
 }
 
+
 int PEventQueue::GetState(int iface) const
 {
  
-        return (mEventQueue.front()).GetState(iface);
+    return (mEventQueue.front()).GetState(iface);
 }
 
 

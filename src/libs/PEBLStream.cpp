@@ -544,7 +544,7 @@ Variant PEBLStream::EndOfFile(Variant v)
 }
 
 
-    //Copies the contents of one file to another.
+//Copies the contents of one file to another.
 Variant PEBLStream::AppendFile(Variant v)
 {
     //v[1] should have the filename
@@ -915,58 +915,71 @@ Variant PEBLStream::GetHTTPFile(Variant v)
     PError::AssertType(v3, PEAT_STRING, "Error in third argument function [GetHTTPFile(<host>,<fileurl>,<savename>)]: ");
 
     PEBLHTTP http(v1);
-    bool result =  http.GetHTTPFile(v2,v3);
 
-    return Variant(result);
+    int out =  http.GetHTTPFile(v2,v3);
+    unsigned int status = http.GetStatus();
+    cout << out << "----" << status << "----<<<" << http.GetStatus() << endl;
+    return Variant((int)status);
 }
+
+
+//This gets text via http.
+Variant PEBLStream::GetHTTPText(Variant v)
+{
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 = plist->First(); 
+    PError::AssertType(v1, PEAT_STRING, "Error in first argument of function [GetHTTPText(<host>,<fileurl>)]: ");
+
+    Variant v2 = plist->Nth(2);
+    PError::AssertType(v2, PEAT_STRING, "Error in second argument of function [GetHTTPText(<host>,<fileurl>)]: ");
+
+    PEBLHTTP http(v1);
+
+    int out =  http.GetHTTPText(v2);
+    unsigned int status = http.GetStatus();
+
+
+    //return a pair; the status code  + the text
+
+
+    PList * returnlist = new PList();
+    returnlist->PushBack(Variant((int)status));
+    returnlist->PushBack(Variant(*(http.GetTextObject())));
+    counted_ptr<PEBLObjectBase>  tmp2 = counted_ptr<PEBLObjectBase>(returnlist);
+    PComplexData * pcd = new PComplexData(tmp2);
+    Variant tmp3 = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp3;
+}
+
 
 
 Variant PEBLStream::PostHTTP(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); //plist->PopFront();
-    PError::AssertType(v1, PEAT_STRING, "Error in first argument of function [PostHTTP(<host>,<page>,[<headers>],<body-args>,<savename>)]: ");
+    PError::AssertType(v1, PEAT_STRING, "Error in first argument of function [PostHTTP(<host>,<page>,[<list>,<of>,<headers>],<body-args>)]: ");
 
     Variant v2 = plist->Nth(2);
-    PError::AssertType(v2, PEAT_STRING, "Error in first argument of function [PostHTTP(<host>,<page>,[<headers>],<body-args>,<savename>)]: ");
+    PError::AssertType(v2, PEAT_STRING, "Error in first argument of function [PostHTTP(<host>,<page>,[<list>,<of>,<headers>],<body-args>)]: ");
 
 
     Variant v3 = plist->Nth(3);
-    PError::AssertType(v3, PEAT_LIST, "Error in Third argument of function [PostHTTP(<host>,<page>,[<headers>],<body-args>,<savename>)]: ");
+    PError::AssertType(v3, PEAT_LIST, "Error in Third argument of function [PostHTTP(<host>,<page>,[<list>,<of>,<headers>],<body-args>)]: ");
 
     Variant v4 = plist->Nth(4);
-    PError::AssertType(v4, PEAT_STRING, "Error in Fourth argument of function [PostHTTP(<host>,<page>,[<headers>],<body-args>,<savename>)]: ");
+    PError::AssertType(v4, PEAT_STRING, "Error in Fourth argument of function [PostHTTP(<host>,<page>,[<list>,<of>,<headers>],<body-args>)]: ");
 
-    Variant v5 = plist->Nth(5);
-    PError::AssertType(v5, PEAT_STRING, "Error in Fifth argument of function [PostHTTP(<host>,<page>,[<headers>],<body-args>,<savename>)]: ");
 
-    //v3 is a header/value list.  It needs to be
-    //translated into a char* vector, with a null-termination.
-    
-
-    PList * dataList = (PList*)(v3.GetComplexData()->GetObject().get());
-    std::vector<Variant>::iterator p1 = dataList->Begin();
-    std::vector<Variant>::iterator p1end = dataList->End();
-
-    std::vector<string> headers;
-    int numargs = dataList->Length()*2+1;
-
-    while(p1 != p1end)
-        {
-
-            headers.push_back((string)(*p1));
-            p1++;
-
-        }
-
-    headers.push_back(NULL);
     PEBLHTTP http(v1);
 
-    //this does not work right now:
-    bool result=  http.PostHTTP(v2,v1,v4);
 
-    //Should return 0 on failure:
-    return Variant((int)result);
+    int code=  http.PostHTTP(v2,v3,v4);
+    const std::string *  result =  http.GetTextObject();
+    Variant out = Variant(*result);
+
+    return out;
 }
 
 #endif

@@ -3,7 +3,7 @@
 //    Name:       src/objects/PDrawObject.h
 //    Purpose:    Utility class drawing things.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2005-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -29,6 +29,7 @@
 
 #include "PWidget.h"
 #include "PColor.h"
+#include "../utility/Defs.h"
 
 #include <vector>
 
@@ -71,11 +72,11 @@ private:
 class PLine: public PDrawObject
 {
 public:
-    PLine(int x1, int y1, int dx, int dy, Variant fg);
+    PLine(pInt x1, pInt y1, pInt dx, pInt dy, Variant fg);
     virtual ~PLine();
-    virtual int GetWidth() const{return mDX;};
-    virtual int GetHeight() const{return mDY;};
-    virtual void SetSize(int dx, int dy);
+    virtual pInt GetWidth() const{return mDX;};
+    virtual pInt GetHeight() const{return mDY;};
+    virtual void SetSize(pInt dx, pInt dy);
     virtual std::ostream & SendToStream(std::ostream& out);
 
 
@@ -88,8 +89,8 @@ public:
 
 protected:
     //X1--Y2 are relative to mX and mY
-    int mDX;  
-    int mDY;  
+    pInt mDX;  
+    pInt mDY;  
 
     bool mAntiAliased;
 
@@ -125,11 +126,11 @@ private:
  class PRectangle: public PDrawObject
  {
  public:
-     PRectangle(int x1, int y1, int dx, int dy, Variant fg, bool filled);
+     PRectangle(pInt x1, pInt y1, pInt dx, pInt dy, Variant fg, bool filled);
      virtual ~PRectangle();
-     virtual int GetWidth() const{return mDX;};
-     virtual int GetHeight() const{return mDY;};
-     virtual void SetSize(int dx, int dy);
+     virtual pInt GetWidth() const{return mDX;};
+     virtual pInt GetHeight() const{return mDY;};
+     virtual void SetSize(pInt dx, pInt dy);
      virtual std::ostream & SendToStream(std::ostream& out);
 
      //overloaded generic PEBLObjectBase methods
@@ -140,19 +141,19 @@ private:
 
 
  protected:
-     int mDX;
-     int mDY;
+     pInt mDX;
+     pInt mDY;
  private:
  };
 
  class PSquare: public PRectangle
  {
  public:
-     PSquare(int x, int y, int size, Variant fg, bool filled);
+     PSquare(pInt x, pInt y, pInt size, Variant fg, bool filled);
      virtual ~PSquare();
-     virtual int GetWidth() const{return mDX;};
-     virtual int GetHeight() const{return mDY;};
-     virtual void SetSize(int size);
+     virtual pInt GetWidth() const{return mDX;};
+     virtual pInt GetHeight() const{return mDY;};
+     virtual void SetSize(pInt size);
      virtual std::ostream & SendToStream(std::ostream& out);
      
 
@@ -171,11 +172,11 @@ private:
 class PEllipse: public  PDrawObject
  {
  public:
-     PEllipse(int x1, int y1, int rx, int ry, Variant fg, bool filled);
+     PEllipse(pInt x1, pInt y1, pInt rx, pInt ry, Variant fg, bool filled);
      virtual ~PEllipse();
-     virtual int GetWidth() const{return mRX;};
-     virtual int GetHeight() const{return mRY;};
-     virtual void SetSize(int dx, int dy);
+     virtual pInt GetWidth() const{return mRX;};
+     virtual pInt GetHeight() const{return mRY;};
+     virtual void SetSize(pInt dx, pInt dy);
      virtual std::ostream & SendToStream(std::ostream& out);
      
 
@@ -189,8 +190,8 @@ class PEllipse: public  PDrawObject
  protected:
      
      //X1--Y2 are relative to mX and mY
-     int mRX;
-     int mRY;  
+     pInt mRX;
+     pInt mRY;  
 
 
  private:
@@ -200,14 +201,14 @@ class PEllipse: public  PDrawObject
  class PCircle: public PDrawObject
  {
  public:
-     PCircle(int x1, int y1, int r, Variant fg, bool filled);
+     PCircle(pInt x1, pInt y1, pInt r, Variant fg, bool filled);
      virtual ~PCircle();
 
-     virtual int GetWidth() const{return (int)(2*mR);};
-     virtual int GetHeight() const{return (int)(2*mR);};
+     virtual pInt GetWidth() const{return (pInt)(2*mR);};
+     virtual pInt GetHeight() const{return (pInt)(2*mR);};
      virtual std::ostream & SendToStream(std::ostream& out);
 
-     virtual void SetSize(int r);
+     virtual void SetSize(pInt r);
 
     //overloaded generic PEBLObjectBase methods
      virtual bool SetProperty(std::string, Variant v);
@@ -218,7 +219,7 @@ class PEllipse: public  PDrawObject
 
  protected:
 
-     double mR;
+     pDouble mR;
  private:
  };
 
@@ -227,11 +228,11 @@ class PEllipse: public  PDrawObject
  class PPolygon: public PDrawObject
  {
  public:
-     PPolygon(int x, int y, Variant xpoints, Variant ypoints,  Variant fg, bool filled);
+     PPolygon(pInt x, pInt y, Variant xpoints, Variant ypoints,  Variant fg, bool filled);
      virtual ~PPolygon();
 
-     virtual int GetWidth() const{return mWidth;};
-     virtual int GetHeight() const{return mHeight;};
+     virtual pInt GetWidth() const{return mWidth;};
+     virtual pInt GetHeight() const{return mHeight;};
 
      virtual bool SetXPoints(Variant v);
      virtual bool SetYPoints(Variant v);
@@ -258,11 +259,11 @@ class PEllipse: public  PDrawObject
  class PBezier: public PDrawObject
  {
  public:
-     PBezier(int x, int y, Variant xpoints, Variant ypoints,  int steps, Variant fg);
+     PBezier(pInt x, pInt y, Variant xpoints, Variant ypoints,  pInt steps, Variant fg);
      virtual ~PBezier();
 
-     virtual int GetWidth() const{return mWidth;};
-     virtual int GetHeight() const{return mHeight;};
+     virtual pInt GetWidth() const{return mWidth;};
+     virtual pInt GetHeight() const{return mHeight;};
 
      virtual bool SetXPoints(Variant v);
      virtual bool SetYPoints(Variant v);
@@ -282,7 +283,7 @@ class PEllipse: public  PDrawObject
 
      Variant mXPoints;
      Variant mYPoints;
-     int mSteps;
+     pInt mSteps;
  private:
  };
 

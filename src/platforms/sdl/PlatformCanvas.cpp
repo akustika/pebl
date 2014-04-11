@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformTextBox.cpp
 //    Purpose:    Contains SDL-specific interface for a draw canvas.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2010-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -62,6 +62,20 @@ PlatformCanvas::PlatformCanvas(int width, int height, Variant bg):
     InitializeProperty("BGCOLOR",bg);
     SetColor(bg);
     
+    mSurface = NULL;
+    Reset();
+    Draw();
+
+}
+
+
+
+PlatformCanvas::PlatformCanvas(int width, int height):
+    PlatformWidget(),
+    PCanvas(width, height)
+{
+
+    mCDT = CDT_CANVAS;
 
     mSurface = NULL;
     Reset();
@@ -70,18 +84,21 @@ PlatformCanvas::PlatformCanvas(int width, int height, Variant bg):
 }
 
 
+
+
 PlatformCanvas::PlatformCanvas(const PlatformCanvas & canvas):
     PlatformWidget(),
     PCanvas()
 {
 
+    PCanvas::mDrawBackground = canvas.GetDrawBackground();
     mCDT = CDT_CANVAS;
     mWidth = canvas.GetWidth();
     mHeight = canvas.GetHeight();
     mSurface = NULL;
     Reset();   //reset initializes the canvas
     Draw();
-    //    if(!RenderText()) cerr << "Unable to render text.\n";
+
 }
 
 
@@ -102,7 +119,7 @@ ostream & PlatformCanvas::SendToStream(ostream& out) const
  
 
 
-/// This method should be called when the font is initialized or the text is changed.
+/// This method should be called when the canvas is initialized or something is changed.
 /// It will make the mSurface pointer hold the appropriate image.
 bool  PlatformCanvas::Reset()
 {
@@ -118,6 +135,7 @@ bool  PlatformCanvas::Reset()
     Uint32 gmask = 0x00ff0000;
     Uint32 bmask = 0x0000ff00;
     Uint32 amask = 0x000000ff;
+    //    Uint32 amask = 0x00000000;
 
 #else
 
@@ -125,25 +143,35 @@ bool  PlatformCanvas::Reset()
     Uint32 gmask = 0x0000ff00;
     Uint32 bmask = 0x00ff0000;
     Uint32 amask = 0xff000000;
+    //Uint32 amask = 0x00000000;
 
 #endif
 
 
 
-    //Make a surface of the prescribed size.
-    mSurface = SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA, mWidth, mHeight, 32,
-                                    rmask, gmask, bmask, amask);
+    //Make a transparent surface of the prescribed size.
+    mSurface = SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA, 
+              mWidth, mHeight, 32, rmask, gmask, bmask, amask);
     if(!mSurface)  PError::SignalFatalError("Surface not created in Canvas::Reset.");
+
+
     
-    //SDL_SetAlpha(mSurface,0,SDL_ALPHA_TRANSPARENT);
+    // SDL_SetAlpha( mSurface, 0, SDL_ALPHA_OPAQUE );        
+    // SDL_SetAlpha(mSurface,0,SDL_ALPHA_TRANSPARENT);
+
     //Fill the box with the background color 
-    //std::cout << mBackgroundColor << "|" << mBackgroundColor.GetAlpha() << std::endl;
-    SDL_FillRect(mSurface, NULL, 
-                 SDL_MapRGBA( mSurface->format ,
-                              (mBackgroundColor.GetRed()),
-                              (mBackgroundColor.GetGreen()),
-                              (mBackgroundColor.GetBlue()),
-                              (mBackgroundColor.GetAlpha())));
+    std::cout << mBackgroundColor << "|alpha:|" << mBackgroundColor.GetAlpha() << std::endl;
+
+
+    if(mDrawBackground)
+        {
+            SDL_FillRect(mSurface, NULL, 
+                         SDL_MapRGBA( mSurface->format ,
+                                      (mBackgroundColor.GetRed()),
+                                      (mBackgroundColor.GetGreen()),
+                                      (mBackgroundColor.GetBlue()),
+                                      (mBackgroundColor.GetAlpha())));
+        }
     
     
     //    if(mBackgroundColor.GetAlpha() <.000001)

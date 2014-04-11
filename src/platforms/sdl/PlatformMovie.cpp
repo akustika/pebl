@@ -4,7 +4,7 @@
 //    Name:       src/platforms/sdl/PlatformMovie.cpp
 //    Purpose:    Contains SDL-specific interface for images
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2009 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -29,11 +29,13 @@
 #include "../../utility/PEBLPath.h"
 #include "../../utility/PError.h"
 #include "../../utility/PEBLUtility.h"
+
 #ifdef PEBL_EMSCRIPTEN
-#include "../../base/Evaluator.h"
-#else
 #include "../../base/Evaluator2.h"
+#else
+#include "../../base/Evaluator.h"
 #endif
+
 
 #include "../../base/PEBLObject.h"
 

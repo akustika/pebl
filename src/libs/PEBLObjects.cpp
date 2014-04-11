@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLObjects.cpp
 //    Purpose:    Function Library for managing PEBL Objects
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -30,11 +30,14 @@
 #include "../base/Variant.h"
 #include "../base/PList.h"
 #include "../base/PComplexData.h"
+
 #ifdef PEBL_EMSCRIPTEN
 #include "../base/Evaluator2.h"
 #else
 #include "../base/Evaluator.h"
 #endif
+
+
 #include "../base/PEBLObject.h"
 
 #include "../devices/DeviceState.h"
@@ -59,6 +62,11 @@
 #include "../platforms/sdl/PlatformTextBox.h" 
 #include "../platforms/sdl/PlatformCanvas.h"
 #include "../platforms/sdl/PlatformAudioIn.h"
+
+#ifdef PEBL_MOVIES
+#include "../platforms/sdl/PlatformMovie.h"
+#endif
+
 
 #include "PEBLList.h"
 
@@ -85,14 +93,11 @@ void PEBLObjects::MakeEnvironment(PEBLVideoMode mode, PEBLVideoDepth depth,
                                   bool windowed,bool unicode)
 {
 
-    cout << "A---\n";
     myEnv = new PlatformEnvironment(mode, depth, windowed,unicode);
-    cout << "B---\n";
     myEnv->Initialize();
-    cout << "C---\n";
     //Initialize the event queue.
     gEventQueue = new PlatformEventQueue();
-    cout << "D---\n";
+
 }
 
 
@@ -253,8 +258,7 @@ Variant PEBLObjects::MakeCanvas(Variant v)
 
     //
     // v[1] should be X, v[2] shoud be Y
-    // v[3] should be dx, v[4] should be dy
-    // v[5] should be the color, v[6] should be whether it is filled.
+    // v[3] should be the color (optional),
     PList * plist = v.GetComplexData()->GetList();
 
     PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [MakeCanvas(<x>, <y>, <color>)]: "); 
@@ -263,21 +267,27 @@ Variant PEBLObjects::MakeCanvas(Variant v)
     PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function [MakeCanvas(<x>, <y>, <color>)]: "); 
     int height = plist->Nth(2);// plist->PopFront();
 
+    PlatformCanvas * pc =NULL;
+    if(plist->Length()>2)
+        {
+            PError::AssertType(plist->Nth(3), PEAT_COLOR, "Argument error in third parameter of function  [MakeCanvas(<x>, <y>, <color>)]: "); 
+            std::cout <<"We have guaze\n";
 
-    PError::AssertType(plist->Nth(3), PEAT_COLOR, "Argument error in third parameter of function  [MakeCanvas(<x>, <y>, <color>)]: "); 
-    Variant color = plist->Nth(3);// plist->PopFront();
+            Variant color = plist->Nth(3);// plist->PopFront();
+            pc = new PlatformCanvas(width,height,color);    
 
+        }else  {
+        std::cout << "we're out of guaze\n";
+        pc = new PlatformCanvas(width,height);
+    }
 
-    counted_ptr<PEBLObjectBase> myCanvas = counted_ptr<PEBLObjectBase>(new PlatformCanvas(width,height,color));
+    counted_ptr<PEBLObjectBase> myCanvas = counted_ptr<PEBLObjectBase>(pc);
     PComplexData *  pcd = new PComplexData(myCanvas);
 
     Variant tmp = Variant(pcd);
     delete pcd;
     pcd=NULL;
     return tmp;
-
-
-
 }
 
 
@@ -658,6 +668,8 @@ Variant PEBLObjects::GetPropertyList(Variant v)
 
 Variant PEBLObjects::SetProperty(Variant v)
 {
+
+
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First();
     PError::AssertType(v1, PEAT_OBJECT, "Argument error in first parameter of function [SetProperty(<object>,<property>,<value>)]:  ");    
@@ -666,6 +678,8 @@ Variant PEBLObjects::SetProperty(Variant v)
     Variant v2 = plist->Nth(2);
     PError::AssertType(v2, PEAT_STRING, "Argument error in second parameter of function [SetProperty(<object>,<property>,<value>)]:  ");    
 
+
+    
 
     Variant v3 = plist->Nth(3);
     //No need to check v3 for type.
@@ -698,6 +712,8 @@ Variant PEBLObjects::GetProperty (Variant v)
 
 Variant PEBLObjects::PropertyExists (Variant v)
 {
+
+
     PList * plist = v.GetComplexData()->GetList();
     
 
@@ -1481,7 +1497,7 @@ Variant PEBLObjects::LoadMovie(Variant v)
     pcd=NULL;
     return tmp;
 #else
-    return false;
+    return Variant(false);
 #endif
 
 }
@@ -1528,6 +1544,7 @@ Variant PEBLObjects::StartPlayback(Variant v)
     Variant v1 = plist->First();
     PlatformMovie * myMovie = dynamic_cast<PlatformMovie*>(v1.GetComplexData()->GetObject().get());
     myMovie->StartPlayback();
+    return Variant(true);
 #else
     return false;
 #endif    

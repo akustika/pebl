@@ -389,3 +389,45 @@ ostream & PStream::SendToStream(ostream & out) const
     return out;
 }
 
+
+    //overloaded generic PEBLObjectBase methods
+bool PStream::SetProperty(std::string name, Variant v)
+{
+    if(name=="FILENAME")
+        {
+            PEBLObjectBase::SetProperty("FILENAME",v);
+        }else if(name=="DIRECTION")
+        {      
+            PEBLObjectBase::SetProperty("DIRECTION",v);
+        }
+}
+
+
+
+Variant PStream::GetProperty(std::string name)const
+{
+    //PEBLObjectBase::PrintProperties(cout);
+    return PEBLObjectBase::GetProperty(name);
+}
+
+
+
+ObjectValidationError PStream::ValidateProperty(std::string name, Variant v)const
+{
+    return ValidateProperty(name);
+}
+
+
+ObjectValidationError PStream::ValidateProperty(std::string name)const
+{
+
+    if(name == "FILENAME" || name=="DIRECTION")
+        {
+            return OVE_VALID;
+        }else
+        {
+
+            return OVE_INVALID_PROPERTY_NAME;
+        }
+}
+

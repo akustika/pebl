@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformWidget.cpp
 //    Purpose:    Contains SDL-specific interface GUI objects
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2010 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -121,8 +121,8 @@ bool PlatformWidget::Draw()
 
                     
                             tmp = rotozoomSurfaceXY(mSurface, mRotation,mZoomX, mZoomY, 1); 
-                    
-
+                            //SDL_SetAlpha(tmp,0,SDL_ALPHA_TRANSPARENT);
+                            //SDL_SetAlpha(tmp, 0, SDL_ALPHA_OPAQUE );        
                             //We need to reset the sizes.
                             mWidth = tmp->w;
                             mHeight = tmp->h;

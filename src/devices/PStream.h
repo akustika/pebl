@@ -85,6 +85,15 @@ public:
     bool Close();
     virtual PEBL_DEVICE_TYPE GetDeviceType(){return PDT_STREAM;};
 
+
+
+    //overloaded generic PEBLObjectBase methods
+    virtual bool SetProperty(std::string, Variant v);
+    virtual Variant GetProperty(std::string)const;
+    virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
+    virtual ObjectValidationError ValidateProperty(std::string)const;
+
+
 protected:
 
     //Inheritable printing Method.

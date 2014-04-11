@@ -161,8 +161,9 @@ namespace PEBLStream
 #endif
 
 #ifdef PEBL_HTTP
-            {(char*)"GETHTTPFILE", GetHTTPFile,                     3,3},
-            {(char*)"POSTHTTP", PostHTTP,                     5,5},
+            {(char*)"GETHTTPFILE", GetHTTPFile,               3,3},
+            {(char*)"GETHTTPTEXT", GetHTTPText,               2,2},
+            {(char*)"POSTHTTP", PostHTTP,                     4,4},
 #endif
 
             {(char*)"MD5SUM", MD5Sum,                         1,1},
@@ -198,7 +199,7 @@ namespace PEBLObjects
             {(char*)"MAKEIMAGE",         MakeImage,  1, 1},
             {(char*)"MAKELABEL",         MakeLabel,  2, 2},
             {(char*)"MAKETEXTBOX",       MakeTextBox, 4, 4},
-            {(char*)"MAKECANVAS",        MakeCanvas, 3,3},
+            {(char*)"MAKECANVAS",        MakeCanvas, 2,3},
             {(char*)"MAKECOLOR",         MakeColor,  1, 1},
             {(char*)"MAKECOLORRGB",      MakeColorRGB, 3, 3},
             {(char*)"MAKEFONT",          MakeFont,   6, 6},
@@ -315,6 +316,7 @@ namespace PEBLEnvironment
 
 
             {(char*)"CLEAREVENTLOOP",                  ClearEventLoop,     0, 0},
+            {(char*)"CALLFUNCTION",                    CallFunction,       2,2},
             {(char*)"GETINPUT",                        GetInput,           2, 4},
             {(char*)"GETTEXTBOXCURSORFROMCLICK",       GetTextBoxCursorFromClick, 3,3},
             {(char*)"REGISTEREVENT",                   RegisterEvent,      5,6},

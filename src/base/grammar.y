@@ -174,6 +174,7 @@ functions:	nlornone function nlornone {gParseTreeHead =  new OpNode(PEBL_FUNCTIO
 function:	/*Syntax allows there to be a newline between the varlist and the block*/
 		PEBL_DEFINE PEBL_FUNCTIONNAME PEBL_LPAREN varlist PEBL_RPAREN  nlornone functionblock  { ;
 		PNode * tmpFN = new OpNode(PEBL_LAMBDAFUNCTION, $4, $7, sourcefilename, yylineno);  
+		tmpFN->SetFunctionName($2);
 		PNode * tmpNode = new DataNode(Variant($2, P_DATA_FUNCTION), sourcefilename, yylineno);
 		free($2);
 		$$ = new OpNode(PEBL_FUNCTION, tmpNode, tmpFN, sourcefilename, yylineno);
@@ -182,7 +183,8 @@ function:	/*Syntax allows there to be a newline between the varlist and the bloc
                /*empty argument list:*/
 	       /******************************************************************************/
 	|	PEBL_DEFINE PEBL_FUNCTIONNAME PEBL_LPAREN PEBL_RPAREN  nlornone functionblock    { ;
-		PNode * tmpFN = new OpNode(PEBL_LAMBDAFUNCTION, NULL, $6, sourcefilename, yylineno);  
+		PNode * tmpFN = new OpNode(PEBL_LAMBDAFUNCTION, NULL, $6, sourcefilename, yylineno); 
+		tmpFN->SetFunctionName($2);
 		PNode * tmpNode = new DataNode(Variant($2, P_DATA_FUNCTION), sourcefilename, yylineno);
 		$$ = new OpNode(PEBL_FUNCTION, tmpNode, tmpFN, sourcefilename, yylineno);
                 free($2);
@@ -374,7 +376,7 @@ varlist:	/*=====================================================================
 		/******************************************************************************
 		/*** A varlist is a list of variables.  It is used in a function declaration.
 		***/
-		variable                     {$$ = new OpNode(PEBL_VARLIST, $1, NULL, sourcefilename, yylineno);}
+		variable      {$$ = new OpNode(PEBL_VARLIST, $1, NULL, sourcefilename, yylineno);}
 
 
                 /******************************************************************************/

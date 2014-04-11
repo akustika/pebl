@@ -93,7 +93,7 @@ namespace PEBLEnvironment
     Variant RegisterEvent( Variant v);
     Variant StartEventLoop(Variant v);
     Variant ClearEventLoop(Variant v);
-
+    Variant CallFunction(Variant v);
     //Misc
     Variant GetInput(Variant v);
     Variant GetTextBoxCursorFromClick(Variant v);

@@ -3,7 +3,7 @@
 //    Name:       src/devices/PEven.h
 //    Purpose:    Events processed by Event Loop.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004-2012 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -53,7 +53,7 @@ class PEventQueue: virtual public PDevice
 	//This 'primes' the event-queue pump, getting any
 	//waiting events from the system, tagging them with a timestamp, 
 	// and putting them into the PEBL queue
-	virtual void Prime(){;};
+	virtual void Prime(){std::cout << "Standard prime\n";};
     virtual bool IsEmpty(){return mEventQueue.empty();};
 
     virtual int GetState(int interface) const;
