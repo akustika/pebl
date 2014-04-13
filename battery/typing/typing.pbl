@@ -3,15 +3,15 @@ define Start(p)
 
 
   parpairs <- [["duration","short"],
-               ["wordtype","words"],
-	       ["set",1],
+               ["wordtype","choose"],
+	       ["set",1]]
 	       
 
   gParams <- CreateParameters(parpairs,gParamFile)
 
 
   duration <- gparams.duration  ##short or long
-  wordtype <- gParams.wordtype  ##words or lorem
+  wordtype <- gParams.wordtype  ##words or lorem or choose
   version <- gParams.set        ##1 through 4
 
 
@@ -25,10 +25,9 @@ define Start(p)
     gSubnum <- GetSubNum(gWin)
   }
 
-
-
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"typing","csv")
-  FilePrint(gFileOut,"sub,timestamp,condition,duration,wordtype,file,time,time2,wpm,cpm,tpm,completed,error")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"typing","csv",
+             "sub,timestamp,condition,duration,wordtype,file,time,time2,wpm,cpm,tpm,completed,error")
+  gReportFile <- GetNewDataFile(gSubNum,gWin,"typing-report","txt","")
 
   cont <- 1
   while(cont)
@@ -36,10 +35,10 @@ define Start(p)
 
    ### Select time length or use passed-in argument.
    ### 
-   if(duration == "short")
+   if(Lowercase(duration) == "short")
    {
      time <- 60000
-   }elseif(duration=="long")
+   }elseif(lowercase(duration)=="long")
    {
    
      time <- 180000
@@ -49,10 +48,10 @@ define Start(p)
    }
 
    ##Select words or loremipsum:
-   if( wordtype== "words")
+   if( lowercase(wordtype)== "words")
    {
      root <- "random"
-    } elseif(wordtype =="nonwords")
+    } elseif(lowercase(wordtype) =="nonwords")
     {
      root <- "lorem"    
     }else{
@@ -66,14 +65,14 @@ define Start(p)
    ##Select stimulus version
    if(IsMember(version,[1,2,3,4]))
    {
-      file <- root + version   + ".txt"
+      file <- "input/"+root + version   + ".txt"
    }else{
 
       version <- GetEasyChoice("Select text version",
                          ["1","2","3","4"],
                          ["1","2","3","4"],gWin)
 
-      file <- root + version   + ".txt"
+      file <- "input/"+root + version   + ".txt"
    }
 
 
@@ -113,6 +112,7 @@ FilePrint(gFileOut,gSubNum+","+TimeStamp()+","  +conditiontag + ","+
 	    timeM +","+ wpm+","+cpm+","+tpm+"," + Second(stats)+","+(1-errs))
 
    Print(report)
+   FilePrint(gReportFile,report)
    MessageBox(report, gWin)
 
    ##reset the hard-coded values
