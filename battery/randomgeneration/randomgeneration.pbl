@@ -31,8 +31,8 @@ define Start(p)
    MakeDirectory("data")
 
 
-   gFileOut <- GetNewDataFile(gSubNum,gWin,"randomgen","csv")
-
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"randomgen","csv",
+                      "SubNum,type,trial,resp,abstime,rt")
    ##Here is the tone:
    beep <- MakeSineWave(300,200,.9)
    flash <- Circle(gVideoWidth/2,gVideoHeight/2,100,MakeColor("red"),1)
