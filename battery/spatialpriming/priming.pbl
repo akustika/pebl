@@ -9,7 +9,7 @@ define Start(p)
                ["iti",800],
                ["primedur",50],
 	       ["lag",400],
-	       ["responsetype","mouse"]
+	       ["responsetype","choose"]
               ]
 
   gParams <- CreateParameters(parpairs,gParamFile)
@@ -20,6 +20,7 @@ define Start(p)
   primeDur <- gParams.primedur ##prime duration
   lag      <- gParams.lag      ##time between prime and stim
   reps     <- gParams.reps      ## How many times through the 54-trial design
+
   gResponseType <- gParams.responsetype
 
 
@@ -28,9 +29,10 @@ define Start(p)
     gSubNum <- GetSubNum(gWin)
   }
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"priming","csv")
-  FilePrint(gfileout,"subnum,responstype,trial,targcell,targrow,targcol,primecond,primerow,primecol,resp,corr,intrusion,abstime,rt")
-  report <- FileOpenWrite("data/priming-report-"+gSubNum+".txt")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"priming","csv",
+    "subnum,responstype,trial,targcell,targrow,targcol,primecond,primerow,primecol,resp,corr,intrusion,abstime,rt")
+
+  report <- GetNewdataFile(gSubNum,gWin,"priming-report","txt","")
 
   stimColor <- MakeColor("royalblue")
   primeColor <- MakeColor("yellow2")
