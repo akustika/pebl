@@ -59,7 +59,8 @@
   gbackground  <-  MakeColor("navyblue")
   gDotColor    <-  MakeColor("white")
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"patcompsd","csv")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"patcompsd","csv",
+          "subnum,trial,samediff,cond,delta,mat1,mat2,abstime,rt,resp,corr")
 
   instruc <- "This test examines your ability to compare two patterns simultaneously.  The computer will present two patterns of dots to you, side by side on the screen.  You must decide, as quickly and accurately as possible, if  the two patterns are the same. You will indicate your answer by pressing the left or right shift keys on the keyboard. Press the left shift key  if the patterns on the screen are identical, or  the right shift key if the patterns are different. Once you press a key, the patterns will disappear, so it is important that you know your answer before you press either button. 
 
@@ -99,8 +100,6 @@ Press any key to begin"
   Hide(gInst)
   Draw()
 
-  ## Print file header
-  FilePrint(gFileOut,"subnum,trial,samediff,cond,delta,mat1,mat2,abstime,rt,resp,corr")
   
   RunBlock(1,condSame,"s")
   gInst.text <- "Now, we will reverse the instructions: Only press the space bar when the two patterns are DIFFERENT.  Press any key to begin"
