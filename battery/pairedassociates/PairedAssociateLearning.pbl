@@ -1,4 +1,4 @@
-	define Start(p)
+define Start(p)
 {
 
   parpairs <- [["isi",2500],
@@ -139,9 +139,9 @@ unrelatedpairs <- Transpose(Append(unrelatedpairs,   RepeatList([1,-1],8)))
     gSubNum <- GetSubNum(gWin)
   }
 
+   header <- "subnum,type,block,resptrial,probe,target,W1,W2,cond,wordord,leftword,rightword,prestrial,respid,rt1,respx,respy,corrresp,actualresp,correct,rt"
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"paired","csv",header)
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"paired","csv")
-  FilePrint(gFileOut,"subnum,type,block,resptrial,probe,target,W1,W2,cond,wordord,leftword,rightword,prestrial,respid,rt1,respx,respy,corrresp,actualresp,correct,rt")
   MessageBox("In this task, you will see a pair of words for several seconds each.  There will be twelve word pairs.  Try to remember the pairing--you will be asked about it later.  There is no need to remember the order of these words.  This test will take about eight minutes."+CR(3)+"To remember the words, many people try to come up with a scene or image that involves the pairing, to make it more memorable.  You may try this, or some other strategy that helps you remember how they go together.",gWin)
 
 
