@@ -138,9 +138,10 @@ define Start(lPar)
   ##
 
 
-   datafile <- GetNewDataFile(gSubNum,gWin,"pcpt","csv")
+   datafile <- GetNewDataFile(gSubNum,gWin,"pcpt","csv",
+           "sub,block,trial,cond,targ,responded,corr,time,rt")
    masterdatafile <- FileOpenAppend("data/pooled-pcpt.csv")
-   reportfile <- GetNewDataFile(gSubNum,gWin,"pcpt-report","txt")
+   reportfile <- GetNewDataFile(gSubNum,gWin,"pcpt-report","txt","")
 
    
    log <- FileOpenAppend("data/pcpt-log.txt")
@@ -174,7 +175,7 @@ define Start(lPar)
    corF4000 <- 0
 
 
-   FilePrint(datafile,"sub,block,trial,cond,targ,responded,corr,time,rt")
+
 
 
 

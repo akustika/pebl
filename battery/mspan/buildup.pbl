@@ -46,7 +46,8 @@ define Start(p)
     gSubNum <- GetSubNum(gWin)
    }
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"buildup","csv")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"buildup","csv",
+      "subnum,trial,stimid,responses,corr,rt1,rt2,rt3,rt4,rt5,rt6,rt7,rt8,rt9," )
 
   gLogFile <- FileOpenAppend("data/buildup-log.txt")
   FilePrint(gLogFile,"BUILDUP start " +GetTime() + " " + TimeStamp() +  " " + gSubNum )

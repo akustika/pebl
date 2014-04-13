@@ -188,8 +188,6 @@ if(gParams.testtype==-1)
   InitPoles()   
    
 
-  FilePrint(gFileOut,"sub,trial,size,current,end,step,reset,tries,score,abstime,trialtime,clicktime,done")
-  FilePrint(gFileOutSum,"sub,trial,size,shortest,startlab,endlab,startconf,endconf,success,tries,score,steps,roundstart,starttime,firsttime,time")
 
   gInstructions.width <- 220
   gInstructions.height <- 520
@@ -614,10 +612,13 @@ define InitPoles()
 
 
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"tol","csv")
-  gFileOutSum <- GetNewDataFile(gSubNum,gWin,"tol-summary","csv")
-  gReportFile <- GetNewDataFile(gSubNum,gWin,"tol-report","txt")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"tol","csv",
+   "sub,trial,size,current,end,step,reset,tries,score,abstime,trialtime,clicktime,done")
 
+  gFileOutSum <- GetNewDataFile(gSubNum,gWin,"tol-summary","csv",
+   "sub,trial,size,shortest,startlab,endlab,startconf,endconf,success,tries,score,steps,roundstart,starttime,firsttime,time")
+
+  gReportFile <- GetNewDataFile(gSubNum,gWin,"tol-report","txt","")
   gPooledFile <- FileOpenAppend("data/pooled-tol.csv")
 
  }

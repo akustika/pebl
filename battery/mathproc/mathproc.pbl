@@ -44,8 +44,9 @@ parpairs <- [["blocktime",180],# Duration of block in sec (default should be  3 
 	  gSubNum <- GetSubNum(gWin)
     }
 
-    MakeDirectory("data")
-    gFileOut <- GetNewDataFile(gSubNum,gWin,"mathproc","csv")
+
+    gFileOut <- GetNewDataFile(gSubNum,gWin,"mathproc","csv",
+           "subnum,trial,feedback,val,length,stim,resp,corr,tooslow,time,rt")
 
   footer1 <- EasyLabel("Left Shift                                 Right Shift",gVideoWidth/2,gVideoHeight-120,gWin,30)
   footer2 <- EasyLabel("Sum less than 5                        Sum greater than 5",gVideoWidth/2,gVideoHeight-150,gWin,30)
@@ -68,7 +69,7 @@ The number of additions and subtractions to be performed in each problem will va
   design <- DesignFullCounterBalance(sums,lengths)
   stimuli <- Shuffle(design)
 
-  FilePrint(gFileOut, "subnum,trial,feedback,val,length,stim,resp,corr,tooslow,time,rt")
+
 
   ##present in random order
   blockdat <- (Transpose([lengths,deadlines]))

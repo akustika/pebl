@@ -34,8 +34,9 @@ define Start(p)
   gstimFont <- MakeFont(gPEBLBaseFontMono,0,24,MakeColor("black"),MakeColor("grey"),1)
   gProbeFont <-MakeFont(gPEBLBaseFontMono,0,80,MakeColor("black"),MakeColor("grey"),1)
 
-  MakeDirectory("data")
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"letterdigit","csv")
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"letterdigit","csv",
+                "subnum,block,trial,letter,cresp,resp,corr,rt")
   gDatCorr <- []
   gDatRT  <- []
 
@@ -65,7 +66,7 @@ define Start(p)
 
 
   ##Add the taurget characters:
-  FilePrint(gFileOut,"subnum,block,trial,letter,cresp,resp,corr,rt")
+
 
 
 

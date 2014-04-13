@@ -15,8 +15,9 @@ define Start(p)
   Init()
 
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"itemorder","csv")
-  
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"itemorder","csv",
+              "subnum,trial,cond,target,compare,pos,resp,corr,abstime,rt")
+
   giveFeedback <- 1
   trials <-Shuffle(Flatten([Repeat(0,gParams.numSame),Repeat(1,gParams.numDiffItem),Repeat(2,gParams.numDiffOrder)]))
 
@@ -52,8 +53,8 @@ define Init()
 
   gTarget <-EasyLabel("+",gVideoWidth/2,gVideoHeight/2,gWin,70)
 
-  gFooter1 <- EasyLabel("   SAME                                       DIFFERENT",   gVideoWidth/2,gVideoHeight-60,gWin,28)
-  gFooter2 <- EasyLabel("<left shift>                                <right shift>", gVideoWidth/2,gVideoHeight-20,gWin,28)
+  gFooter1 <- EasyLabel("   SAME                                       DIFFERENT",   gVideoWidth/2,gVideoHeight-160,gWin,28)
+  gFooter2 <- EasyLabel("<left shift>                                <right shift>", gVideoWidth/2,gVideoHeight-120,gWin,28)
 
   Hide(gFooter1)
   Hide(gFooter2)

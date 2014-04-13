@@ -63,7 +63,7 @@ define Start(lPar)
                 ["usecontinuous",1],
 		["givefeedback",1],
                 ["fixationtime", 400],    ## How long the fixation cross remains
-   ["numBlocks", 12],           ## Number of  repetitions of the interval set
+                ["numBlocks", 12],           ## Number of  repetitions of the interval set
    ["numTrials",120],           ## Number of total trials. (120 =~ 10 minutes)
    ["totalTime",600],     ## total time of the test in milliseconds    
    ["TooFast",150],           ## trial is marked too fast if rt < 150 ms
@@ -130,10 +130,10 @@ define Start(lPar)
   ## Set up the basic  environment 
   ##
 
-   datafile <- GetNewDataFile(gSubNum,gWin,"ppvt","csv")
-   reportfile <- GetNewDataFile(gSubNum,gWin,"ppvt-report","txt")
+   datafile <- GetNewDataFile(gSubNum,gWin,"ppvt","csv",
+                   "sub,block,trial,ISI,ISIbin,abstime,rt,type")
 
-
+   reportfile <- GetNewDataFile(gSubNum,gWin,"ppvt-report","txt","")
 
    ## data structures which save data for analysis and
    ## report at end of study. 
@@ -141,8 +141,6 @@ define Start(lPar)
    types <- []
    isis  <- []
    
-   ##The data file header:
-   FilePrint(datafile,"sub,block,trial,ISI,ISIbin,abstime,rt,type")
 
     Wait(1000)
     trialNum <- 0

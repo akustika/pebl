@@ -65,8 +65,8 @@ define Start(p)
    {
      gSubNum <- GetSubNum(gWin)
    }
-
-    gFileOut <- GetNewDataFile(gSubNum,gWin,"pcards","csv")
+   header <- "subnum,practice,set,trial,card,word,rule,desc,parity,correctResp,lastrule,lastparity,lastcorresp,resp,late,corr,lastcorr,allcorr,time,run,cardnum,errs"
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"pcards","csv",header)
    gLogFile <- FileOpenAppend("data/pcards-log.txt")
    FilePrint(gLogFile,"pcards start " +GetTime() + " " + TimeStamp() +  " " + gSubNum + " " + practice)
 
@@ -128,7 +128,7 @@ Font Color (red or blue) |    Underlined or Plain   | Uppercase or Lowercase Let
  AddObject(gHintbox,gWin)
  Move(gHintBox,(gVideoWidth-gHintBox.width)/2,100)
 
-   FilePrint(gFileOut,"subnum,practice,set,trial,card,word,rule,desc,parity,correctResp,lastrule,lastparity,lastcorresp,resp,late,corr,lastcorr,allcorr,time,run,cardnum,errs")
+
 
    
    lstack <- [] ##two stacks exist.

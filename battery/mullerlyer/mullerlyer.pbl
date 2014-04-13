@@ -69,7 +69,8 @@ parpairs <- [["prestime", 250],  ##how long to do the presentation, in ms
 
 
 
-  fileOut <- GetNewDataFile(gSubNum,gWin,"mullerlyer","csv")
+  fileOut <- GetNewDataFile(gSubNum,gWin,"mullerlyer","csv",
+               "subnum,trial,diff,resp,corr,abstime,rt")
 
   header <- EasyLabel("which is longer?",gVideoWidth/2,100,gWin,40)
   footer <- EasyLabel("<lshift>           <rshift>",gVideoWidth/2,gVideoHeight/2+150,gWin,40)

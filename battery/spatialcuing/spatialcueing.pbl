@@ -32,7 +32,7 @@ define Start(par)
 		 ["numNeutral",5],
 		 ["fontsize",22],
 		 ["reps",4]
-                ]
+               ]
     
     gParams <- CreateParameters(parpairs,gParamFile)
 
@@ -43,7 +43,9 @@ define Start(par)
       gSubNum <- GetSubNum(gWin)
     }
 
-    gFileOut <- GetNewDataFile(gSubNum,gWin,"spatialcueing","csv")
+    gFileOut <- GetNewDataFile(gSubNum,gWin,"spatialcueing","csv",
+          "subnum,trial,cue,stim,correct,delay,rt")
+
 
 #######################################################################
 ## Specify the number of times each type of stimulus is presented.

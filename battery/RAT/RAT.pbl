@@ -187,7 +187,7 @@ define GetResponse(target)
    time0 <- GetTime()
    cont <- 1
    entry <- EasyTextBox("",gVideoWidth/2-200,gVideoHeight/2-50,gWin,45,400,100)
-   response <- GetInputWithTimer(entry,gTimer,Fourth(target),gParams.timeout*1000)    
+   response <- GetInputWithTimer(entry,gTimer,Fourth(target),gParams.timeout*1000,gParams.allowretry)    
 
     correct <- First(response)==Fourth(target)
 
@@ -254,9 +254,8 @@ define InterleaveLists(nested)
 
 ## This is suitable for short inputs, and requires only ALL-CAPS
 ## Input
-define GetInputWithTimer(entry,timelabel,validation,maxtime)
+define GetInputWithTimer(entry,timelabel,validation,maxtime,allowretry)
 {
-
 
   opts <- ["1","2","3","4","5","6","7","8","9","0",
             "A","B","C","D","E","F","G","H","I","J","K","L","M",
@@ -307,9 +306,9 @@ define GetInputWithTimer(entry,timelabel,validation,maxtime)
      }
 
      ##check if the validation matches
-    if(done)
-    {
-     PushOnEnd(outs,[out,GetTime()])
+     if(done)
+     {
+      PushOnEnd(outs,[out,GetTime()])
 
       if(not Uppercase(out)==Uppercase(validation))
       {
@@ -319,8 +318,8 @@ define GetInputWithTimer(entry,timelabel,validation,maxtime)
       }
     }
 
-  ##exit if time is up.
-  if(GetTime()>timeout)
+  ##exit if time is up, or we don't allow retries
+  if(GetTime()>timeout or (not allowretry))
   {  
    done <- 1
   }

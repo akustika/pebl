@@ -40,8 +40,9 @@ define Start(p)
     }
 
   MakeDirectory("data")
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"fourchoice","csv")
-
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"fourchoice","csv",
+  "subnum,resptype,isi,trial,sound,resp,quad,leftright,updown,respquad,corr,lapse,rt")
+  gSummary <- GetNewDataFile(gSubNum,gWin,"fourchoice-summary","txt","")
   gBeep <- LoadSound("tone.wav")
 
 
@@ -85,7 +86,7 @@ define Start(p)
   dat <- []
   gSleepEasy <- 0
   trial <- 1
-  FilePrint(gFileout,"subnum,resptype,isi,trial,sound,resp,quad,leftright,updown,respquad,corr,lapse,rt")
+
 
   while(trial <= gNumTrials)
   {
@@ -123,7 +124,7 @@ define Start(p)
     }
    feedback <- feedback +    Print("-------------------------------------") +CR(1)
 
-   gSummary <- FileOpenWrite("fourchoice-summary-"+gSubnum+".txt")
+
    FilePrint(gSummary,feedback)
    FileClose(gSummary)
    FileClose(gFileOut)

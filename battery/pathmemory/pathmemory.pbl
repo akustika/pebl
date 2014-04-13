@@ -30,8 +30,8 @@ define Start(p)
     gSubNum <- GetSubNum(gWin)
   }
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"pathmemory","csv")
-
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"pathmemory","csv",
+                            "subNum,sample,path,x,y,time")
 
   grid <-[]
   x <- Sequence(0,800,100)

@@ -146,9 +146,14 @@ define Start(lPar)
   {
     header <- EasyLabel("Press space bar for box with square on top",gVideoWidth/2,100,gWin,25)
   }
-  MakeDirectory("data")
-  datafile   <- FileOpenWrite("data/toav-"+ gSubNum + ".csv")
-  reportfile <- FileOpenWrite("data/toav-report-" + gSubNum + ".txt")
+
+  
+
+  datafile <- GetNewDataFile(gSubNum,gWin,"toav","csv",
+        "sub,trial,targ,toofast,responded,corr,mult,time,rt")   
+
+  reportfile <- GetnewdataFile(gSubNum,gWin,"tav-report","txt","")
+
 
 
    ## 
@@ -176,7 +181,7 @@ define Start(lPar)
    totalTrials2 <- 0   # 
 
 
-  FilePrint(datafile,"sub,trial,targ,toofast,responded,corr,mult,time,rt")
+
 
 
     half <- 1  

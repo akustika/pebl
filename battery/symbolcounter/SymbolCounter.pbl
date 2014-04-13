@@ -68,8 +68,10 @@ define Start(lPar)
 
   Initialize()
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"symbolcounter","csv")
-  gReportFile <- GetNewDataFile(gSubNum,gWin,"symbolcounter-report","txt")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"symbolcounter","csv",
+            "subNum,block,trial,stim,resp,corr,corrun,abstime,rt")
+
+  gReportFile <- GetNewDataFile(gSubNum,gWin,"symbolcounter-report","txt","")
  
   gInstructions.text <- "You are about to take part in a simple task.  "+
     "In this task, you will see a series of symbols and you will need to keep track of " +

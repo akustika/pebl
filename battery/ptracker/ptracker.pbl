@@ -111,8 +111,8 @@ define Start(p)
    }
 
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"ptracker","csv")
-  FilePrint(gFileOut,"subnum,time,posX,posY,userdeltaX,userdeltaY,timeDelta,targetDeltaX,targetDeltaY,deviation,mouseD1,mouseD2")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"ptracker","csv",
+       "subnum,time,posX,posY,userdeltaX,userdeltaY,timeDelta,targetDeltaX,targetDeltaY,deviation,mouseD1,mouseD2")
 
   inst <- EasyTextBox("Your goal in this task is to keep the ball near
   the target using your mouse or pointing device.  The test lasts

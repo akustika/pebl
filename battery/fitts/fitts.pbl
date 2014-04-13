@@ -301,7 +301,6 @@ define WaitForMouseMovement()
    pos <-GetMouseCursorPosition()
     
    continue <- 1
-   Print("checkign equality of: "+ lastpos + " == "+ pos)
    while(ListEqual(lastpos,pos)) 
     {
 

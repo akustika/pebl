@@ -103,8 +103,9 @@ define Start(lPar)
   numStim <- gParams.numstim
   
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"iat","csv")
-  reportfile <- GetNewDataFile(gSubNum,gWin,"iat-report","txt")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"iat","csv",
+    "sub,trial,round,stim,type,goodnesscond,rt,corr")
+  reportfile <- GetNewDataFile(gSubNum,gWin,"iat-report","txt","")
 
   grey <- MakeColor("GREY")
   red <- MakeColor("RED")

@@ -54,8 +54,7 @@ define Start(lPar)
   ## SOA in ms. These are really chosen to match screen updates, so
   ## there should be a parameter in the future to support that.
   soas <- gParams.soa
-  PrintProperties(gParams)
-  Print(gParams.soa)
+
 
   ####################################
   ##
@@ -97,7 +96,8 @@ define Start(lPar)
 
   delayseq <- Shuffle(DesignBalancedSampling(soas, numtrials))
 
-  gDataFile <- GetNewDataFile(gSubNum,gWin,"partreport","csv")
+  header <- "subnum,blocknum,trial,delay,s1,s2,s3,s4,s5,s6,s7,s8,cueid,cueresp,resp,corr,time"
+  gDataFile <- GetNewDataFile(gSubNum,gWin,"partreport","csv",header)
 
   gInstructions.text <- "You are about to take part in a simple task.  On each trial, you will see a + sign, surrounded by a circle of eight letters.  The letters are chosen randomly from D F J and K.  The letters will disappear quickly, but shortly after they appear an arrow will appear, pointing to the location of a letter.  Your task is to identify what letter the arrow pointed to.
 

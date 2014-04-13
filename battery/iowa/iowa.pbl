@@ -115,7 +115,8 @@ define Start(lPar)
 
 
   ## results are stored in tmpresults.dat
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"igt","csv")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"igt","csv",
+     "subNum,trialnum,resp,reward,penalty,net,total,abstime,rt")
 
 
   ####################################################

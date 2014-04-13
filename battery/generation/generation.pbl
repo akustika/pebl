@@ -21,9 +21,8 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
     }
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"generation","csv")
-
-  FilePrint(gFileOut,"subnum,stage,trial,type,easyhard,trial2,hint,stim,pair2,resp,correct,abstime,rt")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"generation","csv",
+  "subnum,stage,trial,type,easyhard,trial2,hint,stim,pair2,resp,correct,abstime,rt")
 
   
   ## These are arrange as cue-firstassociate-third associate (easier and harder)

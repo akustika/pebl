@@ -39,16 +39,20 @@ define Start(p)
    }
 
    
-   gFileOutSum <- GetNewDataFile(gSubNum,gWin,"switch-summary","csv")
-   gFileOut <- GetNewDataFile(gSubNum,gWin,"switch","csv")
+
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"switch","csv",
+           "gSubNum,block,type,try,successes,rule,lastrule,curid,currentval,correct,matchColor,matchLetter,matchShape,matchLast,curcolor,curletter,curshape,targcolor,targletter,targshape,clickcolor,clickletter,clickshapetargx,targx,targy,targid,corsum,incsum,time,rt")
+
+   gFileOutSum <- GetNewDataFile(gSubNum,gWin,"switch-summary","csv",
+       "subNum,timestamp,testtype,numcues,numerr,matchlast,matchany,tooslow,waittime,perftime,medtime")   
+
 
    gRuleNames <- ["color","letter","shape","NA"]
    coltmplt <-   [1,1,2,2,3,3,4,4,5,5]
    numtmplt <-   [1,2,3,4,5,1,2,3,4,5]
    shapetmplt <- [1,2,1,3,2,4,3,5,4,5]
-   FilePrint(gFileOutSum,"gSubNum,timestamp,testtype,numcues,numerr,matchlast,matchany,tooslow,waittime,perftime,medtime")   
 
-   FilePrint(gFileOut,"gSubNum,block,type,try,successes,rule,lastrule,curid,currentval,correct,matchColor,matchLetter,matchShape,matchLast,curcolor,curletter,curshape,targcolor,targletter,targshape,clickcolor,clickletter,clickshapetargx,targx,targy,targid,corsum,incsum,time,rt")
+
 
 ################################################################
 ## Instructions:

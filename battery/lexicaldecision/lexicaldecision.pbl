@@ -29,8 +29,8 @@ define Start(lPar)
 
  #open a file for writing to.
   MakeDirectory("data")
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"ld","csv") 
-  FilePrint(gFileOut,"subnum,trial,stim,type,resp,corr,rt")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"ld","csv",  
+                 "subnum,trial,stim,type,resp,corr,rt")
   #Read in the words/nonwords.  
   words <- FileReadList("words.txt")
   nonwords <- FileReadList("nonwords.txt")

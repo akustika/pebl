@@ -90,15 +90,13 @@ Press any key to begin.")
   ## Set up the basic  environment 
   ##
 
-   datafile <- GetNewDataFile(gSubNum,gWin,"probrev","csv")
-   reportfile <- GetNewDataFile(gSubNum,gWin,"probrev-report","txt")
+   datafile <- GetNewDataFile(gSubNum,gWin,"probrev","csv",
+                       "sub,block,stage,trial,targ")
+   reportfile <- GetNewDataFile(gSubNum,gWin,"probrev-report","txt","")
 
 
    ## Global data structures which save data for analysis and
    ## report at end of study. 
-
-   FilePrint(datafile,"sub,block,stage,trial,targ")
-
 
    ##Go through each block of the task, starting here.
     trialNum <- 0

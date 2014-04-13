@@ -20,7 +20,7 @@ define Start(p)
 
   gParams <- CreateParameters(parpairs,gParamFile)
 
-  numPracticeTrials <- gParmas.numpractice
+  numPracticeTrials <- gParams.numpractice
   numTrials         <- gParams.numtrials
   isi <- gParams.isi
   gTimeout <- gParams.timeout
@@ -35,8 +35,8 @@ define Start(p)
    }
 
 
-   gFileOut <- GetNewDataFile(gSubNum,gWin,"twocol","csv")
-   gSummaryFile <- GetNewDataFile(gSubNum,gWin,"twocol-summary","txt")
+   gFileOut <- GetNewDataFile(gSubNum,win,"twocol","csv", "sub,cond,trial,num1,num2,num3,sum,resp,corr,toolong,clicks,starttime,firstclick,completetime")
+   gSummaryFile <- GetNewDataFile(gSubNum,win,"twocol-summary","txt","")
 
   ##The sound file to play:
   gBuzz <- LoadSound("buzz500ms.wav")
@@ -78,7 +78,7 @@ Press any key to begin."
 
 
   ##label output file
-  FilePrint(gFileOut,"sub,cond,trial,num1,num2,num3,sum,resp,corr,toolong,clicks,starttime,firstclick,completetime")
+
 
   ####################################
   #Do practice trials
@@ -124,6 +124,7 @@ Press any key to begin."
   ####################################
   # Clean up and give feedback
   FileClose(gFileOut)
+  FilePrint(gSummaryFile,"PEBL Two-column addition task" + Timestamp())
   FileClose(gSummaryFile)
   ShowAll(0)
   Hide(gSum)

@@ -45,7 +45,7 @@ define Start(lPar)
 	       ["responsekey","X"]]         ##Response key to use.
 
   gParams <- CreateParameters(parpairs,gParamFile)
-
+  
   blocks <- gParams.blocks       
   blocklength <- gParams.blocklength      
   numtrials <- blocks * blocklength 
@@ -74,6 +74,7 @@ define Start(lPar)
   ## Begin Initialization Procedures.
   ##
 
+  gSleepEasy <- 1
   Initialize()
   if(gSubNum+""=="0")
    {
@@ -85,8 +86,8 @@ define Start(lPar)
   ## like sequential dependencies, distributions, fixed delays, etc.
   delayseq <- Shuffle(DesignBalancedSampling(delays, numtrials))
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"srt","csv")
-
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"srt","csv",
+    "subNum,block,trial,time0,delay,delay2,rt,resp1,resp2") 
  
   gInstructions.text <- "You are about to take part in a simple task.  In this task, you will see the symbol  '" +
 	                     stimulus + "'. Whenever you see this symbol, depress the 'X' key as quickly as possible. " + CR(3) +
@@ -136,7 +137,10 @@ define Start(lPar)
 
   if(resp1 == LowerCase(gParams.responsekey))
   {  
+    ##too fast!
     Wait(delay - (time1-time0))
+  } else { 
+    resp1 <- "NO_RESPONSE"
   }
 
   Show(gStim)

@@ -61,8 +61,7 @@ define Start(p)
 
   MakeDirectory("data")
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"tapping","csv")
-  FilePrint(gFileOut,"sub,trial,domhand,hand,tap,sumtime,trialtime,rt")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"tapping","csv","sub,trial,domhand,hand,tap,sumtime,trialtime,rt")
 
   font <-  MakeFont(gPEBLBaseFontMono,0,24,MakeColor("white"),MakeColor("black"),1)
   

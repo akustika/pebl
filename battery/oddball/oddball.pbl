@@ -42,20 +42,18 @@ define Start(p)
 
    ##Make data files   
 
-   MakeDirectory("data")
-
-
-   gFileOut <- GetNewDataFile(gSubNum,gWin,"oddball","csv")
+   header <- "subnum,block,trial,practice,targdir,oddballcoherence,oddballdir,time0,resp,corr,rt"
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"oddball","csv",header)
    gPooledFileOut <- FileOpenAppend("data/oddball-pooled.csv")
 
 
-   gSumFileOut <- GetNewDataFile(gSubNum,gWin,"oddball-report","txt")
+   gSumFileOut <- GetNewDataFile(gSubNum,gWin,"oddball-report","txt","")
    gLog <- FileOpenAppend("data/oddball-log.csv")
    gPooledSummary <- FileOpenAppend("data/oddball-all.csv")
 
    ##Add headers onto files.
    flen <- Length(FileReadList("data/oddball-pooled.csv"))
-   header <- "subnum,block,trial,practice,targdir,oddballcoherence,oddballdir,time0,resp,corr,rt"
+
 
    if(flen==0)
     { 

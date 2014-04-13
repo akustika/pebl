@@ -37,14 +37,16 @@ define Start(p)
 
 
 
-   gFileOut <- GetNewDataFile(gSubNum,gWin,"gonogo","csv")
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"gonogo","csv",
+ "subnum,block,type,correctresponse,trial,choice,x,y,stim,present,response,responded,starttime,rt")
+
    gPooledFileOut <- FileOpenAppend("data/gonogo-pooled.csv")
-   gSumFileOut <-GetNewDataFile(gSubNum,gWin,"gonogo-report","txt")
+   gSumFileOut <-GetNewDataFile(gSubNum,gWin,"gonogo-report","txt","")
 
    gLog <- FileOpenAppend("data/gonogo-log.csv")
    gPooledSummary <- FileOpenAppend("data/gonogo-all.csv")
    FilePrint(gLog, gSubNum + "," + gLanguage + "," + TimeStamp()+",GONOGO,INITIATED") 
-   FilePrint(gfileout, "subnum,block,type,correctresponse,trial,choice,x,y,stim,present,response,responded,starttime,rt")
+
   ##Keep track of some data
   gBlockNums <- []
   gRTs <- []

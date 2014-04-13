@@ -23,47 +23,9 @@ define Start(p)
   gSleepEasy <- 1
   gwin <- MakeWindow("black")
 
-  MakeDirectory("data")
-  
-  needsubnum <- 0
-  if(gSubNum+""=="0")
-  {
-   needsubnum <- 1
-  }
 
-  if(FileExists("data/"+gSubNum))
-   {
-    needsubnum <- 1
-   }
-
- if(not needsubnum)
-  {
-    MakeDirectory("data/"+gSubNum)
-    gFileOut <- FileOpenAppend("data/"+gSubNum+"/sternberg-"+gSubNum+".csv")   
-  }
-
-  while(needSubNum)
-  {
-     gSubNum <- GetSubNum(gWin)
-   if(FileExists("data/"+gsubnum))
-    {
-      opt <- GetEasychoice("Subject code already in use.  Choose new code or add session?",
-          ["Choose new code","Add Session"], ["new","add"],gWin)
-
-      if(opt == "add")
-      {
-        needsubnum <- 0
-	gFileOut <- FileOpenAppend("data/"+gSubNum+"/sternberg-"+gSubNum+".csv") 
-      } 
-     } else {
-       needsubnum <- 0
-       MakeDirectory("data/"+gsubnum)
-       gFileOut <- FileOpenWrite("data/"+gSubNum+"/sternberg-"+gSubNum+".csv") 
-     }
-
-  }
-
-
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"sternberg","csv",
+                    "subNum,length,trial,set,stim,resp,corr,rt")
 
   log <- FileOpenAppend("data/runlog.txt")
   FilePrint(log, gSubNum + "," + TimeStamp() + "Sterberg started")
@@ -157,7 +119,7 @@ define Start(p)
       }
          out <- Trial(stim,First(st),Second(st))
 	 correct <- Second(out)
-	 outlist <- [gSubNum,length,trial,st,out]
+	 outlist <- [gSubNum,length,trial,ListToString(stim),st,out]
 	 FilePrint(gFileOut,MakeCSVLine(Flatten(outlist)))
 	 trial <- trial + 1
 

@@ -59,7 +59,8 @@ define Start(p)
    }
 
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"msp-staircase","csv")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"msp-staircase","csv",
+        "subnum,trial,stimid,responses,corr,rt1,rt2,rt3,rt4,rt5,rt6,rt7,rt8,rt9," )
   gLogFile <- FileOpenAppend("data/msp-staircase-log.txt")
   FilePrint(gLogFile,"MSP,start," +GetTime() + "," + TimeStamp() +  "," + gSubNum + "," + cond)
   ShowCursor(0)

@@ -26,8 +26,7 @@ define Start(p)
   }
 
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"wpt","csv")
-  FilePrint(gFileout,"subnum,trial,config,c1,c2,c3,c4,sampleprob,rainprob,time,rt,resp,outcome,correct")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"wpt","csv","subnum,trial,config,c1,c2,c3,c4,sampleprob,rainprob,time,rt,resp,outcome,correct")
 
 
 #Table 2.

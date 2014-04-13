@@ -22,6 +22,7 @@ define Start(p)
 
   gParams <- CreateParameters(parpairs,gParamFile)
 
+  PrintProperties(gParams)
 
   gDuration <- gParams.duration  
   gTesttype <- ""  ##easy or diff
@@ -37,30 +38,11 @@ define Start(p)
    gSubNum <- GetSubNum(gWin)
   }
 
+    gFileOutS <- GetNewDataFile(gSubNum,gWin,"mathtest","csv",
+        "sub,timestamp,condition,duration,testtype,probset,time,completed,errors,rtmean")
+    gFileOutD <- GetNewDataFile(gSubNum,gWin,"mathtest-detailed","csv",
+        "sub,timestamp,condition,duration,testtype,endtime,problem,correctanswer,answer,correct,try,rt")
 
- MakeDirectory("data")
- fnameD <- "data/mathtest-detailed-"+gsubnum+".csv"
- fnameS <- "data/mathtest-"+gsubnum+".csv"
-
- if(FileExists(fnameD))
-   {
-   ##File exists; append
-   gFileOutD <- FileOpenAppend(fnameD)     
-   } else {
-   gFileOutD <- FileOpenWrite(fnameD)     
-   FilePrint(gFileOutD,"sub,timestamp,condition,duration,testtype,endtime,problem,correctanswer,answer,correct,try,rt")
-
-   }
-
- if(FileExists(fnameS))
-   {
-     ##File exists; append
-   gFileOutS <- FileOpenAppend(fnameS)     
-   } else {
-   gFileOutS <- FileOpenWrite(fnameS)     
-   FilePrint(gFileOutS,"sub,timestamp,condition,duration,testtype,probset,time,completed,errors,rtmean")
-
-   }
 
    gTimeLimit <- gParams.duration * 1000
 

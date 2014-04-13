@@ -29,7 +29,8 @@ Practice now by hitting the shift keys to see which stimulus the map onto.  Hit 
    
    MakeDirectory("data")
 
-   gFileOut <- GetNewDataFile(gSubNum,gWin,"simon","csv")
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"simon","csv",
+           "subnum,trial,type,pos,resp,corr,time,rt")
 
    ##This controls how many times through the 10-stimulus trial set we go
    reps <- gParams.reps
@@ -141,7 +142,7 @@ Practice now by hitting the shift keys to see which stimulus the map onto.  Hit 
       }
      Draw()
 
-     FilePrint(gFileOut,trial + "," + type + "," + pos + "," + resp + "," +corr + "," + time0 +  ","  + (time2-time0))
+     FilePrint(gFileOut,gSubNum+","+trial + "," + type + "," + pos + "," + resp + "," +corr + "," + time0 +  ","  + (time2-time0))
 
      rts <- Append(rts,(time2-time0))
      corrs <- Append(corrs,corr)

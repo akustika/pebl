@@ -61,10 +61,11 @@ define Start(p)
 
 
 
-  MakeDirectory("data")
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"luckvogel","csv")
-  FilePrint(gFileOut,"subnum,trial,prestime,delay,size,same,resp,corr,rt")
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"luckvogel","csv",
+               "subnum,trial,prestime,delay,size,same,resp,corr,rt")
+
   gHeader <- EasyLabel("",gVideoWidth/2,gVideoHeight/2-gParams.fieldheight/2-30,gWin,30)
 
   bgField <- Rectangle(gVideoWidth/2,gVideoHeight/2,

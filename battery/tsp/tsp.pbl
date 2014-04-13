@@ -66,12 +66,20 @@ define Start (p)
    ## This is the stuff on the screen.
    gLines <- []
     
-   MakeDirectory("data")
-   gLogFile <- FileOpenAppend("data/tsp-log.txt")
-   gSumFile <- FileOpenWrite("data/tsp-sum-"+gSubCode+".csv")
-   gFileOut <- FileOpenWrite("data/tsp-"+gSubCode+".csv")
-   gReportFile <- FileOpenWrite("data/tsp-report-"+gSubcode+".txt")
 
+
+
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"tsp","csv",  
+   "subnum,trial,test,type,point,clicklocX,clicklocY,clickid,time,rt")
+
+   gSumFile <- GetNewDataFile(gSubNum,gWin,"tsp-sum","csv",  
+                "subnum,trial,test,type,starttime,firstclick,endtime,elapsedtime,numpos,opt,obs,eff")
+
+   gReportFile <- GetNewDataFile(gSubNum,gWin,"tsp-report","txt",   "")
+
+
+
+   gLogFile <- FileOpenAppend("data/tsp-log.txt")
    FilePrint(gLogFile,"TSP start " +GetTime() + " " + TimeStamp() + "  " + gSubCode)
 
 
@@ -92,9 +100,6 @@ define Start (p)
    if(dointro) 
    {
 
-    ##Print file headers on first round.
-    FilePrint(gFileOut,"subnum,trial,test,type,point,clicklocX,clicklocY,clickid,time,rt")
-    FilePrint(gSumFile, "subnum,trial,test,type,starttime,firstclick,endtime,elapsedtime,numpos,opt,obs,eff")
     Show(gMessage)
   
    tb.text <- tb.text + " "+gParams.inputlabel+" or click each circle, connecting the dots and finding the shortest path through all the points. "

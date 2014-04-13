@@ -29,6 +29,7 @@ define Start(p)
   trialtime <- gparams.trialtime*1000   #number of seconds * 1000 = ms
 
   gWin <- MakeWindow()
+  gSleepEasy <- 1
 
    if(gSubNum+""=="0")
    {
@@ -36,7 +37,8 @@ define Start(p)
    }
 
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"timetap","csv")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"timetap","csv",
+              "subNum,trial,trialtype,targtime,hits,time,rt")
 
   tb <- EasyTextBox("In this task, you are asked to tap the keyboard
   at the specified rate for "+ numtrials +" trials of " +
