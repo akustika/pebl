@@ -77,10 +77,8 @@ define Start(p)
 
 
    MakeDirectory("data")
-   gFileOut <- GetNewDataFile(gSubNum,gWin,"globallocal","csv")
-
-
-   FilePrint(gFileOut,"subnum,block,trial,correctresp,localstim,globalstim,consistency,correctLocal,correctGlobal,response,correct,time1,rt")
+   gFileOut <- GetNewDataFile(gSubNum,gWin,"globallocal","csv",
+   "subnum,block,trial,correctresp,localstim,globalstim,consistency,correctLocal,correctGlobal,response,correct,time1,rt")
 
    lab <- EasyLabel("Pre-Creating stimuli",gVideoWidth/2,100,gWin,22)
 
