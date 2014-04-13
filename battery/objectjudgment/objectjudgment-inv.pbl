@@ -94,7 +94,8 @@ define Start(p)
     gSubNum <- GetSubNum(gWin)
   }
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"objjudgeinv","csv")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"objjudgeinv","csv",
+            "subNum,abs,trial,cond,type,X,shapepert,order,resp,corr,rt")
 
   gstimFont <-  MakeFont("VeraMono.ttf",0,18,MakeColor("yellow"),gStimColor,1)
   gclickedFont <- MakeFont("VeraMono.ttf",1,18,MakeColor("yellow"),gStimColor,1)

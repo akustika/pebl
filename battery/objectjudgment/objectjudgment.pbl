@@ -43,9 +43,11 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
    }
 
-   MakeDirectory("data")
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"objjudge","csv")
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"objjudge","csv",
+          "subNum,abs,trial,cond,type,X,shapepert,order,resp,corr,rt")
+
   gStimColor <- MakeColor("blue")
   gstimFont <-  MakeFont(gPEBLBaseFontMono,0,18,MakeColor("yellow"),gStimColor,1)
   gclickedFont <- MakeFont(gPEBLBaseFontMono,1,18,MakeColor("yellow"),gStimColor,1)
