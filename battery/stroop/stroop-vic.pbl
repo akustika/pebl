@@ -71,10 +71,10 @@ define Start(p)
 
   MakeDirectory("data")
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"vstroop","csv")
-  gSumFileOut <- GetNewDataFile(gSubNum,gWin,"vstroop-report","txt")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"vstroop","csv",
+     "subnum,block,trial,word,color,part,xpos,ypos,resp,rname,correct,intrusion,numresponses,time0,timea,timeend,trialtime,responsetime")
+  gSumFileOut <- GetNewDataFile(gSubNum,gWin,"vstroop-report","txt","")
 
-  FilePrint(gFileOut,"subnum,block,trial,word,color,part,xpos,ypos,resp,rname,correct,intrusion,numresponses,time0,timea,timeend,trialtime,responsetime")
 
   gTrial <- 0
   gBlock <- 0

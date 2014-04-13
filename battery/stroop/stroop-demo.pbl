@@ -1,7 +1,7 @@
 define Start(p)
 {
 
-#"sub","block","trial","type","colorresp","cond","cond2","shade","word","resp","corr","respnum","start","rt"
+
 
 # sub is the subject code entered at startup
 # block is the block number (different response types)
@@ -78,7 +78,8 @@ define Start(p)
 
 
 
-  gFileOut <- GetNewDataFile(gSubNum,gWin,"stroop","csv")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"stroop","csv",
+"sub,block,trial,type,colorresp,cond,cond2,shade,word,resp,corr,respnum,start,rt")
 
   gTrial <- 0
   gBlock <- 0
@@ -313,7 +314,8 @@ We will start with a practice round.
    gErr  <- []; gRT   <- []; gCond <- []
 
     
-   reportfile <- GetNewDataFile(gSubNum,gWin,"stroop-report","txt")
+   reportfile <- GetNewDataFile(gSubNum,gWin,"stroop-report","txt","")
+
    ##Print out report
    PrintMe(reportfile,"--------------------------------------------------------")
    PrintMe(reportfile," Report for PEBL Stroop Test, Version 0.2")

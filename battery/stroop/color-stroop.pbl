@@ -74,7 +74,7 @@ define Start(p)
    
    if(gResponseType=="ask")
    {
-   gResponseType <- GetEasyChoice("Select input type ",
+     gResponseType <- GetEasyChoice("Select input type ",
                                ["1-2-3-4 Number Line on keyboard",
                                "Vocal input from microphone"],
                                ["keyboard","audio"], gWin)
@@ -123,11 +123,17 @@ define Start(p)
 
    GetStrings(gLanguage)
  
-   MakeDirectory("data/"+gSubNum)
 
-   gFileOut <- FileOpenWrite("data/"+gSubnum+"/colstroop-"+gResponseType+"-"+gSubNum+".csv")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"colstroop-"+gResponseType,
+              "csv",  "subnum,response,code,block,trial,stim,cond,responded,response,correct,abstime,rt,speechduration,recordtime")
+
+  gSumFileOut <- GetNewDataFile(gSubNum,gWin,
+                    "colstroop-"+gResponseType+"-summary",
+                     "txt","")
+
+
    gPooledFileOut <- FileOpenAppend("data/colstroop-"+gResponseType+"-pooled.csv")
-   gSumFileOut <- FileOpenWrite("data/" + gSubNum + "/colstroop-"+gResponseType+"-summary-" + gSubNum+".txt")
+
    gLog <- FileOpenAppend("data/colstroop-log.csv")
 
 
@@ -139,8 +145,6 @@ define Start(p)
       FilePrint(gPooledFileOut, "subnum,response,code,block,trial,stim,cond,responded,response,correct,abstime,rt,speechduration,recordtime")
     }
 
-
-    FilePrint(gFileOut, "subnum,response,code,block,trial,stim,cond,responded,response,correct,abstime,rt,speechduration,recordtime")
 
 
 
