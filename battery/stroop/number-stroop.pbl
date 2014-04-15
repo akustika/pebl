@@ -61,7 +61,7 @@ define Start(p)
                                         ##otherwise, you need to go back through and code responses afterward.
 
                  ["usepreset",1],   ## If set to 1, it will use the same sequence of stimuli every time.
-                                    ## If set to 0, it will regenerate randomly on each run.
+                                    ## If set to 0, it will regenerate randomly on each run.     ["nonpresettrials",28], ##If preset==0, use this many trials per condition per block
 
                  ["fixationTime",1000],    #time for the fixation cross   
                  ["responseTimeout",2000], #Time limit given for responding
@@ -514,7 +514,7 @@ define Round1Trials(usepreset)
     ["I", "111"], ["C", "1"], ["C", "333"], ["C", "333"], ["I", "2"], ["I", "11"],["C", "333"]]
 
    }else {
-      x <- GenerateStimuli(28)
+      x <- GenerateStimuli(gParams.nonpresettrials)
 
 
    }
@@ -531,7 +531,7 @@ define Round2Trials(usepreset)
         x <-  [["N", "MM"],["C", "22"],["N", "MM"],["C", "333"],["C", "333"],["N", "G"],["N", "GG"],["I", "3"],["C", "22"],["I", "3"],["I", "11"],["I", "111"],["I", "111"],["N", "G"],["N", "ZZZ"],["N", "GG"],["N", "ZZ"],["C", "22"],["N", "MMM"],["N", "MMM"],["N", "GGG"],["I", "3"],["I", "2"],["N", "ZZ"],["N", "MM"],["C", "333"],["N", "M"],["I", "222"],["C", "22"],["I", "111"],["C", "333"],["C", "333"],["C", "333"],["N", "GGG"],["N", "GGG"],["I", "222"],["N", "G"],["C", "1"],["I", "33"],["C", "1"],["I", "33"],["N", "MMM"],["N", "G"],["I", "222"],["N", "ZZZ"],["C", "1"],["I", "111"],["N", "M"],["C", "1"],["C", "333"],["I", "11"],["C", "1"],["C", "1"],["I", "3"],["I", "2"],["I", "2"],["I", "11"],["I", "2"],["N", "GG"],["N", "Z"],["I", "11"],["I", "111"],["I", "33"],["N", "ZZZ"],["N", "Z"],["C", "1"],["N", "ZZ"],["C", "333"],["I", "222"],["C", "22"],["I", "3"],["C", "22"],["C", "22"],["N", "M"],["N", "Z"],["C", "22"],["C", "1"],["I", "33"],["C", "22"],["C", "333"],["C", "22"],["I", "11"],["I", "33"],["C", "1"]]
 
    }else {
-      x <- GenerateStimuli(28)
+      x <- GenerateStimuli(gParams.nonpresettrials)
 
    }
   return x
