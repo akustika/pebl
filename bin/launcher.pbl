@@ -153,6 +153,13 @@ define FileSelect(p)
 
    win <- MakeWindow("grey90")
 
+   ##make a dummy object INSIDE() will recognize as a click on the window.
+   gWinDummy <- MakeCustomObject("dummy")
+   gWinDummy.name <- "<CUSTOMOBJECT>"
+   gWinDummy.x <- gVideoWidth/2
+   gWinDummy.y <- gvideoHeight/2
+   gWinDummy.width <- gVideoWidth
+   gWinDummy.height <- gVideoheight
 
   ##Now, determine the proper translation strings.
   GetStrings(gLanguage)
@@ -163,19 +170,6 @@ define FileSelect(p)
     } else { 
       fstext <- ""
     }
-  if(gNimhdemographics)
-    {
-	  demotext <- "X"
-    }else{
-	  demotext <- ""
-    }
-
- if(gRandomizeChain)
-   {
-    randomizeChainText <- "X"
-   }else{
-    randomizeChainText <- ""
-   }
 
    ##keep track of the gOffset/select pairs when you move to new directories.
    selectStack <- []
@@ -220,40 +214,36 @@ define FileSelect(p)
      adjust <- 0
    }
  
-   run     <- MakeButton(xbase+100,ybase-61,200,win,gRuntext) 
+   run     <- MakeButton(gRuntext,xbase+100,ybase-61,win,200) 
 
 
-   edit       <- MakeButton(xbase+55,ybase+height+20,120,win,gOpenText)
-   combinedata <- MakeButton(xbase+55,ybase+height+45,120,win,gCombineDataText)
-   exit       <- MakeButton(xbase+55,ybase+height+70,120,win,gExitText)
+   edit       <- MakeButton(gOpenText,xbase+55,ybase+height+20,win,120)
+   combinedata <- MakeButton(gCombineDataText,xbase+55,ybase+height+45,win,120)
+   exit       <- MakeButton(gExitText,xbase+55,ybase+height+70,win,120)
 
-   viewoutput <- MakeButton(xbase+200,ybase+height+20,150,win,gViewDebugText)
-   viewerror  <- MakeButton(xbase+200,ybase+height+45,150,win,gViewErrorText)
+   viewoutput <- MakeButton(gViewDebugText,xbase+200,ybase+height+20,win,150)
+   viewerror  <- MakeButton(gViewErrorText,xbase+200,ybase+height+45,win,150)
 
 
-   addtochain <- MakeButton(xbase+300,ybase+height+20-100,120,win,gAddToChainText)
-   clearchain <- MakeButton(xbase+300,ybase+height+41-100,120,win,gClearChainText)
-   savechain <- MakeButton(xbase+430,ybase+height+41-100,120,win,gSaveChainText)
-   loadchain <- MakeButton(xbase+430,ybase+height+20-100,120,win,gLoadChainText)
-
+   addtochain <- MakeButton(gAddToChainText,xbase+300,ybase+height+20-100,win,120)
+   clearchain <- MakeButton(gClearChainText,xbase+300,ybase+height+41-100,win,120)
+   savechain <- MakeButton(gSaveChainText,xbase+430,ybase+height+41-100,win,120)
+   loadchain <- MakeButton(gLoadChainText,xbase+430,ybase+height+20-100,win,120)
 
    yheight <- 14
-   randomizeChainBox    <-EasyTextBox(randomizechaintext,   xbase+250,ybase+height+62-100,win,fontsize,yheight,yheight)
-   randomizeChainLabel  <- EasyLabel(gRandomizeChainText, xbase+width+70,ybase+120+yheight/2,win,fontsize)
-   MoveCorner(randomizeChainlabel,randomizeChainBox.x + 20,randomizeChainBox.y)
-
+   randomizeChainBox <-  MakeCheckBox(gRandomizeChainText,xbase+240,ybase+height+60-100,win,170)
+   SetCheckBox(randomizechainBox,gRandomizeChain)
 
    ##upper right buttons
-   openmanual <- MakeButton(630,50,130,win,gOpenManualText)
-   about      <- MakeButton(770,50,130,win,gAboutLabelText)
-   launchsize  <- MakeButton(630,75,130,win,gSizeText+gScreenSize)
-   visitweb <- MakeButton(770,75,130,win,gWebText)
-   wiki     <- MakeButton(910,50,130,win,gWikiText)
+   openmanual <- MakeButton(gOpenManualText,630,50,win,130)
+   about      <- MakeButton(gAboutLabelText,770,50,win,130)
+   launchsize  <- MakeButton(gSizeText+gScreenSize,630,75,win,130)
+   visitweb <- MakeButton(gWebText,770,75,win,130)
+   wiki     <- MakeButton(gWikiText,910,50,win,130)
 
 
-   donate <- MakeButton(910,75,130,win,"Donate")
-   review   <- MakeButton(630,100,130,win,"Review PEBL")
-
+   donate <- MakeButton("Donate",910,75,win,130)
+   review   <- MakeButton("Review PEBL",630,100,win,130)
 
    ##################################################
    ##  
@@ -266,12 +256,7 @@ define FileSelect(p)
    chainlist.text <- MakeExpChainText(gexpchain)
 
 
-   launchchain <- MakeButton(chaintitle.x,chaintitle.y-20,200,win,gLaunchChainText)
- 
-
-   bg <- MakeCanvas(200,500-adjust,MakeColor("grey50"))
-   AddObject(bg,win)
-   MoveCorner(bg,xbase,ybase)
+   launchchain <- MakeButton(gLaunchChainText,chaintitle.x,chaintitle.y-20,win,200)
 
    wd   <- EasyLabel(GetWorkingDirectory(),(xbase+width/2), ybase-25, win,fontsize)
    path <- EasyLabel(DirListToText(gDirChain),(xbase+width/2), ybase-10, win,fontsize)
@@ -279,15 +264,19 @@ define FileSelect(p)
    yheight <- path.height
    gYHeight <- yHeight
 
-   gPortalnum <- Floor((bg.height-gutter*4)/yheight)
-   portalheight <- yheight*gPortalNum
+#   gPortalnum <- Floor((bg.height-gutter*4)/yheight)
+   portalheight <- (500-adjust)
 
-   gPortal <- MakeTextBox("",font,width-gutter*3,portalheight)
 
-   gPortal.linewrap <-0
-   AddObject(gPortal,win)
+  dirlist <- DirToText(First(gfilelist),Second(gfilelist),   
+                             gOffset,gDirChain)
 
-   Move(gPortal,xbase+gutter,ybase+gutter*2)
+  Print(portalheight)			   
+  gPortal <- MakeScrollbox(dirlist,"File listing",
+                             xbase,ybase,
+			     win,fontsize,
+			     width, portalheight,1)
+#  DrawScrollbox(gPortal)
 
 
    description <- MakeTextBox(gNoDesc,font,420,240-adjust)
@@ -302,17 +291,8 @@ define FileSelect(p)
    AddObject(screenshotdummy,win)
    screenshot <- screenshotdummy
 
-   gSelection <- Rectangle(gPortal.x+gPortal.width/2,0,gPortal.width,yheight,MakeColor("black"),0)
-   
-   up <- Polygon(xbase+width-gutter,ybase+gutter,[-5,5,0],[5,5,-5],MakeColor("grey"),1)
-   down <- Polygon(xbase+width-gutter,gPortal.y+gPortal.height+gutter,[-5,5,0],[-5,-5,5],MakeColor("grey"),1)
-   
-   upbg <- Square(xbase+width-gutter, ybase+gutter,  10,MakeColor("grey"),0)
-   downbg <- Square(xbase+width-gutter, gPortal.y+gPortal.height+gutter, 10,MakeColor("grey"),0)
 
 
-   gThumb <- Rectangle(xBase+width-gutter,ybase+gutter+20,10,20,MakeColor("grey40"),1)
-   slidebin <- Rectangle(xBase+width-gutter,gPortal.y+gPortal.height/2,10,gPortal.height,MakeColor("grey70"),1)
 
 
    subjectbox <- EasyTextBox(gsubcode,xbase+width+150,ybase,win,fontsize,60,yheight)
@@ -322,9 +302,9 @@ define FileSelect(p)
    AddObject(subboxhighlight,win)
    Hide(subboxhighlight)
 
-   subplusbutton <-  MakeButton(subjectbox.x+subjectbox.width+20,subjectbox.y+5,20,win,"+")
+   subplusbutton <-  MakeButton("+",subjectbox.x+subjectbox.width+20,subjectbox.y+5,win,20)
 
-   filter    <- MakeButton(xbase+100,ybase+height-20,100,win,"*.pbl")
+   filter    <- MakeButton("*.pbl",xbase+95,ybase+height-11,win,172)
 
 ###Experimenter code box:
    expbox <- EasyTextBox(gexperimenter,xbase+width+150,ybase+40,win,fontsize,60,yheight)
@@ -353,74 +333,90 @@ define FileSelect(p)
    Hide(cloboxhighlight)
 
 
-### parameter set:
-   psetbox <- EasyTextBox("default",langbox.x,langbox.y+40,win,fontsize,200,yheight)
+### parameter set pulldown:
+
    psetlabel   <- EasyLabel(	gParameterLabel, expbox.x,expbox.y+20,win,fontsize)
-   MoveCorner(psetlabel,psetbox.x-psetlabel.width-10,psetbox.y)
-   psetboxhighlight <- Rectangle(psetbox.x+psetbox.width/2,psetbox.y+psetbox.height/2,psetbox.width+2,psetbox.height+2,MakeColor("grey50"),0)
+
+if(0)
+{
+   psetbox <- EasyTextBox("default",langbox.x,langbox.y+40,win,fontsize,200,yheight)
+
+   psetboxhighlight <- Rectangle(psetbox.x+psetbox.width/2,
+                                psetbox.y+psetbox.height/2,
+                                psetbox.width+2,psetbox.height+2,
+                                MakeColor("grey50"),0)
    AddObject(psetboxhighlight,win)
+}else{
 
-   params     <- MakeButton(psetlabel.x-psetlabel.width/2-30,psetlabel.y,50,win,gEditParams)
+   psetbox <- MakePulldown(["default"],langbox.x,langbox.y+40,win,fontsize,200,1)
+   MoveCorner(psetlabel,psetbox.x-psetlabel.width-10,psetbox.y)   
+}
 
-
+   params     <- MakeButton(gEditParams,psetlabel.x-psetlabel.width/2-30,psetlabel.y,win,50)
 ### screen resolution
-   screenselection <- Easylabel(gScreenRes,expbox.x+expbox.width/2,expbox.y+expbox.height+15,win,fontsize)
-   screenback <- Rectangle(screenselection.x,screenselection.y,screenselection.width+6,screenselection.height,MakeColor("black"),0)
-   AddObject(screenback,win)
-   screenlabel <- EasyLabel(gScreenResLabel,expbox.x,expbox.y+20,win,fontsize)
-   Move(screenlabel,screenselection.x-screenlabel.width/2-screenselection.width/2-10,screenselection.y)
+
+  screenselection <- MakePulldown([gScreenRes],expbox.x,expbox.y+expbox.height+5,win,fontsize,150,1)
+  gCustomScreenRes <- ""
+  ##initially, use 'default'
+  UpdateScreenResPulldown(screenselection)
+
+  screenselection.selected <- Length(screenselection.list)-1
+  DrawPulldown(screenselection)
 
 
+
+  screenlabel <- EasyLabel(gScreenResLabel,expbox.x,expbox.y+20,win,fontsize)
+  Move(screenlabel,screenselection.x-screenlabel.width/2-10,screenselection.y+screenlabel.height/2)
 
 #####################################
    ##Fullscreen checkbox:
-   fullscreenbox    <-EasyTextBox(fstext,      xbase+width+10,ybase+140,win,fontsize,yheight,yheight)
-   fullscreenlabel  <- EasyLabel(gFullText, xbase+width+70,ybase+140+yheight/2,win,fontsize)
-   MoveCorner(fullscreenlabel,xbase+width+30,ybase+140)
-
+#   fullscreenbox    <-EasyTextBox(fstext,      xbase+width+10,ybase+140,win,fontsize,yheight,yheight)
+#   fullscreenlabel  <- EasyLabel(gFullText, xbase+width+70,ybase+140+yheight/2,win,fontsize)
+#   MoveCorner(fullscreenlabel,xbase+width+30,ybase+140)
+  fullscreenbox <-  MakeCheckBox(gFulltext,xbase+width+5,ybase+140,win,120)
 
 
 
    ##Demographics checkbox:
-   demobox    <-EasyTextBox(demotext,             xbase+width+130,ybase+140,win,fontsize,yheight,yheight)
-   demolabel  <- EasyLabel(gCollectdemoText, xbase+width+230,ybase+140+yheight/2,win,fontsize)
-   MoveCorner(demolabel,xbase+width+150,ybase+140)
+#   demobox    <-EasyTextBox(demotext,             xbase+width+130,ybase+140,win,fontsize,yheight,yheight)
+#   demolabel  <- EasyLabel(gCollectdemoText, xbase+width+230,ybase+140+yheight/2,win,fontsize)
+#   MoveCorner(demolabel,xbase+width+150,ybase+140)
+
+   demobox <-  MakeCheckBox(gCollectDemoText,xbase+width+145,ybase+140,win,200)
+   SetCheckBox(demobox,gNIMHdemographics)
 
 
-
-
+if(0)
+{
    AddObject(slidebin,win) 
-   AddObject(upbg,win)
    AddObject(up,win)
-   AddObject(downbg,win)
    AddObject(down,win)
    AddObject(gThumb,win)
    AddObject(gSelection,win)
 
 
 
-
-##Some state variables are initialized here
-
-
-
-
-   gPortal.text <- DirToText(First(gfilelist),Second(gfilelist),gOffset,gDirChain)
-
+   gPortal.text <- DirToText(First(gfilelist),Second(gfilelist),   
+                             gOffset,gDirChain)
    gSelection.y <- gPortal.y+yheight*(gselected-.5)
+}
 
+   gPortal.list <- DirToText(First(gfilelist),Second(gfilelist),   
+                             gOffset,gDirChain)
 
-
+   UpdateScrollbox(gPortal)			    
+   DrawScrollbox(gPortal)
 
    if(gparams.checkfornew)
    {
      newestlabel <- Easylabel("checking for new version", xbase+250, ybase+height+62-80,win,fontsize)
 
      MoveCorner(newestlabel,xbase+135,ybase+height+65)
-     Draw()
+#     Draw()
 
-        newest <- GetHTTPText("www.obereed.net","/latestpeblversion.txt")
-##	Print(newest)
+        newest <- GetHTTPText("pebluser.s3-website-us-east-1.amazonaws.com","/latest.txt")
+#
+#         newest <- ["0.14",100]
         if(First(newest)==200)
 	{
 	  newestversion <- Second(newest)
@@ -449,22 +445,16 @@ define FileSelect(p)
    while(cont)
     { 
 
-     
-    ###update the portal:
 
-     gSelection.y <- gPortal.y+yheight*(gselected-.5-gOffset)
-     thumby <- (gOffset / (Length(gflatfilelist)-gPortalNum-1))*(portalHeight-gutter*2)
-     gPortal.text <- DirToText(First(gfilelist),Second(gfilelist),gOffset,gDirChain)
+   gPortal.list <- DirToText(First(gfilelist),Second(gfilelist),   
+                             gOffset,gDirChain)
 
-
-     ##find out if there is a text description of the selected text.
-
-     ##Make sure selected didn't get off the end of the list because
-     ##of filtering or whatnot.
-     gSelected<- Min([gSelected,Length(gFlatFileList)])
-      
-     descname <- DirListToText(gDirChain)+Nth(gflatfilelist,gselected)+".about.txt"
-     path.text <- DirListToText(gDirChain)
+   UpdateScrollbox(gPortal)			     
+   DrawScrollbox(gPortal)
+   gSelected <- gPortal.selected
+    
+   descname <- DirListToText(gDirChain)+Nth(gflatfilelist,gselected)+".about.txt"
+   path.text <- DirListToText(gDirChain)
      MoveCorner(path,xbase+2,ybase-18)
 
      if(FileExists(descname))
@@ -481,7 +471,6 @@ define FileSelect(p)
 
      if(FileExists(screenname))
       {
-
 	     RemoveObject(screenshot,win)
 	     screenshot <- MakeImage(screenname)
 
@@ -500,15 +489,18 @@ define FileSelect(p)
       } else {
 	  
           ##try to find any .png file, provided it is a  subdirectory
-            if(IsDirectory( DirListToText(gDirChain)+Nth(gFlatFileList,gselected)))
+            if(IsDirectory( DirListToText(gDirChain)+
+                            Nth(gFlatFileList,gselected)))
 	    {
-	     list <- GetDirectoryListing( DirListToText(gDirChain)+Nth(gFlatFileList,gselected))
+	     list <- GetDirectoryListing( DirListToText(gDirChain)+
+                                        Nth(gFlatFileList,gselected))
 	     pngs <- Second(FilterDir(list,gDirChain,"*.png"))
              if(Length(pngs)>0)
 	     {
 
        	      RemoveObject(screenshot,win)
-              screenname <- DirListToText(gDirChain)+Nth(gFlatFileList,gselected)+"/"+First(pngs)
+              screenname <- DirListToText(gDirChain)+
+                         Nth(gFlatFileList,gselected)+"/"+First(pngs)
 	      screenshot <- MakeImage(screenname)
 
 	     AddObject(screenshot,win)
@@ -539,43 +531,27 @@ define FileSelect(p)
 
       }
 
-  prevparfiles <- parfiles
-  parfiles <- GetParFiles()   
+    prevparfiles <- parfiles
+    parfiles <- GetParFiles()   
+    if(not ListEqual(prevparfiles,parfiles))
+    {
+       ##we need to update the pbox here.
+       UpdatePulldown(psetbox,parfiles)
+       pselected <- psetbox.selected
+    }
 
-  if(not ListEqual(prevparfiles,parfiles))
-  {
-    pselected <- -1
-  }
-
-  if(pselected<0)
-   {	  
-     if(Length(parfiles)>1)
-     {
-      psetbox.text <-Second(parfiles)
-      pselected <- 2
-
-     }elseif(Length(parfiles)==1)
-     {
-       pselected <- 1
-       psetbox.text <- First(parfiles)
-
-     } else {
-       pselected <- 0
-       psetbox.text <- ""
-     }
-   }
      Draw()
 
-       vals <- [gPortal,upbg,downbg,exit,slidebin,
+       vals <- [gPortal,exit,
 	   run,subjectbox,fullscreenbox,expbox,langbox,
 	   addtochain,clearchain,launchchain,viewoutput,viewerror,
 	   edit,openmanual,launchsize,visitweb,about,
 	   description,demobox,savechain,loadchain,wiki,
            subplusbutton,clobox,filter,donate,review,
-          screenselection, randomizeChainBox,params,
+           screenselection, randomizeChainBox,params,
 	   combinedata,psetbox]
 
-      returns <- 		   [1,2,3,4,5,
+      returns <- 		   [1,4,
 				   6,7,8,9,10,
 				   11,12,13,14,15,
 				   16,17,18,19,20,
@@ -589,180 +565,84 @@ define FileSelect(p)
    if(tmp==1)  #Click was on the portal.
       {
 
-           ##this allows scrolling with the middle mouse buttons.
-          button <- Third(Second(resp))
-          if(button==4 or button==5)
-               {
-                 if(button==4)  ##going up
-		    {
-         
-                      newselected <- Max([1,gSelected-1])
-		      if(newselected<=gOffset)
-		      {
-		        gOffset <- newselected-1
-                       }
-		    }elseif(button==5) ##going down.
-		    {
-                      newselected <- Min([gSelected+1,Length(gFlatFileList)])
-		      if(newselected>gPortalNum+gOffset)
-		      {
-                       gOffset <-  newselected - gPortalNum
-		      }
-		    }
+         event <- ClickOnScrollbox(gPortal,gClick)
+         newselected <- gPortal.selected
 
-   	         }else{
-               
+	 ##Most of the updates only matter if we did a selection action.
+	 if(event == "<select>")
+	 {
+          if(gselected == newselected)
+	   {
+             Print("New thing is selected") 
+             ##We are selecting something we just selected.open 
+              ##directory
+              if(IsDirectory(DirListTotext(gDirChain)+Nth(gFlatFileList,gselected)))
+                {		
 
-  	        ##update selection rectangle here
-	        clicky <- Second(gClick)
-	        newselected <- Floor((clicky-gPortal.y)/yheight)+1 + gOffset
-                }
-		  ##if we click past the last entry, don't adjust selection
-		  if(newselected > Length(gFlatFileList))
-                   {
-		      gselected <- gselected ##do nothing
-                   }elseif(gselected == newselected)
- 		   {
-                      ##We are selecting something we just selected.open directory
-    	          if(IsDirectory(DirListTotext(gDirChain)+Nth(gFlatFileList,gselected)))
-                   {		
-
-
-                   gDirChain <- AppendDirlist(gDirChain,Nth(gFlatFileList,gselected))
-			   if(Length(gDirChain)<(Length(selectstack)+1))
+                 Print("DIRCHAIN:")
+		 Print(gDirChain)
+                  gDirChain <- AppendDirlist(gDirChain,Nth(gFlatFileList,gselected))
+ 
+	          if(Length(gDirChain)<(Length(selectstack)+1))
                     {	
+    	              ##we are backing up. (i.e., ../ was clicked on)
 
-			      ##we are backing up.
-			      last <- Nth(selectstack,Length(selectstack))
-			      gselected <- 	First(last)
-			      gOffset <- Second(last)
+	              last <- Nth(selectstack,Length(selectstack))
+                       gselected <- First(last)
+                       gPortal.selected <- First(last)
 
+   	             ##Remove the last item.
+		      if(Length(selectstack)<=1)
+                      { 
+                       selectStack <- []
+                      } else {
+                        selectStack <-SubList(selectstack,1,Length(selectstack)-1)
+	       	      }
+       	   	      gfilelist <- FilterDir(GetDirectoryListing(DirlistToText(gDirChain)),
+                                                     gDirChain,First(gFilters))
+                      gFlatFileList <- Flatten(gfilelist)
 
-		  ##Remove the last item.
-		  if(Length(selectstack)<=1)
-                  { 
-                    selectStack <- []
-                  } else {
-    
-    			selectStack <-SubList(selectstack,1,Length(selectstack)-1)
-	       	  }
-       	   	         gfilelist <- FilterDir(GetDirectoryListing(DirlistToText(gDirChain)),gDirChain,First(gFilters))
-         		 gFlatFileList <- Flatten(gfilelist)
-
- 		      }elseif(Length(gDirChain)>Length(selectstack))
-                         {
-			     #We opened a new subdirectory.
-                        selectStack <- Append(selectstack,[gselected, gOffset])
-                        gOffset <- 0
-			pselected <- -1
-        	        gfilelist <-  FilterDir(GetDirectoryListing(DirlistToText(gDirChain)),gDirChain,First(gFilters))
-         	        gFlatFileList <- Flatten(gfilelist)
-
-     		        gselected <- Length(First(gfilelist)) + 1
-
-      		   if(gselected > Length(gFlatFileList) or 
-    		      gselected > gPortalNum)
+                   }elseif(Length(gDirChain)>Length(selectstack))
                     {
-                      gselected <- 1 
-                    }
-               }
+		       Print("New subdirectory")
+                       #We opened a new subdirectory.
+                        selectStack <- Append(selectstack,[gselected, gOffset])
+                  	pselected <- -1
+        	        gfilelist <-  FilterDir(GetDirectoryListing(DirlistToText(gDirChain)),
+                                                  gDirChain,First(gFilters))
+         	        gFlatFileList <- Flatten(gfilelist)
+                       gselected <- gPortal.selected
 
-              }          
-            } else {
+                  } else {
+		      Print("same-clicking")
 		      gselected <- newselected
-            }
-      }elseif(tmp==2)  ## up arrow
-      {
-	    gOffset <- Max([gOffset - 1,0])
+                  }
 
-        if(gselected<=gOffset)
-          {
-	    gselected <- gOffset + 1
-          }
-        if(gselected > gOffset+gPortalNum)
-          {
-		    gselected <- gOffset+gPortalNum
-          }
+         }}}else{
 
-      }elseif(tmp==3) ## down arrow
-      {
-	    gOffset <- Min([gOffset+1, Length(gFlatFileList)-gPortalNum])
-		gselected <- Max([gOffset+1,gselected])
-
-
-      }elseif(tmp == 5) ##click on the slider bin
-      {
-	    
-
-
-	filelen <- Length(gFlatFileList)
-	if(filelen <= gPortalNum)
-         {
-           gOffset <- 0
-
-         } else {
-        
-            if(1)
-              {
-               clicky  <- Second(gClick)
-               proportion <- ((clicky - gPortal.y)/gPortal.height)
-               gOffset  <- Floor(proportion * (filelen - gPortalNum))
-	       if(gselected < gOffset)
-               {
-                  gselected <- gOffset+1
-               }
-	      if(gselected>gOffset+gPortalNum)
-	        {
-	         gselected <- gOffset+gPortalNum
-   	        }
-
-		  ##
-		  ##now, 'capture the thumb' until you upclick
-		  ##
-               }
-  
-               UpdateCapturedThumb("dummy")
-
-  	      if(1)
-                {
-
- 		  RegisterEvent("<MOUSE_MOVEMENT>",1,1 ,"<TRUE>","UPDATECAPTUREDTHUMB", ["mousemove-0"])
-		 
-		 ##devicetype,
-		 ##interface
-		 ##value
-		 ##test
-		 ##fname
-		 ##parameter
- 		  RegisterEvent("<MOUSE_BUTTON>",1,1,"<EQUAL>","UPDATECAPTUREDTHUMB", ["mousebutton-1"])
-	          RegisterEvent("<MOUSE_BUTTON>",1,0,"<EQUAL>","CLEARTHUMBCAPTURE", ["mousebutton-0"])
-                  out <-  StartEventLoop()
-                  ClearEventLoop()
-
-                }
-
-         }
-      }elseif(tmp ==4) ##Exit
+	 ##update selection stuff.
+	 gSelected <- newselected
+	 newselected <- gPortal.selected
+      }
+      }elseif(tmp==4) ##Exit
       {
 
 
-           PushButton(exit)
+           PushButton(exit,[0,0])
 	   Saveconfig(gconfigname)
 
 	     cont <- 0
       }elseif(tmp==6) ##hit 'run'
       {
-           PushButton(run)
+           PushButton(run,[0,0])
           if(IsDirectory(DirListTotext(gDirChain)+Nth(gFlatFileList,gselected)))
          {		
-
-
-               gDirChain <- AppendDirlist(gDirChain,Nth(gFlatFileList,gselected))
-		   gfilelist <- FilterDir(GetDirectoryListing(DirlistToText(gDirChain)),gDirChain,First(gFilters))
-		   gFlatFileList <- Flatten(gfilelist)
- 		   gselected <- Length(First(gfilelist)) + 1
-		   if(gselected > Length(gFlatFileList) or 
-		      gselected > gPortalNum)
+             gDirChain <- AppendDirlist(gDirChain,Nth(gFlatFileList,gselected))
+             gfilelist <- FilterDir(GetDirectoryListing(DirlistToText(gDirChain)),
+                                            gDirChain,First(gFilters))
+             gFlatFileList <- Flatten(gfilelist)
+ 	    gselected <- Length(First(gfilelist)) + 1
+	   if(gselected > Length(gFlatFileList))
             {
               gselected <- 1 
             }
@@ -776,9 +656,18 @@ define FileSelect(p)
 	      	  GetNIMHDemographics(gsubcode,win,"demographics-log.csv")
           }
 
-	    
+	     paramindex <- psetbox.selected
+
+	     if(paramindex==0)
+	     { 
+                 paramset <- "default"
+             }else{
+  	         paramset <- Nth(psetbox.list,paramindex)
+             }
+
+
              RunScript(gDirChain,Nth(gFlatFileList,gselected),gfullscreen,
-                       glanguage,logfile,gsubcode,gexperimenter,psetbox.text)
+                       glanguage,logfile,gsubcode,gexperimenter,paramset)
 
 
           if(gAutoSubCode)
@@ -804,13 +693,9 @@ define FileSelect(p)
 	   
       }elseif(tmp==8)
       {
-	     gfullscreen <- 1-gfullscreen
-		 if(gfullscreen)
-		 {
-		   fullscreenbox.text <- "X"
-         }else{
-		   fullscreenbox.text <- ""
-         }
+         ClickCheckBox(fullscreenbox,[0,0])
+	 gfullscreen <- fullscreenbox.state
+
       }elseif(tmp==9)  ##Change experimenter code
       {
        ##experimenter box
@@ -840,26 +725,33 @@ define FileSelect(p)
       }elseif(tmp==11)  ##Add to chain
       {
 
-	 PushButton(addtochain)
+	 PushButton(addtochain,[0,0])
 
   	 fname <- Nth(gFlatFileList,gselected)
 	 if(IsPEBLFile(fname))
          {
-
-  	    gexpchain <- Append(gexpchain,[gDirChain,fname,psetbox.text])
+	     paramindex <- psetbox.selected
+	     if(paramindex==0)
+	     { 
+                 paramset <- "default"
+             }else{
+  	         paramset <- Nth(psetbox.list,paramindex)
+            }
+  	    gexpchain <- Append(gexpchain,[gDirChain,
+                                           fname,paramset])
 	    chainlist.text <- MakeExpChainText(gexpchain)
          }
 
 	   
       }elseif(tmp==12)  ##clear chain
       {
-	    PushButton(clearchain)
+	    PushButton(clearchain,[0,0])
             gexpchain <- []        
     	    chainlist.text <- MakeExpChainText(gexpchain)
 	   
       }elseif(tmp==13)  ##launch chain
       {
-         PushButton(launchchain)
+         PushButton(launchchain,[0,0])
 	 if(gnimhdemographics)
 	  {
               GetNIMHDemographics(gSubcode,win,"demographics-log.csv")
@@ -891,56 +783,49 @@ define FileSelect(p)
       }elseif(tmp==14)  ##View debug output
       {
 
-         PushButton(viewoutput)  
+         PushButton(viewoutput,[0,0])
          file <- DirListToText(gDirChain)+"stdout.txt"	 
-         resp <- LaunchFile(file)
-	 ##resp==0 means failure.
-	 if(resp==0)
+	 if(FileExists(file))
 	 {
-	   MessageBox("Unable to find file: ["+file+"]",win)
-          #SystemCall(gViewerCommand, DirListToText(gDirChain)+"stdout.txt &")
-
-	 }
-  
-#	     SystemCall(gViewerCommand,  DirListToText(gDirChain)+"stdout.txt &")
+            LaunchFile(file)
+	 }else{
+  	   PopupMessageBox("Unable to find file: ["+file+"]",win)
+         }
       
       }elseif(tmp==15)  ##View error output
       {
-         PushButton(viewerror)
+         PushButton(viewerror,[0,0])
          file <- DirListToText(gDirChain)+"stderr.txt"	 
-         success <- LaunchFile(file)
-	 ##success==0 should mean success!
-	 if( success==0)
+	 if(FileExists(file))
 	 {
-	   MessageBox("Unable to find file: ["+file+"]",win)
-       #This might work as a backup:
-	   #SystemCall(gViewerCommand, DirListToText(gDirChain)+"stderr.txt &")
-	  }
+            LaunchFile(file)
+	 }else{
+  	   PopupMessageBox("Unable to find file: ["+file+"]",win)
+         }
 
       }elseif(tmp==16)  ##Edit script
       {
-         PushButton(edit)    
+         PushButton(edit,[0,0])
 
 	    file <- DirListToText(gDirChain)+Nth(gFlatFileList,gselected)
-            success <-  LaunchFile(file)
-
-          ##This may work not be correct o all platfroms
-         if(success == 0)
-            {
-	      	   MessageBox("Unable to find file: ["+file+"]",win)
-            } 
+  	    if(FileExists(file))
+	    {
+              LaunchFile(file)
+	    }else{
+  	      PopupMessageBox("Unable to find file: ["+file+"]",win)
+            }
 
       }elseif(tmp==17)  ##Open Manual
       {
-	     PushButton(openmanual)
-         #SystemCall(gManualLoc,"")	  
-        #Print(gManualLoc)
-		#MessageBox(gManualLoc,win)
-        LaunchFile(gManualLoc)
+          PushButton(openmanual,[0,0])
+          #SystemCall(gManualLoc,"")	  
+          #Print(gManualLoc)
+  	  #MessageBox(gManualLoc,win)
+          LaunchFile(gManualLoc)
         
       }elseif(tmp==18)  ##Launcher Size
       {
-	 PushButton(launchsize)
+	 PushButton(launchsize,[0,0])
          #LaunchFile("https://fundry.com/project/69-pebl")
 	 if(gScreenSize=="small")
 	 {
@@ -949,18 +834,18 @@ define FileSelect(p)
            gScreenSize <- "small"
          }
        Saveconfig(gconfigname)
-       MessageBox(gRelaunchMessage,win)
+       PopupMessageBox(gRelaunchMessage,win)
 
       }elseif(tmp==19)  ##Visit web
       {
-         PushButton(visitweb)
+         PushButton(visitweb,[0,0])
          #SystemCall("http://pebl.sourceforge.net","")	  
 	 Launchfile("http://pebl.sourceforge.net")	  
 	   
 
       }elseif(tmp==20)  ##About
       {
-	   PushButton(about)
+	   PushButton(about,[0,0])
 	   MessageBox(gAboutText,win)
       } elseif(tmp==21) ##edit description
       {
@@ -988,48 +873,34 @@ define FileSelect(p)
          }
       }elseif(tmp==22)
       {
-	     gnimhdemographics <- 1-gnimhdemographics
-		 if(gnimhdemographics)
-		 {
-		   demobox.text <- "X"
-         }else{
-		   demobox.text <- ""
-         }
+            ClickCheckBox(demobox,[0,0])
+            gnimhdemographics <- demobox.state
 
       }elseif(tmp==23)  ##sAVE CHAIN
       {
-         PushButton(savechain)
+         PushButton(savechain,[0,0])
          Saveconfig(gconfigname)
 
 
       }elseif(tmp==24)  ##loadchain
       {
 
-	     PushButton(loadchain)
+	     PushButton(loadchain,[0,0])
 	     gConfigname <- GetEasyInput(gConfigNameText,win)
 		 ReadConfigFile(gConfigName)
 
 
+         ##fullscreen may have been changed when config was read in.
 
-		 if(gfullscreen)
-		 {
-		   fullscreenbox.text <- "X"
-         }else{
-		   fullscreenbox.text <- ""
-         }
-
-  	   if(gnimhdemographics)
-	    {
-		   demobox.text <- "X"
-         }else{
-		   demobox.text <- ""
-        }
+	SetCheckBox(fullscreenbox,gFullScreen)
+        SetCheckBox(demobox,gNIMHDemographics)
+        SetCheckBox(randomizechainBox,gRandomizeChain)
         chaintitle.text  <- gExpChainText+gConfigName
         chainlist.text <- MakeExpChainText(gexpchain)
 
       }elseif(tmp==25)  ##Visit wiki
       {
-        PushButton(wiki)
+        PushButton(wiki,[0,0])
          #SystemCall("http://pebl.sourceforge.net","")	  
 
        if(Length(gDirChain)>1)
@@ -1050,7 +921,7 @@ define FileSelect(p)
 
 	    gSubCode <- (ToNumber(subjectbox.text)+1)+""
             subjectbox.text <- gSubCode
-	    PushButton(subplusbutton)
+	    PushButton(subplusbutton,[0,0])
 
       } elseif(tmp==27)
       { 
@@ -1067,20 +938,20 @@ define FileSelect(p)
       } elseif(tmp==28)
       { 
 
-	   PushButton(filter)
+       PushButton(filter,[0,0])
+       gFilters <- Rotate(gFilters,1)
+       filter    <- MakeButton(First(gFilters),filter.x,filter.y,win,172)
+       gfilelist <-  FilterDir(GetDirectoryListing(DirlistToText(gDirChain)),gDirChain,First(gFilters))
+       gFlatFileList <- Flatten(gfilelist)
 
-	   gFilters <- Rotate(gFilters,1)
-       filter    <- MakeButton(xbase+100,ybase+height-20,100,win,First(gFilters))
-	   gfilelist <-  FilterDir(GetDirectoryListing(DirlistToText(gDirChain)),gDirChain,First(gFilters))
-	   gFlatFileList <- Flatten(gfilelist)
-
-      }elseif(tmp==29)  ##29 == donate data.
+      }elseif(tmp==29)  ##29 == donate 
        {		
-         PushButton(donate)
+         PushButton(donate,[0,0])
 
 if(0)
 {
 	 fname <-DirListToText(gDirChain)+ Nth(gFlatFileList,gselected)
+
 		 if(IsDataFile(fname))
          {
 
@@ -1155,134 +1026,117 @@ if(0)
 			RemoveObject(header,win)
 
 			WaitForAnyKeyPress()
-}
+          }
 
 
-   	Draw()
+      	   Draw()
 
          } else {
-           MessageBox("Specified file ["+fname+"] is not a known data file.",win)
+           PopupMessageBox("Not implemented",win)
          }
 
 		 
        } elseif(tmp==30) ##write review
 	   {
- 	     PushButton(review)
+ 	     PushButton(review,[0,0])
 	     Launchfile("http://sourceforge.net/projects/pebl/reviews/")
 	   
        }elseif(tmp==31)  ##Change screen resolution.
          {       
 
-	  currentxy <- First(gScreenResInitial) +"x" + Second(gScreenResInitial)
-          screenmodes <- GetVideoModes()
 
-	  ##create a list of text-based screen modes to choose from:
-          modes <- []
-	  loop(i, screenmodes)
+
+          resolutions <- UpdateScreenResPulldown(screenselection)
+	  PullDown(screenselection,gClick)
+	  Draw()
+          choice <- screenselection.selected ##index chosen.
+
+if(0)
+  {
+ 	  resp <- WaitForClickOntarget([gWinDummy,screenselection],[2,1])
+
+	  if(resp==2)
 	  {
+	    ##close the box:
+	    PullDown(screenselection,[-1,-1])
+	  }elseif(resp ==1)
+          {
 
-	    tmp <- First(i)+"x"+Second(i)
-
-	    if(tmp==currentxy)
-	    { 
-               tmp <- tmp + "*"
-	    }
-
-	     modes <- Append(modes, tmp)
-	  }
-
-	  ##Add the custom option to the end of each:
-	  modes <- Append(modes,gCurrent)
-	  modes <- Append(modes,gCustomText)
-
-	  screenmodes <- Append(screenmodes,gCurrent)
-	  screenmodes <- Append(screenmodes,gCustomText)
-
-          choice <-  GetEasychoice(gChooseScreenText,
-                             modes,
-			   screenmodes,
-			   win)
+  	   PullDown(screenselection,gClick)
 
 
-      if(choice == gCustomText)
+	    PRint("CHOICE:" + choice)
+          }
+  }
+
+       if(choice ==screenselection.numitems)
 	   {
 	     ##get custom screen size:
-                 width <- ToNumber(GetEasyInput(gGetWidthText,win))
-		 height <- ToNumber(GetEasyInput(gGetHeightText,win))
-		 gScreenRes <-  width+"x"+height
 
-	   } elseif(choice == gCurrent)
+	      xy <- [screenselection.x+screenselection.width/2,
+                      screenselection.y+screenselection.height/2]
+              width <- ToNumber(PopUpEntryBox(gGetWidthText,win,xy))
+              height <- ToNumber(PopUpEntryBox(gGetHeightText,win,xy))
+	      gCustomScreenRes <-  width+"x"+height
+#              UpdateScreenResPulldown(screenselection)
+	      ##reset to choice
+	      screenselection.selected <- choice
+	      DrawPulldown(screenselection)	      
+	      gScreenRes <- gCustomScreenRes	      
+	      Draw()
+
+	   } elseif(Nth(screenselection.list,choice) == gCurrent)
 	   {
             ##Use the current screen resolution:
 	    gScreenRes <- gCurrent
 
 	   } else {
 	      #Use the specified resolution.
-              gScreenRes <- First(choice)+"x"+Second(choice)
+	      res <- Nth(resolutions,choice)
+              gScreenRes <- First(res)+"x"+Second(res)
 	   }
-      }elseif(tmp==32)
+
+         
+
+     }elseif(tmp==32)
       {
-	 gRandomizeChain <- 1-gRandomizeChain
-	 if(gRandomizeChain)
-	 {
-            randomizechainbox.text <- "X"
-         }else{
-	   randomizechainbox.text <- ""
-         }
+       ClickCheckBox(randomizechainbox,[0,0])
+       gRandomizeChain <- randomizechainbox.state
+
       }elseif(tmp==33)
       {
-       ##Set parameters. 
-       PushButton(params)
-       SetParameters(gDirChain,Nth(gFlatFileList,gselected),win,psetbox.text)
+       ##Set/edit parameters. 
+       PushButton(params,[0,0])
+
+       paramindex <- psetbox.selected
+       if(paramindex==0)
+         {
+            paramset <- "default"
+          }else{
+           paramset <- Nth(psetbox.list,paramindex)
+          }
+       SetParameters(gDirChain,Nth(gFlatFileList,gselected),win,paramset)
 
       } elseif(tmp==34)
       {
         ##Combine data dialog, which is really a separate PEBL program.
-        PushButton(combineData)
+        PushButton(combineData,[0,0])
         CombineDataDialog(gDirChain,Nth(gFlatFileList,gselected),logfile)
       }elseif(tmp==35)
       {
        ##get the parameter files we want.
 
-       parfiles <- GetParFiles()
-       ##make a little choice box here to select between par files.
-        parSettext <- ""
-        sep <- ""
-        loop(i,parfiles)
-        {
-          parSettext <- parsettext + sep +i
-          sep <- CR(1)
-        }
+       if(Length(parfiles)>1)
+       {
+        Pulldown(psetbox,gClick)
+        pselected <- psetbox.selected
+       }
 
-      Print(parfiles)
 
-      Draw()
-
-      if(Length(parfiles)>1)
-      {
-        psetbox.text <- parsettext
-        psetbox.height <- Length(parfiles)*gyHeight
-        AddObject(psetbox,win)
-	Draw()
-
-        WaitForClickOnTarget([psetbox],[1])
-        clickedon <- Floor((Second(gClick)-psetbox.y)/gYHeight)+1
-        psetbox.height <- gYHeight
-        psetbox.text <- Nth(parfiles,clickedon)
-        pselected <- clickedon
-
-      } else {
-        pselected<- 0
-      }
-
-      Draw()
       }
 
 
-
-      screenselection.text <- gScreenRes
-      screenback.width <- screenselection.width+6
-     Draw()
+#     Draw()
    }
 
 
@@ -1290,7 +1144,63 @@ if(0)
 
 define CombineDataDialog(dirChain,filename,logfile)
 {
-  RunScript(dirchain, "combinedatafiles.pbl",0,gLanguage, logfile,0,"","")
+ ##this would work, but it runs blocking the current app. so reconstruct runscript.
+##  RunScript(dirchain, "combinedatafiles.pbl",0,gLanguage, logfile,0,"","")
+
+   Print(filename)
+   type <- GetSystemType()
+   if(type== "LINUX" or type=="OSX")
+   {
+     sep <- " ; "
+   } else {
+     sep <- " & "
+   }
+   
+  ##On windows, should the launcher run from a PEBL subdirectory rather than C:\Program Files\pebl
+   if(gUseReloc)
+     {
+        sep <- CR(1)
+        gPEBLName <- "\bin\pebl.exe"  ##The relative location should be bin\pebl.exe
+	callstring <- "set ABSPATH=%CD%"+sep+"cd " + DirListToText(dirchain) + sep + gQuote+"%ABSPATH%" +gPEBLName +gQuote
+
+     }else {
+         
+	 callstring <- "cd " + DirListToText(dirChain) + sep  + gPEBLName + " "  +gQuote+ "combinedatafiles.pbl"+gQuote 
+
+      }
+
+     callstring <- callstring + " --language " + glanguage  +" &"
+
+     if(type =="LINUX" or type == "OSX" or type == "WINDOWS")
+        {
+          if(gDebug)
+	    {
+             if(type == "WINDOWS")
+	        {
+		   callstring <- callstring + sep+"pause"
+		}
+             }
+
+	   if(type=="LINUX" or type=="OSX")
+             {
+                callstring <- callstring + " > stdout.txt 2> stderr.txt"
+             }
+        }
+
+	##be sure to run in background, if possible.
+
+  if(gUseReloc)
+      {
+         runfile <- FileOpenOverWrite("tmp.bat")
+         FilePrint(runfile,callstring)
+         FileClose(runfile)
+         SystemCall("tmp.bat","")
+
+      }else{
+
+        Print(callstring)
+         Print(SystemCall(callstring,""))
+      }
 }
 
 
@@ -1358,19 +1268,18 @@ define DirToText(dirlist,filelist,offset,path)
   tmp <- []
   loop(i,dirlist)
   {
-     tmp <- Append(tmp,  i +"\"+ CR(1))
+     PushOnEnd(tmp,  i +"\")
   }
 
   loop(i,filelist)
   {
-    tmp <- Append(tmp,  i + CR(1))
+    PushOnEnd(tmp,  i )
   }
 
   ##this crashes here sometimes here, let's be sure we access part of the list that we can.
   offset <- Max([0,offset])
   list <- SubList(tmp,offset+1,Length(tmp))
-  gOffset <- offset
- return ListToString(list)
+ return list
 }
 
 define AppendDirList(dirlist,dir)
@@ -1625,74 +1534,7 @@ define IsPNGFile(fname)
 
 
 
-define MakeButton(x,y,width,win,label)
-{
 
-   col <- MakeColor("grey50")
-
-
-   black <- MakeColor("black")
-   bg <- win.bgcolor
-   button <-MakeCanvas(width,20,col)
-
-   buttonback <- MakeColorRGB(248,248,248)
-   font<- MakeFont(gPEBLBaseFont,0,15,Makecolor("grey40"),
-                   buttonback,0)
-   buttonSideL   <- MakeImage("buttonsideL.png")
-   buttonSideR   <- MakeImage("buttonsideR.png")
-   buttonMiddle <-  MakeImage("buttonmiddle.png")
-
-
-   buttonMiddle.zoomX <- (width-4)/buttonMiddle.width
-   Draw(buttonMiddle)
-
-   AddObject(buttonMiddle,button)
-   AddObject(buttonSideL,button)
-   AddObject(buttonSideR,button)
-
-
-
-   Move(buttonMiddle,button.width/2,button.height/2)
-   Move(buttonSideL,buttonSideL.width/2,button.height/2)
-   Move(buttonSideR,button.width-buttonSideR.width/2,button.height/2)
-  
-   Draw(buttonMiddle)   
-   Draw(button)
-
-#   RemoveObject(buttonMiddle,button)
-#   RemoveObject(buttonSideR,button)
-#   RemoveObject(buttonSideL,button)
-
-   Draw(button)
-
-   label <- MakeLabel(label,font)
-   ##If the label is bigger than the button, shrink it.
-   if(label.width > (button.width-6))
-    {
-       label.zoomx <- (button.width-6)/(label.width)
-    }
-
-   AddObject(label,button)
-   Move(label,width/2,button.height/2)
-   Draw(label)
-
-   AddObject(button,win)
-   
-   Move(button,x,y)
-   
-   return button
-}
-
-
-
-define PushButton(tmp)
-{
-	     Move(tmp,tmp.x+2,tmp.y+2)
-		 Draw()
-		 Wait(100)
-		 Move(tmp,tmp.x-2,tmp.y-2)
-		 Draw()
-}
 
 define ReadConfigFile(configname)
 {
@@ -1798,7 +1640,7 @@ define UpdateCapturedThumb(p)
    if(time-gLastUpdate > 5)
     {
      mousexy <- GetMouseCursorPosition()
-     UpdatePortal(mousexy)
+     UpdatePortalXX(mousexy)
      gLastUpdate <- time
      Draw()
     }
@@ -1807,7 +1649,7 @@ define UpdateCapturedThumb(p)
 }
 
 ##this should update the file list given mouse position
-define UpdatePortal(mousexy)
+define UpdatePortalXX(mousexy)
 {
 
 	mousey <- Second(mousexy)
@@ -1844,7 +1686,7 @@ define UpdatePortal(mousexy)
 
          ##move the thumb to the right spot.
 
-	 gThumb.y <-  Max([Min([mousey, gPortal.y+gPortal.height-gutter*2]),gPortal.y+gutter])
+	 gThumb.y <-  Max([Min([mousey, gPortal.y+gPortal.height-gutter*2-1]),gPortal.y+gutter*2+1])
          gSelection.y <- gPortal.y+gyheight*(gselected-.5-gOffset)
          gPortal.text <- DirToText(First(gfilelist),Second(gfilelist),gOffset,gDirChain)
              
@@ -2111,7 +1953,7 @@ define RunFirstTime(p)
     gVideoHeight <- 500
     gwin <- MakeWindow("white")
     gSleepEasy <- 1
-   
+       
    head1 <- EasyLabel(GetPEBLVersion() + " for " +GetSystemType(),gVideoWidth/2,50,gwin,22)
 
 
@@ -2246,18 +2088,10 @@ if(1)
 }
 
 
-
-
+## This handles setting parameters for a selected script file.
+##
 define SetParameters(dirChain,scriptname,win,parname)
 {
-
-
-  pFontSize <- 11  ##this is the description font size; make a bit smaller for extra room.
- 
-  ##Create background over current window.
-  rect <- Rectangle(gVideoWidth/2,gVideoHeight/2,gVideoWidth,gVideoheight,MakeColor("grey80"),1)
-  AddObject(rect,win)
-
 
   path <- DirListToText(dirchain) +"params/"
   schema <- path+scriptname+".schema"
@@ -2272,103 +2106,99 @@ define SetParameters(dirChain,scriptname,win,parname)
   }
 
   fail <- 0
+
   if((not FileExists(schema)))
    { 
-     MessageBox("Schema file does not exist for script.  Parameters cannot be set outside script",win)
+      if(IsPEBLFile(scriptname))
+         {
+            PopupMessageBox("Schema file does not exist for script ["+scriptname+"]. Schema files are saved in the params\ subdirectory of the script's directory.  Most likely, the parameters of ["+scriptname+"] cannot be set using this interface.",win)
+         }else{
+            PopupMessageBox("To set parameters, select a .pbl file first. ["+scriptname+"] is not a PEBL script ending with .pbl",win)
+         }
+
+
      fail <- 1
    }
 
  if(not fail)
   {
+ 
+  ##Create background over current window.
+  rect <- Rectangle(gVideoWidth/2,gVideoHeight/2,gVideoWidth,gVideoheight,MakeColor("grey80"),1)
+  AddObject(rect,win)
 
   header <- EasyLabel("Editing parameters for "+path+scriptname,gVideoWidth/2,20,win,20)
   schemas <- ReadSchemaFile(schema)
   ts <- Transpose(schemas)
   defaults <- Transpose([First(ts),Second(ts)])
+
+  Print("Reading parameters from: " + paramsfile)
   parameters <- CreateParameters(defaults,paramsfile)  
+  PrintProperties(parameters)
 
   changed <- 0
 
-  ui <- []
 
-  quit  <- MakeButton(100,50,150,win,"Exit without saving")  
-  save <- MakeButton(100,72,150,win,"Save file and exit")  
-
+  quit  <- MakeButton("Exit without saving",100,50,win,150)
+  save <- MakeButton("Save file and exit",100,72,win,150)
 
   pnl <- EasyLabel("Parameters:",420,50,win,12)
   parnamebox <- EasyTextBox(parname,420-75,72-10,win,12,250,20)
 
-  add <- MakeButton(260,72,150,win,"New parameter set")
-#  del <- MakeButton(260,72,150,win,"Remove parameter")
+  add <- MakeButton("New parameter set",260,72,win,150)
+#  del <- MakeButton("Remove parameter",260,72,win,150)
 
-  reset <- MakeButton(260,50,150,win,"Reset to defaults")  
+  reset <- MakeButton("Reset to defaults",260,50,win,150)
 
   ##Now, make a grid showing values, etc., in the schema file
   ##We will set the rowheight adaptively..it should be set based on size 
   ##needed, but for now we will just stretch them all equally.
-  
+
+  ##out is [ui,vals,pluses,minuses,pmindex]
+  out <- LayoutPGrid(schemas,parameters,win)
+
+  ui <- First(out)
+  vals <- Second(out)
+  pluses <- Third(out)
+  minuses <- Fourth(out)
+  pmIndex <- Fifth(out)
 
 
-  rowBase <- 80
-  rowHeight <- Min([50,Floor(((gVideoHeight-5)-rowBase)/(Length(schemas)+1))])
-
-  Print("Row height: " + rowheight)
-
-  c1Base <- 100
-  c1 <- 150
-  c2 <- 100
-  c3 <- 600
+  returns <- Sequence(1,Length(vals),1)
 
 
-  head1 <- EasyLabel("Parameter name",c1Base+c1/2,rowBase+rowHeight/2,win,18)
-  head2 <- EasyLabel("Value",c1Base+c1+c2/2,rowBase+rowHeight/2,win,18)
-  head3 <- EasyLabel("Description",c1Base+c1+c2+c3/2,rowBase+rowHeight/2,win,18)
-  row <- 1
-  vals <- []
-  Print("SCHEMAS:")
-  Print(schemas)
-  prevparname <- ""
-  counter <- 1
-
-  loop(i,schemas)
-  {
-     parname <- First(i)
-     curval <- Second(i)
-     if(PropertyExists(parameters,parname))
-     {
-       curval <- GetProperty(parameters,parname)
-     }
-
-
-      r1 <- EasyTextbox(First(i), c1Base,rowBase + rowHeight*row,win,12,c1-2,rowHeight-2)
-      r2 <- EasyTextbox(curVal+"", c1Base+c1,rowBase + rowHeight*row,win,12,c2-2,rowHeight-2)
-      r3 <- EasyTextbox(Third(i)+"(default:["+Second(i)+"])", c1Base+c1+c2,rowBase + rowHeight*row,win,pFontSize,c3-2,rowHeight-2)
-
-      PushOnEnd(ui,r1)
-      PushOnEnd(ui,r2)
-      PushOnEnd(ui,r3)
-      PushOnEnd(vals,r2)
-
-      row <- row+ 1
-
-  }
-  Draw()
-
-##add the click-on values at the end of the
+##add the click-on values at the end of the lists
   PushOnEnd(vals,save)
   PushOnEnd(vals,reset)
   PushOnEnd(vals,quit)
-  PushOnEND(vals,add)
+  PushOnEnd(vals,add)
   PushOnENd(vals,parnamebox)
 
-  returns <- Sequence(1,row-1,1)
   PushOnEnd(returns,"save")
   PushOnEnd(returns,"reset")
   PushOnEnd(returns,"quit")
   PushOnEnd(returns,"add")
   PushOnEnd(returns,"parnamebox")
- 
 
+##add the plus/minuses now 
+ vals <- Merge(vals,pluses)
+index <- 1
+ loop(i,pmIndex)  ##add return index for pluses
+ {
+   PushOnEnd(returns,[i+1000,index])
+   index <- index + 1
+ }
+  index <- 1
+ vals <- Merge(vals,minuses)
+ loop(i,pmIndex)  ##add return index for minuses
+ {
+   PushOnEnd(returns,[i+2000,index])
+   index <- index + 1
+ }
+
+
+
+ Draw()
   ##Now, do a click-on loop to manage parameter updates. 
    cont <- 1
    while(cont)
@@ -2378,12 +2208,12 @@ define SetParameters(dirChain,scriptname,win,parname)
     ##See if we need to edit something.
     if(resp == "quit")	
     {
-      PushButton(quit)
+      PushButton(quit,[0,0])
       cont <- 0
     }elseif(resp=="save")
     {
 
-      PushButton(save)
+      PushButton(save,[0,0])
 
       pfile <- FileOpenOverwrite(paramsfile)
 
@@ -2393,10 +2223,11 @@ define SetParameters(dirChain,scriptname,win,parname)
        value <- GetProperty(parameters,First(i))
        if(IsList(value))
        {
+        ##Multi-parameter property:
        loop(j,value)
          {
           Print("saving:" + First(i)+"==" + Second(i) +"->" +j)
-          FilePrint(pfile,First(i)+","+j)
+          FilePrint(pfile,First(i)+"*,"+j)
          }
        }else{
          Print("saving:" + First(i)+"==" + Second(i) +"->" +value)
@@ -2409,7 +2240,7 @@ define SetParameters(dirChain,scriptname,win,parname)
 
     } elseif(resp=="reset")
     {
-     PushButton(reset)  
+     PushButton(reset,[0,0])
  
       pnames <- First(ts)
       defaults <- Second(ts)
@@ -2424,7 +2255,7 @@ define SetParameters(dirChain,scriptname,win,parname)
 
     }elseif(resp == "add")
     {
-      Pushbutton(add)
+      Pushbutton(add,[0,0])
       #this is really like 'save' but with a new name.
 
       ##figure out the new name:
@@ -2467,7 +2298,19 @@ define SetParameters(dirChain,scriptname,win,parname)
 	x <- GetInput(box,"<return>",1)
 	Draw()
   
-    }elseif(resp <= Length(schemas))
+    }elseif(IsList(resp))
+    {
+      ##plus or minus
+      index <- First(resp)
+      pmindex <- Second(resp)
+      if(index > 2000)
+      {    
+         PushButton(Nth(minuses,pmindex),[0,0])
+       }else{
+         PushButton(Nth(pluses,pmindex),[0,0])
+       }
+
+    }  elseif(resp <= Length(schemas))
     {  ##Click and edit a parameter box:
 
         box <- Nth(vals,resp)
@@ -2478,13 +2321,146 @@ define SetParameters(dirChain,scriptname,win,parname)
 	Draw()
 	newval  <- GetInput(box,"<return>",1)
         SetProperty(parameters,First(Nth(schemas,resp)),newval)
-        Draw()
+     
     }
+#   Draw()
    }
 }
 }
 
 
+##this does a layout on the parameter grid; suitable for 
+##re-layout if the number of parameters change.
+##We are given schemas, a list of triplets giving parametername,
+##default value, description, and parameters, an object created by
+##createparameters.
+##
+## multi-element properties are handled in the parameters
+## as a list; within schemas,
+## the names have a * at the end, and the values are (potentially)
+## a comma-separated list.
+
+define LayoutPGrid(schemas,parameters,win)
+{
+  pFontSize <- 11  ##this is the description font size; make a bit smaller for extra room.
+  rowBase <- 80
+
+
+  ##we need a better estimate of the length of the rows.
+  rows <- []
+  loop(i,GetPropertyList(parameters))
+  {
+     if(SubString(i,StringLength(i),1)=="*")
+     {
+       PushOnEnd(rows,SplitString(GetProperty(parameters,i),","))
+     }else {
+       PushOnEnd(rows,GetProperty(parameters,i))
+     }
+  }
+  rows2 <- Flatten(rows)
+  rowHeight <- Min([50,Floor(((gVideoHeight-5)-rowBase)/(Length(rows2)+2))])
+
+
+  c1Base <- 100
+  c1 <- 150
+  c2 <- 100
+  c3 <- 600
+
+
+  head1 <- EasyLabel("Parameter name",c1Base+c1/2,rowBase+rowHeight/2,win,18)
+  head2 <- EasyLabel("Value",c1Base+c1+c2/2,rowBase+rowHeight/2,win,18)
+  head3 <- EasyLabel("Description",c1Base+c1+c2+c3/2,rowBase+rowHeight/2,win,18)
+
+  ui <- []
+  vals <- []
+  pluses <- []
+  minuses <- []
+  pmIndex <- []
+
+  prevparname <- ""
+  counter <- 1
+  row <- 1
+  loop(i,schemas)
+  {
+     parname <- First(i)
+     ##is this a multi-parameter set (specified with a *)
+     singlepar <- 1
+
+     if(SubString(parname,StringLength(parname),1)=="*")
+     {
+         parname <- SubString(parname,1,StringLength(parname)-1)
+	 singlepar <- 0
+
+        ##Schema is multi-parameter; the default values in the schema
+	##are actually separated by commas.
+	pvalues <- SplitString(Second(i),",")
+	
+       ##use CreateParameters to make sure these are converted to numbers
+       Print("pvalues:" + pvalues)
+       fakeprop <- Repeat("fake",Length(pvalues))
+       fakepar <- CreateParameters(Transpose([fakeprop,pvalues]),"")
+       curvals <- fakepar.fake
+
+     }else{
+       curvals <- Second(i)
+     }
+     Print("================================")
+     Print(parname )
+     Print(curvals)
+
+     #Now, curval is either a list (for multi-parameters), or a value,
+     ##based on the schema file.
+
+     ##Use the pfile value in if it exists:
+     if(PropertyExists(parameters,parname))
+     {
+       curvals <- GetProperty(parameters,parname)
+     }
+
+     if(not IsList(curvals))
+     {
+       curvals <- [curvals]
+     }
+
+     ##i is the schema for the current property, which we will still use for default parameters etc.
+     ##curval is the current value from the parameter file or the schema (if no parameter file exists)
+
+
+      loop(curval,curvals)
+      {
+
+      if(not singlepar)
+      {
+       ##Add +/- button for multiple parameters.
+       tmpminus <- MakeButton("-",c1Base-40,rowbase+rowheight*(row+.5),win,18)
+       tmpplus <- MakeButton("+",c1Base-20,rowbase+rowheight*(row+.5),win,18)
+       PushOnEnd(ui,tmpminus)
+       PushOnEnd(ui,tmpplus)
+       PushOnEnd(pluses,tmpPlus)
+       PushOnEnd(minuses,tmpMinus)
+       PushOnEnd(pmIndex,row+1)
+
+      }
+
+
+      ##Now, add the UI elements for this parameter
+      	
+
+      r1 <- EasyTextbox(First(i)+"", c1Base,rowBase + rowHeight*row,win,12,c1-2,rowHeight-2)
+      r2 <- EasyTextbox(curval+"", c1Base+c1,rowBase + rowHeight*row,win,12,c2-2,rowHeight-2)
+      r3 <- EasyTextbox(Third(i)+" (default: ["+Second(i)+"])", c1Base+c1+c2,rowBase + rowHeight*row,win,pFontSize,c3-2,rowHeight-2)
+
+      PushOnEnd(ui,r1)
+      PushOnEnd(ui,r2)
+      PushOnEnd(ui,r3)
+      PushOnEnd(vals,r2)
+      row <- row+ 1
+    }
+
+  }
+
+  return [ui,vals,pluses,minuses,pmindex]
+}
 
 define ReadSchemaFile(filename)
 {
@@ -2603,4 +2579,45 @@ define ListEqual(l1,l2)
      same <- 0
    } 
   return same
+}
+
+
+
+define UpdateScreenResPulldown(pd)
+{
+
+	  selected <- pd.selected
+	  currentxy <- First(gScreenResInitial) +"x" + Second(gScreenResInitial)
+          screenmodes <- GetVideoModes()
+	  screenmodes <- SortBy(screenmodes,First(Transpose(screenmodes)))
+
+	  ##create a list of text-based screen modes to choose from:
+          modes <- []
+	  loop(i, screenmodes)
+	  {
+
+	    tmp <- First(i)+"x"+Second(i)
+	    if(tmp==currentxy)
+	    { 
+               tmp <- tmp + "*"
+	    }
+
+	     modes <- Append(modes, tmp)
+	  }
+
+	  ##Add the custom option to the end of each:
+	  modes <- Append(modes,gCurrent)
+	  modes <- Append(modes,gCustomText+gCustomScreenRes)
+
+	  screenmodes <- Append(screenmodes,gCurrent)
+	  screenmodes <- Append(screenmodes,gCustomText+gCustomScreenRes)
+
+
+	  ##screen modes is the nested list of resolutions
+	  ##modes is the text that is inside pd
+
+	  pd.selected <- selected
+	  UpdatePulldown(pd,modes)
+	  pd.selected <- selected
+	  return screenmodes
 }
