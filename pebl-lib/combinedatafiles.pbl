@@ -17,7 +17,7 @@ define Start(p)
   fontsize <- 12
   gSelected <- 1
 
-  head <- EasyLabel("PEBL Data File Merge", gVideoWidth/2,20,gWin,30)
+  head <- EasyLabel("PEBL Data Combining Tool", gVideoWidth/2+120,20,gWin,30)
 
 
   helpdefault <- "Instructions:  
@@ -28,23 +28,26 @@ define Start(p)
 * Example: add [.csv dat] to include all files having either .csv and dat in their names. Add [.csv&test] to include only files that have both .csv and test in their names. Add [pooled] to excludes to exclude all files with pooled in their names."
 
   help <- EasyTextBox(helpdefault,10,270,gWin,12,260,310)
-
-  gFileWindow <- EasyTextBox("",300,50,gWin,fontsize,450,400)
-  gFileWindow.linewrap <-0
+   gFileWindow <- MakeScrollBox([""],"Files:",300,50,gWin,12,480,300,1)
+   
 
   gWindowhead <- Easylabel("Files identified:",gfileWindow.x, gfilewindow.y-8,gWin,fontsize)
   gyHeight <- gWindowhead.height 
   gWindowhead.x <- gFileWindow.x+gWindowhead.width/2
-  gfilepreview <- EasyTextBox("",300,470,gWin,fontsize,450,100)
-  gfilepreview.linewrap <- 0
+
+#  gfilepreview <- EasyTextBox("",300,470,gWin,fontsize,450,100)
+#  gfilepreview.linewrap <- 0
+
+  gFilePreview <- MakeScrollBox([""],"Preview:",300,370,gWin,10,480,200,0)
+  Hide(gFilePreview.selection)
+  fptb <- gFilePreview.box
+  fptb.font <- Makefont(gPEBLBaseFontMono,0,10,MakeColor("black"),MakeColor("white"),0)
+
   gPreviewHead <- Easylabel("Preview:",gfilepreview.x, gfilePreview.y-8,gWin,fontsize)
   gPreviewHead.x <- gFilePreview.x + gPreviewHead.width/2
-  gSelection <- Rectangle(gfileWindow.x+gfileWindow.width/2,0,
-                      gfileWindow.width,gyheight,MakeColor("black"),0)
 
-  AddObject(gSelection,gWin)
 
-  helpfont <- MakeFont(gPeblBaseFont,0,15,MakeColor("blue"),MakeColor("black"),0)
+  helpfont <- MakeFont(gPeblBaseFont,4,15,MakeColor("blue"),MakeColor("black"),0)
 
   cb1 <- MakeCheckBox("Add filename to data",40,100,gWin,200)
   cb2 <- MakeCheckBox("Files contain header",40,125,gWin,200)
@@ -67,9 +70,10 @@ define Start(p)
                    filenamebox.y+filenamebox.height/2)
 
 
-  preview <- MakeButton(140,35,200,gWin,"Combine and open")
-  combine   <- MakeButton(140,55,200,gWin,"Combine and save")
-  exit      <- MakeButton(140,75,200,gWin,"Exit")
+  preview <- MakeButton("Combine and open",140,35,gWin,200)
+  combine   <- MakeButton("Combine and save",140,55,gWin,200)
+  exit      <- MakeButton("Exit",140,75,gWin,200)
+
   gStatus <- EasyLabel("",300,gVideoHeight-20,gWin,12)
   UpdateStatus("status:")
 
@@ -82,7 +86,7 @@ define Start(p)
   h7 <- MakeLabel("?",helpfont);Addobject(h7,gWin);Move(h7,filenamename.x-filenamename.width/2-5,filenamename.y)  
   h8 <- MakeLabel("?",helpfont);Addobject(h8,gWin);Move(h8,gWindowhead.x-gWindowhead.width/2-5,gWindowhead.y)  
   h9 <- MakeLabel("?",helpfont);Addobject(h9,gWin);Move(h9,gPreviewHead.x-gPreviewHead.width/2-5,gPreviewHead.y)  
-  h10 <- MakeLabel("?",helpfont);Addobject(h10,gWin);Move(h10,help.x-5,help.y)  
+  h10 <- MakeLabel("?",helpfont);Addobject(h10,gWin);Move(h10,head.x-head.width/2-5,head.y)  
 
   UpdateFilter(directory,filter,exclude)
 
@@ -96,21 +100,21 @@ define Start(p)
      Draw()
      out <- WaitForClickOnTarget([cb1,cb2,preview,filterbox,
                                    excludebox,gfilewindow,filenamebox,
-				   combine,exit,
+				   combine,exit,gFilePreview,
                                      h1,h2,h3,h4,h5,h6,h7,h8,h9,h10],
-                                      [1,2,3,4,5,6,7,8,9,
+                                      [1,2,3,4,5,6,7,8,9,10,
                                        11,12,13,14,15,16,17,18,19,20])
      if(out==1)
      {
-        ClickCheckBox(cb1)
+        ClickCheckBox(cb1,[0,0])
         Draw()
      }elseif(out==2)
      {	
-        ClickCheckBox(cb2)
+        ClickCheckBox(cb2,[0,0])
         Draw()
      }elseif(out==3)
      {
-        PushButton(preview)
+        PushButton(preview,[0,0])
         CombineDataFiles(directory,filename,filter,exclude,cb2.state,cb1.state)
         Launchfile(filename)
         UpdateStatus("File opened")
@@ -143,9 +147,10 @@ define Start(p)
 
      }elseif(out==6)
      {  ##click on file window
-        clicky <- Second(gClick)
-        SetSelected(Min([Floor((clicky-gfilewindow.y)/gyheight)+1 ,
-                         Length(gfilelist)]))
+
+      Callfunction(gFileWindow.clickon,[gFileWindow,gClick])
+      gSelected <- gFileWindow.selected
+      SetSelected(gSelected)
 	Draw()
 
       } elseif(out==7)
@@ -161,15 +166,22 @@ define Start(p)
      {
 
  
-     PushButton(combine)
+     PushButton(combine,[0,0])
      CombineDataFiles(directory,filename,filter,exclude,cb2.state,cb1.state)
  
      
      }elseif(out==9)
      {
-       PushButton(exit)
+       PushButton(exit,[0,0])
        cont <- 0
-     }elseif(out>=10 and out<=20)
+
+     }elseif(out==10)
+     {  ##click on file preview window
+
+      Callfunction(gFilePreview.clickon,[gFilePreview,gClick])
+      Draw()
+
+     }elseif(out>10 and out<=20)
      {
         instructions <- ["This button merges the files and opens them in your default handler (i.e., microsoft excel for csv files)",
                         "This button combines the files and saves the combined file to the save file",
@@ -179,7 +191,8 @@ define Start(p)
 csv files with 'pooled' in their names: csv&pooled
 txt files or csv files: txt|csv
 ",
-			"Specify exclusion criteria here, separated by spaces.  Excludes are processed after filters.",
+			"Specify exclusion criteria here, separated by spaces.  Excludes are processed after matches.  
+For example, to not match any files names test-summary-X.txt, add 'summary' in the box.",
 			"Specify file name to save the merged data file as.",
 			"This box lists all files matching the constraints. This box does not scroll, so if you match too many files, you will not see the ones at the end.",
        			"This gives you a preview any data file selected in the files window.  This allows you to inspect whether the file should be included, and whether there is a header.",
@@ -323,13 +336,15 @@ define GetFileListing(directory)
         ##First check if its a directory.
         if(IsDirectory(directory+"/"+i))
          {
+     	   Print("directory: [" + directory+"]")
            sublist <- GetDirectoryListing(directory+"/"+i)
+
 	   loop(sfile,sublist)	
             {
 
 	      if(not IsdotFile(sfile))	
 	      {
-                  PushOnEnd(list, directory+"/"+i+"/"+sfile)
+                  PushOnEnd(list, i+"/"+sfile)
 	      }
             }
          }else {
@@ -432,50 +447,10 @@ define IsDotFile(i)
 }
 
 
-define MakeButtonX(x,y,width,win,label)
-{
-
-
-   col <- MakeColor("grey70")
-   button <-MakeCanvas(width,20,col)
-
-   
-
-   font<- MakeFont(gPEBLBaseFont,0,15,MakeColor("black"),MakeColor("white"),0)
-   label <- MakeLabel(label,font)
-
-   ##If the label is bigger than the button, shrink it.
-   if(label.width > (button.width-6))
-    {
-	   label.zoomx <- (button.width-6)/(label.width)
-    }
-
-   AddObject(label,button)
-   Move(label,width/2,9)
-   Draw(button)
-   
-   rect <-Rectangle(Floor(button.width/2),Floor(button.height/2),button.width,button.height,MakeColor("grey25"),0)
-   AddObject(rect,button)
-   Draw(rect)
-   Move(rect,rect.x-1,rect.y-1)
-   Draw(rect)
-   Move(rect,rect.x-1,rect.y-1)
-   Draw(rect)
-#   Move(rect,rect.x-1,rect.y-1)
-#   Draw(rect)
-   RemoveObject(rect,button)
-
-   AddObject(button,win)
-   
-   Move(button,x,y)
-   
-   return button
-}
-
+## This updates the file preview based on the selected index.
+##
 define SetSelected(index)
 {
-   gSelected <- index
-   gSelection.y <- gfileWindow.y+gyheight*(gselected-.5)
 
      
   if((Length(gFileList)>0)  and (gSelected <= Length(gFileList)))
@@ -484,17 +459,21 @@ define SetSelected(index)
 
      if(FileExists(file))
        {
-           gfilepreview.text <- FileReadNLines(file,20)
-
+          ##we should'nt have to read everything, should we?
+           gfilepreview.list <- FileReadNLines(file,1000)
+           UpdateScrollbox(gFilePreview)
          }else{
 
-           gfilepreview.text <- "File does not exist"
-
+           gfilepreview.list <- ["File does not exist"]
+           UpdateScrollbox(gFilePreview)
          }
 
 
-  gPreviewHead.text <- "Preview: "+file
-  gPreviewHead.x <- gFilePreview.x + gPreviewHead.width/2
+	DrawScrollbox(gFilePreview)
+
+       gPreviewHead.text <- "Preview: "+file
+       gPreviewHead.x <- gFilePreview.x + gPreviewHead.width/2
+	Draw()
  }
 
 }
@@ -502,11 +481,12 @@ define SetSelected(index)
 ##This reads N lines of text
 define FileReadNLines(file,n)
 {
+  
   filein <- FileopenRead(file)
-  out <- ""
+  out <- []
   loop(i, Sequence(1,n,1))
   {
-    out <- out + FileReadLine(filein) +CR(1)
+    PushOnEnd(out , FileReadLine(filein))
     if(EndOfFile(filein))
     {
       break
@@ -541,15 +521,22 @@ define UpdateStatus(message)
 define UpdateFilter(directory,filter,exclude)
 {
   gFileList <- ["Reading files...."]
-  gfileWindow.text <- "reading files....."
+  gfileWindow.list <- ["reading files....."]
+  UpdateScrollbox(gFileWindow)
+  DrawScrollbox(gFileWindow)
   UpdateStatus("reading and filtering files")
-  SetSelected(1)
+  SetSelected(gFileWindow.selected)
   Draw()
   gfileList <- GetFilteredFiles(directory,filter,exclude)
-  gfilewindow.text <- ListToText(gfilelist)
+  
+  gFileWindow.list <- gFileList
+  SetSelected(gFileWindow.selected)
+  UpdateScrollbox(gFileWindow)
+  DrawScrollBox(gFileWindow)
+
   gWindowhead.text  <- "Files identified: " +Length(gFileList)
   MoveCorner(gWindowhead,gFileWindow.x,gFileWindow.y-15)
-  SetSelected(1)  ##we get a crash here if there is no file in gFileList
+
   UpdateStatus("Files read")
   Draw()
 

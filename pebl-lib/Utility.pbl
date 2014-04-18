@@ -683,13 +683,26 @@ define Inside(click,object)
     {
       SignalFatalError("First argument of Inside(<click>, <object>) must be a list specifying [x,y] position.")
     }
-	x <- First(click)
+    x <- First(click)
     y <- Second(click)
     if((not IsNumber(x)) or (not IsNumber(y)))
      {
        SignalFatalError("First argument of Inside(<click>, <object>) is not a list of numbers.  It must specify [x,y] position.")
      }
-    
+
+   called <- 0
+   if(IsCustomObject(object))	
+    {    
+
+      if(PropertyExists(object,"inside"))
+      {
+          inside <- CallFunction(object.inside, [click,object])
+	  called <- 1
+      }
+     } 
+
+   if(not called)
+    {
 
    if(IsImage(object) or IsLabel(object) or  IsCanvas(object) or
       object.name == "<RECTANGLE>" or object.name == "<SQUARE>" or 
@@ -720,8 +733,9 @@ define Inside(click,object)
    } else {
        SignalFatalError("Second argument of Inside(<click>,<object>) must either be an image, label, textbox, rectangle, square, or circle, or <CUSTOMOBJECT>.")
    }
-
+}
 	return inside
+
 }
 
 
@@ -963,7 +977,7 @@ define WaitForDownClick()
    continue <- 1
    while(continue) 
     {
-		x <- WaitForMouseButton()
+	x <- WaitForMouseButton()
         if(Nth(x,4) == "<pressed>")
         { 
          continue <- 0
@@ -1067,21 +1081,27 @@ define CreateParameters(defaults,file)
 
     if(IsList(defaults))
     {
-
       par1 <-  MakeParameterObject(defaults)
     } else {
       par1 <- MakeCustomObject("parameters")
     }
 
 
+  Print("defaults:")
+  PrintProperties(par1)
+
   ##############################
   ##Now, read in values from the file
   if(FileExists(file))
    {
-    paramfile <- ReadCSV(file)
-    par2 <- MakeParameterObject(file)
-   
+    parampairs <- ReadCSV(file)
+    par2 <- MakeParameterObject(parampairs)
 
+
+    Print("filevalues")
+    Print(parampairs)
+   PrintProperties(par2)
+   Print("-------------------")
   ##now, we need to merge the two parameter sets together.  
   ##we should use defaults as the base, but copy anything from
   ## file to replace.
@@ -1241,6 +1261,52 @@ define GetNewDataFile(subnum,win,basename,extension,header)
 }
 
 
+##
+##
+define DrawObject(p)
+{
+
+  if(IsCustomObject(p))
+   {
+     if(PropertyExists(p,"draw"))
+     {	
+      CallFunction(p.draw,[p])
+     }else {
+      Draw(p)
+     }
+   }else{
+    Draw(p)
+  }
+}
+
+
+##
+define MoveObject(obj,x,y)
+{
+  if(IsCustomObject(p))
+   {
+     if(PropertyExists(p,"draw"))
+     {	
+      CallFunction(p.move,[p,x,y])
+     }else {
+      Move(p,x,y)
+     }
+   }else{
+    Draw(p,x,y)
+  }
+}
 
 
 
+
+##
+define ClickOn(obj,xy)
+{
+  if(IsCustomObject(obj))
+   {
+     if(PropertyExists(obj,"clickon"))
+     {	
+      CallFunction(p.clickon,[p,x,y])
+     }  
+    }
+}
