@@ -2,7 +2,7 @@
 ##  This is a PEBL script that acts as a cross-platform 
 ##  launcher for PEBL.
 ## Version 0.3: Adds parameter setting (version 0.14), 
-## data file combining, http version check.
+## data file combining, http version check.  
 ##
 ##  Version 0.2: Initial release, to accompany PEBL 0.13.
 ##  (c) 2011-2014 Shane T. Mueller, Ph.D. smueller@obereed.net
@@ -11,18 +11,54 @@
 define Start(p)
 {
 
-    gdebug <- 1
-  
-    gsystemType <- GetSystemType()
+    gdebug <- 0
+	gUseReloc <-  1  ##Set this from 0 to 1 if you want to run on windows 
+                   ## NOT from an installation in Program Files, but from
+                   ##A PEBL subdirectory of the current working directory.
+ 
+	  if(gDebug)
+	  {
+	   gWin <- MakeWindow()
+   
+	   gMessage <- EasyLabel("Started",200,200,gWin,12)
+      Draw()
+	  WaitForANyKeyPress()
+	  }
+   gsystemType <- GetSystemType()
     ghome <- GetHomeDirectory()
-    
-    parPairs <- [["checkfornew",1],
+	
+	parPairs <- [["checkfornew",1],
                  ["newest","0.14"]
                  ]
-
     gParams  <- CreateParameters(parpairs,"launcher.pbl.par")
-		
-      if(gSystemtype == "WINDOWS")
+	
+    if (gUseReloc)
+	    {
+		gPEBLDIR <- "PEBL"
+    	gDest <- ".\" ##was ghome. 
+        gHome <- ""
+
+		   FileSelect(["default"]) ##Giving an argument here will specify a data file
+		} else {
+	
+     if(Length(p)>0)
+	  {
+  	    gPEBLDir  <- First(p)
+	  } else {
+        gPEBLDir <- GetWorkingDirectory()+"\..\"
+	  }
+	  # gPEBLDir <- GetWorkingDirectory()+"\..\"
+	  # gPEBLDir <- ""
+	  
+	  if(gDebug)
+	  {
+        gMessage.text <- gPEBLDir
+	    Draw()
+	    WaitForANyKeyPress()
+	  }
+	  
+
+	if(gSystemtype == "WINDOWS")
 	   {
  	    if(FileExists(ghome+"\Documents"))
 	    {
@@ -45,6 +81,7 @@ define Start(p)
       gDest <- ghome+ doc + "/pebl-exp.0.14" 
       Print("starting in " + gDest)
 
+	 
      ##Decide whether to run for the first time
 	  if(FileExists(gdest))
 	   {
@@ -52,7 +89,7 @@ define Start(p)
              #Print(list)
 	      if(Length(list)>2)
 		 {
-                   SetWorkingDirectory(gdest)
+              SetWorkingDirectory(gdest)
    	          FileSelect(["default"]) ##Giving an argument here will specify a data file
                  } else{
                   RunFirstTime(p)
@@ -62,15 +99,13 @@ define Start(p)
 	       Print("Running for the first time")
 	       RunFirstTime(p)
 	  }
+  }
 }
 
 
 define FileSelect(p)
 {
-  gUseReloc <-  0  ##Set this from 0 to 1 if you want to run on windows 
-                   ## NOT from an installation in Program Files, but from
-                   ##A PEBL subdirectory of the current working directory.
- 
+  
  ##Set this from 1 to 0 to turn off automatic subject code incrementation
  ##it increments the previous code by one, to avoid overwriting
  gAutoSubCode <- 1
@@ -99,7 +134,7 @@ define FileSelect(p)
   ## open battery.txt file
 
   ##This allows you to open up the description file directly.
-  gEditDescription <- 1
+  gEditDescription <- 0
 
   systemType <- GetSystemType()
 
@@ -110,28 +145,60 @@ define FileSelect(p)
 
     gViewerCommand <- "gedit"
     gPEBLName      <- "pebl"
-    gOpenManual    <- "acroread /usr/local/share/pebl/doc/PEBLManual0.13.pdf&"
+    gOpenManual    <- "acroread /usr/local/share/pebl/doc/PEBLManual0.14.pdf&"
     gOpenURL        <- "firefox"
-    gManualLoc      <- "/usr/local/share/pebl/doc/PEBLManual0.13.pdf"
+    gManualLoc      <- "/usr/local/share/pebl/doc/PEBLManual0.14.pdf"
 
 		
    }elseif(systemType=="WINDOWS")   {
      
+	 
+	 	  ##Debugging:
+      #SystemCall("echo " + gQuote+ gPEBLDir+gQuote +" & pause","")
+	  #SystemCall("dir "+gQuote+"%ProgramFiles%\PEBL\bin\pebl.exe"+gQuote +"&pause","")
+      #SystemCall("dir "+gQuote+"%ProgramFiles(x86)%\PEBL\bin\pebl.exe"+gQuote+"&pause","")
+	
+	 ##There should be a built-in that does this.
+	Print(gPeblDir+"\bin\pebl.exe")
+	Print(GetDirectoryListing(".\"))
+	if (not FileExists(gPEBLDir+"\bin\pebl.exe"))
+	 	     {
+			 Print("RENAMING")
+			  if(FileExists(gQuote+"%ProgramFiles%\PEBL\bin\pebl.exe"+gQuote))
+			  {
+		       gPEBLDir <- "%ProgramFiles%\PEBL"
+			   } elseif(FileExists(gQuote+"%ProgramFiles(x86)%\PEBL\bin\pebl.exe"+gQuote))
+			   {
+			     gPEBLDir <- gQuote+"%ProgramFiles(x86)%\PEBL"+ gQuote
+			   } else {
+			      if(gDebug)
+				   {
+                     MessageBox("Unable to fine PEBL Base Directory.  Please hard-code",gWin)
+                   }
+				    gPEBLDir <- "%ProgramFiles%\PEBL"
+                   #SignalFatalError("Unable to find PEBL Base Directory.")
+				}
+			}
+    
      gViewerCommand <- "c:\windows\notepad.exe"  ##used as a backup
 #     gPEBLName      <- "c:\Progra~1\PEBL\bin\pebl.exe "
-     gPEBLName     <- gQuote+"%ProgramFiles(x86)%\PEBL\bin\pebl.exe"+gQuote+ " "
+     gPEBLName     <- gQuote+gPEBLDir+"\bin\pebl.exe"+gQuote+ " "
      gOpenManual    <- ""
-     gManualLoc     <-  gQuote+gDest+"\PEBLManual0.13.pdf"+gQuote
+     gManualLoc     <-  gQuote+gPEBLDir+"\doc\PEBLManual0.14.pdf"+gQuote
      ##This shouldn't be hard-coded; but for now, change to localize.
-#     gManualLoc    <- "C:\Program Files\PEBL\doc\PEBLManual0.13.pdf"
+#     gManualLoc    <- "C:\Program Files\PEBL\doc\PEBLManual0.14.pdf"
      gOpenURL       <- ""
 
+ if(gDebug)
+	  {
+	     MessageBox("pebl.exe:" + gPEBLName,gWin)
+	   }
 
    }elseif(systemType == "OSX")
    {
      gViewerCommand <- "open"
      gPEBLName      <- "/opt/local/bin/pebl"
-     gOpenManual    <- "acroread /opt/local/share/pebl/doc/PEBLManual0.13.pdf"
+     gOpenManual    <- "acroread /opt/local/share/pebl/doc/PEBLManual0.14.pdf"
    }
 
    gSleepEasy <- 1
@@ -152,7 +219,8 @@ define FileSelect(p)
    }
 
    win <- MakeWindow("grey90")
-
+           	   
+		   
    ##make a dummy object INSIDE() will recognize as a click on the window.
    gWinDummy <- MakeCustomObject("dummy")
    gWinDummy.name <- "<CUSTOMOBJECT>"
@@ -336,21 +404,9 @@ define FileSelect(p)
 ### parameter set pulldown:
 
    psetlabel   <- EasyLabel(	gParameterLabel, expbox.x,expbox.y+20,win,fontsize)
-
-if(0)
-{
-   psetbox <- EasyTextBox("default",langbox.x,langbox.y+40,win,fontsize,200,yheight)
-
-   psetboxhighlight <- Rectangle(psetbox.x+psetbox.width/2,
-                                psetbox.y+psetbox.height/2,
-                                psetbox.width+2,psetbox.height+2,
-                                MakeColor("grey50"),0)
-   AddObject(psetboxhighlight,win)
-}else{
-
    psetbox <- MakePulldown(["default"],langbox.x,langbox.y+40,win,fontsize,200,1)
    MoveCorner(psetlabel,psetbox.x-psetlabel.width-10,psetbox.y)   
-}
+
 
    params     <- MakeButton(gEditParams,psetlabel.x-psetlabel.width/2-30,psetlabel.y,win,50)
 ### screen resolution
@@ -370,36 +426,13 @@ if(0)
 
 #####################################
    ##Fullscreen checkbox:
-#   fullscreenbox    <-EasyTextBox(fstext,      xbase+width+10,ybase+140,win,fontsize,yheight,yheight)
-#   fullscreenlabel  <- EasyLabel(gFullText, xbase+width+70,ybase+140+yheight/2,win,fontsize)
-#   MoveCorner(fullscreenlabel,xbase+width+30,ybase+140)
   fullscreenbox <-  MakeCheckBox(gFulltext,xbase+width+5,ybase+140,win,120)
 
 
 
    ##Demographics checkbox:
-#   demobox    <-EasyTextBox(demotext,             xbase+width+130,ybase+140,win,fontsize,yheight,yheight)
-#   demolabel  <- EasyLabel(gCollectdemoText, xbase+width+230,ybase+140+yheight/2,win,fontsize)
-#   MoveCorner(demolabel,xbase+width+150,ybase+140)
-
    demobox <-  MakeCheckBox(gCollectDemoText,xbase+width+145,ybase+140,win,200)
    SetCheckBox(demobox,gNIMHdemographics)
-
-
-if(0)
-{
-   AddObject(slidebin,win) 
-   AddObject(up,win)
-   AddObject(down,win)
-   AddObject(gThumb,win)
-   AddObject(gSelection,win)
-
-
-
-   gPortal.text <- DirToText(First(gfilelist),Second(gfilelist),   
-                             gOffset,gDirChain)
-   gSelection.y <- gPortal.y+yheight*(gselected-.5)
-}
 
    gPortal.list <- DirToText(First(gfilelist),Second(gfilelist),   
                              gOffset,gDirChain)
@@ -414,9 +447,8 @@ if(0)
      MoveCorner(newestlabel,xbase+135,ybase+height+65)
 #     Draw()
 
-        newest <- GetHTTPText("pebluser.s3-website-us-east-1.amazonaws.com","/latest.txt")
-#
-#         newest <- ["0.14",100]
+        #newest <- GetHTTPText("pebluser.s3-website-us-east-1.amazonaws.com","/latest.txt")
+         newest <- ["0.14",100]
         if(First(newest)==200)
 	{
 	  newestversion <- Second(newest)
@@ -564,7 +596,6 @@ if(0)
 		
    if(tmp==1)  #Click was on the portal.
       {
-
          event <- ClickOnScrollbox(gPortal,gClick)
          newselected <- gPortal.selected
 
@@ -816,12 +847,12 @@ if(0)
             }
 
       }elseif(tmp==17)  ##Open Manual
-      {
+      {   
           PushButton(openmanual,[0,0])
           #SystemCall(gManualLoc,"")	  
           #Print(gManualLoc)
-  	  #MessageBox(gManualLoc,win)
-          LaunchFile(gManualLoc)
+          
+		  LaunchFile(gManualLoc)
         
       }elseif(tmp==18)  ##Launcher Size
       {
@@ -860,7 +891,7 @@ if(0)
     	   cursorpos <-  GetTextBoxCursorFromClick(description,relx,rely)
            description.cursorpos <- cursorpos 
      	   Draw()
-  	   desctext <- GetInput(description,"<return>",1)
+  	        desctext <- GetInput(description,"<return>",1)
            descname <- DirListToText(gDirChain)+Nth(gFlatFileList,gselected)+".about.txt"
            outfile <- FileOpenOverWrite(descname)
            FilePrint(outfile,desctext)
@@ -1051,23 +1082,6 @@ if(0)
 	  Draw()
           choice <- screenselection.selected ##index chosen.
 
-if(0)
-  {
- 	  resp <- WaitForClickOntarget([gWinDummy,screenselection],[2,1])
-
-	  if(resp==2)
-	  {
-	    ##close the box:
-	    PullDown(screenselection,[-1,-1])
-	  }elseif(resp ==1)
-          {
-
-  	   PullDown(screenselection,gClick)
-
-
-	    PRint("CHOICE:" + choice)
-          }
-  }
 
        if(choice ==screenselection.numitems)
 	   {
@@ -1159,9 +1173,10 @@ define CombineDataDialog(dirChain,filename,logfile)
   ##On windows, should the launcher run from a PEBL subdirectory rather than C:\Program Files\pebl
    if(gUseReloc)
      {
+
         sep <- CR(1)
         gPEBLName <- "\bin\pebl.exe"  ##The relative location should be bin\pebl.exe
-	callstring <- "set ABSPATH=%CD%"+sep+"cd " + DirListToText(dirchain) + sep + gQuote+"%ABSPATH%" +gPEBLName +gQuote
+  	    callstring <- "set ABSPATH=%CD%"+sep+"cd " + DirListToText(dirchain) + sep + gQuote+"%ABSPATH%\PEBL" +gPEBLName +gQuote + " " +  gQuote + "combinedatafiles.pbl"+gQuote
 
      }else {
          
@@ -1382,10 +1397,10 @@ define RunScript(dirChain,filename,fullscreen,language,logfile,subcode,experimen
   ##On windows, should the launcher run from a PEBL subdirectory rather than C:\Program Files\pebl
    if(gUseReloc)
      {
-         
+       Print(gPEBLName)
         sep <- CR(1)
         gPEBLName <- "\bin\pebl.exe"  ##The relative location should be bin\pebl.exe
-		callstring <- "set ABSPATH=%CD%"+sep+"cd " + DirListToText(dirchain) + sep + gQuote+"%ABSPATH%" +gPEBLName +gQuote+ " " +filename + " -s " + subcode
+		callstring <- "set ABSPATH=%CD%"+sep+"cd " + DirListToText(dirchain) + sep + gQuote+"%ABSPATH%\PEBL\" +gPEBLName +gQuote+ " " +filename + " -s " + subcode
     		 ##callstring <- "set ABSPATH=%CD%"+gPEBLname+ CR(1)+ " cd "+DirListToText(dirchain)+CR(1)+gQuote+"%ABSPATH%"+gquote + " " + filename +" "  
 
      }else {
@@ -1437,15 +1452,11 @@ define RunScript(dirChain,filename,fullscreen,language,logfile,subcode,experimen
                 callstring <- callstring + " > stdout.txt 2> stderr.txt"
                 }
 		   }
-
 		 
-		   
          FilePrint(logfile,TimeStamp() + "," + DirListToText(dirChain)+ filename+","+GetPEBLVersion() + "," + experimenter + "," + subcode + "," +"fullscreen:["+fullscreen+"],"+ language + "," + callstring+ ","+"STARTED")
 
-		 
          #### Run the experiment!!!!
          Print("Executing : [" + callstring + "]")
-
 
   if(gUseReloc)
       {
@@ -1889,9 +1900,9 @@ define RunFirstTime(p)
     Print(p)
    if(Length(p)>1)
      {
-	 Print(p)
+
    	 resources <- Nth(p,1)
-         Print("Resources:" + resources)
+     ##Print("Resources:" + resources)
 	 targetdir <- Second(p)
 	 home <- targetdir
 
@@ -1904,7 +1915,7 @@ define RunFirstTime(p)
   		  } elseif(GetSystemType()=="WINDOWS")
                     {
                       ##Check here for robustness.
-                      if (FileExists("%ProgramFiles(x86)%"))
+            if (FileExists("%ProgramFiles(x86)%"))
  		     {
 		       resources <- "%ProgramFiles(x86)%\\PEBL"
 		      } else {
