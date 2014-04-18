@@ -35,15 +35,17 @@
 
 
 
-#elif defined( PEBL_WINDOWS) 
+#elif defined( PEBL_WINDOWS)
 
  #include <windows.h>
  #include <iostream>
  #include <iomanip>
-
+ #include <stdio.h>
 #endif
 
 #undef PEBL_CHECKTIMER
+
+using namespace std;
 
 /// This is the standard PlatformTimer constructor
 PlatformTimer::PlatformTimer()
@@ -150,7 +152,8 @@ void PlatformTimer::GetTimeOfDay(unsigned long & secs, unsigned long & msecs)
     secs = secs1;
     msecs = usecs/100;
 #else
- SYSTEMTIME st;
+
+   SYSTEMTIME st;
 
     ::GetSystemTime(&st);
 

@@ -43,7 +43,7 @@ using std::endl;
 
 /// These are SDL-specific utilities that don't fit into a single class very well.
 
-  
+
 SDL_Color  SDLUtility::PColorToSDLColor(PColor pcolor)
 {
   SDL_Color scolor;
@@ -51,18 +51,18 @@ SDL_Color  SDLUtility::PColorToSDLColor(PColor pcolor)
   scolor.g = pcolor.GetGreen();
   scolor.b = pcolor.GetBlue();
   scolor.unused = pcolor.GetAlpha();
-  
+
   return scolor;
 }
 
 PColor SDLUtility::SDLColorToPColor(SDL_Color scolor)
 {
-  
-  return PColor(scolor.r, scolor.g, scolor.b, scolor.unused);          
-}  
+
+  return PColor(scolor.r, scolor.g, scolor.b, scolor.unused);
+}
 
 
-  
+
 
 ///  This sets a pixel to be a certain color.
 void SDLUtility::DrawPixel(SDL_Surface *surface, int x, int y, PColor pcolor)
@@ -72,11 +72,11 @@ void SDLUtility::DrawPixel(SDL_Surface *surface, int x, int y, PColor pcolor)
     Uint32 pixel = SDL_MapRGBA(surface->format,
                                pcolor.GetRed(), pcolor.GetGreen(),
                                pcolor.GetBlue(), pcolor.GetAlpha());
-    
+
     //Only draw the pixel if it is actually in the surface.
-    if(x < 0 
+    if(x < 0
        || x >= surface->w
-       || y < 0 
+       || y < 0
        || y >= surface->h)
         {
             //cout << "outside: "<< x<< " " << y << endl;
@@ -109,7 +109,7 @@ void SDLUtility::DrawPixel(SDL_Surface *surface, int x, int y, PColor pcolor)
             p[2] = (pixel >> 16) & 0xff;
         }
         break;
-        
+
     case 4:
         *(Uint32 *)p = pixel;
         break;
@@ -121,11 +121,11 @@ void SDLUtility::DrawPixel(SDL_Surface *surface, int x, int y, PColor pcolor)
 void SDLUtility::DrawLine(SDL_Surface *surface, int x1, int y1, int x2, int y2, PColor pcolor)
 {
     //Draw a pixel on every point between (x1,y1) and (x2,y2)
-    
-    //We need a rough estimate of the number of steps to take.  
-    
+
+    //We need a rough estimate of the number of steps to take.
+
     int length = (int)(sqrt((double)(x1-x2) * (x1 - x2) + (y1-y2)*(y1-y2)) * 2);
-    
+
     //Draw twice for each intermediate pixel.
     float deltax = (float)(x2 - x1) / length;
     float deltay = (float)(y2 - y1) / length;
@@ -135,7 +135,7 @@ void SDLUtility::DrawLine(SDL_Surface *surface, int x1, int y1, int x2, int y2, 
         {
             DrawPixel( surface, (int)(x1 + deltax * i), (int)( y1 +deltay*i), pcolor);
         }
- 
+
     //Draw the end pixel just for kicks.
     DrawPixel(surface, x2, y2, pcolor);
 
@@ -145,7 +145,7 @@ void SDLUtility::DrawLine(SDL_Surface *surface, int x1, int y1, int x2, int y2, 
 void SDLUtility::DrawSmoothLine(SDL_Surface *surface, int x1, int y1, int x2, int y2, PColor pcolor)
 {
     //Draw a pixel on every point between (x1,y1) and (x2,y2)
-    
+
     DrawLine(surface, x1, y1, x2, y2, pcolor);
 
 
@@ -161,23 +161,23 @@ Uint32 SDLUtility::GetPixel(SDL_Surface *surface, int x, int y)
         int bpp = surface->format->BytesPerPixel;
         /* Here p is the address to the pixel we want to retrieve */
         Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
-   
+
        switch (bpp) {
        case 1:
            return *p;
-   
+
        case 2:
            return *(Uint16 *)p;
-   
+
        case 3:
            if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
                return p[0] << 16 | p[1] << 8 | p[2];
            else
                return p[0] | p[1] << 8 | p[2] << 16;
-   
+
        case 4:
            return *(Uint32 *)p;
- 
+
      default:
          return 0;       /* shouldn't happen, but avoids warnings */
      } // switch
@@ -203,7 +203,7 @@ PColor SDLUtility::GetPixelColor(SDL_Surface *surface, int x, int y)
 
 int SDLUtility::WritePNG(const Variant fname, PlatformWidget* wid)
 {
-#if ! defined(PEBL_OSX)    
+#if ! defined(PEBL_OSX)
     SDL_Surface * surf = wid->GetSDL_Surface();
 
 
@@ -218,13 +218,19 @@ int SDLUtility::WritePNG(const Variant fname, PlatformWidget* wid)
 
 
     FILE* fi = fopen(fname.GetString().c_str(),"wb");
-
+    if (!fi)
+      {
+         std::cerr << "[WritePng] file ["<< fname << "]  could not be opened for writing\n";
+         return 0;
+      }
 
 
      png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
      //png_create_write_struct could fail, for whatever reason.
      if (png_ptr == NULL)
          {
+            std::cerr << "[WritePng] failed to create PNG struct\n";
+
              fclose(fi);
              png_destroy_write_struct(&png_ptr, (png_infopp) NULL);
              return 0;
@@ -242,7 +248,7 @@ int SDLUtility::WritePNG(const Variant fname, PlatformWidget* wid)
                  }
             else
                 {
-                    //Nothing failed so far.  
+                    //Nothing failed so far.
                     if (setjmp(png_jmpbuf(png_ptr)))
                         {
                             fclose(fi);
@@ -262,14 +268,14 @@ int SDLUtility::WritePNG(const Variant fname, PlatformWidget* wid)
                             info_ptr->color_type = PNG_COLOR_TYPE_RGB;
                             info_ptr->interlace_type = 1;
                             info_ptr->valid = 0;	// will be updated by various png_set_FOO() functions
-                            
+
                             png_set_sRGB_gAMA_and_cHRM(png_ptr, info_ptr,
                                                        PNG_sRGB_INTENT_PERCEPTUAL);
-                            
+
                             /* Set headers */
-                            
+
                             count = 0;
-                            
+
                             /*
                               if (title != NULL && strlen(title) > 0)
                               {
@@ -284,25 +290,25 @@ int SDLUtility::WritePNG(const Variant fname, PlatformWidget* wid)
                             text_ptr[count].text =  (png_charp) "PEBL ";
                             text_ptr[count].compression = PNG_TEXT_COMPRESSION_NONE;
                             count++;
-                            
-                            
+
+
                             png_set_text(png_ptr, info_ptr, text_ptr, count);
-                            
+
                             png_write_info(png_ptr, info_ptr);
-                            
-                            
-                            
+
+
+
                             /* Save the picture: */
-                            
+
                             png_rows = (unsigned char**)malloc(sizeof(char *)* surf->h);
-                            
+
                             for (y = 0; y < surf->h; y++)
                                 {
                                     png_rows[y] = (unsigned char*)malloc(sizeof(char) * 3 * surf->w);
-                                    
+
                                     for (x = 0; x < surf->w; x++)
                                         {
-                                            
+
                                             SDL_GetRGB(GetPixel(surf, x, y), surf->format, &r, &g, &b);
 
                                             png_rows[y][x * 3 + 0] = r;
@@ -312,18 +318,18 @@ int SDLUtility::WritePNG(const Variant fname, PlatformWidget* wid)
                                 }
 
                             png_write_image(png_ptr, png_rows);
-                            
+
                             for (y = 0; y < surf->h; y++)
                                 free(png_rows[y]);
-                            
+
                             free(png_rows);
 
-                            
+
                             png_write_end(png_ptr, NULL);
-                            
+
                             png_destroy_write_struct(&png_ptr, &info_ptr);
                             fclose(fi);
-                            
+
                             return 1;
                         }
                 }
@@ -344,7 +350,7 @@ Variant SDLUtility::GetCurrentScreenResolution()
         {
             w = info->current_w;
             h = info->current_h;
-            
+
         }else
         {
             w = 0;
@@ -354,9 +360,9 @@ Variant SDLUtility::GetCurrentScreenResolution()
     PList * newlist = new PList();
     newlist->PushBack(Variant(w));
     newlist->PushBack(Variant(h));
-    
+
     counted_ptr<PEBLObjectBase> newlist2 = counted_ptr<PEBLObjectBase>(newlist);
-    PComplexData * pcd=new PComplexData(newlist2); 
+    PComplexData * pcd=new PComplexData(newlist2);
     return Variant(pcd);
 
 }

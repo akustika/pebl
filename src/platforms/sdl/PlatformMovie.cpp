@@ -108,18 +108,18 @@ PlatformMovie::~PlatformMovie()
 void PlatformMovie::SetPosition(int x, int y)
 {
     PWidget::SetPosition(x,y);
-    
+
     SDL_Rect location;
     location.h = mHeight;
     location.w = mWidth;
     location.x = mX;
     location.y = mY;
-    
+
     if(mStreamObj)
-        WV_resetStreamOverlayOutput(mStreamObj, 
+        WV_resetStreamOverlayOutput(mStreamObj,
                                     mWindow->GetSDL_Surface(),
                                     &location);
-    
+
 }
 
 void PlatformMovie::SetWidth(int w)
@@ -132,7 +132,7 @@ void PlatformMovie::SetWidth(int w)
     location.y = mY;
 
     if(mStreamObj)
-        WV_resetStreamOverlayOutput(mStreamObj, 
+        WV_resetStreamOverlayOutput(mStreamObj,
                                     mWindow->GetSDL_Surface(),
                                     &location);
 
@@ -148,7 +148,7 @@ void PlatformMovie::SetHeight(int h)
     location.y = mY;
 
     if(mStreamObj)
-        WV_resetStreamOverlayOutput(mStreamObj, 
+        WV_resetStreamOverlayOutput(mStreamObj,
                                    mWindow->GetSDL_Surface(),
                                     &location);
 
@@ -159,7 +159,7 @@ void PlatformMovie::SetHeight(int h)
 void PlatformMovie::SetPlaybackPosition(unsigned long int x)
 {
   PMovie::SetPlaybackPosition(x);
-  uint32_t streamDuration = WV_getStreamDuration(mStream); 
+  uint32_t streamDuration = WV_getStreamDuration(mStream);
   if(x<=streamDuration)
       {
           WV_seekStream(mStream, x);
@@ -171,7 +171,7 @@ void PlatformMovie::SetPlaybackPosition(unsigned long int x)
 
 void PlatformMovie::SetVolume(long double vol)
 {
-    
+
     PMovie::SetVolume(vol);
     WV_setVolume(mStream, vol);
 }
@@ -210,13 +210,13 @@ bool PlatformMovie::LoadMovie(const std::string &  moviefilename, PlatformWindow
     char* fname = (char*)(filename.c_str());
     mStream = WV_getStream(fname);  //shouldn't this be const???
 
-    
+
 
 
 
 
     int streamType = WV_getStreamType(mStream);
-    
+
 
     if(streamType == WV_STREAM_TYPE_VIDEO || streamType ==WV_STREAM_TYPE_AUDIOVIDEO)
         {
@@ -226,13 +226,13 @@ bool PlatformMovie::LoadMovie(const std::string &  moviefilename, PlatformWindow
             location.x = 0;
             location.y = 0;
 
-#if 0
+#if 1
             mStreamObj = WV_getStreamOverlayObj(window->GetSDL_Surface(),&location);
             WV_setStreamingMethod(mStream, mStreamObj);
 
 #else
 	    // mStreamObj = WV_getStreamOverlayObj(window->GetSDL_Surface(),&location);
-	    mStreamObj = WV_getStreamSurfaceObj (window->GetSDL_Surface(), &location,1);
+	      mStreamObj = WV_getStreamSurfaceObj (window->GetSDL_Surface(), &location,1);
 	    //  WV_resetStreamSurfaceOutput (mStreamObj, window->GetSDL_Surface(),&location);
             WV_setStreamingMethod(mStream, mStreamObj);
 
@@ -242,8 +242,8 @@ bool PlatformMovie::LoadMovie(const std::string &  moviefilename, PlatformWindow
             WV_loadStream(mStream);
 
 
-            mLength = WV_getStreamDuration(mStream); 
-            
+            mLength = WV_getStreamDuration(mStream);
+
         }else if(streamType == WV_STREAM_TYPE_AUDIO )
       {
 	//just load the audio.
@@ -264,16 +264,16 @@ bool PlatformMovie::LoadMovie(const std::string &  moviefilename, PlatformWindow
                                           WV_getStreamDuration(mStream)));
 
     PMovie::SetProperty("FILENAME",Variant(filename));
-    
 
-    
+
+
 #else
     PError::SignalFatalError("PEBL Not compiled with movie playing support");
 #endif
     return false;
 }
 
-// This is for loading .mp3 and the like 
+// This is for loading .mp3 and the like
 //
 //
 bool PlatformMovie::LoadAudioFile(const std::string &  audiofilename)
@@ -295,9 +295,9 @@ bool PlatformMovie::LoadAudioFile(const std::string &  audiofilename)
     char* fname = (char*)(filename.c_str());
     mStream = WV_getStream(fname);  //shouldn't this be const???
 
-    
+
     int streamType = WV_getStreamType(mStream);
-    
+
     if(streamType == WV_STREAM_TYPE_VIDEO || streamType ==WV_STREAM_TYPE_AUDIOVIDEO)
         {
 	  std::cerr << "Warning: trying to load video file using LoadAudioFile\n";
@@ -320,9 +320,9 @@ bool PlatformMovie::LoadAudioFile(const std::string &  audiofilename)
                                           WV_getStreamDuration(mStream)));
 
     PMovie::SetProperty("FILENAME",Variant(filename));
-    
 
-    
+
+
 #else
     PError::SignalFatalError("PEBL Not compiled with movie playing support");
 #endif
