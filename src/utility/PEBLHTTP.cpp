@@ -7,12 +7,12 @@
 #include "../base/PComplexData.h"
 
 
-void http_begin_cb( const happyhttp::Response* r, 
+void http_begin_cb( const happyhttp::Response* r,
 			   void* userdata )
 {
-  //I don't think any of this is needed:  
+  //I don't think any of this is needed:
   PEBLHTTP* http = (PEBLHTTP*)(userdata);
-  //  FILE * filestream = http->GetFileObject();  
+  //  FILE * filestream = http->GetFileObject();
    printf( "BEGIN (%d %s)\n", r->getstatus(), r->getreason() );
    http->SetByteCount(0);
    http->SetStatus(r->getstatus());
@@ -25,7 +25,7 @@ void http_begin_cb( const happyhttp::Response* r,
 
   PEBLHTTP* http = (PEBLHTTP*) (userdata);
   FILE * filestream = http->GetFileObject();
-  
+
   //FILE * filestream = (FILE*)userdata;
 
   //  std::cout << http->GetByteCount() << std::endl;
@@ -54,13 +54,13 @@ void http_begin_cb( const happyhttp::Response* r,
 // rather than a file.
 //
 
-void http_begin_cb2( const happyhttp::Response* r, 
+void http_begin_cb2( const happyhttp::Response* r,
 			   void* userdata )
 {
-  //I don't think any of this is needed:  
+  //I don't think any of this is needed:
   PEBLHTTP* http = (PEBLHTTP*)(userdata);
-  //  FILE * filestream = http->GetFileObject();  
-  
+  //  FILE * filestream = http->GetFileObject();
+
   //printf( "BEGIN (%d %s)\n", r->getstatus(), r->getreason() );
   http->SetStatus(r->getstatus());
   http->SetReason(std::string(r->getreason()));
@@ -68,7 +68,7 @@ void http_begin_cb2( const happyhttp::Response* r,
 
 }
 
- void http_getdata_cb2( const happyhttp::Response* r, void* userdata, 
+ void http_getdata_cb2( const happyhttp::Response* r, void* userdata,
 			const unsigned char* data, int n )
 {
 
@@ -78,7 +78,7 @@ void http_begin_cb2( const happyhttp::Response* r,
 
   std::string * text = http->GetTextObject();
   text->append((const char*)data, n);
-  
+
   //  std::cout << "tmp text:" << *text << std::endl;
 
   http->SetByteCount(http->GetByteCount()+n);
@@ -115,7 +115,7 @@ PEBLHTTP::~PEBLHTTP()
 
 //This gets an http url and saves it to the specified file.
 //this assumes you are getting a binary-formatted file.
-int PEBLHTTP::GetHTTPFile(Variant  filename, 
+int PEBLHTTP::GetHTTPFile(Variant  filename,
 			   Variant savename)
 {
 
@@ -125,32 +125,32 @@ int PEBLHTTP::GetHTTPFile(Variant  filename,
   //such as png, gif, jpg, .wav, .ogg, .mp3, etc?
 
 
-       
+
   mFile = fopen(savename.GetString().c_str(),"wb");
 
-  //Somehow, we need to 'prime' the file, or else it comes out 
+  //Somehow, we need to 'prime' the file, or else it comes out
   //of the void* cast as NULL.
   fwrite( "",1,0,mFile);
 
-  conn.setcallbacks( http_begin_cb, 
-		     http_getdata_cb, 
+  conn.setcallbacks( http_begin_cb,
+		     http_getdata_cb,
 		     http_complete_cb, this);
 
 
-  
+
   try
     {
-      
-      conn.request( "GET", filename.GetString().c_str(), 0, 0,0 );	   
+
+      conn.request( "GET", filename.GetString().c_str(), 0, 0,0 );
       while( conn.outstanding() )
 	{
 	  //std::cout << "+" << std::flush;
 	  conn.pump();
 	     }
-      
+
       fclose(mFile);
       return mStatus;
-      
+
     }
   catch( happyhttp::Wobbly& e )
     {
@@ -160,7 +160,7 @@ int PEBLHTTP::GetHTTPFile(Variant  filename,
 	  fclose(mFile);
 	  return 0;  //mstatus may not exist here
     }
-  
+
 }
 
 
@@ -178,14 +178,14 @@ int PEBLHTTP::GetHTTPText(Variant  filename)
 
   mText = new std::string;
 
-  conn.setcallbacks( http_begin_cb2, 
-		     http_getdata_cb2, 
+  conn.setcallbacks( http_begin_cb2,
+		     http_getdata_cb2,
 		     http_complete_cb2, this);
 
        try
 	 {
 
-	   conn.request( "GET", filename.GetString().c_str(), 0, 0,0 );	   
+	   conn.request( "GET", filename.GetString().c_str(), 0, 0,0 );
 
 	   while( conn.outstanding() )
 	     {
@@ -207,34 +207,35 @@ int PEBLHTTP::GetHTTPText(Variant  filename)
 }
 
 
-int PEBLHTTP::PostHTTP(Variant name, 
+int PEBLHTTP::PostHTTP(Variant name,
 			Variant headersx,
 			Variant bodyx)
 //Variant savename)
 {
 
-       
+
   //mFile = fopen("tmp.html","wb");
   //  fwrite( "",1,0,mFile);
 
   mText = new std::string;
 
 
-  //headersx is a variant-list, we need to create a const char* list 
+  //headersx is a variant-list, we need to create a const char* list
   //to contain it (with a 0 at the end).
 
   PList * dataList = (PList*)(headersx.GetComplexData()->GetObject().get());
   const char** headers = (const char**)malloc(sizeof(const char*) * (dataList->Length()+1));
-  
+
   std::vector<Variant>::iterator p1 = dataList->Begin();
   std::vector<Variant>::iterator p1end = dataList->End();
 
-  int i = 0;  
+  int i = 0;
 
   while(p1 != p1end)
     {
 
-      headers[i] = strdupa((*p1).GetString().c_str());
+//      headers[i] = strdupa((*p1).GetString().c_str());
+       headers[i]= strdup((*p1).GetString().c_str());
       p1++;
       i++;
     }
@@ -244,16 +245,16 @@ int PEBLHTTP::PostHTTP(Variant name,
 
   // simple POST command
   happyhttp::Connection conn(mHost.GetString().c_str(), 80 );
-  
+
   //  mFile = fopen(savename.GetString().c_str(),"wb");
 
-  //Somehow, we need to 'prime' the file, or else it comes out 
+  //Somehow, we need to 'prime' the file, or else it comes out
   //of the void* cast as NULL.
   //  fwrite( "",1,0,mFile);
 
 
-  conn.setcallbacks( http_begin_cb2, 
-		     http_getdata_cb2, 
+  conn.setcallbacks( http_begin_cb2,
+		     http_getdata_cb2,
 		     http_complete_cb2, this);
 
 
@@ -263,7 +264,7 @@ int PEBLHTTP::PostHTTP(Variant name,
 
 
   unsigned int l = strlen(bodyx.GetString().c_str());
-  
+
   //  std::cout <<"Starting POST pump\n";
 
   try
@@ -272,7 +273,7 @@ int PEBLHTTP::PostHTTP(Variant name,
 		    name.GetString().c_str(),
 		    headers,
 		    body,l);
-      
+
       while( conn.outstanding() )
 	{
 
@@ -280,6 +281,12 @@ int PEBLHTTP::PostHTTP(Variant name,
 	}
       //      fclose(mFile);
       //      mFile = NULL;
+    for(int ii = 0; ii<(i-1);ii++)
+      {
+         if(headers[ii]) free(&headers[ii]);
+
+      }
+
 
       return mStatus;
     }
@@ -292,7 +299,7 @@ int PEBLHTTP::PostHTTP(Variant name,
 
       //      fclose(mFile);
       //      mFile = NULL;
-      return mStatus;  
+      return mStatus;
     }
 }
 

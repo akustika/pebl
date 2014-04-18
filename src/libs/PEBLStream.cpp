@@ -22,7 +22,7 @@
 //
 //    You should have received a copy of the GNU General Public License
 //    along with PEBL; if not, write to the Free Software
-//    Foundation, Inc., 59 Temple Place, Suite 330, 
+//    Foundation, Inc., 59 Temple Place, Suite 330,
 //    Boston, MA  02111-1307  USA
 ///////////////////////////////////////////////////////////////////////////
 #include "PEBLStream.h"
@@ -232,7 +232,7 @@ Variant PEBLStream::FileOpenAppend(Variant v)
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First(); //plist->PopFront();
     PError::AssertType(v1, PEAT_STRING, "Argument error in function FileOpenAppend(<string>)]: ");
-    
+
 
     ///v1 contains the name of a file to open.
     counted_ptr<PEBLObjectBase> mystream = counted_ptr<PEBLObjectBase>(new PStream(v1,sdAppend, stASCII));
@@ -248,7 +248,7 @@ Variant PEBLStream::FileOpenAppend(Variant v)
 
 }
 
-///This Closes a filestream
+///This is a filestream
 Variant PEBLStream::FileClose(Variant v)
 {
     //v[1] should have the file stream to close
@@ -692,7 +692,7 @@ Variant PEBLStream::SetNetworkPort(Variant v)
 }
 
 
-// Once a listener has been opened, this will 
+// Once a listener has been opened, this will
 //see if anyone is knocking on the door.
 //
 
@@ -762,7 +762,7 @@ Variant PEBLStream::AcceptNetworkConnection(Variant v)
 
     counted_ptr<PEBLObjectBase> tmp2 = (v1.GetComplexData())->GetObject();
     PlatformNetwork * mynet = dynamic_cast<PlatformNetwork*>(tmp2.get());
-    
+
     Variant timeout = plist->Nth(2); //plist->PopFront();
 
     PError::AssertType(timeout, PEAT_INTEGER, "Argument error in second argument of function [AcceptNetworkConnection(<port>,<timeout>)]: ");
@@ -789,9 +789,9 @@ Variant PEBLStream::WaitForNetworkConnection(Variant v)
     mynet->SetHostName("");
     mynet->SetPort((int)v1);
 
-    //The following waits forever, until a network connection 
+    //The following waits forever, until a network connection
     //opens.  If you want more control, use Accept()
-    mynet->Accept(); 
+    mynet->Accept();
 
     PComplexData * pcd = new PComplexData(tmp2);
     Variant tmp3 = Variant(pcd);
@@ -835,13 +835,13 @@ Variant PEBLStream::SendData(Variant v)
     //    struct timespec a,b;
     //    a.tv_sec  = 0;
     //    a.tv_nsec = 10000000; //100 ms
-    
+
     //    while(!success | ++tries<10)
     //        {
     //            success = mynet->SendString(v2);
     //            nanosleep(&a,&b);
     //        }
-    
+
     return Variant(success);
 }
 
@@ -858,7 +858,7 @@ Variant PEBLStream::GetData(Variant v)
 
     Variant v2 = plist->Nth(2);
     PError::AssertType(v2, PEAT_INTEGER, "Argument error in second parameter of function [GetData(<network>,<size>)]: ");
-    
+
     //cout << "Trying to receive " << v2 << " bytes\n";
     Variant ret = mynet->Receive(v2);
     return ret;
@@ -905,7 +905,7 @@ Variant PEBLStream::GetMyIPAddress(Variant v)
 Variant PEBLStream::GetHTTPFile(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); 
+    Variant v1 = plist->First();
     PError::AssertType(v1, PEAT_STRING, "Error in first argument of function [GetHTTPFile(<host>,<fileurl>,<savename>)]: ");
 
     Variant v2 = plist->Nth(2);
@@ -927,7 +927,7 @@ Variant PEBLStream::GetHTTPFile(Variant v)
 Variant PEBLStream::GetHTTPText(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
-    Variant v1 = plist->First(); 
+    Variant v1 = plist->First();
     PError::AssertType(v1, PEAT_STRING, "Error in first argument of function [GetHTTPText(<host>,<fileurl>)]: ");
 
     Variant v2 = plist->Nth(2);

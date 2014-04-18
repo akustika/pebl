@@ -3,7 +3,7 @@
 *
 * Author: Teunis van Beelen
 *
-* Copyright (C) 2005, 2006, 2007, 2008, 2009 Teunis van Beelen
+* Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Teunis van Beelen
 *
 * teuniz@gmail.com
 *
@@ -29,7 +29,10 @@
 ***************************************************************************
 */
 
-#ifdef PEBL_USEPORTS
+/* last revision: Januari 31, 2014 */
+
+/* For more info and how to use this libray, visit: http://www.teuniz.net/RS-232/ */
+
 
 #ifndef rs232_INCLUDED
 #define rs232_INCLUDED
@@ -43,7 +46,7 @@ extern "C" {
 
 
 
-#ifdef PEBL_UNIX
+#ifdef __linux__
 
 #include <termios.h>
 #include <sys/ioctl.h>
@@ -59,13 +62,19 @@ extern "C" {
 
 #endif
 
-int OpenComport(int, int);
-int PollComport(int, unsigned char *, int);
-int SendByte(int, unsigned char);
-int SendBuf(int, unsigned char *, int);
-void CloseComport(int);
-void cprintf(int, const char *);
-int IsCTSEnabled(int);
+int RS232_OpenComport(int, int);
+int RS232_PollComport(int, unsigned char *, int);
+int RS232_SendByte(int, unsigned char);
+int RS232_SendBuf(int, unsigned char *, int);
+void RS232_CloseComport(int);
+void RS232_cputs(int, const char *);
+int RS232_IsDCDEnabled(int);
+int RS232_IsCTSEnabled(int);
+int RS232_IsDSREnabled(int);
+void RS232_enableDTR(int);
+void RS232_disableDTR(int);
+void RS232_enableRTS(int);
+void RS232_disableRTS(int);
 
 
 #ifdef __cplusplus
@@ -75,4 +84,3 @@ int IsCTSEnabled(int);
 #endif
 
 
-#endif

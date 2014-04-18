@@ -77,7 +77,13 @@
 #include <fcntl.h> //For md5file O_RDONLY
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#ifdef PEBL_LINUX
 #include <sys/mman.h>
+#else
+#include "mman.h"
+
+#endif
 
 //Some math libraries contain this, but let's not take any chances.
 #define PI 3.141592653589793238462643383279502884197169399375
@@ -410,7 +416,7 @@ std::string PEBLUtility::TranslateKeyCode(const PEBLKey key, int modkeys)
     //These are tailored to US keyboard.
     switch(key)
         {
-            
+
             /* The keyboard syms have been cleverly chosen to map to ASCII */
         case PEBLKEY_UNKNOWN:        return "<unknown>";
             //   case PEBLKEY_FIRST:         return "<>";  //same as above
@@ -1166,7 +1172,7 @@ Variant PEBLUtility::GetWorkingDirectory()
 
     char* path = get_current_dir_name();
 
-#elif defined (PEBL_EMSCRIPTEN) 
+#elif defined (PEBL_EMSCRIPTEN)
     const char* path = ""; //maybe this won't work
 #endif
 
@@ -1252,9 +1258,9 @@ Variant PEBLUtility::SystemCall(std::string call, std::string args)
 
 
 #if defined( PEBL_UNIX )
-    
+
     std::string tmp = call + " " + args;
-    
+
     const char* call2 = tmp.c_str();
     int x = system(call2);  //do a system call with the argument string.
 
@@ -1406,27 +1412,27 @@ std::string PEBLUtility::MD5File(const std::string & filename)
 
     if(FileExists(filename))
         {
-            
+
             int file_descript;
             unsigned long file_size;
             char* file_buffer;
-            
+
             //printf("using file:\t%s\n", filename);
-            
+
             file_descript = open(filename.c_str(), O_RDONLY);
-            if(file_descript < 0) 
+            if(file_descript < 0)
                 {
                     PError::SignalFatalError("File does not exist in MD5file\n");
                     return "";
                 }
-                        
+
             file_size = get_size_by_fd(file_descript);
             //printf("file size:\t%lu\n", file_size);
-            
-            file_buffer = (char*)mmap(0, file_size, PROT_READ, MAP_SHARED, 
+
+            file_buffer = (char*)mmap(0, file_size, PROT_READ, MAP_SHARED,
                                file_descript, 0);
-            
-            
+
+
             MD5 *md5 = new MD5();
             md5->update((unsigned char*)file_buffer,file_size);
             //std::string result =  md5((unsigned char*) file_buffer);
@@ -1436,7 +1442,7 @@ std::string PEBLUtility::MD5File(const std::string & filename)
             md5=NULL;
             return hex;
         }else{
-        
+
         return "0";
     }
 

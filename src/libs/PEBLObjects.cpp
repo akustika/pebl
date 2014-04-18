@@ -6,7 +6,7 @@
 //    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
-//   
+//
 //
 //     This file is part of the PEBL project.
 //
@@ -57,9 +57,9 @@
 #include "../platforms/sdl/PlatformImageBox.h"
 #include "../platforms/sdl/PlatformDrawObject.h"
 #include "../platforms/sdl/PlatformLabel.h"
-#include "../platforms/sdl/PlatformFont.h" 
+#include "../platforms/sdl/PlatformFont.h"
 #include "../platforms/sdl/PlatformEventQueue.h"
-#include "../platforms/sdl/PlatformTextBox.h" 
+#include "../platforms/sdl/PlatformTextBox.h"
 #include "../platforms/sdl/PlatformCanvas.h"
 #include "../platforms/sdl/PlatformAudioIn.h"
 
@@ -85,7 +85,7 @@ extern PlatformEventQueue * gEventQueue = NULL;
 
 
 /// This function instantiates the namespace-viewable
-//  PEBLObjects::myEnv, creating a new Environment for displaying 
+//  PEBLObjects::myEnv, creating a new Environment for displaying
 /// stimuli. It is not used directly by functions, but by
 /// the program itself.
 
@@ -102,7 +102,7 @@ void PEBLObjects::MakeEnvironment(PEBLVideoMode mode, PEBLVideoDepth depth,
 
 
 
-/// This function makes a new root-level window and return 
+/// This function makes a new root-level window and return
 /// a variant to access it.
 Variant PEBLObjects::MakeWindow(Variant v)
 {
@@ -117,9 +117,9 @@ Variant PEBLObjects::MakeWindow(Variant v)
     else
         {
             PList * plist = v.GetComplexData()->GetList();
-            
+
             color = plist->First();
-            PError::AssertType(color, PEAT_STRING,"Argument error in [MakeWindow(<color>)]: ");            
+            PError::AssertType(color, PEAT_STRING,"Argument error in [MakeWindow(<color>)]: ");
         }
 
 
@@ -133,7 +133,7 @@ Variant PEBLObjects::MakeWindow(Variant v)
     bool resizeable = myEnv->GetResizeable();
 
     myWindow->Initialize(mode, depth, windowed,resizeable);
-    
+
     //Add the window to the environment
     myEnv->AddWindow(myWindow);
 
@@ -154,18 +154,18 @@ Variant PEBLObjects::ResizeWindow(Variant v)
 {
 
        PList * plist = v.GetComplexData()->GetList();
-            
+
        Variant v2 = plist->First(); //plist->PopFront();
-       PError::AssertType(v2, PEAT_WINDOW, "Argument error in first argument of function [ResizeWindow(<window>,<w>,<h>)]: "); 
+       PError::AssertType(v2, PEAT_WINDOW, "Argument error in first argument of function [ResizeWindow(<window>,<w>,<h>)]: ");
        PlatformWindow * myWindow = dynamic_cast<PlatformWindow*>(v2.GetComplexData()->GetObject().get());
 
        Variant w = plist->Nth(2);
-       
+
        Variant h = plist->Nth(3);
-       PError::AssertType(w, PEAT_NUMBER, "Argument error in second argument of function [ResizeWindow(<window>,<w>,<h>)]: "); 
-       PError::AssertType(h, PEAT_NUMBER, "Argument error in third argument of function [ResizeWindow(<window>,<w>,<h>)]: "); 
-       
-       
+       PError::AssertType(w, PEAT_NUMBER, "Argument error in second argument of function [ResizeWindow(<window>,<w>,<h>)]: ");
+       PError::AssertType(h, PEAT_NUMBER, "Argument error in third argument of function [ResizeWindow(<window>,<w>,<h>)]: ");
+
+
        myWindow->Resize(w,h);
        return Variant(1);
 }
@@ -177,11 +177,11 @@ Variant PEBLObjects::MakeImage(Variant v)
     //v[1] should be have a filename in it.
     PList * plist = v.GetComplexData()->GetList();
     Variant name = plist->First();
-    PError::AssertType(name, PEAT_STRING, "Argument error in function [MakeImage(<filename>)]: "); 
+    PError::AssertType(name, PEAT_STRING, "Argument error in function [MakeImage(<filename>)]: ");
     PlatformImageBox * myImageBox = new PlatformImageBox;
-    
+
     myImageBox->LoadImage(name);
-    
+
     counted_ptr<PEBLObjectBase>tmp2 = counted_ptr<PEBLObjectBase>(myImageBox);
     PComplexData *  pcd = new PComplexData(tmp2);
     Variant tmp = Variant(pcd);
@@ -194,19 +194,19 @@ Variant PEBLObjects::MakeImage(Variant v)
 
 Variant PEBLObjects::MakeLabel(Variant v)
 {
-    //v[1] should have text in it, 
+    //v[1] should have text in it,
     //v[2] should have a font in it.
-    
+
     PList * plist = v.GetComplexData()->GetList();
-    
+
 
     //Get the text
-    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in first parameter of function [MakeLabel(<text>, <font>)]: ");     
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in first parameter of function [MakeLabel(<text>, <font>)]: ");
     std::string  text = (plist->First()); //plist->PopFront();
 
     //Get the font
     Variant v2 = plist->Nth(2);// plist->PopFront();
-    PError::AssertType(v2, PEAT_FONT, "Argument error in second parameter of function [MakeLabel(<text>, <font>)]: "); 
+    PError::AssertType(v2, PEAT_FONT, "Argument error in second parameter of function [MakeLabel(<text>, <font>)]: ");
 
     counted_ptr<PEBLObjectBase> tmpFont = v2.GetComplexData()->GetObject();
 
@@ -216,8 +216,8 @@ Variant PEBLObjects::MakeLabel(Variant v)
     //Place it by default at 0,0
     tmpLabel->SetPosition(0,0);
     counted_ptr<PEBLObjectBase> myLabel = counted_ptr<PEBLObjectBase>(tmpLabel);
-    
-    
+
+
     //Return a variant containing the label.
     PComplexData *  pcd =     new PComplexData(myLabel);
 
@@ -231,7 +231,7 @@ Variant PEBLObjects::MakeLabel(Variant v)
 
 Variant PEBLObjects::MakeTextBox(Variant v)
 {
-    //v[1] should have text in it, 
+    //v[1] should have text in it,
     //v[2] should have a font in it.
     //v[3] should have a width in it (in pixels)
     //v[4] should have a height in it (in pixels)
@@ -243,7 +243,7 @@ Variant PEBLObjects::MakeTextBox(Variant v)
     string  text = (plist->First()).GetString(); //plist->PopFront();
 
     //Get the font
-    Variant v2 = plist->Nth(2);// plist->PopFront();   
+    Variant v2 = plist->Nth(2);// plist->PopFront();
     PError::AssertType(v2, PEAT_FONT, "Argument error in second parameter of function [MakeTextBox(<text>,<font>,<width>,<height>)]: ");
 
     counted_ptr<PEBLObjectBase> myFont = v2.GetComplexData()->GetObject();
@@ -251,11 +251,11 @@ Variant PEBLObjects::MakeTextBox(Variant v)
 
     //Get the width
     PError::AssertType(plist->Nth(3), PEAT_NUMBER,"Argument error in third parameter of function [MakeTextBox(<text>,<font>,<width>,<height>)]: ");
-    int width = plist->Nth(3);// plist->PopFront();   
+    int width = plist->Nth(3);// plist->PopFront();
 
     //Get the height
     PError::AssertType(plist->Nth(4), PEAT_NUMBER,"Argument error in fourth parameter of function [MakeTextBox(<text>,<font>,<width>,<height>)]: ");
-    int height = plist->Nth(4);// plist->PopFront();   
+    int height = plist->Nth(4);// plist->PopFront();
 
    //Create the text box
     PlatformTextBox * tmptb = new PlatformTextBox(text, myFont,width,height);
@@ -264,7 +264,7 @@ Variant PEBLObjects::MakeTextBox(Variant v)
     tmptb->SetPosition(0,0);
 
     counted_ptr<PEBLObjectBase> myTextBox = counted_ptr<PEBLObjectBase>(tmptb);
-    
+
     //Return a variant containing the label.
     PComplexData *   pcd = new PComplexData(myTextBox);
 
@@ -285,19 +285,19 @@ Variant PEBLObjects::MakeCanvas(Variant v)
     // v[3] should be the color (optional),
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [MakeCanvas(<x>, <y>, <color>)]: "); 
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [MakeCanvas(<x>, <y>, <color>)]: ");
     int width = plist->First();// plist->PopFront();
 
-    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function [MakeCanvas(<x>, <y>, <color>)]: "); 
+    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function [MakeCanvas(<x>, <y>, <color>)]: ");
     int height = plist->Nth(2);// plist->PopFront();
 
     PlatformCanvas * pc =NULL;
     if(plist->Length()>2)
         {
-            PError::AssertType(plist->Nth(3), PEAT_COLOR, "Argument error in third parameter of function  [MakeCanvas(<x>, <y>, <color>)]: "); 
+            PError::AssertType(plist->Nth(3), PEAT_COLOR, "Argument error in third parameter of function  [MakeCanvas(<x>, <y>, <color>)]: ");
 
             Variant color = plist->Nth(3);// plist->PopFront();
-            pc = new PlatformCanvas(width,height,color);    
+            pc = new PlatformCanvas(width,height,color);
 
         }else  {
         pc = new PlatformCanvas(width,height);
@@ -324,7 +324,7 @@ Variant PEBLObjects::MakeColor(Variant v)
 
     std::string name = plist->First();// plist->PopFront();
 
-    counted_ptr<PEBLObjectBase> myColor = counted_ptr<PEBLObjectBase>(new PColor(name));    
+    counted_ptr<PEBLObjectBase> myColor = counted_ptr<PEBLObjectBase>(new PColor(name));
     PComplexData *  pcd = new PComplexData(myColor);
     Variant tmp = Variant(pcd);
     delete pcd;
@@ -338,15 +338,15 @@ Variant PEBLObjects::MakeColorRGB(Variant v)
     //v[1] [2] [3] should be RGB values between 0 and 255
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in first parameter of function [MakeColorRGB(<red>, <green>, <blue>)]: "); 
+    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in first parameter of function [MakeColorRGB(<red>, <green>, <blue>)]: ");
     int red  = plist->First();// plist->PopFront();
 
-    PError::AssertType(plist->Nth(2), PEAT_INTEGER, "Argument error in second parameter of function [MakeColorRGB(<red>, <green>, <blue>)]: "); 
+    PError::AssertType(plist->Nth(2), PEAT_INTEGER, "Argument error in second parameter of function [MakeColorRGB(<red>, <green>, <blue>)]: ");
     int green  = plist->Nth(2);// plist->PopFront();
 
-    PError::AssertType(plist->Nth(3), PEAT_INTEGER, "Argument error in third parameter of function [MakeColorRGB(<red>, <green>, <blue>)]: "); 
+    PError::AssertType(plist->Nth(3), PEAT_INTEGER, "Argument error in third parameter of function [MakeColorRGB(<red>, <green>, <blue>)]: ");
     int blue  = plist->Nth(3);// plist->PopFront();
-    
+
     PColor * tmpColor = new PColor(red,green,blue, 255);
     counted_ptr<PEBLObjectBase> myColor = counted_ptr<PEBLObjectBase>(tmpColor);
     PComplexData *  pcd = new PComplexData(myColor);
@@ -367,31 +367,31 @@ Variant PEBLObjects::MakeFont(Variant v)
     PList * plist = v.GetComplexData()->GetList();
 
     //First comes the filename of the font.
-    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in first parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: "); 
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in first parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: ");
     std::string name = plist->First(); //plist->PopFront();
 
     //Next comes the style, an integerized code for normal, bold, italic, underline.
-    PError::AssertType(plist->Nth(2), PEAT_INTEGER, "Argument error in second parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: "); 
+    PError::AssertType(plist->Nth(2), PEAT_INTEGER, "Argument error in second parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: ");
     int style = plist->Nth(2); //plist->PopFront();
 
     //Next is the point size.
-    PError::AssertType(plist->Nth(3), PEAT_INTEGER, "Argument error in third parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: "); 
+    PError::AssertType(plist->Nth(3), PEAT_INTEGER, "Argument error in third parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: ");
     int size = plist->Nth(3);// plist->PopFront();
 
     //The next parameter should be a PColor--foreground color
     Variant vfg = plist->Nth(4); //plist->PopFront();
-    PError::AssertType(vfg, PEAT_COLOR, "Argument error in fourth parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: "); 
+    PError::AssertType(vfg, PEAT_COLOR, "Argument error in fourth parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: ");
     PColor fgcolor = *((PColor*)(vfg.GetComplexData()->GetObject().get()));
 
 
     //The next parameter should be a PColor--background color
     Variant vbg = plist->Nth(5); //plist->PopFront();
-    PError::AssertType(vbg, PEAT_COLOR, "Argument error in fifth parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: "); 
+    PError::AssertType(vbg, PEAT_COLOR, "Argument error in fifth parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: ");
 
     PColor bgcolor = *((PColor*)(vbg.GetComplexData()->GetObject().get()));
     //Whether the font should be rendered with anti-aliasing against background.
 
-    PError::AssertType(plist->Nth(6), PEAT_INTEGER, "Argument error in sixth parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: "); 
+    PError::AssertType(plist->Nth(6), PEAT_INTEGER, "Argument error in sixth parameter of function [MakeFont(<filename>, <style>, <size>, <fg>, <bg>, <aa>)]: ");
     bool aa = plist->Nth(6);// plist->PopFront();
 
     //Make the font and wrap it up in a Variant to return it.
@@ -399,7 +399,6 @@ Variant PEBLObjects::MakeFont(Variant v)
     counted_ptr<PEBLObjectBase> myFont = counted_ptr<PEBLObjectBase>(tmpFont);
 
     PComplexData *  pcd = new PComplexData(myFont);
-    
     Variant tmp = Variant(pcd);
 
     //delete pcd;  //without deleting here, fonts will leak memory
@@ -408,6 +407,8 @@ Variant PEBLObjects::MakeFont(Variant v)
     //helps increase the number of fonts we can have, but there is
     // still a memory leak; fonts cannot get destroyed in SDL 1.2
 
+    //delete pcd;  //without deleting here, fonts will leak memory
+    //pcd=NULL;    //But deleting causes a segfault I haven't figured out.
     //NOTE: the crash happens when the font object is being destroyed,
     return tmp;
 
@@ -415,7 +416,7 @@ Variant PEBLObjects::MakeFont(Variant v)
 
 
 
-/// This function adds a widget to a parent widget. 
+/// This function adds a widget to a parent widget.
 Variant PEBLObjects::AddObject(Variant v)
 {
     //v[1] should have the child widget
@@ -425,13 +426,13 @@ Variant PEBLObjects::AddObject(Variant v)
 
 
     Variant v1 = plist->First(); //plist->PopFront();
-    PError::AssertType(v1, PEAT_WIDGET, "Argument error in first parameter of function [AddObject(<child-widget>, <parent-widget>)]: "); 
+    PError::AssertType(v1, PEAT_WIDGET, "Argument error in first parameter of function [AddObject(<child-widget>, <parent-widget>)]: ");
 
 
     PlatformWidget * child = dynamic_cast<PlatformWidget*>((v1.GetComplexData())->GetObject().get());
 
     Variant v2 = plist->Nth(2); //plist->PopFront();
-    PError::AssertType(v2, PEAT_WIDGET, "Argument error in second parameter of function [AddObject(<child-widget>, <parent-widget>)]: "); 
+    PError::AssertType(v2, PEAT_WIDGET, "Argument error in second parameter of function [AddObject(<child-widget>, <parent-widget>)]: ");
 
     PlatformWidget * parent = dynamic_cast<PlatformWidget*>((v2.GetComplexData())->GetObject().get());
 
@@ -449,16 +450,16 @@ Variant PEBLObjects::RemoveObject(Variant v)
     //v[2] should have the parent widget
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First();// plist->PopFront();
-    PError::AssertType(v1, PEAT_WIDGET, "Argument error in first parameter of function [RemoveObject(<child-widget>, <parent-widget>)]: "); 
+    PError::AssertType(v1, PEAT_WIDGET, "Argument error in first parameter of function [RemoveObject(<child-widget>, <parent-widget>)]: ");
 
 
     PlatformWidget * child = dynamic_cast<PlatformWidget*>(v1.GetComplexData()->GetObject().get());
-    
+
     Variant v2 = plist->Nth(2);//plist->PopFront();
-    PError::AssertType(v2, PEAT_WIDGET, "Argument error in second parameter of function [RemoveObject(<child-widgett>, <parent-widget>)]: "); 
+    PError::AssertType(v2, PEAT_WIDGET, "Argument error in second parameter of function [RemoveObject(<child-widgett>, <parent-widget>)]: ");
 
 
-    PlatformWidget * parent = dynamic_cast<PlatformWidget*>(v2.GetComplexData()->GetObject().get());  
+    PlatformWidget * parent = dynamic_cast<PlatformWidget*>(v2.GetComplexData()->GetObject().get());
 
     //Removing subwidgets does not destroy the Variant, so we don't need to
     // worry about a memory leak here, even though we are using raw pointers.
@@ -467,7 +468,7 @@ Variant PEBLObjects::RemoveObject(Variant v)
     return Variant(true);
 }
 
- 
+
 Variant PEBLObjects::SetPoint(Variant v)
 {
 
@@ -475,18 +476,18 @@ Variant PEBLObjects::SetPoint(Variant v)
     PList * plist = v.GetComplexData()->GetList();
 
     Variant v1 = plist->First(); //plist->PopFront();
-    PError::AssertType(v1, PEAT_WIDGET, "Argument error in first parameter of function [SetPixel(<widget>,<x>, <y>, <color>)]: "); 
+    PError::AssertType(v1, PEAT_WIDGET, "Argument error in first parameter of function [SetPixel(<widget>,<x>, <y>, <color>)]: ");
     PlatformWidget * widget = dynamic_cast<PlatformWidget*>(v1.GetComplexData()->GetObject().get());
 
 
     int x = plist->Nth(2);// plist->PopFront();
-    PError::AssertType(x, PEAT_NUMBER, "Argument error in second parameter of function [SetPixel(<widget>,<x>, <y>, <color>)]: "); 
+    PError::AssertType(x, PEAT_NUMBER, "Argument error in second parameter of function [SetPixel(<widget>,<x>, <y>, <color>)]: ");
 
     int y = plist->Nth(3);// plist->PopFront();
-    PError::AssertType(y, PEAT_NUMBER, "Argument error in third parameter of function [SetPixel(<widget>,<x>, <y>, <color>)]: "); 
+    PError::AssertType(y, PEAT_NUMBER, "Argument error in third parameter of function [SetPixel(<widget>,<x>, <y>, <color>)]: ");
 
     Variant color = plist->Nth(4);// plist->PopFront();
-    PError::AssertType(color, PEAT_COLOR, "Argument error in fourth parameter of function  [SetPixel(<widget>,<x>, <y>, <color>)]: "); 
+    PError::AssertType(color, PEAT_COLOR, "Argument error in fourth parameter of function  [SetPixel(<widget>,<x>, <y>, <color>)]: ");
 
 
     PColor pcolor = *((PColor*)(color.GetComplexData()->GetObject().get()));
@@ -500,15 +501,15 @@ Variant PEBLObjects::GetPixelColor(Variant v)
    PList * plist = v.GetComplexData()->GetList();
 
     Variant v1 = plist->First(); //plist->PopFront();
-    PError::AssertType(v1, PEAT_WIDGET, "Argument error in first parameter of function [GetPixelColor(<widget>,<x>, <y>)]: "); 
+    PError::AssertType(v1, PEAT_WIDGET, "Argument error in first parameter of function [GetPixelColor(<widget>,<x>, <y>)]: ");
     PlatformWidget * widget = dynamic_cast<PlatformWidget*>(v1.GetComplexData()->GetObject().get());
 
 
     int x = plist->Nth(2);// plist->PopFront();
-    PError::AssertType(x, PEAT_NUMBER, "Argument error in second parameter of function [GetPixelColor(<widget>,<x>, <y>, <color>)]: "); 
+    PError::AssertType(x, PEAT_NUMBER, "Argument error in second parameter of function [GetPixelColor(<widget>,<x>, <y>, <color>)]: ");
 
     int y = plist->Nth(3);// plist->PopFront();
-    PError::AssertType(y, PEAT_NUMBER, "Argument error in third parameter of function [GetPixelColor(<widget>,<x>, <y>)]: "); 
+    PError::AssertType(y, PEAT_NUMBER, "Argument error in third parameter of function [GetPixelColor(<widget>,<x>, <y>)]: ");
 
     PColor  c1 = (widget->GetPixel(x,y));
     //cout << "C1:" << c1 << endl;
@@ -528,16 +529,16 @@ Variant PEBLObjects::SetCursorPosition(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_TEXTBOX, "Argument error in first argument of function [SetCursorPosition(<textbox>, <position>)]: "); 
+    PError::AssertType(plist->First(), PEAT_TEXTBOX, "Argument error in first argument of function [SetCursorPosition(<textbox>, <position>)]: ");
 
 
-    counted_ptr<PEBLObjectBase> textbox = plist->First().GetComplexData()->GetObject(); //plist->PopFront();    
-    
-    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second argument of function [SetCursorPosition(<textbox>, <position>)]: "); 
+    counted_ptr<PEBLObjectBase> textbox = plist->First().GetComplexData()->GetObject(); //plist->PopFront();
+
+    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second argument of function [SetCursorPosition(<textbox>, <position>)]: ");
     Variant v1 = plist->Nth(2);// plist->PopFront();
 
     (dynamic_cast<PTextBox *>(textbox.get()))->SetCursorPosition(v1.GetInteger());
-    
+
     return Variant(1);
 }
 
@@ -546,7 +547,7 @@ Variant PEBLObjects::GetCursorPosition(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_TEXTBOX, "Argument error in function [GetCursorPosition(<textbox>)]: "); 
+    PError::AssertType(plist->First(), PEAT_TEXTBOX, "Argument error in function [GetCursorPosition(<textbox>)]: ");
 
     counted_ptr<PEBLObjectBase> textbox = plist->First().GetComplexData()->GetObject(); //plist->PopFront();
     return Variant((dynamic_cast<PTextBox *>(textbox.get()))->GetCursorPosition());
@@ -556,10 +557,10 @@ Variant PEBLObjects::SetEditable(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_TEXTBOX, "Argument error in first argument of function [SetEditable(<textbox>, <boolean>)]: "); 
-    
+    PError::AssertType(plist->First(), PEAT_TEXTBOX, "Argument error in first argument of function [SetEditable(<textbox>, <boolean>)]: ");
+
     PlatformTextBox * textbox = dynamic_cast<PlatformTextBox*>(plist->Nth(1).GetComplexData()->GetObject().get()); //plist->PopFront();
-    
+
     Variant v1 = plist->Nth(2); //plist->PopFront();
 
     if(bool(v1))
@@ -582,28 +583,28 @@ Variant PEBLObjects::SetText(Variant v)
 
     PList * plist = v.GetComplexData()->GetList();
 
-    
+
     //This can be used on either a textbox or a label.
     Variant v1 = plist->First(); //plist->PopFront();
-    PError::AssertType(v1, PEAT_TEXTOBJECT, "Argument error in first argument of function [SetText(<object>, <text>)]: "); 
+    PError::AssertType(v1, PEAT_TEXTOBJECT, "Argument error in first argument of function [SetText(<object>, <text>)]: ");
     //Get the text to change it to.
     Variant v2 = plist->Nth(2);//First(); plist->PopFront();
-    PError::AssertType(v2, PEAT_STRING, "Argument error in second argument of function [SetText(<object>, <text>)]: "); 
+    PError::AssertType(v2, PEAT_STRING, "Argument error in second argument of function [SetText(<object>, <text>)]: ");
 
 
-    //Make the change.  
+    //Make the change.
     if(v1.GetComplexData()->IsLabel() )
         {
             PlatformLabel * label = dynamic_cast<PlatformLabel*>(v1.GetComplexData()->GetObject().get());
-            label->SetText(v2.GetString());            
+            label->SetText(v2.GetString());
         }
     else
         {
             PlatformTextBox * textbox = dynamic_cast<PlatformTextBox*>(v1.GetComplexData()->GetObject().get());
-            textbox->SetText(v2.GetString());            
-        
+            textbox->SetText(v2.GetString());
+
         }
- 
+
     return Variant(1);
 }
 
@@ -612,11 +613,11 @@ Variant PEBLObjects::GetText(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_TEXTBOX, "Argument error in function [GetText(<textbox>)]: "); 
+    PError::AssertType(plist->First(), PEAT_TEXTBOX, "Argument error in function [GetText(<textbox>)]: ");
 
     PlatformTextBox * textbox = dynamic_cast<PlatformTextBox*>(plist->First().GetComplexData()->GetObject().get());
-    //    plist->PopFront();    
-    
+    //    plist->PopFront();
+
     return Variant(textbox->GetText());
 }
 
@@ -624,20 +625,20 @@ Variant PEBLObjects::SetFont(Variant v)
 {
 
     PList * plist = v.GetComplexData()->GetList();
-    
+
     //This can be used on either a textbox or a label.
     Variant v1 = plist->First();// plist->PopFront();
-    PError::AssertType(v1, PEAT_TEXTOBJECT, "Argument error in first argument of function [SetFont(<object>, <font>)]: "); 
+    PError::AssertType(v1, PEAT_TEXTOBJECT, "Argument error in first argument of function [SetFont(<object>, <font>)]: ");
     //Get the text to change it to.
     Variant v2 = plist->Nth(2);//First(); plist->PopFront();
-    PError::AssertType(v2, PEAT_FONT, "Argument error in second argument of function [SetFont(<object>, <font>)]: "); 
+    PError::AssertType(v2, PEAT_FONT, "Argument error in second argument of function [SetFont(<object>, <font>)]: ");
 
 
-    //Make the change.  
+    //Make the change.
     if(v1.GetComplexData()->IsLabel() )
         {
             PlatformLabel * label = dynamic_cast<PlatformLabel*>(v1.GetComplexData()->GetObject().get());
-            
+
             counted_ptr<PEBLObjectBase>tmpFont = v2.GetComplexData()->GetObject();
             label->SetFont(tmpFont);
         }
@@ -647,7 +648,7 @@ Variant PEBLObjects::SetFont(Variant v)
             counted_ptr<PEBLObjectBase> tmpFont = v2.GetComplexData()->GetObject();
             textbox->SetFont(tmpFont);
         }
- 
+
     return Variant(1);
 }
 
@@ -657,15 +658,15 @@ Variant PEBLObjects::PrintProperties(Variant v)
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First();// plist->PopFront();
     //This should also work for PEBLObjectBase things.
-    //It should also work for devices and the like; 
+    //It should also work for devices and the like;
     //it probably does not currently do so.
 
-    PError::AssertType(v1, PEAT_OBJECT, "Argument error in function [PrintProperties(<object>)]: "); 
-    
+    PError::AssertType(v1, PEAT_OBJECT, "Argument error in function [PrintProperties(<object>)]: ");
+
     //PlatformWidget * widget = dynamic_cast<PlatformWidget*>(v1.GetComplexData()->GetObject().get());
     PEBLObjectBase* obj = dynamic_cast<PEBLObjectBase*>(v1.GetComplexData()->GetObject().get());
     obj->PrintProperties(std::cout);
-    
+
     return Variant(true);
 }
 
@@ -676,11 +677,11 @@ Variant PEBLObjects::GetPropertyList(Variant v)
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First();// plist->PopFront();
     //This should also work for PEBLObjectBase things.
-    //It should also work for devices and the like; 
+    //It should also work for devices and the like;
     //it probably does not currently do so.
 
-    PError::AssertType(v1, PEAT_OBJECT, "Argument error in function [GetPropertyList(<object>)]: "); 
-    
+    PError::AssertType(v1, PEAT_OBJECT, "Argument error in function [GetPropertyList(<object>)]: ");
+
     //PlatformWidget * widget = dynamic_cast<PlatformWidget*>(v1.GetComplexData()->GetObject().get());
     PEBLObjectBase* obj = dynamic_cast<PEBLObjectBase*>(v1.GetComplexData()->GetObject().get());
 
@@ -694,14 +695,14 @@ Variant PEBLObjects::SetProperty(Variant v)
 
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First();
-    PError::AssertType(v1, PEAT_OBJECT, "Argument error in first parameter of function [SetProperty(<object>,<property>,<value>)]:  ");    
+    PError::AssertType(v1, PEAT_OBJECT, "Argument error in first parameter of function [SetProperty(<object>,<property>,<value>)]:  ");
 
 
     Variant v2 = plist->Nth(2);
-    PError::AssertType(v2, PEAT_STRING, "Argument error in second parameter of function [SetProperty(<object>,<property>,<value>)]:  ");    
+    PError::AssertType(v2, PEAT_STRING, "Argument error in second parameter of function [SetProperty(<object>,<property>,<value>)]:  ");
 
 
-    
+
 
     Variant v3 = plist->Nth(3);
     //No need to check v3 for type.
@@ -715,18 +716,18 @@ Variant PEBLObjects::SetProperty(Variant v)
 Variant PEBLObjects::GetProperty (Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
-    
+
 
     //v[1] should be a list
     Variant v1 = plist->First(); //plist->PopFront();
-    PError::AssertType(v1, PEAT_OBJECT, "Argument error in first parameter of function [GetProperty(<object>, <property>)]:  ");    
-    
-    
+    PError::AssertType(v1, PEAT_OBJECT, "Argument error in first parameter of function [GetProperty(<object>, <property>)]:  ");
+
+
     Variant prop =PEBLUtility::ToUpper( plist->Nth(2));
 
 
     //v[2] should be an integer
-    PError::AssertType(prop, PEAT_STRING, "Argument error in second parameter of function [Nth(<object>, <property>)]: ");    
+    PError::AssertType(prop, PEAT_STRING, "Argument error in second parameter of function [Nth(<object>, <property>)]: ");
     return v1.GetComplexData()->GetProperty(prop);
 
 }
@@ -737,18 +738,18 @@ Variant PEBLObjects::PropertyExists (Variant v)
 
 
     PList * plist = v.GetComplexData()->GetList();
-    
+
 
     //v[1] should be a list
     Variant v1 = plist->First(); //plist->PopFront();
-    PError::AssertType(v1, PEAT_OBJECT, "Argument error in first parameter of function [PropertyExists(<object>, <property>)]:  ");    
-    
-    
+    PError::AssertType(v1, PEAT_OBJECT, "Argument error in first parameter of function [PropertyExists(<object>, <property>)]:  ");
+
+
     Variant prop =PEBLUtility::ToUpper( plist->Nth(2));
 
 
     //v[2] should be an integer
-    PError::AssertType(prop, PEAT_STRING, "Argument error in second parameter of function [PropertyExists(<object>, <property>)]: ");    
+    PError::AssertType(prop, PEAT_STRING, "Argument error in second parameter of function [PropertyExists(<object>, <property>)]: ");
 
     return v1.GetComplexData()->PropertyExists(prop);
 
@@ -764,11 +765,11 @@ Variant PEBLObjects::Show(Variant v)
 
 
     Variant v1 = plist->First(); //plist->PopFront();
-    PError::AssertType(v1, PEAT_WIDGET, "Argument error in function [Show(<widget>)]: "); 
+    PError::AssertType(v1, PEAT_WIDGET, "Argument error in function [Show(<widget>)]: ");
 
 
     PlatformWidget * widget = dynamic_cast<PlatformWidget*>(v1.GetComplexData()->GetObject().get());
-    
+
     widget->Show();
 
     return Variant(true);
@@ -778,13 +779,13 @@ Variant PEBLObjects::Show(Variant v)
 
 Variant PEBLObjects::Hide(Variant v)
 {
- 
+
     //v[1] should have the  widget
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First();// plist->PopFront();
-    PError::AssertType(v1, PEAT_WIDGET, "Argument error in function [Hide(<widget>)]: "); 
+    PError::AssertType(v1, PEAT_WIDGET, "Argument error in function [Hide(<widget>)]: ");
     PlatformWidget * widget = dynamic_cast<PlatformWidget*>(v1.GetComplexData()->GetObject().get());
-    
+
     widget->Hide();
 
     return Variant(true);
@@ -798,7 +799,7 @@ Variant PEBLObjects::Hide(Variant v)
 ///
 Variant PEBLObjects::Draw(Variant v)
 {
-    //v[1] should have the object.  If it is null, 
+    //v[1] should have the object.  If it is null,
     //redraw the entire environment.
 
     if(v.IsStackSignal())
@@ -807,11 +808,11 @@ Variant PEBLObjects::Draw(Variant v)
         }
     else
         {
-        
+
             PList * plist = v.GetComplexData()->GetList();
-            
+
             Variant v2 = plist->First(); //plist->PopFront();
-            PError::AssertType(v2, PEAT_WIDGET, "Argument error in function [Draw(<widget>)]: "); 
+            PError::AssertType(v2, PEAT_WIDGET, "Argument error in function [Draw(<widget>)]: ");
 
             PlatformWidget * myWidget = dynamic_cast<PlatformWidget*>(v2.GetComplexData()->GetObject().get());
             myWidget->Draw();
@@ -820,21 +821,21 @@ Variant PEBLObjects::Draw(Variant v)
 }
 
 
-///This calls the Draw() routine a number of times equal to the 
-///the parameter.  It returns a value that should approximate the 
+///This calls the Draw() routine a number of times equal to the
+///the parameter.  It returns a value that should approximate the
 ///presentation time fairly well.  It should be given a window.
 Variant PEBLObjects::DrawFor(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
 
     Variant v1 = plist->First(); //plist->PopFront();
-    PError::AssertType(v1, PEAT_WIDGET, "Argument error in first parameter of function [DrawFor(<widget>, <count>)]: "); 
+    PError::AssertType(v1, PEAT_WIDGET, "Argument error in first parameter of function [DrawFor(<widget>, <count>)]: ");
 
     PlatformWindow * window = dynamic_cast<PlatformWindow*>(v1.GetComplexData()->GetObject().get());
-    PError::AssertType(plist->Nth(2), PEAT_INTEGER, "Argument error in second parameter of function [DrawFor(<widget>, <count>)]: "); 
+    PError::AssertType(plist->Nth(2), PEAT_INTEGER, "Argument error in second parameter of function [DrawFor(<widget>, <count>)]: ");
 
     unsigned int count =static_cast<long unsigned int>(( plist->First()));
-        
+
     return Variant((pInt)(window->DrawFor(count)));
 
 }
@@ -842,7 +843,7 @@ Variant PEBLObjects::DrawFor(Variant v)
 
 /// This function moves a widget to a new location.
 /// It moves the CENTER of the object to the specified location, which
-/// is probably the most common thing we want to do..  To 
+/// is probably the most common thing we want to do..  To
 /// move some other part, use the GetSize(object) function.
 Variant PEBLObjects::Move(Variant v)
 {
@@ -850,21 +851,21 @@ Variant PEBLObjects::Move(Variant v)
     PList * plist = v.GetComplexData()->GetList();
 
     Variant v1 = plist->First(); //plist->PopFront();
-    PError::AssertType(v1, PEAT_WIDGET, "Argument error in first parameter of function [Move(<widget>,<x>, <y>)]: "); 
+    PError::AssertType(v1, PEAT_WIDGET, "Argument error in first parameter of function [Move(<widget>,<x>, <y>)]: ");
 
-    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function [Move(<widget>,<x>, <y>)]: "); 
+    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function [Move(<widget>,<x>, <y>)]: ");
     int x = plist->Nth(2); //plist->PopFront();
 
-    PError::AssertType(plist->Nth(3), PEAT_NUMBER, "Argument error in third parameter of function [Move(<widget>,<x>, <y>)]: "); 
+    PError::AssertType(plist->Nth(3), PEAT_NUMBER, "Argument error in third parameter of function [Move(<widget>,<x>, <y>)]: ");
     int y = plist->Nth(3); //plist->PopFront();
 
 
 
     PWidget * widget = dynamic_cast<PWidget*>(v1.GetComplexData()->GetObject().get());
 
-    //This uses the widget setposition, rather than the child classes overridden version.  
-    widget->SetPosition(x , y);  
-    
+    //This uses the widget setposition, rather than the child classes overridden version.
+    widget->SetPosition(x , y);
+
     return Variant(true);
 }
 
@@ -880,7 +881,7 @@ Variant PEBLObjects::GetSize(Variant v)
 
 
     PWidget * widget = dynamic_cast<PWidget*>(v1.GetComplexData()->GetObject().get());
-    
+
     Variant width = widget->GetWidth();
     Variant height = widget->GetHeight();
 
@@ -888,9 +889,9 @@ Variant PEBLObjects::GetSize(Variant v)
 
     newlist->PushBack(height);
     newlist->PushBack(width);
-    
+
     counted_ptr<PEBLObjectBase> newlist2 = counted_ptr<PEBLObjectBase>(newlist);
-    PComplexData *   pcd = new PComplexData(newlist2); 
+    PComplexData *   pcd = new PComplexData(newlist2);
     Variant tmp = Variant(pcd);
     delete pcd;
     pcd=NULL;
@@ -907,12 +908,12 @@ Variant PEBLObjects::LoadSound(Variant v)
     PList * plist = v.GetComplexData()->GetList();
 
     Variant v1 = plist->First();// plist->PopFront();
-    PError::AssertType(v1, PEAT_STRING, "Argument error in function [LoadSound(<filename>)]: "); 
-    
+    PError::AssertType(v1, PEAT_STRING, "Argument error in function [LoadSound(<filename>)]: ");
+
     PlatformAudioOut * myAudio = new PlatformAudioOut();
     myAudio->LoadSoundFile(v1);
     myAudio->Initialize();
-    
+
     counted_ptr<PEBLObjectBase> audio2 = counted_ptr<PEBLObjectBase>(myAudio);
     PComplexData *  pcd = new PComplexData(audio2);
     Variant tmp = Variant(pcd);
@@ -925,19 +926,19 @@ Variant PEBLObjects::LoadSound(Variant v)
 
 
 //This plays a sound object, returning (almost) immediately, allowing
-//the sound to play in the background.  If you want the function to only return 
-//after the sound playing is complete, use PlayForeground();  
+//the sound to play in the background.  If you want the function to only return
+//after the sound playing is complete, use PlayForeground();
 Variant PEBLObjects::PlayBackground(Variant v)
 {
    //v[1] should have the PlatformAudioOut object
     PList * plist = v.GetComplexData()->GetList();
 
-    Variant v1 = plist->First();// plist->PopFront();      
-    PError::AssertType(v1, PEAT_AUDIOOUT, "Argument error in function PlayBackground(<audio-stream>)]: "); 
+    Variant v1 = plist->First();// plist->PopFront();
+    PError::AssertType(v1, PEAT_AUDIOOUT, "Argument error in function PlayBackground(<audio-stream>)]: ");
 
     PlatformAudioOut * myAudio = dynamic_cast<PlatformAudioOut*>(v1.GetComplexData()->GetObject().get());
     myAudio->Play();
-    return Variant(true);        
+    return Variant(true);
 }
 
 Variant PEBLObjects::PlayForeground(Variant v)
@@ -946,12 +947,12 @@ Variant PEBLObjects::PlayForeground(Variant v)
     PList * plist = v.GetComplexData()->GetList();
 
 
-    Variant v1 = plist->First();// plist->PopFront();      
+    Variant v1 = plist->First();// plist->PopFront();
 
-    PError::AssertType(v1, PEAT_AUDIOOUT, "Argument error in function PlayForeground(<audio-stream>)]: "); 
+    PError::AssertType(v1, PEAT_AUDIOOUT, "Argument error in function PlayForeground(<audio-stream>)]: ");
     PlatformAudioOut * myAudio = dynamic_cast<PlatformAudioOut*>(v1.GetComplexData()->GetObject().get());
     myAudio->PlayForeground();
-    return Variant(true);        
+    return Variant(true);
 }
 
 
@@ -960,9 +961,9 @@ Variant PEBLObjects::Stop(Variant v)
     //v[1] should have the PlatformAudioOut object.
      PList * plist = v.GetComplexData()->GetList();
 
-     Variant v1 = plist->First(); //plist->PopFront();      
+     Variant v1 = plist->First(); //plist->PopFront();
 
-    PError::AssertType(v1, PEAT_AUDIOOUT, "Argument error in function Stop(<audio-stream>)]: ");  
+    PError::AssertType(v1, PEAT_AUDIOOUT, "Argument error in function Stop(<audio-stream>)]: ");
 
     PlatformAudioOut * myAudio = dynamic_cast<PlatformAudioOut*>(v1.GetComplexData()->GetObject().get());
 
@@ -977,25 +978,25 @@ Variant PEBLObjects::MakeSineWave(Variant v)
    //v[1] should have the filename
     PList * plist = v.GetComplexData()->GetList();
 
-    
+
     Variant v1 = plist->First(); //plist->PopFront();
-    PError::AssertType(v1, PEAT_NUMBER, "Argument error in first parameter of  function [MakeSineWave(<freq>,<length>,<amplitude>)]: "); 
+    PError::AssertType(v1, PEAT_NUMBER, "Argument error in first parameter of  function [MakeSineWave(<freq>,<length>,<amplitude>)]: ");
 
     Variant v2 = plist->Nth(2); //plist->PopFront();
-    PError::AssertType(v2, PEAT_INTEGER, "Argument error in second parameter of function [MakeSineWave(<freq>,<length>,<amplitude>)]: "); 
+    PError::AssertType(v2, PEAT_INTEGER, "Argument error in second parameter of function [MakeSineWave(<freq>,<length>,<amplitude>)]: ");
 
     Variant v3 = plist->Nth(3);// plist->PopFront();
-    PError::AssertType(v3, PEAT_NUMBER, "Argument error in third parameter of function [MakeSineWave(<freq>,<length>,<amplitude>)]: "); 
+    PError::AssertType(v3, PEAT_NUMBER, "Argument error in third parameter of function [MakeSineWave(<freq>,<length>,<amplitude>)]: ");
 
     if((((pDouble)v3>1.0 )| ((pDouble)v3<-1.0)))
         {
-            PError::SignalWarning("amplitude in MakeSineWave(<freq>,<length>,<amplitude> will produce clipping if greater than 1.0"); 
+            PError::SignalWarning("amplitude in MakeSineWave(<freq>,<length>,<amplitude> will produce clipping if greater than 1.0");
         }
 
     PlatformAudioOut * myAudio = new PlatformAudioOut();
     myAudio->CreateSineWave((pDouble)v1,(int)v2, (pDouble)v3);
     myAudio->Initialize();
-    
+
     counted_ptr<PEBLObjectBase> audio2 = counted_ptr<PEBLObjectBase>(myAudio);
     PComplexData *  pcd = new PComplexData(audio2);
     Variant tmp = Variant(pcd);
@@ -1014,9 +1015,9 @@ Variant PEBLObjects::MakeAudioInputBuffer(Variant v)
     //
      PList * plist = v.GetComplexData()->GetList();
 
-    
+
      Variant v1 = plist->First(); //plist->PopFront();
-     PError::AssertType(v1, PEAT_NUMBER, "Argument error in first parameter of  function [MakeAudioInputBuffer(<duration>)]: "); 
+     PError::AssertType(v1, PEAT_NUMBER, "Argument error in first parameter of  function [MakeAudioInputBuffer(<duration>)]: ");
 
 
      PlatformAudioIn * myAudio = new PlatformAudioIn();
@@ -1029,7 +1030,7 @@ Variant PEBLObjects::MakeAudioInputBuffer(Variant v)
      PlatformAudioOut * myOut = new PlatformAudioOut();
      myOut->LoadSoundFromData((tmp->audio),tmp->audiolen,&(tmp->spec));
      myOut->Initialize();
-  
+
      counted_ptr<PEBLObjectBase> audio2 = counted_ptr<PEBLObjectBase>(myOut);
      PComplexData *  pcd = new PComplexData(audio2);
      Variant tmpv = Variant(pcd);
@@ -1050,15 +1051,15 @@ Variant PEBLObjects::SaveAudioToWaveFile(Variant v)
 
     PList * plist = v.GetComplexData()->GetList();
     Variant v1 = plist->First();// plist->PopFront();
-    PError::AssertType(v1, PEAT_STRING, "Argument error in first parameter of function [SaveAudioToWaveFile(<filename>,<audio-buffer>)]: ");   
+    PError::AssertType(v1, PEAT_STRING, "Argument error in first parameter of function [SaveAudioToWaveFile(<filename>,<audio-buffer>)]: ");
 
 
     Variant v2 = plist->Nth(2);// plist->PopFront();
-    PError::AssertType(v2, PEAT_AUDIOOUT, "Argument error second parameter of function [SaveAudioToWaveFile(<filename>,<audio-buffer>)]: "); 
+    PError::AssertType(v2, PEAT_AUDIOOUT, "Argument error second parameter of function [SaveAudioToWaveFile(<filename>,<audio-buffer>)]: ");
 
     PlatformAudioOut * myAudio = dynamic_cast<PlatformAudioOut*>(v2.GetComplexData()->GetObject().get());
     myAudio->SaveBufferToWave(v1);
-    return Variant(true);        
+    return Variant(true);
 
 
 }
@@ -1070,23 +1071,23 @@ Variant PEBLObjects::SaveAudioToWaveFile(Variant v)
 Variant PEBLObjects::GetVocalResponseTime(Variant v)
 {
 #ifdef PEBL_AUDIOIN
-    
+
 	//
      PList * plist = v.GetComplexData()->GetList();
 
-    
+
      Variant v1 = plist->First();// plist->PopFront();
-//     PError::AssertType(v1, PEAT_NUMBER, "Argument error in first parameter of  function [MakeSineWave(<freq>,<length>,<amplitude>)]: "); 
+//     PError::AssertType(v1, PEAT_NUMBER, "Argument error in first parameter of  function [MakeSineWave(<freq>,<length>,<amplitude>)]: ");
 
      Variant v2 = plist->Nth(2); //plist->PopFront();
-//     PError::AssertType(v2, PEAT_INTEGER, "Argument error in second parameter of function [MakeSineWave(<freq>,<length>,<amplitude>)]: "); 
+//     PError::AssertType(v2, PEAT_INTEGER, "Argument error in second parameter of function [MakeSineWave(<freq>,<length>,<amplitude>)]: ");
 
      Variant v3 = plist->Nth(3); //plist->PopFront();
-//     PError::AssertType(v3, PEAT_NUMBER, "Argument error in third parameter of function [MakeSineWave(<freq>,<length>,<amplitude>)]: "); 
+//     PError::AssertType(v3, PEAT_NUMBER, "Argument error in third parameter of function [MakeSineWave(<freq>,<length>,<amplitude>)]: ");
 
 //     if((((pDouble)v3>1.0 )| ((pDouble)v3<-1.0)))
 //         {
-//             PError::SignalWarning("amplitude in MakeSineWave(<freq>,<length>,<amplitude> will produce clipping if greater than 1.0"); 
+//             PError::SignalWarning("amplitude in MakeSineWave(<freq>,<length>,<amplitude> will produce clipping if greater than 1.0");
 //         }
 
      //v1 should be a audiout object, which has our buffer.
@@ -1095,13 +1096,13 @@ Variant PEBLObjects::GetVocalResponseTime(Variant v)
      AudioInfo * tmp = po->GetAudioInfo();
 
      PlatformAudioIn * myAudio = new PlatformAudioIn();
-     myAudio->UseBuffer(tmp); 
+     myAudio->UseBuffer(tmp);
      myAudio->Initialize(1);
      //delete tmp;
      //     tmp= NULL;
 
      Variant out = myAudio->VoiceKey((pDouble)v2,(int)v3);
-     
+
      return out;
 
 #else
@@ -1140,19 +1141,19 @@ Variant PEBLObjects::Line(Variant v)
     // v[5] should be the color.
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Line(<x>, <y>, <dx>, <dy>, <color>)]: "); 
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Line(<x>, <y>, <dx>, <dy>, <color>)]: ");
     int x = plist->First(); //plist->PopFront();
 
-    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function  [Line(<x>, <y>, <dx>, <dy>, <color>)]: "); 
+    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function  [Line(<x>, <y>, <dx>, <dy>, <color>)]: ");
     int y = plist->Nth(2); //plist->PopFront();
 
-    PError::AssertType(plist->Nth(3), PEAT_NUMBER, "Argument error in third parameter of function  [Line(<x>, <y>, <dx>, <dy>, <color>)]: "); 
+    PError::AssertType(plist->Nth(3), PEAT_NUMBER, "Argument error in third parameter of function  [Line(<x>, <y>, <dx>, <dy>, <color>)]: ");
     int dx = plist->Nth(3);// plist->PopFront();
 
-    PError::AssertType(plist->Nth(4), PEAT_NUMBER, "Argument error in fourth parameter of function  [Line(<x>, <y>, <dx>, <dy>, <color>)]: "); 
+    PError::AssertType(plist->Nth(4), PEAT_NUMBER, "Argument error in fourth parameter of function  [Line(<x>, <y>, <dx>, <dy>, <color>)]: ");
     int dy = plist->Nth(4);// plist->PopFront();
 
-    PError::AssertType(plist->Nth(5), PEAT_COLOR, "Argument error in fifth parameter of function  [Line(<x>, <y>, <dx>, <dy>, <color>)]: "); 
+    PError::AssertType(plist->Nth(5), PEAT_COLOR, "Argument error in fifth parameter of function  [Line(<x>, <y>, <dx>, <dy>, <color>)]: ");
     Variant color = plist->Nth(5);// plist->PopFront();
 
     counted_ptr<PEBLObjectBase> myLine = counted_ptr<PEBLObjectBase>(new PlatformLine(x,y,dx,dy,color));
@@ -1173,22 +1174,22 @@ Variant PEBLObjects::Rectangle(Variant v)
     // v[5] should be the color, v[6] should be whether it is filled.
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: ");
     int x = plist->First(); //plist->PopFront();
 
-    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function  [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function  [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: ");
     int y = plist->Nth(2);// plist->PopFront();
 
-    PError::AssertType(plist->Nth(3), PEAT_NUMBER, "Argument error in third parameter of function  [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->Nth(3), PEAT_NUMBER, "Argument error in third parameter of function  [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: ");
     int dx = plist->Nth(3);// plist->PopFront();
 
-    PError::AssertType(plist->Nth(4), PEAT_NUMBER, "Argument error in fourth parameter of function  [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->Nth(4), PEAT_NUMBER, "Argument error in fourth parameter of function  [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: ");
     int dy = plist->Nth(4); //plist->PopFront();
 
-    PError::AssertType(plist->Nth(5), PEAT_COLOR, "Argument error in fifth parameter of function  [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->Nth(5), PEAT_COLOR, "Argument error in fifth parameter of function  [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: ");
     Variant color = plist->Nth(5);// plist->PopFront();
 
-    PError::AssertType(plist->Nth(6), PEAT_NUMBER, "Argument error in sixth parameter of function  [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->Nth(6), PEAT_NUMBER, "Argument error in sixth parameter of function  [Rectangle(<x>, <y>, <dx>, <dy>, <color>, <filled>)]: ");
     int filled = plist->Nth(6); //plist->PopFront();
 
     counted_ptr<PEBLObjectBase> myRect = counted_ptr<PEBLObjectBase>(new PlatformRectangle(x,y,dx,dy,color,filled));
@@ -1211,20 +1212,20 @@ Variant PEBLObjects::Square(Variant v)
     // v[5] should be the color, v[6] should be whether it is filled.
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Square(<x>, <y>, <size>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Square(<x>, <y>, <size>, <color>, <filled>)]: ");
     int x = plist->First(); //plist->PopFront();
 
-    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function  [Square(<x>, <y>, <size>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function  [Square(<x>, <y>, <size>, <color>, <filled>)]: ");
     int y = plist->Nth(2);// plist->PopFront();
 
-    PError::AssertType(plist->Nth(3), PEAT_NUMBER, "Argument error in third parameter of function  [Square(<x>, <y>, <size>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->Nth(3), PEAT_NUMBER, "Argument error in third parameter of function  [Square(<x>, <y>, <size>, <color>, <filled>)]: ");
     int size = plist->Nth(3); //plist->PopFront();
 
-    PError::AssertType(plist->Nth(4), PEAT_COLOR, "Argument error in fourth parameter of function  [Square(<x>, <y>, <size>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->Nth(4), PEAT_COLOR, "Argument error in fourth parameter of function  [Square(<x>, <y>, <size>, <color>, <filled>)]: ");
 
     Variant color = plist->Nth(4);// plist->PopFront();
 
-    PError::AssertType(plist->Nth(5), PEAT_NUMBER, "Argument error in fifth parameter of function  [Square(<x>, <y>, <size>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->Nth(5), PEAT_NUMBER, "Argument error in fifth parameter of function  [Square(<x>, <y>, <size>, <color>, <filled>)]: ");
     int filled = plist->Nth(5);// plist->PopFront();
 
     counted_ptr<PEBLObjectBase> mySquare = counted_ptr<PEBLObjectBase>(new PlatformSquare(x,y,size,color,filled));
@@ -1244,22 +1245,22 @@ Variant PEBLObjects::Ellipse(Variant v)
     // v[5] should be the color.
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Ellipse(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Ellipse(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: ");
     int x = plist->First();// plist->PopFront();
 
-    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function  [Ellipse(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function  [Ellipse(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: ");
     int y = plist->Nth(2); //plist->PopFront();
 
-    PError::AssertType(plist->Nth(3), PEAT_NUMBER, "Argument error in third parameter of function  [Ellipse(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->Nth(3), PEAT_NUMBER, "Argument error in third parameter of function  [Ellipse(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: ");
     int rx = plist->Nth(3); //plist->PopFront();
 
-    PError::AssertType(plist->Nth(4), PEAT_NUMBER, "Argument error in fourth parameter of function  [Ellipse(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->Nth(4), PEAT_NUMBER, "Argument error in fourth parameter of function  [Ellipse(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: ");
     int ry = plist->Nth(4);// plist->PopFront();
 
-    PError::AssertType(plist->Nth(5), PEAT_COLOR, "Argument error in fifth parameter of function  [Ellipse(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->Nth(5), PEAT_COLOR, "Argument error in fifth parameter of function  [Ellipse(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: ");
     Variant color = plist->Nth(5);// plist->PopFront();
 
-    PError::AssertType(plist->Nth(6), PEAT_NUMBER, "Argument error in sixth parameter of function  [Ellipse(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->Nth(6), PEAT_NUMBER, "Argument error in sixth parameter of function  [Ellipse(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: ");
     int filled = plist->Nth(6);// plist->PopFront();
 
 
@@ -1284,20 +1285,20 @@ Variant PEBLObjects::Circle(Variant v)
     // v[5] should be the color.
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Circle(<x>, <y>, <rx>,  <color>)]: "); 
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Circle(<x>, <y>, <rx>,  <color>)]: ");
     int x = plist->First();// plist->PopFront();
 
-    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function  [Circle(<x>, <y>, <rx>, <color>)]: "); 
+    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function  [Circle(<x>, <y>, <rx>, <color>)]: ");
     int y = plist->Nth(2);// plist->PopFront();
 
-    PError::AssertType(plist->Nth(3), PEAT_NUMBER, "Argument error in third parameter of function  [Circle(<x>, <y>, <r>,, <color>)]: "); 
+    PError::AssertType(plist->Nth(3), PEAT_NUMBER, "Argument error in third parameter of function  [Circle(<x>, <y>, <r>,, <color>)]: ");
     int r = plist->Nth(3);// plist->PopFront();
 
 
-    PError::AssertType(plist->Nth(4), PEAT_COLOR, "Argument error in fourth parameter of function  [Circle(<x>, <y>, <rx>, <color>)]: "); 
+    PError::AssertType(plist->Nth(4), PEAT_COLOR, "Argument error in fourth parameter of function  [Circle(<x>, <y>, <rx>, <color>)]: ");
     Variant color = plist->Nth(4);// plist->PopFront();
-    
-    PError::AssertType(plist->Nth(5), PEAT_NUMBER, "Argument error in fifth parameter of function  [Circle(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: "); 
+
+    PError::AssertType(plist->Nth(5), PEAT_NUMBER, "Argument error in fifth parameter of function  [Circle(<x>, <y>, <rx>, <ry>, <color>, <filled>)]: ");
     int filled = plist->Nth(5);// plist->PopFront();
 
 
@@ -1321,22 +1322,22 @@ Variant PEBLObjects::Polygon(Variant v)
     // v[6] should be whether filled
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Polygon(<x>, <y>, <xpoints>, <ypoints>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Polygon(<x>, <y>, <xpoints>, <ypoints>, <color>, <filled>)]: ");
     int x = plist->First(); //plist->PopFront();
 
-    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function  [Polygon(<x>, <y>,<xpoints>, <ypoints>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function  [Polygon(<x>, <y>,<xpoints>, <ypoints>, <color>, <filled>)]: ");
     int y = plist->Nth(2); //plist->PopFront();
 
-    PError::AssertType(plist->Nth(3), PEAT_LIST, "Argument error in third parameter of function  [Polygon(<x>, <y>, <xpoints>, <ypoints>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->Nth(3), PEAT_LIST, "Argument error in third parameter of function  [Polygon(<x>, <y>, <xpoints>, <ypoints>, <color>, <filled>)]: ");
     Variant xpoints = plist->Nth(3); //plist->PopFront();
 
-    PError::AssertType(plist->Nth(4), PEAT_LIST, "Argument error in fourth parameter of function  [Polygon(<x>, <y>, <xpoints>, <ypoints>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->Nth(4), PEAT_LIST, "Argument error in fourth parameter of function  [Polygon(<x>, <y>, <xpoints>, <ypoints>, <color>, <filled>)]: ");
     Variant ypoints = plist->Nth(4);// plist->PopFront();
 
-    PError::AssertType(plist->Nth(5), PEAT_COLOR, "Argument error in fifth parameter of function  [Polygon(<x>, <y>, <xpoints>, <ypoints>, <color>, <filled>)]: "); 
-    Variant color = plist->Nth(5);// plist->PopFront();    
+    PError::AssertType(plist->Nth(5), PEAT_COLOR, "Argument error in fifth parameter of function  [Polygon(<x>, <y>, <xpoints>, <ypoints>, <color>, <filled>)]: ");
+    Variant color = plist->Nth(5);// plist->PopFront();
 
-    PError::AssertType(plist->Nth(6), PEAT_NUMBER, "Argument error in sixth parameter of function  [Polygon(<x>, <y>, <xpoints>, <ypoints>, <color>, <filled>)]: "); 
+    PError::AssertType(plist->Nth(6), PEAT_NUMBER, "Argument error in sixth parameter of function  [Polygon(<x>, <y>, <xpoints>, <ypoints>, <color>, <filled>)]: ");
     int filled = plist->Nth(6);// plist->PopFront();
 
     counted_ptr<PEBLObjectBase> myPolygon = counted_ptr<PEBLObjectBase>(new PlatformPolygon(x,y,xpoints,ypoints,color,filled));
@@ -1359,24 +1360,24 @@ Variant PEBLObjects::Bezier(Variant v)
     // v[5] should be the color.
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Bezier(<x>, <y>, <xpoints>, <ypoints>, <steps>, <color>)]: "); 
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [Bezier(<x>, <y>, <xpoints>, <ypoints>, <steps>, <color>)]: ");
     int x = plist->First(); //plist->PopFront();
 
-    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function  [Bezier(<x>, <y>,<xpoints>, <ypoints>, <steps>, <color>)]: "); 
+    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function  [Bezier(<x>, <y>,<xpoints>, <ypoints>, <steps>, <color>)]: ");
     int y = plist->Nth(2); //plist->PopFront();
 
-    PError::AssertType(plist->Nth(3), PEAT_LIST, "Argument error in third parameter of function  [Bezier(<x>, <y>, <xpoints>, <ypoints>, <steps>, <color>)]: "); 
+    PError::AssertType(plist->Nth(3), PEAT_LIST, "Argument error in third parameter of function  [Bezier(<x>, <y>, <xpoints>, <ypoints>, <steps>, <color>)]: ");
     Variant xpoints = plist->Nth(3); //plist->PopFront();
 
-    PError::AssertType(plist->Nth(4), PEAT_LIST, "Argument error in fourth parameter of function  [Bezier(<x>, <y>, <xpoints>, <ypoints>, <steps>, <color>)]: "); 
+    PError::AssertType(plist->Nth(4), PEAT_LIST, "Argument error in fourth parameter of function  [Bezier(<x>, <y>, <xpoints>, <ypoints>, <steps>, <color>)]: ");
     Variant ypoints = plist->Nth(4);// plist->PopFront();
 
-    PError::AssertType(plist->Nth(5), PEAT_NUMBER, "Argument error in fifth parameter of function  [Bezier(<x>, <y>, <xpoints>, <ypoints>, <steps>, <color>)]: "); 
+    PError::AssertType(plist->Nth(5), PEAT_NUMBER, "Argument error in fifth parameter of function  [Bezier(<x>, <y>, <xpoints>, <ypoints>, <steps>, <color>)]: ");
     int steps = plist->Nth(5);// plist->PopFront();
 
-    PError::AssertType(plist->Nth(6), PEAT_COLOR, "Argument error in sixth parameter of function  [Bezier(<x>, <y>, <xpoints>, <ypoints>, <steps>, <color>)]: "); 
+    PError::AssertType(plist->Nth(6), PEAT_COLOR, "Argument error in sixth parameter of function  [Bezier(<x>, <y>, <xpoints>, <ypoints>, <steps>, <color>)]: ");
     Variant color = plist->Nth(6);// plist->PopFront();
-    
+
 
     counted_ptr<PEBLObjectBase> myBezier = counted_ptr<PEBLObjectBase>(new PlatformBezier(x,y,xpoints,ypoints,steps,color));
     PComplexData *  pcd = new PComplexData(myBezier);
@@ -1403,30 +1404,30 @@ Variant PEBLObjects::RotoZoom(Variant v)
 
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_WIDGET, "Argument error in first parameter of function [ROTOZOOM(<widget>,<rotation>,<xzoom>, <yzoom>, <smooth>)]: "); 
+    PError::AssertType(plist->First(), PEAT_WIDGET, "Argument error in first parameter of function [ROTOZOOM(<widget>,<rotation>,<xzoom>, <yzoom>, <smooth>)]: ");
     Variant v1 = plist->First(); //plist->PopFront();
     PlatformWidget * widget = dynamic_cast<PlatformWidget*>(v1.GetComplexData()->GetObject().get());
 
 
 
-    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function [ROTOZOOM(<widget>,<rotation>,<xzoom>, <yzoom>, <smooth>)]: "); 
+    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function [ROTOZOOM(<widget>,<rotation>,<xzoom>, <yzoom>, <smooth>)]: ");
     Variant r = plist->Nth(2); //plist->PopFront();
 
-    PError::AssertType(plist->Nth(3), PEAT_NUMBER, "Argument error in third parameter of function [ROTOZOOM(<widget>,<rotation>,<xzoom>, <yzoom>, <smooth>)]: "); 
+    PError::AssertType(plist->Nth(3), PEAT_NUMBER, "Argument error in third parameter of function [ROTOZOOM(<widget>,<rotation>,<xzoom>, <yzoom>, <smooth>)]: ");
     Variant x = plist->Nth(3); //plist->PopFront();
 
 
-    PError::AssertType(plist->Nth(4), PEAT_NUMBER, "Argument error in fourth parameter of function [ROTOZOOM(<widget>,<rotation>,<xzoom>, <yzoom>, <smooth>)]: "); 
+    PError::AssertType(plist->Nth(4), PEAT_NUMBER, "Argument error in fourth parameter of function [ROTOZOOM(<widget>,<rotation>,<xzoom>, <yzoom>, <smooth>)]: ");
     Variant y = plist->Nth(4); //plist->PopFront();
-    
-    PError::AssertType(plist->Nth(5), PEAT_NUMBER, "Argument error in fifth parameter of function [ROTOZOOM(<widget>,<rotation>,<xzoom>, <yzoom>, <smooth>)]: "); 
+
+    PError::AssertType(plist->Nth(5), PEAT_NUMBER, "Argument error in fifth parameter of function [ROTOZOOM(<widget>,<rotation>,<xzoom>, <yzoom>, <smooth>)]: ");
     int smooth = plist->Nth(5);// plist->PopFront();
 
     bool result = widget->RotoZoom((pDouble)r,(pDouble)x,(pDouble)y,smooth);
 
-    
+
     //if(!result)PError::SignalFatalError("Rotozoom failed.");
-    
+
     return v1.GetComplexData();
 }
 
@@ -1444,14 +1445,14 @@ Variant PEBLObjects::Gabor(Variant v)
     // v[5] should be the color, v[6] should be whether it is filled.
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [MakeCanvas(<width>, <height>, <color>)]: "); 
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first parameter of function [MakeCanvas(<width>, <height>, <color>)]: ");
     int width = plist->First(); //plist->PopFront();
 
-    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function  [MakeCanvas(<width>, <height>, <color>)]: "); 
+    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second parameter of function  [MakeCanvas(<width>, <height>, <color>)]: ");
     int height = plist->Nth(2);// plist->PopFront();
 
 
-    PError::AssertType(plist->Nth(3), PEAT_COLOR, "Argument error in fifth parameter of function  [MakeCanvas(<x>, <y>, <dx>, <dy>, <color>)]: "); 
+    PError::AssertType(plist->Nth(3), PEAT_COLOR, "Argument error in fifth parameter of function  [MakeCanvas(<x>, <y>, <dx>, <dy>, <color>)]: ");
     Variant color = plist->Nth(3);// plist->PopFront();
 
 
@@ -1466,7 +1467,7 @@ Variant PEBLObjects::Gabor(Variant v)
     counted_ptr<PEBLObjectBase> myCanvas = counted_ptr<PEBLObjectBase>(new PlatformCanvas(width,height,color));
     PComplexData *  pcd = new PComplexData(myCanvas);
 
-    
+
 
     Variant tmp = Variant(pcd);
     delete pcd;
@@ -1476,32 +1477,34 @@ Variant PEBLObjects::Gabor(Variant v)
 
 
 }
-  
+
 #endif
 
 Variant PEBLObjects::LoadMovie(Variant v)
 {
 
-#ifdef PEBL_MOVIES    
+#ifdef PEBL_MOVIES
+
+    cout << "Creaing movie\n";
     // v[1] should be name of movie
     // v[2] should be width; v[3] should be height.
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in first parameter of function [LoadMovie(<filename>,<window>,<width>, <height>)]: "); 
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in first parameter of function [LoadMovie(<filename>,<window>,<width>, <height>)]: ");
     Variant filename = plist->First();
 
     Variant v2 = plist->Nth(2); //plist->PopFront();
-    PError::AssertType(v2, PEAT_WIDGET, "Argument error in second parameter of function [LoadMovie(<filename>,<window>,<width>, <height>)]: "); 
+    PError::AssertType(v2, PEAT_WIDGET, "Argument error in second parameter of function [LoadMovie(<filename>,<window>,<width>, <height>)]: ");
 
     PlatformWindow * window = dynamic_cast<PlatformWindow*>(v2.GetComplexData()->GetObject().get());
 
-   
 
-    PError::AssertType(plist->Nth(3), PEAT_NUMBER, "Argument error in second parameter of function  [LoadMovie(<filename>,<window>,<width>, <height>)]: "); 
+
+    PError::AssertType(plist->Nth(3), PEAT_NUMBER, "Argument error in second parameter of function  [LoadMovie(<filename>,<window>,<width>, <height>)]: ");
     int width = plist->Nth(3);
 
 
-    PError::AssertType(plist->Nth(4), PEAT_NUMBER, "Argument error in second parameter of function  [LoadMovie(<filename>,<window>,<width>, <height>)]: "); 
+    PError::AssertType(plist->Nth(4), PEAT_NUMBER, "Argument error in second parameter of function  [LoadMovie(<filename>,<window>,<width>, <height>)]: ");
     int height = plist->Nth(4);
 
 
@@ -1532,10 +1535,10 @@ Variant PEBLObjects::LoadAudioFile(Variant v)
     // v[2] should be width; v[3] should be height.
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in first parameter of function [LoadAudioFile(<filename>)]: "); 
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in first parameter of function [LoadAudioFile(<filename>)]: ");
     Variant filename = plist->First();
 
-   
+
     PlatformMovie* myMovie = new PlatformMovie();
     myMovie->LoadAudioFile(filename);
 
@@ -1559,15 +1562,15 @@ Variant PEBLObjects::StartPlayback(Variant v)
 #ifdef PEBL_MOVIES
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_MOVIE, "Argument error in first parameter of function [StartPlayback(<movie>)]: "); 
-    
+    PError::AssertType(plist->First(), PEAT_MOVIE, "Argument error in first parameter of function [StartPlayback(<movie>)]: ");
+
     Variant v1 = plist->First();
     PlatformMovie * myMovie = dynamic_cast<PlatformMovie*>(v1.GetComplexData()->GetObject().get());
     myMovie->StartPlayback();
     return Variant(true);
 #else
     return false;
-#endif    
+#endif
 }
 
 
@@ -1577,8 +1580,8 @@ Variant PEBLObjects::PausePlayback(Variant v)
 #ifdef PEBL_MOVIES
     PList * plist = v.GetComplexData()->GetList();
 
-    PError::AssertType(plist->First(), PEAT_MOVIE, "Argument error in first parameter of function [PausePlayback(<movie>)]: "); 
-    
+    PError::AssertType(plist->First(), PEAT_MOVIE, "Argument error in first parameter of function [PausePlayback(<movie>)]: ");
+
 
     Variant v1 = plist->First();
     PlatformMovie * myMovie = dynamic_cast<PlatformMovie*>(v1.GetComplexData()->GetObject().get());
@@ -1598,7 +1601,7 @@ Variant PEBLObjects::MakeCustomObject(Variant v)
     std::string name = plist->First();// plist->PopFront();
 
     PCustomObject* myobj = new PCustomObject(name);
-    counted_ptr<PEBLObjectBase> tmpObject = counted_ptr<PEBLObjectBase>(myobj);    
+    counted_ptr<PEBLObjectBase> tmpObject = counted_ptr<PEBLObjectBase>(myobj);
     PComplexData *  pcd = new PComplexData(tmpObject);
     Variant tmp = Variant(pcd);
     delete pcd;
