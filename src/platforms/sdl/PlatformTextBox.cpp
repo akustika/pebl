@@ -286,10 +286,11 @@ void PlatformTextBox::SetText(string text)
 void PlatformTextBox::FindBreaks()
 {
 
-
     //First, find the height and width of the text when rendered with the font.
     int height = mFont->GetTextHeight(mText);
 
+    //Set this directly as a property; no need to check with PTextBox, which doesn't do anything with it.
+    PEBLObjectBase::SetProperty("LINEHEIGHT",Variant(height));
     //Now, go through the text letter by letter and word by word until
     //it won't fit on a line any longer.
 
@@ -563,7 +564,7 @@ void PlatformTextBox::DrawCursor()
 }
 
 
-//This overrides th2e parent Draw() method so that
+//This overrides the parent Draw() method so that
 //things can be re-rendered if necessary.
 bool PlatformTextBox::Draw()
 {

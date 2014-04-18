@@ -118,6 +118,13 @@ void PEvent::SetMovieEndEvent(const PEBL_MovieEndEvent & evt)
     mEvent.movieEndEvent = evt;
 }
 
+void PEvent::SetWindowEvent(const PEBL_WindowEvent & evt)
+{
+    cout << "setting window event\n";
+    mType = PDT_WINDOW_RESIZE;
+    mEvent.windowEvent = evt;
+}
+
 
 void PEvent::SetDummyEvent(const PEBL_DummyEvent & evt)
 {
@@ -214,6 +221,26 @@ PEBL_DummyEvent PEvent::GetDummyEvent() const
 }
 
 
+
+
+
+
+
+PEBL_WindowEvent PEvent::GetWindowEvent()const
+{
+    if(PDT_WINDOW_RESIZE == mType)
+        return mEvent.windowEvent;
+    else
+        {
+            PEBL_WindowEvent tmp;
+            tmp.w = 0;
+            tmp.h = 0;
+            return tmp;
+        }
+
+}
+
+
 int PEvent::GetState(int iface) const
 {
        
@@ -240,8 +267,7 @@ int PEvent::GetState(int iface) const
  
             break;
              
-          
-            
+ 
         case PDT_MOUSE_MOVEMENT:
         case PDT_MOUSE_BUTTON:
         case PDT_TIMER:
@@ -249,7 +275,19 @@ int PEvent::GetState(int iface) const
         case PDT_MOVIE_END:
         case PDT_UNKNOWN:
             return PEBL_UNKNOWN;
-            
+ 
+        case PDT_WINDOW_RESIZE:
+            {
+            //Here, the state should describe the size of the window resize.
+            if((PEBLKey)iface == PEBL_WINDOWWIDTH)
+                {
+                    return mEvent.windowEvent.w;
+                }else
+                {
+                    return mEvent.windowEvent.h;
+                }
+            break;
+            }
         default:
             
             cerr << mType << endl;

@@ -37,8 +37,9 @@ namespace PEBLObjects
 {
 
     void MakeEnvironment(PEBLVideoMode mode, PEBLVideoDepth depth, 
-                         bool windowed,bool unicode );
+                         bool windowed,bool resizeable,bool unicode );
     Variant MakeWindow(Variant v);
+    Variant ResizeWindow(Variant v);
     Variant MakeImage(Variant v);
     Variant MakeLabel(Variant v);
     Variant MakeColor(Variant v);

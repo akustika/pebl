@@ -3,7 +3,7 @@
 //    Name:       src/devices/PEven.h
 //    Purpose:    Events processed by Event Loop.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004-2012 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -46,7 +46,9 @@ enum
         PEBL_MOVEMENT,
         PEBL_TIMEOUT,
         PEBL_EQUALS,
-        PEBL_DIFFERS
+        PEBL_DIFFERS,
+        PEBL_WINDOWWIDTH,
+        PEBL_WINDOWHEIGHT
 	};
 
 
@@ -99,6 +101,14 @@ typedef struct
 
 typedef struct
 {
+    int w;
+    int h;
+    //We may need to keep track of which window.
+} PEBL_WindowEvent;
+
+
+typedef struct
+{
     int value;
 
 } PEBL_DummyEvent;
@@ -120,6 +130,7 @@ class PEvent
     void SetPortEvent(const PEBL_PortEvent & evt);
     void SetMovieRefreshEvent(const PEBL_MovieRefreshEvent & evt);
     void SetMovieEndEvent(const PEBL_MovieEndEvent & evt);
+    void SetWindowEvent(const PEBL_WindowEvent & evt);
     void SetDummyEvent(const PEBL_DummyEvent & evt);
 
     int GetState(int iface) const;
@@ -133,6 +144,7 @@ class PEvent
     PEBL_MovieRefreshEvent GetMovieRefreshEvent() const;
     PEBL_MovieEndEvent GetMovieEndEvent() const;
     PEBL_DummyEvent GetDummyEvent() const;
+    PEBL_WindowEvent GetWindowEvent()const;
 
  private:
 
@@ -146,7 +158,9 @@ class PEvent
         PEBL_PortEvent          portEvent;
         PEBL_MovieRefreshEvent  movieRefreshEvent;
         PEBL_MovieEndEvent      movieEndEvent;
+        PEBL_WindowEvent        windowEvent;
         PEBL_DummyEvent         dummyEvent;
+
 	} mEvent;
 
     //This keeps track of the time the event was

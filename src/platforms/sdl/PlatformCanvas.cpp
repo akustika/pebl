@@ -157,10 +157,10 @@ bool  PlatformCanvas::Reset()
 
     
     // SDL_SetAlpha( mSurface, 0, SDL_ALPHA_OPAQUE );        
-    // SDL_SetAlpha(mSurface,0,SDL_ALPHA_TRANSPARENT);
+   SDL_SetAlpha(mSurface,0,SDL_ALPHA_TRANSPARENT);
 
     //Fill the box with the background color 
-    std::cout << mBackgroundColor << "|alpha:|" << mBackgroundColor.GetAlpha() << std::endl;
+   //    std::cout << mBackgroundColor << "|alpha:|" << mBackgroundColor.GetAlpha() << std::endl;
 
 
     if(mDrawBackground)

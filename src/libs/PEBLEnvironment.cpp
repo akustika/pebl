@@ -128,7 +128,7 @@ Variant  PEBLEnvironment::Wait(Variant v)
     Evaluator::mEventLoop->RegisterState(state, funcname, Variant(0));
     PEvent returnval = Evaluator::mEventLoop->Loop();
     //Now, clear the event loop tests
-    //Evaluator::mEventLoop->Clear();
+    Evaluator::mEventLoop->Clear();
     delete device;
 
     return Variant(returnval.GetDummyEvent().value);
@@ -238,6 +238,7 @@ Variant PEBLEnvironment::WaitForKeyDown(Variant v)
     PEvent returnval = Evaluator::mEventLoop->Loop();
 
     //Now, clear the event loop tests
+    Evaluator::mEventLoop->Clear();
 
     return Variant(returnval.GetDummyEvent().value);
 }
@@ -267,7 +268,7 @@ Variant PEBLEnvironment::WaitForKeyUp(Variant v)
     PEvent returnval = Evaluator::mEventLoop->Loop();
 
     //Now, clear the event loop tests (this is now done in-loop).
-    //Evaluator::mEventLoop->Clear();
+    Evaluator::mEventLoop->Clear();
 
     return Variant(returnval.GetDummyEvent().value);
 
@@ -295,7 +296,7 @@ Variant PEBLEnvironment::WaitForAnyKeyDown(Variant v)
     PEvent returnval = Evaluator::mEventLoop->Loop();
 
     //Now, clear the event loop tests
-    //Evaluator::mEventLoop->Clear();
+    Evaluator::mEventLoop->Clear();
 
     return Variant(returnval.GetDummyEvent().value);
 }
@@ -329,7 +330,7 @@ Variant PEBLEnvironment::WaitForKeyPress(Variant v)
 
     cout << "ABOUT TO CLEAR KEYPRESS\n";
     //Now, clear the event loop tests
-    //Evaluator::mEventLoop->Clear();
+    Evaluator::mEventLoop->Clear();
 
     return Variant(PEBLUtility::TranslateKeyCode(returnval.GetKeyboardEvent().key,0));
 }
@@ -360,7 +361,7 @@ Variant PEBLEnvironment::WaitForKeyRelease(Variant v)
     PEvent returnval = Evaluator::mEventLoop->Loop();
 
     //Now, clear the event loop tests
-    //Evaluator::mEventLoop->Clear();
+    Evaluator::mEventLoop->Clear();
 
 
     return Variant(PEBLUtility::TranslateKeyCode(returnval.GetKeyboardEvent().key,0));
@@ -387,7 +388,7 @@ Variant PEBLEnvironment::WaitForAnyKeyPress(Variant v)
     PEvent returnval = Evaluator::mEventLoop->Loop();
 
     //Now, clear the event loop tests
-    //Evaluator::mEventLoop->Clear();
+    Evaluator::mEventLoop->Clear();
 
     return Variant(PEBLUtility::TranslateKeyCode(returnval.GetKeyboardEvent().key,0));
 
@@ -413,7 +414,7 @@ Variant PEBLEnvironment::WaitForAllKeysUp(Variant v)
     PEvent returnval = Evaluator::mEventLoop->Loop();
 
     //Now, clear the event loop tests
-    //Evaluator::mEventLoop->Clear();
+    Evaluator::mEventLoop->Clear();
 
 
     return Variant(returnval.GetDummyEvent().value);
@@ -451,7 +452,7 @@ Variant PEBLEnvironment::WaitForAnyKeyDownWithTimeout(Variant v)
     PEvent returnval = Evaluator::mEventLoop->Loop();
 
     //Now, clear the event loop tests
-    //Evaluator::mEventLoop->Clear();
+    Evaluator::mEventLoop->Clear();
 
     return Variant(returnval.GetDummyEvent().value);
 
@@ -495,7 +496,7 @@ Variant PEBLEnvironment::WaitForAnyKeyPressWithTimeout(Variant v)
 
      std::cout << "Returnval: "<<returnval.GetType() << std::endl;
     //Now, clear the event loop tests
-     //Evaluator::mEventLoop->Clear();
+     Evaluator::mEventLoop->Clear();
     //    return Variant(returnval.GetDummyEvent().value);
 
     return Variant(PEBLUtility::TranslateKeyCode(returnval.GetKeyboardEvent().key,0));
@@ -564,7 +565,7 @@ Variant PEBLEnvironment::WaitForListKeyPressWithTimeout(Variant v)
     PEvent returnval = Evaluator::mEventLoop->Loop();
 
     //Now, clear the event loop tests
-    //Evaluator::mEventLoop->Clear();
+    Evaluator::mEventLoop->Clear();
 
     //    return Variant(PEBLUtility::TranslateKeyCode(returnval.GetKeyboardEvent().key,0));
     Variant ret;
@@ -629,7 +630,7 @@ Variant PEBLEnvironment::WaitForKeyListDown(Variant v)
     PEvent returnval = Evaluator::mEventLoop->Loop();
 
 
-    //Evaluator::mEventLoop->Clear();
+    Evaluator::mEventLoop->Clear();
     Variant ret;
     if(returnval.GetType() == PDT_KEYBOARD)
         {
@@ -692,7 +693,7 @@ Variant PEBLEnvironment::WaitForListKeyPress(Variant v)
 
     //Start the event loop.
     PEvent returnval = Evaluator::mEventLoop->Loop();
-    //Evaluator::mEventLoop->Clear();
+    Evaluator::mEventLoop->Clear();
 
     return Variant(PEBLUtility::TranslateKeyCode(returnval.GetKeyboardEvent().key,0));
 }
@@ -739,6 +740,7 @@ Variant PEBLEnvironment::GetInput(Variant v)
 
     //Evaluator::mEventLoop->Clear();
     Evaluator::mEventLoop->RegisterEvent(keypressstate, funcname, Variant(0));
+    keypressstate = NULL;
 
     //Evaluate the last list item, if it exists.
     //This is the optional command that specifies mouse click events.
@@ -758,13 +760,14 @@ Variant PEBLEnvironment::GetInput(Variant v)
 
     //This gets the first click/keypress:
     PEvent keypress =  Evaluator::mEventLoop->Loop();
+    Evaluator::mEventLoop->Clear();    
 
     //handle special if it is a mouse click:
     if(keypress.GetType()==PDT_MOUSE_BUTTON )
         {
             if(keypress.GetMouseButtonEvent().state==PEBL_PRESSED)
                 {
-                    //Evaluator::mEventLoop->Clear();
+
                     textbox->SetEditable(false);
                     gEventQueue->PushEvent(keypress);
                     return Variant(textbox->GetText());
@@ -786,7 +789,6 @@ Variant PEBLEnvironment::GetInput(Variant v)
     while(PEBLUtility::TranslateKeyCode(pke.key, pke.modkeys) !=
           PEBLUtility::ToLower(exitString))
         {
-            //cout << "----------------------------\n";
             //cout << ":::"<<PEBLUtility::TranslateKeyCode(pke.key, pke.modkeys)<<std::endl;
             //std::cout <<"Tensting: " << pke.key << "|" << pke.modkeys << std::endl;
             //Process the input and redraw the textbox.
@@ -794,35 +796,38 @@ Variant PEBLEnvironment::GetInput(Variant v)
             if(!ignore) 
                 textbox->HandleKeyPress(pke.key, pke.modkeys,pke.unicode);
 
+
             if(myEnv)
                 {
                     myEnv->Draw();
                 }
 
+
             //Wait for the next keystroke..
 
             //reregistere the state to look for, which is always cleared when loop returns.
+            keypressstate = new ValueState(PEBL_PRESSED, DT_EQUAL, PEBLKEY_ANYKEY,gEventQueue, PDT_KEYBOARD);
             Evaluator::mEventLoop->RegisterEvent(keypressstate, funcname, Variant(0));
-
+            keypressstate = NULL;
 
 
             //Evaluate the last list item, if it exists.
             //This is the optional command that specifies mouse click events.
             if(plist->Length() > 2)
                 {
+
                     Variant tmp = plist->Nth(3);
                     if(tmp)
                         {
                             //add a mouse click as an exit too.
                             ValueState  * state2 = new ValueState(PEBL_PRESSED, DT_TRUE, 1, gEventQueue, PDT_MOUSE_BUTTON);
                             Evaluator::mEventLoop->RegisterEvent(state2,funcname, Variant(0));
+                            state2 = NULL;
                         }
                 }
             
 
-
             keypress =  Evaluator::mEventLoop->Loop();
-
             ignore=false;
 
             if(keypress.GetType()==PDT_MOUSE_BUTTON)
@@ -830,10 +835,10 @@ Variant PEBLEnvironment::GetInput(Variant v)
 
                     if(keypress.GetMouseButtonEvent().state==PEBL_PRESSED)
                         {
-
-                            //Evaluator::mEventLoop->Clear();
+                            
+                            Evaluator::mEventLoop->Clear();
                             textbox->SetEditable(false);
-                            //We should probably recycle keypress.
+
                             gEventQueue->PushEvent(keypress);
                             return Variant(textbox->GetText());
                         }else{
@@ -846,7 +851,7 @@ Variant PEBLEnvironment::GetInput(Variant v)
         }
 
 
-    //Evaluator::mEventLoop->Clear();
+    Evaluator::mEventLoop->Clear();
     textbox->SetEditable(false);
     myEnv->SetKeyRepeat(false);
     return Variant(textbox->GetText());
@@ -889,14 +894,16 @@ Variant PEBLEnvironment::WaitForMouseButton(Variant v)
     //1 is the value (down), DT_EQUAL is the test, 1 is the interface (e.g., the 'A' key)
 
     ValueState  * state = new ValueState(PEBL_PRESSED, DT_TRUE, 1, gEventQueue, PDT_MOUSE_BUTTON);
-
+    //cout << "Registering in: " << *(Evaluator::mEventLoop) << endl;
     //NULL,NULL will terminate the looping
     string funcname = "";
     Evaluator::mEventLoop->RegisterEvent(state,funcname, Variant(0));
+    //cout << "Adding event:\n";
+
     PEvent returnval = Evaluator::mEventLoop->Loop();
 
     //Now, clear the event loop tests
-    //Evaluator::mEventLoop->Clear();
+    Evaluator::mEventLoop->Clear();
 
     PList * newlist = new PList();
 
@@ -965,10 +972,8 @@ Variant PEBLEnvironment::WaitForMouseButtonWithTimeout(Variant v)
     PEvent returnval = Evaluator::mEventLoop->Loop();
 
 
-
-
     //Now, clear the event loop tests
-    //Evaluator::mEventLoop->Clear();
+    Evaluator::mEventLoop->Clear();
 
     PList *newlist = new PList();
 
@@ -1027,13 +1032,13 @@ Variant PEBLEnvironment::SetCursorPosition(Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
     //The first argument should be a textbox.
-    PError::AssertType(plist->First(), PEAT_INTEGER, "Argument error in first argument of function [SetCursorPosition(<x>,<y>)]: ");
+    PError::AssertType(plist->First(), PEAT_NUMBER, "Argument error in first argument of function [SetCursorPosition(<x>,<y>)]: ");
     int x = plist->First();
     //plist->PopFront();
 
-    PError::AssertType(plist->Nth(2), PEAT_INTEGER, "Argument error in second argumeent of function [SetCursorPosition(<x>,<y>)]: ");
+    PError::AssertType(plist->Nth(2), PEAT_NUMBER, "Argument error in second argumeent of function [SetCursorPosition(<x>,<y>)]: ");
 
-    int y = plist->Nth(2);
+    int y =plist->Nth(2);
     //    plist->PopFront();
 
     myEnv->SetCursorPosition(x,y);
@@ -1234,14 +1239,18 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
             devicetype = PDT_MOUSE_BUTTON;
         }else if(mystring==  "<TIMER>")
         {
-
             //This has the potential to leak:
             device = new PlatformTimer(myTimer);
             devicetype = PDT_TIMER;
 
             //this will be a state, not an event.
 
+        }else if(mystring == "<WINDOW_RESIZE>")
+        {
+            device = gEventQueue;
+            devicetype = PDT_WINDOW_RESIZE;
 
+            //cout << "Creating window resize:" << PDT_WINDOW_RESIZE << endl;
         }else if (mystring == "<JOYSTICK_BUTTON>")
         {
 
@@ -1492,10 +1501,13 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
         {
             Evaluator::mEventLoop->RegisterState(state,funcname, parameters);
 
+            //cout<<">>>>>>>>>>Timer" << *Evaluator::mEventLoop << endl;
         }
     else
         {
+
             Evaluator::mEventLoop->RegisterEvent(state,funcname, parameters);
+            //cout<<">>>>>>>>>>>>nonTimer" << *Evaluator::mEventLoop << endl;
         }
 
 
@@ -1507,6 +1519,7 @@ Variant  PEBLEnvironment::RegisterEvent( Variant v)
 Variant  PEBLEnvironment::StartEventLoop(Variant v)
 {
 
+    
     PEvent returnval = Evaluator::mEventLoop->Loop();
     return Variant(returnval.GetDummyEvent().value);
 
@@ -2128,6 +2141,23 @@ Variant PEBLEnvironment::IsShape(Variant v)
 
 
 
+Variant PEBLEnvironment::IsCustomObject(Variant v)
+{
+
+    PList * plist = v.GetComplexData()->GetList();
+    Variant v1 =  plist->First();
+    if (v1.IsComplexData())
+        {
+            if((v1.GetComplexData())->IsCustomObject())
+                {
+                    return Variant(true);
+                }
+        }
+    return Variant(false);
+}
+
+
+
 
 Variant PEBLEnvironment::PlayMovie(Variant v)
 {
@@ -2161,7 +2191,7 @@ Variant PEBLEnvironment::PlayMovie(Variant v)
 
 
     //Now, clear the event loop tests
-    //Evaluator::mEventLoop->Clear();
+    Evaluator::mEventLoop->Clear();
 
     return Variant(returnval.GetDummyEvent().value);
 #else

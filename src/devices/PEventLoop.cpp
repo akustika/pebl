@@ -3,7 +3,7 @@
 //    Name:       src/devices/PEventLoop.cpp
 //    Purpose:    Primary generic timer event device
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -59,6 +59,7 @@ extern PlatformEventQueue * gEventQueue;
 /// This is the standard PEventLoop constructor
 PEventLoop::PEventLoop()
 {
+    cout << "Creating event loop\n";
 
 }
 
@@ -66,6 +67,7 @@ PEventLoop::PEventLoop()
 PEventLoop::~PEventLoop()
 {
     // Standard Destructor
+    cout << "Destroying venet loop\n";
 }
 
 
@@ -80,6 +82,7 @@ void PEventLoop::RegisterState(DeviceState * state,
 {
 
 
+    //cout << "Registering a state\n";
     //Add the state to the states list.
     mStates.push_back(state);
     //Make a PNode representing the function. If the function-name is null, push a
@@ -131,7 +134,7 @@ void PEventLoop::RegisterState(DeviceState * state,
 /// when finished.
 void PEventLoop::RegisterEvent(DeviceState * state, const std::string &  function, Variant parameters)
 {
-
+    //cout << "Adding a state2--[" << function <<"]"<< endl;
 
     //Add the state to the states list.
     mStates.push_back(state);
@@ -172,15 +175,19 @@ void PEventLoop::RegisterEvent(DeviceState * state, const std::string &  functio
 
 void PEventLoop::Clear()
 {
-    cout << "CLEARING EVENT LOOP VIA CLEAR\n";
+    
+    //cout << "CLEARING EVENT LOOP VIA CLEAR\n";
 
     //When the eventloop is Clear()ed, the states should be deleted one-by-one,
     //to avoid a memory leak.
     
     std::vector<DeviceState*>::iterator i = mStates.begin();
+
     while(i != mStates.end())
         {
-            delete *i;
+            //memory crash here:
+            //cout << "Deleting: " << *i << endl;
+            if(*i)  delete *i;
             i++;
         }
 
@@ -188,6 +195,7 @@ void PEventLoop::Clear()
     mNodes.clear();
     mParameters.clear();
     mIsEvent.clear();
+    
 }
 
 
@@ -209,7 +217,7 @@ PEvent PEventLoop::Loop()
     //when this is set false.
     myEval->gGlobalVariableMap.AddVariable("gKeepLooping", 1);
 
-    //    cout <<"*****" <<myEval->gGlobalVariableMap.RetrieveValue("gKeepLooping") << "--"<< mStates.size() << std::endl;
+    //cout <<"*****" <<myEval->gGlobalVariableMap.RetrieveValue("gKeepLooping") << "--"<< mStates.size() << std::endl;
 
     //while loop stops when gKeepLooping turns false or there are no more states to check for.
     //    bool stop = (mStates.size()==0) ||
@@ -223,59 +231,61 @@ PEvent PEventLoop::Loop()
             //At the beginning of a cycle, the event queue has not yet been primed.
             gEventQueue->Prime();
             
-            //cout << mStates.size() << "  ";
+            // cout << mStates.size() << "  ";
             
             //Scan through each event in the event vector.         
             for(i = 0; i < mStates.size(); i++)
                 {
-                    //cout << i << "/"<<mStates.size() << ":"<<  mNodes[i] << " ";
+                    //cout << i << "/"<<mStates.size() << ":"<<  mNodes[i] << "\n";
 
                     if(mIsEvent[i])   //The test is for an event queue-type event.
                         {
-
+                            
                             // Note: 'events' contrast with 'states', handled later.
-                            // These are devices which send events through the PEBL Event queue.
+                           // These are devices which send events through the PEBL Event queue.
                             // So, if the current test is an 'event' state, we need to check the event queue.
                             
                             //Only test the event if the queue is not empty.
                             if(!gEventQueue->IsEmpty())
                                 {
+                                    //cout << mStates.size() << endl;
                                     //Now, we only should test an event if it is the proper device type.
-                                    //cout << "statetype"<< mStates[i]->GetDeviceType() << endl;
-                                    
+                                    //cout << "statetype ["<<i<<"]" << endl;
+                                    //cout << mStates[i]->GetDeviceType() << "---" << std::flush;
+                                    //cout <<*(mStates[i]) << endl;
+                                    //cout << "Event: " << PDT_WINDOW_RESIZE <<"|"<< gEventQueue->GetFirstEventType() << endl;
                                     if(gEventQueue->GetFirstEventType() == mStates[i]->GetDeviceType())
                                         {
+                                            
+
 
                                             //Now, just test the device.
-                                            //I don't think any devices support TestDevice currently.
                                             result = mStates[i]->TestDevice();
+                                            //cout << "Result:" << result << endl;
                                                
                                             if(result)
                                                 {
                                                     returnval = gEventQueue->GetFirstEvent();
+                                                    
 
-                                                    // The test was successful.  Add a global variable giving the time of the event.
-                                                    // myEval->gGlobalVariableMap.AddVariable("gLastEventTime", gEventQueue->GetFirstEvent().GetTime());
-
+                                                    // The test was successful.  
+                                                    
                                                     if(mNodes[i])  //Execute mNodes
                                                         {
-
                                                             //Add the parameters, as a list, to the stack.
                                                             
-
                                                             myEval->Push(mParameters[i]);
-
-                                                            //myEval->Evaluate(mNodes[i]);
                                                             myEval->CallFunction((OpNode*)mNodes[i]);
                                                             myEval->Pop();
 
                                                         }
                                                     else       //If mNodes[i] is null, terminate
                                                         {
+                                                            //std::cout << "Ending loop with gkeeplooping2\n";
                                                             myEval->gGlobalVariableMap.AddVariable("gKeepLooping", 0);
                                                             
                                                         }
-                                            goto end;
+                                            goto end; 
                                                 }
                                         }
                                 }
@@ -286,7 +296,11 @@ PEvent PEventLoop::Loop()
 
                             //The test examines the device's state directly.
                             //I don't think any devices support TestDevice currently.
+
+                            //result = mStates[i]->TestDevice();
                             result = mStates[i]->TestDevice();
+                            //cout << "Resultb:" << result << endl;
+                            
                             if(result)
 
                                 {
@@ -344,6 +358,7 @@ PEvent PEventLoop::Loop()
                                         }
                                     else
                                         {
+                                            //std::cout << "Ending loop with gkeeplooping\n";
                                             myEval->gGlobalVariableMap.AddVariable("gKeepLooping", 0);
 
                                         }
@@ -374,6 +389,7 @@ PEvent PEventLoop::Loop()
                     }
                 }
 #endif
+
 #if defined(PEBL_WIN32)
            if(myEval->gGlobalVariableMap.Exists("gSleepEasy") )
                 {
@@ -402,8 +418,16 @@ PEvent PEventLoop::Loop()
 std::ostream & operator <<(std::ostream & out, const PEventLoop & loop )
 {
 
-    out << "PEBL Event Loop:" << flush;
-    
+    out << "PEBL Event Loop: " << flush;
+    loop.Print(out);
     return out;
+
+}
+
+
+void PEventLoop::Print(std::ostream & out) const
+{
+    out << " ---------------\n";
+    out << "Number of states:" <<mStates.size() << endl;
 
 }

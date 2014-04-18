@@ -196,6 +196,7 @@ namespace PEBLObjects
         {
 
             {(char*)"MAKEWINDOW",        MakeWindow, 0, 1},
+            {(char*)"RESIZEWINDOW",      ResizeWindow, 3, 3},
             {(char*)"MAKEIMAGE",         MakeImage,  1, 1},
             {(char*)"MAKELABEL",         MakeLabel,  2, 2},
             {(char*)"MAKETEXTBOX",       MakeTextBox, 4, 4},
@@ -366,7 +367,7 @@ namespace PEBLEnvironment
             {(char*)"ISWIDGET",                        IsWidget,           1,1},
             {(char*)"ISWINDOW",                        IsWindow,           1,1},
             {(char*)"ISSHAPE",                         IsShape,            1,1},
-
+            {(char*)"ISCUSTOMOBJECT",                  IsCustomObject,     1,1},
             {(char*)"PLAYMOVIE",   PlayMovie,  1,1},
 
 

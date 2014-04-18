@@ -32,7 +32,7 @@ using std::cout;
 using std::endl;
 
 PCustomObject::PCustomObject():
-    PEBLObjectBase(),
+    PEBLObjectBase(CDT_CUSTOMOBJECT),
     mName("Unknown Custom Object")
 {
     
@@ -41,7 +41,7 @@ PCustomObject::PCustomObject():
 
 
 PCustomObject::PCustomObject(const std::string & name):
-    PEBLObjectBase(),
+    PEBLObjectBase(CDT_CUSTOMOBJECT),
     mName(name)
 {
 

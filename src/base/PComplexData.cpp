@@ -161,6 +161,9 @@ std::string PComplexData::GetTypeName() const
   case CDT_MOVIE:
       return "Complex Data: Movie";
 
+  case CDT_CUSTOMOBJECT:
+      return "Complex Data: Custom Object";
+
   case CDT_UNDEFINED:
   default:
       return "Complex Data: Undefined";
@@ -209,7 +212,7 @@ bool PComplexData::IsEnvironment() const
 bool PComplexData::IsWidget() const
 {
   if ( ( GetType() == CDT_WINDOW ) || ( GetType() == CDT_LABEL ) || ( GetType() == CDT_IMAGEBOX )
-       || ( GetType() == CDT_TEXTBOX ) || ( GetType() == CDT_DRAWOBJECT ) || ( GetType() == CDT_CANVAS ) || GetType() == CDT_MOVIE)
+       || ( GetType() == CDT_TEXTBOX ) || ( GetType() == CDT_DRAWOBJECT ) || ( GetType() == CDT_CANVAS ) || GetType() == CDT_MOVIE || GetType() == CDT_CUSTOMOBJECT)
          return true;
   else
     return false;
@@ -312,9 +315,18 @@ bool PComplexData::IsMovie() const
   return GetType() == CDT_MOVIE;
 }
 
+
+bool PComplexData::IsCustomObject() const
+{
+    //cout << "checking custom object" << GetType() << "|" << GetTypeName() << endl;
+    
+  return GetType() == CDT_CUSTOMOBJECT;
+}
+
 PList * PComplexData::GetList()const
 {
 
     if(IsList()) return dynamic_cast<PList*>(mPEBLObject.get());
     else return NULL;
+
 }

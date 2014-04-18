@@ -123,7 +123,8 @@ bool PlatformImageBox::LoadImage(const std::string &  imagefilename)
     //bpp, format, etc.
 
     //shouldn't images be opaque?
-     SDL_SetAlpha( mSurface, 0, SDL_ALPHA_TRANSPARENT);    
+    //     SDL_SetAlpha( mSurface, 0, SDL_ALPHA_TRANSPARENT);    
+
 
     //Now, set the height and width to be the same as the
     //initial image.

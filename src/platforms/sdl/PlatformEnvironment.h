@@ -45,7 +45,8 @@ class PlatformEnvironment: virtual public PEnvironment, public PEBLObjectBase
 {
 public:
   
-    PlatformEnvironment(PEBLVideoMode mode, PEBLVideoDepth depth, bool windowed,bool unicode);
+    PlatformEnvironment(PEBLVideoMode mode, PEBLVideoDepth depth, 
+                        bool windowed,bool resizeable, bool unicode);
     virtual ~PlatformEnvironment();
   
 
@@ -59,7 +60,7 @@ public:
     bool GetWindowed(){return mWindowed;};
     
     Variant GetScreenModes();
-
+    Variant GetResizeable(){return mResizeable;};
     //overloaded generic PEBLObjectBase methods
     virtual bool SetProperty(std::string, Variant v);
     virtual Variant GetProperty(std::string)const;
@@ -87,6 +88,7 @@ private:
     PEBLVideoDepth mVideoDepth;
 
     bool mWindowed;
+    bool mResizeable;
     bool mUnicode;
     int mNumJoysticks;
 

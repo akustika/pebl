@@ -61,8 +61,11 @@ Evaluator::Evaluator():
 #ifdef PEBL_DEBUG_PRINT 
     cout << "Creating Evaluator: " << mScope << endl;
 #endif
-    
-    mEventLoop = new PEventLoop();
+
+
+    if(!mEventLoop)
+        mEventLoop = new PEventLoop();
+
     gCallStack.Push(gEvalNode);
     
 }
@@ -80,7 +83,8 @@ Evaluator::Evaluator(Variant & stacktop, string scope):
     //add everything in callstack onto mCallStack
     //mCallStack = callstack;
 
-    mEventLoop = new PEventLoop();
+    if(!mEventLoop)
+        mEventLoop = new PEventLoop();
 
     //Push the current evalnode onto the stack, if
     //it exists.
@@ -97,6 +101,7 @@ Evaluator::Evaluator(Variant & stacktop, string scope):
 Evaluator::~Evaluator()
 
 {
+
 #ifdef PEBL_DEBUG_PRINT 
     cout << "Deleting Evaluator: " << mScope << endl;
 #endif
@@ -1069,7 +1074,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                         if(v1.GetDataType() == P_DATA_STACK_SIGNAL &&
                            v1 == Variant(STACK_BREAK))
                             {
-                                cout << "STACKBREAKING ON RIGHT\n";
+                                //cout << "STACKBREAKING ON RIGHT\n";
                                 
                                 //If this is a stack signal, and if 
                                 //it is a break, we should just back out
@@ -1087,7 +1092,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                         if(v1.GetDataType() == P_DATA_STACK_SIGNAL &&
                            v1 == Variant(STACK_BREAK))
                             {
-                                cout << "STACKBREAKING ON LEFT\n";
+                                //cout << "STACKBREAKING ON LEFT\n";
                                 //If this is a stack signal, and if 
                                 //it is a break, we should just back out
                                 Push(Variant(STACK_BREAK));
@@ -1109,7 +1114,7 @@ bool Evaluator::Evaluate(const OpNode * node)
                 //all relevant loops look for this type of event and 
                 //cleanly abort when that times comes.
 
-                cout << "PEBL_BREAK HANDLER\n";
+                //                cout << "PEBL_BREAK HANDLER\n";
 
                 Variant v1 = Variant(STACK_BREAK);
                 Push(v1);

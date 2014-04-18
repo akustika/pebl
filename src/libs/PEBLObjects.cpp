@@ -90,10 +90,10 @@ extern PlatformEventQueue * gEventQueue = NULL;
 /// the program itself.
 
 void PEBLObjects::MakeEnvironment(PEBLVideoMode mode, PEBLVideoDepth depth,
-                                  bool windowed,bool unicode)
+                                  bool windowed,bool resizeable,bool unicode)
 {
 
-    myEnv = new PlatformEnvironment(mode, depth, windowed,unicode);
+    myEnv = new PlatformEnvironment(mode, depth, windowed,resizeable,unicode);
     myEnv->Initialize();
     //Initialize the event queue.
     gEventQueue = new PlatformEventQueue();
@@ -130,8 +130,9 @@ Variant PEBLObjects::MakeWindow(Variant v)
     PEBLVideoMode mode = myEnv->GetVideoMode();
     PEBLVideoDepth depth = myEnv->GetVideoDepth();
     bool windowed = myEnv->GetWindowed();
+    bool resizeable = myEnv->GetResizeable();
 
-    myWindow->Initialize(mode, depth, windowed);
+    myWindow->Initialize(mode, depth, windowed,resizeable);
     
     //Add the window to the environment
     myEnv->AddWindow(myWindow);
@@ -146,6 +147,29 @@ Variant PEBLObjects::MakeWindow(Variant v)
     //cout << "Deleting PCD Window in PEBLOBjects::MakeWindow\n";
     return tmp;
 }
+
+
+
+Variant PEBLObjects::ResizeWindow(Variant v)
+{
+
+       PList * plist = v.GetComplexData()->GetList();
+            
+       Variant v2 = plist->First(); //plist->PopFront();
+       PError::AssertType(v2, PEAT_WINDOW, "Argument error in first argument of function [ResizeWindow(<window>,<w>,<h>)]: "); 
+       PlatformWindow * myWindow = dynamic_cast<PlatformWindow*>(v2.GetComplexData()->GetObject().get());
+
+       Variant w = plist->Nth(2);
+       
+       Variant h = plist->Nth(3);
+       PError::AssertType(w, PEAT_NUMBER, "Argument error in second argument of function [ResizeWindow(<window>,<w>,<h>)]: "); 
+       PError::AssertType(h, PEAT_NUMBER, "Argument error in third argument of function [ResizeWindow(<window>,<w>,<h>)]: "); 
+       
+       
+       myWindow->Resize(w,h);
+       return Variant(1);
+}
+
 
 
 Variant PEBLObjects::MakeImage(Variant v)
@@ -271,13 +295,11 @@ Variant PEBLObjects::MakeCanvas(Variant v)
     if(plist->Length()>2)
         {
             PError::AssertType(plist->Nth(3), PEAT_COLOR, "Argument error in third parameter of function  [MakeCanvas(<x>, <y>, <color>)]: "); 
-            std::cout <<"We have guaze\n";
 
             Variant color = plist->Nth(3);// plist->PopFront();
             pc = new PlatformCanvas(width,height,color);    
 
         }else  {
-        std::cout << "we're out of guaze\n";
         pc = new PlatformCanvas(width,height);
     }
 
@@ -773,8 +795,6 @@ Variant PEBLObjects::Hide(Variant v)
 
 
 
-/// The Draw() function should only really be callable on the environment,
-/// or it maybe shouldn't need an argument.
 ///
 Variant PEBLObjects::Draw(Variant v)
 {
@@ -1574,14 +1594,12 @@ Variant PEBLObjects::PausePlayback(Variant v)
 
 Variant PEBLObjects::MakeCustomObject(Variant v)
 {
-
-
     PList * plist = v.GetComplexData()->GetList();
     std::string name = plist->First();// plist->PopFront();
 
-
-    counted_ptr<PEBLObjectBase> myObject = counted_ptr<PEBLObjectBase>(new PCustomObject(name));    
-    PComplexData *  pcd = new PComplexData(myObject);
+    PCustomObject* myobj = new PCustomObject(name);
+    counted_ptr<PEBLObjectBase> tmpObject = counted_ptr<PEBLObjectBase>(myobj);    
+    PComplexData *  pcd = new PComplexData(tmpObject);
     Variant tmp = Variant(pcd);
     delete pcd;
     pcd=NULL;

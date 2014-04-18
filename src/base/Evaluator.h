@@ -93,7 +93,7 @@ public:
     /// is done in the main program file.
     static VariableMap gGlobalVariableMap;
     
-
+    //Ditto with mEventLoop:
     static PEventLoop * mEventLoop;
 
     static PEBLPath gPath;

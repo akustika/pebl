@@ -53,7 +53,7 @@ int DeviceState::GetInterface() const
 
 int DeviceState::TestDevice() const
 {
-    cout << "Dummy device tester\n";
+    //cout << "Dummy device tester\n";
     return true;
 }
 

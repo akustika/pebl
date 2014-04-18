@@ -311,6 +311,7 @@ void PlatformFont::SetBackgroundColor(PColor color)
 SDL_Surface * PlatformFont::RenderText(const std::string & text)
 {
 
+    int maxchars = 1000;
 #if 0
     cout << "About to render text [" << text  << "] with font " << *this << endl;
 
@@ -335,6 +336,10 @@ SDL_Surface * PlatformFont::RenderText(const std::string & text)
     std::string toBeRendered = StripText(text);
     SDL_Surface * tmpSurface = NULL;
 
+    if(toBeRendered.length()>maxchars)
+        {
+            toBeRendered=toBeRendered.substr(0,maxchars);
+        }
     //The text renderer doesn't like to render empty text.
     if(toBeRendered.length() == 0) toBeRendered = " ";
 
@@ -390,11 +395,24 @@ SDL_Surface * PlatformFont::RenderText(const std::string & text)
         }
     else
         {
+            string message =   "Unable to render text  [" +  toBeRendered + "] in PlatformFont::RenderText. Attempting to render '' instead\n";
+            PError::SignalWarning(message);
 
-            string message =   "Unable to render text  [" +  toBeRendered + "] in PlatformFont::RenderText";
-            PError::SignalFatalError(message);
+            //We have a problem, probably because we are trying to render garbage. Let's try to render "" instead, and
+            //signal a waring.  If there is still an error, we will signal a fatal error.
+            std::string tmp = "";
+            tmpSurface =  TTF_RenderText_Blended(mTTF_Font, tmp.c_str(), mSDL_FGColor);
+
+           if(tmpSurface)
+            {
+            return tmpSurface;
+             }
+            else
+            {
+              string message =   "Unable to render text in PlatformFont::RenderText";
+              PError::SignalFatalError(message);
+            }
         }
-
     return NULL;
 }
 

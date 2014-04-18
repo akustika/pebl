@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/PlatformEnvironment.cpp
 //    Purpose:    Contains SDL-specific interface for the main environment.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -66,12 +66,14 @@ using std::ostream;
 
 
 ///Standard Constructor
-PlatformEnvironment::PlatformEnvironment(PEBLVideoMode mode, PEBLVideoDepth depth, bool windowed,bool unicode):
+PlatformEnvironment::PlatformEnvironment(PEBLVideoMode mode, PEBLVideoDepth depth,
+                                         bool windowed,bool resizeable,bool unicode):
     PEBLObjectBase(CDT_ENVIRONMENT),
     mVideoMode(mode),
     mVideoDepth(depth),
     mWindowed(windowed),
     mUnicode(unicode),
+    mResizeable(resizeable),
     mNumJoysticks(0)
 {
     mIsInitialized = false;
@@ -154,7 +156,7 @@ void PlatformEnvironment::Initialize()
     //This shouldn't be neded, if platformenvironment gets cleaned up alright,
     //but let's do it anyway.
     //atexit(SDL_Quit);
-    std::cerr << "SDL INITIALIZATION COMPLETE\n";
+    //    std::cerr << "SDL INITIALIZATION COMPLETE\n";
 }
 
 
@@ -188,9 +190,7 @@ Variant PlatformEnvironment::GetProperty(std::string name )const
 }
 
 // ObjectValidationError PlatformEnvironment::ValidateProperty(std::string, Variant v)const
-
 // ObjectValidationError PlatformEnvironment::ValidateProperty(std::string)const;
-
 
 int PlatformEnvironment::ShowCursor(int val)
 {

@@ -152,9 +152,9 @@ PNode *  FunctionMap::GetFunction(const string & lcasefuncname)
     if(p == mFunctionMap.end())
         {
             //This should probably signal an error.
-            cerr << "Function Name [" << funcname << "] not found.  Returning 0" << endl;
+            PError::SignalFatalError(string("Function Name [")+ funcname+string("] not found.\n"));
             DumpValues();
-            return new DataNode(Variant(PEBL_DATA_NODE),"PEBL SELF-GENERATED OBJECT",-1);
+            return NULL;//new DataNode(Variant(PEBL_DATA_NODE),"PEBL SELF-GENERATED OBJECT",-1);
         }
     else
         {

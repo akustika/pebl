@@ -3,7 +3,7 @@
 //    Name:       src/apps/PEBL.cpp
 //    Purpose:    The primary PEBL run-time interpreter.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -118,11 +118,12 @@ void  PrintOptions();
 
 ///Initiate some static member data.
 FunctionMap Evaluator::mFunctionMap;
-PEventLoop *Evaluator::mEventLoop;
+PEventLoop *Evaluator::mEventLoop=NULL;
 VariableMap Evaluator::gGlobalVariableMap;
 const PNode * Evaluator::gEvalNode = NULL;
 PEBLPath  Evaluator::gPath;
 PCallStack Evaluator::gCallStack;
+
 
 Loader* myLoader;
 PNode * head;
@@ -183,6 +184,8 @@ int PEBLInterpret( int argc, char *argv[] )
     files.push_back("Utility.pbl");
     files.push_back("Math.pbl");
     files.push_back("Graphics.pbl");
+    files.push_back("UI.pbl");
+
     //    files.push_back("Taguchi.pbl"); //not ready
 
 
@@ -311,6 +314,7 @@ int PEBLInterpret( int argc, char *argv[] )
     enum PEBLVideoMode displayMode;
     enum PEBLVideoDepth displayDepth;
     bool windowed = true;
+    bool resizeable = false;
     bool unicode = true;
     Variant lang = "en";
     Variant subnum = 0;
@@ -385,6 +389,13 @@ int PEBLInterpret( int argc, char *argv[] )
                     pfile = Variant("params/") +Variant(argv[++j]);
                 }
 
+            else if(strcmp(argv[j],"--resizeable")==0 || 
+                    strcmp(argv[j],"--resizable")==0  )
+                {
+                    if(windowed)
+                        resizeable = true;
+                }
+
         }
 
 
@@ -450,7 +461,7 @@ int PEBLInterpret( int argc, char *argv[] )
 
     // We can't use any SDL-related functions before this function is called.
     // But we may want to know current screen resolution before we set displaymode
-    PEBLObjects::MakeEnvironment(displayMode, displayDepth, windowed,unicode);
+    PEBLObjects::MakeEnvironment(displayMode, displayDepth, windowed,resizeable,unicode);
 
     cerr << "Environment created\n";
 
@@ -880,7 +891,9 @@ std::list<std::string> GetFiles(int argc,  char * argv[])
                 }
             else if (strcmp(argv[i],"--windowed")==0 ||
                      strcmp(argv[i],"--fullscreen")==0 ||
-                     strcmp(argv[i],"--unicode")==0 )
+                     strcmp(argv[i],"--unicode")==0 ||
+                     strcmp(argv[i],"--resizeable")==0||
+                     strcmp(argv[i],"--resizable")==0)
                 {
                     //Don't bother incrementing 'i'
                 }
@@ -930,6 +943,9 @@ void PrintOptions()
     cout << "--windowed\n";
     cout << "--fullscreen\n";
     cout << "  Controls whether the script will run in a window or fullscreen.\n\n";
+    cout << "--resizeable\n";
+    cout << "--resizable\n";
+    cout << "  Controls whether the window will be resizeable (only in windowed mode)\n\n";
     cout << "--unicode\n";
     cout << "  Turns on unicode handling, with slight overhead\n";
     cout << "--pfile <filename>\n";

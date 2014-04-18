@@ -55,8 +55,11 @@ public:
     ///This method initiates everything needed to display the main window
     bool Initialize(PEBLVideoMode mode, 
                     PEBLVideoDepth vdepth, 
-                    bool windowed);
+                    bool windowed,
+                    bool resizeable);
     int GetVideoFlags();
+
+    bool Resize(int w, int h);
 
     bool Draw();
     long int DrawFor(unsigned int cycles);
@@ -67,6 +70,7 @@ protected:
     
 private:
 
+    int mFlags;
 };
 
 

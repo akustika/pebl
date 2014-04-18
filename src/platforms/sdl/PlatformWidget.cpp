@@ -76,8 +76,7 @@ std::ostream & PlatformWidget::SendToStream(std::ostream& out) const
 
 bool PlatformWidget::Draw()
 {
-    
-    
+
     //cout <<"Drawing: " << mSurface->refcount << endl;
     if(IsVisible())
         {

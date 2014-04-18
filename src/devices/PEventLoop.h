@@ -3,7 +3,7 @@
 //    Name:       src/devices/PEventLoop.h
 //    Purpose:    Primary Event Loop.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -72,7 +72,7 @@ public:
 
     //Overload of the << operator
     friend std::ostream & operator <<(std::ostream & out, const PEventLoop & loop );
-
+    void Print(std::ostream & out)const;
 
 protected:
     

@@ -52,6 +52,7 @@ PTextBox::PTextBox():
     InitializeProperty("CURSORPOS",Variant(0));
     InitializeProperty("NAME",Variant("<TEXTBOX>"));
     InitializeProperty("LINEWRAP",Variant(1));
+    InitializeProperty("LINEHEIGHT",Variant(0));
 }
 
 
@@ -70,6 +71,7 @@ PTextBox::PTextBox(std::string text, int width, int height):
     InitializeProperty("CURSORPOS",Variant(0));
     InitializeProperty("NAME",Variant("<TEXTBOX>"));
     InitializeProperty("LINEWRAP",Variant(1));
+    InitializeProperty("LINEHEIGHT",Variant(0));
 }
 
 
@@ -83,6 +85,7 @@ PTextBox::PTextBox( PTextBox & text)
     mLineWrap = true;
     InitializeProperty("NAME",Variant("<TEXTBOX>"));
     InitializeProperty("LINEWRAP",Variant(1));
+    InitializeProperty("LINEHEIGHT",Variant(0));
 }
 
 PTextBox::~PTextBox()
@@ -111,7 +114,6 @@ bool PTextBox::SetProperty(std::string name, Variant v)
     else if(name == "CURSORPOS") SetCursorPosition(v);
     else if(name == "LINEWRAP") SetLineWrap(v);
     else return false;
-
     return true;
 }
 

@@ -33,9 +33,12 @@
 #ifdef PEBL_MOVIES
 #include "WAAVE.h"
 #endif
+
+#include "../../apps/Globals.h"
 using std::cout;
 using std::endl;
 
+extern Evaluator * myEval;
 
 //This should be moved into PEventQueue
 PlatformEventQueue::PlatformEventQueue()
@@ -179,7 +182,7 @@ void PlatformEventQueue::Prime()
                     {
                         PEvent evt(PDT_MOUSE_MOVEMENT, time);
                         PEBL_MouseMovementEvent pme;
-
+                        //cout << "mousemove\n";
                         pme.x= test_event.motion.x;
                         pme.y= test_event.motion.y;
                         pme.relx =test_event.motion.xrel;
@@ -214,8 +217,31 @@ void PlatformEventQueue::Prime()
                     }
                     break;
 #endif
+
+
+ //If the window resized 
+                case SDL_VIDEORESIZE:
+                    {
+                        PEvent evt(PDT_WINDOW_RESIZE,time);
+                        //cout << "resizevent\n";
+                        PEBL_WindowEvent pwe;
+                        pwe.w= test_event.resize.w;
+                        pwe.h= test_event.resize.h;
+                        evt.SetWindowEvent(pwe);
+                        mEventQueue.push(evt);
+                        //cout <<"Size: " << mEventQueue.size()<<endl;
+                        
+
+
+                        //Change the video size.
+                        myEval->gGlobalVariableMap.AddVariable("gVideoWidth", pwe.w);
+                        myEval->gGlobalVariableMap.AddVariable("gVideoHeight", pwe.h);
+
+
+                    }
+                    break;
                 default:
-                    cout << "Unknown event\n";
+                    //cout << "Unknown event\n";
                     ;
                 }
             //cout << "Loop active\n";

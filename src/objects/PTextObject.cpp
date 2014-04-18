@@ -3,7 +3,7 @@
 //    Name:       src/objects/PTextObject.cpp
 //    Purpose:     Contains generic specs for all objects containing text
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004-2013 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -42,6 +42,7 @@ PTextObject::PTextObject():
 {
     InitializeProperty("TEXT","");
     InitializeProperty("DIRECTION",1);
+    InitializeProperty("LINEHEIGHT",0);
 
 }
 
@@ -56,6 +57,7 @@ PTextObject::PTextObject(const std::string & text):
 
     InitializeProperty("TEXT",Variant(mText));
     InitializeProperty("DIRECTION",1);
+    InitializeProperty("LINEHEIGHT",0);
 }
 
 
@@ -64,10 +66,10 @@ PTextObject::PTextObject( PTextObject &object):
     mTextChanged(true),
     mText(object.GetText()),
     mDirection(1)
- 
 {
     InitializeProperty("TEXT",Variant(mText));
     InitializeProperty("DIRECTION",1);
+    InitializeProperty("LINEHEIGHT",0);
 }
 
 
@@ -125,7 +127,7 @@ Variant PTextObject::GetProperty(std::string name)const
 
 ObjectValidationError PTextObject::ValidateProperty(std::string name, Variant v)const
 {
-    return ValidateProperty(name);
+        return ValidateProperty(name);
 }
 
 ObjectValidationError PTextObject::ValidateProperty(std::string name)const
@@ -140,7 +142,8 @@ ObjectValidationError PTextObject::ValidateProperty(std::string name)const
             name == "WIDTH" ||
             name == "HEIGHT" ||
             name == "FONT" ||
-            name == "DIRECTION")
+            name == "DIRECTION"||
+            name == "LINEHEIGHT")
 
         return OVE_VALID;
     else

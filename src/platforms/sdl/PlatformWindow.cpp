@@ -123,7 +123,8 @@ int PlatformWindow::GetVideoFlags()
 ///This method initiates everything needed to display the main window
 bool PlatformWindow::Initialize(PEBLVideoMode mode, 
                                 PEBLVideoDepth vdepth, 
-                                bool windowed)
+                                bool windowed,
+                                bool resizeable)
 {  
     Variant v = 0;
 
@@ -215,6 +216,11 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
         }
 
     
+    if(resizeable)
+        {
+            vflags |= SDL_RESIZABLE;         //IS the window resizeable?
+        }
+
     //Re-store the values
     myEval->gGlobalVariableMap.AddVariable("gVideoWidth", width);
     myEval->gGlobalVariableMap.AddVariable("gVideoHeight", height);
@@ -224,6 +230,7 @@ bool PlatformWindow::Initialize(PEBLVideoMode mode,
     bool success = 0;
     //INitialize the SDL surface with the appropriate flags.
      mSurface=SDL_SetVideoMode(width,height,depth,vflags);
+     mFlags = vflags;
    // mSurface = SDL_SetVideoMode(width,height,depth,SDL_HWACCEL | SDL_FULLSCREEN | SDL_DOUBLEBUF); 
     if ( mSurface == NULL )
         {          
@@ -415,3 +422,18 @@ long int PlatformWindow::DrawFor(unsigned int cycles)
     return result;
 
 }
+
+bool PlatformWindow::Resize(int w, int h)
+{
+ //Resize the screen 
+
+    //    screen = SDL_SetVideoMode( event.resize.w, event.resize.h, SCREEN_BPP, SDL_SWSURFACE | SDL_RESIZABLE ); 
+    Variant vDp =   myEval->gGlobalVariableMap.RetrieveValue("gVideoDepth");
+    mSurface = SDL_SetVideoMode(w,h,(int)vDp,mFlags);
+
+    if(mSurface)
+        {
+            myEval->gGlobalVariableMap.AddVariable("gVideoWidth", w);
+            myEval->gGlobalVariableMap.AddVariable("gVideoHeight", h);
+        }
+}    
