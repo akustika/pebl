@@ -1364,8 +1364,11 @@
 	<string>
 	<signal.h>
 
-1347548660 source:c:\users\localadmin\documents\code-0\src\apps\pebl.cpp
+1397829526 source:c:\users\localadmin\documents\code-0\src\apps\pebl.cpp
+	"../base/Evaluator-es.h"
+	"../devices/PEventLoop-es.h"
 	"../base/Evaluator.h"
+	"../devices/PEventLoop.h"
 	"../base/grammar.tab.hpp"
 	"../base/PNode.h"
 	"../base/Loader.h"
@@ -1380,7 +1383,6 @@
 	"../utility/PEBLUtility.h"
 	"../utility/rc_ptrs.h"
 	"../utility/BinReloc.h"
-	"../devices/PEventLoop.h"
 	"Globals.h"
 	<iostream>
 	<signal.h>
@@ -1395,9 +1397,11 @@
 	<shlobj.h>
 	<mach-o/dyld.h>
 	<CoreFoundation/CFBundle.h>
+	"WAAVE.h"
 	"../platforms/sdl/PlatformEnvironment.h"
+	"../platforms/sdl/SDLUtility.h"
 
-1347031797 c:\users\localadmin\documents\code-0\src\base\evaluator.h
+1397829535 c:\users\localadmin\documents\code-0\src\base\evaluator.h
 	<stack>
 	<list>
 	"Variant.h"
@@ -1405,12 +1409,14 @@
 	"../utility/PEBLPath.h"
 	"VariableMap.h"
 	"../utility/PError.h"
+	"../devices/PEventLoop.h"
 
-1347031797 c:\users\localadmin\documents\code-0\src\base\variant.h
+1397829535 c:\users\localadmin\documents\code-0\src\base\variant.h
 	<iostream>
 	"../utility/rc_ptrs.h"
+	"../utility/Defs.h"
 
-1347031789 c:\users\localadmin\documents\code-0\src\utility\rc_ptrs.h
+1397829527 c:\users\localadmin\documents\code-0\src\utility\rc_ptrs.h
 	<iostream>
 	<stddef.h>
 
@@ -1419,15 +1425,16 @@
 	<map>
 	<string>
 
-1347031797 c:\users\localadmin\documents\code-0\src\base\pnode.h
+1397829535 c:\users\localadmin\documents\code-0\src\base\pnode.h
 	"Variant.h"
 	<string>
+	"../utility/Defs.h"
 
 1347039793 c:\users\localadmin\documents\code-0\src\utility\peblpath.h
 	<list>
 	<string>
 
-1347031798 c:\users\localadmin\documents\code-0\src\base\variablemap.h
+1397829535 c:\users\localadmin\documents\code-0\src\base\variablemap.h
 	"Variant.h"
 	<map>
 	<string>
@@ -1438,7 +1445,7 @@
 	"../base/Variant.h"
 	"../base/PNode.h"
 
-1347031797 c:\users\localadmin\documents\code-0\src\base\grammar.tab.hpp
+1397829535 c:\users\localadmin\documents\code-0\src\base\grammar.tab.hpp
 
 1347031797 c:\users\localadmin\documents\code-0\src\base\loader.h
 	"PNode.h"
@@ -1448,19 +1455,12 @@
 	<set>
 	<map>
 
-1347031798 c:\users\localadmin\documents\code-0\src\base\pcomplexdata.h
+1397829535 c:\users\localadmin\documents\code-0\src\base\pcomplexdata.h
 	"PList.h"
 	"../objects/PColor.h"
 	"../platforms/sdl/PlatformEnvironment.h"
 	"../platforms/sdl/PlatformWindow.h"
 	"../platforms/sdl/PlatformImageBox.h"
-	"../platforms/sdl/PlatformFont.h"
-	"../platforms/sdl/PlatformLabel.h"
-	"../platforms/sdl/PlatformTextBox.h"
-	"../platforms/sdl/PlatformKeyboard.h"
-	"../platforms/sdl/PlatformDrawObject.h"
-	"../platforms/sdl/PlatformCanvas.h"
-	"../platforms/sdl/PlatformMovie.h"
 	"../devices/PStream.h"
 	"../platforms/sdl/PlatformAudioOut.h"
 	"../platforms/sdl/PlatformNetwork.h"
@@ -1470,14 +1470,14 @@
 	"../devices/PComPort.h"
 	<iostream>
 
-1347031797 c:\users\localadmin\documents\code-0\src\base\plist.h
+1397829535 c:\users\localadmin\documents\code-0\src\base\plist.h
 	"Variant.h"
 	"../utility/rc_ptrs.h"
 	"PEBLObject.h"
 	<vector>
 	<iostream>
 
-1347031798 c:\users\localadmin\documents\code-0\src\base\peblobject.h
+1397829535 c:\users\localadmin\documents\code-0\src\base\peblobject.h
 	"Variant.h"
 	<iostream>
 	<map>
@@ -1488,14 +1488,14 @@
 	<iostream>
 	<string>
 
-1347031791 c:\users\localadmin\documents\code-0\src\platforms\sdl\platformenvironment.h
+1397829531 c:\users\localadmin\documents\code-0\src\platforms\sdl\platformenvironment.h
 	"PlatformWindow.h"
 	"../../objects/PEnvironment.h"
 	"../../apps/Globals.h"
 	"../../base/PEBLObject.h"
 	<list>
 
-1347031792 c:\users\localadmin\documents\code-0\src\platforms\sdl\platformwindow.h
+1397829531 c:\users\localadmin\documents\code-0\src\platforms\sdl\platformwindow.h
 	"PlatformWidget.h"
 	"../../base/PEBLObject.h"
 	"../../objects/PWindow.h"
@@ -1503,22 +1503,24 @@
 	"../../apps/Globals.h"
 	"SDL/SDL.h"
 
-1347031791 c:\users\localadmin\documents\code-0\src\platforms\sdl\platformwidget.h
+1397829531 c:\users\localadmin\documents\code-0\src\platforms\sdl\platformwidget.h
 	"../../objects/PWidget.h"
 	"SDL/SDL.h"
 
-1347031795 c:\users\localadmin\documents\code-0\src\objects\pwidget.h
+1397829533 c:\users\localadmin\documents\code-0\src\objects\pwidget.h
 	"../base/PEBLObject.h"
 	"PColor.h"
+	"../utility/Defs.h"
 	<list>
 	<iostream>
 
-1347031795 c:\users\localadmin\documents\code-0\src\objects\pwindow.h
+1397829534 c:\users\localadmin\documents\code-0\src\objects\pwindow.h
 	"PWidget.h"
 	"PColor.h"
 	<iostream>
 
-1347031788 c:\users\localadmin\documents\code-0\src\apps\globals.h
+1397829526 c:\users\localadmin\documents\code-0\src\apps\globals.h
+	"../base/Evaluator.h"
 
 1347031795 c:\users\localadmin\documents\code-0\src\objects\penvironment.h
 	"../base/PEBLObject.h"
@@ -1534,11 +1536,11 @@
 	"SDL/SDL_image.h"
 	<string>
 
-1347031795 c:\users\localadmin\documents\code-0\src\objects\pimagebox.h
+1397829534 c:\users\localadmin\documents\code-0\src\objects\pimagebox.h
 	"PWidget.h"
 	<string>
 
-1347031791 c:\users\localadmin\documents\code-0\src\platforms\sdl\platformfont.h
+1397829531 c:\users\localadmin\documents\code-0\src\platforms\sdl\platformfont.h
 	"../../objects/PFont.h"
 	"../../objects/PColor.h"
 	"../../utility/rc_ptrs.h"
@@ -1549,7 +1551,7 @@
 	"SDL/SDL.h"
 	"SDL/SDL_ttf.h"
 
-1347031795 c:\users\localadmin\documents\code-0\src\objects\pfont.h
+1397829534 c:\users\localadmin\documents\code-0\src\objects\pfont.h
 	"PWidget.h"
 	"PColor.h"
 	<string>
@@ -1572,14 +1574,14 @@
 	"SDL/SDL.h"
 	"SDL/SDL_ttf.h"
 
-1347031795 c:\users\localadmin\documents\code-0\src\objects\plabel.h
+1397829533 c:\users\localadmin\documents\code-0\src\objects\plabel.h
 	"PTextObject.h"
 	"PFont.h"
 	"PColor.h"
 	"../utility/rc_ptrs.h"
 	<string>
 
-1347031795 c:\users\localadmin\documents\code-0\src\objects\ptextobject.h
+1397829533 c:\users\localadmin\documents\code-0\src\objects\ptextobject.h
 	"PWidget.h"
 	"PFont.h"
 	"PColor.h"
@@ -1616,7 +1618,7 @@
 	<list>
 	<string>
 
-1347031786 c:\users\localadmin\documents\code-0\src\devices\pdevice.h
+1397829526 c:\users\localadmin\documents\code-0\src\devices\pdevice.h
 	<iostream>
 
 1347031791 c:\users\localadmin\documents\code-0\src\platforms\sdl\platformdrawobject.h
@@ -1626,12 +1628,13 @@
 	"../../base/PEBLObject.h"
 	"SDL/SDL.h"
 
-1347031795 c:\users\localadmin\documents\code-0\src\objects\pdrawobject.h
+1397829533 c:\users\localadmin\documents\code-0\src\objects\pdrawobject.h
 	"PWidget.h"
 	"PColor.h"
+	"../utility/Defs.h"
 	<vector>
 
-1347031791 c:\users\localadmin\documents\code-0\src\platforms\sdl\platformcanvas.h
+1397829531 c:\users\localadmin\documents\code-0\src\platforms\sdl\platformcanvas.h
 	"PlatformWidget.h"
 	"../../objects/PCanvas.h"
 	"SDL/SDL.h"
@@ -1639,12 +1642,12 @@
 	"../../base/PEBLObject.h"
 	<vector>
 
-1347031795 c:\users\localadmin\documents\code-0\src\objects\pcanvas.h
+1397829533 c:\users\localadmin\documents\code-0\src\objects\pcanvas.h
 	"../utility/rc_ptrs.h"
 	"PWidget.h"
 	"PColor.h"
 
-1347031791 c:\users\localadmin\documents\code-0\src\platforms\sdl\platformmovie.h
+1397829531 c:\users\localadmin\documents\code-0\src\platforms\sdl\platformmovie.h
 	"PlatformWidget.h"
 	"PlatformWindow.h"
 	"../../objects/PMovie.h"
@@ -1659,13 +1662,13 @@
 	"../devices/PDevice.h"
 	<string>
 
-1347031786 c:\users\localadmin\documents\code-0\src\devices\pstream.h
+1397829526 c:\users\localadmin\documents\code-0\src\devices\pstream.h
 	"PDevice.h"
 	"../base/PEBLObject.h"
 	<fstream>
 	<string>
 
-1347031791 c:\users\localadmin\documents\code-0\src\platforms\sdl\platformaudioout.h
+1397829531 c:\users\localadmin\documents\code-0\src\platforms\sdl\platformaudioout.h
 	"../../devices/PAudioOut.h"
 	"../../base/PEBLObject.h"
 	"SDL/SDL.h"
@@ -1676,12 +1679,12 @@
 	"PDevice.h"
 	<string>
 
-1347031791 c:\users\localadmin\documents\code-0\src\platforms\sdl\platformnetwork.h
-	"../../devices/PNetwork.h"
+1397829531 c:\users\localadmin\documents\code-0\src\platforms\sdl\platformnetwork.h
 	"SDL.h"
 	"SDL_net.h"
 	"SDL/SDL.h"
 	"SDL/SDL_net.h"
+	"../../devices/PNetwork.h"
 
 1347031785 c:\users\localadmin\documents\code-0\src\devices\pnetwork.h
 	"PDevice.h"
@@ -1707,24 +1710,25 @@
 	<fstream>
 	<string>
 
-1347031785 c:\users\localadmin\documents\code-0\src\devices\pcomport.h
+1397829526 c:\users\localadmin\documents\code-0\src\devices\pcomport.h
 	"PDevice.h"
 	"../base/PEBLObject.h"
 	<fstream>
 	<string>
 
-1347031793 c:\users\localadmin\documents\code-0\src\libs\peblobjects.h
+1397829532 c:\users\localadmin\documents\code-0\src\libs\peblobjects.h
 	"../platforms/sdl/PlatformEnvironment.h"
 	"../apps/Globals.h"
 
-1347548660 c:\users\localadmin\documents\code-0\src\utility\peblutility.h
+1397829527 c:\users\localadmin\documents\code-0\src\utility\peblutility.h
 	"../devices/PKeyboard.h"
 	"../apps/Globals.h"
+	"Defs.h"
 	<string>
 
 1347031789 c:\users\localadmin\documents\code-0\src\utility\binreloc.h
 
-1347031785 c:\users\localadmin\documents\code-0\src\devices\peventloop.h
+1397829526 c:\users\localadmin\documents\code-0\src\devices\peventloop.h
 	<iostream>
 	<vector>
 	"DeviceState.h"
@@ -1732,12 +1736,12 @@
 	"../utility/rc_ptrs.h"
 	"../base/PEBLObject.h"
 
-1347031785 c:\users\localadmin\documents\code-0\src\devices\devicestate.h
+1397829526 c:\users\localadmin\documents\code-0\src\devices\devicestate.h
 	<iostream>
 	"PDevice.h"
 	"PEvent.h"
 
-1347031785 c:\users\localadmin\documents\code-0\src\devices\pevent.h
+1397829526 c:\users\localadmin\documents\code-0\src\devices\pevent.h
 	"PKeyboard.h"
 	"SDL/SDL.h"
 
@@ -1749,7 +1753,7 @@
 	"SDL\SDL.h"
 	"SDL\SDL_main.h"
 
-1347031797 source:c:\users\localadmin\documents\code-0\src\base\evaluator.cpp
+1397829535 source:c:\users\localadmin\documents\code-0\src\base\evaluator.cpp
 	"Evaluator.h"
 	"PNode.h"
 	"grammar.tab.hpp"
@@ -1761,13 +1765,14 @@
 	"../utility/PEBLUtility.h"
 	"../utility/PError.h"
 	"../utility/rc_ptrs.h"
+	"../utility/Defs.h"
 	<iostream>
 	<string>
 	<strstream>
 	<math.h>
 	<algorithm>
 
-1347031798 source:c:\users\localadmin\documents\code-0\src\base\functionmap.cpp
+1397829535 source:c:\users\localadmin\documents\code-0\src\base\functionmap.cpp
 	"FunctionMap.h"
 	"PNode.h"
 	"../utility/PEBLUtility.h"
@@ -1776,12 +1781,13 @@
 	<string>
 	<functional>
 
-1347031797 source:c:\users\localadmin\documents\code-0\src\base\loader.cpp
+1397829535 source:c:\users\localadmin\documents\code-0\src\base\loader.cpp
 	"Loader.h"
 	"PNode.h"
 	"grammar.tab.hpp"
 	"Variant.h"
 	"FunctionMap.h"
+	"Evaluator2.h"
 	"Evaluator.h"
 	"../utility/PEBLUtility.h"
 	"../utility/PError.h"
@@ -1795,7 +1801,7 @@
 	<list>
 	<string>
 
-1347548661 c:\users\localadmin\documents\code-0\src\libs\functions.h
+1397829532 c:\users\localadmin\documents\code-0\src\libs\functions.h
 	"PEBLEnvironment.h"
 	"PEBLMath.h"
 	"PEBLStream.h"
@@ -1803,29 +1809,29 @@
 	"PEBLList.h"
 	"PEBLString.h"
 
-1347548661 c:\users\localadmin\documents\code-0\src\libs\peblenvironment.h
+1397829532 c:\users\localadmin\documents\code-0\src\libs\peblenvironment.h
 
 1347031793 c:\users\localadmin\documents\code-0\src\libs\peblmath.h
 
-1347031793 c:\users\localadmin\documents\code-0\src\libs\peblstream.h
+1397829532 c:\users\localadmin\documents\code-0\src\libs\peblstream.h
 
 1347031793 c:\users\localadmin\documents\code-0\src\libs\pebllist.h
 
 1347031793 c:\users\localadmin\documents\code-0\src\libs\peblstring.h
 
-1347031798 source:c:\users\localadmin\documents\code-0\src\base\pcomplexdata.cpp
+1397829535 source:c:\users\localadmin\documents\code-0\src\base\pcomplexdata.cpp
 	"PComplexData.h"
 	<iostream>
 	"../utility/PError.h"
 	"../utility/rc_ptrs.h"
 
-1347031797 source:c:\users\localadmin\documents\code-0\src\base\peblobject.cpp
+1397829535 source:c:\users\localadmin\documents\code-0\src\base\peblobject.cpp
 	"PEBLObject.h"
 	"../base/PComplexData.h"
 	"../utility/PError.h"
 	<stdio.h>
 
-1347031798 source:c:\users\localadmin\documents\code-0\src\base\plist.cpp
+1397829535 source:c:\users\localadmin\documents\code-0\src\base\plist.cpp
 	"PList.h"
 	"Variant.h"
 	"../utility/PError.h"
@@ -1834,14 +1840,15 @@
 	<map>
 	<stdio.h>
 
-1347031797 source:c:\users\localadmin\documents\code-0\src\base\pnode.cpp
+1397829535 source:c:\users\localadmin\documents\code-0\src\base\pnode.cpp
 	"PNode.h"
 	"grammar.tab.hpp"
+	"../utility/Defs.h"
 	<iostream>
 	<string>
 	<stdlib.h>
 
-1347031798 source:c:\users\localadmin\documents\code-0\src\base\variablemap.cpp
+1397829535 source:c:\users\localadmin\documents\code-0\src\base\variablemap.cpp
 	"VariableMap.h"
 	"../utility/PError.h"
 	"../utility/PEBLUtility.h"
@@ -1849,18 +1856,19 @@
 	<map>
 	<string>
 
-1347031797 source:c:\users\localadmin\documents\code-0\src\base\variant.cpp
+1397830091 source:c:\users\localadmin\documents\code-0\src\base\variant.cpp
 	"Variant.h"
 	"PComplexData.h"
 	"../utility/PEBLUtility.h"
 	"../utility/PError.h"
+	"../utility/Defs.h"
 	<iostream>
 	<sstream>
 	<math.h>
 	<string>
 	<stdlib.h>
 
-1347031798 source:c:\users\localadmin\documents\code-0\src\base\grammar.tab.cpp
+1397829535 source:c:\users\localadmin\documents\code-0\src\base\grammar.tab.cpp
 	"PNode.h"
 	<stdio.h>
 	<iostream>
@@ -1876,7 +1884,7 @@
 	<stdlib.h>
 	<stdio.h>
 
-1347031798 source:c:\users\localadmin\documents\code-0\src\base\lex.yy.cpp
+1397830266 source:c:\users\localadmin\documents\code-0\src\base\lex.yy.cpp
 	<stdio.h>
 	<string.h>
 	<errno.h>
@@ -1890,20 +1898,20 @@
 	<math.h>
 	<unistd.h>
 
-1347031785 source:c:\users\localadmin\documents\code-0\src\devices\devicestate.cpp
+1397829526 source:c:\users\localadmin\documents\code-0\src\devices\devicestate.cpp
 	"PDevice.h"
 	"DeviceState.h"
 	<iostream>
 
 1347031785 source:c:\users\localadmin\documents\code-0\src\devices\paudioout.cpp
 
-1347031785 source:c:\users\localadmin\documents\code-0\src\devices\pcomport.cpp
+1397829526 source:c:\users\localadmin\documents\code-0\src\devices\pcomport.cpp
 	"PComPort.h"
 	"../utility/rs232.h"
 	"../utility/PError.h"
 	<sys/io.h>
 
-1347031788 c:\users\localadmin\documents\code-0\src\utility\rs232.h
+1391164572 c:\users\localadmin\documents\code-0\src\utility\rs232.h
 	<stdio.h>
 	<string.h>
 	<termios.h>
@@ -1919,34 +1927,40 @@
 	"PDevice.h"
 	<iostream>
 
-1347031785 source:c:\users\localadmin\documents\code-0\src\devices\pevent.cpp
+1397829526 source:c:\users\localadmin\documents\code-0\src\devices\pevent.cpp
 	"PEvent.h"
 	"../utility/PError.h"
 	<iostream>
 
-1347031786 source:c:\users\localadmin\documents\code-0\src\devices\peventloop.cpp
+1397829526 source:c:\users\localadmin\documents\code-0\src\devices\peventloop.cpp
 	"PEventLoop.h"
 	"PDevice.h"
 	"PEventQueue.h"
 	"../platforms/sdl/PlatformEventQueue.h"
 	"../base/FunctionMap.h"
+	"../apps/Globals.h"
+	"PEventLoop-es.h"
+	"../base/Evaluator-es.h"
+	"emscripten.h"
+	"PEventLoop.h"
 	"../base/Evaluator.h"
 	"../base/PComplexData.h"
 	"../base/PEBLObject.h"
 	"../base/grammar.tab.hpp"
+	"../utility/Defs.h"
 	"../libs/PEBLEnvironment.h"
 	<iostream>
 
-1347031785 c:\users\localadmin\documents\code-0\src\devices\peventqueue.h
+1397829526 c:\users\localadmin\documents\code-0\src\devices\peventqueue.h
 	"PEvent.h"
 	<queue>
 	<iostream>
 
-1347031791 c:\users\localadmin\documents\code-0\src\platforms\sdl\platformeventqueue.h
+1397829531 c:\users\localadmin\documents\code-0\src\platforms\sdl\platformeventqueue.h
 	"../../devices/PEventQueue.h"
 	"../../devices/PEvent.h"
 
-1347031785 source:c:\users\localadmin\documents\code-0\src\devices\peventqueue.cpp
+1397829526 source:c:\users\localadmin\documents\code-0\src\devices\peventqueue.cpp
 	"PEventQueue.h"
 	"PEvent.h"
 
@@ -1966,7 +1980,7 @@
 	"PNetwork.h"
 	"../utility/PError.h"
 
-1347031786 source:c:\users\localadmin\documents\code-0\src\devices\pparallelport.cpp
+1397829526 source:c:\users\localadmin\documents\code-0\src\devices\pparallelport.cpp
 	"PParallelPort.h"
 	"../utility/PError.h"
 	<sys/io.h>
@@ -1974,7 +1988,7 @@
 	<conio.h>
 	<stdio.h>
 
-1347031785 source:c:\users\localadmin\documents\code-0\src\devices\pstream.cpp
+1397829526 source:c:\users\localadmin\documents\code-0\src\devices\pstream.cpp
 	"PStream.h"
 	"../utility/PError.h"
 	<iostream>
@@ -1994,12 +2008,15 @@
 	"PDevice.h"
 	<iostream>
 
-1347548661 source:c:\users\localadmin\documents\code-0\src\libs\peblenvironment.cpp
+1397829532 source:c:\users\localadmin\documents\code-0\src\libs\peblenvironment.cpp
 	"PEBLEnvironment.h"
 	"PEBLObjects.h"
 	"../base/Variant.h"
 	"../base/PList.h"
 	"../base/PComplexData.h"
+	"../base/PNode.h"
+	"../base/grammar.tab.hpp"
+	"../base/Evaluator2.h"
 	"../base/Evaluator.h"
 	"../utility/PError.h"
 	"../utility/PEBLUtility.h"
@@ -2012,6 +2029,7 @@
 	"../platforms/sdl/PlatformKeyboard.h"
 	"../platforms/sdl/PlatformTextBox.h"
 	"../platforms/sdl/PlatformEventQueue.h"
+	"../platforms/sdl/PlatformMovie.h"
 	<ctime>
 	<string>
 	<windows.h>
@@ -2021,7 +2039,7 @@
 	"SDL/SDL.h"
 	<stdio.h>
 
-1347031793 source:c:\users\localadmin\documents\code-0\src\libs\pebllist.cpp
+1397829532 source:c:\users\localadmin\documents\code-0\src\libs\pebllist.cpp
 	"PEBLList.h"
 	"../base/Variant.h"
 	"../base/PComplexData.h"
@@ -2035,27 +2053,29 @@
 	<vector>
 	<iostream>
 
-1347548661 source:c:\users\localadmin\documents\code-0\src\libs\peblmath.cpp
+1397829532 source:c:\users\localadmin\documents\code-0\src\libs\peblmath.cpp
 	"PEBLMath.h"
 	"../base/Variant.h"
 	"../base/PList.h"
 	"../base/PComplexData.h"
 	"../utility/PEBLUtility.h"
 	"../utility/PError.h"
+	"../utility/Defs.h"
 	"../base/PEBLObject.h"
 	<stdlib.h>
-	<math.h>
+	<cmath>
 	<list>
 	<string>
 	<strstream>
 	<time.h>
 
-1347031793 source:c:\users\localadmin\documents\code-0\src\libs\peblobjects.cpp
+1397830376 source:c:\users\localadmin\documents\code-0\src\libs\peblobjects.cpp
 	"PEBLObjects.h"
 	"PEBLEnvironment.h"
 	"../base/Variant.h"
 	"../base/PList.h"
 	"../base/PComplexData.h"
+	"../base/Evaluator2.h"
 	"../base/Evaluator.h"
 	"../base/PEBLObject.h"
 	"../devices/DeviceState.h"
@@ -2063,7 +2083,10 @@
 	"../objects/PColor.h"
 	"../objects/PTextBox.h"
 	"../objects/PDrawObject.h"
+	"../objects/PCustomObject.h"
 	"../utility/PError.h"
+	"../utility/PEBLUtility.h"
+	"../utility/Defs.h"
 	"../platforms/sdl/PlatformEnvironment.h"
 	"../platforms/sdl/PlatformWindow.h"
 	"../platforms/sdl/PlatformImageBox.h"
@@ -2074,6 +2097,7 @@
 	"../platforms/sdl/PlatformTextBox.h"
 	"../platforms/sdl/PlatformCanvas.h"
 	"../platforms/sdl/PlatformAudioIn.h"
+	"../platforms/sdl/PlatformMovie.h"
 	"PEBLList.h"
 	<string>
 
@@ -2085,26 +2109,32 @@
 	"PlatformAudioOut.h"
 	<string>
 
-1347031793 source:c:\users\localadmin\documents\code-0\src\libs\peblstream.cpp
+1397834281 source:c:\users\localadmin\documents\code-0\src\libs\peblstream.cpp
 	"PEBLStream.h"
 	"../base/Variant.h"
 	"../base/PComplexData.h"
 	"../base/PList.h"
+	"../base/PEBLObject.h"
+	"../base/Evaluator2.h"
 	"../base/Evaluator.h"
 	"../devices/PStream.h"
 	"../utility/PError.h"
 	"../utility/PEBLPath.h"
 	"../utility/PEBLUtility.h"
+	"../utility/PEBLHTTP.h"
 	"../devices/PParallelPort.h"
+	"../platforms/sdl/SDLUtility.h"
+	"../platforms/sdl/PlatformNetwork.h"
 	<list>
 	<iostream>
 	<fstream>
+	<vector>
 	<stdio.h>
 	<stdlib.h>
 	<unistd.h>
 	<sys/io.h>
 
-1347031793 source:c:\users\localadmin\documents\code-0\src\libs\peblstring.cpp
+1397829532 source:c:\users\localadmin\documents\code-0\src\libs\peblstring.cpp
 	"PEBLString.h"
 	"../base/Variant.h"
 	"../base/PComplexData.h"
@@ -2117,7 +2147,7 @@
 	<iostream>
 	<cctype>
 
-1347031795 source:c:\users\localadmin\documents\code-0\src\objects\pcanvas.cpp
+1397829534 source:c:\users\localadmin\documents\code-0\src\objects\pcanvas.cpp
 	"PCanvas.h"
 	"PColor.h"
 	"../utility/rc_ptrs.h"
@@ -2137,7 +2167,7 @@
 
 1347031795 c:\users\localadmin\documents\code-0\src\objects\rgbcolornames.h
 
-1347031795 source:c:\users\localadmin\documents\code-0\src\objects\pdrawobject.cpp
+1397829533 source:c:\users\localadmin\documents\code-0\src\objects\pdrawobject.cpp
 	"PDrawObject.h"
 	"PWidget.h"
 	"../base/PComplexData.h"
@@ -2146,7 +2176,7 @@
 1347031795 source:c:\users\localadmin\documents\code-0\src\objects\penvironment.cpp
 	"PEnvironment.h"
 
-1347031795 source:c:\users\localadmin\documents\code-0\src\objects\pfont.cpp
+1397829534 source:c:\users\localadmin\documents\code-0\src\objects\pfont.cpp
 	"PFont.h"
 	"PColor.h"
 	"../base/Variant.h"
@@ -2154,23 +2184,24 @@
 	"../utility/rc_ptrs.h"
 	<iostream>
 
-1347031795 source:c:\users\localadmin\documents\code-0\src\objects\pimagebox.cpp
+1397829534 source:c:\users\localadmin\documents\code-0\src\objects\pimagebox.cpp
 	"PImageBox.h"
 	<iostream>
 
-1347031795 source:c:\users\localadmin\documents\code-0\src\objects\plabel.cpp
+1397829533 source:c:\users\localadmin\documents\code-0\src\objects\plabel.cpp
 	"PLabel.h"
 	"PFont.h"
 	<string>
 	<iostream>
 
-1347031795 source:c:\users\localadmin\documents\code-0\src\objects\pmovie.cpp
+1397829533 source:c:\users\localadmin\documents\code-0\src\objects\pmovie.cpp
 	"PMovie.h"
+	"../utility/Defs.h"
 	<iostream>
 
 1347031795 source:c:\users\localadmin\documents\code-0\src\objects\pobject.cpp
 
-1347031795 source:c:\users\localadmin\documents\code-0\src\objects\ptextbox.cpp
+1397829534 source:c:\users\localadmin\documents\code-0\src\objects\ptextbox.cpp
 	"PTextBox.h"
 	"PFont.h"
 	"../utility/rc_ptrs.h"
@@ -2180,7 +2211,7 @@
 	"SDL/SDL.h"
 	<iostream>
 
-1347031795 source:c:\users\localadmin\documents\code-0\src\objects\ptextobject.cpp
+1397829534 source:c:\users\localadmin\documents\code-0\src\objects\ptextobject.cpp
 	"PWidget.h"
 	"PTextObject.h"
 	"PFont.h"
@@ -2188,24 +2219,25 @@
 	<string>
 	<iostream>
 
-1347031795 source:c:\users\localadmin\documents\code-0\src\objects\pwidget.cpp
+1397829533 source:c:\users\localadmin\documents\code-0\src\objects\pwidget.cpp
 	"PWidget.h"
 	"../base/PComplexData.h"
 	"../utility/PError.h"
 	<list>
 	<iostream>
 
-1347031795 source:c:\users\localadmin\documents\code-0\src\objects\pwindow.cpp
+1397829534 source:c:\users\localadmin\documents\code-0\src\objects\pwindow.cpp
 	"PWindow.h"
 	"PWidget.h"
 	<string>
 	<iostream>
 
-1347031792 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformaudioin.cpp
+1397829531 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformaudioin.cpp
 	"PlatformAudioIn.h"
 	"PlatformAudioOut.h"
 	"../../utility/PEBLPath.h"
 	"../../utility/PError.h"
+	"../../base/Evaluator2.h"
 	"../../base/Evaluator.h"
 	"../../base/PList.h"
 	"../../base/PComplexData.h"
@@ -2216,18 +2248,19 @@
 	<vector>
 	<fstream>
 
-1347031791 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformaudioout.cpp
+1397829531 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformaudioout.cpp
 	"PlatformAudioOut.h"
 	"../../devices/PAudioOut.h"
 	"../../utility/PEBLPath.h"
 	"../../utility/PError.h"
+	"../../base/Evaluator2.h"
 	"../../base/Evaluator.h"
 	"SDL/SDL.h"
 	"SDL/SDL_audio.h"
 	<cmath>
 	<fstream>
 
-1347031792 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformcanvas.cpp
+1397829531 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformcanvas.cpp
 	"PlatformCanvas.h"
 	"../../objects/PCanvas.h"
 	"SDLUtility.h"
@@ -2252,7 +2285,7 @@
 	<iostream>
 	<list>
 
-1347653051 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformenvironment.cpp
+1397829531 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformenvironment.cpp
 	"PlatformEnvironment.h"
 	"../../objects/PEnvironment.h"
 	"PlatformWindow.h"
@@ -2260,6 +2293,10 @@
 	"../../base/PComplexData.h"
 	"SDL.h"
 	"SDL_ttf.h"
+	"SDL.h"
+	"SDL_ttf.h"
+	"SDL/SDL.h"
+	"SDL/SDL_ttf.h"
 	"SDL/SDL.h"
 	"SDL/SDL_ttf.h"
 	<fstream>
@@ -2269,36 +2306,42 @@
 	"../../utility/PError.h"
 	<windows.h>
 
-1347031791 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformeventqueue.cpp
+1397829531 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformeventqueue.cpp
 	"PlatformEventQueue.h"
 	"../../devices/PEventQueue.h"
 	"../../devices/PEvent.h"
 	"../../utility/PError.h"
 	"SDL/SDL.h"
 	"WAAVE.h"
+	"../../apps/Globals.h"
 
-1347031792 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformfont.cpp
+1397829531 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformfont.cpp
 	"PlatformFont.h"
 	"../../objects/PFont.h"
 	"../../objects/PColor.h"
 	"../../utility/PEBLPath.h"
 	"../../utility/PError.h"
+	"../../base/Evaluator2.h"
 	"../../base/Evaluator.h"
 	"SDL.h"
 	"SDL_ttf.h"
+	"SDL_rwops.h"
 	"SDL/SDL.h"
 	"SDL/SDL_ttf.h"
+	"SDL/SDL_rwops.h"
 	<stdio.h>
 	<iostream>
 
-1347031791 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformimagebox.cpp
+1397829531 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformimagebox.cpp
 	"PlatformImageBox.h"
 	"../../utility/PEBLPath.h"
 	"../../utility/PError.h"
-	"../../base/Evaluator.h"
 	"../../base/PEBLObject.h"
+	"../../base/Evaluator2.h"
+	"../../base/Evaluator.h"
 	<string>
 	<stdio.h>
+	<assert.h>
 
 1347031791 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformjoystick.cpp
 	"PlatformJoystick.h"
@@ -2309,7 +2352,7 @@
 	"../../base/PList.h"
 	"../../base/PComplexData.h"
 
-1347031791 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformkeyboard.cpp
+1397829531 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformkeyboard.cpp
 	"PlatformKeyboard.h"
 	"../../devices/PKeyboard.h"
 	"../../devices/DeviceState.h"
@@ -2317,7 +2360,7 @@
 	"PlatformTimer.h"
 	<stdio.h>
 
-1347031791 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformlabel.cpp
+1397829531 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformlabel.cpp
 	"PlatformLabel.h"
 	"../../objects/PLabel.h"
 	"PlatformFont.h"
@@ -2332,17 +2375,18 @@
 	<stdio.h>
 	<algorithm>
 
-1347031792 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformmovie.cpp
+1397830420 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformmovie.cpp
 	"PlatformMovie.h"
 	"../../utility/PEBLPath.h"
 	"../../utility/PError.h"
 	"../../utility/PEBLUtility.h"
+	"../../base/Evaluator2.h"
 	"../../base/Evaluator.h"
 	"../../base/PEBLObject.h"
 	<string>
 	<stdio.h>
 
-1347031791 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformnetwork.cpp
+1397829531 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformnetwork.cpp
 	"PlatformNetwork.h"
 	"../../devices/PNetwork.h"
 	"../../utility/PError.h"
@@ -2352,7 +2396,7 @@
 	"SDL/SDL_net.h"
 	<string>
 
-1347031791 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformtextbox.cpp
+1397829531 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformtextbox.cpp
 	"PlatformTextBox.h"
 	"../../objects/PTextBox.h"
 	"PlatformFont.h"
@@ -2370,7 +2414,7 @@
 	<string>
 	<algorithm>
 
-1347031792 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformtimer.cpp
+1397830832 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformtimer.cpp
 	"PlatformTimer.h"
 	"SDL/SDL.h"
 	<iostream>
@@ -2379,8 +2423,9 @@
 	<windows.h>
 	<iostream>
 	<iomanip>
+	<stdio.h>
 
-1347031792 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformwidget.cpp
+1397829531 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformwidget.cpp
 	"PlatformWidget.h"
 	"SDL.h"
 	"SDL_rotozoom.h"
@@ -2390,16 +2435,17 @@
 	"../../utility/PError.h"
 	<iostream>
 
-1347031791 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformwindow.cpp
+1397829531 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\platformwindow.cpp
 	"PlatformWindow.h"
 	"../../objects/PWindow.h"
 	"../../objects/PColor.h"
 	"../../base/Evaluator.h"
 	"../../base/VariableMap.h"
+	"emscripten.h"
 	"SDL/SDL.h"
 	<stdio.h>
 
-1347031792 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\sdlutility.cpp
+1382568426 source:c:\users\localadmin\documents\code-0\src\platforms\sdl\sdlutility.cpp
 	"SDLUtility.h"
 	"../../objects/PColor.h"
 	"../../utility/PError.h"
@@ -2411,7 +2457,7 @@
 	<math.h>
 	<iostream>
 
-1347031789 source:c:\users\localadmin\documents\code-0\src\utility\binreloc.cpp
+1397829527 source:c:\users\localadmin\documents\code-0\src\utility\binreloc.cpp
 	<sys/types.h>
 	<sys/stat.h>
 	<unistd.h>
@@ -2421,7 +2467,7 @@
 	<string.h>
 	"BinReloc.h"
 
-1347500519 source:c:\users\localadmin\documents\code-0\src\utility\peblpath.cpp
+1397829527 source:c:\users\localadmin\documents\code-0\src\utility\peblpath.cpp
 	"PEBLPath.h"
 	"../base/Variant.h"
 	"PError.h"
@@ -2434,7 +2480,7 @@
 	<mach-o/dyld.h>
 	<CoreFoundation/CFBundle.h>
 
-1347549148 source:c:\users\localadmin\documents\code-0\src\utility\peblutility.cpp
+1397832149 source:c:\users\localadmin\documents\code-0\src\utility\peblutility.cpp
 	"PEBLUtility.h"
 	"PError.h"
 	"rc_ptrs.h"
@@ -2443,6 +2489,7 @@
 	"../base/PList.h"
 	"../devices/PKeyboard.h"
 	"../apps/Globals.h"
+	"md5.h"
 	<errno.h>
 	<ctype.h>
 	<string>
@@ -2460,11 +2507,20 @@
 	<unistd.h>
 	<bits/types.h>
 	<pwd.h>
+	<sys/stat.h>
+	<unistd.h>
+	<sys/types.h>
+	<pwd.h>
 	<unistd.h>
 	<pwd.h>
 	<unistd.h>
 	<sys/stat.h>
 	<stdio.h>
+	<fcntl.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<sys/mman.h>
+	"mman.h"
 
 1347031789 source:c:\users\localadmin\documents\code-0\src\utility\perror.cpp
 	"PError.h"
@@ -2476,8 +2532,85 @@
 	<string>
 	<signal.h>
 
-1347031789 source:c:\users\localadmin\documents\code-0\src\utility\rs232.c
+1391164546 source:c:\users\localadmin\documents\code-0\src\utility\rs232.c
 	"rs232.h"
 
 1347494656 source:c:\users\localadmin\documents\code-0\codeblocks\pebl\resource.rc
+
+1110560048 c:\users\localadmin\documents\sdl-libs\include\sdl\sdl_audioin.h
+	<SDL/SDL_audio.h>
+	<SDL/begin_code.h>
+	<SDL/close_code.h>
+
+1397829527 c:\users\localadmin\documents\code-0\src\utility\defs.h
+
+1397829535 c:\users\localadmin\documents\code-0\src\base\evaluator-es.h
+
+1397829534 c:\users\localadmin\documents\code-0\src\objects\pcustomobject.h
+	"../base/PEBLObject.h"
+	"../utility/rc_ptrs.h"
+	<string>
+
+1397829527 c:\users\localadmin\documents\code-0\src\utility\md5.h
+	<cstring>
+	<iostream>
+
+1397831844 c:\users\localadmin\documents\code-0\src\utility\mman.h
+	<_mingw.h>
+	<sys/types.h>
+
+1397831894 source:c:\users\localadmin\documents\code-0\src\utility\mman.c
+	<windows.h>
+	<errno.h>
+	<io.h>
+	"mman.h"
+
+1397829527 source:c:\users\localadmin\documents\code-0\src\utility\md5.cpp
+	"md5.h"
+	<cstdio>
+
+1397829534 source:c:\users\localadmin\documents\code-0\src\objects\pcustomobject.cpp
+	"../utility/PError.h"
+	"PCustomObject.h"
+	<string>
+	<iostream>
+
+1397834370 c:\users\localadmin\documents\code-0\src\utility\peblhttp.h
+	"happyhttp.h"
+	"../base/Variant.h"
+	<iostream>
+	<stdlib.h>
+	<cstdio>
+	<cstring>
+
+1397836406 c:\users\localadmin\documents\code-0\src\utility\happyhttp.h
+	<string>
+	<map>
+	<vector>
+	<deque>
+
+1397835180 source:c:\users\localadmin\documents\code-0\src\utility\peblhttp.cpp
+	"PEBLHTTP.h"
+	"PError.h"
+	<stdio.h>
+	"../base/PList.h"
+	"../base/PComplexData.h"
+
+1397836842 source:c:\users\localadmin\documents\code-0\src\utility\happyhttp.cpp
+	"happyhttp.h"
+	<sys/socket.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<netdb.h>
+	<errno.h>
+	<unistd.h>
+	<WinSock2.h>
+	<cstdio>
+	<cstring>
+	<cstdarg>
+	<assert.h>
+	<string>
+	<vector>
+	<string>
+	<algorithm>
 

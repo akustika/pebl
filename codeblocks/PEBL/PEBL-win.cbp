@@ -27,7 +27,9 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-DPEBL_WIN32" />
+					<Add option="-DPEBL_WINDOWS" />
 					<Add option="-DPEBL_MOVIES" />
+					<Add option="-DPEBL_AUDIOIN" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="C:\Users\LocalAdmin\Documents\pebl\codeblocks\PEBL\" />
@@ -41,6 +43,8 @@
 			<Add option="-Wall" />
 			<Add option="-DPEBL_WIN32=1" />
 			<Add option="-DNO_STDIO_REDIRECT" />
+			<Add option="-DPEBL_MOVIES=1" />
+			<Add option="-DPEBL_AUDIOIN=1" />
 			<Add directory="..\..\..\sdl-libs\include\SDL" />
 			<Add directory="..\..\..\sdl-libs\include" />
 		</Compiler>
@@ -53,12 +57,15 @@
 			<Add library="SDL_net" />
 			<Add library="png15-15" />
 			<Add library="..\..\..\sdl-libs\dlls\libwaave-0.dll" />
+			<Add library="SDL_audioin" />
+			<Add library="png12-0" />
 			<Add directory="..\..\..\sdl-libs\dlls" />
 		</Linker>
 		<Unit filename="cb.bmp" />
 		<Unit filename="resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="version.h" />
 		<Unit filename="..\..\src\apps\Globals.h" />
 		<Unit filename="..\..\src\apps\PEBL.cpp" />
 		<Unit filename="..\..\src\apps\SDL_win32_main.c">
@@ -129,6 +136,8 @@
 		<Unit filename="..\..\src\objects\PCanvas.h" />
 		<Unit filename="..\..\src\objects\PColor.cpp" />
 		<Unit filename="..\..\src\objects\PColor.h" />
+		<Unit filename="..\..\src\objects\PCustomObject.cpp" />
+		<Unit filename="..\..\src\objects\PCustomObject.h" />
 		<Unit filename="..\..\src\objects\PDrawObject.cpp" />
 		<Unit filename="..\..\src\objects\PDrawObject.h" />
 		<Unit filename="..\..\src\objects\PEnvironment.cpp" />
@@ -196,6 +205,12 @@
 		<Unit filename="..\..\src\utility\PEBLUtility.h" />
 		<Unit filename="..\..\src\utility\PError.cpp" />
 		<Unit filename="..\..\src\utility\PError.h" />
+		<Unit filename="..\..\src\utility\md5.cpp" />
+		<Unit filename="..\..\src\utility\md5.h" />
+		<Unit filename="..\..\src\utility\mman.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\utility\mman.h" />
 		<Unit filename="..\..\src\utility\rc_ptrs.h" />
 		<Unit filename="..\..\src\utility\rs232.c">
 			<Option compilerVar="CC" />
@@ -206,6 +221,12 @@
 			<debugger />
 			<envvars />
 			<lib_finder disable_auto="1" />
+			<AutoVersioning>
+				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="100" />
+				<Settings autoincrement="1" date_declarations="1" do_auto_increment="0" ask_to_increment="0" language="C++" svn="0" svn_directory="" header_path="version.h" />
+				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
+				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="" />
+			</AutoVersioning>
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

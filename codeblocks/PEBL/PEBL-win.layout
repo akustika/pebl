@@ -4,17 +4,56 @@
 	<File name="resource.rc" open="0" top="0" tabpos="7">
 		<Cursor position="96" topLine="0" />
 	</File>
-	<File name="..\..\src\apps\PEBL.cpp" open="1" top="1" tabpos="1">
-		<Cursor position="6703" topLine="117" />
+	<File name="..\..\src\apps\PEBL.cpp" open="0" top="0" tabpos="1">
+		<Cursor position="6703" topLine="0" />
 	</File>
-	<File name="..\..\src\apps\SDL_win32_main.c" open="1" top="0" tabpos="2">
-		<Cursor position="6544" topLine="278" />
+	<File name="..\..\src\apps\SDL_win32_main.c" open="0" top="0" tabpos="2">
+		<Cursor position="6544" topLine="114" />
 	</File>
 	<File name="..\..\src\base\Evaluator.cpp" open="0" top="0" tabpos="0">
 		<Cursor position="19272" topLine="720" />
 	</File>
-	<File name="..\..\src\platforms\sdl\PlatformEnvironment.cpp" open="1" top="0" tabpos="3">
+	<File name="..\..\src\base\Variant.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="4852" topLine="230" />
+	</File>
+	<File name="..\..\src\devices\PComPort.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="2793" topLine="97" />
+	</File>
+	<File name="..\..\src\libs\Functions.h" open="1" top="0" tabpos="1">
+		<Cursor position="6923" topLine="113" />
+	</File>
+	<File name="..\..\src\libs\PEBLEnvironment.cpp" open="0" top="0" tabpos="2">
+		<Cursor position="1473" topLine="0" />
+	</File>
+	<File name="..\..\src\libs\PEBLObjects.cpp" open="0" top="0" tabpos="6">
+		<Cursor position="47950" topLine="1339" />
+	</File>
+	<File name="..\..\src\libs\PEBLStream.cpp" open="0" top="0" tabpos="4">
+		<Cursor position="27697" topLine="921" />
+	</File>
+	<File name="..\..\src\objects\PMovie.cpp" open="1" top="1" tabpos="2">
+		<Cursor position="844" topLine="0" />
+	</File>
+	<File name="..\..\src\platforms\sdl\PlatformAudioIn.cpp" open="0" top="0" tabpos="4">
+		<Cursor position="989" topLine="620" />
+	</File>
+	<File name="..\..\src\platforms\sdl\PlatformAudioIn.h" open="0" top="0" tabpos="7">
+		<Cursor position="1511" topLine="28" />
+	</File>
+	<File name="..\..\src\platforms\sdl\PlatformEnvironment.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="3010" topLine="114" />
+	</File>
+	<File name="..\..\src\platforms\sdl\PlatformJoystick.cpp" open="0" top="0" tabpos="8">
+		<Cursor position="3529" topLine="121" />
+	</File>
+	<File name="..\..\src\platforms\sdl\PlatformMovie.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="1717" topLine="90" />
+	</File>
+	<File name="..\..\src\platforms\sdl\PlatformMovie.h" open="0" top="0" tabpos="0">
+		<Cursor position="670" topLine="80" />
+	</File>
+	<File name="..\..\src\platforms\sdl\SDLUtility.cpp" open="0" top="0" tabpos="5">
+		<Cursor position="6156" topLine="0" />
 	</File>
 	<File name="..\..\src\utility\PEBLPath.cpp" open="0" top="0" tabpos="3">
 		<Cursor position="7695" topLine="148" />
@@ -22,8 +61,8 @@
 	<File name="..\..\src\utility\PEBLPath.h" open="0" top="0" tabpos="5">
 		<Cursor position="2027" topLine="36" />
 	</File>
-	<File name="..\..\src\utility\PEBLUtility.cpp" open="0" top="0" tabpos="6">
-		<Cursor position="46284" topLine="1135" />
+	<File name="..\..\src\utility\PEBLUtility.cpp" open="0" top="0" tabpos="1">
+		<Cursor position="46284" topLine="0" />
 	</File>
 	<File name="..\..\src\utility\PEBLUtility.h" open="0" top="0" tabpos="4">
 		<Cursor position="3073" topLine="66" />
