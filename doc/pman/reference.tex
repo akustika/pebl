@@ -2024,16 +2024,19 @@ Filter(<list>,<filter>)
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+FindInString()+
 
-\item[Description]	Finds a token in a string, returning the position.
+\item[Description]	Finds a token in a string, returning the position (starting at a particular position).
 
 \item[Usage]
 \begin{verbatim}
-FindInString(<string>,<string>)
+FindInString(<basestring>,<searchstring>,<startingpos>)
 \end{verbatim}
 
+If the string is not found, the value 0 is returned.
 \item[Example]
 \begin{verbatim}
-FindInString("about","bo") 	# == 2
+FindInString("about","bo",1) 	# == 2
+FindInString("banana","na",1) 	# == 3
+FindInString("banana","na",4) 	# == 5
 \end{verbatim}
 
 \item[See Also]	\verb+SplitString()+

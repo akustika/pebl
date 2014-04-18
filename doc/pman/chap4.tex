@@ -341,6 +341,7 @@ behavior.
   widget.ROTATION
   widget.ZOOMX
   widget.ZOOMY
+
 \end{verbatim}
  
 
@@ -581,6 +582,9 @@ Textbox properties:
 \begin{verbatim}
    textbox.EDITABLE
    textbox.CURSORPOS 
+   textbox.DIRECTION
+   textbox.LINEHEIGHT
+   textbox.LINEWRAP
 \end{verbatim}
  
 
@@ -847,15 +851,16 @@ Starting with Version 0.12, PEBL can send and receive information via a standard
 
 
 If you have a parallel port, it is mapped to one of three ports: LPT1, LPT2, or LPTX.  To initialize access to a port, you must call OpenPPort with the name of your port:
+"
 \begin{verbatim}
   port <- OpenPPort("LPT1")
 \end{verbatim}
 
-Parallel ports have two modes, input and output.  To read data in, it needs to be in input mode; to change the state of the bits, it needs to be in output mode.  Set the state with SetPPortMode(port,"<input>") or SetPPortMode(port,"<output>").
+Parallel ports have two modes, input and output.  To read data in, it needs to be in input mode; to change the state of the bits, it needs to be in output mode.  Set the state with \texttt{SetPPortMode(port,"<input>")} or \texttt{SetPPortMode(port,"<output>")}.
 
-To access the state of a port, use GetPPortState(port).  It will return a string of "|" separated 1s and 0s, which specify the state of each of the 8 bits.
+To access the state of a port, use \texttt{GetPPortState(port)}.  It will return a string of "|" separated 1s and 0s, which specify the state of each of the 8 bits.
 
-To set the state of the port, use SetPPortState(port,state).  state should be a list of 8 0s or 1s:
+To set the state of the port, use \texttt{SetPPortState(port,state)}.  state should be a list of 8 0s or 1s:
 
 SetPPortState(port, [0,0,0,0,0,0,0,1])
 
