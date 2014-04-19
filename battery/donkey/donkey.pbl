@@ -23,6 +23,8 @@
 ##  to be unpressed, which includes the numlock, capslock, etc.  So,
 ##  if the experiment 'freezes' with a door open, make sure capslock and
 ##  numlock are off.
+##
+## Spanish translation by  Gabriela Guadalupe De Gyves Montes
 ##########################################################
 
 define Start(lPar)
@@ -32,7 +34,7 @@ define Start(lPar)
      
   gParams<-CreateParameters(parpairs,gParamFile)
 
-
+  GetStrings(gLanguage)
   gInputDevice <- gParams.inputdevice
 
   ## results are stored in tmpresults.dat
@@ -84,14 +86,14 @@ define Start(lPar)
    method <-  " Choose a door by pressing the C V B or N key. Press any key to begin."
   }elseif(gINputDevice =="mouse")
   {
-   method <-  " Choose a door by clicking with the mouse. Click mouse to begin test."
+   method <-  gStrings.inst
   } else {
     method <- ""
   }
 
 
    ## Give instructions; wait for them to hit a key, 
-   SetText(gInstructions,"You are about to play a game in which you help a donkey get apples.  Behind each door are some apples that the donkey will receive, but also each door will cost the donkey some apples."+method)
+   SetText(gInstructions,  gStrings.inst2 + method)
 
    Show(gInstructions)
    Draw()  
@@ -111,15 +113,15 @@ define Start(lPar)
    ##Turn the header on during the task.
    if(gInputDevice == "keyboard")
    {
-      gHeader.text <- "Select door by pressing corresponding key (cvbn)"
+      gHeader.text <- gStrings.headerkey
    }else{
-      gHeader.text <- "Select door by clicking with mouse."
+      gHeader.text <- gStrings.headermouse
    }
    Show(gHeader)
 
    gTotal <- 0
    earnings <- MakeEarningsGraph(gTotal)
-   gTotalLabel <- MakeLabel("Total: "+gTotal + " apples.",gHeaderFont)
+   gTotalLabel <- MakeLabel(gSTrings.total+gTotal + gStrings.apples,gHeaderFont)
    AddObject(gTotalLabel,gWin)
    Move(gTotalLabel,gVideoWidth/2,gVideoHeight/2+100)
    Draw()
@@ -192,7 +194,7 @@ define Start(lPar)
       ##Figure out the +/- sign
 
       gTotal <- gTotal + net
-      gTotalLabel.text <- "Total: "+gTotal +" apples."
+      gTotalLabel.text <- gStrings.total +gTotal + gStrings.apples
 
       RemoveComplex(earnings)
 	  earnings <- MakeEarningsGraph(gTotal)
@@ -221,13 +223,13 @@ define Start(lPar)
 
 
    ##Now, show debriefing info.
-   feedback <-  "Thank you for participating in the experiment. You earned a total of " + gTotal + " apples. "
+   feedback <-  gStrings.feedback1+ gTotal + gStrings.apples
    if(gTotal > 0) 
    {
-     feedback <- feedback + "Congratulations! "
+     feedback <- feedback + gStrings.congrats
    }
 
-   feedback <-  feedback + CR(3) + " You may now leave.  Please alert the experimenter that you are done. Press the X key to exit."
+   feedback <-  feedback + CR(3) + gStrings.feedback2
 
 
    SetText(gInstructions, feedback)
@@ -470,4 +472,49 @@ define WaitForContinue()
   } else {
      WaitForDownClick()
   }
+}
+
+
+define GetStrings(lang)
+{
+
+ lang <- Uppercase(lang)
+  gStrings <- MakeCustomObject("translation")
+ 
+  gStrings.inst <- "Please make sure no keys are pressed.
+   Make sure that the numlock and scroll lock keys are untoggled."
+
+  gStrings.inst2 <- "You are about to play a game in which you help a donkey get apples.  Behind each door are some apples that the donkey will receive, but also each door will cost the donkey some apples."
+
+  gStrings.headerkey <- "Select door by pressing corresponding key (cvbn)"
+  gStrings.headermouse <- "Select door by clicking with mouse."
+  gStrings.total <- "Total: "
+  gStrings.apples <- " apples."
+  gSTrings.feedback1 <- "Thank you for participating in the experiment. You earned a total of "
+  gSTrings.congrats <- "Congratulations! "
+  gStrings.feedback3 <- " You may now leave.  Please alert the experimenter that you are done. Press the X key to exit."
+
+
+ if(Uppercase(lang)=="ES")
+ {
+  gStrings.inst <- "¡Bienvenido!
+En este juego tú le ayudarás a un burrito a juntar todas las manzanas posibles que saldrán de cualquiera de las cuatro puertas, 
+pero debes tener cuidado por que al abrir las puertas puedes perder manzanas, si pierdes manzanas se verán con un tachecito. La barra de abajo te dirá si vas a ganando 
+o perdiendo."
+
+
+ gStrings.inst2 <- "Selecciona la puerta
+mediante un click con el ratón. Haz un click con el ratón para iniciar el juego 
+¡Recuerda! Debes obtener el mayor número de manzanas.
+¿Estás listo?"
+
+
+  gStrings.headerkey <- "Select door by pressing corresponding key (cvbn)"
+  gStrings.headermouse <- "Escoge la puerta haciendo clic sobre ella."
+  gStrings.total <- "Total: "
+  gStrings.apples <- " manzanas."
+  gSTrings.feedback1 <- "Gracias por participar en el experimento. "
+  gSTrings.congrats <-  "Felicidades! "
+  gStrings.feedback3 <- " Presiona la X para salir. "
+ }
 }
