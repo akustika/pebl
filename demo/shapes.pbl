@@ -13,6 +13,8 @@
   col2 <- MakeColor("darkgreen")
   black <- MakeColor("black")
 
+  header <- EasyLabel("Hit any key repeatedly to see shapes",gVideoWidth/2,20,win,40)
+
   font <- MakeFont("Vera.ttf",0,22,black,col,1)
   lab <- MakeLabel("FILLED CIRCLE",font)
   AddObject(lab,win)
@@ -29,8 +31,6 @@
   Draw()
   WaitForAnyKeyPress()
 
-
-  WaitForAnyKeyPress()
 
   lab.TEXT <- "OPEN CIRCLE"
   shape.FILLED <- 0

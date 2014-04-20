@@ -13,6 +13,8 @@ define Start(lParameter)
   gCorrect <- LoadSound("cheer.wav")
   gIncorrect <- LoadSound("boo.wav")
 
+  header <- EasyLabel("Simple N-Back demo.  See complete dual-nback in test battery",gVideoWidth/2,30,gWindow,16)
+  footer <- EasyLabel("Press 'Y' if target matches 2-back; 'N' if it mismatches",gVideoWidth/2,gVideoHeight-150,gWindow,35)
 
   gStimuli <- ["dare","long","cult","hint","wish"]
 
@@ -70,16 +72,21 @@ define DoTrial(stim1, mytype)
 	Print_(stim1 + "  " + mytype)
 	lText <- MakeLabel(Nth(gStimuli, stim1), gFont)
  	Print_("  " + Nth(gStimuli, stim1))
-         AddObject(lText, gWindow)
-	Move(lText, 300,200)
+        AddObject(lText, gWindow)
+	Move(lText, gVideoWidth/2,gVideoHeight/2)
 	Show(lText)
 	Draw()
+
+
 	start <- GetTime()
-	response <- WaitForKeyListDown(["Y","N"])
+	response <- Uppercase(WaitForListKeyPress(["Y","N"]))
  	end <- GetTime()
-	Print("  " + response + "  " + (end - start))
+
+   
+	Print(" RESPONSE: " + response + "  " + (end - start))
 	RemoveObject(lText, gWindow)
 	Draw()
+
 
   	#Give auditory feedback.
 	if(((response == "Y") and (mytype == 2)) or
