@@ -6,7 +6,7 @@
 //    Copyright:  (c) 2010-2013 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
-//   
+//
 //
 //     This file is part of the PEBL project.
 //
@@ -82,7 +82,7 @@ PParallelPort::~PParallelPort()
 void PParallelPort::Init()
 {
 
-#ifdef PEBL_LINUX           
+#ifdef PEBL_LINUX
     //This works on linux: open 3 bytes to access
     int out = ioperm(mPort, 3, 1);
     //int out = iopl(3);
@@ -97,19 +97,21 @@ void PParallelPort::Init()
         }
 
 
-#elif defined(PEBL_WIND32)
+#elif defined(PEBL_WIN32)
    HINSTANCE hLib;
+   inpfuncPtr inp32fp;
+   oupfuncPtr oup32fp;
    hLib = LoadLibrary("inpout32.dll");
    if(hLib == NULL)
    {
       PError::SignalFatalError("Unable to load library inpout32.dll.  Cannot initiate parallel port device");
    }
 
-// Get the address of the Input function 
+// Get the address of the Input function
 
      inp32fp = (inpfuncPtr) GetProcAddress(hLib, "Inp32");
 
-     if (inp32fp == NULL) 
+     if (inp32fp == NULL)
      {
        PError::SignalFatalError("Unable to get Inp32.");
      }
@@ -135,7 +137,7 @@ void PParallelPort::SetPort(Variant v)
     if(v=="LPT1")
         {
             mmPort = PEBLPPortLPT1;
-        
+
         }else if(v=="LPT2")
         {
             mmPort = PEBLPPortLPT2;
@@ -178,7 +180,7 @@ char PParallelPort::GetStatusState()
 #if defined(PEBL_LINUX)
     return inb(mPort+1);
 #elif defined (PEBL_WIN32)
-    return Inp32(mPort+1); 
+    return Inp32(mPort+1);
 #else
     return '\0';
 #endif
@@ -186,18 +188,18 @@ char PParallelPort::GetStatusState()
 }
 
 //Gets a byte whos bits are pins 2...9 (for dual-mode ports)
-// 
+//
 char PParallelPort::GetDataState()
 {
 #if defined(PEBL_LINUX)
     return (inb(mPort));
 
 #elif defined (PEBL_WIN32)
-    return Inp32(mPort); 
+    return Inp32(mPort);
 #else
     return '\0';
 #endif
-    
+
 }
 
 //sets the data bytes (pins 2..9) to the specified state.
@@ -229,7 +231,7 @@ void PParallelPort::SetOutputMode()
     x = inb(mPort+2);  //get state of control register
     outb(x & ~0x20, mPort+2);
 #elif defined (PEBL_WIN32)
-    x = Inp32(mPort+2); 
+    x = Inp32(mPort+2);
     Out32(mPort+2,x&~0x20);
 #endif
 
@@ -241,7 +243,7 @@ void PParallelPort::SetOutputMode()
 //
 void PParallelPort::SetInputMode()
 {
-     
+
     unsigned char x = 0;
 
 #if defined(PEBL_LINUX)
@@ -249,7 +251,7 @@ void PParallelPort::SetInputMode()
     //  turns 7th bit of the control byte  on
     outb( x | 0x20, mPort+2);
 #elif defined (PEBL_WIN32)
-    x = Inp32(mPort+2); 
+    x = Inp32(mPort+2);
     Out32(mPort+2,x|0x20);
 #endif
 
@@ -274,7 +276,7 @@ int PParallelPort::GetState(int iface)
             SetDataState(255);
             SetInputMode();
             out = GetDataState();
-        } else 
+        } else
         if(iface==1)
             {
                 out = GetStatusState();

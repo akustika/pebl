@@ -57,7 +57,7 @@ PComPort::PComPort(unsigned int port,
 PComPort::~PComPort()
 {
     if(mIsOpen)
-        CloseComport(mPort);
+        RS232_CloseComport(mPort);
     mIsOpen = false;
 }
 
@@ -69,7 +69,7 @@ void PComPort::Init()
     //init
     if(!mIsOpen)
         {
-            int out = OpenComport(mPort,mBaud);
+            int out = RS232_OpenComport(mPort,mBaud);
 
             mIsOpen = true;
             std::cerr << "Initiating comport ["<< mPortName<<"]  Return value :["<<out<<"]\n";
@@ -121,7 +121,7 @@ void PComPort::SetPort(unsigned int portnum,unsigned int baud)
 
 void PComPort::PSendByte(unsigned char byte)
 {
-    int check = SendByte(mPort,byte);
+    int check = RS232_SendByte(mPort,byte);
 
     //if check == 1, nothing was sent
 }
@@ -130,7 +130,7 @@ void PComPort::PSendByte(unsigned char byte)
 int PComPort::GetByte(unsigned char& out)
 {
 
-    int check = PollComport(mPort,&out,1);
+    int check = RS232_PollComport(mPort,&out,1);
     return check;
 
 }
@@ -140,7 +140,7 @@ int PComPort::GetByte(unsigned char& out)
 unsigned char PComPort::GetByte()
 {
     unsigned char out;
-    int check = PollComport(mPort,&out,1);
+    int check = RS232_PollComport(mPort,&out,1);
     if(check==0)
         {
             return 0;
@@ -161,7 +161,7 @@ Variant PComPort::GetBytes(int n)
     unsigned char *out;
     out = new unsigned char[n];
 
-    int check = PollComport(mPort,out,n);
+    int check = RS232_PollComport(mPort,out,n);
     Variant got = Variant(out);
     //    int get = n;
     //    Variant got ="";
@@ -185,7 +185,7 @@ Variant PComPort::GetPortName()
 void PComPort::Close()
 {
 
-    CloseComport(mPort);
+    RS232_CloseComport(mPort);
 }
 
 
