@@ -13,12 +13,14 @@ define Start(p)
 
 
 
-   parpairs <- [["reps",6]]#reps*4 is the number of items per test (6=24 items)
+   parpairs <- [["rounds",1]]#rounds is the number of times you go through form 1-2-3
+
    gParams <- CreateParameters(parpairs,gParamFile)
      
 
    ##The number of trials per block (and condition)
-   reps <- gParams.reps
+   ##This is really the number of columns, and shouldn't be changed
+   columns <- 6
 
    ## Uncomment to eliminate busy-wait (mostly for older machines or
    ## laptops that might overheat.)
@@ -72,43 +74,17 @@ define Start(p)
   MakeDirectory("data")
 
   gFileOut <- GetNewDataFile(gSubNum,gWin,"vstroop","csv",
-     "subnum,block,trial,word,color,part,xpos,ypos,resp,rname,correct,intrusion,numresponses,time0,timea,timeend,trialtime,responsetime")
+   "subnum,round,block,trial,word,color,part,xpos,ypos,resp,rname,correct,intrusion,numresponses,time0,timea,timeend,trialtime,responsetime")
   gSumFileOut <- GetNewDataFile(gSubNum,gWin,"vstroop-report","txt","")
 
 
   gTrial <- 0
   gBlock <- 0
-  
+  gRound <- 1  
 
   ##This works by presenting a specific stimulus, and giving the option of four responses.
   ##The stimulus must be categorized either by color or by name.
   ##There are two control conditions for comparison purposes.
-
-
-  ########################################
-  ## round 1 is "Part D": colored dots
-
-
-  stim1 <-  PasteTables(ShuffleMe([0,0,0,0],gColors,1),
-                         Transpose([Repeat("d",reps*4)]))
-
-
-
-
-
-  #########################################
-  ## Round 2 is "Part W": colored words
-
-  stim2 <- PasteTables(ShuffleMe(gWords,gColors,1),
-                       Transpose([Repeat("w",reps*4)]))
-
-
-
-  #########################################
-  ## some trials where all colors are black
-
-   stim3 <- PasteTables(ShuffleMe(gColorNames,gColors,0),
-                        Transpose([Repeat("c",reps*4)]))
 
 
 
@@ -137,17 +113,50 @@ define Start(p)
    gErr  <- []; gRT   <- []; gCond <- []
 
    gHead <- gHeadBlock
+
+  text <- ""
+   dotraining <- 1
+  loop(round,Sequence(1,gparams.rounds,1))
+   {
+
    ########################################################
    ##Do the Dot naming  (block 1)
+
+
+  ########################################
+  ## round 1 is "Part D": colored dots
+
+
+  stim1 <-  PasteTables(ShuffleMe([0,0,0,0],gColors,1),
+                         Transpose([Repeat("d",columns*4)]))
+
+
+
    gBlock <- 1
-   out1 <-   Block(stim1,1)
+   out1 <-   Block(stim1,dotraining)
 
    resp1 <- First(out1)
    time1 <- Second(out1)
 
+   dotraining <- 0  ##only do training on the very first block
+
+
 
    ########################################################
    ##Do the word naming  (block 2)
+
+
+
+
+
+
+
+  #########################################
+  ## Round 2 is "Part W": colored words
+
+  stim2 <- PasteTables(ShuffleMe(gWords,gColors,1),
+                       Transpose([Repeat("w",columns*4)]))
+
 
 
    gInstructions.text <- gInst2
@@ -172,6 +181,14 @@ define Start(p)
    ##Do the color naming  (block 3)
 
 
+  #########################################
+  ## some trials where all colors are black
+
+   stim3 <- PasteTables(ShuffleMe(gColorNames,gColors,0),
+                        Transpose([Repeat("c",columns*4)]))
+
+
+
    gInstructions.text <- gInst3
    Show(gInstructions)
    Hide(gHeader)
@@ -188,8 +205,9 @@ define Start(p)
    time3 <- Second(out3)
    intrusions <- Third(out3)
 
+
    text <- CR(3)+ 
-            "Round              Time taken     Responses made    Intrusions"+CR(1)+
+            "(Round "+round+")             Time taken     Responses made    Intrusions"+CR(1)+
             "--------------------------------------------------------------"+CR(1)+
             "Part D:            "+Format(Round(time1/10)/100,10) + "     " + resp1+ CR(1) +
             "Part W:            "+Format(Round(time2/10)/100 ,10) +"     " + resp2+CR(1) +
@@ -197,6 +215,10 @@ define Start(p)
             "Efficiency(C/D):   "+Format((time3/time1),10) +       "     "+ resp3/resp1+CR(1)+
             "Efficiency(C/W):   "+Format((time3/time2),10) +       "     "+ resp3/resp2
        
+    gRound <- gRound + 1
+
+   }
+
 
 
    FilePrint(gSumFileOut,"------------------------------------------")
@@ -404,7 +426,7 @@ if(dotraining)
            } else{
              intrusion <- 0
            }
-       FilePrint(gFileOut,gSubNum+ "," + gBlock + "," +trial + "," + First(id) + "," + Second(id)+
+       FilePrint(gFileOut,gSubNum+ "," +gRound+","+ gBlock + "," +trial + "," + First(id) + "," + Second(id)+
         "," + Third(id) + "," + Fourth(id) + ","+ Fifth(id)+ "," + resp + "," + colname + ","  + corr + "," +intrusion + ","+responses + "," +
         time0+ ","+ timea + "," + timeend + "," +(timeend-time0) + "," + (timeend-timea))
 
