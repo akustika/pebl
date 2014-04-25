@@ -253,7 +253,7 @@ define InterleaveLists(nested)
 }
 
 ## This is suitable for short inputs, and requires only ALL-CAPS
-## Input
+## Input in latin characters.
 define GetInputWithTimer(entry,timelabel,validation,maxtime,allowretry)
 {
 
@@ -267,6 +267,8 @@ define GetInputWithTimer(entry,timelabel,validation,maxtime,allowretry)
   out <- ""
   SetEditable(entry,1)
   timeout <- GetTime()+maxtime
+
+
   while (not done)
   { 
 
@@ -274,6 +276,7 @@ define GetInputWithTimer(entry,timelabel,validation,maxtime,allowretry)
      RegisterEvent("<TIMER>", 1, timeout,"<GEQ>","EndTrial", [timeout])
 
      resp <- (WaitForListKeyPressWithTimeout(opts,500,1))
+     Print(resp)
      if(IsList(resp))
       {
          if(GetTime()>timeout)
@@ -299,10 +302,11 @@ define GetInputWithTimer(entry,timelabel,validation,maxtime,allowretry)
    
       out <- out + Uppercase(resp)
      }
-      
+
+
       entry.text <- out
       entry.cursorpos <- StringLength(out) 
-     Draw()
+       Draw()
      }
 
      ##check if the validation matches
@@ -310,22 +314,23 @@ define GetInputWithTimer(entry,timelabel,validation,maxtime,allowretry)
      {
       PushOnEnd(outs,[out,GetTime()])
 
-      if(not Uppercase(out)==Uppercase(validation))
+      corr <- (Uppercase(out)==Uppercase(validation))
+
+      if(not corr and allowRetry)
       {
         done <- 0
 	out <- ""
 	entry.text <- out
       }
-    }
+     }
 
-  ##exit if time is up, or we don't allow retries
-  if(GetTime()>timeout or (not allowretry))
-  {  
-   done <- 1
+   ##exit if time is up, or we don't allow retries
+   if(GetTime()>timeout)
+   {  
+    done <- 1
+   }
   }
 
-
-  }
   SetEditable(entry,0)
   ClearEventLoop()
   return [out,outs]
@@ -334,6 +339,7 @@ define GetInputWithTimer(entry,timelabel,validation,maxtime,allowretry)
 
 define UpdateTimer(endtime,maxtime,timer)
 {
+
     prop <- Max([0,endTime - GetTime()])/maxtime
     front <- gTimer.front
     back <- gTimer.back
@@ -344,7 +350,6 @@ define UpdateTimer(endtime,maxtime,timer)
 
 define EndTrial(p)
 {
-
  gKeeplooping <- 0
  Draw()
 }
