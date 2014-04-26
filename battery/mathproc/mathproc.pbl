@@ -1,7 +1,5 @@
 define Start(p)
 {
-
-
 parpairs <- [["blocktime",180],# Duration of block in sec (default should be  3 min)
     ["uselength1",0],
     ["uselength2",1],

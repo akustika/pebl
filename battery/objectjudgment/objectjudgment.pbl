@@ -59,8 +59,7 @@ define Start(p)
 
   inst <-  EasyTextBox("",50,50,gWin,24,gVideoWidth-100,gVideoHeight-100)
 
-  inst.text <- "  This test has two parts.  First is absolute identification, and second is invariant identification.
-
+  inst.text <- "  
                 Absolute Identification:
 In this test, you will be show a study shape, followed shortly afterwards by a pair of shapes.  One of the new shapes is exactly like the previous shape; the other is different, either in size, orientation, or the actual shape of the objects.  Pick the choice that is identical to the previous one.
 
