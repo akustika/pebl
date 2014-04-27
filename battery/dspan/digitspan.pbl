@@ -127,18 +127,18 @@ define Start(lPar)
   gStim <- FileReadList("Digits.txt")
 
 
-
+  ##these get loaded from the media\ directory in the PEBL distribution
   gSounds <- []
   loop(i,gStim)
    {
-     x <- LoadSound("stim/"+i+".wav")
+     x <- LoadSound(i+".wav")
      gSounds <- Append(gSounds,x)
    }
 
-  gReady <- LoadSound("stim/ready.wav")
-  gBeep  <- LoadSound("stim/beep.wav")
-  gCorrect <- LoadSound("stim/correct.wav")
-  gIncorrect <- LoadSound("stim/incorrect.wav")
+  gReady <- LoadSound("ready.wav")
+  gBeep  <- LoadSound("beep.wav")
+  gCorrect <- LoadSound("correct.wav")
+  gIncorrect <- LoadSound("incorrect.wav")
 
   stim <- Transpose([gStim,gSounds])
   ####################################################
