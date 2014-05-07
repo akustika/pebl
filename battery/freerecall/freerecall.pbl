@@ -37,12 +37,12 @@ define Start(p)
    stim <- Easylabel("+", gVideoWidth/2,gVideoHeight/2,gWin,60)
    header <- Easylabel("Try to remember each word", gVideoWidth/2,150,gWin,25)
    input <- EasyTextbox("",gVideoWidth/2-200,gVideoheight/2+100,gWin,30,400,80)
-   Hide(input)
+
    
   gBlock <- 1  
   loop(words,lists)
    {
-
+   Hide(input)
    MessageBox("Hit OK to see the list of words",gWin)
    Draw()
    Showcursor(0)
