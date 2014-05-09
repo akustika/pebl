@@ -1,16 +1,16 @@
-You are about to take part in an experiment that involves gambling with play money.  You will start with a $2000 loan.  On each trial, you will select a card from one of four decks.  After you select each card, you will be given a reward and possibly be required to pay a penalty.  Your goal is to maximize the profit on your loan, and you may choose from any deck at any time to do so.  Click the mouse to continue.
-For each card you draw, you will get a reward.  This reward depends on the deck you choose, and each deck has a fixed reward.  You will also get a penalty, which will cost you money.  Penalties are somewhat random--the penalty you will get is different for different cards in the deck.  Sometimes the penalty will be zero, and sometimes it will be larger, at times even larger than the reward you get for choosing that deck.  You should try to get as much money as possible by the end of the study.  Press the mouse to continue.
-At the bottom of the screen, there is a graph which shows you your current earnings.  The more money you have, the larger the bar will be.                                                                                                  Now, you will begin the test.  Do you have any questions?                                                                                       Press the mouse to begin.
-1
-2
-3
-4
-Select deck by clicking with mouse
-Total: $
- Choice:   
- Reward:   $
- Penalty:  $
+In front of you on the screen, there will be 4 decks of cards: A, B, C, and D. When we begin the game, I want you to select one card at a time by clicking on a card from any deck you choose. Each time you select a card, the computer will tell you that you won some money. I don't know how much money you will win. You will find out as we go along. Every time you win, the green bar gets bigger. Every so often, when you click on a card, the computer will tell you that you won some money as usual, but then it will say that you lost some money as well. I don't know when you will lose or how much. You will find out as we go along. Every time you lose, the green bar gets smaller. Click the mouse to continue.
+You are absolutely free to switch from one deck to the other at any time, and as often as you wish. The goal of the game is to win as much money as possible and avoid losing as much money as possible. You won't know when the game will end. Simply keep on playing until the computer stops. I am going to give you $2000 of credit, the green bar, to start the game. The red bar is a reminder of how much money you borrowed to play the game and how much money you have to pay back before we see whether you won or lost. Click the mouse to continue.
+The only hint I can give you, and the most important thing to note is this: Out of these four decks of cards, there are some that are worse than others, and to win you should try to stay away from bad decks. No matter how much you find yourself losing, you can still win the game if you avoid the worst decks. Also note that the computer does not change the order of the cards once the game begins. It does not make you lose at random, or make you lose money based on the last card you picked. If you have any questions, please ask the researcher now. Otherwise, click the mouse to begin.
+A
+B
+C
+D
+Pick a card by clicking with the mouse:
+Winnings: $
+ You chose: Deck 
+ You have won $
+ But you also have lost $
  Net Gain: $
-Thank you for participating in the experiment. You earned a total of $
+You've completed the game. After repaying your loan, your net winnings are $
 Congratulations!
-You may now leave.  Please alert the experimenter that you are done. Press 'x' key to exit.
+Thank you for participating in the experiment. Please notify the researcher that you have finished.

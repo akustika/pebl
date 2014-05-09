@@ -1,3 +1,2 @@
-PEBL's "Bechara Gambling Task": an independent implementation of Bechara et al.'s so-called "Iowa Gambling Task". Choose which option and receive rewards and costs.
-Data are saved to igt-X.txt in the iowa directory.
-To cite:  Mueller, S. T. (2011). The PEBL Bechara Gambling Task (PBGT).  Computer software retrieved from http://pebl.sf.net/battery.html
+PEBL's "Bechara Gambling Task": an independent implementation of Bechara et al.'s so-called "Iowa Gambling Task". Choose which option and receive rewards and costs.  This version, by Peter Bull, is a substantial improvement over the original PEBL test, which is still available as iowa-old.pbl if needed.
+
