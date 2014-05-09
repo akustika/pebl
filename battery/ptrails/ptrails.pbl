@@ -36,7 +36,8 @@ define Start(p)
 		      ["NumTargs", 26 ],     #Number of targets
 		      ["DrawLines", 1 ],     #Whether to draw lines
 		      ["fieldwidth",700],
-		      ["fieldheight",500]
+		      ["fieldheight",500],
+		      ["maxanglethresh",2.8] ##maximum angle (in radians) to allow on path.  Make this smaller to make the path jaggier.
                      ]
 
    gParams <- CreateParameters(parpairs,gParamFile)
@@ -125,6 +126,7 @@ After the display appears, you can examine the circles as long as you want.  Tim
 
             ##Save a copy of this one so we can have some more complex solutions
 	    tourlength <- PathDist(tour,mat)
+
 	    PushOnEnd(tours,tour)
 	    PushOnEnd(lengths,tourlength)
 
@@ -153,25 +155,18 @@ After the display appears, you can examine the circles as long as you want.  Tim
 	    PushOnEnd(tours,tour)
 	    PushOnEnd(lengths,tourlength)
 
-	   # FilePrint(gTmpFile,gFile+","+trial+","+i+","+tourlength)
-	   # Print(TimeStamp()+ ","+gFile+","+ trial+","+i+","+tourlength)
 	 }
 
+	 ##now, we have shortened the path as much as we need. Pick the best one.
+	 tour <- Nth(tours,ArgMin(lengths))
 
-	 ##Choose the best one as the min-length standard:
-	 minLength <- Min(lengths)
-	 standard <- minlength * gParams.pathscalethresh
-	 deltas <- []
-         loop(i,lengths)
-         {
-  	   PushOnEnd(deltas, Abs(i-standard))
-         }
 
-	 
-	 ##pick the tour that is closest to the target
-	 tour <- Nth(tours,ArgMin(deltas))
          pts <- SortBy(pts,(Order(tour)))  #re-sort the original points
-	 
+         tourangles <- GetAngles(pts,i))   #find angles of the tour. These are
+	                                   #compute to range between 0 and pi, with 
+					   #pi=3.14 a straight line.  We want to get 
+					   #rid of straight lines to some extent.
+
        }
 
 
@@ -243,6 +238,9 @@ After the display appears, you can examine the circles as long as you want.  Tim
       }
 
       gTrial <- trial
+
+
+
       Trial(Nth(pts,i),Nth(types,i))
       trial <- trial + 1
     }
@@ -840,19 +838,20 @@ define InsertPointOnPath(path,newpoint,pts,mat)
        }
   
 
-      links <- Transpose([path, Rotate(path,1)])
+      links <- Transpose([Rotate(path,-1),path, Rotate(path,1)])
       dists <- []
-
+      angles <- []
      loop(i,links)
       {
         ## compute the cost to inserting between the two elements of i
-        cost <- M(mat,First(i),newpoint) + M(mat,newpoint,Second(i)) - M(mat,First(i),Second(i))
-
+        cost <- M(mat,Second(i),newpoint) + M(mat,newpoint,Third(i)) - M(mat,Second(i),Third(i))
+	angle <- GetAngle3(First(i),Second(i),Third(i))
         PushOnEnd(dists,cost)
-
+	PushOnEnd(angles,angle)
       }
 
-       ##we went through all the links
+       ##we went through all the links. We have two measures; least cost and max angle. 
+       ##let's add it to the least-cost position that has an appropriate angle.
        d2 <- SortBy(Sequence(1,Length(path),1),dists)
        ##The first element of d2 gives the location to insert
        path <- Insert(path, newpoint,First(d2))
@@ -1070,5 +1069,29 @@ define ArgMin(list)
    return Nth(SortBy(indexes, list), Length(list))
 }
 
+define ArgMin(list)
+{
+   indexes <- Sequence(1,Length(list),1)
+   return First(SortBy(indexes, list))
+}
+
+
+
+define GetAngles(path)
+{
+   angles <- []
+   tmp1 <- Sublist(path,1,Length(path)-2)
+   tmp2 <- SubList(path,2,Length(path)-1)
+   tmp3 <- SubList(path,3,Length(path))
+   pp <- Transpose([tmp1,tmp2,tmp3])
+   loop(i,pp)
+   {
+      ##compute the angle of p1p2p3
+      angle <- GetAngle3(First(i),Second(i),Third(i))
+      PushOnEnd(angles,angle)
+   }
+
+ return angles
+}
 
 

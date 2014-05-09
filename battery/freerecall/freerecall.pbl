@@ -7,7 +7,8 @@ define Start(p)
                ["listlength",10],
 	       ["timeperword",2000],
 	       ["isi",250],
-	       ["delay",1000]]##delay before recall
+	       ["delay",1000],##delay before recall
+	       ["stimfile","torontowordpool.txt"]]##word file to use.
 
   gParams <- CreateParameters(parpairs,gparamFile)
 
@@ -19,14 +20,14 @@ define Start(p)
      gSubNum <- GetSubNum(gWin)
    }
 
-   header <- "subnum,block,trial,resp,corr,time"
+   header <- "subnum,block,pos,resp,onlist,repeat,corr,time,abstime"
    gFileOut <- GetNewDataFile(gSubNum,gWin,"freerecall","csv",header)
    header <- "subnum,block,position,word,time"
    gPresentedFile <- GetNewDataFile(gSubNum,gWin,"freerecall-presented","csv",header)
 
 
 
-  words <- Shuffle(FileReadList("torontowordpool.txt"))
+  words <- Shuffle(FileReadList(gParams.stimfile))
  
   subset <- SampleN(words,gParams.numlists*gParams.listlength)
 
@@ -43,17 +44,17 @@ define Start(p)
   loop(words,lists)
    {
    Hide(input)
-   MessageBox("Hit OK to see the list of words",gWin)
+   MessageBox("Hit OK to see the words to remember",gWin)
    Draw()
    Showcursor(0)
    Wait(1000)
 
 
-
+     uwords <- []
      position <- 1
      loop(word,words)
      {
-     
+      PushOnEnd(uwords,Uppercase(word))   ##make uppercase words for matching
       Show(stim)
       stim.text <- word
       Draw()
@@ -77,6 +78,7 @@ define Start(p)
      header.text <- "Type response (make empty entry when done)."
      Draw()
 
+     resps <- []
      resp <- "X"
      position <- 1
      sequence <- Sequence(1,gparams.listlength,1)
@@ -86,8 +88,9 @@ define Start(p)
        input.text <- ""
        resp<- GetInput(input,"<return>")
        time2 <- GetTime()
-
-       onlist <- Lookup(Uppercase(resp),words,sequence)
+       
+       onlist <- Lookup(Uppercase(resp),uwords,sequence)
+       repeat <- Lookup(Uppercase(resp),resps,Repeat(1,Length(resps)))
 
        if(IsList(onlist))
        {
@@ -96,8 +99,20 @@ define Start(p)
        } else {
            correct <- 1
        }
-       FilePrint(gFileOut,gSubNum+","+gBlock+","+resp+","+position+","+onlist+","+correct+","+(time2-time1)+","+time2)
-       position <- position+ 1
+
+       ##score any repeats as 0/incorrect
+       if(IsList(repeat))
+       {
+        repeat <- 0
+       } else {
+          correct <- 0
+       }
+
+       
+         FilePrint(gFileOut,gSubNum+","+gBlock+","+position+","+
+                 resp+","+
+                 onlist+","+ repeat+","+correct+","+(time2-time1)+","+time2)
+         position <- position+ 1
      }
 
      gBlock <- gBlock + 1

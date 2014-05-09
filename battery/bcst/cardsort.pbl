@@ -292,7 +292,7 @@ define Start(lPar)
       time0 <- GetTime()
 
   ## Get the response
-  simulate <- 1
+  simulate <-0
 
   if(simulate) 
    {
