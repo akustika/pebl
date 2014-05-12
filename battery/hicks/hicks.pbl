@@ -8,20 +8,29 @@ define Start(p)
 
 
   parpairs <- [["hilightcolor","red"],
-               ["fgcolor","grey25"],
-	       ["bgcolor","navy"],
-	       ["validfontcolor","white"],
-	       ["invalidfontcolor","grey30"],
-               ["numtrials","40"],
+               ["numtrials","30"],
+	       ["itiMin",250],  ##intertrial interval min
+	       ["itiMax",750],  ##intertrial interval  max
 	       ["keylabels","1234567890"],
 	       ["givefeedback",1],
-	       ["round1","56"],
-	       ["round2","4567"],
-	       ["round3","345678"],
-	       ["round4","23456789"],
-	       ["round5",""]]
+	       ["round1","5"],
+	       ["round2","56"],
+	       ["round3","567"],
+	       ["round4","4567"],
+	       ["round5","34567"],
+	       ["round6","345678"],
+	       ["round7","2345678"],
+	       ["round8","23456789"]]
                
   gParams <- CreateParameters(parpairs,gParamFile)
+
+ ##here are some additional parameters that we won't expose to the interface 
+ gParams.fgcolor <- "grey25"  #Color of box interior
+ gParams.bgcolor <- "navy"    #Color of box border
+ gparams.validfontcolor <- "white"   #color name of font for valid options
+ gParams.invalidfontcolor <- "grey30" #Color name for font of invalid options
+
+
 
   gWin <- MakeWindow("black")
 
@@ -35,7 +44,7 @@ define Start(p)
 
  
   gFileout <- GetNewdataFile(gSubNum,gWin,"hicks","csv",
-                  "subnum,stimset,stim,resp,correctresp,correct,rt")
+                  "subnum,stimset,delay,stim,resp,correctresp,correct,rt")
 
   gReportFile <- GetNewdataFile(gSubNum,gWin,"hicks-report","txt","")
 
@@ -68,6 +77,18 @@ define Start(p)
   {
     PushOnEnd(rounds,SplitString(gParams.round5+"",""))
   }
+  if(StringLength(gParams.round6+"")>0)
+  {
+    PushOnEnd(rounds,SplitString(gParams.round6+"",""))
+  }
+  if(StringLength(gParams.round7+"")>0)
+  {
+    PushOnEnd(rounds,SplitString(gParams.round7+"",""))
+  }
+  if(StringLength(gParams.round8+"")>0)
+  {
+    PushOnEnd(rounds,SplitString(gParams.round8+"",""))
+  }
 
   dataSet <- []
   gBlock <- 1
@@ -92,10 +113,11 @@ Press any key to begin."
   }
 
   report <- TimeStamp() + CR(1)+
+  "Elapsed time:        " + (GetTime()/1000/60) + " min"+CR(1)+
   "Participant code:    " + gSubNum + CR(1) +
-"-------------------------------------------------------------
+"------------------------------------------------------------------
  Numoptions   Options   responses    Accuracy      Time (ms)
---------------------------------------------------------------"+CR(1)
+------------------------------------------------------------------"+CR(1)
 
 
   loop(i,dataSet)
@@ -109,7 +131,7 @@ Press any key to begin."
    }
 
 
-  report <- report +"-------------------------------------------------------"   
+  report <- report +"------------------------------------------------------------------"
 
   Print(report)
   FilePrint(greportfile,report)
@@ -217,7 +239,8 @@ define Trials(numTrials, stimuli)
    loop(i,stim)
    {
 
-     Wait(400 + Random()*200)
+     delay <- gParams.itimin + Random()*(gParams.itimax-gParams.itimin)
+     Wait(delay)
      ##Move the highlight square.
      Move(highlight,Nth(xs,ToInteger(i)),y)
      Show(highlight)
@@ -253,7 +276,7 @@ define Trials(numTrials, stimuli)
        Draw()
      }
 
-     FilePrint(gFileOut,gSubNum+","+Length(stim)+","+i+","+resp+","+correctresponse+","+ correct +","+(time1-time0))
+     FilePrint(gFileOut,gSubNum+","+Length(stim)+","+delay+","+i+","+resp+","+correctresponse+","+ correct +","+(time1-time0))
 
      totalcorr <- totalcorr + correct
      rtsum <- rtsum + (time1-time0)

@@ -1,14 +1,14 @@
 hilightcolor|red|Color to use to indicate stimulus.  See PEBL manual appendix for hundreds of options
-fgcolor|grey25|Color of box interior
-bgcolor|navy|Color of box border
-validfontcolor|white|color name of font for valid options
-invalidfontcolor|grey30|Color name for font of invalid options
-numtrials|40|Number of trials per block (up to five blocks)
+numtrials|30|Number of trials per block (up to five blocks)
+itimin|250|Smallest ITI (wait before next stim)
+itimax|750|largest ITI (wait before next stim)
 keylabels|1234567890|labels for the ten key boxes
 givefeedback|1|Whether correct/incorrect feedback will be given
-round1|56|Round 1 response options
-round2|4567|Round 2 response options
-round3|345678|Round 3 response options
-round4|23456789|Round 4 response options
-round5||Round 5 response options. blank will be ignored
-
+round1|5|Round 1 response options
+round2|56|Round 2 response options
+round3|456|Round 3 response options
+round4|4567|Round 4 response options
+round5|34567|Round 5 response options. blank will be ignored
+round6|345678|Round 6 response options. blank will be ignored
+round7|2345678|Round 7 response options. blank will be ignored
+round8|23456789|Round 8 response options. blank will be ignored
