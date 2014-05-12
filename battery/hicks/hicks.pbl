@@ -44,11 +44,6 @@ define Start(p)
 
  Draw()
  WaitForAnykEYpRESS()
-  Print(gParams.round1)
-  Print(gParams.round2)
-  Print(gParams.round3)
-  Print(gParams.round4)
-  Print(gParams.round5)
  ## creat the rounds:
   rounds <- []
   if(StringLength(gParams.round1+"")>0)
@@ -68,7 +63,7 @@ define Start(p)
   {
     PushOnEnd(rounds,SplitString(gParams.round4+"",""))
   }
-  Print(gParams.round5)
+
   if(StringLength(gParams.round5+"")>0)
   {
     PushOnEnd(rounds,SplitString(gParams.round5+"",""))
@@ -193,9 +188,6 @@ define Trials(numTrials, stimuli)
   loop(x,xs)
   {
   
-  Print(num)
-  Print(stimuli)
-  Print("checking")
   if(IsMember(num+"",stimuli))
   {
     lab <-  MakeLabel(Nth(keylabels,num),validfont)
@@ -237,7 +229,7 @@ define Trials(numTrials, stimuli)
      Hide(highlight)
      Draw()
 
-     Print(i)
+
      ##Determine what the correct response should be (10 is a problem)
      correctresponse <- i
      if(correctresponse==10)
