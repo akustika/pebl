@@ -45,7 +45,7 @@ battery:2:2:2:1000
 
 #proper trials
 static:-1:trials.txt
-battery:5:3:7:1000
+battery:15:3:7:1000
 
 #end of assessment
 static:2000:end.txt

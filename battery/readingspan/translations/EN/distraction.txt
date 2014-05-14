@@ -27,7 +27,7 @@ Children go to school.,This sentence makes sense.,T
 Balls are round.,This sentence makes sense.,T
 Dogs can play guitar.,This sentence makes sense.,F
 Carrots are blue.,This sentence makes sense.,F
-Aeroplanes have wings.,This sentence makes sense.,T
+Airplanes have wings.,This sentence makes sense.,T
 A cow eats grass.,This sentence makes sense.,T
 A dog and a cat walk on four legs.,This sentence makes sense.,T
 A giraffe has a long neck.,This sentence makes sense.,T
@@ -39,9 +39,9 @@ Ben clapped his hands.,This sentence makes sense.,T
 Birds use wings to fly.,This sentence makes sense.,T
 Every day I comb my hair.,This sentence makes sense.,T
 I read a book from the library.,This sentence makes sense.,T
-Grass is coloured green.,This sentence makes sense.,T
-Aeroplanes have hands.,This sentence makes sense.,F
-Grass is coloured red.,This sentence makes sense.,F
+Grass is colored green.,This sentence makes sense.,T
+Airplanes have hands.,This sentence makes sense.,F
+Grass is colored red.,This sentence makes sense.,F
 I eat with a knife and fork.,This sentence makes sense.,T
 Pianos are hot.,This sentence makes sense.,F
 Apples grow on wheels.,This sentence makes sense.,F
@@ -57,7 +57,7 @@ A cow reads grass.,This sentence makes sense.,F
 I hear with my ears.,This sentence makes sense.,T
 I smell with my nose.,This sentence makes sense.,T
 I wear socks on my feet.,This sentence makes sense.,T
-Jim likes to eat fish and chips.,This sentence makes sense.,T
+Jim likes to eat potato chips.,This sentence makes sense.,T
 Mary unlocks the door with her key.,This sentence makes sense.,T
 My dog wags his tail.,This sentence makes sense.,T
 My teeth are in my mouth.,This sentence makes sense.,T
@@ -66,18 +66,18 @@ Mary unlocks the door with her hair.,This sentence makes sense.,F
 Paul’s dog can run very fast.,This sentence makes sense.,T
 Seven days makes a week.,This sentence makes sense.,T
 The baker made a loaf of bread.,This sentence makes sense.,T
-The colour of a banana is yellow.,This sentence makes sense.,T
+The color of a banana is yellow.,This sentence makes sense.,T
 The farmer lives on a farm.,This sentence makes sense.,T
 The fireman put out the fire.,This sentence makes sense.,T
-The football team scored a goal.,This sentence makes sense.,T
+The football team scored a touchdown.,This sentence makes sense.,T
 The magician waves his magic wand.,This sentence makes sense.,T
 The moon comes out at night.,This sentence makes sense.,T
 The opposite of bad is good.,This sentence makes sense.,T
 The opposite of black is white.,This sentence makes sense.,T
 The opposite of dark is light.,This sentence makes sense.,T
 The rocket went up into outer space.,This sentence makes sense.,T
-The sky is coloured blue.,This sentence makes sense.,T
-The rubbish goes in a rubbish bin.,This sentence makes sense.,T
+The sky is colored blue.,This sentence makes sense.,T
+Garbage goes in a trash can.,This sentence makes sense.,T
 The sun shines in the sky.,This sentence makes sense.,T
 There are seven days in a week.,This sentence makes sense.,T
 To make a snowman you need snow.,This sentence makes sense.,T
@@ -96,7 +96,7 @@ I smell with my ears.,This sentence makes sense.,F
 I see with my eyes.,This sentence makes sense.,T
 I see with my nose.,This sentence makes sense.,F
 I wear carrots on my feet.,This sentence makes sense.,F
-Jim likes to wag fish and chips.,This sentence makes sense.,F
+Jim likes to wag potato chips.,This sentence makes sense.,F
 My dog rockets his tail.,This sentence makes sense.,F
 Paul’s dog can shine very fast.,This sentence makes sense.,F
 Seven days makes a year.,This sentence makes sense.,F
@@ -110,14 +110,14 @@ The opposite of good is great.,This sentence makes sense.,F
 The opposite of white is yellow.,This sentence makes sense.,F
 The opposite of light is bright.,This sentence makes sense.,F
 The rocket went up into outer farms.,This sentence makes sense.,F
-The rubbish goes in the rubbish nose.,This sentence makes sense.,F
+The trash goes in the trash nose.,This sentence makes sense.,F
 The sun shines in the ground.,This sentence makes sense.,F
 There are ten days in a week.,This sentence makes sense.,F
 To make a snowman you need bricks.,This sentence makes sense.,F
 When babies are hungry they fly.,This sentence makes sense.,F
 When I wake up I open my nose.,This sentence makes sense.,F
 While sleeping I had a strange paintbrush.,This sentence makes sense.,F
-Wool comes from chips.,This sentence makes sense.,F
+Wool comes from potatoes.,This sentence makes sense.,F
 Worms live up in the sky.,This sentence makes sense.,F
 You can build a house with sky.,This sentence makes sense.,F
 You get full if you have no food.,This sentence makes sense.,F

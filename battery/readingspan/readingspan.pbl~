@@ -137,8 +137,6 @@ define WaitForClick( a_WaitTO )
 	return rval
 }
 
-
-
 # show a single distract task, returns a list, first element 0/1 for success failure second element is time taken
 define ShowDistract(a_WaitTO)
 {
@@ -148,9 +146,7 @@ define ShowDistract(a_WaitTO)
 	{
 		gDistractWorkingSet<-SampleN( gDistractionTasks, Length( gDistractionTasks ) )
 	}
-
-
-
+	
 	currDistract<-Nth(gDistractWorkingSet, 1 )
 	gDistractWorkingSet<-RemoveSubset( gDistractWorkingSet, [1])
 
@@ -158,26 +154,18 @@ define ShowDistract(a_WaitTO)
 	answer<-Nth( currDistract, 2 )
 	truthVal<-Nth( currDistract, 3 )
 
-	questionLabel<-MakeLabel( question, gQuestionFont )
+	questionLabel<-MakeLabel( question, gLgFont )
 	xPos<- gVideoWidth/2
 	yPos<- gVideoHeight/2
 	Move(questionLabel, xPos,yPos)
 	AddObject(questionLabel,gWin)
-
-	footer <- MakeLabel("Click screen for response options",gSmlFont)
-	AddObject(footer,gWin)
-	Move(footer,gVideoWidth/2,gVideoheight/2+200)
 	Draw()
-	
+
 	elapsed<-GetTime()
-	Wait(250)  ##wait a little bit to avoid accidental fast-clicks
 	rval<-WaitForClick( a_WaitTO )
 
 	elapsed<-GetTime() - elapsed
-	##elapsed is the time spent reading the question
-
 	RemoveObject(questionLabel, gWin)
-	RemoveObject(footer,gWin)
 
 	if ( rval != 0 ) # not timeout
 	{
@@ -191,15 +179,14 @@ define ShowDistract(a_WaitTO)
 		Move(answerLabel, xPos,yPos)
 		AddObject(answerLabel,gWin)
 		Draw()
-		
-		time2 <- GetTime()
+
 		yPos <- yPos + 2 * cellHeight
 
 		keyWidth<-3*keyHeight
 		kb <- MakeKB( gWin, ["True","False"], xPos-keyWidth/2, yPos, 2, keyWidth, keyHeight, spc)
 
 		resp<-GetKBInput( GetClickable( kb ), ["1", "0"]  )
-		time3 <- GetTime()
+
 		if ( ToNumber( resp ) == truthVal )
 		{
 			# return 1 to indicate correct response
@@ -215,9 +202,7 @@ define ShowDistract(a_WaitTO)
 		rval <- -1
 	}
 
-	##rt is the time to choose T/F after clicking.
-	rt <- time3-time2
-	return [rval,elapsed,rt,currDistract]
+	return [rval,elapsed]
 }
 
 define ShowTargetLetter( testVal, timeout )
@@ -438,7 +423,7 @@ define PresentRun(  distractMS, targetMS, numTarget, stages, feedback )
 			{
 				if ( Nth( task, 2 ) == 1 )
 				{
-				   distractCorrect <- distractCorrect + 1
+					distractCorrect <- distractCorrect + 1
 				}
 				distractTotal<- distractTotal + 1
 			} else {
@@ -799,14 +784,9 @@ define InitDefaults()
 	gNoSelectionChar<-"*"
 	gUnknownValue<-"_"
 
-	gLgFontSz<-25
+	gLgFontSz<-22
 	gKeyHeight<-2.1*gLgFontSz
 
-	##font for questions:
-	gQuestionFontSz <- 40
-	gQuestionFont <- MakeFont(gPEBLBaseFont,0,gQuestionFontSz,gFGColor,gBGColor,0)
-
-	##font for memory letters:
         gStimFontsz <- 80
 	gStimFont <- MakeFont(gPEBLBaseFont,0,gStimFontSz,gFGColor,gBGColor,0)
 
@@ -815,7 +795,7 @@ define InitDefaults()
         gLgFont_Disabled <- MakeFont("Vera.ttf",0,gLgFontSz,
                                      gFGDisabledColor,gBGColor,0)
 
-	gSmlFont<- MakeFont( "Vera.ttf",0,16,gFGColor,gBGColor,0)
+	gSmlFont<- MakeFont( "Vera.ttf",0,20,gFGColor,gBGColor,0)
 	gDbgFont<-MakeFont(  "Vera.ttf",0,20,gDbgColor,gBGColor,0)
 
 	gBatteryThreshold<-0.85
@@ -840,8 +820,6 @@ define InitDefaults()
 }
 
 
-## This processes data from a 'full' run (not just a memory or decision task)
-##
 # return [avgTimeDistract,pctCorrectDistract]
 define ProcessRunResult( stages, runResult, write ,conds)
 {
@@ -858,7 +836,6 @@ define ProcessRunResult( stages, runResult, write ,conds)
 	numCorrectDistract<-0
 	totNumDistract<-0
 
-      Print("stages:")
       Print(stages)
 
       target<- ""
@@ -867,7 +844,6 @@ define ProcessRunResult( stages, runResult, write ,conds)
 
 	loop( result, runResult )
 	{
-	   Print("resultline:" + result)
                 ##Distractor problems:
 		if ( Nth( result, 1 ) == "D" )
 		{
@@ -1022,9 +998,7 @@ define Start(par)
 
 				if ( abort == 1 )
 				{
-				     MessageBox(gAbortThresholdMsg,gWin)
-				     SignalFatalError("Exiting experiment because threshold not met.")
-
+					PresentStatic( -1, 1, gAbortThresholdMsg, 1 )
 				} else {
 					lens<-Sequence( min, max, 1 )
 					lens<-Flatten( ShuffleRepeat( lens, reps ) )
