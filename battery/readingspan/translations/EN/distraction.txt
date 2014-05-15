@@ -18,7 +18,7 @@ The sun is hot.,This sentence makes sense.,T
 Bananas ride bicycles.,This sentence makes sense.,F
 Houses can sing.,This sentence makes sense.,F
 Seven days makes a month.,This sentence makes sense.,F
-I have a toothbrush to cleen my teeth.,This sentence makes sense.,T
+I have a toothbrush to clean my teeth.,This sentence makes sense.,T
 Your nose is on your face.,This sentence makes sense.,T
 Wheels are square.,This sentence makes sense.,F
 Giraffes have long necks.,This sentence makes sense.,T
@@ -52,7 +52,7 @@ Every day I swim my hair.,This sentence makes sense.,F
 I read a dog from the library.,This sentence makes sense.,F
 Cars have hands.,This sentence makes sense.,F
 I go to sleep in my bed.,This sentence makes sense.,T
-I have four fingers and one thumb.,This sentence makes sense.,T
+A hand has four fingers and one thumb.,This sentence makes sense.,T
 A cow reads grass.,This sentence makes sense.,F
 I hear with my ears.,This sentence makes sense.,T
 I smell with my nose.,This sentence makes sense.,T
@@ -90,7 +90,7 @@ You can build a house with bricks.,This sentence makes sense.,T
 You get hungry if you have no food.,This sentence makes sense.,T
 You paint with a paintbrush.,This sentence makes sense.,T
 I go to sleep in my sky.,This sentence makes sense.,F
-I have five fingers and one thumb.,This sentence make sense.,F
+A hand has five fingers and one thumb.,This sentence make sense.,F
 I hear with my nose.,This sentence makes sense.,F
 I smell with my ears.,This sentence makes sense.,F
 I see with my eyes.,This sentence makes sense.,T

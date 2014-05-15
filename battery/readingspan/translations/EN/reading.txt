@@ -1,6 +1,5 @@
 Now you will practice the sentence reading part of this task.
 <blank>
-<blank>
 A sentence will appear on your screen that will look
 like this:
 <blank>
@@ -8,7 +7,6 @@ like this:
 <blank>
 As soon as you see the sentence, you should read it and work
 out if it makes sense or not. The above sentence makes sense.
-<blank>
 <blank>
 An example of a sentence that does not make sense would be:
 <blank>

@@ -149,6 +149,7 @@ define ShowDistract(a_WaitTO)
 		gDistractWorkingSet<-SampleN( gDistractionTasks, Length( gDistractionTasks ) )
 	}
 
+        rt <- -1
 
 
 	currDistract<-Nth(gDistractWorkingSet, 1 )
@@ -198,8 +199,10 @@ define ShowDistract(a_WaitTO)
 		keyWidth<-3*keyHeight
 		kb <- MakeKB( gWin, ["True","False"], xPos-keyWidth/2, yPos, 2, keyWidth, keyHeight, spc)
 
+		SetMouseCursorPosition(gVideoWidth/2,gVideoHeight/2)
 		resp<-GetKBInput( GetClickable( kb ), ["1", "0"]  )
 		time3 <- GetTime()
+		rt <- time3-time2
 		if ( ToNumber( resp ) == truthVal )
 		{
 			# return 1 to indicate correct response
@@ -216,7 +219,6 @@ define ShowDistract(a_WaitTO)
 	}
 
 	##rt is the time to choose T/F after clicking.
-	rt <- time3-time2
 	return [rval,elapsed,rt,currDistract]
 }
 
@@ -868,6 +870,7 @@ define ProcessRunResult( stages, runResult, write ,conds)
 	loop( result, runResult )
 	{
 	   Print("resultline:" + result)
+
                 ##Distractor problems:
 		if ( Nth( result, 1 ) == "D" )
 		{
@@ -881,18 +884,28 @@ define ProcessRunResult( stages, runResult, write ,conds)
 			}
 			totNumDistract<- totNumDistract + 1
 	
+	
+		##T is a memory test item
                  }elseif(First(result)=="T"){
 		  target <- Second(result)
 		  resp <- Third(result)
 		  correct <- target==resp
 
                 }
+
+		##Prit out the distractor information
 		if ( write != 0  and First(result)=="D")
 		{
-		  FilePrint( gPositionLog, gSubNum+","+ gTrial+","+
+			
+		  problem <- Nth(result,5)
+
+		  FilePrint( gDistractionLog, gSubNum+","+ gTrial+","+
 		    	     distract_timeout +","+ target_timeout +","+ runLen +","+
 			     numCorrectDistract+","+totNumDistract+","+
-			     Nth( result, 1 ) + "," + Nth( result, 2 ) + ","+Nth(result,3 ) +",")
+			     gQuote+First(problem)+gQuote+","+
+			     Third(problem)+","+
+			     Nth( result, 1 ) + "," + Nth( result, 2 ) + ","+
+                             Nth(result,3 ) +","+Nth(result,4))
 	       }
 	}
 
@@ -925,9 +938,12 @@ define OpenSubOut()
 	subNoSpc<-ReplaceChar( gSubNum, " ", "_" )
         header <- "subnum,trial,probtime,memtime,length,stim,resp,memcorr,time,distcorr,numcorrdist,totnumdist,runningcorrect,runningtotal"
 	gSubOut <- GetNewDataFile(subNoSpc,gWin,"rspan","csv",header)
-	header <- "subnum,trial,readingtime,memtime,length,type,corr,rt"
-	gPositionLog <- GetNewDataFile(subNoSpc,gWin,"rspan-distraction","csv",header)
+#	header <- "subnum,trial,readingtime,memtime,length,type,corr,rt"
+#	gPositionLog <- GetNewDataFile(subNoSpc,gWin,"rspan-positions","csv",header)
 	##FilePrint( gSubOut, "NEWSESSION:" +TimeStamp() )
+
+	header <- "subnum,trial,X,X,X,order,statement,truth,type,correct,readingtime,resptime"
+	gDistractionLog <- GetNewdataFile(subNoSpc,gWin,"rspan-distraction","csv",header)
 }
 
 define Start(par)
