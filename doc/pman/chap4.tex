@@ -642,6 +642,42 @@ Movies have a number of properties that can be set to change playback or determi
 \item ZOOMY: scaling; not used (just set height)
 \end{itemize}
 
+\sect{Custom objects}
+Along with the built-in objects, PEBL lets you create your own object with properties that can be added, changed, and accessed using the .property notation.  With appropriate use of the \texttt{CallFunction} command, you can also specify function handlers for functions such as \texttt{Move()}, \texttt{Draw()}, \texttt{Inside()}, or whatever you want.  The object system in PEBL is fairly (and intentionally) primitive, without things you might expect from full-fledged object-oriented languages (i.e., accessor functions, inheritance, methods, constructors, etc.).  Nevertheless, it can be very useful for encapsulating a lot of information about a computing object, and is used heavily in the GUI objects found in the launcher and other PEBL tools.
+
+Use  \verb+MakeCustomObject(name)+ to create a custom object.  Then, a property can be added by assigning obj.name. For example, suppose you want an object to represent the x,y location of a point.
+\begin{verbatim}
+p1 <- MakeCustomObject("point")
+p1.x <- 100
+p1.y <- 100
+\end{verbatim}
+
+Now, if you want to use access the x and y properties, do:
+\begin{verbatim}
+ Print("position is:" p1.x + ","+ p1.y) 
+\end{verbatim}
+
+An object can take a function name as a property.  For example:
+\begin{verbatim}
+p1.inside <- "InsidePoint"
+\end{verbatim}
+With the function InsidePoint defined as:
+\begin{verbatim}
+define InsidePoint(x,y,p)
+{
+  return (x==p.x and y==p.y)
+}
+\end{verbatim}
+
+If you had a bunch of objects, you could define the .inside property of each differently. Then, later, you could define InsideObject to check any of them:
+\begin{verbatim}
+define InsideObject(x,y,p)
+{
+   CallFunction(p.inside,[x,y,p])
+}
+\end{verbatim}
+
+
 
 \sect{Keyboard Entry}
 
@@ -670,7 +706,6 @@ Function keys "<F1>" through "<F15>".
 \end{verbatim}
 
 Also, the traditional "modifier" keys can serve as normal keys:
-
 
 \begin{verbatim}
 <lshift>, <rshift> <numlock>, <capslock>, <scrollock>, 
@@ -751,18 +786,35 @@ listed below.  Each function returns a file object:
 \begin{verbatim}
 FileOpenRead()
 FileOpenWrite()
+FileOpenOverwrite()
 FileOpenAppend()
 \end{verbatim}
 
 For example, you can use the command:\\
  \texttt{myfile <-  FileOpenRead("stimuli.txt")} \\
-to create `\texttt{myfile}', a readable
-file stream.
+to create `\texttt{myfile}', a readable file stream.\\
 
+
+\texttt{FileOpenWrite} is made with a safety backup.  It will never overwrite an existing file; instead it will create a new file name by appending a number (i.e. 1) to the end of the base file name.  The new filename will be saved as in the .filename property of the resulting file.  The function \texttt{FileOpenOverwrite()} will overwite any existing files, and should not be used for data files when you have the chance for a collision in a subject code.
+
+The function \texttt{GetNewDataFile()} offers another all-in-one path for creating a data file.  It will take a base name and a subject identifier, a file extension, and a header.  If the file has not previously been created, it will create the new file and add a header row.  If it has been created before, it will ask you whether to append to the current data file (in which case it won't add a header row), or select a new data file.  Data files are created in separated subdirectories (one per participant) within the data\ directory of the experiment.
 
 Other Functions described below allow filestreams to be written to 
 or read from.  When you are finished, you can close a filestream 
 Using the `\texttt{FileClose()}' function.
+
+
+A number of related functions have been created to help make reading and writing to files easier. For example, the following functions enable reading an entire file into either a string variant, a list (with one list item per row), or a table:
+\begin{verbatim}
+ReadCSV()
+FileReadCharacter()
+FileReadLine()
+FileReadWord()
+FileReadTable()
+FileReadText()
+FileReadList()
+FileExists()
+\end{verbatim}
 
 
 \sect{Network Connections}
@@ -887,14 +939,50 @@ The event loop works by maintaining a list of triggers that can be satisfied by 
 
 As of Version  0.12, simple means to program the event loop are available.  Three functions include:
 \begin{itemize}
-\item RegisterEvent().  This allows you to specify a condition and a function name which executes whenever the condition is true.      
-\item StartEventLoop().  This starts the event loop, with all available events.     
-\item ClearEventLoop().  This clears out the event loop so other events can be used.     
+\item \texttt{RegisterEvent()}.  This allows you to specify a condition and a function name which executes whenever the condition is true.      
+\item \texttt{StartEventLoop()}.  This starts the event loop, with all available events.     
+\item \texttt{ClearEventLoop()}.  This clears out the event loop so other events can be used.     
 \end{itemize}
 Note that because other functions, such as Wait(), use the event loop, you can pre-load extra events and start the event loop with one of these functions.
 
 These are used in a number of test battery tasks.  However, their use is currently somewhat experimental, and their names and arguments may change in the future, and so we will not provide a detailed description of their use here.
 
+\sect{Parameter Setting}
+PEBL offers an interface to set a large set of experimental parameters from a text file. Furthermore, the PEBL launcher allows you to edit and save new parameter sets.  This allows you to create common versions of a test that you call, without editing the PEBL script.
+
+The PEBL parameter system is based on a custom object created with the \texttt{CreateParameters()} function.  To use this, it requires you to set default parameters (in case the parameter file is not found or damaged).  Create default parameters as a nested list containing property-value pairs.  For example:
+
+\begin{verbatim}
+parameterpairs <- [["length",10],
+                   ["trialsperblock",15],
+                   ["numblocks",3]]
+\end{verbatim}
+
+If you want to override these values, create a text file (typically saved in the params\ folder with the extension .par) that contains comma-separated values parname,value, like this:
+\begin{verbatim}
+length,5
+trialsperblock,25
+numblocks,5
+\end{verbatim}
+
+
+Then, create a parameter object using \texttt{CreateParameters}:
+
+\begin{verbatim}
+gParams <- CreateParameters(pairlist, filename)
+\end{verbatim}
+
+Any values in the .par file will override the values in the default list.  PEBL tries to convert text values to numbers, and the value will be a number whenever the round-trip from text-to-number-to-text does not change the original value.  Thus, avoid using floating-point values for parameters, and you may need to write 
+``0.1'' instead of ``.1'' if you do.
+
+The PEBL launcher offers a way to set parameters.  To do so, it needs more information, including the default values and a description.  It looks for a .schema file  in the params folder with the same name as the experiment. This file uses the | character to separate field (this allows you to use commas in the description):
+\begin{verbatim}
+length|10|The number of words per trial
+trialsperblock|15|Trials in each block
+numblock|3|Number of blocks.
+\end{verbatim}
+
+Notice that quotes are not used in these files.  The values in this file are ONLY relevant to the PEBL launcher.  These are used to reset the values in a .par file or tell the experiment what typical values are.  They can differ from the default values in the .pbl file, but for clarity they should not.
 
 \sect{Errors and Warnings}
 
@@ -1010,6 +1098,14 @@ Listing of fonts appears in Table~\ref{tab:fonts}\\
 \texttt{boo.wav}         &A really bad booing sound\\
 \texttt{cheer.wav}       &A pretty lame cheering sound\\
 \texttt{beep.wav}        &A simple beep\\
+\texttt{boo.wav}         &Boo--useful for errors\\
+\texttt{cheer.wav}&A cheer-useful for correct feedback\\
+\texttt{kaching.wav} &Sound of a coin in a jar\\
+\texttt{knock.wav} & simple knocking/click sound\\
+\texttt{0.wav} through {9.wav} & Recording of numerals, used in digit span and others\\
+\texttt{correct.wav}&correct feedback\\
+\texttt{incorrect.wav}&Incorrect feedback\\
+\texttt{H,R,N,K,X,Y,W.wav}&Female voice letters for n-back\\
 \addlinespace[.1cm]
 \midrule
 \addlinespace[.2cm]

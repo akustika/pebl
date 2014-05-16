@@ -864,6 +864,147 @@ USAGE CURRENTLY UNDOCUMENTED
 
 
 
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+ClickCheckbox()+
+
+\item[Description]	
+This 'clicks' a checkbox, changing its status (both the visual display and its .status property).   Its state can also be set using the \texttt{SetCheckBox()} function. The text "ClickCheckBox" is by default bound to the .clickon property of any checkbox, enabling you to handle on a number of graphical object the same (see callfunction example).   The [x,y] coordinates are ignored, and so anything can be fed to them, but the standard approach is to use give gClick, which is a global bound to the last click coordinates when WaitForClickOnTarget is used.
+
+\item[Usage]
+\begin{verbatim}
+ ClickCheckBox(obj, [x,y])
+  \end{verbatim}
+
+\item[Example]      	
+The following creates a button, waits for you to click on it, and animates a button press
+
+
+\begin{verbatim}
+ ok <- MakeCheckbox("OK?",400,250,gWin,150)
+ resp <- WaitForClickOnTarget([ok],[1])
+ ClickCheckBox(done,gClick) 
+ Draw()
+\end{verbatim}
+
+You can handle a bunch of objects together using an idiom like this:
+\begin{verbatim}
+ ok <- MakeCheckbox("OK?",400,250,gWin,150)
+ ok2 <- MakeCheckbox("Otherwise?",400,280,gWin,150)
+
+ checks  <- [ok,ok2]
+ resp <- WaitForClickOnTarget(checks,[1,2])
+  check <- Nth(checks,resp) 
+ CallFunction(check.clickon,[check,gClick]) 
+ Draw()
+\end{verbatim}
+
+
+Examples of its use can be found in demo\\ui.pbl
+\item[See Also]	\verb+MakeCheckBox()+, \verb+SetCheckBox()+
+\end{desc}
+
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+Clickon()+
+
+\item[Description] Calls the function named by the  .clickon property of a custom object.  Useful for handling click events of a bunch of different objects. This is essentially the same as CallFunction(obj.clickon, [obj,gClick]).
+
+\item[Usage]
+\begin{verbatim}
+Clickon(obj,[x,y])	
+\end{verbatim}
+
+\item[Example]	
+
+
+\begin{verbatim}
+  
+   ##This overrides buttons placement at the center:  
+   done <- MakeButton("QUIT",400,250,gWin,150)
+   WaitForClickOnTarget([done],[1])
+   Clickon(done,gClick)
+    
+\end{verbatim}
+
+\item[See Also]	
+\verb+Inside()+, \verb+ClickCheckbox+ \verb+MoveObject+, \verb+DrawObject+
+\end{desc}
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+ClickOnMenu()+
+
+\item[Description]	
+Handles clicking on a menu item. It will call the .clickon property of that item, and then hide the menu.
+
+\item[Usage]
+\begin{verbatim}
+ ClickOnMenu(obj,[x,y])
+  \end{verbatim}
+This function is typically not used directly, but rather it is called via \texttt{MakeMenu}. However, it can be used as a quick-and-dirty button.
+
+\item[Example]      	
+This creates a menu and awaits clicking on.  More complete examples are available in ui.pbl.  It requires that MyMessage is created somewhere
+\begin{verbatim}
+
+   menu1 <- MakeMenuItem("File",0,0,gWin,14,10,"MYMESSAGE")
+
+
+   menu2<- MakeMenu("Edit",70,0,gWin,14,10, "MYMESSAGE")
+   
+   menus <- [menu1,menu2]
+   opt <- WaitForClickOntarget(menu,[1,2])
+   ClickOnMenu(Nth(menus,opt),gClick)
+\end{verbatim}
+
+\item[See Also]	\verb+MakeMenu()+, \verb+OpenSubMenus()+, \verb+MakeMenuItem+
+\end{desc}
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+ClickOnScrollbox()+
+
+\item[Description]	
+Handles a click event on the a  \verb+ScrollBox+. This should be called after one checks (e.g., via InsideTB) whether the scrollbox was actually clicked on.  It will handle scrolling, moving via the thumb, up/down arrows, and reselection. It is also used to interact with \verb+ScrollingTextBox+  objects. This function name is bound to the .clickon property of scrollboxes, so it can be called using CallFunction (see example below).
+
+\item[Usage]
+\begin{verbatim}
+ ClickOnScrollbox(sb,[x,y])
+  \end{verbatim}
+
+Here, \texttt{sb} is the scrollbox object. \texttt{[x,y]} is a list of xy coordinates, which can also be the global variable \texttt{gClick}
+
+\item[Example]      	
+See ui.pbl in the demo directory for examples of the use of a scrolling text box.  A brief example follows:
+
+\begin{verbatim}
+   sb <- MakeScrollBox(Sequence(1,50,1),"The numbers",40,40,gWin,12,150,500,3)
+   Draw()
+	  
+   resp <- WaitForClickOntarget([sb],[1])
+    ClickOnScrollbox(sb,gClick) 
+ 
+    #Alternately:   CallFunction(sb.clickon,[sb,gClick])
+
+ 
+   ##change the selected items
+   sb.list <- Sequence(sb.selected,sb.selected+50,1)
+   UpdateScrollbox(sb)      
+   DrawScrollbox(sb)
+   Draw()
+ 
+\end{verbatim}
+
+\item[See Also]
+\verb+MakeScrollingTextBox+
+\verb+MakeScrollBox+
+\verb+UpdateScrollBox+
+\verb+DrawScrollBox+
+\end{desc}
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+CloseNetworkConnection()+
@@ -1433,6 +1574,103 @@ DrawFor( <object>, <cycles>)
 \end{desc}
 
 
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+DrawObject()+
+
+\item[Description] Calls the function named by the  .draw property of a custom object.  Useful for handling drawing of a bunch of different objects. This is essentially the same as CallFunction(obj.draw, [obj]), but falls back to a normal Draw() command so it handles built-in objects as well.
+
+\item[Usage]
+\begin{verbatim}
+DrawObject(obj)	
+\end{verbatim}
+
+\item[Example]	
+
+
+\begin{verbatim}
+  
+   ##This overrides buttons placement at the center:  
+   done <- MakeButton("QUIT",400,250,gWin,150)
+   WaitForClickOnTarget([done],[1])
+   Clickon(done,gClick)
+   DrawObject(done)
+    
+\end{verbatim}
+
+\item[See Also]	
+\verb+Inside()+, \verb+ClickOnCheckbox+ \verb+MoveObject+, \verb+Draw+
+\end{desc}
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+DrawPulldown()+
+
+\item[Description]	
+This handles layout/drawing of a pulldown box. This does not actually call Draw() on the window, and so an additional draw command is needed before the output is displayed.  The main use case for this function is if you need to manually change the selected object (by changing .selected). This will redraw the pulldown with the new selection.  
+
+\item[Usage]
+\begin{verbatim}
+ DrawPullDown(object)
+ \end{verbatim}
+
+\item[Example]      	
+\begin{verbatim}
+ options  <- MakePulldownButton(["A",B","C"],400,250,gWin,14,100,1)
+ Draw()
+ WaitForAnyKeyPress()
+ options.selected <- 2
+ DrawPulldown(options)
+ Draw()
+ WaitForAnyKeyPress()
+\end{verbatim}
+
+\item[See Also]	\verb+MakePullDown()+, \verb+Pulldown()+, \verb+UpdatePulldown+
+\end{desc}
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+DrawScrollbox()+
+
+\item[Description]	
+Redraws a \verb+ScrollBox+.  This is called by various internal functions, but should be used to handle redrawing if \texttt{UpdateScrollbox} is used. When things like the scrollbar, offset, and selected item change, this can be called directly.  If the actual list is changed, \texttt{UpdateScrollBox} should be called first. Note that the redrawn scrollbox won't be changed on the screen until a \verb+Draw()+ command is issued.
+
+\item[Usage]
+\begin{verbatim}
+ DrawScrollBox(sb)
+  \end{verbatim}
+
+Here, \texttt{sb} is the scrollbox object.
+
+\item[Example]      	
+See ui.pbl in the demo directory for examples of the use of a scrolling text box.  A brief example follows:
+
+\begin{verbatim}
+   sb <- MakeScrollBox(Sequence(1,50,1),"The numbers",40,40,gWin,12,150,500,3)
+   Draw()
+	  
+   resp <- WaitForClickOntarget([sb],[1])
+   CallFunction(sb.clickon,[sb,gClick])
+   #Alternately: ClickOnScrollbox(sb,gClick) 
+ 
+   ##change the selected items
+   sb.list <- Sequence(sb.selected,sb.selected+50,1)
+   UpdateScrollbox(sb)      
+   DrawScrollbox(sb)
+   Draw()
+ 
+\end{verbatim}
+
+\item[See Also]
+\verb+MakeScrollingTextBox+
+\verb+MakeScrollBox+
+\verb+UpdateScrollBox+
+\verb+ClickOnScrollBox+
+\end{desc}
+
+
 \vfill
 \newpage
 \sect{E}
@@ -1627,7 +1865,7 @@ ExtractListItems(myList, [2,4,5,1,4])
 # produces [102, 104, 105, 101, 104]
 \end{verbatim}
 
-\item[See Also]	\verb+Subset()+, \verb+SubList()+, \verb+SampleN()+
+\item[See Also]	\verb+Subset()+, \verb+SubList()+, \verb+SampleN()+, \verb+Filter()+
 \end{desc}
 
 \vfill
@@ -1675,7 +1913,8 @@ FileClose(x)
  exists <-  FileExists(filename)
   if(exists)
    {
-    MessageBox("Subject file already exists.  Please try a new one.",gWin) 
+    MessageBox("Subject file already exists. "+
+    " Please try a new one.",gWin) 
     SignalFatalError("filename already used")
    }
 \end{verbatim}
@@ -2547,6 +2786,55 @@ define Start(p)
 \end{desc}
 
 
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+GetNewDataFile()+
+
+\item[Description]	Creates a data file for output, asking for either append or renumbering the subject code if the specified file is already in use.
+
+\item[Usage]
+\begin{verbatim}
+GetNewDataFile(subnum,win,basename,extension,header)
+\end{verbatim} 
+Here, subnum should be a subject code you want to use.  win should refer to the window a prompt will be displayed on if the subject code is already in use.  basename should be the base filename of the file, and extension should be the . extension (without the dot) at the end of the file.  Finally, header is what will be printed on the first row of a file.
+
+When this file is used, a 'data' subdirectory will first be created in the current directory (i.e., the directory where the experiment is).  Then, a subdirectory will be created inside data based on the subnum.  Spaces and some other characters will be removed to ensure easy and uniform access to this directory.  Then, a filename will be created composed of:
+\begin{verbatim}
+data\subnum\basename-subnum.extension
+\end{verbatim}
+
+If this file does not exist, one will be created and the header will be printed to the first line.  If it does exist, you will be prompted that the file exists, and at that point you can choose to either append to the existing file (in which case no header will be added), or choose a new subject code (in which case, a new directory will be made).  The process can repeat until you either append or choose an unused file.
+
+Multiple files can be made, and they will all appear in the subnum directory.  If you get a filename collision, you decision on the first file will carry forward on future files, controlled by a special global variable called gResetNumber.  
+
+
+Note that nearly all of the test battery tests use this function.  This can make pooling subject data more difficult, but use the combine data dialog in the launcher to easily combine data from multiple files in multiple subdirectories.
+
+In all situations, the global variable \verb+gSubNum+ is set to the resulting subject code (whether or not \verb+gSubNum+ is passed to this function). This should only be called at the beginning of an experiment, when the experimenter still has control of the computer, in case a subject code is reused and a decision needs to be made.  Finally, the extension chosen has essentially nothing to do with how the internals are formatted; it is up to you 
+
+
+\item[Example]
+\begin{verbatim}
+  file1 <- GetNewDataFile("1",gWin,"memorytest","csv",
+                  "sub,trial,word,answer,rt,corr")
+##above creates a file data\1\memorytest-1.csv
+
+ file2 <- GetNewDataFile("1",gWin,"memorytest","csv",
+                  "sub,trial,word,answer,rt,corr")
+# above will prompt you for new subject code
+
+ file3 <- GetNewDataFile("1",gWin,"memorytest-report","txt",
+                  "")
+##No header is needed on a text-based report file.
+
+\end{verbatim}
+
+\item[See Also]	
+\verb+FileOpenWrite+, \verb+FileOpenAppend+, \verb+FileOpenOverwrite+
+\end{desc}
+
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+GetNIMHDemographics()+
 
@@ -2724,6 +3012,74 @@ color <- GetPixelColor(widget,x,y)
 
 \item[See Also]
 \verb+COMPortGetByte+, \verb+COMPortSendByte+, \verb+OpenPPort+ \verb+OpenCOMPort+, \verb+SetPPortMode+, \verb+GetPPortState+ 
+\end{desc} 
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] \verb+GetProperty+ 
+
+\item[Description]  
+Gets a particular named property of an object. This works for custom or built-in objects.  If the property does not exist, a fatal error will be signaled, and so you should check using PropertyExists() if there is any chance the property does not exist.
+  
+\item[Usage]       
+     \verb+out <- GetProperty(obj,property)+ 
+\item[Example]
+
+\begin{verbatim}
+  obj <- MakeCustomObject("myobject")
+  obj.taste <- "buttery"
+  obj.texture <- "creamy"
+  SetProperty(obj,"flavor","tasty")
+  
+  list <- GetPropertyList(obj)
+  loop(i,list)
+   {
+     if(PropertyExists(obj,i)
+      {
+        Print(i  + ":  " + GetProperty(obj,i))
+      }
+   }
+
+\end{verbatim}
+
+
+\item[See Also]
+\verb+GetPropertyList+, \verb+PropertyExists+, \verb+SetProperty+ \verb+MakeCustomObject+, \verb+PrintProperties+ 
+\end{desc} 
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] \verb+GetPropertyList+ 
+
+\item[Description]  
+Gets a list of all of the properties an object has.  This works for custom or built-in objects.
+  
+\item[Usage]       
+     \verb+out <- GetPropertyList(obj)+ 
+\item[Example]
+
+\begin{verbatim}
+  obj <- MakeCustomObject("myobject")
+  obj.taste <- "buttery"
+  obj.texture <- "creamy"
+  SetProperty(obj,"flavor","tasty")
+  
+  list <- GetPropertyList(obj)
+  loop(i,list)
+   {
+     if(PropertyExists(obj,i)
+      {
+        Print(i  + ":  " + GetProperty(obj,i))
+      }
+   }
+
+\end{verbatim}
+
+
+\item[See Also]
+\verb+GetProperty+, \verb+PropertyExists+, \verb+SetProperty+ \verb+MakeCustomObject+, \verb+PrintProperties+ 
 \end{desc} 
 
 
@@ -2923,7 +3279,7 @@ GetVocalResponseTime(buffer,
                      timethreshold,
                      energythreshold)
 \end{verbatim}
-This is a simple function that fairly reliably gets an audio response time.  It works by recording audio to a buffer, and computing energy for 1-ms bins.  When enough bins (whose number/duration is set by timethreshald) in a row surpass an energy threshold (scaled from 0 to 1, set by energythreshold), recording will stop, and the voice key will return.  Reasonable values depend on the amount of noise in your microphone, and the types of vocal responses being made.  The return time will lag the detection time a bit, and so using the time it takes for the function to return is an unreliable measure of vocal response time.
+This is a simple function that fairly reliably gets an audio response time.  It works by recording audio to a buffer, and computing energy for 1-ms bins.  When enough bins (whose number/duration is set by timethreshold) in a row surpass an energy threshold (scaled from 0 to 1, set by energythreshold), recording will stop, and the voice key will return.  Reasonable values depend on the amount of noise in your microphone, and the types of vocal responses being made.  The return time will lag the detection time a bit, and so using the time it takes for the function to return is an unreliable measure of vocal response time.
 
 
 It returns a list of three elements:
@@ -3092,7 +3448,7 @@ Insert(<[list]>,<item>,<position>)
 
 \item[Description] Determines whether an \verb+[x,y]+ point is inside another
   object.  Will operate correctly for rectangles, squares, circles,
-  textboxes, images, and labels. \verb+[xylist]+ can be a list containing
+  textboxes, images, and labels. For custom objects having a function name bound to their .inside property, it will use that function to test for insideness. \verb+[xylist]+ can be a list containing
   [x,y], and if it is longer the other points will be ignored (such as
   the list returned by \verb+WaitForMouseButton()+.  Returns 1 if inside, 0
   if not inside.
@@ -3116,9 +3472,39 @@ Inside(<[xylist]>,<object>)
 \end{verbatim}
 
 \item[See Also]	
-\verb+WaitForMouseButton()+, \verb+GetMouseCursorPosition+
+\verb+WaitForMouseButton()+, \verb+GetMouseCursorPosition+, \verb+InsideTB+
 
 \end{desc}
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+InsideTB()+
+
+\item[Description] Determines whether an \verb+[x,y]+ point is inside an object having .x, .y, .width, and .height properties, with .x and .y representing the upper left corner of the object.  This is bound to the .inside property of many custom ui objects.  The \texttt{Inside} function will use the function bound to the .inside property for any custom object having that property, and so this function's use is mainly hidden from users.
+
+\item[Usage]
+\begin{verbatim}
+InsideTB([x,y],<obj>)	
+\end{verbatim}
+
+\item[Example]	
+
+\begin{verbatim}
+   pulldown <- MakePulldown(["one","two","three","four"],400-75,300,gWin,12,150,1)
+
+   if(InsideTB([300,300],pulldown))
+    {
+      Print("INSIDE")
+     }
+\end{verbatim}
+
+\item[See Also]	
+\verb+Inside()+, \verb+MoveObject+ \verb+ClickOn+, \verb+DrawObject+
+
+\end{desc}
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+IsAnyKeyDown()+
@@ -3212,6 +3598,34 @@ if(IsColor(x)
   \verb+IsNumber()+, \verb+IsString()+, \verb+IsTextBox()+,
   \verb+IsWidget()+, \verb+IsWindow()+
 \end{desc}
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+IsCustomObject()+
+
+\item[Description]	Tests whether \verb+<variant>+ is a Custom object (created with \verb+MakeCustomObject+.) Return 1 if so, 0 if not.
+
+\item[Usage]
+\begin{verbatim}
+IsCustomObject(<obj>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}
+if(IsCustomObject(obj)
+{
+   MoveObject(obj,x,y)
+} else {
+   Move(obj,x,y)
+}
+\end{verbatim}
+
+\item[See Also] \verb+IsAudioOut()+, \verb+IsImage()+,
+  \verb+IsInteger()+, \verb+IsFileStream()+, \verb+IsFloat()+,
+  \verb+IsFont()+, \verb+IsLabel()+, \verb+IsList()+,
+  \verb+IsNumber()+, \verb+IsString()+, \verb+IsTextBox()+, \verb+IsText()+
+  \verb+IsWidget()+, \verb+IsWindow()+
+\end{desc}
+
 
 
 \begin{desc}{Name/Symbol}
@@ -4079,7 +4493,7 @@ LoadAudioFile(audiofile)
    PausePlayback(insnt)
 \end{verbatim}
 
-\item[See Also]  \verb+LoadMovie()+, \verb+tPlayMovie()+,\verb+StartPlayback()+ \verb+PausePlayback()+
+\item[See Also]  \verb+LoadMovie()+, \verb+PlayMovie()+,\verb+StartPlayback()+ \verb+PausePlayback()+
 \end{desc}
 
 
@@ -4116,7 +4530,7 @@ LoadMovie(movie,window, width, height)
    PausePlayback(movie)
 \end{verbatim}
 
-\item[See Also] \verb+LoadAudioFile()+, \verb+LoadMovie()+, \verb+tPlayMovie()+,\verb+StartPlayback()+ \verb+PausePlayback()+
+\item[See Also] \verb+LoadAudioFile()+, \verb+LoadMovie()+, \verb+PlayMovie()+,\verb+StartPlayback()+ \verb+PausePlayback()+
 \end{desc}
 
 \begin{desc}{Name/Symbol}
@@ -4387,6 +4801,37 @@ Note: Version 0.12 seems to have some trouble specifying buffers of different le
 
 
 \begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+MakeButton()+
+
+\item[Description]	
+Creates a button on a window that can be clicked and launches actions. The button is always 20 pixels high (using images in media\\images), with a rounded grey background.  The label text will be shrunk to fit the width, although this should be avoided as it can look strange.
+A button is a custom object made from images and text. It has a property 'clickon' that is bound to 'PushButton'
+
+A button will look like this:\\
+ \includegraphics{images/buttons.png}
+
+\item[Usage]
+\begin{verbatim}
+ MakeButton(label,x,y,window,width)
+ \end{verbatim}
+
+\item[Example]      	
+The following creates a button, waits for you to click on it, and animates a button press
+
+\begin{verbatim}
+ done <- MakeButton("QUIT",400,250,gWin,150)
+ resp <- WaitForClickOntarget([done],[1])
+ CallFunction(done.clickon,[done,gClick]) 
+
+\end{verbatim}
+
+\item[See Also]	\verb+PushButton()+, \verb+MakeCheckBox()+
+\end{desc}
+
+
+
+
+\begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+MakeCanvas()+
 
 \item[Description] Makes a canvas object  \verb+<x>+ pixels by
@@ -4444,6 +4889,47 @@ MakeCanvas(<x>, <y>, <color>)
 
 
 \begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+MakeCheckbox()+
+
+\item[Description]	
+Creates a checkbox on a window that can be clicked and keeps track of its status. The checkbox uses a MakeButton object as its base.  The checkbox button is always 20 pixels high (using images in media\\images), with a rounded grey background.  The label text will be shrunk to fit the width, although this should be avoided as it can look strange.
+It has a property 'clickon' that is bound to \texttt{ClickCheckBox}, which flips its state and updates the graphics. It has a property state which is either 0 or 1, depending on the state of the checkbox. Its initial state is 0. Its state can be set using the \texttt{SetCheckBox()} function.
+
+A checkbox will look like this:\\
+ \includegraphics{images/checkbox.png}
+
+\item[Usage]
+\begin{verbatim}
+ MakeCheckBox(label,x,y,window,width)
+ \end{verbatim}
+
+\item[Example]      	
+The following creates a button, waits for you to click on it, and animates a button press
+
+\begin{verbatim}
+ ok <- MakeCheckbox("OK?",400,250,gWin,150)
+ resp <- WaitForClickOnTarget([ok],[1])
+ CallFunction(done.clickon,[done,gClick]) 
+ Draw()
+\end{verbatim}
+
+Alternately:
+
+\begin{verbatim}
+ ok <- MakeCheckbox("OK?",400,250,gWin,150)
+ resp <- WaitForClickOnTarget([ok],[1])
+ ClickCheckBox(done,gClick) 
+ Draw()
+\end{verbatim}
+
+
+Examples of its use can be found in demo\\ui.pbl
+\item[See Also]	\verb+ClickCheckBox()+, \verb+SetCheckBox()+
+\end{desc}
+
+
+
+\begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+MakeColor()+
 
 \item[Description] Makes a color from \verb+<colorname>+ such as
@@ -4456,7 +4942,10 @@ MakeColor(<colorname>)
 \end{verbatim}
 
 \item[Example]	
-
+\begin{verbatim}
+ green <- MakeColor("green")
+ black <- MakeColor("black")
+\end{verbatim}
 \item[See Also]	\verb+MakeColorRGB()+, \verb+RGBtoHSV()+
 \end{desc}
 
@@ -4475,6 +4964,40 @@ MakeColorRGB(<red>, <green>, <blue>)
 
 \item[See Also]	\verb+MakeColor()+, \verb+RGBtoHSV()+
 \end{desc}
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] \verb+MakeCustomObject+ 
+
+\item[Description]  
+Creates a 'custom' object that can encapsulate multiple properties. It takes a name as an argument, but this is currently not accessible.
+  
+\item[Usage]       
+     \verb+obj <- MakeCustomObject("mybutton")+ 
+\item[Example]
+
+\begin{verbatim}
+  obj <- MakeCustomObject("myobject")
+  obj.taste <- "buttery"
+  obj.texture <- "creamy"
+  SetProperty(obj,"flavor","tasty")
+  
+  list <- GetPropertyList(obj)
+  loop(i,list)
+   {
+     if(PropertyExists(obj,i)
+      {
+        Print(i  + ":  " + GetProperty(obj,i))
+      }
+   }
+
+\end{verbatim}
+
+
+\item[See Also]
+\verb+GetPropertyList+, \verb+PropertyExists+, \verb+SetProperty+ \verb+IsCustomObject+, \verb+PrintProperties+ ,\verb+GetProperty+
+\end{desc} 
 
 
 \begin{desc}{Name/Symbol}
@@ -4609,6 +5132,77 @@ MakeLabel(<text>, <font>)
 
 \item[See Also]	
 \end{desc}
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+MakeMenu()+
+
+\item[Description]	
+Creates a menu containing multiple menu items, that automatically call functions specified by the command.
+ \includegraphics{images/menu.png}
+
+\item[Usage]
+\begin{verbatim}
+ MakeMenu(label,x,y,window,fontsize, width, subitems,functions)
+ \end{verbatim}
+
+The subitems list should include the names of the menu options.  The functions list should be the same length, and contain the function names called when one of those items is used. MakeMenu uses MakeMenuItem to create each on of those items.  Menus can only be nested one-deep (no submenus allowed).
+
+\item[Example]      	
+This creates a menu and awaits clicking on.  More complete examples are available in ui.pbl.  It requires that MyMessage is created somewhere
+\begin{verbatim}
+
+   menu1 <- MakeMenu("File",0,0,gWin,14,10,
+              ["Open","Save","Save as","Quit"],
+              ["MYMESSAGE","MYMESSAGE","MYMESSAGE","MYMESSAGE"])
+
+
+   menu2<- MakeMenu("Edit",70,0,gWin,14,10,    
+              ["Cut","Copy","Paste","Select"],
+              ["MYMESSAGE","MYMESSAGE","MYMESSAGE","MYMESSAGE"])
+
+   menu <- [menu1,menu2]
+   opt <- WaitForClickOntarget(menu,[1,2])
+   ClickOnMenu(Nth(menu,opt),gClick)
+\end{verbatim}
+
+\item[See Also]	\verb+MakeMenuItem()+, \verb+OpenSubMenus()+, \verb+ClickOnMenu+
+\end{desc}
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+MakeMenuItem()+
+
+\item[Description]	
+Creates a single menu containing a label, whose .clickon property is bound to some other function.
+
+\item[Usage]
+\begin{verbatim}
+ MakeMenuItem(label,x,y,window,fontsize, width, function)
+ \end{verbatim}
+This function is typically not used directly, but rather it is called via \texttt{MakeMenu}. However, it can be used as a quick-and-dirty button.
+
+\item[Example]      	
+This creates a menu and awaits clicking on.  More complete examples are available in ui.pbl.  It requires that MyMessage is created somewhere
+\begin{verbatim}
+
+   menu1 <- MakeMenuItem("File",0,0,gWin,14,10,"MYMESSAGE")
+
+
+   menu2<- MakeMenu("Edit",70,0,gWin,14,10, "MYMESSAGE")
+   
+   menus <- [menu1,menu2]
+   opt <- WaitForClickOntarget(menu,[1,2])
+   ClickOnMenu(Nth(menus,opt),gClick)
+\end{verbatim}
+
+\item[See Also]	\verb+MakeMenu()+, \verb+OpenSubMenus()+, \verb+ClickOnMenu+
+\end{desc}
+
+
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+MakeNGonPoints()+
 
@@ -4641,6 +5235,149 @@ MakeNGonPoints(<radius>, <num_peaks>)
 \item[See Also]	
 \verb+MakeStarPoints+, \verb+Polygon+, \verb+RotatePoints+, \verb+ZoomPoints+
 \end{desc}
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+MakePulldown()+
+
+\item[Description]	
+Creates a pulldown list that can be used to select an option. The closed version is s always 20 pixels high. When opened, it will be by default 15 rows high, although this is made smaller if the pulldown is close to the bottom of the screen.
+A button is a custom object made from images and text. It has a property 'clickon' that is bound to 'Pulldown'
+
+A closed pulldown will look like this:\\
+ \includegraphics[scale=.8]{images/pulldown-closed.png}
+
+An open pulldown will look like this:\\
+ \includegraphics[scale=.8]{images/pulldown-open.png}
+
+\item[Usage]
+\begin{verbatim}
+ MakePulldown(options,x,y,window,fontsize,width,selected)
+ \end{verbatim}
+
+The \texttt{options} argument is a list of options you want to appear.  x and y are the coordinates of the upper left corner, window is the name of the window (or other graphical object) it appears on, fontsize is the size of the font, and width is the width of the pulldown in pixels.  The selected argument is the initial selected list item.
+
+Pulldown objects have a property .maxitems, that specify how many elements are displayed.  If the list contains more than obj.maxitems, the pulldown will enable scrolling.  A pulldown's click-on handler is by default bound to the 'Pulldown' function. When \texttt{PullDown(obj,mousexy)} is called, it will pop open the pulldown, allow for a new option to be selected, and return. It returns the index of the selected object, but the selected index can also be accessed using \texttt{obj.selected}. 
+
+\item[Example]      	
+See ui.pbl in the demo directory for examples of the use of pulldowns.  Pulldowns are also used within the PEBL launcher for various purposes.  A basic example is:
+
+\begin{verbatim}
+ options  <- MakePulldownButton(["A",B","C"],
+                            400,250,gWin,14,100,1)
+ resp <- WaitForClickOntarget([options],[1])
+ CallFunction(options.clickon,[options,gClick]) 
+\end{verbatim}
+
+\item[See Also]	\verb+PullDown()+, \verb+DrawPulldown()+, \verb+UpdatePulldown+
+\end{desc}
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+MakeScrollBox()+
+
+\item[Description]	
+Creates a graphical object that displays and allows selection of a list of items, and scrolls if the text gets too big. 
+
+It has a property 'clickon' that is bound to 'ClickOnScrollBox'
+
+A Scrolling textbox looks like this:\\
+ \includegraphics[scale=.8]{images/scrollbox.png}
+
+\item[Usage]
+\begin{verbatim}
+ MakeScrollBox(list,header,x,y,window,fontsize,
+                  width,height,selected)
+ \end{verbatim}
+
+The \texttt{list} argument is a text block you want to display. header is a label. x and y are the coordinates of the upper left corner, window is the name of the window (or other graphical object) it appears on, fontsize is the size of the font, and width and height is the size of the scrollbox in pixels. \verb+selected+ indicates which option is selected, and this selection  (accessed via .selected) is updated by users using \verb+ClickOnScrollBox+, which is bound to the .clickon property.  
+
+
+Several related function help update and draw a scrollbox.  To change the list or selected item, set the .list property to a new list or .selected to new selection and then call \verb+UpdateScrollBox+.  The function \verb+DrawScrollbox+ to manage redrawing drawing, and \verb+ClickOnScrollBox+ to handle interaction (this is bound to the .clickon property). .inside is bound to \verb+InsideTB+
+A summary of important properties:
+\begin{itemize}
+\item \verb+selected+: which item is selected
+\item \verb+numitems+: How many items on the list
+\item \verb+maxoffset+: The most lines that can be displayed
+\item \verb+list+: the list of options 
+\item \verb+inside+: bound to InsideTB
+\item \verb+clickon+: bound to ClickOnScrollBox
+
+\end{itemize}
+
+
+\item[Example]      	
+See ui.pbl in the demo directory for examples of the use of a scrolling text box
+
+
+\begin{verbatim}
+  sb <- MakeScrollBox(Sequence(1,50,1),"The numbers",40,40,gWin,12,150,500,3)
+
+   Draw()
+   resp <- WaitForClickOntarget([sb],[1])
+   CallFunction(sb.clickon,[sb,gClick])
+   #Alternately: ClickOnScrollbox(sb,gClick) 
+\end{verbatim}
+
+\item[See Also]
+\verb+SetScrollingText+
+\verb+MakeScrollingTextBox+
+\verb+UpdateScrollBox+
+\verb+DrawScrollBox+
+\verb+ClickOnScrollBox+
+\end{desc}
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+MakeScrollingTextBox()+
+
+\item[Description]	
+Creates a graphical object that displays a block of text, and scrolls if the text gets too big. It uses a \verb+Scrollbox+ as its base, but handles parsing the text into lines and hides the selection box.  Thus, no 'selection' is displayed (although it actually exists), and a .text property is added to hold the text being displayed.
+
+It has a property 'clickon' that is bound to 'ClickOnScrollBox'
+
+A Scrolling textbox looks like this:\\
+ \includegraphics[scale=.8]{images/scrollingtext.png}
+
+\item[Usage]
+\begin{verbatim}
+ MakeScrollingTextBox(text,x,y,window,fontsize,
+                        width,height,linewrap)
+ \end{verbatim}
+
+The \texttt{text} argument is a text block you want to display. x and y are the coordinates of the upper left corner, window is the name of the window (or other graphical object) it appears on, fontsize is the size of the font, and width and height is the size of the scrolling textbox in pixels.  linewrap, if non-zero, will parse the text layout so you see everything, breaking when the text gets to the end of the box, and on linebreaks.  if 0, it will only break at explicit carriage returns.
+
+Note that parsing text into the scrolling textbox is fairly fast, but you may need workarounds for to display extremely long files if you want high responsiveness.
+
+Several related function help update and draw a scrolling textbox.  To change the text, use \verb+SetScrollingText+. Because a scrolling textbox is really just a scrollbox, you also use \verb+DrawScrollbox+ to manage drawing, and \verb+ClickOnScrollBox+ to handle interaction (this is bound to the .clickon property). .inside is bound to \verb+InsideTB+
+
+
+\item[Example]      	
+See ui.pbl in the demo directory for examples of the use of a scrolling text box
+
+
+\begin{verbatim}
+  textscroll <- MakeScrollingTextBox("",200,50,gWin,12,
+                                        300,150,0)
+
+  SetScrollingText(textscroll,FileReadText("Uppercase.txt"))
+   Draw()
+  resp <- WaitForClickOntarget([textscroll],[1])
+   CallFunction(textscroll.clickon,[textscroll,gClick]) 
+\end{verbatim}
+
+\item[See Also]
+\verb+SetScrollingText+
+\verb+MakeScrollBox+
+\verb+UpdateScrollBox+
+\verb+DrawScrollBox+
+\verb+ClickOnScrollBox+
+\end{desc}
+
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+MakeSineWave()+
@@ -4758,6 +5495,37 @@ MakeWindow(<color>)
 
 
 
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+MakeTextList()+ 
+
+\item[Description]	This takes a list and creates a block of text with carriage returns, ensuring each item of the list is on its own line; it also requires an offset, skipping the first lines of the list.  It is mostly a helper function used by \verb+Scrollbox+ objects to help format.  It will make text out of the entire list, so  you should be sure to cut off the end for efficiency if you only want to display some of the lines.
+
+
+\item[Usage]		
+\begin{verbatim}
+MakeTextList([<list>], <list-offset>,<prebuffer>)
+\end{verbatim}
+
+\item[Example]
+\begin{verbatim}	
+letters <- FileReadList("Uppercase.txt")
+out <- MakeTextList(letters,20,"--")
+\end{verbatim}
+The above code will create the following:
+\begin{verbatim}
+--u
+--v
+--w
+--x
+--y
+--z
+\end{verbatim}
+    
+\item[See Also]	
+\verb+ListToString+
+\end{desc}
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Match()+            
 
@@ -4801,6 +5569,71 @@ Max(<list>)
 \item[See Also]	\verb+Min()+, \verb+Mean()+, \verb+StDev()+
 \end{desc}
 
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+MD5Sum()+            
+
+\item[Description] Computes MD5 sum of a text string.  Returns blank if no string provided\verb+<list>+.
+
+\item[Usage]		
+\begin{verbatim}
+MD5Sum(<text>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim} 
+
+Print(MD5Sum(""))
+#Return: d41d8cd98f00b204e9800998ecf8427e
+ Print(MD5Sum("bananana"))
+#returns bb8e9af523e4aeffa88f1807fb2af9ce
+
+text <- FileReadText("test.pbl")
+Print(MD5Sum(text))  
+#returns: 3396a651bd3c96f9799ce02eecb48801; see similar example next
+
+Print(MD5File("test.pbl"))
+# returns 3396a651bd3c96f9799ce02eecb48801
+
+Print(MD5File("doesnotexist.txt"))
+#returns 0
+
+\end{verbatim}
+\item[See Also]	\verb+MD5File()+
+\end{desc}
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+MD5File()+            
+
+\item[Description] Computes MD5 sum of a file.  Returns blank if no string provided\verb+<list>+.
+
+\item[Usage]		
+\begin{verbatim}
+MD5File(<filename>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim} 
+text <- FileReadText("test.pbl")
+Print(MD5Sum(text))  
+#returns: 3396a651bd3c96f9799ce02eecb48801; see similar example next
+
+Print(MD5File("test.pbl"))
+# returns 3396a651bd3c96f9799ce02eecb48801
+
+Print(MD5File("doesnotexist.txt"))
+#returns 0
+
+Print(MD5Sum(""))
+#Return: d41d8cd98f00b204e9800998ecf8427e
+ Print(MD5Sum("bananana"))
+#returns bb8e9af523e4aeffa88f1807fb2af9ce
+\end{verbatim}
+\item[See Also]	\verb+MD5Sum()+
+\end{desc}
 
 
 
@@ -4979,6 +5812,40 @@ MoveCorner(label, 33, 100)
 
 
 \begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+MoveObject()+
+
+\item[Description] Calls the function named by the  .move property of a custom object.  Useful if a custom object has complex parts that need to be moved; you can bind .move to a custom move function and then call it (and anything else) using MoveObject. \texttt{MoveObject} will fall back on a normal move, so you can handle movement of many built-in objects with it
+
+\item[Usage]
+\begin{verbatim}
+MoveObject(obj,x,y)	
+\end{verbatim}
+
+\item[Example]	
+
+
+\begin{verbatim}
+  
+   ##This overrides buttons placement at the center:  
+   done <- MakeButton("QUIT",400,250,gWin,150)
+   done.move <- "MoveCorner"
+   MoveObject(done, 100,100)
+    
+\end{verbatim}
+
+\item[See Also]	
+\verb+Inside()+, \verb+Move+ \verb+ClickOn+, \verb+DrawObject+
+
+\end{desc}
+
+
+
+\vfill
+\newpage
+\sect{N}
+\vfill
+
+\begin{desc}{Name/Symbol}
    
 \item[Name/Symbol] \verb+NonOverlapLayout+
 
@@ -5066,10 +5933,6 @@ The output of the above program is shown below.  Even for the left configuration
 \item[See Also]	\verb+and+, \verb+or+
 \end{desc}
 
-\vfill
-\newpage
-\sect{N}
-\vfill
 
 
 \begin{desc}{Name/Symbol}
@@ -5201,6 +6064,37 @@ net <- OpennetworkListener(port)
 
 
 \begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+OpenSubMenus()+
+
+\item[Description]	
+Used by ClickOnMenu to open, display a submenu and get a click.
+
+\item[Usage]
+\begin{verbatim}
+ OpenSubMenus(obj,[x,y])
+  \end{verbatim}
+THis function is bound to the .clickon property of a menu. It will open and display all the submenus, wait for a click, and execute the function called.
+
+\item[Example]      	
+This creates a menu and awaits clicking on.  More complete examples are available in ui.pbl.  It requires that MyMessage is created somewhere
+\begin{verbatim}
+
+   menu1 <- MakeMenuItem("File",0,0,gWin,14,10,"MYMESSAGE")
+
+
+   menu2<- MakeMenu("Edit",70,0,gWin,14,10, "MYMESSAGE")
+   
+   menus <- [menu1,menu2]
+   opt <- WaitForClickOntarget(menu,[1,2])
+   ClickOnMenu(Nth(menus,opt),gClick)
+\end{verbatim}
+
+\item[See Also]	\verb+MakeMenu()+, \verb+OpenSubMenus()+, \verb+MakeMenuItem+
+\end{desc}
+
+
+
+\begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+or+                   
 
 \item[Description]	Logical or
@@ -5262,7 +6156,7 @@ LPT1, but other configurations are sometimes possible.
 \item[Name/Symbol]	\verb+PausePlayback()+
  
 \item[Description] Pauses a playing movie or audio stream.  This is used for 
-movies whose playback was initiated using STartPlayback, which then ran as
+movies whose playback was initiated using \verb+StartPlayback+, which then ran as
 background threads during a Wait() function. 
 
 \item[Usage]		
@@ -5283,7 +6177,7 @@ PausePlayBack(movie)
    
 \end{verbatim}
 
-\item[See Also] \verb+LoadAudioFile()+, \verb+LoadMovie()+, \verb+tPlayMovie()+, \verb+StartPlayback()+
+\item[See Also] \verb+LoadAudioFile()+, \verb+LoadMovie()+, \verb+PlayMovie()+, \verb+StartPlayback()+
 \end{desc}
 
 
@@ -5427,6 +6321,74 @@ to appear.
 \verb+MakeNGonPoints()+
 \end{desc}
 
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+PopUpEntryBox()+ 
+
+\item[Description]	Creates a small text-entry box at a specified location..
+
+\item[Usage]		
+\begin{verbatim}
+ PopuUpEntryBox(<text>,<win>,[x,y])
+
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+ subnum <- PopUpEntryBox("Enter particpant code",gWin,[100,100])
+ 
+\end{verbatim}
+
+\item[See Also]     
+\verb+MessageBox+ \verb+GetEasyInput+, \verb+PopUpMessageBox+
+\end{desc}
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+PopUpMessageBox()+ 
+
+\item[Description]	Creates a small 300x200 information box at the current cursor location, but also adjusts so it is on the screen.  It must be dismissed by clicking the 'OK' button.  
+
+\item[Usage]		
+\begin{verbatim}
+ PopuUpMessageBox(<text>,<win>)
+\end{verbatim}
+Note that the function puts the box on the screen at the current mouse position.  If you want control over where it goes, you need to use \verb+SetMouseCursorPosition+ immediately before the box is made.
+\item[Example]	
+\begin{verbatim}
+ subnum <- PopUpMessageBox("There has been an error.",gWin)
+ 
+\end{verbatim}
+
+\item[See Also]     
+\verb+MessageBox+ \verb+GetEasyInput+, \verb+PopUpEntryBox+
+\end{desc}
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]	\verb+Print()+
+
+\item[Description]	Prints \verb+<value>+ to stdout (the console [Linux] or the file \texttt{stdout.txt} [Windows]), and then appends a newline afterwards.
+
+\item[Usage]		
+\begin{verbatim}
+Print(<value>)
+\end{verbatim}
+
+\item[Example]	
+\begin{verbatim}
+  Print("hello world")
+  Print(33 + 43)
+  x <-Print("Once")
+
+\end{verbatim}
+\item[See Also]	\verb+Print_()+, \verb+FilePrint()+
+\end{desc}
+
+
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]	\verb+Pow()+ 
 
@@ -5563,6 +6525,109 @@ PrintList(Flatten([[1,2],[3,4],[5,6]]))
 
 \item[See Also]	\verb+Print()+, \verb+Print_()+, \verb+FilePrint()+, \verb+FilePrint_()+, \verb+FilePrintList()+,
 \end{desc}
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] \verb+PropertyExists+ 
+
+\item[Description]  
+Tests whether a particular named property exists. This works for custom or built-in objects. This is important to check properties that might not exist, because trying to \verb+GetProperty+ of a non-existent property will cause a fatal error.
+  
+\item[Usage]       
+     \verb+out <- PropertyExists(obj,property)+ 
+\item[Example]
+
+\begin{verbatim}
+  obj <- MakeCustomObject("myobject")
+  obj.taste <- "buttery"
+  obj.texture <- "creamy"
+  SetProperty(obj,"flavor","tasty")
+  
+  list <- GetPropertyList(obj)
+  loop(i,list)
+   {
+     if(PropertyExists(obj,i)
+      {
+        Print(i  + ":  " + GetProperty(obj,i))
+      }
+   }
+
+\end{verbatim}
+
+
+\item[See Also]
+\verb+GetPropertyList+, \verb+GetProperty+, \verb+SetProperty+ \verb+MakeCustomObject+, \verb+PrintProperties+ 
+\end{desc} 
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+Pulldown()+
+
+\item[Description]	
+This handles making a new selection on a pulldown box.
+
+\item[Usage]
+\begin{verbatim}
+ Pulldown(object, [x,y])
+\end{verbatim}
+
+This function is typically the primary way of interacting with a pulldown box. It will have the effect of opening the pulldown box, waiting for the user to select a new option, and then changing the selected option to whatever they click on.
+
+\item[Example]      	
+See demo\\ui.pbl for examples of the use of pulldowns.  Pulldowns are also used within the PEBL launcher for various purposes.  A basic example is:
+
+\begin{verbatim}
+ options  <- MakePulldownButton(["A",B","C"],400,250,gWin,14,100,1)
+ resp <- WaitForClickOntarget([options],[1])
+ newvalue <- Pulldown(options,gClick) 
+\end{verbatim}
+
+\item[See Also]	\verb+MakePullDown()+, \verb+DrawPulldown()+, \verb+UpdatePulldown+
+\end{desc}
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+PushButton+
+
+\item[Description]	
+Animates a button-pushing. It takes a button created using the MakeButton function and will animate a downclick when the mouse is down, and release when the mouse is unclicked.  To conform with general object handlers, it requires specifying a mouse click position, which could be [0,0], or gclick. This function is bound to the property 'clickon' of any button, allowing you to handle mouse clicks universally for many different objects.
+
+\item[Usage]
+\begin{verbatim}
+ PushButton(button, xylist)
+  \end{verbatim}
+
+\item[Example]      	
+The following creates a button, waits for you to click on it, and animates a button press
+
+\begin{verbatim}
+ done <- MakeButton("QUIT",400,250,gWin,150)
+ resp <- WaitForClickOntarget([done],[1])
+ PushButton(done,[0,0])
+\end{verbatim}
+
+To handle multiple buttons, you can do:
+
+\begin{verbatim}
+ done <- MakeButton("QUIT",400,250,gWin,150)
+ ok <-   MakeButton("OK",400,250,gWin,150)
+
+ resp <- 2
+ while (resp != 1)
+ {
+  Draw()
+  resp <- WaitForClickOntarget([done,ok],[1,2])
+  obj <- Nth([done,ok],resp)
+  CallFunction(obj.clickon,[obj,gClick])
+ } 
+ 
+\end{verbatim}
+
+
+\item[See Also]	\verb+MakeCheckBox()+
+\end{desc}
+
 
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+PushOnEnd+
@@ -6130,11 +7195,12 @@ Print(Replace(x,rep))
 
 \item[Description]  	Substitutes  \verb+<char2>+ for \verb+<char>+
   in \verb+<string>+. Useful for saving subject entry data in a file;
-  replacing spaces with some other character.
+  replacing spaces with some other character.  The second argument can either be a character to match, or a list of characters to match, in which case they all get replaced with the third argument.
 
 \item[Usage]        	
 \begin{verbatim}
 ReplaceChar(<string>,<char>,<char2>)
+ReplaceChar(<string>,[<chara>, <charb>],<char2>)
 \end{verbatim}
 			  
 \item[Example]     	
@@ -6144,10 +7210,15 @@ x <- ["Sing a song of sixpence"]
 rep <- ReplaceChar(x," ", "_")
 Print(rep)
 # Result:  Sing_a_song_of_sixpence
+
+x <- ["sing a song of sixpence"]
+rep <- ReplaceChar(x,["s","x"], "p")
+Print(rep)
+# Result:  ping a pong of pippence
 \end{verbatim}
 
 \item[See Also]	
- for list items: \verb+Replace()+ 
+ for list items: \verb+Replace()+ , \verb+\SplitString()+, 
 \end{desc}
 
 \begin{desc}{Name/Symbol}
@@ -6415,6 +7486,45 @@ SampleNWithReplacement(x, 10)
 \item[See Also]     	\verb+SampleN()+, \verb+ChooseN()+, \verb+Subset()+
 \end{desc}
 
+
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol] \verb+SetProperty+ 
+
+\item[Description]  
+Sets a a property of a custom object.   This works for custom or built-in objects, but new properties can only be set on custom object. This function works essentially identically to the obj.property assignment, but it allows you to create property names from input. It is used extensively for the PEBL parameter setting.
+  
+\item[Usage]       
+     \verb+SetProperty(obj,property, value)+ 
+\item[Example]
+
+\begin{verbatim}
+  obj <- MakeCustomObject("myobject")
+  obj.taste <- "buttery"
+  obj.texture <- "creamy"
+  SetProperty(obj,"flavor","tasty")
+  
+  list <- GetPropertyList(obj)
+  loop(i,list)
+   {
+     if(PropertyExists(obj,i)
+      {
+        Print(i  + ":  " + GetProperty(obj,i))
+      }
+   }
+\end{verbatim}
+
+
+\item[See Also]
+\verb+GetProperty+, \verb+PropertyExists+, \verb+GetPropertyList+ \verb+MakeCustomObject+, \verb+PrintProperties+ 
+\end{desc} 
+
+
+
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol] 	\verb+SDTBeta()+
 
@@ -6494,6 +7604,35 @@ SDTDPrime(<hr>, <far>)
 \item[See Also]\verb+SDTBeta()+,
 \end{desc}
 
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+SetCheckbox()+
+
+\item[Description]	
+This sets the .status property of a checkbox and draws it.   Its state can also be updated using the the \texttt{ClickCheckBox()} function, which flips the current state. 
+
+\item[Usage]
+\begin{verbatim}
+ SetCheckBox(obj, value)
+  \end{verbatim}
+
+\item[Example]      	
+
+
+\begin{verbatim}
+ ok <- MakeCheckbox("OK?",400,250,gWin,150)
+ Draw()
+ SetCheckBox(ok,1)
+ Draw()	
+ Wait(1000)
+ SetCheckbox(ok,0)
+ Draw()
+ Wait(1000)
+\end{verbatim}
+
+Examples of its use can be found in demo\\ui.pbl
+\item[See Also]	\verb+MakeCheckBox()+, \verb+ClickCheckBox()+
+\end{desc}
 
 
 \begin{desc}{Name/Symbol}
@@ -6825,6 +7964,43 @@ Draw()
 \end{desc} 
 
 
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+SetScrollingText()+
+
+\item[Description]	
+This updates the text in a \verb+ScrollingTextBox+. Because text must be parsed to be put into the box, you cannot just update the .text property, but instead should use this function.
+
+\item[Usage]
+\begin{verbatim}
+ SetScrollingText(stb, newtext)
+  \end{verbatim}
+
+Here,  \texttt{stb} is a scrolling textbox created with \verb|MakeScrollingTextBox|, and \texttt{newtext} is the new text you want to display.
+
+
+\item[Example]      	
+See ui.pbl in the demo directory for examples of the use of a scrolling text box.  A brief example follows:
+
+\begin{verbatim}
+  textscroll <- MakeScrollingTextBox("",200,50,gWin,12,
+                                        300,150,0)
+
+  SetScrollingText(textscroll,FileReadText("Uppercase.txt"))
+   Draw()
+  resp <- WaitForClickOntarget([textscroll],[1])
+   CallFunction(textscroll.clickon,[textscroll,gClick]) 
+\end{verbatim}
+
+\item[See Also]
+\verb+MakeScrollingTextBox+
+\verb+MakeScrollBox+
+\verb+UpdateScrollBox+
+\verb+DrawScrollBox+
+\verb+ClickOnScrollBox+
+\end{desc}
+
+
+
 
 \begin{desc}{Name/Symbol}
 
@@ -7112,15 +8288,16 @@ SortBy(["Bobby","Greg","Peter"], [3,1,2])
 \item[See Also]    	\verb+Shuffle()+, \verb+Sort()+
 \end{desc}
 
+
+
+
 \begin{desc}{Name/Symbol}
 \item[Name/Symbol]  	\verb+SplitString()+
 
 \item[Description]	Splits a string into tokens. \verb+<split>+ must be a string. If 
 		\verb+<split>+ is not found in \verb+<string>+, a list containing the entire 
 		string is returned; if split is equal to \verb+""+, the each letter 
-		in the string is placed into a different item in the list.  
-		Multiple delimiters, as well as delimiters at the beginning 
-		and end of a list, will produce empty list items. 
+		in the string is placed into a different item in the list.  Only the first character of \verb+<split>+ is used.  IF you need a multicharacter split, you can use \verb+<SplitStringSlow>+, which can handle multi-character splits but is relatively slower. This should not matter for short strings, but if you are using splitstring on long files, it could make a difference.
 
 
 \item[Usage]
@@ -7134,8 +8311,36 @@ SplitString("Everybody Loves a Clown", " ")
 # Produces ["Everybody", "Loves", "a", "Clown"]
 \end{verbatim}
 
-\item[See Also]     	\verb+FindInString()+
+\item[See Also]     	\verb+FindInString()+, \verb+ReplaceChar+, \verb+SplitStringSlow+
 \end{desc}
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+SplitStringSlow()+
+
+\item[Description]	Splits a string into tokens. \verb+<split>+ must be a string. If 
+		\verb+<split>+ is not found in \verb+<string>+, a list containing the entire 
+		string is returned; if split is equal to \verb+""+, the each letter 
+		in the string is placed into a different item in the list.  The entire text of \verb+<split>+ is used to tokenize, but as a consequence this function is relatively slow, and should be avoided if your string is longer than a few hundred characters.
+
+\item[Usage]
+\begin{verbatim}
+SplitStringSlow(<string>, <split>)
+\end{verbatim}
+
+\item[Example]      	
+\begin{verbatim}
+SplitStringSlow("Everybody Loves a Clown", " ") 
+# Produces ["Everybody", "Loves", "a", "Clown"]
+SplitStringSlow("she sells seashells", "ll")
+#produces ["she se","s seashe", "s"] 
+
+\end{verbatim}
+
+\item[See Also] \verb+Splitstring+     	\verb+FindInString()+, \verb+ReplaceChar+
+\end{desc}
+
 
 
 
@@ -7227,7 +8432,7 @@ StartPlayBack(movie)
    PausePlayback(movie)
 \end{verbatim}
 
-\item[See Also] \verb+LoadAudioFile()+, \verb+LoadMovie()+, \verb+tPlayMovie()+, \verb+PausePlayback()+
+\item[See Also] \verb+LoadAudioFile()+, \verb+LoadMovie()+, \verb+PlayMovie()+, \verb+PausePlayback()+
 \end{desc}
 
 
@@ -7800,6 +9005,76 @@ Transpose([[1,11,111],[2,22,222],
 \newpage
 \sect{U}
 \vfill
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+UpdatePulldown()+
+
+\item[Description]	
+This changes the list being used in a Pulldown object.  It tries to maintain the same selected option (matching the text of the previous selection), but if not found will select index 1. It calls \verb+DrawPullDown+ when complete, but a \verb+Draw()+ command must be issued before the pulldown changes will appear.
+
+\item[Usage]
+\begin{verbatim}
+ UpdatePullDown(object, newlist)
+ \end{verbatim}
+
+\item[Example]      	
+\begin{verbatim}
+ options  <- MakePulldownButton(["A",B","C"],400,250,gWin,14,100,3)
+ Draw()
+ WaitForAnyKeyPress()
+ 
+ ##This should add a fourth option but C should still be selected.
+ UpdatePullDown(options,["A","B","C","D"])
+ Draw()
+ WaitForAnyKeyPress()
+
+\end{verbatim}
+
+\item[See Also]	\verb+MakePullDown()+, \verb+Pulldown()+, \verb+DrawPulldown+
+\end{desc}
+
+
+
+
+\begin{desc}{Name/Symbol}
+\item[Name/Symbol]  	\verb+UpdateScrollbox()+
+
+\item[Description]	
+This updates the layout of a \verb+ScrollBox+. It should be used if you manually change the .list or .listoffset properties.  It won't actually redraw the scrollbox (which is done by DrawScrollbox).
+
+\item[Usage]
+\begin{verbatim}
+ UpdateScrollBox(sb)
+  \end{verbatim}
+
+Here,  \texttt{sb} is the scrollbox object.
+
+\item[Example]      	
+See ui.pbl in the demo directory for examples of the use of a scrolling text box.  A brief example follows:
+
+\begin{verbatim}
+   sb <- MakeScrollBox(Sequence(1,50,1),"The numbers",40,40,gWin,12,150,500,3)
+   Draw()
+	  
+   resp <- WaitForClickOntarget([sb],[1])
+   CallFunction(sb.clickon,[sb,gClick])
+   #Alternately: ClickOnScrollbox(sb,gClick) 
+ 
+   ##change the selected items
+   sb.list <- Sequence(sb.selected,sb.selected+50,1)
+   UpdateScrollbox(sb)      
+   DrawScrollbox(sb)
+   Draw()
+ 
+\end{verbatim}
+
+\item[See Also]
+\verb+MakeScrollingTextBox+
+\verb+MakeScrollBox+
+\verb+DrawScrollBox+
+\verb+ClickOnScrollBox+
+\end{desc}
 
 
 

@@ -68,6 +68,7 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+Median+ &\verb+<list>+ &Returns the median value of the numbers in \verb+<list>+\\ 
 \verb+Min+ &\verb+<list>+ &Returns the smallest of \verb+<list>+\\ 
 \verb+Max+ &\verb+<list>+ &Returns the largest of \verb+<list>+\\ 
+\verb+Bound+&\verb+<val>+, \verb+<min>+, \verb+<max>+& Returns val, bounded by min and max.\\
 \verb+StDev+ &\verb+<list>+ &Returns the standard dev of \verb+<list>+ \\ 
 \verb+Sum+ &\verb+<list>+ &Returns the sum of the numbers in \verb+<list>+\\ 
 \verb+Median+ &\verb+<list>+ &Returns the median of a set of values \\ 
@@ -128,6 +129,7 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+FileReadLine+ &\verb+<filestream>+&Reads and returns a line from a file; all characters up until the next newline or the end of the file\\ 
 \verb+FileReadList+ &\verb+<filename>+ &Given a filename, will open it, read in all the items into a list (one item per line), and close the file afterwards\\ 
 \verb+FileReadTable+ &\verb+<filename>+ \verb+<opt-sep>+ &Like \verb+FileReadList+, but reads in tables. Optionally, specify a token separator\\ 
+\verb+GetNewDatafile+&\verb+<id-code>+,\verb+<window>+,\linebreak \verb+<basename>+,\linebreak \verb+<extension>+, \verb+<header>+& Opens a data file in subnum directory\\
 \verb+ReadCSV+ &\verb+<filename>+&Opens a csv file< returning a table with its elements\\ 
 \verb+FileReadText+ &\verb+<filename>+ &Reads all of the text in the file into a variable\\ 
 \verb+EndOfLine+ &\verb+<filestream>+&Returns true if at end of line \\ 
@@ -150,8 +152,16 @@ contribute to the PEBL project by implementing the function yourself.
 \verb+GetData+&\verb+<network>+ \verb+<length>+&return a string from network connection\\
 \verb+ConvertIPString+&\verb+<ip-as-string>+&Converts an
 ip-number-as-string to usable address \\
-\verb+OpenNetworkListener+&\verb+<port>+&Opens a port for listening\\
-\verb+CheckForNetworkConnection+&\verb+<network>+&Checks for incoming connection\\
+\verb+OpenNetworkListener+\\&\verb+<port>+&Opens a port for listening\\
+\verb+CheckForNetworkConnection+\\&\verb+<network>+&Checks for incoming connection\\
+\verb+GetHTTPFile+&\verb+<server>+, \verb+<file>+,\newline \verb+<outputfile>+&Gets and saves a file from a website\\
+\verb+GetHTTPText+&\verb+<server>+, \newline \verb+<file>+&Gets a file from a website and saves it to a variable.\\
+
+\verb+PostHTTP+&\verb+<host>+,\verb+<page>+, \newline \verb+<headers>+, \verb+<content>+, &Post to a server form.\\
+\verb+MD5Sum+&\verb+<text>+& Computes MD5 checksum on text\\
+\verb+MD5File+&\verb+<filename>+&Computes MD5 Checksum on file.\\
+
+
 \verb+WritePNG+&\verb+<filename>+, \verb+<object>+ &Makes a .png from a window or object\\
 
 \verb+GetNumJoysticks+& no argument&Determines how many joysticks are available\\
@@ -234,29 +244,29 @@ erasing anything drawn on the canvas\\
 \verb+Square+ &\verb+<x>+ \verb+<y>+ \verb+<size>+ \verb+<color>+ \verb+<filled>+&Creates square with width size centered at position x,y\\ 
 \verb+Rectangle+ &\verb+<x>+ \verb+<y>+ \verb+<dx>+ \verb+<dy>+\verb+<color>+ \verb+<filled>+ &Creates rectangle with size (dx, dy) centered at position x,y\\ 
 \verb+Line+ &\verb+<x>+ \verb+<y>+ \verb+<dx>+ \verb+<dy>+  \verb+<color>+ &Creates line starting at x,y and ending at x+dx, y+dy\\ 
-\verb+PrintProperties+ &\verb+<object>+ &Prints a list of all available properties of an object (for debugging)\\
+
 \verb+Polygon+ &\verb+<x>+ \verb+<y>+ \verb+<xpoints>+ \verb+<ypounts>+  \verb+<color>+\verb+<filled>+ &Creates polygon centered at x,y with relative points \verb+<xpoints>+,\verb+<ypoints>+\\ 
-\verb+Bezier+ &\verb+<x>+ \verb+<y>+ \verb+<xpoints>+ \verb+<ypounts>+ \verb+<steps>+ \verb+<color>+ &Creates bezier curve centered at x,y with relative points \verb+<xpoints>+,\verb+<ypoints>+\\ 
+\verb+Bezier+ &\verb+<x>+ \verb+<y>+ \verb+<xpoints>+ \verb+<ypoints>+ \verb+<steps>+ \verb+<color>+ &Creates bezier curve centered at x,y with relative points \\ 
 \verb+BlockE+         &\verb+<x> <y> <h> <w>+ \verb+<thickness>+ \verb+<orientation>+ \verb+<color>+ &Creates a block E as a useable polygon which can be added to a window directly.\\ 
 \verb+Plus+           &\verb+<x> <y>+ \verb+<size> <w>+ \verb+<color>+
 &Creates a plus sign as a useable polygon which can be added to a window directly.\\ 
 \verb+MakeStarPoints+ &\verb+<r_outer>+ \verb+<r_inner>+ \verb+<npeaks>+ &Creates points for a star, which can then be fed to Polygon\\ 
 \verb+MakeNGonPoints+ &\verb+<radius>+ \verb+<npeaks>+ &Creates points for a polygon, which can then be fed to Polygon\\ 
 \verb+ThickLine+ &\verb+<x1>+ \verb+<y1>+ \verb+<x2>+ \verb+<y2>+ \verb+<thickness>+ \verb+<color>+ &Creates a thick line between two points\\ 
-\verb+MakeAttneave+&\verb+<radius>+,\verb+numpoints+,\verb+minangle+,\verb+maxangle+\\
+\verb+MakeAttneave+&\verb+<radius>+, \verb+<numpoints>+, \verb+<minangle>+, \verb+<maxangle>+\\
 & &Makes a complex ``Attneave'' polygon\\
-\verb+ConvexHull+&\verb+<list-of-pts>+Returns a convex subset of
+\verb+ConvexHull+&\verb+<list-of-pts>+& Returns a convex subset of
 points for a set\\
-\verb+KaneszaSquare+& \verb+squaresize+, \verb+circleradius+,\verb+fg+,\verb+bg+ & Creates a 'Kanesza Square' stimulus.\\
-\verb+KaneszaPolygon+&\verb+points+,\verb+circTF+, \verb+circleradius+,\verb+fg+,\verb+bg+,\verb+show+& Create generic Kanesza polygon.\\
+\verb+KaneszaSquare+& \verb+<squaresize>+, \verb+<circleradius>+, \verb+<fg>+, \verb+<bg>+ & Creates a 'Kanesza Square' stimulus.\\
+\verb+KaneszaPolygon+&\verb+<points>+, \verb+<circTF>+, \verb+<circleradius>+, \verb+<fg>+, \verb+<bg>+,\verb+<show>+& Create generic Kanesza polygon.\\
  
 
 \verb+Inside+  & \verb+<[x,y]>+ \verb+<object>+ & Determines whether a point is inside a graphical object\\ 
 \verb+SetPixel+&\verb+x,y,color+&Sets the color of a pixel on an image or canvas to \verb+color+\\
 \verb+SetPoint+&\verb+x,y,color+&Sets the color of a pixel on an image or canvas to \verb+color+\\
 \verb+GetPixelColor+&\verb+<obj>,x,y+&Gets the color of a specified pixel on a widget\\
-\verb+MakeGabor+&\verb+size,freq,sd, angle,phase,bglev+\\
-      &&Creates a 'gabor patch' with specified parameters\\
+\verb+MakeGabor+&\verb+<size>+, \verb+<freq>+, \verb+<sd>+, \verb+<angle>+, \verb+<phase>+, \verb+<bglev>+
+      &Creates a 'gabor patch' with specified parameters\\
 \addlinespace[0.2cm] 
 \cmidrule(l{.5cm}r{.5cm}){1-3} 
 \multicolumn{3}{c}{\textbf{Sound Objects Functions}}\\ 
@@ -290,8 +300,74 @@ points for a set\\
 \verb+StartPlayback+&\verb+<movie>+&Initiates playback in background, updated with Wait()\\
 \verb+PausePlayback+&\verb+<movie>+&Pauses playback of movie\\
 
+
+
 \addlinespace[0.2cm] 
 
+\cmidrule(l{.5cm}r{.5cm}){1-3} 
+\multicolumn{3}{c}{\textbf{Graphical User Interface Functions}}\\ 
+\cmidrule(l{.5cm}r{.5cm}){1-3} 
+
+\verb+GetTime+ &\verb+<>+ &Gets a number, in milliseconds, representing the time since the PEBL program began running.\\ 
+
+\verb+MakeButton+&\verb+<label>+\verb+<x>+,\verb+<y>+\newline
+\verb+<win>+,\verb+<width>+&Makes a button for clicking on.\\
+\verb+PushButton+&\verb+<button>+\verb+<[x,y]>+&Pushes a button and releases.\\
+
+\verb+MakeCheckBox+&\verb+<label>+\verb+<x>+,\verb+<y>+,\newline\verb+<win>+,\verb+<width>+&Makes a two-state checkbox on a button background.\\
+\verb+ClickCheckBox+&\verb+<checkbox>+\verb+<[x,y]>+&Handles checkbox click and updates state.\\
+\verb+SetCheckBox+&\verb+<checkbox>+\verb+<state>+&Sets checkbox state.\\
+
+\verb+MakeScrollingTextBox+\\
+&\verb+<text>+, \verb+<x>+, \verb+<y>+, \verb+<win>+, \verb+<fontsize>+, \verb+<width>+, \verb+<height>+, \verb+<linewrap>+ &Make a box for text that can be scrolled if too long.\\
+\verb+SetScrollingText+&\verb+<obj>+\verb+<text>+, \verb+<linewrap>+ & Changes text of a scrolling textbox.\\
+
+\verb+MakeScrollBox+&\verb+<opts>+, \verb+<header>+, \verb+<x>+, \verb+<y>+, \verb+<win>+,\verb+<fontsize>+, \verb+<width>+, \verb+<height>+, \verb+<selected>+ &Make a scrolling selection box.\\
+\verb+UpdateScrollBox+&\verb+<obj>+&Recalculates scrollbox layout.\\
+\verb+DrawScrollBox+&\verb+<obj>+&Draws a scrollbox.\\
+\verb+ClickOnScrollBox+&\verb+<obj>+, \verb+<click>+&Handles click on scrollbox.\\
+
+
+
+\verb+PopuUpMessageBox+&\verb+<label>+\verb+<win>+&Makes a small message box at the mouse location.\\
+\verb+PopuUpEntryBox+&\verb+<label>+\verb+<win>+\verb+<[x,y]>+&Makes a small entry box at [xy] location.\\
+
+
+\verb+MakePullDown+&\verb+<optionlist>+, \verb+<x>+,\verb+<y>+, \verb+<win>+, \verb+<fontsize>+, \verb+<width>+, \verb+<selected>+, &Make a pulldown selection box for a list.\\
+\verb+PullDown+&\verb+<obj>+\verb+<[x,y]>+ &Handle click on a pulldown.\\
+\verb+UpdatePullDown+&\verb+<obj>+, \verb+<newlist>+ &Updates the list of a pulldown.\\
+\verb+DrawPullDown+&\verb+<obj>+ &Redraws a pulldonw if state changes.\\
+
+
+\verb+MakeTextlist+&\verb+<list>+, \verb+<listoffset>+,
+  \verb+<prebuffer>+&Creates a text body from a list.\\ 
+\verb+InsideTB+&\verb+<[xy]>+\verb+<obj>+&Determine inside for a textbox-style object (location is upper left)\\
+
+
+\verb+MakeMenu+&\verb+<header>+, \verb+<x>+, \verb+<y>+, \verb+<win>+, \verb+<fontsize>+, \verb+<width>+, \verb+<subitems>+, \verb+<functions>+
+&Creates menu with suboptions.\\ 
+
+\verb+MakeMenuItem+&\verb+<text>+, \verb+<x>+, \verb+<y>+, \verb+<win>+, \verb+<fontsize>+, \verb+<width>+, \verb+<function>+
+&Creates menu sub-item.\\ 
+\verb+ClickOnMenu+&\verb+<obj>+, \verb+<[x,y]>+ & Handles menu click, calling the .clickon function of menu.\\
+
+\verb+OpenSubMenus+&\verb+<obj>+, \verb+<[x,y]>+&Opens the sub-menus of a menu.\\
+
+\addlinespace[0.2cm] 
+\cmidrule(l{.5cm}r{.5cm}){1-3} 
+\multicolumn{3}{c}{\textbf{Custom and Built-in Object Functions}}\\ 
+\cmidrule(l{.5cm}r{.5cm}){1-3} 
+\verb+PrintProperties+ &\verb+<object>+ &Prints a list of all available properties of an object (for debugging)\\
+\verb+GetPropertyList+ &\verb+<object>+ &Gets a list of all the property names of an object\\
+\verb+PropertyExists+ &\verb+<object>+ \verb+<prop>+&Determines whether a particular property exists\\
+\verb+SetProperty+ &\verb+<object>+ \verb+<prop>+ \verb+<value>+Sets property of an object\\
+\verb+GetProperty+ &\verb+<object>+ \verb+<prop>+&Returns value of property\\
+\verb+MakeCustomObject+ &\verb+<name>+ &Creates custom object.\\
+\verb+IsCustomObject+ &\verb+<object>+ &Tests whether object is a custom object.\\
+\verb+DrawObject+&\verb+obj+& Calls the .draw property of an object\\
+\verb+MoveObject+&\verb+obj+, \verb+x+, \verb+y+&Calls the .move property of an object\\
+\verb+Clickon+&\verb+obj+, \verb+[x,y]+&Calls the .clickon property of an object\\
+\addlinespace[0.2cm] 
 \cmidrule(l{.5cm}r{.5cm}){1-3} 
 \multicolumn{3}{c}{\textbf{Misc Event Functions}}\\ 
 \cmidrule(l{.5cm}r{.5cm}){1-3} 
@@ -418,7 +494,7 @@ list, in the order they appear in the original list\\
 \verb+Levels+&\verb+[list]+&Returns a sorted list of unique elements in list.\\
 
 \verb+Rest+ & \verb+<list>+& Returns a list minus its first element\\
-\verb+ExtractListItems+ &\verb+<list>+ \verb+<list-of-indices>+ & \\ 
+\verb+ExtractListItems+ &\verb+<list>+ \verb+<list-of-indices>+ & Gets a subset of items from a list\\ 
 \verb+IsMember+ &\verb+<item>+ \verb+<list>+ & Checks whether \verb+<item>+ is a member of \verb+<list>+ \\ 
 \verb+Replace+ &\verb+<template>+ \verb+<replacementList>+ & Replaces items in a data structure\\ 
 \verb+Lookup+& \verb+<key>+ \verb+<keylist>+ \verb+<database>+&returns
@@ -449,6 +525,7 @@ exactly \verb+<num>+ characters by truncating or padding.\\
 \verb+ReplaceChar+&\verb+<string>+ \verb+<char>+ \verb+<char2>+\\
 & & Substitutes  \verb+<char2>+ for \verb+<char>+ in \verb+<string>+.\\
 \verb+SplitString+ &\verb+<string>+ \verb+<split>+ & Splits \verb+<string>+ into a list of \verb+<split>+-delimited substrings \\ 
+\verb+SplitStringSlow+ &\verb+<string>+ \verb+<split>+ & Splits \verb+<string>+ into a list of \verb+<split>+-delimited substrings \\ 
 \verb+StringLength+ &\verb+<string>+ & Returns the length of a string\\ 
 \verb+SubString+ &\verb+<string>+ \verb+<position>+ \verb+<length>+& Returns a substring\\ 
 \verb+FindInString+ &\verb+<string>+ \verb+<key>+ \verb+<pos>+ & Returns position
