@@ -59,7 +59,7 @@ extern PlatformEventQueue * gEventQueue;
 /// This is the standard PEventLoop constructor
 PEventLoop::PEventLoop()
 {
-    cout << "Creating event loop\n";
+    //cout << "Creating event loop\n";
 
 }
 
@@ -67,7 +67,7 @@ PEventLoop::PEventLoop()
 PEventLoop::~PEventLoop()
 {
     // Standard Destructor
-    cout << "Destroying venet loop\n";
+    //cout << "Destroying venet loop\n";
 }
 
 

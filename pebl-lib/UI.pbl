@@ -180,6 +180,58 @@ define SetCheckBox(cb,state)
  Draw(check)
 }
 
+
+
+
+define MakeTextEntry(label,x,y,win,width,default,layout)
+{
+
+  #layout 1 = left/right centered
+  #layout 2 = top/bottom
+  #layout 3 = bottom/top
+  #layout 4 = ???
+
+
+   obj <- MakeCustomObject("TextEntry")
+   obj.name <- "<CUSTOMOBJECT>"
+   obj.value <- default
+   
+   font<- MakeFont(gPEBLBaseFont,0,12,Makecolor("grey20"),
+                   MakeColor("white"),0)
+
+   entry <- MakeTextBox(default+"",font,width,15)
+   label <- EasyLabel(label,x+width/2,y+5,win,12)
+   obj.entry <- entry
+   obj.label <- label
+   AddObject(entry,win)
+   Move(entry,x,y+15)
+
+   obj.win <- win
+ 
+   obj.x <- x
+   obj.y <- y
+   obj.width<- width
+   obj.height <-27
+   obj.clickon <- "GetTextEntryInput"
+   obj.inside <- "InsideTB"
+   return obj
+}
+
+
+define GetTextEntryInput(obj,xy)
+{
+   tb <- obj.entry
+   obj.value <-   GetInput(tb,"<return>")
+   return obj.value
+}
+
+
+define SetTextEntry(obj,value)
+{
+   tb <- obj.entry
+   tb.text <- value
+}
+
 ## This creates a 'scrolling' textbox.  If the text is too tall for
 ## the given size, it will add a scrollbar that allows you to see everything
 ## If scrolling is needed, the text box size is reduced slightly.
@@ -213,18 +265,18 @@ define SetScrollingText(obj,text,linewrap)
    tb.linewrap <- linewrap
    ##Now, figure out line breaks of the text.
 #   SetEditable(tb,1)
-#   Draw(tb)   
+   tb.text <- text
+   Draw(tb)   
    index <- 0
    jumps <- []
-   tb.text <- text
-#   Draw()
+
    textlength <- StringLength(text)
    lines <- []
 
  
    while(index< textlength)
    {
- #     Draw()
+     ##   Draw()
       cut <- GetTextBoxCursorFromClick(tb,1,20)
       cuttext <- SubString(tb.text,1,cut)
 
@@ -239,9 +291,9 @@ define SetScrollingText(obj,text,linewrap)
          cut <- cut + 1
       }     
 
-#      tb.cursorpos <- cut
-#      Draw()
-#      WaitForAnyKeyPress()
+      tb.cursorpos <- cut
+ #     Draw()
+      ##  WaitForAnyKeyPress()
 
       PushOnEnd(lines,cuttext)
 
@@ -250,8 +302,11 @@ define SetScrollingText(obj,text,linewrap)
       tb.text <- SubString(text,index+1,textlength-index)
       tb.cursorpos <- 0
    }
+
    obj.text <- text
    obj.list <- lines
+   obj.numitems <- Length(lines)
+   UPdateScrollbox(obj)
 }
 
 
@@ -367,7 +422,7 @@ define MakePullDown(opts, x,y,win,fontsize,
    gWinDummy.y <- gvideoHeight/2
    gWinDummy.width <- gVideoWidth
    gWinDummy.height <- gVideoheight
-
+   gWinDummy.win <- win
 
    obj <- MakeCustomObject("pulldown")
    obj.name <- "<CUSTOMOBJECT>"
@@ -572,7 +627,10 @@ define PullDown(obj,xy)
  
      }
      DrawPulldown(obj)
-     Draw()
+     Draw()  
+    ##After we draw it, wait a little bit so you can see the selection before
+    ##the pulldown rolls up.
+     Wait(100)
     }
 
 
@@ -617,18 +675,30 @@ define DrawPulldown(obj)
         tb.text <- " "+Nth(obj.list,obj.selected)
        }
     }else{
-
+     ###############################
      ##Draw an open box here
+
+
      Show(outline)
      Hide(obj.pull)
 
      tb.height <- Min([obj.maxitems,obj.numitems]) * obj.lineheight
-    if(Length(obj.list)==0)
-     {    
+     obj.selected <- Bound(obj.selected,1,obj.numitems)
+
+ 
+    ##We need to make sure the selected object is not off the screen
+    if(obj.selected > obj.maxitems + obj.listoffset)
+    {
+      obj.listoffset <- obj.selected - obj.maxitems
+    }
+ 
+
+     if(Length(obj.list)==0)
+      {    
        tb.text <- ""
        obj.selectedtext <- ""
 
-     }else{
+      }else{
       tb.text <- MakeTextList(obj.list,obj.listoffset," ")
       obj.selectedtext <- Nth(obj.list,obj.selected)
 
@@ -673,6 +743,7 @@ define DrawPulldown(obj)
   outline.y <- tb.y+tb.height/2
   AddObject(outline,obj.win)
   obj.height <- tb.height
+  Draw()
 }
 
 
@@ -781,8 +852,10 @@ define MakeScrollBox(opts, header,x,y,win,fontsize,
    AddObject(tb,win)
    Move(tb,x+10,y+obj.lineheight+1)
 
-   obj.outline <- Rectangle(tb.x+tb.width/2,   tb.y+tb.height/2,
-                            tb.width+2,tb.height+2,MakeColor("grey22"),0)
+   obj.outline <- Rectangle(tb.x+tb.width/2,  tb.y+tb.height/2,
+                            tb.width+2,tb.height+2,
+                            MakeColor("grey22"),0)
+
    AddObject(obj.outline,win)
   
 
@@ -864,15 +937,18 @@ define UpdateScrollbox(obj)
    obj.numitems <- Length(obj.list)
    obj.maxoffset <- Max([0,obj.numitems-obj.maxitems])
 
-   if(obj.numitems>obj.maxitems)
+   obj.toomany <- (obj.numitems > obj.maxitems)
+   if(obj.toomany)
    {
     Show(obj.thumb)
    }else{
     Hide(obj.thumb)
   }
 
+
    ##redo the offset in case we lost items.
    obj.listoffset <- Bound(obj.listoffset,0,obj.maxoffset)
+
 
 }
 
@@ -923,8 +999,14 @@ define DrawScrollBox(obj)
    cheat <- 42
    thumb <- obj.thumb
    thumb.y <- band.y - (band.height-cheat)/2 + prop*(band.height - cheat)
-}
 
+if(obj.numitems <= obj.maxitems)
+{
+   Hide(obj.thumb)
+}else{
+   Show(obj.thumb)
+}
+}
 
 define ClickOnScrollbox(obj,click)
 {
@@ -940,20 +1022,33 @@ define ClickOnScrollbox(obj,click)
   if(Inside(click,obj.up) or button==4)
   {
 
-    ##adjust the offset here
-    obj.listoffset <- Max([0,obj.listoffset-1])
-    obj.selected <- Min([obj.selected,obj.listoffset+obj.maxitems])
 
+   if(button==4)
+   {
+     jump <- -3
+   }else{
+     jump <- -1
+   }
+    ##adjust the offset here
+    obj.listoffset <- Max([0,obj.listoffset+jump])
+    obj.selected <- Min([obj.selected,obj.listoffset+obj.maxitems])
 
   }elseif(Inside(click,obj.down) or button==5)
   {
+   if(button==5)
+   {
+     jump <- 3
+   }else{
+     jump <- 1
+   }
 
-    obj.listoffset <- Bound(obj.listoffset+1,0,obj.maxoffset)
+    obj.listoffset <- Bound(obj.listoffset+jump,0,obj.maxoffset)
 
     obj.selected <- Bound(obj.selected, obj.listoffset+1,obj.listoffset+obj.maxitems)
 
   }elseif(Inside(click,box))
     {
+
     ##we clicked in the box, possibly changing the selection.
     selected <- Floor((y - box.y)/obj.lineheight)+1+obj.listoffset
     selected <- Bound(selected,obj.listoffset+1,obj.numitems)
@@ -963,6 +1058,7 @@ define ClickOnScrollbox(obj,click)
 
   }elseif(Inside(click,obj.gutter))
   {
+
 
     band <- obj.gutter
     prop <- (y - (band.y - band.height/2))/band.height
@@ -1018,10 +1114,6 @@ define UpdateCapturedScrollBoxThumb(obj,p)
  
 }
 
-define Bound(number,min,max)
-{
-   return Max([Min([number,max]),min])
-}
 
 ##this supposedly gets called on a mouse release event?
 ##it should also get called when you leave the window...
@@ -1029,4 +1121,154 @@ define ClearScrollboxThumbCapture(obj,p)
 {
 	gKeepLooping <- 0
 	Draw()
+}
+
+
+
+define MakeMenu(header,x,y,win,fontsize,width,subitems,functions)
+{
+   obj <- MakeCustomObject("menu")
+   obj.name <-"<CUSTOMOBJECT>"
+
+   headitem <- MakeMenuItem(header,x,y,win,fontsize,width,"opensubmenus")
+   
+
+   obj.head <- headitem
+   obj.fontsize <- fontsize
+   obj.height <- headitem.height
+
+    obj.width <- headitem.width+15
+    obj.x <- x
+    obj.y <- y
+    obj.clickon <- "OpenSubMenus"
+
+    obj.show <- "Showmenu"
+    obj.hide <- "HideMenu"
+    obj.win <- win
+    obj.inside <- "INSIDEMENU"
+
+    obj.subitems <- subitems
+    obj.functions <- functions
+
+    return obj
+}
+
+
+define OpenSubMenus(obj,xy)
+{
+  head <- obj.head
+  fg<-head.fg
+  bg <- head.bg
+#  bg <- MakeColor("green")
+  space <- 8
+
+  newy <- obj.y + obj.height
+
+
+
+   winDummy <- MakeCustomObject("dummy")
+   winDummy.name <- "<CUSTOMOBJECT>"
+   winDummy.x <- gVideoWidth/2
+   winDummy.y <- gvideoHeight/2
+   winDummy.width <- gVideoWidth
+   winDummy.height <- gVideoheight
+
+  menuback <- Rectangle(obj.x,newy+obj.height*(Length(obj.subitems))/2,
+                        obj.width,(obj.height+space)*(Length(obj.subitems)),bg,1)
+  AddObject(menuback,obj.win)			
+
+  widths <- []
+  submenus <- [windummy]
+  newy <- newY + space/2
+  loop(i, Transpose([obj.subitems,obj.functions]))
+   {
+      item <- MakeMenuItem(First(i),
+                        obj.x,newy,obj.win,
+                        obj.fontsize, obj.width,Second(i))
+
+
+      PushOnEnd(submenus,item)
+      PushOnEnd(widths,item.width)
+      newY <- newY + obj.height+space
+   }
+
+  menuback.width <- Max(widths)+15
+  MoveCorner(menuback,obj.x,obj.y+obj.height)
+  Draw()
+  resp <- WaitForClickOnTarget(submenus,Sequence(1,Length(submenus),1))
+  if(resp>1)
+  {
+  obj <- Nth(submenus,resp)
+  CallFunction(obj.clickon,[obj,gClick])
+  ##after exiting, the menu should disappear.  
+  }
+}
+
+##A menu item is just a set of labels with solid backs that launch
+##  something when the get clicked
+
+define MakeMenuItem(text,x,y,win,fontsize, width,function)
+{
+    menuback <- MakeColor("grey20")
+    menuFG <- MakeColor("grey90")
+
+    obj <- MakeCustomObject("menuitem")
+    obj.name <- "<CUSTOMOBJECT>"
+
+    obj.bg <- menuback
+    obj.fg <- menuFG
+
+    font<- MakeFont(gPEBLBaseFont,0,fontsize,menufg,menuback,0)
+    label <- MakeLabel(text,font)
+    Move(label,x+label.width/2+4,y)
+    AddObject(label,win)
+    label.y <- y + label.height/2
+    obj.width <- Max([width,label.width])
+    bg  <- Rectangle(x+(obj.width+6)/2,label.y,obj.width+6,label.height,menuback,1)
+   
+    AddObject(bg,win)
+    AddObject(label,win)
+
+    obj.font <- font
+    obj.width <-bg.width    
+    obj.text <- text
+    obj.label <- label
+    obj.back <- bg
+    obj.height <- label.height
+
+    obj.x <- x
+    obj.y <- y
+
+    obj.clickon <- function
+    obj.move <- "MoveMenu"
+    obj.show <- "Showmenu"
+    obj.hide <- "HideMenu"
+    obj.win <- win
+    obj.inside <- "INSIDEMENU"
+
+    return obj
+      
+}
+
+
+define ClickOnMenu(obj,xy)
+{
+   CallFunction(obj.clickon,[obj,xy])
+   CallFunction(obj.hide,[obj,xy])  
+}
+
+
+##This is offset from upper left corner
+define InsideMenu(xy,object)
+{
+
+     x <- First(xy)
+     y <- Second(xy)
+     xlow <- object.x
+     xhigh <- object.x+object.width
+     ylow <- object.y
+     yhigh <- object.y+object.height
+     inside <- (x >= xlow) and (x  <= xhigh) and (y >= ylow) and (y <= yhigh)
+
+     return inside
 }

@@ -427,6 +427,8 @@ namespace PEBLString
             {(char*)"STRINGLENGTH",              StringLength, 1, 1},
             {(char*)"SUBSTRING",                 SubString, 3, 3},
             {(char*)"FINDINSTRING",              FindInString, 3, 3},
+            {(char*)"SPLITSTRING",               SplitString, 2, 2},
+            {(char*)"COPYTOCLIPBOARD",           CopyToClipboard,1,1},
             //          {(char*)"TOKEN",                     TokenMakeWindow, 1, 1},
             //          {(char*)"FORMAT",        Format, 1, 1},
             {0,            0,  0, 0}

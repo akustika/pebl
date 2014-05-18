@@ -95,6 +95,8 @@ namespace PEBLUtility
     std::string MD5File(const std::string & filename);
     std::string MD5String(const std::string & text);
 
+    void CopyToClipboard(const std::string & text);
+
 }
 
 

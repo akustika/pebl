@@ -18,7 +18,8 @@ define Start(p)
    testentry  <- MakeButton("Test entry",400,400,gWin,150)
    testentry.clickon <- "testpopupentry"  ##connect the button handler
 
-   testmessage  <- MakeButton("Test message box.",400,425,gWin,150)
+   testmessage  <- MakeButton("Test message box
+.",400,425,gWin,150)
    testmessage.clickon <- "testpopupmessage"  ##connect the button handler
 
    menubar <- Rectangle(gVideoWidth/2,8,gVideoWidth,16,MakeColor("grey20"),1)

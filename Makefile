@@ -1,8 +1,8 @@
-#//////////////////////////////////////////////////////////////////////////////
-#//////////////////////////////////////////////////////////////////////////////
-#//////////////////////////////////////////////////////////////////////////////
+#//////////////////////////////////////////////////////////////////////////
+#//////////////////////////////////////////////////////////////////////////
+#//////////////////////////////////////////////////////////////////////////
 #//
-#//	Copyright (c) 2003-2012
+#//	Copyright (c) 2003-2014
 #//	Shane T. Mueller, Ph.D.  smueller at obereed dot net
 #//
 #//     This file is part of the PEBL project.
@@ -19,31 +19,41 @@
 #//
 #//    You should have received a copy of the GNU General Public License
 #//    along with PEBL; if not, write to the Free Software
-#//    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#//    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  
+#//    02111-1307 USA
 #//
-#//////////////////////////////////////////////////////////////////////////////
-#//////////////////////////////////////////////////////////////////////////////
-#//////////////////////////////////////////////////////////////////////////////
+#//////////////////////////////////////////////////////////////////////////
+#//////////////////////////////////////////////////////////////////////////
+#//////////////////////////////////////////////////////////////////////////
 
 #This only affects install location.  The binary should be 
 #locatable anywhere
 PREFIX = /usr/local/
 
-PEBL_VERSION =0.13
+PEBL_VERSION =0.14
 USE_WAAVE=1       ##Optional; comment out to turn off waave multimedia library
 USE_AUDIOIN=1     ##Optional; comment out to turn off  sdl_audioin library
+USE_NETWORK=1     ##Optional; comment out to turn off sdl_net library.
+USE_PORTS=1 
+USE_HTTP=1      ##Optional; turn on/off for http get/set
+
 USE_DEBUG = 1     ##Optional; turn on/off debugging stuff.
+
 C   = gcc
 CXX = g++ 
+#C = ~/src/emscripten-master/emcc
+#CXX = ~/src/emscripten-master/em++
+#C = clang
+#CXX = clang++
+
 ifdef USE_DEBUG
-DEBUGFLAGS = -lefence -DPEBL_DEBUG -g
+DEBUGFLAGS =  -DPEBL_DEBUG -g
 else
 DEBUGFLAGS = 
 endif
 CFLAGS =   -O3 -std=c99 -DPREFIX=$(PREFIX) -g 
 
-
-CXXFLAGS0 =  -O3  -DPEBL_UNIX  -DPEBL_LINUX -DENABLE_BINRELOC -DPREFIX=$(PREFIX) 
+CXXFLAGS0 =  -g -O3  -DPEBL_UNIX  -DPEBL_LINUX -DENABLE_BINRELOC -DPREFIX=$(PREFIX) 
 
 
 ifdef USE_WAAVE
@@ -58,8 +68,27 @@ ifdef USE_AUDIOIN
 	LINKOPTS2 = -lsdl_audioin
 endif
 
-CXXFLAGS = $(CXXFLAGS0) $(CXXFLAGS1) $(CXXFLAGS2)
-LINKOPTS = $(LINKOPTS1) $(LINKOPTS2)
+
+ifdef USE_NETWORK
+      CXXFLAGS3 = -DPEBL_NETWORK
+      LINKOPTS3 = -lSDL_net
+endif
+
+ifdef USE_PORTS
+	CXXFLAGS4 = -DPEBL_USEPORTS
+##	CFLAGS4 =  -DPEBL_USEPORTS
+endif
+
+
+
+ifdef USE_HTTP
+	CXXFLAGS5 = -DPEBL_HTTP  
+endif
+
+
+
+CXXFLAGS = $(CXXFLAGS0) $(CXXFLAGS1) $(CXXFLAGS2) $(CXXFLAGS3) $(CXXFLAGS4) $(CXXFLAGS5)
+LINKOPTS = $(LINKOPTS1) $(LINKOPTS2) $(LINKOPTS3)
 
 SDL_CONFIG = /usr/bin/sdl-config
 
@@ -112,7 +141,10 @@ vpath %.l   $(SRC_DIR)
 PUTILITIES_SRC = $(UTIL_DIR)/PEBLUtility.cpp \
 		$(UTIL_DIR)/PError.cpp \
 		$(UTIL_DIR)/BinReloc.cpp \
-		$(UTIL_DIR)/PEBLPath.cpp 
+		$(UTIL_DIR)/PEBLPath.cpp \
+		$(UTIL_DIR)/PEBLHTTP.cpp \
+		$(UTIL_DIR)/happyhttp.cpp \
+		$(UTIL_DIR)/md5.cpp
 
 
 PUTILITIES_OBJ1  = $(patsubst %.cpp, %.o, $(PUTILITIES_SRC))
@@ -139,15 +171,22 @@ PEBLBASE_SRCXX =	$(BASE_DIR)/Evaluator.cpp \
 			$(BASE_DIR)/PList.cpp \
 			$(BASE_DIR)/PNode.cpp \
 			$(BASE_DIR)/VariableMap.cpp \
-			$(DEVICES_DIR)/PEventLoop.cpp \
-			$(BASE_DIR)/Variant.cpp 
+			$(BASE_DIR)/Variant.cpp \
+			$(DEVICES_DIR)/PEventLoop.cpp 
 
-PEBLBASE_OBJXX = $(patsubst %.cpp, %.o, $(PEBL_SRCXX))
+PEBLBASE_OBJXX = $(patsubst %.cpp, %.o, $(PEBLBASE_SRCXX))
 
-##This just collects plain .c files:
+
+##This just collects plain .c files, 
 PEBLBASE_SRC = lex.yy.c \
 		$(UTIL_DIR)/rs232.c
-PEBLBASE_OBJ = $(patsubst %.c, %.o, $(PEBL_SRC))
+PEBLBASE_OBJ = $(patsubst %.c, %.o, $(PEBLBASE_SRC))
+
+
+##These are 3rd party libraries we include directly.
+#LIB_SRC      = libs/happyhttp/happyhttp.cpp
+#LIB_OBJ      =$(patsubst %.cpp, %.o, $(LIB_SRC))
+
 
 
 POBJECT_SRC  =  $(OBJECTS_DIR)/PEnvironment.cpp \
@@ -161,7 +200,8 @@ POBJECT_SRC  =  $(OBJECTS_DIR)/PEnvironment.cpp \
 		$(OBJECTS_DIR)/PTextObject.cpp \
 		$(OBJECTS_DIR)/PLabel.cpp \
 		$(OBJECTS_DIR)/PTextBox.cpp \
-		$(OBJECTS_DIR)/PMovie.cpp
+		$(OBJECTS_DIR)/PMovie.cpp \
+		$(OBJECTS_DIR)/PCustomObject.cpp 
 ##		$(PUTILITIES_SRC)
 
 
@@ -214,14 +254,17 @@ PLATFORM_SDL_INC  = 	$(patsubst %.cpp, %.h, $(PLATFORM_SDL_SRC))
 
 
 FUNCTIONLIB_SRC = $(LIBS_DIR)/PEBLMath.cpp \
-			  	$(LIBS_DIR)/PEBLStream.cpp \
-	 	  		$(LIBS_DIR)/PEBLObjects.cpp \
+	  	  $(LIBS_DIR)/PEBLStream.cpp \
+		  $(LIBS_DIR)/PEBLObjects.cpp \
                   $(LIBS_DIR)/PEBLEnvironment.cpp \
                   $(LIBS_DIR)/PEBLList.cpp \
                   $(LIBS_DIR)/PEBLString.cpp
 
+
+
 FUNCTIONLIB_OBJ =  $(patsubst %.cpp, %.o, $(FUNCTIONLIB_SRC))
 FUNCTIONLIB_INC =  $(patsubst %.cpp, %.h, $(FUNCTIONLIB_SRC))
+
 
 
 VCG_MAKER_SRC = $(BASE_DIR)/VCG.cpp  $(PEBLBASE_SRCXX)  $(POBJECT_SRC) $(FUNCTIONLIB_SRC) $(PUTILITY_SRC)
@@ -236,12 +279,13 @@ PEBLMAIN_SRC = 		$(APPS_DIR)/PEBL.cpp \
 			$(POBJECT_SRC) \
 			$(PUTILITIES_SRC) \
 			$(PLATFORM_SDL_SRC)
+###			$(LIB_SRC)
 
 PEBLMAIN_OBJ = $(patsubst %.cpp, %.o, $(PEBLMAIN_SRC))
 PEBLMAIN_INC = $(patsubst %.cpp, %.h, $(PEBLMAIN_SRC))
 
 PEBLMAIN_EXTRA = $(LIBS_DIR)/Functions.h \
-	           	$(OBJECTS_DIR)/RGBColorNames.h \
+	           	$(OBJECTS_DIR)/RGBColorNames.h 
 
 
 DIRS = \
@@ -255,7 +299,8 @@ DIRS = \
 	$(OBJ_DIR)/$(PLATFORMS_DIR) \
 	$(OBJ_DIR)/$(SDL_DIR) \
 	$(OBJ_DIR)/$(UTIL_DIR) \
-	$(OBJ_DIR)/$(TEST_DIR)
+	$(OBJ_DIR)/$(TEST_DIR) 
+
 
 ##############################
 # Dependencies
@@ -265,15 +310,26 @@ DIRS = \
 #	-L/home/smueller/Projects/src/waave-1.0/src -L/usr/lib  -L/usr/local/lib \
 #	-I/usr/include/SDL -I/usr/include -I/usr/local/include -D_REENTRANT \
 
+#d: 
+#	@echo $(PEBLMAIN_OBJ)
+
+
 main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
 	$(CXX) $(CXXFLAGS) -Wall -Wl,-rpath -Wl,LIBDIR $(DEBUGFLAGS) \
-	$(SDL_FLAGS)	\
+	$(SDL_FLAGS) -g	\
 	-o $(BIN_DIR)/pebl \
-	$(OSX_FLAGS) $(BASE_DIR)/$(PEBLBASE_SRC) $(patsubst %.o, $(OBJ_DIR)/%.o, $(PEBLMAIN_OBJ)) \
-	-lSDL -lSDLmain -lpthread -lSDL_image  -lSDL_ttf -lSDL_gfx  \
-	-lSDL_net -lpng  $(LINKOPTS)
+	$(OSX_FLAGS) $(BASE_DIR)/$(PEBLBASE_SRC) \
+	$(patsubst %.o, $(OBJ_DIR)/%.o, $(PEBLMAIN_OBJ)) \
+	-lSDL -lSDLmain -lpthread -lSDL_image -lSDL_net -lSDL_ttf -lSDL_gfx  \
+	-lpng   $(LINKOPTS)
 ##  -Wl,-V #verbose linking 
 ## -Wl,-rpath,/usr/lib \
+
+##Make emscripten target:
+em: 
+	~/src/emscripten-master/emcc -O2 src/apps/PEBL.cpp -I..  -o pebl.raw.js -s TOTAL_MEMORY=52428800 
+
+
 
 doc: $(PEBL_DOCSRC)
 	cd doc/pman; pdflatex main.tex
@@ -284,7 +340,7 @@ deb:    main doc
 
 parse:
 	bison -d $(BASE_DIR)/grammar.y -o $(BASE_DIR)/grammar.tab.cpp
-	flex -o$(BASE_DIR)/lex.yy.c  $(BASE_DIR)/Pebl.l
+	flex -o$(BASE_DIR)/lex.yy.c  $(BASE_DIR)/Pebl.l 
 
 parse-debug:
 	bison -d $(BASE_DIR)/grammar.y -t --verbose --graph=bison.vcg -o $(BASE_DIR)/grammar.tab.cpp
@@ -296,7 +352,7 @@ parse-debug:
 %.h:
 	@echo Updating %.h;
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $^ -o $(OBJ_DIR)/$@ $(SDL_FLAGS)
+	$(CXX) $(CXXFLAGS) -g -c $^ -o $(OBJ_DIR)/$@ $(SDL_FLAGS)
 
 
 $(DIRS): %:
@@ -344,6 +400,7 @@ install: uninstall
 	rm -rf `find $(PREFIX)share/pebl/media -type d -name .svn`
 	cp  pebl-lib/*.pbl $(PREFIX)share/pebl/pebl-lib/
 	cp doc/pman/PEBLManual$(PEBL_VERSION).pdf $(PREFIX)/share/pebl/doc
+	cp bin/launcher.pbl $(PREFIX)/share/pebl/pebl-lib/
 	chmod -R uga+r $(PREFIX)share/pebl/
 #	chmod +s $(PREFIX)bin/pebl ##suid root
 	cp -R battery/* $(PREFIX)share/pebl/battery
@@ -352,10 +409,10 @@ install: uninstall
 	rm -rf `find $(PREFIX)share/pebl/battery -type d -name .svn`
 	rm `find $(PREFIX)share/pebl/battery | grep \~`
 	rm -Rf `find $(PREFIX)share/pebl/battery | grep 'data'`
-	rm $(PREFIX)share/pebl/battery/launch.bat
-	rm $(PREFIX)share/pebl/battery/PEBLLaunch-log.txt
-	rm $(PREFIX)share/pebl/battery/*.config
-	rm $(PREFIX)share/pebl/battery/makelinks-mac.sh
+	rm -f $(PREFIX)share/pebl/battery/launch.bat
+	rm -f $(PREFIX)share/pebl/battery/PEBLLaunch-log.txt
+	rm -f $(PREFIX)share/pebl/battery/*.config
+	rm -f $(PREFIX)share/pebl/battery/makelinks-mac.sh
 ##Now, convert all the battery files to unix format.
 	find $(PREFIX)share/pebl/battery -name '*pbl' -exec dos2unix {} \;
 

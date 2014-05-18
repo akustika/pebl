@@ -448,3 +448,9 @@ define Filter(list,match)
 }
 
 
+
+define Bound(number,min,max)
+{
+   return Max([Min([number,max]),min])
+}
+

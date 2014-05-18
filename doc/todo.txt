@@ -1,11 +1,142 @@
 ========================================
+TODO for 0.14
+
+
+ *Add/fix probedigit
+ * flanker task--make neutral version flanked by lines (or at least add the condition) (DONE)
+ *switcher task--add debriefing (DONE)
+   - move mouse cursor a bit after each click so letter is not obscured. (DONE)
+
+ * setting bgcolor of a window doesn't seem to work; it 
+     distorts the color (at least one created with RGBColor) (FIXED)
+
+ * PropertyExists does not seem to work right (workaround with IsProperty in Utility.pbl); (now fixed).
+
+* look at Mueller-lyer illusion for better instructions (they appear not to change; works as intended)
+* Look into WritePNG on windows. (fixed)
+* Figure out d prime/beta calculation (done)
+
+ * fix/workaround or document font limitation to around 1000 fonts (mostly fixed; limit is now much higher, although not perfect)
+ * bring in satest fixes made to enable varying predator size and screen size. (DONE)
+ 
+* (temporary) xy coordinates of objectsmessedup. (fixed)
+- Seems to be a problem with setting x/y location of images that are scaled?  (Fixed)
+
+-Some crash in dots task with new evaluator. (fixed)
+ * Sublist does not provide useful error feedback. (DONE)
+ *TOH output is messed up supposedly. (DONE)
+ * Cannot enter | into text box... (fixed)
+
+ *fix subject code text getting blurry. (Done)
+ *Incorporate PAR scoring into BCST (DONE)
+
+* Mental Rotation: At least for version 0.11, there was a ton of output that takes (at least for us non-Linux users), a fair amount of post-processing. If it was possible to have a report which has the mean time and percent correct for each angle of rotation, that'd be helpful. (DONE)
+
+* Iowa: The Psychological Assessment Resources version has a brief (500 msec) delay after each selection. This helps to limit the potential that people just respond quick but thoughtlessly. There also is an audio component after each a response (I think it was a "cha-ching" after $ gained, a buzzer after $ lost). (DONE)
+
+
+ *nback hangs on second block???
+ -Runaway crash on demo/NBack.pbl  (maybe with new evaluator)(works now (or does it))
+
+ * Fix GetInput mouse event (DONE)
+ * Fix multi-parameter stuff (DONE; removed this; 
+                        need to fix the schema file for some test)
+  *Add ui for parameter sets files (DONE)
+
+Verify:
+
+2) Berg: If it'd be possible to get the mean (or median) response time for each response category, that'd be helpful. Admittedly, I may be the only one interested in these measures but I think there's some interesting info in these end-points that folks haven't considered because it wasn't available for the traditional (physical card) version.
+
+
+ *Document new parameter system
+ *Document new sound files *
+
+ Document the CustomObject object/functions:
+  GetPropertyList#*
+  SetProperty#*
+  GetProperty#*
+  PropertyExists#*
+  MakeCustomObject*#
+  IsCustomObject*#
+
+
+*Document the use of CombineDataFiles utility#
+*Document http check-in launcher
+
+
+
+*Document list option for second argument of ReplaceChar()#*
+*Document SplitStringSlow #*
+MakeButton*#
+PushButton*#
+MakePullDown#*
+PullDown#*
+UpdatePullDown#*
+DrawPullDown#*
+PopuUpMessageBox#
+PopuUpEntryBox#*
+MakeCheckBox*#
+ClickCheckBox*#
+SetCheckBox*#
+MakeTextlist#*
+MD5File#*
+MD5Sum#*
+GetNewDataFile()#*
+MakeScrollingTextBox*#
+SetScrollingText*#
+MakeScrollBox#*
+UpdateScrollBox#*
+DrawScrollBox#*
+ClickOnScrollBox#*
+
+InsideTB*#
+DrawObject*#,
+MoveObject*#,
+ClickOn *#
+Inside changes to handle custom objects. (DONE)
+
+MakeMenu#*
+MakeMenuItem#*
+
+ClickOnMenu#*
+OpenSubMenus+*
+
+
+
+*Document GetHTTPFile()#, GetHTTPText()#, PostHTTP()#
+
+
+ Remaining:
+
+*document  --resizeable
+* look into mis documentos\ stuff on xp and others 
+* investigate why spaces in filenames choke on windows.
+* Launcher chokes when there is a blank in the filename.(Verified works on linux)
+
+*Look at 64-bit parallel-port stuff
+ *make digitspan forward and backward parameter sets.
+
+
+ * Strange [<timeout>] response when we used waitforkeylistdown() (which is never really used).
+
+
+* zenhei font in standalone.
+
+
+
+ Blue Sky:
+*On-line experiment creator.
+ * Recording input only grabs 5 secs.
+ - Optional arguments???
+ - Allow Shuffle to take multiple arguments, which are shuffled in parallel??? (Not done)
+
+
 To Do for 0.13:
+=================================================================
 -  stdout.txt problems
 - windows launcher won't load files with spaces in their names.
 - installing overtop 0.12 can cause some problems.
 
-- Seems to be a problem with setting x/y location of images that are scaled?
-   (cannot replicate.)
 
 - determine whether secret abort code works on italian keyboards.
    (fixed...)
@@ -43,13 +174,11 @@ EasyLabel can't accept a number in the text variable. Maybe it should?
 
 - fix shuffling problem in BCST  ????
 
-
-
  - for battery, fix gsubnum stuff and screen resolution stuff. (Mostly fixed)
 
  - move GetEasychoice to libs; remove from battery tests that use it. ****DONE
 
- - Allow Shuffle to take multiple arguments, which are shuffled in parallel??? (Not done)
+
 
  - Create a PushOnEnd type function (DONE)
 

@@ -166,7 +166,7 @@ define FileSelect(p)
 				   {
                      MessageBox("Unable to fine PEBL Base Directory.  Please hard-code",gWin)
                    }
-				    gPEBLDir <- "%ProgramFiles%\PEBL"
+                   gPEBLDir <- "%ProgramFiles%\PEBL"
                    #SignalFatalError("Unable to find PEBL Base Directory.")
 				}
 			}
@@ -215,10 +215,9 @@ define FileSelect(p)
 
    win <- MakeWindow("grey90")
            	   
-    parPairs <- [["checkfornew",1],
+    parPairs <- [["checkfornew",0],
                  ["newest","0.14"],
-		 ["username",""],
-		 ["passwordhash",""]
+		 ["pwhash",""]
                 ]
 
 
@@ -226,15 +225,11 @@ define FileSelect(p)
     gParams  <- CreateParameters(parpairs,"params/launcher.pbl.par")
     	    
 
-        
-   if(gParams.username=="")
+
+   if(not gParams.pwhash=="2627692e567165c7a474f3ea97c07912")
    {
-      gParams.username <- PopUpEntryBox("Please enter a user name",win,
-                             [gVideoWidth/2,gVideoHeight/2])
-      password <- PopUpEntryBox("Please enter a password",win,  
-                             [gVideoWidth/2,gVideoHeight/2])
-      passwordhash <- MD5Sum(password)
-      gParams.passwordhash <- passwordhash
+      Draw()        
+      PopUpScreen(win)
    }
 
   plist <-[]
@@ -267,8 +262,8 @@ define FileSelect(p)
               ["ExitPEBL"])
 
    menu2<- MakeMenu("Options",90,0,win,14,120,    
-              ["Change launcher size"],
-              ["ChangeLauncherSize"])
+              ["Change launcher size","Set password"],
+              ["ChangeLauncherSize","SetPassword"])
 
     menu3 <- MakeMenu("Help",180,0,win,14,120,["About","Manual","Website", "PEBL Wiki","Tutorial","Review PEBL","Donate"],
           ["AboutMessage","OpenManual","GoToWeb","VisitWIKI","Tutorial","Review","Donate"])
@@ -463,6 +458,10 @@ define FileSelect(p)
    UpdateScrollbox(gPortal)			    
    DrawScrollbox(gPortal)
 
+
+
+   
+
    #if(gParams.checkfornew)
    if(0)
    {
@@ -505,9 +504,13 @@ define FileSelect(p)
 
 
 
-   gDescription <- MakeTextBox(gNoDesc,font,420,120)
-   AddObject(gDescription,win)
-   Move(gDescription,570,25)
+#   gDescription <- MakeTextBox(gNoDesc,font,420,120)
+#   AddObject(gDescription,win)
+#   Move(gDescription,570,25)
+
+  gDescription <- MakeScrollingTextBox(gNoDesc,570,25,win,
+                                10,420,120,1)
+
 
    title <- MakeMenuItem(gPEBLTitle+ GetPEBLVersion(),
                     gVideoWidth/2+100,0,win,14,150,"Draw")
@@ -548,6 +551,10 @@ define FileSelect(p)
 
   AddObject(gStdouthighlight,win)			       
   UpdateStdout(gMenuStdOut,[0,0])
+
+
+
+
 
    Draw()
    gCont <- 1
@@ -622,7 +629,7 @@ define FileSelect(p)
 	               last <- Nth(selectstack,Length(selectstack))
                        gselected <- First(last)
                        gPortal.selected <- First(last)
-		       Print("gPortal.selceted:" + gPortal.selected +"  " + gSelected)
+
 		       ##the selected item may be beyond maxitems.
 		       ##in this case, we need to update the offset.
                        if(gPortal.selected>gPortal.maxitems)
@@ -668,14 +675,12 @@ define FileSelect(p)
        gPortal.list <- DirToText(First(gfilelist),Second(gfilelist),   
                              gOffset,gDirChain)
 
-       Print("gPortal.selceted:" + gPortal.selected +"  " + gSelected)
+
        UpdateScrollbox(gPortal)			     
-       Print("gPortal.selceted:" + gPortal.selected +"  " + gSelected)
        ##selected gets updated here;
        DrawScrollbox(gPortal)
        gSelected <- gPortal.selected
-       Print("gPortal.selceted:" + gPortal.selected +"  " + gSelected)
-       Print("DONE")
+
        UpdateScreen(win)
    #    Draw()
 
@@ -688,23 +693,13 @@ define FileSelect(p)
 
       }elseif(tmp==6) ##hit 'run'
       {
-           PushButton(run,[0,0])
-          if(IsDirectory(DirListTotext(gDirChain)+Nth(gFlatFileList,gselected)))
+         PushButton(run,[0,0])
+        if(not IsPEBLFile(DirListTotext(gDirChain)+Nth(gFlatFileList,gselected)))
          {		
-             gDirChain <- AppendDirlist(gDirChain,Nth(gFlatFileList,gselected))
-             gfilelist <- FilterDir(GetDirectoryListing(DirlistToText(gDirChain)),
-                                            gDirChain,First(gFilters))
-             gFlatFileList <- Flatten(gfilelist)
- 	    gselected <- Length(First(gfilelist)) + 1
-	   if(gselected > Length(gFlatFileList))
-            {
-              gselected <- 1 
-            }
-	   gOffset <- 0
-
-
+	   PopUpMessageBox("Please select a .pbl file to run",win)
          } else {
 
+	   ##it is a real PEBL test:
        	  if(gnimhdemographics)
     	  {
 	      	  GetNIMHDemographics(gsubcode,win,"demographics-log.csv")
@@ -716,8 +711,6 @@ define FileSelect(p)
 	     { 
                  paramset <- "default"
              }else{
-	        Print(psetbox.list)
-		Print(paramindex)
 
   	         paramset <- Nth(psetbox.list,paramindex)
              }
@@ -925,7 +918,7 @@ define FileSelect(p)
 	    file <- DirListToText(gDirChain)+Nth(gFlatFileList,gselected)
   	    if(FileExists(file))
 	    {
-              LaunchFile(file)
+              LaunchFile(gQuote+file+gQuote)
 	    }else{
   	      PopupMessageBox("Unable to find file: ["+file+"]",win)
             }
@@ -952,31 +945,10 @@ define FileSelect(p)
 
 
 
-      } elseif(tmp==21) ##edit description
+      } elseif(tmp==21) ##handle clickon the description
       {
-        if(gEditDescription)
-         {
-           #
+        ClickOnScrollBox(gDescription,gClick)
 
-          if(GetSystemType()=="LINUX")
-          {
-    	   relx <- First(gClick) - (description.x )
-           rely <- Second(gClick) - (description.y )
-    	   cursorpos <-  GetTextBoxCursorFromClick(description,relx,rely)
-           description.cursorpos <- cursorpos 
-     	   Draw()
-  	        desctext <- GetInput(description,"<return>",1)
-           descname <- DirListToText(gDirChain)+Nth(gFlatFileList,gselected)+".about.txt"
-           outfile <- FileOpenOverWrite(descname)
-           FilePrint(outfile,desctext)
-           FileClose(outfile)
-
-         	#SystemCall(gViewerCommand + " " + DirListToText(gDirChain)+Nth(gFlatFileList,gselected)+".about.txt&")
-          } else {
-           # LaunchFile(DirListToText(gDirChain)+Nth(gFlatFileList,gselected)+".about.txt")
-	   ##we do nothing here.
-          }
-         }
       }elseif(tmp==22)
       {
             ClickCheckBox(demobox,[0,0])
@@ -1127,6 +1099,15 @@ define FileSelect(p)
        filter    <- MakeButton(First(gFilters),filter.x,filter.y,win,172)
        gfilelist <-  FilterDir(GetDirectoryListing(DirlistToText(gDirChain)),gDirChain,First(gFilters))
        gFlatFileList <- Flatten(gfilelist)
+
+       gPortal.list <-  DirToText(First(gfilelist),Second(gfilelist),   
+                             gOffset,gDirChain)
+
+       UpdateScrollbox(gPortal)			     
+       DrawScrollbox(gPortal)
+       UpdateScreen(win)
+
+
 
       }elseif(tmp==29)  ##29 == donate 
        {		
@@ -1283,31 +1264,33 @@ if(0)
        PushButton(params,[0,0])
 
         paramindex <- psetbox.selected
-        if(paramindex==0)
+        if(paramindex==0 or Length(psetbox.list)==0)
          {
-            paramset <- "default"
+             paramset <- "default"
           }else{
-           paramset <- Nth(psetbox.list,paramindex)
+             paramset <- Nth(psetbox.list,paramindex)
           }
           file <-  SetParameters(gDirChain,Nth(gFlatFileList,
                                       gselected),win,paramset)
 
        ## we need to update psetbox and select file if it exists.
           parfiles <- GetParFiles()   
+
           UpdatePulldown(psetbox,parfiles)
 
 	  ##find out best index.
-
+	  if(Length(parfiles)>0)
+          {
 	  loop(i, Sequence(1, psetbox.numitems,1))
 	  {
-	   Print("checking: " + NtH(psetbox.list,i) + "==" + file)
+
 	   if(Nth(psetbox.list,i)==file)
            {
              psetbox.selected <- i
 	     break
            }
 	  } 
-
+          }
           pselected <- psetbox.selected
 	  DrawPulldown(psetbox)
 
@@ -1899,7 +1882,7 @@ define GetStrings(lang)
 	gwebtext <- "Visit Website"
 	gWikiText <- "Wiki"
 	gLaunchChainText <- "Launch Chain"
-    gNoDesc <- "Please cite PEBL if you use it:"+CR(1)+"Mueller, S. T., & Piper, B. J. (2014). The Psychology Experiment Building Language (PEBL) and PEBL Test Battery. Journal of neuroscience methods (222), 250–259."
+    gNoDesc <- "Please cite PEBL if you use it:"+CR(1)+"Mueller, S. T., & Piper, B. J. (2014). The Psychology Experiment Building Language (PEBL) and PEBL Test Battery. Journal of neuroscience methods, 222, 250–259."
     gPEBLTitle <- "PEBL Launcher for "
     gPartCode <- "Participant Code:"
     gCustomText <- "Custom:"
@@ -1979,7 +1962,7 @@ define SendText(network,text)
 {
    len <- StringLength(text)
    
-   Print("Sending: [" + ZeroPad(len,10)+"]")
+#   Print("Sending: [" + ZeroPad(len,10)+"]")
 
    SendData(network,ZeroPad(len,10))
    SendData(network,text)
@@ -2179,11 +2162,9 @@ if(1)
 		
             dest <- ghome+ doc + "\pebl-exp.0.14" 
  	    #SystemCall("md " + dest +" >> "gHome+"\pebl_install_log.txt","")
-	    Print("Creating:"+gQuote+dest+gQuote)
+
             MakeDirectory(dest)
-	    Print(dest+"\battery")
 	    MakeDirectory(dest+"\battery")
-	    Print(dest+"\demo")
 	    MakeDirectory(dest+"\demo")
 
 	 ##copy test battery:
@@ -2213,12 +2194,8 @@ if(1)
 	
             dest <- ghome+ doc + "\pebl-exp.0.14" 
  	    #SystemCall("md " + dest +" >> "gHome+"\pebl_install_log.txt","")
-	    Print("Creating:"+gQuote+dest+gQuote)
-
             MakeDirectory(dest)
-	    Print(dest+"\battery")
 	    MakeDirectory(dest+"\battery")
-	    Print(dest+"\demo")
 	    MakeDirectory(dest+"\demo")
 
       inst.text <- "<"; Draw()
@@ -2307,9 +2284,8 @@ define SetParameters(dirChain,scriptname,win,parname)
   ts <- Transpose(schemas)
   defaults <- Transpose([First(ts),Second(ts)])
 
-##  Print("Reading parameters from: " + paramsfile)
   parameters <- CreateParameters(defaults,paramsfile)  
-##  PrintProperties(parameters)
+
 
   changed <- 0
 
@@ -2401,11 +2377,11 @@ index <- 1
         ##Multi-parameter property:
        loop(j,value)
          {
-          Print("saving:" + First(i)+"==" + Second(i) +"->" +j)
+
           FilePrint(pfile,First(i)+"*,"+j)
          }
        }else{
-         Print("saving:" + First(i)+"==" + Second(i) +"->" +value)
+
          FilePrint(pfile,First(i)+","+value)
 
        }
@@ -2461,11 +2437,11 @@ index <- 1
        {
        loop(j,value)
          {
-          Print("saving:" + First(i)+"==" + Second(i) +"->" +j)
+
           FilePrint(pfile,First(i)+","+j)
          }
        }else{
-         Print("saving:" + First(i)+"==" + Second(i) +"->" +value)
+
          FilePrint(pfile,First(i)+","+value)
 
        }
@@ -2589,7 +2565,7 @@ define LayoutPGrid(schemas,parameters,win)
 	pvalues <- SplitString(Second(i),",")
 	
        ##use CreateParameters to make sure these are converted to numbers
-       Print("pvalues:" + pvalues)
+
        fakeprop <- Repeat("fake",Length(pvalues))
        fakepar <- CreateParameters(Transpose([fakeprop,pvalues]),"")
        curvals <- fakepar.fake
@@ -2598,9 +2574,6 @@ define LayoutPGrid(schemas,parameters,win)
        curvals <- Second(i)
      }
 
-     Print("================================")
-     Print(parname )
-     Print(curvals)
 
      #Now, curval is either a list (for multi-parameters), or a value,
      ##based on the schema file.
@@ -2758,11 +2731,7 @@ define GetParFiles()
 
 define GetConfigFiles()
 {  
- Print("***********************")
- Print(gDirChain)
  dir <- DirListToText(gDirChain)  
- Print(dir)
- Print(GetDirectoryListing(dir))
  conffiles <- Second(FilterDir(GetDirectoryListing("./"),
                               gDirChain,"*.config"))
  return conffiles
@@ -2813,7 +2782,7 @@ define UpdateScreenResPulldown(pd)
   	    screenmodes <- Append(screenmodes,gCustomText)
 	  }
 
-	  Print(screenmodes)
+
 
 	  ##create a list of text-based screen modes to choose from:
           modes <- []
@@ -2830,12 +2799,12 @@ define UpdateScreenResPulldown(pd)
 	      tmp <- i
             }
 
-	    Print(tmp+"==="+currentxy)
+
 	    if(tmp==currentxy)
 	    { 
                tmp <- tmp + "*"
                selected <- index
-	       Print("Found selected!!")
+
        	    }
 
 	     modes <- Append(modes, tmp)
@@ -2934,6 +2903,13 @@ define GoToWeb(obj,click)
 	 Launchfile("http://pebl.sourceforge.net")	  
 }
 
+define SetPassword(obj,click)
+{
+         PopUpScreen(obj.win)
+
+}
+
+
 define VisitWiki(obj,click)
 {
        if(Length(gDirChain)>1)
@@ -2967,7 +2943,7 @@ define Donate(obj,click)
  
 define ReloadStdOutErr(obj,click)
 {
-  Print("reloading")
+
   ReadStdOutStdErr()
   if(gMessageBox.stdout)
   {
@@ -2982,14 +2958,13 @@ define ReloadStdOutErr(obj,click)
 define ReadStdOutStdErr()
 {	     
        file <- DirListToText(gDirChain)+"stdout.txt"
-       Print("file:" + file)
        if(FileExists(file))
           {
             gStdoutlist <- Merge(["stdout.txt"],FileReadList(file))
           }
 
          file <- DirListToText(gDirChain)+"stderr.txt"
-         Print("file:" + file)
+
           if(FileExists(file))
             {
   	       gStdErrlist <- Merge(["stderr.txt:"],FileReadList(file))
@@ -3138,10 +3113,134 @@ define UpdateScreen(win)
      if(FileExists(descname))
       {
          text <- FileReadText(descname)
-	 gDescription.text <-  text 
+         SetScrollingText(gDescription,text,1)
+	 DrawScrollBox(gDescription)
       } else {
-         gDescription.text <- gNoDesc
+         SetScrollingText(gDescription,gNoDesc,1)
+	 DrawScrollBox(gDescription)
       }
 
+}
+
+
+
+
+define PopUpScreen(win)
+{
+
+##here is the 'nag' screen.
+ text <- "Thank you for using PEBL: The Psychology Experiment Building Language. 
+
+We appreciate your support! This software is licensed with the GPLv2, and is provided free of charge.  You are free to modify, share, and redistribute PEBL, and unlike most commercial tests, you can observe how it works and what it calculates. Please cite PEBL if you use it:
+
+Mueller, S. T., & Piper, B. J. (2014). The Psychology Experiment Building Language (PEBL) and PEBL Test Battery. Journal of neuroscience methods, 222, 250–259.
+
+To skip this screen when you start-up, enter the password.  You can get a password by donating to the project, or by contributing in other ways to the project (translations, new tests, normative data, bug reports, writing wiki documentation, and so on)"
+
+
+  boxwidth <- 651
+  boxheight <- 301
+  if(not IsWindow(win))
+  { 
+    SignalFatalError("PopupEntryBox(win) needs a window to be specified, not [" + win + "]")
+  }
+
+
+
+   	   
+    xpos <- gVideoWidth/2
+    ypos <- gVideoheight/2
+  
+   bgcol <- win.BGCOLOR
+
+   popup  <- MakeCanvas(boxwidth,boxheight,MakeColor("grey60"))
+   Move(popup,xpos,ypos)
+   AddObject(popup,win)
+   
+   
+   bg <- Rectangle(boxwidth/2,boxheight/2,boxwidth-2,boxheight-2,bgcol,1)
+   AddObject(bg,popup)
+   font <- MakeFont(gPEBLBaseFont,0,13,MakeColor("black"),bgcol,0)
+   box <- MakeTextBox(text,font,boxwidth-20,boxheight-50)
+   Move(box, 10,20)
+   AddObject(box,popup)
+
+
+   Draw(popup)
+   Hide(bg)
+   Hide(box)
+
+##to accept clicks, these need to be on the main window.
+   entrybox <-  EasyTextBox("",gVideoWidth/2+5,
+                               popup.y+popup.height/2-70, 
+                               win,13,180,20)
+   ok    <- MakeButton("Enter/Confirm password:",gVideoWidth/2-95,entrybox.y+10,win,180)
+
+   try  <- MakeButton("Let me try first",gVideoWidth/2-200,entrybox.y+45,win,170)
+
+   donate <- MakeButton("Contribute and get password",gVideoWidth/2,entrybox.y+45,win,180)
+   contribute <- MakeButton("How else can I help?",gVideoWidth/2+200,entrybox.y+45,win,170) 
+
+   Draw()
+ 
+  cont <- 1
+  while(cont)
+  {
+
+   resp <- WaitForButtonClickOnTarget([entrybox,ok,try,donate,contribute],
+                                      [1,2,3,4,5])
+
+   id <- First(resp)
+   click <- Second(resp)
+   obj <- Third(resp)
+
+   if(id==1)
+    {
+
+	   relx <- First(gClick) - (entrybox.x )
+	   rely <- Second(gClick) - (entrybox.y )
+
+	   entrybox.cursorpos <- (GetTextBoxCursorFromClick(entrybox,relx,
+                                                                     rely))
+	   Draw()
+           pw  <- GetInput(entrybox,"<return>",1)
+
+    }elseif(id==2)
+    {
+     PushButton(obj,gClick)
+     ##check password here.
+      pw <- entrybox.text
+      passwordhash <- MD5Sum(pw)
+     Print(pw)
+     Print(passwordhash)
+
+      gParams.pwhash <- passwordhash
+      if(gParams.pwhash=="2627692e567165c7a474f3ea97c07912")
+      {
+        cont <- 0
+      }else{
+       PopUpMessageBox("Sorry, this password in incorrect.",win)
+       entrybox.text <- ""
+     }
+    }elseif(id==3)
+    {
+     PushButton(obj,gClick)
+     ##don't check password here.
+     cont <- 0
+     PopUpMessageBox("Please help support PEBL development or if you are able",win)
+   
+   }elseif(id==4){
+     PushButton(obj,gClick)
+     ##go to donation page
+     cont <- 0
+   }elseif(id==5){
+     PushButton(obj,gClick)
+     Launchfile("http://pebl.sourceforge.net/wiki/index.php/How_can_I_contribute")
+  }
+
+
+   Draw()
+  }
+   return entrybox.text
 }
 

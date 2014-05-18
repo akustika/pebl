@@ -118,10 +118,10 @@ define MoveCenter(object,x, y)
 
 ## This splits 'string' into a list, breaking each time 'split'
 ## appears in sting.  It discards the split token(s).
-## if split is "", split at each letter.  This should be able
-## to accept a list of split characters, but does not yet.  
-## Also, it could use the PEBLUtility::Tokenize, becoming a compiled function.
-define SplitString(string, split)
+## if split is "", split at each letter.  
+
+
+define SplitStringSlow(string, split)
 {
   ##Check to see if the arguments are of the right type.
  if(not IsString(string))
@@ -334,6 +334,16 @@ define ConvertIPString(ip)
 
 define ReplaceChar(word,char, char2)
 {
+    ##Handle character sets for replacement recursively.
+    if(IsList(char))
+    {
+       out <- word
+       loop(c,char)
+       {
+         out <- ReplaceChar(out,c,char2)
+       }    
+    }else{
+
    list <- SplitString(word, char)
    newString <- ""
    begin <- 0
@@ -347,7 +357,9 @@ define ReplaceChar(word,char, char2)
        newString <- newString + char2 + i
      }
    }
-    return newString
+   out <- newString
+  }
+    return out
 }
 
 ## Returns the element of database corresponding to the first match of
@@ -1087,8 +1099,7 @@ define CreateParameters(defaults,file)
     }
 
 
-  Print("defaults:")
-  PrintProperties(par1)
+
 
   ##############################
   ##Now, read in values from the file
@@ -1097,11 +1108,6 @@ define CreateParameters(defaults,file)
     parampairs <- ReadCSV(file)
     par2 <- MakeParameterObject(parampairs)
 
-
-    Print("filevalues")
-    Print(parampairs)
-   PrintProperties(par2)
-   Print("-------------------")
   ##now, we need to merge the two parameter sets together.  
   ##we should use defaults as the base, but copy anything from
   ## file to replace.
@@ -1113,6 +1119,8 @@ define CreateParameters(defaults,file)
      SetProperty(par1,p,GetProperty(par2,p))
   }
  }
+   Print("Parameters used:")
+   PrintProperties(par1)
   return par1
 }
 
@@ -1136,6 +1144,9 @@ define MakeParameterObject(pairs)
          val <- Second(i) ##use the format here directly;
                           ## these were set in-script
 
+	if(not val=="")
+        {
+    
 	 if(IsString(val))
 	 {
            ##convert to a number, if it will work
@@ -1148,6 +1159,7 @@ define MakeParameterObject(pairs)
           } 
 
          }
+        }
 	  ##does the property already exist?
 	  ##if so, add it to a list, which we create if needed.
 	  if(PropertyExists(parameters,property))
@@ -1186,12 +1198,20 @@ define MakeParameterObject(pairs)
 ## it query for a new subject code.
 ##
 
-define GetNewDataFile(subnum,win,basename,extension,header)
+define GetNewDataFile(subraw,win,basename,extension,header)
 {
+
+  ##for robustness, get rid of spaces and strange characters
+  ## in subject codes/basenames
+  subraw <- subraw+""
+  basename <- basename+""
+  gSubnum<-ReplaceChar(subraw, [" ","/","\",",",":"], "_" )
+  basename <-ReplaceChar(basename, [" ","/","\",",",":"], "_" )
+
   MakeDirectory("data")
-  MakeDirectory("data/"+subnum)
+  MakeDirectory("data/"+gSubnum)
   
-  fname <- "data/"+subNum+"/"+ basename +"-"+gSubNum+"."+extension
+  fname <- "data/"+gSubNum+"/"+ basename +"-"+gSubNum+"."+extension
 
   if(not FileExists(fname))
   {
@@ -1215,13 +1235,13 @@ define GetNewDataFile(subnum,win,basename,extension,header)
    {
 
      ##loop until we either append or make a new file.
-      Print("greset:" + gResetSubNum)
+     ##  Print("greset:" + gResetSubNum)
       if(gresetSubNum)   
        {
         opt <- "add"
        }else 
       {
-      opt <- GetEasychoice("Subject code ["+subnum+"] already in use for file ["+fname+"].  Choose new code or add session?",
+      opt <- GetEasychoice("Subject code ["+gSubnum+"] already in use for file ["+fname+"].  Choose new code or add session?",
           ["Choose new code","Add Session"], ["new","add"],win)
       }
 
@@ -1285,7 +1305,7 @@ define MoveObject(obj,x,y)
 {
   if(IsCustomObject(p))
    {
-     if(PropertyExists(p,"draw"))
+     if(PropertyExists(p,"move"))
      {	
       CallFunction(p.move,[p,x,y])
      }else {

@@ -36,7 +36,7 @@ define Start(p)
 }
 
  
-define FileExists(file)
+define FileExistsX(file)
 {
   return 1
 }

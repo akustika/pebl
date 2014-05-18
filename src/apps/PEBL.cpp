@@ -457,7 +457,7 @@ int PEBLInterpret( int argc, char *argv[] )
     //setenv()
 #endif
 
-    cout <<"About to create environment\n";
+    //cout <<"About to create environment\n";
 
     // We can't use any SDL-related functions before this function is called.
     // But we may want to know current screen resolution before we set displaymode
@@ -594,14 +594,14 @@ int PEBLInterpret( int argc, char *argv[] )
 #ifdef PEBL_EMSCRIPTEN
 
             myEval->Evaluate1(head);
-            cout << "Finished evaluating head1\n";
+            //cout << "Finished evaluating head1\n";
 
             //            while(myEval->GetNodeStackDepth()>0)
             //                {
             //                    myEval->Evaluate1();
             //                    cout << "step complete1\n";
             //                }
-            cout << "Evaluating first step\n";
+            //cout << "Evaluating first step\n";
             myEval -> Evaluate1();
             cerr << "Exiting main loop; going asynchronous\n";
             return 0;

@@ -3,7 +3,7 @@
 //    Name:       src/platforms/sdl/SDLUtility.h
 //    Purpose:    Contains miscellaneous utility functions.
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2012 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //
@@ -365,4 +365,10 @@ Variant SDLUtility::GetCurrentScreenResolution()
     PComplexData * pcd=new PComplexData(newlist2);
     return Variant(pcd);
 
+}
+
+
+void SDLUtility::CopyToClipboard(std::string text)
+{
+    //Not available in SDL 1.2
 }

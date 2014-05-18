@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLString.h
 //    Purpose:    List Manipulation Library for PEBL
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2004-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2004-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -39,6 +39,8 @@ namespace PEBLString
     Variant StringLength(Variant v);
     Variant SubString(Variant v);
     Variant FindInString(Variant v);
+    Variant SplitString(Variant v);
+    Variant CopyToClipboard(Variant v);
 }
 
 

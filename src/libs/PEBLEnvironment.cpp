@@ -1822,6 +1822,7 @@ Variant PEBLEnvironment::FileExists(Variant v)
     PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function [FileExists(<filename>)]:  ");
 
     Variant out = PEBLUtility::FileExists(plist->First());
+    //cout << "Fileexists:" << out << endl;
     return out;
 }
 

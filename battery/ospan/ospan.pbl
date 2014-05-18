@@ -238,7 +238,7 @@ define ShowTargetInputScreen(padKeys, testVals)
 	
 	# the main keypad
 	# positioning of main keypad starts from centre of screen
-	currY <- gVideoHeight/2-100	# TODO rename
+	currY <- gVideoHeight/2-150	# TODO rename
 	currX <- gVideoWidth/2 # TODO rename
 	currX <- currX - ( gGridNumCol-1)/2 * cellHeight # height==width here
 	currY <- currY - (gGridNumRow-1)/2 * cellHeight
@@ -363,7 +363,7 @@ define PresentStatic( timeout, centred, staticData, isLast )
 			Wait( 1800000 ) 
 		} else {
 			# show next button
-			spc<- 30
+			spc<- 50
 			keyHeight <- 1.9 * gLgFontSz
 			keyWidth<-3*keyHeight
 			kb <- MakeKB( gWin, ["Next"], gVideoWidth-keyWidth/2-spc, gVideoHeight-keyHeight/2-spc*3, 1, keyWidth, keyHeight, spc)

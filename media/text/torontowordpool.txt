@@ -970,6 +970,9 @@ CHIMNEY
 LION
 WEAKNESS
 COMPASS
+## This is the 'toronto' word pool.
+## 1000 items, see Friendly et al., 1982.
+##  See http://memory.psych.upenn.edu/Word_Pools
 MONKEY
 COURAGE
 LEGEND

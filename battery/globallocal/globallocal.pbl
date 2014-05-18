@@ -20,10 +20,14 @@ define Start(p)
 	       ["stim1","H"],
 	       ["stim2","S"],
 	       ["stimdummy","█"],#▓█▄
-	       ["giveErrorfeedback",1]
+	       ["giveErrorfeedback",1],
+	       ["doscatterconditions",1]
                ]
 
   gParams <- CreateParameters(parpairs,gParamFile)
+
+  gParams.scatterwidth <- 600
+  gParams.scatterheight <- 1
 
   gDebugDraw <- 0
   gSleepEasy <- 1
@@ -79,6 +83,8 @@ define Start(p)
    MakeDirectory("data")
    gFileOut <- GetNewDataFile(gSubNum,gWin,"globallocal","csv",
    "subnum,block,trial,correctresp,localstim,globalstim,consistency,correctLocal,correctGlobal,response,correct,time1,rt")
+
+    gReportfile <- GetNewdataFile(gSubNum,gWin,"globallocal-report","txt","")
 
    lab <- EasyLabel("Pre-Creating stimuli",gVideoWidth/2,100,gWin,22)
 
@@ -662,6 +668,251 @@ define Start(p)
       }
 
 
+
+if(gParams.doscatterconditions)
+{
+    block <- 6
+    ##Block 6: local mixed letters, distributed around the screen
+    footer3.text <- "Respond to small letters"
+    inst4 <- "Now, you will still need to decide between "+gParams.stim1+" or a "+gParams.stim2+", but they will appear as large squares or outlines of letters, created from individual letters, like you see below.   This round, each stimulus will be on a different area aof the screen. RESPOND TO THE SMALL LETTERS, and NOT THE LARGE OUTLINE.  Hit the space bar to begin"
+
+      tmp1 <- Nth(stimCacheL,1)
+      AddObject(tmp1,gWin)
+      Move(tmp1,gVideoWidth/2-300,gVideoHeight/2)
+      Show(tmp1)
+
+      tmp2 <- Nth(stimCacheL,4)
+      AddObject(tmp2,gWin)
+      Move(tmp2,gVideoWidth/2,gVideoHeight/2)
+      Show(tmp2)     
+
+      tmp3 <- Nth(stimCacheL,6)
+      AddObject(tmp3,gWin)
+      Move(tmp3,gVideoWidth/2+300,gVideoHeight/2)
+      Show(tmp3)     
+        
+      message.text <- inst4
+      Show(message)
+      Draw()
+      WaitForKeyPress(" ")
+
+      RemoveObject(tmp1,gWin)
+      RemoveObject(tmp2,gWin)
+      RemoveObject(tmp3,gWin)
+
+      loop(i,stimCacheL)
+      {
+        AddObject(i,gWin)
+	Move(i,gVideoWidth/2,gVideoHeight/2)
+	Hide(i)
+      }
+      Hide(message)
+      Draw()
+
+
+      trials <- Shuffle(RepeatList(Sequence(1,6,1),gParams.reps))
+
+       loop(i,trials)
+        {
+
+          stim   <- Nth(stimCacheL,i)
+	  positionX <- gVideoWidth/2 -gParams.scatterwidth/2 + Random()*gParams.scatterwidth 
+	  positionY <- gVideoHeight/2 -gParams.scatterheight/2 + Random()*gParams.scatterheight 
+	  Move(stim,positionX,positionY)
+          Show(stim)
+          Draw()
+          time1 <- GetTime()  
+      
+          resp <- WaitForListKeyPress(["<lshift>","<rshift>"])
+          time2 <- GetTime()
+
+
+      globalStim <- Nth(stimset,Nth(keyLocalGlobal,i))
+      localstim <- Nth(stimset,Nth(keyLocalLocal,i))
+
+
+          if(Uppercase(resp)=="<LSHIFT>")
+           {
+
+            correctGlobal <- globalstim == gParams.stim1
+            correctLocal <-  localstim == gParams.stim1
+           }else {
+
+            correctGlobal <- globalstim == gParams.stim2
+            correctLocal <-  localstim == gParams.stim2
+
+           }
+          corr <- correctLocal
+          Hide(stim)
+
+
+       correctresp <- localStim
+
+      consistency <- GetConsistency(globalstim, localstim)
+
+      FilePrint(gFileOut,gSubNum+","+block+","+trial+","+correctresp+","+
+                localStim+","+globalStim+"," +  consistency+","+correctLocal+","+
+                correctGlobal+"," +resp+","+corr+","+time1+
+                 ","+(time2-time1))
+
+      PushOnEnd(gDataBlock,block)
+      PushOnEnd(gDataConsistency,consistency)
+      PushOnEnd(gDataRT,(time2-time1))
+      PushOnEnd(gDataAcc,corr)
+
+      if(gParams.giveErrorFeedback) 
+       {
+            if(not corr) 
+            {
+             stimlabel.text <- "INCORRECT"
+	     } else {
+             stimlabel.text <- "CORRECT"
+             }
+
+	     Show(stimlabel)
+	     Draw()
+	     Wait(250)
+	     Hide(stimlabel)
+
+       }
+
+         Hide(stim)
+         Draw()
+         Wait(500)
+         trial <- trial + 1
+          
+        }
+
+      loop(i,stimCacheL)
+      {
+        RemoveObject(i,gWin)
+      }
+
+
+    block <- 7
+    ##Block 7: Global mixed letters, distributed aronud the screen
+    footer3.text <- "Respond to large letter"
+    inst5 <- "Now, you will still need to decide between "+gParams.stim1+" or a "+gParams.stim2+", and they will appear as large outlines of letters, created from individual letters or boxes, like you see below. This round, each stimulus will be on a different area aof the screen.  RESPOND TO THE LARGE LETTER SHAPES, and NOT THE individual letters making up the shape.  Hit the space bar to begin"
+
+      tmp1 <- Nth(stimCacheG,1)
+      AddObject(tmp1,gWin)
+      Move(tmp1,gVideoWidth/2-300,gVideoHeight/2)
+      Show(tmp1)
+
+      tmp2 <- Nth(stimCacheG,4)
+      AddObject(tmp2,gWin)
+      Move(tmp2,gVideoWidth/2,gVideoHeight/2)
+      Show(tmp2)     
+
+      tmp3 <- Nth(stimCacheG,6)
+      AddObject(tmp3,gWin)
+      Move(tmp3,gVideoWidth/2+300,gVideoHeight/2)
+      Show(tmp3)     
+         
+        
+      message.text <- inst5
+      Show(message)
+      Draw()
+      WaitForKeyPress(" ")
+
+      Hide(message)
+      RemoveObject(tmp1,gWin)
+      RemoveObject(tmp2,gWin)
+      RemoveObject(tmp3,gWin)
+
+      loop(i,stimCacheG)
+      {
+        AddObject(i,gWin)
+	Move(i,gVideoWidth/2,gVideoHeight/2)
+	Hide(i)
+      }
+
+      Draw()
+
+
+      trials <- Shuffle(RepeatList(Sequence(1,6,1),gParams.reps))
+
+       loop(i,trials)
+        {
+
+          stim   <- Nth(stimCacheG,i)
+
+	  positionX <- gVideoWidth/2 -gParams.scatterwidth/2 + Random()*gParams.scatterwidth 
+	  positionY <- gVideoHeight/2 -gParams.scatterheight/2 + Random()*gParams.scatterheight 
+	  Move(stim,positionX,positionY)
+
+          Show(stim)
+          Draw()
+          time1 <- GetTime()  
+      
+          resp <- WaitForListKeyPress(["<lshift>","<rshift>"])
+          time2 <- GetTime()
+
+
+        ##Global /local dimensions:
+        globalStim <- Nth(stimset,Nth(keyGlobalGlobal,i))
+        localstim <- Nth(stimset,Nth(keyGlobalLocal,i))
+
+
+       if(Uppercase(resp)=="<LSHIFT>")
+           {
+            correctGlobal <- globalstim == gParams.stim1
+            correctLocal <-  localstim == gParams.stim1
+           }else {
+
+            correctGlobal <- globalstim == gParams.stim2
+            correctLocal <-  localstim == gParams.stim2
+
+           }
+          corr <- correctGlobal
+          correctresp   <- globalStim
+
+      consistency <- GetConsistency(globalstim, localstim)
+
+      FilePrint(gFileOut,gSubNum+","+block+","+trial+","+correctresp+","+
+                localStim+","+globalStim+"," +  consistency+","+correctLocal+","+
+                correctGlobal+"," +resp+","+corr+","+time1+
+                 ","+(time2-time1))
+
+
+      PushOnEnd(gDataBlock,block)
+      PushOnEnd(gDataConsistency,consistency)
+      PushOnEnd(gDataRT,(time2-time1))
+      PushOnEnd(gDataAcc,corr)
+
+      Hide(stim)
+      if(gParams.giveErrorFeedback) 
+       {
+            if(not corr) 
+            {
+             stimlabel.text <- "INCORRECT"
+	     } else {
+             stimlabel.text <- "CORRECT"
+             }
+
+	     Show(stimlabel)
+	     Draw()
+	     Wait(250)
+	     Hide(stimlabel)
+
+       }
+
+         Hide(stim)
+         Draw()
+         Wait(500)
+         trial <- trial + 1
+          
+        }
+
+      loop(i,stimCacheG)
+      {
+        RemoveObject(i,gWin)
+      }
+
+
+   }
+
+
    ##Now, compute averages of consistent, inconsistent/neutral for each block
    dataset <- Transpose([gDatablock,gDataConsistency,gDataRT,gDataAcc])
 
@@ -670,7 +921,13 @@ define Start(p)
     accs <- []
     rts <- []
 
-   loop(i,[1,2,3,4,5])
+    if(gParams.doscatterconditions)
+    {
+      conds <- [1,2,3,4,5,6,7]
+    }else{
+      conds <- [1,2,3,4,5]
+    }
+   loop(i,conds)
     {
       filter <- Match(gDataBlock,i)
       trials <- Filter(dataset,filter)
@@ -689,7 +946,7 @@ define Start(p)
            { 
                ttdat <- Transpose(tmpdat)
                PushOnEnd(rtLine,Median(Nth(ttdat,3)))
-               PushOnEnd(accline,Median(Nth(ttdat,4)))
+               PushOnEnd(accline,Mean(Nth(ttdat,4)))
            } else{
                PushOnEnd(rtLine,"NA")
                PushOnEnd(accline,"NA")
@@ -699,46 +956,66 @@ define Start(p)
        PushOnEnd(accs,accline)
     }
 
- reportfile <- FileOpenWrite("data/globallocal-report-"+gSubNum+".txt")
 
-  FilePrint(reportfile,"PEBL Global-local interference task")
-  FilePrint(reportfile,"Version 1.0, Released 2014")
-  FilePrint(reportfile,TimeStamp())
-  FilePrint(reportfile,"PEBL Version: " +GetPEBLVersion())
-  FilePrint(reportfile,"--------------------------------------------------")
-  FilePrint(reportfile,"Response times (ms):")
-  FilePrint(reportfile,"--------------------------------------------------")
-  FilePrint(reportfile,"Condition         Incong   Neutral  Congr")
-  FilePrint(reportfile,"--------------------------------------------------")
+
+  FilePrint(gReportFile,"PEBL Global-local interference task")
+  FilePrint(gReportFile,"Version 1.0, Released 2014")
+  FilePrint(gReportFile,TimeStamp())
+  FilePrint(gReportFile,"PEBL Version: " +GetPEBLVersion())
+  FilePrint(gReportFile,"Elapsed time: " + (GetTime()/1000/60) + " min")
+  FilePrint(gReportFile,"--------------------------------------------------")
+  FilePrint(gReportFile,"Response times (ms):")
+  FilePrint(gReportFile,"--------------------------------------------------")
+  FilePrint(gReportFile,"Condition         Incong   Neutral  Congr")
+  FilePrint(gReportFile,"--------------------------------------------------")
   row <- First(rts)
-  FilePrint(reportfile,"Pure condition:    " + First(row) + "     " + Second(row) +  "        " + Third(row))
+  FilePrint(gReportFile,"Pure condition:    " + First(row) + "     " + Second(row) +  "        " + Third(row))
   row <- Second(rts)
-  FilePrint(reportfile,"Local 1-D:         " + First(row) + "     " + Second(row) +  "        " + Third(row))
+  FilePrint(gReportFile,"Local 1-D:         " + First(row) + "     " + Second(row) +  "        " + Third(row))
   row <- Third(rts)
-  FilePrint(reportfile,"Global 1-D:        " + First(row) + "     " + Second(row) +  "        " + Third(row))
+  FilePrint(gReportFile,"Global 1-D:        " + First(row) + "     " + Second(row) +  "        " + Third(row))
   row <- Fourth(rts)
-  FilePrint(reportfile,"Local mixed:       " + First(row) + "     " + Second(row) +  "        " + Third(row))
+  FilePrint(gReportFile,"Local mixed:       " + First(row) + "     " + Second(row) +  "        " + Third(row))
   row <- Fifth(rts)
-  FilePrint(reportfile,"Global mixed:      " + First(row) + "     " + Second(row) +  "        " + Third(row))
-  FilePrint(reportfile,"--------------------------------------------------")
+  FilePrint(gReportFile,"Global mixed:      " + First(row) + "     " + Second(row) +  "        " + Third(row))
 
-  FilePrint(reportfile,"--------------------------------------------------")
-  FilePrint(reportfile,"Accuracy (pc):")
-  FilePrint(reportfile,"--------------------------------------------------")
-  FilePrint(reportfile,"Condition         Incong   Neutral  Congr")
-  FilePrint(reportfile,"--------------------------------------------------")
+  if(gParams.doscatterconditions)
+ {
+  row <- Nth(rts,6)
+  FilePrint(gReportFile,"Local mixed/scatter:       " + First(row) + "     " + Second(row) +  "        " + Third(row))
+  row <- Nth(rts,7)
+  FilePrint(gReportFile,"Global mixed/scatter:      " + First(row) + "     " + Second(row) +  "        " + Third(row))
+
+ }
+
+  FilePrint(gReportFile,"--------------------------------------------------")
+
+  FilePrint(gReportFile,"--------------------------------------------------")
+  FilePrint(gReportFile,"Accuracy (pc):")
+  FilePrint(gReportFile,"--------------------------------------------------")
+  FilePrint(gReportFile,"Condition         Incong   Neutral  Congr")
+  FilePrint(gReportFile,"--------------------------------------------------")
   row <- First(accs)
-  FilePrint(reportfile,"Pure condition:    " + First(row) + "     " + Second(row) +  "        " + Third(row))
+  FilePrint(gReportFile,"Pure condition:    " + First(row) + "     " + Second(row) +  "        " + Third(row))
   row <- Second(accs)
-  FilePrint(reportfile,"Local 1-D:         " + First(row) + "     " + Second(row) +  "        " + Third(row))
+  FilePrint(gReportFile,"Local 1-D:         " + First(row) + "     " + Second(row) +  "        " + Third(row))
   row <- Third(accs)
-  FilePrint(reportfile,"Global 1-D:        " + First(row) + "     " + Second(row) +  "        " + Third(row))
+  FilePrint(gReportFile,"Global 1-D:        " + First(row) + "     " + Second(row) +  "        " + Third(row))
   row <- Fourth(accs)
-  FilePrint(reportfile,"Local mixed:       " + First(row) + "     " + Second(row) +  "        " + Third(row))
+  FilePrint(gReportFile,"Local mixed:       " + First(row) + "     " + Second(row) +  "        " + Third(row))
   row <- Fifth(accs)
-  FilePrint(reportfile,"Global mixed:      " + First(row) + "     " + Second(row) +  "        " + Third(row))
-  FilePrint(reportfile,"--------------------------------------------------")
-  FileClose(reportfile)
+  FilePrint(gReportFile,"Global mixed:      " + First(row) + "     " + Second(row) +  "        " + Third(row))
+
+  if(gParams.doscatterconditions)
+ {
+  row <- Nth(accs,6)
+  FilePrint(gReportFile,"Local mixed/scatter:       " + First(row) + "     " + Second(row) +  "        " + Third(row))
+  row <- Nth(accs,7)
+  FilePrint(gReportFile,"Global mixed/scatter:      " + First(row) + "     " + Second(row) +  "        " + Third(row))
+  }
+
+  FilePrint(gReportFile,"--------------------------------------------------")
+  FileClose(gReportFile)
 
 
 

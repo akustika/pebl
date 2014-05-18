@@ -1,8 +1,8 @@
-%product PEBL Version 0.12.3
-%copyright 2011 by Shane T. Mueller, Ph.D.
+%product PEBL Version 0.13.1
+%copyright 2013 by Shane T. Mueller, Ph.D.
 %vendor The PEBL Project pebl.sourceforge.net
 %description  Software for designing and running psychology experiments
-%version 0.12
+%version 0.13
 %readme doc/ReleaseNotes.txt
 %license COPYING
 %requires libsdl1.2debian 
@@ -12,7 +12,7 @@
 %requires libsdl-net1.2
 %requires libpng12-0
 f 755 root sys /usr/bin/pebl bin/pebl
-f 755 root sys /usr/lib/libsdl_audioin.so libs/libsdl_audioin.so
+#f 755 root sys /usr/lib/libsdl_audioin.so libs/libsdl_audioin.so
 d 755 root sys /usr/share/pebl
 d 655 root sys /usr/share/pebl/media
 d 655 root sys /usr/share/pebl/pebl-lib
@@ -26,7 +26,7 @@ f 644 root sys /usr/share/pebl/media/text media/text/*.txt
 f 644 root sys /usr/share/pebl/media/sounds media/sounds/*.wav
 f 644 root sys /usr/share/pebl/media/images media/images/*.png
 f 644 root sys /usr/share/pebl/pebl-lib pebl-lib/*.pbl
-f 644 root sys /usr/share/pebl/doc/PEBLManual0.12.pdf doc/pman/PEBLManual0.12.pdf
+f 644 root sys /usr/share/pebl/doc/PEBLManual0.13.pdf doc/pman/PEBLManual0.13.pdf
 f 644 root sys /usr/share/pebl/doc/ReleaseNotes.txt doc/ReleaseNotes.txt
 f 644 root sys /usr/share/pebl/doc/Colors.txt doc/Colors.txt
 f 644 root sys /usr/share/pebl/doc/PEBLTutorial.html doc/PEBLTutorial.html

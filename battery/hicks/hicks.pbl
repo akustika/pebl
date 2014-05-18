@@ -8,19 +8,19 @@ define Start(p)
 
 
   parpairs <- [["hilightcolor","red"],
-               ["numtrials","30"],
-	       ["itiMin",250],  ##intertrial interval min
-	       ["itiMax",750],  ##intertrial interval  max
+               ["numtrials","50"],
+	       ["itiMin",300],  ##intertrial interval min
+	       ["itiMax",500],  ##intertrial interval  max
 	       ["keylabels","1234567890"],
 	       ["givefeedback",1],
 	       ["round1","5"],
 	       ["round2","56"],
 	       ["round3","567"],
 	       ["round4","4567"],
-	       ["round5","34567"],
-	       ["round6","345678"],
-	       ["round7","2345678"],
-	       ["round8","23456789"]]
+	       ["round5","345678"],
+	       ["round6","23456789"],
+	       ["round7",""],
+	       ["round8",""]]
                
   gParams <- CreateParameters(parpairs,gParamFile)
 
@@ -115,9 +115,9 @@ Press any key to begin."
   report <- TimeStamp() + CR(1)+
   "Elapsed time:        " + (GetTime()/1000/60) + " min"+CR(1)+
   "Participant code:    " + gSubNum + CR(1) +
-"------------------------------------------------------------------
- Numoptions   Options   responses    Accuracy      Time (ms)
-------------------------------------------------------------------"+CR(1)
+"------------------------------------------------------------------------
+ Numoptions   Options   responses    Accuracy   Mean Time  Med. Time (ms)
+-------------------------------------------------------------------------"+CR(1)
 
 
   loop(i,dataSet)
@@ -126,12 +126,13 @@ Press any key to begin."
       data <- Second(i)
       acc <- Nth(data,2)
       rt  <- Nth(data,1)
+      rtmed <- Nth(data,4)
      report <- report + "     " +Length(stimcond)+ "        "  + Format(ListToString(stimcond),12)+ 
-         Nth(data,3) +"         " +Round(acc,3)+ "         " + rt + CR(1)
+         Nth(data,3) +"         " +Format(Round(acc,3),6)+ "    " + rt + "    "+rtmed + CR(1)
    }
 
 
-  report <- report +"------------------------------------------------------------------"
+  report <- report +"----------------------------------------------------------------------------------"
 
   Print(report)
   FilePrint(greportfile,report)
@@ -227,6 +228,7 @@ define Trials(numTrials, stimuli)
 
    totalcorr <- 0
    rtsum <- 0
+   rts <- []
 
   ##Now, create the stimuli
    stim <-SampleNWithReplacement(stimuli,numtrials)
@@ -280,10 +282,9 @@ define Trials(numTrials, stimuli)
 
      totalcorr <- totalcorr + correct
      rtsum <- rtsum + (time1-time0)
-
+     PushOnEnd(rts,(time1-time0))
    }   
 
-
-  return [rtsum/numtrials,totalcorr/numtrials,numtrials]
+  return [rtsum/numtrials,totalcorr/numtrials,numtrials,Median(rts)]
 }
 

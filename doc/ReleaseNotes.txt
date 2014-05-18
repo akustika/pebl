@@ -27,6 +27,119 @@ obsolete.
 
 
                  RELEASE NOTES
+
+
+Version 0.14
+
+
+===New Custom Object===
+- We've implemented a custom object data type, which can be created using MakeCustomObject().  The properties of a custom object can be created using either:
+object.property <- value
+
+or
+SetProperty(object,property,value)
+
+This comes with functions PropertyExists(), GetProperty, and GetPropertyList()
+
+This means that variable property names can be set from resource files. We have used this to create a new parameter setting convention that is now part of almost all test battery scripts.  The upshot is that all user-settable parameters are self-documented, default values can be overriden, and different version of a test can be run by setting up different parameter files via the launcher UI. 
+
+ 
+===HTTP access===
+ We've added several simple functions for interacting with internet services.  These include GetHTTPFile, GetHTTPText, PostHTTP, MD5Sum, and MD5File functions.  These should allow building interfaces to automatically upload data to a server, to download resources of an experiment, verify files are correct, etc.  
+
+(see http.pbl for example code)
+
+===Data saving===
+All the test battery tests now use a new function for data saving; GetNewdataFile().  THis will check to be sure you are not overwriting an old data file, and ask for renaming/appending.  New data files will all have header rows.  Also, each participant gets their own subdirectory.  
+
+
+===Data merging tool===
+To help combine data from multiple participants, we've added a little data file merger tool.  This can be used on any text-based data files (.txt, .csv, etc.), and will attempt to merge multiple files, enable pattern matching, remove header files, etc. 
+
+===PEBL Launcher===
+As discussed above, there are several updates to the PEBL Launcher:
+- Along with a button to access the data merger button
+- Donate button?
+- Parameter-setting
+- Version check-in
+- Randomize chain
+- Improvements to the file listing (you can now drag the listing around)
+- Better display of test previews; it now works when you just click on a directory.
+
+
+ Interface functions available outside:
+  Makebutton, makecheckbox, PushButton, ClickCheckbox,
+  Popupmessagbox
+  
+===Internal Updates and other new functions===
+-Updating Levels(), IsProperty(), ListBy(), and NonOverlapLayout()
+- Document ExtractListItems() function
+
+- internal things: evaluator is now a pointer,
+- Evaluator is now iterative rather than recursive.
+
+- Font handling: SDL library has a problem freeing font resources; this meant that if you opened too many fonts (around 1000, depending on OS), you could crash because you max out the file handles available.  We've created a workaround that let's you load more, at least until your memory runs out.  This is still a memory leak, and so you can avoid it by reusing fonts (and avoiding EasyLabel and EasyTextBox() functions within a trial), but we hope moving the SDL 2.0 will improve this.
+
+===Minor fixes===
+
+* now, a file will have two properties: filename, and direction.  Filename will get bound to the actual filename used to save the file (if a new filename was used because of a conflict).  Direction will get ethier READ or WRITE.
+
+-Fixed SDTDPrime so it computes d prime correctly (thanks Carlos Schlottfildt and others)
+-Setting xy position of scaled objects fixed.
+
+-you can now reset the background color of a window using the .bgcolor property
+
+
+-Audio playback issues.  If you try to load multiple soundfiles using LoadSound(), they need to get converted internally to a common playback format.  PEBL will use the format of the first sound file loaded in order to do this. However, you need to be careful when loading sounds of different sampling rates, because the internal functions in SDL 1.2 that do this are not able to do conversions that are not a power of 2. That is, if your first file has a rate of 44100 and your later files are 22050, you are fine, but if the later files are 16000, it will not be able to cleanly convert.  The newest version of SDL 2.03 supposedly fixes this, but we have not yet migrated to SDL 2.  the workaround is to resample your audio sothat they are at the same sampling rate (i.e., use audacity).
+
+
+
+
+
+===New Test Battery Tasks===
+
+-New scales: Handedness, bigfive, BNT
+- Added Esposito's BST
+- Added Random number generation
+- Added TSP task
+- A GlobalLocal task implemented.
+- New spatial priming task (see paper in PTR)
+- Dot judgment task revised
+- new Paired Associates Learning task.
+- new mathtest for training or testing simple math facts
+- Added Weather Prediction Task(Knowlton, Gluck)
+- Added simple change detection (Luck and Vogel procedure) task.
+- PAR scoring for BCST test
+- CPT-AX test (in the PCPT folder)
+- Reading span and Operation span task (contributed by David Hegarty)
+- Free recall task
+- RAT task (remote associates)
+- probe-digit (waugh and norman) task
+- Deese-roediger-mcdermott recognition memory paradigm
+- Ebbinghaus-inspired CVC learning task
+- Brown-peterson task
+
+
+===Other specific Test Battery Improvements===
+
+-SATest now lets you specify number of predators and prey.
+- Improvements to Bechara's gambling task (i.e., the iowa), to make it much closer to the currently-adopted computerized one.  It now includes much better feedback about whether errors are being made. These were provided by Peter Bull, and they supercede the older version.  Users who wish to use the old version can do so using iowa-old.pbl.
+
+-Improvements to the ANT task, contributed by  Paulo H Moraes, july 2013
+-Polish translation of TOL from Magda Piorkowska
+-Spanish translation of Hungry Donkey task Gabriela Guadalupe De Gyves Montes
+-Fixed pcpt.pbl randomization (thanks Philip Brittain)
+-TOL-dx test now defaults to no turn limit (consistent with Culburtson)
+- Fixed dspan data entry.
+- save survey.pbl files with 1/subject per row.
+- Added --<-- and -->-- type neutral conditions to flanker task.
+- Options in ptrails for improved path creation.
+- mouse movement in switcher task so it won't obscure the letter
+- many small fixes to test battery tests, improving layout for different screen sizes, data saving formats, and other minor bugs too numerous to mention
+-Added debriefing to switcher task
+ -Updated stroop tests: the old stroop task, which was mainly a demo, is now called stroop-demo.  Color and number-based stroop tests are available, as well as the short 'victoria' stroop (stroop-vic.pbl).
+
+#################################################################3
 ###
 Version 0.13
 

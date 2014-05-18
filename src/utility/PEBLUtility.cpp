@@ -184,6 +184,8 @@ Variant PEBLUtility::Tokenize(const char* line, char separator)
     int begin = 0;
     char * token;
 
+    int tokensize;
+
     //Go through each item of the string.  Cut a token whenever you get to a separator or
     //a character that might be the end of the line.
     while(true)
@@ -191,21 +193,38 @@ Variant PEBLUtility::Tokenize(const char* line, char separator)
             if(line[i] == separator
                || line[i] == '\0'
                || line[i] == 10
-               || line[i] == 13)
+               || line[i] == 13 
+               || separator == 0)
                 {
+
                     //line[i] is the separator; the token is from
                     //begin to line[i-1]
-                    token = (char*)malloc((i-begin+1+1) * sizeof(char));
-                    strncpy(token, &line[begin], i-begin);
-                    token[i-begin]='\0';
+
+                    //tokensize should be from begin to now, substracting out the separator.
+                    tokensize = i-begin+(separator==0);
+
+                    //if separator ==0, tokensize is really one bigger, as the separator width is 0.
+
+                    token = (char*)malloc((tokensize+1) * sizeof(char));
+                    strncpy(token, &line[begin], tokensize);
+                    token[tokensize]=  '\0';
+
 
                     plist->PushBack(Variant(token));
-                    begin = i+1;
+                    begin = i+1;  //move begin to the next piece of text.
                 }
+
 
             if(line[i] == '\0'|| line[i] == 10  || line[i] == 13)
                 break;
+
+            //we need to not copy a final empty element if separator==0
+            if(separator==0 and line[begin]=='\0')
+                {
+                    break;
+                }
             i++;
+
         }
 
     counted_ptr<PEBLObjectBase> tmpObj = counted_ptr<PEBLObjectBase>(plist);
@@ -1018,8 +1037,8 @@ Variant PEBLUtility::FileExists(std::string path)
     struct stat stFileInfo;
     //may need to use _stat on windows
     int out = stat(path.c_str(),&stFileInfo);
-     //cout << path.c_str()<<"\n";
-     //cout << "File info:" << out << endl;
+    //cout << path.c_str()<<"\n";
+    //cout << "File info:" << out << endl;
     //  We can get better info about the file
     //  if we look at out.
     return Variant(out==0);
@@ -1452,4 +1471,10 @@ std::string PEBLUtility::MD5File(const std::string & filename)
 std::string PEBLUtility::MD5String(const std::string & text)
 {
     return md5(text);
+}
+
+
+void PEBLUtility::CopyToClipboard(const std::string & text)
+{
+    
 }

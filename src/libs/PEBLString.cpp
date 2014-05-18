@@ -162,3 +162,45 @@ Variant PEBLString::FindInString(Variant v)
         return Variant((int)newpos+1);
 }
 
+
+
+
+// This splits the string by another string.  If second string is "", it splits ever character.
+Variant PEBLString::SplitString(Variant v)
+{
+   //v[1] should have the parameter: a list of keys to wait for.
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in first parameter of function SplitString(<string>,<substring>)]: ");  
+    std::string str1 = plist->First();// plist->PopFront();
+    
+    
+    PError::AssertType(plist->Nth(2), PEAT_STRING, "Argument error in second parameter of function SplitString(<string>,<substring>)]: ");  
+    std::string str2 = plist->Nth(2); //plist->PopFront();
+
+
+    std::string tmpstring = str1;
+    std::string sep = str2;
+    Variant  ret  =  PEBLUtility::Tokenize(tmpstring.c_str(),*(sep.c_str()));
+
+    return ret;
+}
+
+
+
+
+
+// This copies text to the OS clipboard.
+Variant PEBLString::CopyToClipboard(Variant v)
+{
+   //v[1] should have the parameter: a list of keys to wait for.
+    PList * plist = v.GetComplexData()->GetList();
+
+    PError::AssertType(plist->First(), PEAT_STRING, "Argument error in function CopyToClipboard(<string>)]: ");  
+    std::string str1 = plist->First();// plist->PopFront();
+    
+
+    PEBLUtility::CopyToClipboard(str1);
+    return Variant(1);
+}
+
