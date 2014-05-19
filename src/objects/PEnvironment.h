@@ -48,12 +48,14 @@ public:
 
     virtual bool AddWindow(PWindow * window);
 
-
+    //virtual std::string GetExecutableName(){return mExecutableName;};
+    //virtual void SetExecutableName(std::string name){mExecutableName=name;};
 protected:
     virtual std::ostream & SendToStream(std::ostream& out) const {return out;};
 
     bool mIsInitialized;
    
+    //std::string mExecutableName;
     // The main environment can
     // hold multiple PWindows; usually just one, but more if
     // you want separate interfaces for the subject and the experimenter.

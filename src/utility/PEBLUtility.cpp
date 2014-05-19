@@ -78,7 +78,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#ifdef PEBL_LINUX
+#if defined(PEBL_LINUX) or defined(PEBL_OSX)
 #include <sys/mman.h>
 #else
 #include "mman.h"
@@ -114,6 +114,7 @@ std::string PEBLUtility::ToLower(const std::string & text)
 // (ending with a '/' or '\'), it won't strip that character.
 const std::string PEBLUtility::StripFile(const std::string &  file)
 {
+    cout << "Stripping file " << file << endl;
 #if defined PEBL_UNIX
     char separator = '/';
 #else
@@ -121,7 +122,7 @@ const std::string PEBLUtility::StripFile(const std::string &  file)
 #endif
 
     int lastsep  = 0;
-    int i = file.size();
+    unsigned long int i = file.size();
     //end
     //Start at the end of the filename and move backward
     while(i > 0)
@@ -1164,7 +1165,7 @@ Variant PEBLUtility::GetHomeDirectory()
     {
         PError::SignalFatalError("Unable to find user's home directory!");
     }
-#elif defined(PEBL_LINUX)
+#elif defined(PEBL_LINUX) or defined(PEBL_OSX)
 
   struct passwd *p=getpwuid(getuid());
   std::string path = p->pw_dir;
@@ -1180,12 +1181,13 @@ Variant PEBLUtility::GetHomeDirectory()
 
 Variant PEBLUtility::GetWorkingDirectory()
 {
-#ifdef PEBL_WIN32
+#if defined(PEBL_WIN32) or  defined(PEBL_OSX)
     //maybe this will work given we compile with g++
 
     char *path=NULL;
     size_t size = 0;
     path=getcwd(path,size);
+
 
 #elif defined(PEBL_UNIX) //linux/osx
 
@@ -1256,15 +1258,15 @@ Variant PEBLUtility::LaunchFile(std::string file)
 
 
     std::string call2 = "gnome-open " + file;
-    x = system(call2.c_str());  //do a system call with the argument string.
-
+    int ret = system(call2.c_str());  //do a system call with the argument string.
+    x = !ret;
 
 
 
 #elif defined(PEBL_OSX)
      std::string call2 = "open " + file;
-     x = system(call2.c_str());  //do a system call with the argument string.
-
+     int ret  = system(call2.c_str());  //do a s string.
+     x = !ret;
 #endif
 
  return Variant(x);

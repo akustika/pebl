@@ -1751,6 +1751,17 @@ Variant PEBLEnvironment::GetSystemType(Variant v)
   return type;
 }
 
+Variant PEBLEnvironment::GetExecutableName(Variant v)
+{
+    SignalFatalError("Use gExecutableName");
+   //THis should access a global variable that is set up on startup
+   //that keeps track of the executable name.
+    //return myEnv->GetExecutableName();
+    return Variant(0);
+}
+
+
+
 
 Variant PEBLEnvironment::LaunchFile(Variant v)
 {

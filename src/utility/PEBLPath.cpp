@@ -157,6 +157,9 @@ void PEBLPath::Initialize(std::list<std::string> files)
 
 #elif defined PEBL_OSX
 
+    
+    
+       
 
 	// ----------------------------------------------------------------------------
 	// This makes relative paths work in C++ in Xcode by changing directory to the
@@ -300,28 +303,27 @@ string  PEBLPath::FindFile(const string & filename)
     int lengthp;
     int lengthfilename;
     string tmp;
-    while(p != mPathList.end())
-        {
-            lengthp = (*p).size();
-            lengthfilename = filename.size();
-            
-            tmp = (*p) + filename;
-            
-            
-            //Check to see if the file exists.
-            //cout << "Checking:" << tmp.c_str() << "|" << stat(tmp.c_str(), &st)<< endl;
-            if(stat(tmp.c_str(), &st)==0)
-                {
-                    //cout << "file ["<<tmp<<"] exists\n";
-                    //The file exists, so return it
-                    return tmp;
-                }
-            
-            //otherwise, increment and try again.
-            p++;
-        }
-    //If everything fails, return "".
-    return "";
+   while(p != mPathList.end())
+       {
+           lengthp = (*p).size();
+           lengthfilename = filename.size();
+
+           tmp = (*p) + filename;
+
+
+               //Check to see if the file exists.
+               //cout << "Checking:" << tmp.c_str() << stat(tmp.c_str(), &st)<< endl;
+               if(stat(tmp.c_str(), &st)==0)
+                   {
+                       //The file exists, so return it
+                       return tmp;
+                   }
+
+           //otherwise, increment and try again.
+           p++;
+       }
+   //If everything fails, return "".
+   return "";
 }
 
 

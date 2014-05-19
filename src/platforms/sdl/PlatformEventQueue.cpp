@@ -63,10 +63,10 @@ void PlatformEventQueue::Prime()
 
 	//Get the next event in the queue. SDL_PollEvent returns 0
     //when there are no pending events available.
+    //cout << "about to poll for event\n";
     while(SDL_PollEvent(&test_event))
         {
-            
-            //cout << time << endl;
+            //cout << "EVented\n";
             //cout << "Event [" << (int)(test_event.type) << "]\n";
 
             //first, check to see if the event is the 'magic' abort event: ctrl-alt-shift-X.

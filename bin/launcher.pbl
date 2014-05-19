@@ -43,7 +43,7 @@ define Start(p)
 	
      if(Length(p)>0)
 	  {
-  	    gPEBLDir  <- First(p)
+  	       gPEBLDir  <- First(p)
 	  } else {
            gPEBLDir <- GetWorkingDirectory()+"\..\"
 	  }
@@ -90,7 +90,7 @@ define Start(p)
 	      if(Length(list)>2)
                {
                  SetWorkingDirectory(gdest)
-                  FileSelect(["default.config"]) ##Giving an argument here will specify a data file
+                  FileSelect(["default.config"],p) ##Giving an argument here will specify a data file
                  } else{
                   RunFirstTime(p)
 		 }
@@ -103,7 +103,7 @@ define Start(p)
 }
 
 
-define FileSelect(p)
+define FileSelect(p,resources)
 {
   
  ##Set this from 1 to 0 to turn off automatic subject code incrementation
@@ -195,8 +195,11 @@ define FileSelect(p)
  
 
      gPEBLName      <- gExecutableName
+     Print("PEBL NAME:"+gPEBLName)
+     Print("PEBL NAME:"+gPEBLDir)
+
      gOpenManual    <- ""
-     gManualLoc     <- "/Applications/pebl.app/Contents/Resources/PEBLManual"+gPEBLVersion+".pdf"
+     gManualLoc     <- "PEBLManual"+gPEBLVersion+".pdf"
 
    }
 
@@ -2061,9 +2064,7 @@ define RunFirstTime(p)
              Print(p)
    	         resources <- Nth(p,1)
              Print("Resources:" + resources)
-	         targetdir <- Second(p)
-             home <- targetdir
-
+	         
 	         #resources <- "/Applications/pebl.app/Contents/Resources"
 
   		  } elseif(GetSystemType()=="WINDOWS")

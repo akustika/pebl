@@ -337,6 +337,7 @@ namespace PEBLEnvironment
             {(char*)"LAUNCHFILE",                      LaunchFile,        1,1},
             {(char*)"SYSTEMCALL",                      SystemCall,        1,2},
             {(char*)"VARIABLEEXISTS",                  VariableExists,    1,1},
+            {(char*)"GETEXECUTABLENAME",               GetExecutableName,  0,0},
 
 
             {(char*)"ISDIRECTORY",                     IsDirectory,        1,1},

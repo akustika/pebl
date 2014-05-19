@@ -106,7 +106,9 @@ namespace PEBLEnvironment
     Variant GetVideoModes(Variant v);
     Variant GetPEBLVersion(Variant v);
     Variant GetSystemType(Variant v);
+    Variant GetExecutableName(Variant v);
 
+    
     Variant LaunchFile(Variant v);
     Variant SystemCall(Variant v);
 
