@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env pebl
+#!/usr/bin/env pebl
 ##  This is a PEBL script that acts as a cross-platform 
 ##  launcher for PEBL.
 ##
@@ -13,13 +13,15 @@ define Start(p)
 {
 
 
+
     gdebug <- 0
     gUseReloc <-  0  ##Set this from 0 to 1 if you want to run on windows 
                    ## NOT from an installation in Program Files, but from
                    ##A PEBL subdirectory of the current working directory.
+    gPEBLVersion <- "0.14"
  
-	  if(gDebug)
-	  {
+     if(gDebug)
+     {
 	   gWin <- MakeWindow()
    
 	   gMessage <- EasyLabel("Started",200,200,gWin,12)
@@ -32,9 +34,9 @@ define Start(p)
 	
     if (gUseReloc)
 	    {
-		gPEBLDIR <- "PEBL"
-         	gDest <- ".\" ##was ghome. 
-                gHome <- ""
+		  gPEBLDIR <- "PEBL"
+          gDest <- ".\" ##was ghome. 
+          gHome <- ""
 
 		   FileSelect(["default"]) ##Giving an argument here will specify a data file
 		} else {
@@ -76,7 +78,7 @@ define Start(p)
              doc <- "/Documents"
 	}
 
-      gDest <- ghome+ doc + "/pebl-exp.0.14" 
+      gDest <- ghome+ doc + "/pebl-exp."+gPEBLVersion
       Print("starting in " + gDest)
 
 	 
@@ -136,9 +138,9 @@ define FileSelect(p)
 
     gViewerCommand <- "gedit"
     gPEBLName      <- "pebl"
-    gOpenManual    <- "acroread /usr/local/share/pebl/doc/PEBLManual0.14.pdf&"
+    gOpenManual    <- "acroread /usr/local/share/pebl/doc/PEBLManual"+gPEBLVersion+".pdf&"
     gOpenURL        <- "firefox"
-    gManualLoc      <- "/usr/local/share/pebl/doc/PEBLManual0.14.pdf"
+    gManualLoc      <- "/usr/local/share/pebl/doc/PEBLManual"+gPEBLVersion+".pdf"
 
 		
    }elseif(systemType=="WINDOWS")   {
@@ -175,9 +177,9 @@ define FileSelect(p)
 #     gPEBLName      <- "c:\Progra~1\PEBL\bin\pebl.exe "
      gPEBLName     <- gQuote+gPEBLDir+"\bin\pebl.exe"+gQuote+ " "
      gOpenManual    <- ""
-     gManualLoc     <-  gQuote+gPEBLDir+"\doc\PEBLManual0.14.pdf"+gQuote
+     gManualLoc     <-  gQuote+gPEBLDir+"\doc\PEBLManual"+gPEBLVersion+".pdf"+gQuote
      ##This shouldn't be hard-coded; but for now, change to localize.
-#     gManualLoc    <- "C:\Program Files\PEBL\doc\PEBLManual0.14.pdf"
+#     gManualLoc    <- "C:\Program Files\PEBL\doc\PEBLManual"+gPEBLVersion+".pdf"
      gOpenURL       <- ""
 
  if(gDebug)
@@ -188,8 +190,14 @@ define FileSelect(p)
    }elseif(systemType == "OSX")
    {
      gViewerCommand <- "open"
-     gPEBLName      <- "/opt/local/bin/pebl"
-     gOpenManual    <- "acroread /opt/local/share/pebl/doc/PEBLManual0.14.pdf"
+#     gPEBLName      <- "/opt/local/bin/pebl"
+#     gOpenManual    <- "acroread /opt/local/share/pebl/doc/PEBLManual"+gPEBLVersion+".pdf"
+ 
+
+     gPEBLName      <- gExecutableName
+     gOpenManual    <- ""
+     gManualLoc     <- "/Applications/pebl.app/Contents/Resources/PEBLManual"+gPEBLVersion+".pdf"
+
    }
 
    gSleepEasy <- 1
@@ -487,7 +495,7 @@ define FileSelect(p)
          }
    }else{
 
-    newlab <-"PEBL Version 0.14"
+    newlab <-"PEBL Version "+gPEBLVersion
    }
 
 #   newestlabel.text  <- newlab
@@ -2040,7 +2048,7 @@ define RunFirstTime(p)
     Print(p)
    if(Length(p)>1)
      {
-
+	
    	 resources <- Nth(p,1)
      ##Print("Resources:" + resources)
 	 targetdir <- Second(p)
@@ -2050,7 +2058,13 @@ define RunFirstTime(p)
     	 Print("using default resources")
    	    if(GetSystemType()=="OSX")
 		  {
-	           resources <- "/Applications/pebl.app/Contents/Resources"
+             Print(p)
+   	         resources <- Nth(p,1)
+             Print("Resources:" + resources)
+	         targetdir <- Second(p)
+             home <- targetdir
+
+	         #resources <- "/Applications/pebl.app/Contents/Resources"
 
   		  } elseif(GetSystemType()=="WINDOWS")
                     {
@@ -2097,7 +2111,7 @@ define RunFirstTime(p)
       }
      }
 	 
-	 targetDir <- "pebl-exp.0.14"
+	 targetDir <- "pebl-exp."+gPEBLVersion
 	
 	
     gVideoWidth <- 800
@@ -2136,10 +2150,12 @@ if(1)
      {
 	 if(GetSystemType()=="OSX")
 	  {
-         inst.text <- "<"; Draw()
-	  SystemCall("mkdir $HOME/Documents/pebl-exp.0.14 > ~/tmp.txt","")
-	  SystemCall("cp "+resources+"/fileselect.pbl $HOME/Documents/pebl-exp.0.14/ >> ~/tmp.txt","")
-	  SystemCall("cp -R "+resources+"/battery/ $HOME/Documents/pebl-exp.0.14/battery >> ~/tmp.txt","")
+	  SystemCall("mkdir $HOME/Documents/pebl-exp."+gPEBLVersion,"")
+	#  SystemCall("cp "+resources+"/fileselect.pbl $HOME/Documents/pebl-exp."+gPEBLVersion+"/","")
+	  SystemCall("cp -R "+resources+"/battery/ $HOME/Documents/pebl-exp."+gPEBLVersion+"/battery","")
+	  SystemCall("cp -R "+resources+"/demo/ $HOME/Documents/pebl-exp."+gPEBLVersion+"/demo ","")
+          SystemCall("cp -R "+resources+"/experiments/* $HOME/Documents/pebl-exp."+gPEBLVersion+"/demo ","")      
+          SystemCall("cp "+resources+"/PEBLManual"+gPEBLVersion+".pdf $HOME/Documents/pebl-exp."+gPEBLVersion+"/","")
 
 
 
@@ -2160,7 +2176,7 @@ if(1)
 		    doc <- "\My Documents"
 		}
 		
-            dest <- ghome+ doc + "\pebl-exp.0.14" 
+            dest <- ghome+ doc + "\pebl-exp."+gPEBLVersion 
  	    #SystemCall("md " + dest +" >> "gHome+"\pebl_install_log.txt","")
 
             MakeDirectory(dest)
@@ -2178,8 +2194,8 @@ if(1)
         #SystemCall("xcopy "+gQuote+resources+"\demo\*"+gQuote+" "+dest+"\demo"+" /e","")
 
         ##Copy doc:
-        Print("copy "+gQuote+resources+"\doc\PEBLManual0.14.pdf"+gQuote+" "+gQuote+dest+gQuote)
-        SystemCall("copy "+gQuote+resources+"\doc\PEBLManual0.14.pdf"+gQuote+" "+gQuote+dest+gQuote,"")
+        Print("copy "+gQuote+resources+"\doc\PEBLManual"+gPEBLVersion+".pdf"+gQuote+" "+gQuote+dest+gQuote)
+        SystemCall("copy "+gQuote+resources+"\doc\PEBLManual"+gPEBLVersion+".pdf"+gQuote+" "+gQuote+dest+gQuote,"")
 		
 	###########copy files on linux
        }elseif(GetSystemType()=="LINUX"){
@@ -2192,33 +2208,21 @@ if(1)
 	   doc <- "/Documents"
        } 
 	
-            dest <- ghome+ doc + "\pebl-exp.0.14" 
+            dest <- ghome+ doc + "\pebl-exp."+gPEBLVersion
  	    #SystemCall("md " + dest +" >> "gHome+"\pebl_install_log.txt","")
             MakeDirectory(dest)
 	    MakeDirectory(dest+"\battery")
 	    MakeDirectory(dest+"\demo")
 
       inst.text <- "<"; Draw()
-	  SystemCall("mkdir $HOME/Documents/pebl-exp.0.14 > ~/tmp.txt","")
-#      inst.text <- inst.text + "-"; Draw();WaitForDownClick()
-#	  SystemCall("cp -R "+resources+"/demo/ $HOME/Documents/pebl-exp.0.14/demo >> ~/tmp.txt","")
-#      inst.text <- inst.text + "-"; Draw();WaitForDownClick()
-#	  SystemCall("cp "+resources+"battery/fileselect.pbl $HOME/Documents/pebl-exp.0.14/ >> ~/tmp.txt","")
-#      inst.text <- inst.text + "-"; Draw();WaitForDownClick()
-	  SystemCall("cp -R "+resources+"/battery/ $HOME/Documents/pebl-exp.0.14/battery >> ~/tmp.txt","")
-#      inst.text <- inst.text + "-"; Draw();WaitForDownClick()
-#	  Systemcall("cp -R "+resources+"/PEBLdrop.app $HOME/Documents/pebl-exp.0.14 >> ~/tmp.txt","")
-#      inst.text <- inst.text + "-"; Draw();WaitForDownClick()
-#	  Systemcall("cp -R "+resources+"/PEBLdrop\ fullscreen.app $HOME/Documents/pebl-exp.0.14 >> ~/tmp.txt","")
-#      inst.text <- inst.text + "-"; Draw();WaitForDownClick()
-#	  Systemcall("cp -R "+resources+"/runlauncher.command $HOME/Documents/pebl-exp.0.14 >> ~/tmp.txt","")
-#     inst.text <- inst.text + "->"; Draw();WaitForDownClick()
+	  SystemCall("mkdir $HOME/Documents/pebl-exp."+gPEBLVersion+" > ~/tmp.txt","")
+	  SystemCall("cp -R "+resources+"/battery/ $HOME/Documents/pebl-exp."+gPEBLVersion+"/battery >> ~/tmp.txt","")
 		
 	  }
 
 
 		
-	   inst.text <- "Files copied. Next time you run PEBL, it will automatically run the launcher and show you the scripts in Documents/pebl-exp.0.14." + CR(1) +
+	   inst.text <- "Files copied. Next time you run PEBL, it will automatically run the launcher and show you the scripts in Documents/pebl-exp."+gPEBLVersion+"." + CR(1) +
 	    "Click the window to exit."
 	  
 	 } else {
