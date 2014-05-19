@@ -19,14 +19,15 @@ define Start(lPar)
 ### columns are:  rank	lemma	PoS	freq	dispersion
 ###
 
-  parpairs <- [["timelimit",60],    ##How many seconds should we allow?
+  parpairs <- [["timelimitC",240],    ##How many seconds should we allow for C?
                ["doC",1],
+	       ["timelimitS",300],    ##How many seconds should we allow for S?
 	       ["doS",1]
                ]
 
   gParams <- CreateParameters(parpairs,gParamFile)
 
-  gTimeLimit   <- gParams.timelimit
+
   gWin <- MakeWindow("black")
 
   cworddict <- FileReadList("cwords.txt")
@@ -38,10 +39,11 @@ define Start(lPar)
       gSubNum <- GetSubNum(gWin)
     }
 
-  MakeDirectory("data")	 
-  datafilename <- "data/wft-" + gSubNum + ".csv"
-  gFileOut <- FileOpenAppend(datafilename)
-  FilePrint(gFileOut,"subnum,letter")
+
+ header <- "subnum,stim,word,compcount,legalcompcount,time0,time1,time,rt,response,complete,newword,islegal")
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"wft","csv",header)
+
+
 #  Print("Running Subject " + gSubNum + ". Saving to file [" + datafilename + "].")
 
    cwords <- cworddict
@@ -49,16 +51,16 @@ define Start(lPar)
  resulttext <- ""
 if(gParams.doC)
   {
-   resultC <- CompletionTrial("C","CTEST",cworddict,25)
+   resultC <- CompletionTrial("C","CTEST",cworddict,gParams.timelimitC)
    resulttext <- resulttext + "You completed " +First(resultC) + " unique C words, "+Second(resultC) + " of which were in our dictionary"+CR(2)
   }
  if(gParams.doS)
   {
-   resultS <-   CompletionTrial("S","STEST",sworddict,25)
+   resultS <-   CompletionTrial("S","STEST",sworddict,gParams.timelimitS)
    resulttext <- resulttext + "You completed " +First(resultS) + " unique S words, "+Second(resultS) + " of which were in our dictionary"+CR(2)
 
   } 
-  MessageBox("Thank you for completing the test." + resultText, gWin)
+  MessageBox("Thank you for completing the test."+CR(1) + resultText, gWin)
 
 }
 
@@ -100,7 +102,7 @@ define CompletionTrial(stimulus,trialcode,dict,timelimit)
    completecount <- 0  #How many new words were generated?  Count that here
    legalcompletecount <- 0  #How many new words in the dictionary were generated?  Count that here
 
-   endtime <- GetTime() + gTimelimit*1000
+   endtime <- GetTime() + timelimit*1000
    ##This loop gives a minute to complete stems.
    while(GetTime() < endtime)
    {
