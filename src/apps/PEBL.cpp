@@ -133,12 +133,11 @@ PNode * head;
 
 int PEBLInterpret( int argc, std::vector<std::string> argv )
 {
-
     //argc is redundant here.
 #if defined(PEBL_UNIX) and not defined(PEBL_OSX)
-    if(argc==2 && strcmp(argv[1], "--install")==0)
+    if(argc==2 && strcmp(argv[1].c_str(), "--install")==0)
         {
-
+            
             string basedir = "";
             BrInitError error;
             if (br_init (&error) == 0 && error != BR_INIT_ERROR_DISABLED)
@@ -150,7 +149,7 @@ int PEBLInterpret( int argc, std::vector<std::string> argv )
             string prefix = br_find_prefix("/usr/local/");
             basedir = prefix + string("/share/pebl/battery/");
             string destdir = "~/Documents/pebl-exp.0.14";
-
+            
             //Now, copy everything in 'battery' to your documents directory.
             std::cerr << "Creating Documents/pebl-exp.0.14 Directory\n";
             PEBLUtility::SystemCall("mkdir ~/Documents","");
