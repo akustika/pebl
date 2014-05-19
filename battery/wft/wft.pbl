@@ -19,94 +19,49 @@ define Start(lPar)
 ### columns are:  rank	lemma	PoS	freq	dispersion
 ###
 
-  gTimeLimit   <- 60  ##How many seconds should we allow?
+  parpairs <- [["timelimit",60],    ##How many seconds should we allow?
+               ["doC",1],
+	       ["doS",1]
+               ]
 
+  gParams <- CreateParameters(parpairs,gParamFile)
+
+  gTimeLimit   <- gParams.timelimit
   gWin <- MakeWindow("black")
-  cworddict <- FileReadList("cwords.csv")
-  sworddict <- FileReadList("swords.csv")
+
+  cworddict <- FileReadList("cwords.txt")
+  sworddict <- FileReadList("swords.txt")
+
+
   if(gSubNum == "0")
     {
       gSubNum <- GetSubNum(gWin)
     }
+
   MakeDirectory("data")	 
   datafilename <- "data/wft-" + gSubNum + ".csv"
   gFileOut <- FileOpenAppend(datafilename)
   FilePrint(gFileOut,"subnum,letter")
-  Print("Running Subject " + gSubNum + ". Saving to file [" + datafilename + "].")
+#  Print("Running Subject " + gSubNum + ". Saving to file [" + datafilename + "].")
 
    cwords <- cworddict
 
-  CompletionTrial("C","CTEST",cwords,25)
+ resulttext <- ""
+if(gParams.doC)
+  {
+   resultC <- CompletionTrial("C","CTEST",cworddict,25)
+   resulttext <- resulttext + "You completed " +First(resultC) + " unique C words, "+Second(resultC) + " of which were in our dictionary"+CR(2)
+  }
+ if(gParams.doS)
+  {
+   resultS <-   CompletionTrial("S","STEST",sworddict,25)
+   resulttext <- resulttext + "You completed " +First(resultS) + " unique S words, "+Second(resultS) + " of which were in our dictionary"+CR(2)
 
+  } 
+  MessageBox("Thank you for completing the test." + resultText, gWin)
 
-
-  ##This loop creates a list of lists containing everything
-  ##needed for running a single 'trial'; the presentation of a
-  ##list and cues.
-
-
-  #Preliminary definitions
-  gWin <- MakeWindow("grey40")
-  fg <- MakeColor("Black")
-  bg <- MakeColor("Grey90")
-  instructionsFont <- MakeFont("Vera.ttf",0,24,fg, bg,0)
-  gStimulusFont <- MakeFont("Vera.ttf", 0, 28, fg, MakeColor("grey"),1)
-  gCueFont      <- MakeFont("VeraMono.ttf", 0, 22, MakeColor("red"), MakeColor("grey"),1)
-  gInputFont    <- MakeFont("VeraMono.ttf", 0, 22, fg, MakeColor("white"),1)
-  
-  
-  gCorrectFont <-  MakeFont("Vera.ttf",0,20,MakeColor("forestgreen"),MakeColor("white"),1)
-  gIncorrectFont <-  MakeFont("Vera.ttf",0,20,MakeColor("red"),MakeColor("white"),1)
-
-   
-  ## Get demographic information.
-#  GetNIMHDemographics(gSubNum, gWin, "data/x0402-demographics.txt")
-
-  instructions <- "For this task, you will see a letter, and we want you to generate as many words as you can that start with that letter."
-
- gInstructions <- MakeTextBox(instructions, instructionsFont, 700, 400)
-
-  gKeyCues <- MakeLabel("Press any key to begin trial",instructionsFont)
-  AddObject(gKeyCues,gWin)
-  Move(gKeyCues,gVideoWidth/2,gVideoHeight-100)
-
-
-  AddObject(gInstructions, gWin)
-  Move(gInstructions, 75,50)
-  Draw()
-  WaitForAnyKeyPress()
-  Hide(gInstructions)
-  Draw()
-  ##Do a practice round!!!
-
-
-  gInstructions.text <- "Great.  Now you will be tested with 16 consecutive words.  You will get one minute for each word pattern.  You should type any word you know that fits the pattern, whether or not it is a name, location, or slang.  Feel free to use foreign words if they are in common usage. Try to avoid entering responses that are not actual words or are misspelled.  If you repeat a word, it will not appear in the response box when you hit enter.  Press any key to begin."
-  Show(gInstructions)
-  Draw()
-
-  stim <- Shuffle(stim)
-
-  ###Present the stimuli
-  trial <- 1
-  loop(i,stim)
-   {
-      stem <-  First(i)
-	  lengthcode <-Second(i)
-	  cuecode <- Third(i)
-	  completions <- Fourth(i)
-
-
-	  Show(gKeyCues)
-	  Draw()
-	  WaitForAnyKeyPress()	  
-	  Hide(gInstructions)
-	  Hide(gKeyCues)
-
-	  trial <- trial + 1
-   }
-
-  
 }
+
 
 
 ##This function present a single probe, and collects all of the 
@@ -114,6 +69,8 @@ define Start(lPar)
 
 define CompletionTrial(stimulus,trialcode,dict,timelimit)
 {
+
+  MessageBox("Press any key to begin generating words starting with: "+ stimulus , gWin)
 
   time0 <- GetTime()
   item <- 1
@@ -141,6 +98,7 @@ define CompletionTrial(stimulus,trialcode,dict,timelimit)
 
 
    completecount <- 0  #How many new words were generated?  Count that here
+   legalcompletecount <- 0  #How many new words in the dictionary were generated?  Count that here
 
    endtime <- GetTime() + gTimelimit*1000
    ##This loop gives a minute to complete stems.
@@ -177,7 +135,7 @@ define CompletionTrial(stimulus,trialcode,dict,timelimit)
         
         }else {
         resp <- Uppercase(resp)	
-        Print(resp)
+
        if(resp == "<RETURN>")
      	 {
           done <- 1 
@@ -216,24 +174,28 @@ define CompletionTrial(stimulus,trialcode,dict,timelimit)
          }
        }
 		
-   
+     Print("********************")
 
 
-   Print("Response is:" + word)
+
    response <- word
    newword <- not IsMember(response,responses) and (not response=="")
    isLegal <- IsMember(Lowercase(word), dict)
 
+   Print(word + " " + isLegal)
   if(newword)
    {
      responses <- Append(responses,response)
      wordlist.text <- Tabulize(responses)
      completecount <- completecount + 1
+     legalcompletecount <-  legalcompletecount + isLegal
    }
+
+
    Draw()
    now<- GetTime()
 
-   FilePrint(gFileOut,gSubNum+","+stimulus+","+word+","+completecount+","+
+   FilePrint(gFileOut,gSubNum+","+stimulus+","+word+","+completecount+","+ legalCompleteCount + ","+
     time0+","+time1+","+now+","  +
         (now-time1)+","+response+","+completed+","+newword+","+islegal)
 
@@ -242,6 +204,8 @@ define CompletionTrial(stimulus,trialcode,dict,timelimit)
    fillin.text <- ""
    Draw()
    }
+
+   return [completecount, legalCompleteCount]
   }
 
 
