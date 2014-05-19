@@ -1,0 +1,269 @@
+##  This is an implementation of the Chicago Word Frequency Test, also known as the 
+##  Thurstone word fluency test.
+##  See:
+##  Thurstone, LL and Thurstone, TG. Primary Mental Abilities Chicago, 
+##  Univ. of Chicago Press ,1938 OCLC 741860993
+##
+##  With minor modifications, it could be turned into a version of the 
+## COWAT, found in the Halstead-Reitan battery.
+##
+
+define Start(lPar)
+{
+  #Create stimuli and cue lists.
+
+  gSleepEasy <- 1
+
+### These word lists come from: 
+### http://www.wordfrequency.info/files/entriesWithoutCollocates.txt
+### columns are:  rank	lemma	PoS	freq	dispersion
+###
+
+  gTimeLimit   <- 60  ##How many seconds should we allow?
+
+  gWin <- MakeWindow("black")
+  cworddict <- FileReadList("cwords.csv")
+  sworddict <- FileReadList("swords.csv")
+  if(gSubNum == "0")
+    {
+      gSubNum <- GetSubNum(gWin)
+    }
+  MakeDirectory("data")	 
+  datafilename <- "data/wft-" + gSubNum + ".csv"
+  gFileOut <- FileOpenAppend(datafilename)
+  FilePrint(gFileOut,"subnum,letter")
+  Print("Running Subject " + gSubNum + ". Saving to file [" + datafilename + "].")
+
+   cwords <- cworddict
+
+  CompletionTrial("C","CTEST",cwords,25)
+
+
+
+  ##This loop creates a list of lists containing everything
+  ##needed for running a single 'trial'; the presentation of a
+  ##list and cues.
+
+
+  #Preliminary definitions
+  gWin <- MakeWindow("grey40")
+  fg <- MakeColor("Black")
+  bg <- MakeColor("Grey90")
+  instructionsFont <- MakeFont("Vera.ttf",0,24,fg, bg,0)
+  gStimulusFont <- MakeFont("Vera.ttf", 0, 28, fg, MakeColor("grey"),1)
+  gCueFont      <- MakeFont("VeraMono.ttf", 0, 22, MakeColor("red"), MakeColor("grey"),1)
+  gInputFont    <- MakeFont("VeraMono.ttf", 0, 22, fg, MakeColor("white"),1)
+  
+  
+  gCorrectFont <-  MakeFont("Vera.ttf",0,20,MakeColor("forestgreen"),MakeColor("white"),1)
+  gIncorrectFont <-  MakeFont("Vera.ttf",0,20,MakeColor("red"),MakeColor("white"),1)
+
+   
+  ## Get demographic information.
+#  GetNIMHDemographics(gSubNum, gWin, "data/x0402-demographics.txt")
+
+  instructions <- "For this task, you will see a letter, and we want you to generate as many words as you can that start with that letter."
+
+ gInstructions <- MakeTextBox(instructions, instructionsFont, 700, 400)
+
+  gKeyCues <- MakeLabel("Press any key to begin trial",instructionsFont)
+  AddObject(gKeyCues,gWin)
+  Move(gKeyCues,gVideoWidth/2,gVideoHeight-100)
+
+
+  AddObject(gInstructions, gWin)
+  Move(gInstructions, 75,50)
+  Draw()
+  WaitForAnyKeyPress()
+  Hide(gInstructions)
+  Draw()
+  ##Do a practice round!!!
+
+
+  gInstructions.text <- "Great.  Now you will be tested with 16 consecutive words.  You will get one minute for each word pattern.  You should type any word you know that fits the pattern, whether or not it is a name, location, or slang.  Feel free to use foreign words if they are in common usage. Try to avoid entering responses that are not actual words or are misspelled.  If you repeat a word, it will not appear in the response box when you hit enter.  Press any key to begin."
+  Show(gInstructions)
+  Draw()
+
+  stim <- Shuffle(stim)
+
+  ###Present the stimuli
+  trial <- 1
+  loop(i,stim)
+   {
+      stem <-  First(i)
+	  lengthcode <-Second(i)
+	  cuecode <- Third(i)
+	  completions <- Fourth(i)
+
+
+	  Show(gKeyCues)
+	  Draw()
+	  WaitForAnyKeyPress()	  
+	  Hide(gInstructions)
+	  Hide(gKeyCues)
+
+	  trial <- trial + 1
+   }
+
+  
+}
+
+
+##This function present a single probe, and collects all of the 
+## responses, scoring for presence in the dictionary and for repetition
+
+define CompletionTrial(stimulus,trialcode,dict,timelimit)
+{
+
+  time0 <- GetTime()
+  item <- 1
+
+  timer <- EasyLabel("",50,50,gWin,45)
+
+  keys <- ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","<RETURN>","<BACKSPACE>","-"]
+
+  responses <- []
+  wordlist <- EasyTextBox("",gVideoWidth/2-350,150,gWin,22,700,440)
+  prompt <- EasyLabel("Hit enter to accept or backspace to edit",gVideoWidth/2,50,gWin,16)
+
+  ##The center of the first square
+  xmin <- gVideoWidth/2-250
+
+
+  bg1 <- MakeColor("grey")
+  fg <- MakeColor("black")
+  bg2 <- MakeColor("white")  
+
+
+   fillin <- EasyTextBox("",gVideoWidth/2-150,100,gWin,22,300,40)
+   label <- EasyLabel("Enter words that start with:" + stimulus,gVideoWidth/2,80,gWin,22)
+
+
+
+   completecount <- 0  #How many new words were generated?  Count that here
+
+   endtime <- GetTime() + gTimelimit*1000
+   ##This loop gives a minute to complete stems.
+   while(GetTime() < endtime)
+   {
+     time1 <- GetTime()
+
+    timer.text <- Round((endtime-GetTime())/1000)
+    ##This inner loop allows user to type.
+    
+   
+   ##Move past any letters that already exist
+   done <- 0
+   resp <- ""
+   word <- ""  ##initialize it to something good.
+
+   while(not done)
+   {
+      completed <- 0
+      timer.text <- Round((endtime-GetTime())/1000)
+    
+
+     #######################################
+      ##First, check to see if we are at the end of the word,
+      ## allow enter to verify
+
+
+       resp <-(WaitForListKeyPressWithTimeout(keys,200,1))
+       if(IsList(resp))
+        {
+          ##empty--uptade timera
+          timer.text <- Round((endtime-GetTime())/1000)
+  	  Draw()
+        
+        }else {
+        resp <- Uppercase(resp)	
+        Print(resp)
+       if(resp == "<RETURN>")
+     	 {
+          done <- 1 
+          completed <- 1
+	  
+        
+	}elseif(resp=="<BACKSPACE>") {  ##Backspace
+
+		    ##Simulate a backspace
+		    done <- 0
+                    length <- StringLength(word)
+                    if(length>0)
+                      {
+                        word <- SubString(word,1,length-1)
+                      }
+		    fillin.text <- word
+	           Draw()
+	} else{
+
+            ##A normal response:
+	    inp <- Uppercase(resp)
+             timer.text <- Round((endtime-GetTime())/1000)
+             word <- word + inp
+             fillin.text <- word
+	     Draw()
+        }
+
+
+	##What if the timer ends
+	if(GetTime()>endtime)
+		{
+                    completed <- 0
+		   done <- 1
+
+     		}
+         }
+       }
+		
+   
+
+
+   Print("Response is:" + word)
+   response <- word
+   newword <- not IsMember(response,responses) and (not response=="")
+   isLegal <- IsMember(Lowercase(word), dict)
+
+  if(newword)
+   {
+     responses <- Append(responses,response)
+     wordlist.text <- Tabulize(responses)
+     completecount <- completecount + 1
+   }
+   Draw()
+   now<- GetTime()
+
+   FilePrint(gFileOut,gSubNum+","+stimulus+","+word+","+completecount+","+
+    time0+","+time1+","+now+","  +
+        (now-time1)+","+response+","+completed+","+newword+","+islegal)
+
+   ##clear the bottom fillin text.
+   item  <- item + 1
+   fillin.text <- ""
+   Draw()
+   }
+  }
+
+
+
+
+
+define RemoveObjects(list,object)
+{
+		loop(i,list)
+		{		
+		  RemoveObject(i,object)
+		}
+}
+
+
+
+define Tabulize (list)
+{
+  tmp <- ""
+   loop(i,list)
+   {
+     tmp <- tmp + i+ "    "
+   }
+   return tmp
+}
