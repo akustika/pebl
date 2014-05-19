@@ -908,7 +908,7 @@ define Start(p)
 			    SendFile(network,fname,"USER"+RandomDiscrete(10000),message)
 			    message.text <-  "Data sent."
  	  	 	    message2.text <- "Press any key to return."
-             	            CloseNetworkConnection(network)
+                #CloseNetworkConnection(network)
 			}
 
 			Draw()
