@@ -34,9 +34,9 @@ define Start(p)
 	
     if (gUseReloc)
 	    {
-		  gPEBLDIR <- "PEBL"
-          gDest <- ".\" ##was ghome. 
-          gHome <- ""
+ 	    gPEBLDIR <- "PEBL"
+            gDest <- ".\" ##was ghome. 
+            gHome <- ""
 
 		   FileSelect(["default"]) ##Giving an argument here will specify a data file
 		} else {
@@ -739,8 +739,12 @@ define FileSelect(p,resources)
 
           if(gAutoSubCode)
            {
-	         gSubCode <- (ToNumber(gSubCode)+1)+""
-		 subjectbox.text <- gSubCode
+	      ##only do this if it survives a round-trip
+               if(ToInteger(gSubcode)+""==gSubcode+"")
+                {
+ 	          gSubCode <- (ToInteger(gSubCode)+1)
+                  subjectbox.text <- gSubCode
+                }
            }
 
           }
@@ -756,6 +760,12 @@ define FileSelect(p,resources)
 
 	   Draw()
 	   gsubcode <- GetInput(subjectbox,"<return>",1)
+           if(ToInteger(gSubcode)+""==gSubcode+"")
+              {
+ 	          gSubCode <- ToInteger(gSubCode)
+                  subjectbox.text <- gSubCode
+               }
+
 	   Hide(subboxhighlight)
 	   
       }elseif(tmp==8)
@@ -895,8 +905,12 @@ define FileSelect(p,resources)
       ##Increment subject code after you run
       if(gAutoSubCode)
          {
-           gSubCode <- (ToNumber(gSubCode)+1)+""
-           subjectbox.text <- gSubCode
+               if(ToInteger(gSubcode)+""==gSubcode+"")
+                {
+ 	          gSubCode <- (ToNumber(gSubCode)+1)
+                  subjectbox.text <- gSubCode
+                }
+
          }
 
       }elseif(tmp==14)  ##View debug output
@@ -1086,8 +1100,13 @@ define FileSelect(p,resources)
         
       } elseif(tmp==26)
       { 
-	    gSubCode <- (ToNumber(subjectbox.text)+1)+""
-            subjectbox.text <- gSubCode
+        ##increment!
+          if(ToInteger(gSubcode)+""==gSubcode+"")
+              {
+                  gSubCode <- (ToNumber(gSubCode)+1)
+                  subjectbox.text <- gSubCode
+               }
+   
 	    PushButton(subplusbutton,[0,0])
 
       } elseif(tmp==27)
@@ -1794,9 +1813,13 @@ define ReadConfigFile(configname)
 	   gfullscreen <- ToNumber(GetConfig("fullscreen",keys,config,0))
 	   gnimhdemographics <- ToNumber(GetConfig("nimhdemo",keys,config,0))
 	   gsubcode    <- GetConfig("subcode",keys,config,"0")
+
 	   if(gAutoSubCode)
             {
-	     gSubCode <- (ToNumber(gSubCode)+1)+""
+             if(ToInteger(gSubCode)+""==gSubcode+"")
+             {
+  	         gSubCode <- (ToInteger(gSubCode)+1)
+             }
             }
 
 

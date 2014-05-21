@@ -444,7 +444,7 @@ define EasyTextBox(text,x,y,win,fontsize,width,height)
 #  }
 
   font <-  MakeFont(gPEBLBaseFont,0,fontsize,MakeColor("black"),MakeColor("white"),1)
-  tb <- MakeTextBox(text,font,width,height)
+  tb <- MakeTextBox(text+"",font,width,height)
   AddObject(tb,win)
   Move(tb,x,y)
 

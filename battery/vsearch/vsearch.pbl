@@ -3,7 +3,7 @@
 ##  Part of the PEBL Test Battery, and the
 ##  PEBL Cognitive Decathlon
 ##
-## (c) 2010 Shane T Mueller smueller@obereed.net
+## (c) 2010-2014 Shane T Mueller smueller@obereed.net
 ##
 ## This software may be used, adapted, altered, or 
 ## redistributed without consent of the author.
@@ -102,7 +102,7 @@ define Start(p)
          FilePrint_(gFileOut,"," + j )
       }
     FilePrint(gFileOut,"")
-    trial <- trial + 1
+
 
     if(Mod(trial,30)==0)
      {
@@ -111,7 +111,10 @@ define Start(p)
 		Wait(1000)
 		Draw()
      }
-   triallab.text<- "Trial ["+trial+"] of ["+numtrials+"]"
+
+    trial <- trial + 1
+    triallab.text<- "Trial ["+trial+"] of ["+numtrials+"]"
+
    }
   MessageBox("Thank you for taking part in the study.",gWin)
 }

@@ -173,15 +173,18 @@ int PEBLInterpret( int argc, std::vector<std::string> argv )
     //This does not check for file validity, it just removes any other command-line options,
     //i.e. ones that are of the form <-flag> <option> or whatever.
    //
+
+#if 0
+    //THis is just for debugging purposes.
     //cout << "Arguments: "<< argv.size()<<"\n";
     std::vector<std::string>::iterator ii = argv.begin();
      while(ii != argv.end())
      {
-         //cout << *ii << endl;
+         cout << *ii << endl;
          ii++;
-         //cout << "********\n";
+         cout << "********\n";
      }
-    
+#endif    
     std::list<std::string> files = GetFiles(argc, argv);
 
     //Set up the search path.

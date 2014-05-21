@@ -10,6 +10,7 @@ define Start(par) {
   Move(tb,gVideoWidth/2-300,gVideoHeight/2-200)
 
   message <-  "PEBL VERSION:         ["+GetPEBLVersion()+"]"+CR(1)+
+              "System type:          ["+GetSystemType()+"]"+CR(1)+
               "Time of day:          ["+TimeStamp()+"]"+CR(1)+
 	      "Participant code:     ["+gSubNum+"]"+CR(1)+
 	      "Screen width:         ["+gVideoWidth+"]"+CR(1)+ 

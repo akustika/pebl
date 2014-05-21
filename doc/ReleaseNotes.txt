@@ -80,6 +80,9 @@ As discussed above, there are several updates to the PEBL Launcher:
 
 - Font handling: SDL library has a problem freeing font resources; this meant that if you opened too many fonts (around 1000, depending on OS), you could crash because you max out the file handles available.  We've created a workaround that let's you load more, at least until your memory runs out.  This is still a memory leak, and so you can avoid it by reusing fonts (and avoiding EasyLabel and EasyTextBox() functions within a trial), but we hope moving the SDL 2.0 will improve this.
 
+==The Toronto Word pool==
+The toronto word pool is now included, and can be accessed using FileLoadList("torontowordpool.txt").  This is handy for many types of list memory tests, including a new free recall task.
+
 ===Minor fixes===
 
 * now, a file will have two properties: filename, and direction.  Filename will get bound to the actual filename used to save the file (if a new filename was used because of a conflict).  Direction will get ethier READ or WRITE.
