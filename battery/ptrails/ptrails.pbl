@@ -382,10 +382,10 @@ define Trial(pts,type)
 
                 stimLines <- Append(stimLines,l)
                 AddObjects(stimLines,gWin)
-                AddObjects(stimObjects,gWin)
-                Draw()
-           }
 
+           }
+           AddObjects(stimObjects,gWin)
+           Draw()
            ## Increment the total distance travelled
            dist <- dist + Dist(last,next)
  
