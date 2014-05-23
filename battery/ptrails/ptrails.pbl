@@ -15,7 +15,8 @@ define Start(p)
 
                       ["useShortPath",1], ## Whether to shorten the path so points tend to
                                           ## be adjacent.
-		      ["shorteningtries",1],   ##how many attempts do you make to shorten the path?  Default is 1, which is the original way
+		      ["shorteningtries",1],   ##how many attempts do you make to shorten the path?  
+		                               ## Default is 1, which is the original way
 
 
 		      ["numtrials",4], ##total number of trials per condition (A and B)
@@ -162,7 +163,7 @@ After the display appears, you can examine the circles as long as you want.  Tim
 
 
          pts <- SortBy(pts,(Order(tour)))  #re-sort the original points
-         tourangles <- GetAngles(pts,i))   #find angles of the tour. These are
+         tourangles <- GetAngles(pts)   #find angles of the tour. These are
 	                                   #compute to range between 0 and pi, with 
 					   #pi=3.14 a straight line.  We want to get 
 					   #rid of straight lines to some extent.
@@ -219,7 +220,7 @@ After the display appears, you can examine the circles as long as you want.  Tim
    typeLabels <- ["numbers","alternating numbers and letters","letters"]
 
 
-   Print(pts)
+
 
    loop(i,Sequence(1,Length(pts),1))
     {
@@ -820,9 +821,12 @@ define GrowPathInsert(tour,pts,mat)
   return   toura
 }
 
-##inserts a single point to the closest location on a path.
+##inserts a single point (newpoint) to the closest location on a path.
 define InsertPointOnPath(path,newpoint,pts,mat)
 {
+     ##path and newpoint are point indices
+
+
 
        ##For the next item, look at the cost incurred by adding it to
        ##each of the parts.
@@ -833,7 +837,7 @@ define InsertPointOnPath(path,newpoint,pts,mat)
         xxx2 <-  DrawPath(path,ptssub)
         Draw()
      
-        #WaitForDownClick()  
+        WaitForDownClick()  
         RemoveObjects(xxx2,gWin)
        }
   
@@ -841,11 +845,15 @@ define InsertPointOnPath(path,newpoint,pts,mat)
       links <- Transpose([Rotate(path,-1),path, Rotate(path,1)])
       dists <- []
       angles <- []
+
+
      loop(i,links)
       {
+
         ## compute the cost to inserting between the two elements of i
         cost <- M(mat,Second(i),newpoint) + M(mat,newpoint,Third(i)) - M(mat,Second(i),Third(i))
-	angle <- GetAngle3(First(i),Second(i),Third(i))
+
+	angle <- GetAngle3(Nth(pts,First(i)),Nth(pts,Second(i)),Nth(pts,Third(i)))
         PushOnEnd(dists,cost)
 	PushOnEnd(angles,angle)
       }
@@ -882,8 +890,7 @@ define LengthenPath(tour,pts,mat,scalethresh)
      id2 <- Sample(ids)
      id1 <- id2-1
 
-     Print(tour)
-     Print(id1+"--"+id2)
+
      ptA <- Nth(pts,Nth(tour,id1-1))
      ptB <- Nth(pts,Nth(tour,id1))
      ptC <- Nth(pts,Nth(tour,id2))
