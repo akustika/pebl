@@ -87,7 +87,7 @@ define Start(p)
 
    newprobs <- SubList(newprobs,1,Min([Length(newprobs),gParams.maxprobs]))
 
-  header <- "subnum,block,trial,w1,w2,w3,answer,pdiff,zdiff,set,try,answer,trytime,thiscorr,final,time0,rt"
+  header <- "subnum,block,trial,w1,w2,w3,corranswer,pdiff,zdiff,set,try,answer,trytime,thiscorr,final,time0,rt"
   gFileOut <- GetNewDataFile(gSubNum,gWin,"RAT-byresp","csv",header)
   gFileOut2 <- GetNewDataFile(gSubNum,gWin,"RAT-FINAL","csv",header)
 
@@ -154,7 +154,8 @@ You will have "+gParams.timeout+" seconds per problem to identify the correct an
        FilePrint_(gfileOut,line)
        if(last)
        {
-         FilePrint(gFileOut2,line)
+         FilePrint(gFileOut,"")
+	 FilePrint(gFileOut2,line)
        }
 
        try <- try + 1
