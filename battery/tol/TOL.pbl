@@ -35,7 +35,7 @@
 ## Special thanks to Adam Thomas of NIH/NIMH for implementing the
 ##    TOL-R trials.
 ## Polish translation from Magda Piorkowska
-
+## Croatian (HR) courtesy Silvaja Rucevic
 define Start(p)
 {
 
@@ -1909,6 +1909,41 @@ define GetStrings(language)
     gDebriefing <- "Dziękuję za udział w badaniu. Eksperyment jest już skończony. Proszę nacisnąć dowolny klawisz, aby zakończyć."
     gContinueFail <- "Proszę kliknąć na ekranie aby przejść do kolejnego problemu."
 
+ } elseif(Uppercase(lang) == "HR") 
+     { 
+        ##Courtesy Silvaja Rucevic
+
+gSelect <- "Type number of test to use:"+ CR(2) +
+     "[1] Unconstrained pile heights, {3,4,5} disks, progressive difficulty, 24 trials"+CR(2)+
+     "[2] Unconstrained pile heights, {3,4,5} disks, Random presentation, 24 trials"+CR(2)+
+     "[3] Shallice test ([1,2,3] pile heights, 3 disks, Shallice's 12 problems."+CR(2)+
+     "[4] Shallice pile heights [1,2,3], 3 disks, 30  random trials."+CR(2)+
+     "[5] Phillips (1999) trials A (unconstrained piles, 5 disks, progressive difficulty, 8 trials)"+CR(2)+
+     "[6] Phillips (1999) trials B (unconstrained piles, 5 disks, progressive difficulty, 8 trials)"+CR(2)+
+     "[7] Phillips (1999) trials C (unconstrained piles, 5 disks, progressive difficulty, 8 trials)"+CR(2)+
+     "[8] Fimbel et al (2009) old: [1,2,3] pile heights, 3 disks, progressive difficulty, 15 trials)"+CR(2)+
+     "[9] Fimbel et al (2009) young: [1,2,3] pile heights, 3 disks, progressive difficulty, 35 trials)"+CR(2)+
+     "[0] TOL-R (Schnirman et al, 1998). [1,2,3] pile heights, 3 disks, 30 problems, time and move limit)"+CR(2)+
+     "[a] TOL-DX (Culbertson & Zillmer, 1998). [1,2,3] pile heights, 3 discs, 15 problems)"+CR(3)+
+     "Edit TOL.pbl directly to specify a test configuration automatically."
+
+    gHeaderLab <- "Ciljana"+CR(1)+"hrpa:"
+    gFooterLab <- "Pritisni na hrpu i pusti disk"
+
+    gInstText1 <- "Upravo cete sudjelovati u zadatku koji se zove Londonski toranj. Vas zadatak je da slozite diskove onako kako su prikazani na gornjem dijelu ekrana. Mozete pomicati disk po disk, ali ne mozete pomakntui disk na hrpu na kojoj vise nema mjesta (oznaceno velicinom sivog pravokutnika). Da bi ste pomakli disk kliknite na hrpu s kojeg ga zelite pomaknuti, nakon cega ce se disk pojaviti u ruci. Nakon toga, kliknite na hrpu na koju zelite staviti disk i on ce se spustiti na nju."
+    gInstText2 <- " Imat cete ograniceno vrijeme da biste zavrsili svaki zadatak.  Pokusajte zavrsiti zadatak unutar zadanog vremena."
+    gInstText3 <- " Imat cete ogranicen broj poteza da rijesite svaki zadatak. Prije prvog poteza razmislite o svakom zadatku kako biste bili sigurni da ga mozete rijesiti unutar zadanog broja poteza. Ukoliko ne zavrsite zadatak unutar ogranicenja on ce zavrsiti, a vi cete dobiti novi zadatak."
+    gBegin <-  "Pritisnite lijevo dugme misa za pocetak."
+    gContinue <- "Zavrsen pokusaj. "+CR(2)+ "Pritisnite misa da biste zapoceli novi zadatak."
+    gIncomplete <- "Nezavrsen zadatak. "
+    gClickLab <- "Broj poteza"
+    gTimeLab <-  "Vrijeme"
+    gMovesOutLab <-  "Niste uspjeli rijesiti zadatak u zadanom broju poteza."
+    gResetText   <- "Resetiraj zadatak"
+    gResetLab    <- "Kliknite na ekran da biste ponovili zadatak."
+    gTimeOutLab <-  "Isteklo vam je vrijeme."
+    gDebriefing <- "Hvala vam na sudjelovanju. Zadaci su gotovi.  Pritisnite bilo koju tipku za izlazak."
+    gContinueFail <- "Kliknite na ekran da biste zapoceli s novim zadatkom."
     } else{
      Print("Language: ["+lang+"] unknown.  Falling back on English translations.")
      GetStrings("en")

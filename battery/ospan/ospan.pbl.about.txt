@@ -1,8 +1,10 @@
 The PEBL Operation Span task
-By: David Lawrence Hegarty
+By: D.L. Hegarty & Dufflecoat Enterprises (2014)
+contact: dlhegarty@gmail.com or consulting@dufflecoat-enterprises.com
 Updated and maintained by Shane Mueller
 
 Licensed under GPLv3
+ospan based upon the original test created by Turner & Engle (1989), with automated modifications based on procedures outlined by Unsworth et al., (2009).
 
 Specific running conditions are set up in rundefn.txt. These have three trial types:
 
