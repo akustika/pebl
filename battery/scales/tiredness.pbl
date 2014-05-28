@@ -113,7 +113,6 @@ define Start(p)
    outline <- outline + ","+GetTime()
 
    MakeDirectory("data")
-
    out <- FileOpenAppend("data/tiredness-data.csv")
    FilePrint(out,outline)
 }

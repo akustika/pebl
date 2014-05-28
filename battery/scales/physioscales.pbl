@@ -1,3 +1,7 @@
+##PEBL Comfort and physiological state scales.
+## This asks four questions related to present comfort level,
+## hot/cold, wet/dry, and ambient temperature.
+
 define Start(p)
 {
 
