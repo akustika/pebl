@@ -3,4 +3,4 @@ Data are saved to gonogo\data\
 
 To cite:  Mueller, S. T. (2011). The PEBL Go/No-Go test. Computer software retrieved from http://pebl.sf.net/battery.html
 
-
+Translations avalable for Portuguese (PT) and Croation (HR).

@@ -6,6 +6,7 @@
 ##    doi: 10.1348/026151008X314919.
 ##    http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2757760/
 ##
+##  Croation translation (HR) By Silvija Rucevicgon
 
 define Start(p)
 {
@@ -353,6 +354,8 @@ define AddObjects(list,win)
 
 define GetStrings(lang)
 {
+
+
  if(Uppercase(lang)=="EN")
    {
 	gInst1 <- "In this task, you  will see a series of 'P's and 'R's on the screen. Whenever you see a 'P', respond by pressing the right shift key on the keyboard.  DO NOT RESPOND when you see an 'R'.  Most of the letters you see will be 'P's. You will begin with a few practice trials.  Press the right shift key to begin."
@@ -360,14 +363,26 @@ define GetStrings(lang)
 	gInst3 <- "You may take a short break before you continue.  In the second half of this study, the mapping will reverse.  This time, hit the right shift key only when you see the 'R', but not when you see a 'P'. Once again, most of the letters you see will  be 'P's. You will begin with a few practice trials.  Press the right shift key to begin."
 	gLab <- "Press <shift> for "
     gDebrief <- "Thank you for participating. "
+
   } elseif(Uppercase(lang)=="PT") {
+
+
 	gInst1 <- "Neste teste, irá ver uma série de 'P's e 'R's no ecrã. Sempre que surguir um 'P', responda pressionando a tecla Enter no teclado. NÃO RESPONDA quando surguir um 'R'.  A maioria das letras serão 'P's. Vai iniciar com alguns ensaios de prática. (Carregue na tecla Enter para começar)."
 	gInst2 <- "Agora, já sabe o que fazer nesta tarefa. Vai também deixar de ser avisado quando cometer um erro. (Carregue na tecla Enter para começar)."
 	gInst3 <- "Vai agora fazer um intervalo. Na segunda parte deste teste a regra vai mudar. Agora, vai carregar na tecla enter apenas quando surguir no ecrã um 'R' NÃO RESPONDA quando surguir um 'P'. Mais uma vez, a maioria das letras serão 'P's. Vai iniciar com alguns ensaios de prática. (Carregue na tecla Enter para começar)."
 	gLab <- "Carregue Enter para "
     gDebrief <- "Final. Bateria DPSM-HF "
- 
-  }else {
+
+   } elseif(Uppercase(lang)=="HR") {
+    ##By Silvija  } elseif(Uppercase(lang)=="HR") {
+
+	gInst1 <- "U ovom zadatku vidjet cete niz slova P i R na ekranu. Svaki put kada vidite slovo P pritisnite tipku SHIFT. NE ODGOVARAJTE kada vidite slovo R. Vecina slova koje cete vidjeti su slova P. Zapocet cete s nekoliko zadataka za uvjezbavanje. Pritisnite tipku SHIFT za pocetak."
+	gInst2 <- "Sada cete zapoceti s zadatkom za stvarno. Vise necete dobiti informaciju kada ste pogrijesili. Pritisnite bilo koju tipku za pocetak."
+	gInst3 <- "Mozete se malo odmoriti prije nego li nastavite. U drugom dijelu zadatka radit cete obrnuto. Ovaj put pritisnite tipku SHIFT kada vidite slovo R, ali ne kada vidite slovo P. Ponovno, vecina slova koju vidite bit ce slova P. Zapocet cete s nekoliko zadataka za uvjezbavanje. Pritisnite tipku SHIFT za pocetak."
+	gLab <- "Pritisite tipku shift za "
+    gDebrief <- "Hvala vam na sudjelovanju "
+
+    }else {
     GetStrings("EN")
   }
 }
