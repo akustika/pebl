@@ -374,7 +374,7 @@ define GetStrings(lang)
     gDebrief <- "Final. Bateria DPSM-HF "
 
    } elseif(Uppercase(lang)=="HR") {
-    ##By Silvija  } elseif(Uppercase(lang)=="HR") {
+    ##By Silvija  Rucevic
 
 	gInst1 <- "U ovom zadatku vidjet cete niz slova P i R na ekranu. Svaki put kada vidite slovo P pritisnite tipku SHIFT. NE ODGOVARAJTE kada vidite slovo R. Vecina slova koje cete vidjeti su slova P. Zapocet cete s nekoliko zadataka za uvjezbavanje. Pritisnite tipku SHIFT za pocetak."
 	gInst2 <- "Sada cete zapoceti s zadatkom za stvarno. Vise necete dobiti informaciju kada ste pogrijesili. Pritisnite bilo koju tipku za pocetak."
