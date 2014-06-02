@@ -1142,6 +1142,7 @@ define FileSelect(p,resources)
       }elseif(tmp==29)  ##29 == donate 
        {		
          PushButton(donate,[0,0])
+	 Launchfile("http://www.superiorideas.org/node/139")
 
 if(0)
 {
@@ -2957,14 +2958,15 @@ define VisitWiki(obj,click)
 
 define Review(obj,click)
 {
-     Launchfile("http://sourceforge.net/projects/pebl/reviews/")
+    PopUpMessageBox("A web browser should open to the PEBL Review page at http://sourceforge.net/projects/pebl/reviews/",obj.win)
+   Launchfile("http://sourceforge.net/projects/pebl/reviews/")
 
 }
 
 define Donate(obj,click)
 {
-     Launchfile("http://sourceforge.net/projects/pebl/reviews/")
-
+      PopUpMessageBox("A web browser should open to the PEBL donation page at      http://www.superiorideas.org/node/139",obj.win)	
+     Launchfile("http://www.superiorideas.org/node/139")
 }
 
 
@@ -3198,6 +3200,8 @@ To skip this screen when you start-up, enter the password.  You can get a passwo
    Hide(bg)
    Hide(box)
 
+
+
 ##to accept clicks, these need to be on the main window.
    entrybox <-  EasyTextBox("",gVideoWidth/2+5,
                                popup.y+popup.height/2-70, 
@@ -3208,6 +3212,28 @@ To skip this screen when you start-up, enter the password.  You can get a passwo
 
    donate <- MakeButton("Contribute and get password",gVideoWidth/2,entrybox.y+45,win,180)
    contribute <- MakeButton("How else can I help?",gVideoWidth/2+200,entrybox.y+45,win,170) 
+
+
+
+   thermo <- Rectangle(entrybox.x-entrybox.width/2,entrybox.y-entrybox.height/2,
+   0,entrybox.height,MakeColor("darkblue"),1)
+
+   AddObject(thermo,win)
+
+   Draw()
+   totaltime <- 2000
+   endtime <- GetTime()+totaltime
+   timeleft <- endtime - GetTime()
+   while( timeleft>0)
+   {
+      thermo.width <- entrybox.width* timeleft/totaltime
+      MoveCorner(thermo,entrybox.x,entrybox.y)
+      Draw()
+      Wait(5)
+      timeleft <- endtime - GetTime()
+   }
+   Hide(thermo)
+
 
    Draw()
  
@@ -3239,8 +3265,8 @@ To skip this screen when you start-up, enter the password.  You can get a passwo
      ##check password here.
       pw <- entrybox.text
       passwordhash <- MD5Sum(pw)
-     Print(pw)
-     Print(passwordhash)
+#     Print(pw)
+#     Print(passwordhash)
 
       gParams.pwhash <- passwordhash
       if(gParams.pwhash=="2627692e567165c7a474f3ea97c07912")
@@ -3260,9 +3286,12 @@ To skip this screen when you start-up, enter the password.  You can get a passwo
    }elseif(id==4){
      PushButton(obj,gClick)
      ##go to donation page
-     cont <- 0
+     Launchfile("http://www.superiorideas.org/node/139")
+    PopUpMessageBox("A web browser should open to the PEBL donation page at      http://www.superiorideas.org/node/139",win)
+ #    cont <- 0
    }elseif(id==5){
      PushButton(obj,gClick)
+    PopUpMessageBox("A web browser should open to the PEBL contributions page at http://pebl.sourceforge.net/wiki/index.php/How_can_I_contribute",win)
      Launchfile("http://pebl.sourceforge.net/wiki/index.php/How_can_I_contribute")
   }
 
