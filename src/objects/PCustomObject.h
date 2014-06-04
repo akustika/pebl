@@ -43,7 +43,7 @@ public:
 
     //overloaded generic PObject methods
     virtual bool SetProperty(std::string, Variant v);
-    virtual Variant GetProperty(std::string)const;
+     Variant GetProperty(std::string)const;
     virtual ObjectValidationError ValidateProperty(std::string, Variant v)const;
     virtual ObjectValidationError ValidateProperty(std::string)const;
 

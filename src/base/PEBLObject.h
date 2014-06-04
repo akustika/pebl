@@ -80,14 +80,14 @@ class PEBLObjectBase
 
     //Initializes the valid property names:
     virtual bool InitializeProperty(std::string name, Variant v);
-    
+
 
     //Sets the value of a valid property name.  Will not set invalid properties.
     virtual bool SetProperty(std::string name, Variant v);
 
-    virtual Variant GetProperty(std::string)const;
+    Variant GetProperty(std::string)const;
 
-    // This method needs to be overridden by child classes so that 
+    // This method needs to be overridden by child classes so that
     // want to verify whether a property/string combination is legal.
     // For example, most objects have only a few set legal property names;
     // and trying to set a different property will lead to an error.  Other
@@ -104,8 +104,8 @@ class PEBLObjectBase
     virtual Variant GetPropertyList();
  protected:
     virtual std::ostream & SendToStream(std::ostream& out) const;
-    ComplexDataType mCDT;  
-    
+    ComplexDataType mCDT;
+
     //Any object can contain a set of text-string addressable properties.
     std::map<std::string, Variant> mProperties;
 

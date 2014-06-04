@@ -133,11 +133,9 @@ PNode * head;
 
 int PEBLInterpret( int argc, std::vector<std::string> argv )
 {
-    //argc is redundant here.
 #if defined(PEBL_UNIX) and not defined(PEBL_OSX)
     if(argc==2 && strcmp(argv[1].c_str(), "--install")==0)
         {
-            
             string basedir = "";
             BrInitError error;
             if (br_init (&error) == 0 && error != BR_INIT_ERROR_DISABLED)
@@ -149,7 +147,7 @@ int PEBLInterpret( int argc, std::vector<std::string> argv )
             string prefix = br_find_prefix("/usr/local/");
             basedir = prefix + string("/share/pebl/battery/");
             string destdir = "~/Documents/pebl-exp.0.14";
-            
+
             //Now, copy everything in 'battery' to your documents directory.
             std::cerr << "Creating Documents/pebl-exp.0.14 Directory\n";
             PEBLUtility::SystemCall("mkdir ~/Documents","");
@@ -160,13 +158,6 @@ int PEBLInterpret( int argc, std::vector<std::string> argv )
         }
 #endif
 
-
-/*
-	for(int i = 0; i < argc; i++)
-	{
-      cout << argv[i] << endl;
-	}
-*/
     PNode * tmp = NULL;
 
     //Cycle through command-line parameters extracting the files.
@@ -176,7 +167,7 @@ int PEBLInterpret( int argc, std::vector<std::string> argv )
 
 #if 0
     //THis is just for debugging purposes.
-    //cout << "Arguments: "<< argv.size()<<"\n";
+    cout << "Arguments: "<< argv.size()<<"\n";
     std::vector<std::string>::iterator ii = argv.begin();
      while(ii != argv.end())
      {
@@ -184,7 +175,8 @@ int PEBLInterpret( int argc, std::vector<std::string> argv )
          ii++;
          cout << "********\n";
      }
-#endif    
+#endif
+
     std::list<std::string> files = GetFiles(argc, argv);
 
     //Set up the search path.
@@ -219,13 +211,13 @@ int PEBLInterpret( int argc, std::vector<std::string> argv )
 #else
     //Process the first command-line argument.
     std::list<std::string>::iterator i = files.begin();
-
+    i++;
 
     //-----------------------------------------------------------
     //        Process all files on the command-line
     //-----------------------------------------------------------
 
-	//std::cout << "Loading filename:[" << *i << "]\n";
+	std::cout << "Loading filename:[" << *i << "]\n";
 	string inputfilename = Evaluator::gPath.FindFile(*i);
     string otherfilename;
 
@@ -239,14 +231,15 @@ int PEBLInterpret( int argc, std::vector<std::string> argv )
         {
             PError::SignalFatalError("Unable to find file: [" + inputfilename + "].");
         }
-
+i++;
     //If there are any more arguments, process them by accomodating them
     //inside a function list.
 
     //Increment the iterator to move to the second command-line
-    i++;
+   // i++;
     while(i != files.end())
         {
+            std::cerr << "********************\n";
         	std::cerr << "Loading file name: ["      << *i <<"]"<< endl;
             otherfilename = Evaluator::gPath.FindFile(*i);
             std::cerr << "Resolved as: [" <<otherfilename <<"]"<< endl;
@@ -268,7 +261,7 @@ int PEBLInterpret( int argc, std::vector<std::string> argv )
             else
                 {
                     PError::SignalFatalError("Unable to find file: ["+*i+"] at [" + otherfilename + "]");
-                        //ignore mis-loaded files after the first; this is causing us 
+                        //ignore mis-loaded files after the first; this is causing us
                             //problems on osx
                 }
             i++;
@@ -363,7 +356,7 @@ int PEBLInterpret( int argc, std::vector<std::string> argv )
                             //This now works on Windows; windib versus directx.
 #if defined(PEBL_UNIX)
                             setenv("SDL_VIDEODRIVER", argv[j].c_str() ,1);
-#elif defined(PEBL_WINDOWS) 
+#elif defined(PEBL_WINDOWS)
 
                             _putenv((std::string("SDL_VIDEODRIVER=") + std::string(argv[j])).c_str());
 #endif
@@ -563,7 +556,7 @@ int PEBLInterpret( int argc, std::vector<std::string> argv )
 
     //Add the subject identifier.
     Evaluator::gGlobalVariableMap.AddVariable("gSubNum",subnum);
-    //If this is set to 1, we have reset the subject code, and 
+    //If this is set to 1, we have reset the subject code, and
     //it is presumably good for all future resets.
     Evaluator::gGlobalVariableMap.AddVariable("gResetSubNum",0);
 
@@ -597,7 +590,7 @@ int PEBLInterpret( int argc, std::vector<std::string> argv )
 
     //load the parameter file into a global variable
     Evaluator::gGlobalVariableMap.AddVariable("gParamFile",Variant(pfile));
-    
+
     //Now, everything should be F-I-N-E fine.
     head = myLoader->GetMainPEBLFunction();
 
@@ -700,7 +693,7 @@ void  CaptureSignal(int signal)
 
 int main(int argc,  char *argv[])
 {
-
+  int newargc = argc;
     //  Set up some signals to capture
 #ifdef SIGHUP
     signal(SIGHUP, CaptureSignal);
@@ -728,22 +721,25 @@ int main(int argc,  char *argv[])
 
     signal(SIGTERM, CaptureSignal);
 
-    char** new_argv = NULL;
+    //char** new_argv = NULL;
     std::vector<std::string> newargv;
-    //cout << "ARGC" << argc << endl ;
 
-    //myEnv->SetExecutableName(argv[0]);
-    
+    //cout << "ARGC" << argc << endl ;
+ //   if(PEBL_WIN32)
+ //  {
+ //     myEnv->SetExecutableName(argv[0]);
+ //   }
+
     //cout << PEBL_WIN32 << endl;
-    if(argc == 1)
+    if(newargc == 1)
         {
             //This indicates there are no command-line arguments.
 
 #ifdef PEBL_OSX
-  
+
              cout << "No command line arguments\n";
-            
-            
+
+
             //First, find the location of the app bundle:
 			CFBundleRef mainBundle = CFBundleGetMainBundle();
 			CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
@@ -760,7 +756,7 @@ int main(int argc,  char *argv[])
 			std::string base = (std::string)resourcepath ;
 			std::string launch = base + script;
 
-            
+
             //Identify home directory; it is an environment variable.
 			std::string home = "";
 			char* val = getenv("HOME");
@@ -769,12 +765,12 @@ int main(int argc,  char *argv[])
 				home = val;
 			}
 
-            
+
             //The launcher takes the resources directory as an argument, so create the argument
             std::string v = std::string("-v");
 
             //Set up the new argv/argc, to contain the launcher and the resource path
-            argc  = 4;
+            newargc  = 4;
 
 
             //Now, everything is ready.  Check for the pebl directory, if it  exists,
@@ -787,21 +783,21 @@ int main(int argc,  char *argv[])
 					base = home + "/Documents/pebl-exp.0.14/";
                     PEBLUtility::SetWorkingDirectory(base);
                     launch = script;
-               
+
                      //In this case, don't specify resources on the command line, so we only need 2 arguments.
-				   argc = 2;
+				   newargc = 2;
 
                    newargv.push_back(argv[0]);
                    newargv.push_back(launch);
-                   
+
                    //argv = new_argv;
                    //cout << newargv[0] << " " << newargv[1]  << endl;
-                   
+
 			   } else{
                    //pebl-exp.xx does not exist.  We need to run the launcher using the command line argument of resources to
                    //know where to copy from.
-                   argc = 4;
-      
+                   newargc = 4;
+
                    newargv.push_back(argv[0]);
                    newargv.push_back(launch);
                    newargv.push_back(v);
@@ -812,13 +808,13 @@ int main(int argc,  char *argv[])
                 }
 
 
-         
+
             //End OSX-specific code
 #elif defined(PEBL_WIN32)
 
            //cout << "Autolaunching PEBL\n";
            string basedir = PEBLUtility::StripFile(argv[0]) + "..\\";
-           // cout <<"basedir:"<< basedir << endl;
+            //cout <<"basedir:"<< basedir << endl;
 
 //This may work for vista+
 //TCHAR szFolderPath[MAX_PATH];
@@ -845,12 +841,16 @@ int main(int argc,  char *argv[])
 //    cout << "Destination: " << destdir << endl;
 //
 #endif
-			//See if $HOME/Documents/ and $Home/Documents/filelauncher.pbl exist.
+			//See if $launcher.pbl exist.
             // If so, run with those arguments.
-			std::string script = "\\bin\\launcher.pbl";
+			std::string script = "bin\\launcher.pbl";
 			std::string launch = basedir + script;
 
 			std::string v = (std::string)"-v";
+
+              //cout << "basedir: " << basedir << endl ;
+              //cout << "script " << script << endl ;
+              //cout << "launch: " << launch << endl ;
 
 
 #if (0)
@@ -865,30 +865,34 @@ int main(int argc,  char *argv[])
 				    launch = script;
 
 				    v = "";
-				   argc = 2;
+				   newargc = 2;
 			   }
 #endif
 
             //Now, launch the script file we care about.
-			//std::cout << "*************************launch script:" << launch << endl;
-            argc = 4;
-			new_argv = new char*[4];
-			new_argv[0]=argv[0];
+			std::cout << "*************************launch script:" << launch << endl;
+            newargc = 4;
+
+            newargv.push_back(argv[0]);
+            newargv.push_back(launch);
+            newargv.push_back(v);
+            newargv.push_back(basedir);
+			//new_argv = new char*[4];
+			//new_argv[0]=argv[0];
 
 			//This doesn't work, because launch is gone by the time PEBLInterpret gets run
-			char *plaunch = new char[launch.size()+1];
-			strcpy(plaunch,launch.c_str());
-			char *pv     = new char[v.size()+1];
-			strcpy(pv,v.c_str());
-			char *presources  = new char[basedir.size()+1];
-			strcpy(presources,basedir.c_str());
+			//char *plaunch = new char[launch.size()+1];
+			//strcpy(plaunch,launch.c_str());
+			//char *pv     = new char[v.size()+1];
+			//strcpy(pv,v.c_str());
+			//char *presources  = new char[basedir.size()+1];
+			//strcpy(presources,basedir.c_str());
 		//	char *pdest = new char[destdir.size()+1];
 		//	strcpy(pdest,destdir.c_str());
 
-
-			new_argv[1]= plaunch;
-			new_argv[2]= pv;
-			new_argv[3]= presources;
+			//new_argv[1]= plaunch;
+			//new_argv[2]= pv;
+			//new_argv[3]= presources;
            // new_argv[4]= pv;
            // new_argv[5]= pdest;
             // argv = new_argv;
@@ -903,14 +907,15 @@ int main(int argc,  char *argv[])
 #endif
         } else{
             //This is what happens when argc != 1 (when there ARE arguments), on any platform
-         
+
             for(int i=0; i < argc; i++)
              {
                newargv.push_back(argv[i]);
+                cout << argv[i] << endl;
              }
         }
 
-    return PEBLInterpret(argc, newargv);
+    return PEBLInterpret(newargc, newargv);
 }
 
 
@@ -919,10 +924,11 @@ std::list<std::string> GetFiles(int argc,  std::vector<std::string> argv)
 {
 
     std::list<std::string> tmp;
-    
     std::vector<std::string>::iterator i = argv.begin();
-    i++;
-    
+
+
+//    i++;
+
     while(i != argv.end())//int i = 1; i < argc; i++) //skip the first argv, which is just executable name.
         {
             if(i->compare( "-v")==0 ||
@@ -931,7 +937,7 @@ std::list<std::string> GetFiles(int argc,  std::vector<std::string> argv)
                i->compare( "-S") == 0 ||
                i->compare( "--language")==0 ||
                i->compare("--pfile")==0)
-               
+
                 {
                     //This is the variable switch.  get rid of it and the next argument.
                     i++;
@@ -948,7 +954,7 @@ std::list<std::string> GetFiles(int argc,  std::vector<std::string> argv)
                      i->compare("--unicode")==0 ||
                      i->compare("--resizeable")==0 ||
                      i->compare("--resizable")==0)
-                
+
                 {
                     //Don't bother incrementing 'i'
                 }

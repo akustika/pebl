@@ -114,7 +114,7 @@ std::string PEBLUtility::ToLower(const std::string & text)
 // (ending with a '/' or '\'), it won't strip that character.
 const std::string PEBLUtility::StripFile(const std::string &  file)
 {
-    cout << "Stripping file " << file << endl;
+ //   cout << "Stripping file " << file << endl;
 #if defined PEBL_UNIX
     char separator = '/';
 #else
@@ -194,7 +194,7 @@ Variant PEBLUtility::Tokenize(const char* line, char separator)
             if(line[i] == separator
                || line[i] == '\0'
                || line[i] == 10
-               || line[i] == 13 
+               || line[i] == 13
                || separator == 0)
                 {
 
@@ -1478,5 +1478,5 @@ std::string PEBLUtility::MD5String(const std::string & text)
 
 void PEBLUtility::CopyToClipboard(const std::string & text)
 {
-    
+
 }

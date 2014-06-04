@@ -28,7 +28,6 @@
 #include "happyhttp.h"
 
 #ifndef _WIN32
-
 // #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>

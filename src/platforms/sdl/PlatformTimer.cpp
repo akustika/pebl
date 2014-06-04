@@ -33,7 +33,7 @@
 #include <sys/time.h>
 #if defined(PEBL_UNIX) || defined(PEBL_EMSCRIPTEN)
 
-
+//Nothing special here
 
 #elif defined( PEBL_WINDOWS)
 
@@ -154,7 +154,6 @@ void PlatformTimer::GetTimeOfDay(unsigned long & secs, unsigned long & msecs)
 #else
 
    SYSTEMTIME st;
-
     ::GetSystemTime(&st);
 
 

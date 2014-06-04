@@ -717,14 +717,12 @@ Variant PEBLObjects::GetProperty (Variant v)
 {
     PList * plist = v.GetComplexData()->GetList();
 
-
     //v[1] should be a list
     Variant v1 = plist->First(); //plist->PopFront();
     PError::AssertType(v1, PEAT_OBJECT, "Argument error in first parameter of function [GetProperty(<object>, <property>)]:  ");
 
 
     Variant prop =PEBLUtility::ToUpper( plist->Nth(2));
-
 
     //v[2] should be an integer
     PError::AssertType(prop, PEAT_STRING, "Argument error in second parameter of function [Nth(<object>, <property>)]: ");
@@ -1485,7 +1483,6 @@ Variant PEBLObjects::LoadMovie(Variant v)
 
 #ifdef PEBL_MOVIES
 
-    cout << "Creaing movie\n";
     // v[1] should be name of movie
     // v[2] should be width; v[3] should be height.
     PList * plist = v.GetComplexData()->GetList();

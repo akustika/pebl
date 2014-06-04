@@ -56,7 +56,10 @@ void PEBLPath::Initialize(std::list<std::string> files)
     //	std::cout << "Initializing path\n";
 
 
-#if defined( PEBL_LINUX) 
+//cout << "STarting peblpath\n";
+#if defined( PEBL_LINUX)
+
+cout << "***********linux\n";
     //On unix, add the following paths:
     //current working directory,
     AddToPathList("./");
@@ -112,6 +115,8 @@ void PEBLPath::Initialize(std::list<std::string> files)
     //library functions
     AddToPathList(MergePathAndFile(basedir, "pebl-lib/"));
 #elif defined (PEBL_EMSCRIPTEN)
+
+//cout << "***********EMS\n";
     AddToPathList("./");
 
     //Look for absolute pathnames
@@ -157,9 +162,9 @@ void PEBLPath::Initialize(std::list<std::string> files)
 
 #elif defined PEBL_OSX
 
-    
-    
-       
+
+cout << "***********OSX\n";
+
 
 	// ----------------------------------------------------------------------------
 	// This makes relative paths work in C++ in Xcode by changing directory to the
@@ -198,8 +203,6 @@ void PEBLPath::Initialize(std::list<std::string> files)
 	}
 
 
-
-
 //		_NSGetExecutablePath( pathbuf, (uint32_t*)(&bufsize));
 //		cout << "OSX name: " << pathbuf << endl;
 
@@ -229,6 +232,8 @@ void PEBLPath::Initialize(std::list<std::string> files)
 
 /*#elif defined(PEBL_WIN32) or defined(WIN32)*/
 #else
+
+//cout << "***********************\n";
 	//On Windows add the following paths:
 
     //current working directory
@@ -237,9 +242,11 @@ void PEBLPath::Initialize(std::list<std::string> files)
     //Absolute Pathnames
     AddToPathList("");
 
+  //cout <<"files.front:" <<files.front() << endl;
     //The base directory is the parent of the executable's directory.
     string basedir = PEBLUtility::StripFile(files.front()) + "..\\";
 
+   //  cout << "basedir :" << basedir << endl;
     //The directories of each file on the command-line.
     // files[0] is the execution directory,
     // the others are filenames.
@@ -295,6 +302,7 @@ void PEBLPath::AddToPathList(const  string & pathname)
 
 string  PEBLPath::FindFile(const string & filename)
 {
+    // cout << "Ylooking for file" << filename << endl;
 
     std::list<string>::const_iterator p = mPathList.begin();
 
@@ -312,7 +320,7 @@ string  PEBLPath::FindFile(const string & filename)
 
 
                //Check to see if the file exists.
-               //cout << "Checking:" << tmp.c_str() << stat(tmp.c_str(), &st)<< endl;
+              // cout << "Checking:" << tmp.c_str() <<":"<< stat(tmp.c_str(), &st)<< endl;
                if(stat(tmp.c_str(), &st)==0)
                    {
                        //The file exists, so return it

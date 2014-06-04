@@ -35,7 +35,7 @@ PCustomObject::PCustomObject():
     PEBLObjectBase(CDT_CUSTOMOBJECT),
     mName("Unknown Custom Object")
 {
-    
+
 }
 
 
@@ -64,7 +64,7 @@ PCustomObject::~PCustomObject()
 bool PCustomObject::SetProperty(std::string name, Variant v)
 {
     //We won't do any validation here.  Maybe in the future
-    //some validation cuold be done here; allowing the user 
+    //some validation cuold be done here; allowing the user
     //to specify things like value type, or a subset of values.
 
     mProperties[name]=v;
@@ -85,10 +85,7 @@ ObjectValidationError PCustomObject::ValidateProperty(std::string name, Variant 
 
 ObjectValidationError PCustomObject::ValidateProperty(std::string name)const
 {
- 
-
    ObjectValidationError ove = PEBLObjectBase::ValidateProperty(name);
-    
     if(ove == OVE_VALID)
         return ove;
     else

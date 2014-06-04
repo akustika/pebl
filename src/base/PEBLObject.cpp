@@ -29,7 +29,7 @@
 #include "../base/PComplexData.h"
 #include "../utility/PError.h"
 #include <stdio.h>
- 
+
 using std::cout;
 using std::cerr;
 using std::endl;
@@ -57,7 +57,7 @@ PEBLObjectBase::PEBLObjectBase(const PEBLObjectBase & pob)
 ///Standard Destructor
 PEBLObjectBase::~PEBLObjectBase()
 {
-    mProperties.clear();  
+    mProperties.clear();
     //  cout << "Deleting pob\n";
 }
 
@@ -73,7 +73,7 @@ bool PEBLObjectBase::SetProperty(std::string name, Variant v)
         }
     else
         {
-            Variant msg = Variant("Failing to set property:[") + 
+            Variant msg = Variant("Failing to set property:[") +
                 Variant(name)+ Variant("]:[")+v+Variant("]\n");
 
             PError::SignalFatalError(msg);
@@ -90,11 +90,13 @@ bool PEBLObjectBase::InitializeProperty(std::string name, Variant v)
 
 Variant PEBLObjectBase::GetProperty(const std::string name)const
 {
-
     ObjectValidationError err = PEBLObjectBase::ValidateProperty(name);
 
     if(err == OVE_SUCCESS)
-        return mProperties.find(name)->second;
+       {
+                   return mProperties.find(name)->second;
+
+       }
     else
         {
             PError::SignalFatalError("Attempted to get invalid property [" + name + "] of object.");
@@ -139,7 +141,7 @@ std::string PEBLObjectBase::ObjectName() const
     return "<Unknown PEBLObjectBase>";
 }
 
-ostream & PEBLObjectBase::PrintProperties(ostream& out) 
+ostream & PEBLObjectBase::PrintProperties(ostream& out)
 {
     out << "----------\n";
     std::map<std::string, Variant>::const_iterator i;
@@ -161,7 +163,7 @@ Variant PEBLObjectBase::GetPropertyList()
 {
 
     //Create a plist to put the properties in
-    
+
     PList * newlist = new PList();
 
 

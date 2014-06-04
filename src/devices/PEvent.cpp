@@ -42,16 +42,16 @@ PEvent::PEvent(PEBL_DEVICE_TYPE type, long unsigned int time):
 PEvent::PEvent(const PEvent & evt)
 {
     mType = evt.GetType();
-    
+
     switch(mType)
 		{
 		case PDT_KEYBOARD:
-            {   
+            {
                 PEBL_KeyboardEvent event = evt.GetKeyboardEvent();
                 mEvent.keyboardEvent = event;
             }
 			break;
-			
+
 		case PDT_MOUSE_MOVEMENT:
             {
                 PEBL_MouseMovementEvent event = evt.GetMouseMovementEvent();
@@ -120,7 +120,7 @@ void PEvent::SetMovieEndEvent(const PEBL_MovieEndEvent & evt)
 
 void PEvent::SetWindowEvent(const PEBL_WindowEvent & evt)
 {
-    cout << "setting window event\n";
+   // cout << "setting window event\n";
     mType = PDT_WINDOW_RESIZE;
     mEvent.windowEvent = evt;
 }
@@ -243,20 +243,20 @@ PEBL_WindowEvent PEvent::GetWindowEvent()const
 
 int PEvent::GetState(int iface) const
 {
-       
+
     //  This gets the 'state' described in an event.
     switch(mType)
         {
- 
+
             //For keyboard events, the interface is the key.
         case PDT_KEYBOARD:
- 
+
             //If the interface is the "anykey", return the key state
             if((PEBLKey)iface == PEBLKEY_ANYKEY)
                 {
                     return mEvent.keyboardEvent.state;
                 }
- 
+
             //Determine which key is being used.
             if(mEvent.keyboardEvent.key == (PEBLKey)iface)
                 {
@@ -264,10 +264,10 @@ int PEvent::GetState(int iface) const
                 }
             else
                 return 0;
- 
+
             break;
-             
- 
+
+
         case PDT_MOUSE_MOVEMENT:
         case PDT_MOUSE_BUTTON:
         case PDT_TIMER:
@@ -275,7 +275,7 @@ int PEvent::GetState(int iface) const
         case PDT_MOVIE_END:
         case PDT_UNKNOWN:
             return PEBL_UNKNOWN;
- 
+
         case PDT_WINDOW_RESIZE:
             {
             //Here, the state should describe the size of the window resize.
@@ -289,14 +289,14 @@ int PEvent::GetState(int iface) const
             break;
             }
         default:
-            
+
             cerr << mType << endl;
             PError::SignalFatalError("Unhandled device type in PEvent::GetState\n");
- 
+
             break;
         }
-                 
-     
+
+
     return PEBL_UNKNOWN;
 }
- 
+
