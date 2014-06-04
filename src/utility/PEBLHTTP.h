@@ -41,16 +41,16 @@
 // This uses a simple http library called 'happyhttp'
 // it is a slim wrapper around that, but we abstract from.
 // aLSO , this should enable using PEBLPaths, PErrors, and such.
-// the library to maybe someday use curl or the wget commands 
+// the library to maybe someday use curl or the wget commands
 // in emscripten.
 
 class PEBLHTTP
 {
-    
+
 public:
     PEBLHTTP(Variant host);
     virtual ~PEBLHTTP();
-    
+
     virtual int GetHTTPFile(Variant fname, Variant savename);
     virtual int GetHTTPText(Variant fname);
     virtual int PostHTTP(Variant name, Variant headers,Variant body);
@@ -66,21 +66,21 @@ public:
 
     virtual  void SetReason(std::string reason){mReason = reason;};
 
-    
+
     FILE*  mFile; //file to stream to.
 
-    
+
  private:
     int mStatus;  //http status number
     std::string mReason;
 
-    std::string * mText;    
+    std::string * mText;
     Variant mHost;
     Variant mFileName;
     Variant mSaveName;
-    
-    
-    
+
+
+
     int mByteCount;
 };
 #endif

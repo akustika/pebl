@@ -137,6 +137,7 @@ public:
 //     counted_ptr<PlatformAudioOut>      GetAudioOut() const;
 
     counted_ptr<PEBLObjectBase> GetObject() const;
+    counted_ptr<PEBLObjectBase> GetPEBLObject() const;
 
     //This is no longer under control of the counted pointer system.
     PlatformWidget * GetWidget() const;   //Returns pointer to a widget, whatever it is.

@@ -37,7 +37,7 @@
 #include <unistd.h>
 #else
   //WINDOWS:
-#include <WinSock2.h>
+#include <winsock2.h>
 //#define vsnprintf _vsnprintf
 
 #endif
@@ -51,6 +51,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <iostream>
 
 #ifndef _WIN32
 #define _stricmp strcasecmp
@@ -257,7 +258,11 @@ void Connection::connect()
 {
 in_addr* addr = atoaddr( m_Host.c_str() );
 if( !addr )
-throw Wobbly( "Invalid network address" );
+{
+    std::cerr << m_Host.c_str() << std::endl;
+   throw Wobbly( "Invalid network address" );
+
+}
 
 sockaddr_in address;
 memset( (char*)&address, 0, sizeof(address) );

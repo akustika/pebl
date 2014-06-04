@@ -6,7 +6,7 @@
 //    Copyright:  (c) 2003-2014 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
-//   
+//
 //
 //     This file is part of the PEBL project.
 //
@@ -66,21 +66,21 @@ enum PEBL_DEVICE_TYPE
 
 class PDevice
 {
-    
-   
+
+
 public:
-    ///The Standard constructor.  
+    ///The Standard constructor.
     PDevice();
-    
-    ///The Standard destructor.  
+
+    ///The Standard destructor.
     virtual ~PDevice();
 
-    
+
     //Overload of the << operator
     friend std::ostream & operator <<(std::ostream & out, const PDevice & device );
 
     virtual PEBL_DEVICE_TYPE GetDeviceType(){return PDT_UNKNOWN;};
-    virtual int GetState(int interface) const;
+    virtual int GetState(int iface) const;
 private:
 
     //Inheritable printing Method.

@@ -1,11 +1,17 @@
 #include "PEBLHTTP.h"
+
+
+#ifdef PEBL_WIN32
+#include  <winsock2.h>
+#endif
+
 #ifdef PEBL_HTTP
 
 #include "PError.h"
 #include <stdio.h>
 #include "../base/PList.h"
 #include "../base/PComplexData.h"
-
+#include "../utility/rc_ptrs.h"
 
 void http_begin_cb( const happyhttp::Response* r,
 			   void* userdata )
@@ -41,7 +47,7 @@ void http_begin_cb( const happyhttp::Response* r,
 
  void http_complete_cb( const happyhttp::Response* r, void* userdata )
 {
-   PEBLHTTP* http = (PEBLHTTP*) userdata;
+  //. PEBLHTTP* http = (PEBLHTTP*) userdata;
  //  FILE * filestream = http->GetFileObject();
   //  fclose(filestream);
 
@@ -86,7 +92,7 @@ void http_begin_cb2( const happyhttp::Response* r,
 
  void http_complete_cb2( const happyhttp::Response* r, void* userdata )
 {
-   PEBLHTTP* http = (PEBLHTTP*) userdata;
+   //PEBLHTTP* http = (PEBLHTTP*) userdata;
    //   std::string * text = http->GetTextObject();
    //  FILE * filestream = http->GetFileObject();
    //  fclose(filestream);
@@ -102,6 +108,15 @@ void http_begin_cb2( const happyhttp::Response* r,
 PEBLHTTP::PEBLHTTP(Variant host)
 {
   mHost = host;
+#ifdef WIN32
+    WSAData wsaData;
+    int code = WSAStartup(MAKEWORD(1, 1), &wsaData);
+if( code != 0 )
+{
+PError::SignalFatalError(Variant("Unable to start http library.") + Variant(code));
+}
+#endif //WI
+
 }
 
 
@@ -222,8 +237,16 @@ int PEBLHTTP::PostHTTP(Variant name,
 
   //headersx is a variant-list, we need to create a const char* list
   //to contain it (with a 0 at the end).
+   PError::AssertType(headersx, PEAT_LIST, "PostHTTP headers must be a list");
 
-  PList * dataList = (PList*)(headersx.GetComplexData()->GetObject().get());
+
+   cout << headersx.GetComplexData() << std::endl;
+   //cout << (headersx.GetComplexData())->GetObject().get() << std::endl;
+    PList * dataList = (PList*)(headersx.GetComplexData()->GetPEBLObject().get());
+   //PComplexData * pcd = (headersx.GetComplexData());
+   //counted_ptr<PEBLObjectBase> pl = pcd->GetObject();
+   //PList * dataList = pl.get();
+   //(PList*)(pcd->GetObject().get());
   const char** headers = (const char**)malloc(sizeof(const char*) * (dataList->Length()+1));
 
   std::vector<Variant>::iterator p1 = dataList->Begin();

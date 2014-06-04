@@ -55,7 +55,7 @@ PComplexData::PComplexData( counted_ptr <PEBLObjectBase > object )
 
 PComplexData::~PComplexData()
 {
- 
+
 
 }
 
@@ -63,7 +63,7 @@ PComplexData::~PComplexData()
 ///This is a generic copy constructor
 PComplexData::PComplexData(const PComplexData & pcd )
 {
-    
+
     mPEBLObject = pcd.GetObject();
 
 }
@@ -104,8 +104,16 @@ ComplexDataType PComplexData::GetType() const
 counted_ptr<PEBLObjectBase> PComplexData::GetObject() const
 {
     return mPEBLObject;
+
 }
 
+
+
+counted_ptr<PEBLObjectBase> PComplexData::GetPEBLObject() const
+{
+    return mPEBLObject;
+
+}
 std::string PComplexData::GetTypeName() const
 {
 
@@ -149,7 +157,7 @@ std::string PComplexData::GetTypeName() const
 
   case CDT_NETWORKCONNECTION:
       return "Complex Data: Network Connection";
-  
+
   case CDT_PARALLELPORT:
       return "Complex Data: Parallel Port";
 
@@ -319,7 +327,7 @@ bool PComplexData::IsMovie() const
 bool PComplexData::IsCustomObject() const
 {
     //cout << "checking custom object" << GetType() << "|" << GetTypeName() << endl;
-    
+
   return GetType() == CDT_CUSTOMOBJECT;
 }
 
