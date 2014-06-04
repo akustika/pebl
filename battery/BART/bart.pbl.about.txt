@@ -4,4 +4,5 @@ Data are saved to bart-X.csv in the BART directory.
 To cite:  Mueller, S. T. (2011). The PEBL Balloon Analog Risk Task (PBART).  Computer software retrieved from http://pebl.sf.net/battery.html 
 
 
+Translations available in English and Croation (HR)
 

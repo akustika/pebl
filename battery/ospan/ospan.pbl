@@ -955,6 +955,7 @@ define Start(par)
 						{
 							stages<-Append(stages, "D" )
 							stages<-Append(stages, "T" )
+							gTrial <- gTrial + 1
 						}
 						
 						runRes<-PresentRun( distract_timeout, target_timeout, runLen, stages, gBatteryFeedback )

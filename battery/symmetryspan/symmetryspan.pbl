@@ -535,12 +535,14 @@ define PresentStatic( timeout, centred, staticData, isLast )
 	}
 }
 
-define MungeString( arr )
+define MungeString( arr)
 {
 	rval<-""
+	sep <- ""
 	Loop( c, arr )
 	{
-		rval<-rval+c
+          rval<-rval+sep+c
+	  sep <- "|"
 	}
 	return rval
 }
@@ -1097,6 +1099,10 @@ define ProcessRunResult( stages, runResult, write ,conds)
 	totTimeDistract<-0
 	numCorrectDistract<-0
 	totNumDistract<-0
+        target<- ""
+        resp <- ""
+        correct <- "NA"
+
 	Loop( result, runResult )
 	{
 		if ( Nth( result, 1 ) == "D" )
@@ -1110,7 +1116,12 @@ define ProcessRunResult( stages, runResult, write ,conds)
 				numCorrectDistract<-numCorrectDistract+1
 			}
 			totNumDistract<- totNumDistract + 1
-		}
+	        }elseif(First(result)=="T"){
+		  target <- Second(result)
+		  resp <- Third(result)
+		  correct <- target==resp
+
+                }
 	   if ( write != 0  and First(result)=="D")
 		{
 		  FilePrint( gPositionLog, gSubNum+","+ gTrial+","+
@@ -1123,6 +1134,9 @@ define ProcessRunResult( stages, runResult, write ,conds)
 	if ( totNumDistract > 0 ) {
 		pctCorrectDistract<- numCorrectDistract / totNumDistract
 		avgTimeDistract<- totTimeDistract / totNumDistract
+
+		gTotNumDistract <- gTotNumDistract + totNumDistract
+		gNumCorrectDistract <- gNumCorrectDistract + numCorrectDistract
 	}
 
 
@@ -1146,15 +1160,14 @@ define OpenSubOut()
 {
 	subNoSpc<-ReplaceChar( gSubNum, " ", "_" )
 
-	gSubOut <- GetNewdataFile(subnospc,gWin,gTestType,"csv","")
-	header <- "v1,v2,v3,v4,v5,v6"
-        gPositionLog <- GetNewDataFile(subNoSpc,gWin,"ospan-math","csv",header)
-	#of<-"data/ospan-"+subNoSpc+".csv"
-	##of<-gResultsDir+"/"+subNoSpc+".csv"
-	##gSubOut<-FileOpenAppend( of )
-	##gSubOut<-FileOpenWrite( of )
 
-	FilePrint( gSubOut, "NEWSESSION:" +TimeStamp() )
+        header <- "subnum,trial,distracttimeout,targettime,runlen,targetseq,respseq,correct,avedisttime,pctcorr,numcorrdist,totnumdist,runningcorrect,runningtotal"
+	gSubOut <- GetNewdataFile(subnospc,gWin,gTestType,"csv",header)
+
+	header <- "subnum,trail,distracttimeout,targettime,runlen,numcorr,totnumdistract,type,corr,time"
+        gPositionLog <- GetNewDataFile(subNoSpc,gWin,gTestType+"-pos","csv",header)
+
+	##FilePrint( gSubOut, "NEWSESSION:" +TimeStamp() )
 }
 
 
@@ -1290,10 +1303,12 @@ define Start(par)
 					{
 						stages<-Append(stages, "D" )
 						stages<-Append(stages, "T" )
+
 					}
 					
 					runRes<-PresentRun( gBatteryDistractTimeout, target_timeout, runLen, stages, gBatteryFeedback )
 					ProcessRunResult( stages, runRes, 1, [gBatteryDistractTimeout, target_timeout, runLen, stages, gBatteryFeedback])
+					gTrial <- gTrial + 1
 				}
 			} else {
 				SignalFatalError( "Unk run type: " +type )
