@@ -32,7 +32,7 @@ SetCompressor ZLIB
 
 ######################################################################
 
-#Name "${APP_NAME}"
+Name "${APP_NAME}"
 Caption "${APP_NAME}"
 OutFile "${INSTALLER_NAME}"
 BrandingText "${APP_NAME}"
@@ -100,6 +100,8 @@ File "..\pebl-lib\Math.pbl"
 File "..\pebl-lib\Taguchi.pbl"
 File "..\pebl-lib\Utility.pbl"
 File "..\pebl-lib\UI.pbl"
+File "..\pebl-lib\combinedatafiles.pbl"
+
 SetOutPath "$INSTDIR\media"
 File /r "..\media\text"
 File /r "..\media\sounds"
@@ -243,7 +245,7 @@ WriteUninstaller "$INSTDIR\uninstall.exe"
 SetShellVarContext all
 CreateDirectory "$SMPROGRAMS\$SM_Folder"
 SetOutPath "$INSTDIR"
-CreateShortCut "$SMPROGRAMS\$SM_Folder\${APP_NAME}.lnk" """$INSTDIR\bin\pebl.exe launcher.pbl"""
+CreateShortCut "$SMPROGRAMS\$SM_Folder\${APP_NAME}.lnk" """$INSTDIR\bin\pebl.exe"""
 CreateShortCut "$SMPROGRAMS\$SM_Folder\doc.lnk" "$INSTDIR\doc\pman\PEBLManual0.14.pdf"
 !ifdef WEB_SITE
 WriteIniStr "$INSTDIR\${APP_NAME} website.url" "InternetShortcut" "URL" "${WEB_SITE}"
@@ -256,7 +258,7 @@ CreateShortCut "$SMPROGRAMS\$SM_Folder\${APP_NAME} Website.lnk" "$INSTDIR\${APP_
 SetShellVarContext all
 CreateDirectory "$SMPROGRAMS\PEBL"
 SetOutPath "$INSTDIR"
-CreateShortCut "$SMPROGRAMS\PEBL\${APP_NAME}.lnk" "$INSTDIR\bin\pebl.exe" launcher.pbl 
+CreateShortCut "$SMPROGRAMS\PEBL\${APP_NAME}.lnk" "$INSTDIR\bin\pebl.exe" 
 !ifdef WEB_SITE
 WriteIniStr "$INSTDIR\${APP_NAME} website.url" "InternetShortcut" "URL" "${WEB_SITE}"
 CreateShortCut "$SMPROGRAMS\PEBL\${APP_NAME} Website.lnk" "$INSTDIR\${APP_NAME} website.url"
