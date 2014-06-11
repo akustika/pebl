@@ -12,8 +12,6 @@
 define Start(p)
 {
 
-
-
     gdebug <- 0
     gUseReloc <-  0  ##Set this from 0 to 1 if you want to run on windows 
                    ## NOT from an installation in Program Files, but from
@@ -801,7 +799,7 @@ define FileSelect(p,resources)
 
       }elseif(tmp==3)
       {
-      ##insert
+      ##insert chain.
 
 	 PushButton(insertinchain,[0,0])
 
@@ -851,11 +849,12 @@ define FileSelect(p,resources)
 	 if(IsPEBLFile(fname))
          {
 	     paramindex <- psetbox.selected
-	     if(paramindex==0)
+
+	     if(paramindex==0 or Length(psetbox.list)==0)
 	     { 
                  paramset <- "default"
              }else{
-  	         paramset <- Nth(psetbox.list,paramindex)
+	         paramset <- Nth(psetbox.list,paramindex)
             }
 
             PushOnEnd(gExpChain,[gDirChain, fname,paramset])
