@@ -5,7 +5,7 @@ http://pebl.sourceforge.net
 pebl-list at lists  sourceforge  net
 http://lists.sourceforge.net/lists/listinfo/pebl-list
 --------------------------------------------------
-
+ 
 
 About: 
 
@@ -29,7 +29,7 @@ obsolete.
                  RELEASE NOTES
 
 
-Version 0.14
+Version 0.14 (June 2014)
 
 
 ===New Custom Object===
@@ -99,9 +99,9 @@ The toronto word pool is now included, and can be accessed using FileLoadList("t
 
 
 
-===New Test Battery Tasks===
+===New Test Battery Tasks and major improvements===
 
--New scales: Handedness, bigfive, BNT
+- New scales: Handedness inventory, bigfive personality scales, Berlin Numeracy Test (BNT)
 - Added Esposito's BST
 - Added Random number generation
 - Added TSP task
@@ -110,11 +110,11 @@ The toronto word pool is now included, and can be accessed using FileLoadList("t
 - Dot judgment task revised
 - new Paired Associates Learning task.
 - new mathtest for training or testing simple math facts
-- Added Weather Prediction Task(Knowlton, Gluck)
+- Added Weather Prediction Task (Knowlton, Gluck)
 - Added simple change detection (Luck and Vogel procedure) task.
 - PAR scoring for BCST test
 - CPT-AX test (in the PCPT folder)
-- Reading span and Operation span task (contributed by David Hegarty)
+- Reading span, Symmetry span, and Operation span task (contributed by David Hegarty)
 - Free recall task
 - RAT task (remote associates)
 - probe-digit (waugh and norman) task
@@ -122,12 +122,10 @@ The toronto word pool is now included, and can be accessed using FileLoadList("t
 - Ebbinghaus-inspired CVC learning task
 - Brown-peterson task
 
-
 ===Other specific Test Battery Improvements===
-
--SATest now lets you specify number of predators and prey.
-- Improvements to Bechara's gambling task (i.e., the iowa), to make it much closer to the currently-adopted computerized one.  It now includes much better feedback about whether errors are being made. These were provided by Peter Bull, and they supercede the older version.  Users who wish to use the old version can do so using iowa-old.pbl.
-
+- Great improvements to Bechara's (Iowa) gambling task contributed by Peter Bull.  This makes the default version much more like the PAR version. It now includes much better feedback about whether errors are being made. These were provided by Peter Bull, and they supercede the older version.  Users who wish to use the old version can do so using iowa-old.pbl.
+- Berg's (wisconsin) card sorting task now also computes perseverations using the WCST rules.
+- SATest now lets you specify number of predators and prey.
 -Improvements to the ANT task, contributed by  Paulo H Moraes, july 2013
 -Polish translation of TOL from Magda Piorkowska
 -Spanish translation of Hungry Donkey task Gabriela Guadalupe De Gyves Montes
@@ -139,8 +137,8 @@ The toronto word pool is now included, and can be accessed using FileLoadList("t
 - Options in ptrails for improved path creation.
 - mouse movement in switcher task so it won't obscure the letter
 - many small fixes to test battery tests, improving layout for different screen sizes, data saving formats, and other minor bugs too numerous to mention
--Added debriefing to switcher task
- -Updated stroop tests: the old stroop task, which was mainly a demo, is now called stroop-demo.  Color and number-based stroop tests are available, as well as the short 'victoria' stroop (stroop-vic.pbl).
+- Added debriefing to switcher task
+- Updated stroop tests: the old stroop task, which was mainly a demo, is now called stroop-demo.  Color and number-based stroop tests are available, as well as the short 'victoria' stroop (stroop-vic.pbl).
 
 #################################################################3
 ###

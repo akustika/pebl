@@ -36,7 +36,7 @@ define Start(p)
             gDest <- ".\" ##was ghome. 
             gHome <- ""
 
-		   FileSelect(["default"]) ##Giving an argument here will specify a data file
+		   FileSelect(["default"],p) ##Giving an argument here will specify a data file
 		} else {
 	
      if(Length(p)>0)
