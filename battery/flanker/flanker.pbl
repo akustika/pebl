@@ -31,7 +31,10 @@ define Start(p)
 		  ["includedashtrials",1], ##whether -->-- and --<-- trials should be included
                   ["includeemptytrials",1], ##whether [  >  ] and [  <  ] trials should be used
                   ["arrowsize",40],
-		  ["gap",2]
+		  ["gap",2],
+		  ["fixationtime",500],  ##time of fixatiotn cross
+		  ["timeout",800], ##how long to make response
+		  ["iti",1000]  ##time between trials
                  ]
 
     gParams <- CreateParameters(parpairs,gParamFile)
@@ -240,19 +243,19 @@ define Trial(stimpair,practice)
     Move(stim,gVideoWidth/2,gVideoHeight/2)
 
 	Hide(stim)
-    ##Now, how the trial sequence.
-    time1 <- GetTime()
-    Wait(500)
-    Show(stim)
+        ##Now, how the trial sequence.
+        time1 <- GetTime()
+        Wait(gParams.fixationtime)
+        Show(stim)
 	Hide(fixation)
 	Draw()
 	time2 <- GetTime()
-	resp <- WaitForListKeyPressWithTimeout(["<lshift>","<rshift>"],800,1)
+	resp <- WaitForListKeyPressWithTimeout(["<lshift>","<rshift>"],gParams.timeout,1)
 	time3 <- GetTime()
-    Hide(stim)
-    corr <- ((targdir ==1) and (resp == "<rshift>")) or 
+        Hide(stim)
+        corr <- ((targdir ==1) and (resp == "<rshift>")) or 
             ((targdir ==-1) and (resp == "<lshift>")) 
-    rt <- time3-time2
+        rt <- time3-time2
 
     if(practice)
      {
@@ -262,15 +265,17 @@ define Trial(stimpair,practice)
             } else {
               fixation.text  <- "Incorrect ["+rt+"]"
             }
-			Show(fixation)
-			Draw()
-			Wait(400)
+		
+
+	Show(fixation)
+	Draw()
+        Wait(400) #This is the time to show the feedback.
 
      } 
    Draw()
    dataline <- gSubNum + ","+ gBlock + "," +gTrial+","+practice+","+
                targdir+","+flankercoherence+","+
-			   flankerdir+","+time0+","+resp+","+corr+","+rt
+	       flankerdir+","+time0+","+resp+","+corr+","+rt
 
    FilePrint(gFileOut,dataline)
    FilePrint(gPooledFileOut,dataline)
@@ -287,7 +292,8 @@ define Trial(stimpair,practice)
 
   RemoveObject(stim,gWin)
   RemoveObject(fixation,gWin)
-
+  Draw()
+  Wait(gParams.iti)
   return resp
 }
 

@@ -4,3 +4,6 @@ includedashtrials|1|whether -->-- and --<-- trials should be included
 includeemptytrials|1|whether [  >  ] and [  <  ] trials should be used
 arrowsize|40|Pixel length of arrow (not head, entire arrow)
 gap|2|pixel gap between arrows
+fixationtime|500|Time prior to trial that fixation appears, in ms
+timeout|800|Time allotted to make response, in ms
+iti|1000|Inter-trial interval; time between response and new trial strarting, in ms
