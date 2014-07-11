@@ -1,0 +1,239 @@
+## The PEBL Plus-Minus task, a measure of set shifting.
+## Originated by Jersild (1927) and Spector/Biederman (1976), this is
+## modeled after the executive function task  reproted by Miyake et al (2000).
+##
+
+
+define Start(p)
+{
+
+   parpairs <- [["listsize",30],
+                ["addend",3]]
+
+   gParams <- CreateParameters(parpairs,gParamFile)
+
+   gSleepEasy <- 1
+   gWin <- MakeWindow("black")
+
+
+  if( gSubNum+""=="0")	
+  {
+    gSubNum <- GetSubNum(gWin)
+  }
+
+
+
+  gFileOut <- GetNewDataFile(gSubNum,gWin,"plusminus","csv",
+        "sub,block,trial,value,addend,corranswer,answer,correct,corrcount,abstime,rt")
+
+  gReportFile <- GetNewDataFile(gSubNum,gWin,"plusminus","txt","")
+
+
+   MessageBox("This task involves some simple math problems.  First, you will be shown a series "+gParams.listsize+" 2-digit numbers.  For each number, you must add 3 to it, and enter the response.  For example, if you see the number 18, add three to it and enter 21.  Complete the problems as quickly and accurately as possible.",gWin)
+
+
+   basenums <- Sequence(10,99,1)
+
+   numneeded <- gParams.listsize * 3
+   reps <-Ceiling(numneeded/Length(basenums))
+
+   stim0 <- Flatten(ShuffleRepeat(basenums,reps))
+
+   stim1 <- SubList(stim0,1,gParams.listsize*3)
+   nums <- FoldList(stim1,gParams.listsize)
+   
+
+  footer <- EasyLabel("Add three to each number and enter the answer",
+                   gVideoWidth/2,gVideoHeight-150,gWin,24)
+
+   stim <- EasyLabel("--",gVideoWidth/2,200,gWin,40)
+   answer <- EasyLabel("--",gVideoWidth/2,gVideoHeight/2,gWin,40)
+
+
+ CountDown(gWin) 
+ timeAdd0 <- GetTime()
+ addCorr <- 0
+ block <- "A"
+ trial <- 1
+
+  timesAdd <- []
+  loop(i, First(nums))
+  {
+    answer.text <- "--"
+     time0 <- GetTime()
+     stim.text <- i
+     Draw()
+     out <- GetNumberInput(answer)
+     time1 <- GetTime()
+
+    corresp <- i+gParams.addend
+    corr <- (ToNumber(out)==corresp)
+    addCorr <- addCorr + corr
+    PushOnEnd(timesAdd,(time1-time0))
+    FilePrint(gFileOut,gSubNum+","+block+","+trial+","+i+"," + "+"+gParams.addend +","+out+","+corresp+ "," + corr + ","+addCorr+","+ time1 + "," +(time1-time0))
+    trial <- trial + 1
+  } 
+  timeAdd1 <- GetTime()
+
+
+
+##Now, do subtraction:
+  MessageBox("Now, you will be shown another series of 2-digit numbers.  For each number, you must SUBTRACT 3 from it, and enter the response.  For example, if you see the number 18, add three to it and enter 15.  Complete the problems as quickly and accurately as possible.",gWin)
+  footer.text <- "Subtract 3 from each number and enter the answer"
+ CountDown(gWin) 
+ timeSub0 <- GetTime()
+ subCorr <- 0
+ block <- "S"
+ trial <- 1
+ timesSub <- []
+  loop(i, First(nums))
+  {
+    answer.text <- "--"
+     time0 <- GetTime()
+     stim.text <- i
+     Draw()
+     out <- GetNumberInput(answer)
+     time1 <- GetTime()
+
+
+    corresp <- i-gParams.addend
+    corr <- (ToNumber(out)==corresp)
+    subCorr <- subCorr + corr
+    PushOnEnd(timesSub,(time1-time0))
+    FilePrint(gFileOut,gSubNum+","+block+","+trial+","+i+",-"+gParams.addend+","+out+","+corresp+ "," + corr + ","+subCorr+","+ time1 + "," +(time1-time0))
+    trial <- trial + 1
+  } 
+ 
+  timeSub1 <- GetTime()
+
+
+
+
+
+##Now, do the swap trial:
+  MessageBox("Finally, you will be shown another series of 2-digit numbers.  Now, you must either add or subtract 3 from the number and enter the response.  For the first number, add 3,  for the next number, subtract 3.  Repeat this pattern throughout.  Try to remember which math operation you are supposed to do, but if you lose track, the message at the bottom of the screen will remind you. Complete the problems as quickly and accurately as possible.",gWin)
+ CountDown(gWin) 
+
+  timesSwitch <- []
+ timeSwitch0 <- GetTime()
+ switchCorr <- 0
+ block <- "SW"
+ trial <- 1
+
+  opts <- [gParams.addend,-gParams.addend]
+  labelopt <- ["Add "+gParams.addend+" to","Subtract "+gParams.addend+" from"]
+
+
+  loop(i, First(nums))
+  {
+ 
+     footer.text <- First(labelopt) + " the number and enter the answer"
+     answer.text <- "--"
+     time0 <- GetTime()
+     stim.text <- i
+     Draw()
+     out <- GetNumberInput(answer)
+     time1 <- GetTime()
+
+
+    corresp <- i+First(opts)
+    corr <- (ToNumber(out)==corresp)
+    switchCorr <- switchCorr + corr
+    FilePrint(gFileOut,gSubNum+","+block+","+trial+","+i+","+First(opts)+","+out+","+corresp+ "," + corr + ","+switchCorr+","+ time1 + "," +(time1-time0))
+    PushOnEnd(timesSwitch,(time1-time0))
+    trial <- trial + 1
+
+   opts <-Rotate(opts,1)
+   labelopt <- Rotate(labelopt,1)
+
+   
+  } 
+ 
+  timeSwitch1 <- GetTime()
+
+  medAdd <- Median(timesAdd)
+  medSub <- Median(timesSub)
+  medSwitch <- Median(timesSwitch)
+
+  report <- "PEBL Plus-minus Task" + CR(1)
+  report <- report + TimeStamp() + CR(1)
+
+  report <- report +  "Addition task" + CR(1)
+  report <- report +"Total Time:      " + (timeAdd1-timeadd0)/1000 + " s"+ CR(1)
+  report <- report +"Median time:     " + medAdd+ "ms" + CR(1)
+  report <- report +"Correct:   "+  addCorr +" out of "+gParams.listsize+CR(1)
+
+
+  report <- report +  "Subtraction task" + CR(1)
+  report <- report + "Total Time:      " + (timeSub1-timeSub0)/1000 + " s"+ CR(1)
+  report <- report +"Median time:     " + medSub + " ms" + CR(1)
+  report <- report + "Correct:   "+  subCorr +" out of "+gParams.listsize+CR(1)
+
+  report <- report +  "Switch task" + CR(1)
+  report <- report +"Total Time:      " + (timeSwitch1-timeSwitch0)/1000 + " s" + CR(1)
+  report <- report +"Median time:     " + medSwitch + " ms" + CR(1)
+  report <- report +"Correct:   "+  switchCorr +" out of "+gParams.listsize+CR(1)
+
+
+ timecost <-    (timeSwitch1-timeSwitch0) - ( (timeAdd1-timeAdd0) + (timeSub1-timeSub0) )/2
+  medtimecost <- medSwitch - (medAdd + medSub)/2
+ errorcost <-    (addCorr + subCorr)/2 -  (switchCorr)
+
+  report <- report + "Total Time cost: "   + timeCost/1000  + " s"+ CR(1)
+  report <- report + "Median Time cost: "   + medTimeCost + " ms"+ CR(1)
+  report <- report + "Error cost: "   + errorCost
+
+  Print(report)
+  FilePrint(gReportFile,report)
+  MessageBox("Thank you for participating in this study. Hit OK to continue.",gWin)
+ 
+}
+
+
+
+define GetNumberInput(label)
+{
+  opts <- ["1","2","3","4","5","6","7","8","9","0",
+           "<kp_1>","<kp_2>","<kp_3>","<kp_4>","<kp_5>","<kp_6>",
+           "<kp_7>","<kp_8>","<kp_9>","<kp_0>",
+            "<backspace>","<return>" ,"<kp_enter>"]
+
+  done <- 0
+  
+  out <- ""
+  while (not done)
+  { 
+
+
+
+     resp <- WaitForListKeyPress(opts)
+     if( resp == "<return>" or resp == "<kp_enter>")
+     {
+       done <- 1
+     } else {
+
+     if(resp == "<backspace>")
+     {
+      if(StringLength(out)<=1)
+      {
+        out <- ""
+      } else {
+        start <- 1
+        max <- Max([1,StringLength(out)-1])
+        out <- SubString(out,1,max)
+      }
+     } else {
+   
+      out <- out + resp
+     }
+      
+      label.text <- out
+      Draw()
+
+     }
+
+  }
+
+ return out
+
+}

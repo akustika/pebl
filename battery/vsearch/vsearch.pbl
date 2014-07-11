@@ -28,7 +28,7 @@ define Start(p)
 	       ["numtargs1",0],
 	       ["numtargs2",1],
 	       ["numtargs3",5],
-	       
+	       ["usetargs3",0],
                ["targcol1","white"],#
 	       ["targcol2","green"],#
 	       ["foilcolor","white"],#
@@ -56,6 +56,11 @@ define Start(p)
    searchsize <- [gParams.search1size,gParams.search2size,gParams.search3size]
 
    numtargs <- [gParams.numtargs1,gParams.numtargs2,gParams.numtargs3]
+   if(gParams.usetargs3)
+   {
+     PushOnEnd(numtargs,gParams.numtargs3)
+   }
+
    targcols <- [gParams.targcol1,gParams.targcol2]
    reps  <- gParams.reps
    

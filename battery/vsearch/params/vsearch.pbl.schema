@@ -13,6 +13,7 @@ search3size|30|Search size 3
 numtargs1|0|Target condition 1
 numtargs2|1|Target condition 2
 numtargs3|5|Target condition 3
+usetargs3|1|Whether the 3rd target condition shuold be used.
 targcol1|white|One target color
 targcol2|green|Second target color
 foilcolor|white|Foil color

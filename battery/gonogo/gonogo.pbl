@@ -14,7 +14,8 @@ define Start(p)
   parpairs <- [["reps",32], ##Number of repetitions of P/R blocks (with trials shuffled)
                ["isi",1500], ##Time between stimuli
                ["numP", 4],  ##Number of 'p' trials per block
-	       ["numR", 1]]  ##Number of 'R' trials per block
+	       ["numR", 1],  ##Number of 'R' trials per block
+	       ["usemouse",1]] ##use mouse for response rather than keyboard
 
  Print(parpairs)
  gParams <- CreateParameters(parpairs,gParamFile)
@@ -138,6 +139,7 @@ define Start(p)
    FilePrint(gSumFileOut,"Shane T. Mueller")
    FilePrint(gSumFileOut, GetPEBLVersion())
    FilePrint(gSumFileOut, GetSystemType())
+   FilePrint(gSumFileOut, gParams.usemouse)
    FilePrint(gSumFileOut,"-----------------------------------------------")
    FilePrint(gSumFileOut,"Screen width x height: " +gVideoWidth+ "x"+gVideoHeight)
    FilePrint(gSumFileOut, "Subject code: "+gSubNum)
@@ -281,17 +283,34 @@ define DoBlock(trials,correctresponse,type)
 	 gStimOn <- 1
 	 ##make the stimulus disappear after 500 ms
      RegisterEvent("<TIMER>", 1, starttime+500,"<GEQ>","HIDEME", [stim,star])
-     resp <- WaitForListKeyPressWithTimeout(["<lshift>","<rshift>"],1450,1)
+     if(gParams.usemouse)
+     {
+       resp <- WaitForMouseButtonWithTimeout(1450)
+       Print(resp)
+       ##this will eithe be ["<timeout>"] or [x,y,button,state]
+      
+
+     }else{
+  
+      resp <- WaitForListKeyPressWithTimeout(["<lshift>","<rshift>"],1450,1)
+      #this will either be [<timeout>] or <buttonname>   
+      Print(resp)
+     }
      endtime <- GetTime()
-	 HideMe(stim,star)
+     HideMe(stim,star)
      
-
      if(IsList(resp))
-        {
+     {
+       if(not First(resp)=="<timeout>")
+       {
+       
+         resp <- CollapseList(resp)
+       }else{
            resp <- "NONE"
-        }
+       }
+     }
 
-	  ##RECODE Whether they responded
+     ##RECODE Whether they responded
       if(resp=="NONE")
        {
 	   responded <- 0
@@ -355,13 +374,22 @@ define AddObjects(list,win)
 define GetStrings(lang)
 {
 
-
  if(Uppercase(lang)=="EN")
    {
-	gInst1 <- "In this task, you  will see a series of 'P's and 'R's on the screen. Whenever you see a 'P', respond by pressing the right shift key on the keyboard.  DO NOT RESPOND when you see an 'R'.  Most of the letters you see will be 'P's. You will begin with a few practice trials.  Press the right shift key to begin."
-	gInst2 <- "Now, you will do the task for real. You will no longer be told when you make an error. Press any key to begin."
-	gInst3 <- "You may take a short break before you continue.  In the second half of this study, the mapping will reverse.  This time, hit the right shift key only when you see the 'R', but not when you see a 'P'. Once again, most of the letters you see will  be 'P's. You will begin with a few practice trials.  Press the right shift key to begin."
+    if(gParams.usemouse)
+    { 
+      method <- "clicking the mouse button anywhere on the screen. "
+	gLab <- "Press the mouse button for "
+    } else {
+      method<- " clicking one of the shift keys. "
 	gLab <- "Press <shift> for "
+    }
+	gInst1 <- "In this task, you  will see a series of 'P's and 'R's on the screen. Whenever you see a 'P', respond by " + method + "  DO NOT RESPOND when you see an 'R'.  Most of the letters you see will be 'P's. You will begin with a few practice trials.  Press any key to begin."
+
+	gInst2 <- "Now, you will do the task for real. You will no longer be told when you make an error. Press any key to begin."
+
+	gInst3 <- "You may take a short break before you continue.  In the second half of this study, the mapping will reverse.  This time, respond only when you see the 'R', but not when you see a 'P'. Once again, most of the letters you see will  be 'P's. You will begin with a few practice trials.  Press any key  to begin."
+
     gDebrief <- "Thank you for participating. "
 
   } elseif(Uppercase(lang)=="PT") {
@@ -418,3 +446,17 @@ define HideMe(stim,star)
 	 Draw()
   }}
  
+
+
+define CollapseList (list)
+{
+
+ out <- ""
+ sep <- ""
+ loop(i,list)
+  {
+   out <- out + sep+ i
+   sep <- "|"
+  }
+ return out
+}
