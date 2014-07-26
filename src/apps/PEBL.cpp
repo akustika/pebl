@@ -151,7 +151,7 @@ int PEBLInterpret( int argc, std::vector<std::string> argv )
             //Now, copy everything in 'battery' to your documents directory.
             std::cerr << "Creating Documents/pebl-exp.0.14 Directory\n";
             PEBLUtility::SystemCall("mkdir ~/Documents","");
-            //PEBLUtility::SystemCall("mkdir "+destdir,"");
+            PEBLUtility::SystemCall("mkdir "+destdir,"");
             std::cerr << "Copying files to ["+destdir+ "]\n";
             PEBLUtility::SystemCall("cp -R "+ basedir + " " + destdir,"");
             exit(0);

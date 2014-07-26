@@ -59,7 +59,8 @@ void PEBLPath::Initialize(std::list<std::string> files)
 //cout << "STarting peblpath\n";
 #if defined( PEBL_LINUX)
 
-cout << "***********linux\n";
+
+    //cout << "***********linux\n";
     //On unix, add the following paths:
     //current working directory,
     AddToPathList("./");
@@ -81,18 +82,31 @@ cout << "***********linux\n";
             i++;
         }
 
+
+#ifdef EXECNAME
+
+#define OP OP2(EXECNAME)
+#define OP2(x) OP3(x)
+#define OP3(a) #a
+
+    string peblname = OP;
+#else
+    string peblname ="pebl";
+#endif
+
     string basedir = "";
     //Initialize the binreloc library (courtesy of autopackage).
     BrInitError error;
     if (br_init (&error) == 0 && error != BR_INIT_ERROR_DISABLED)
         {
             PError::SignalWarning("Warning: BinReloc failed to initialize.\n Will fallback to hardcoded default path.\n");
-            basedir = "/usr/local/share/pebl/";
+            basedir = "/usr/local/share/"+peblname+"/";
+
         } else {
 
             std::cerr << "Executable file located at: [" << br_find_exe("") << "].\n";
             string prefix = br_find_prefix("/usr/local/");
-            basedir = prefix + string("/share/pebl/");
+            basedir = prefix + string("/share/") + peblname + string("/");
             std::cerr << "Base resources found at: ["<< basedir <<"]\n";
 
         }
@@ -163,7 +177,7 @@ cout << "***********linux\n";
 #elif defined PEBL_OSX
 
 
-cout << "***********OSX\n";
+    //cout << "***********OSX\n";
 
 
 	// ----------------------------------------------------------------------------
@@ -302,7 +316,7 @@ void PEBLPath::AddToPathList(const  string & pathname)
 
 string  PEBLPath::FindFile(const string & filename)
 {
-    // cout << "Ylooking for file" << filename << endl;
+    // cout << "looking for file" << filename << endl;
 
     std::list<string>::const_iterator p = mPathList.begin();
 
