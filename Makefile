@@ -29,10 +29,12 @@
 #This only affects install location.  The binary should be 
 #locatable anywhere
 PREFIX = /usr/local/
+##This is the name of the executable and share directory in linux:
+EXECNAME = pebl-language
 
 PEBL_VERSION =0.14
-USE_WAAVE=1       ##Optional; comment out to turn off waave multimedia library
-USE_AUDIOIN=1     ##Optional; comment out to turn off  sdl_audioin library
+#USE_WAAVE=1       ##Optional; comment out to turn off waave multimedia library
+#USE_AUDIOIN=1     ##Optional; comment out to turn off  sdl_audioin library
 USE_NETWORK=1     ##Optional; comment out to turn off sdl_net library.
 USE_PORTS=1 
 USE_HTTP=1      ##Optional; turn on/off for http get/set
@@ -51,9 +53,8 @@ DEBUGFLAGS =  -DPEBL_DEBUG -g
 else
 DEBUGFLAGS = 
 endif
-CFLAGS =   -O3 -std=c99 -DPREFIX=$(PREFIX) -g 
-
-CXXFLAGS0 =  -g -O3  -DPEBL_UNIX  -DPEBL_LINUX -DENABLE_BINRELOC -DPREFIX=$(PREFIX) 
+CFLAGS =   -O3 -std=c99 -DPREFIX=$(PREFIX) -DEXECNAME=$(EXECNAME) -g 
+CXXFLAGS0 =  -g -O3  -DPEBL_UNIX  -DPEBL_LINUX -DENABLE_BINRELOC -DPREFIX=$(PREFIX)  -DEXECNAME=$(EXECNAME)
 
 
 ifdef USE_WAAVE
@@ -317,7 +318,7 @@ DIRS = \
 main:  $(DIRS) $(PEBLMAIN_OBJ) $(PEBLMAIN_INC)
 	$(CXX) $(CXXFLAGS) -Wall -Wl,-rpath -Wl,LIBDIR $(DEBUGFLAGS) \
 	$(SDL_FLAGS) -g	\
-	-o $(BIN_DIR)/pebl \
+	-o $(BIN_DIR)/$(EXECNAME) \
 	$(OSX_FLAGS) $(BASE_DIR)/$(PEBLBASE_SRC) \
 	$(patsubst %.o, $(OBJ_DIR)/%.o, $(PEBLMAIN_OBJ)) \
 	-lSDL -lSDLmain -lpthread -lSDL_image -lSDL_net -lSDL_ttf -lSDL_gfx  \
@@ -381,40 +382,40 @@ clean:
 .PHONY: install
 
 uninstall:
-	rm -Rf $(PREFIX)bin/pebl
-	rm -Rf $(PREFIX)share/pebl
+	rm -Rf $(PREFIX)bin/$(EXECNAME)
+	rm -Rf $(PREFIX)share/$(EXECNAME)
 
 install: uninstall
 
 	install -d $(PREFIX)bin/	
 
-	cp bin/pebl $(PREFIX)bin/pebl
-	rm -Rf $(PREFIX)share/pebl
-	install -d $(PREFIX)share/pebl
-	install -d $(PREFIX)share/pebl/media
-	install -d $(PREFIX)share/pebl/pebl-lib
-	install -d $(PREFIX)share/pebl/doc
-	install -d $(PREFIX)share/pebl/battery
+	cp bin/$(EXECNAME) $(PREFIX)bin/$(EXECNAME)
+	rm -Rf $(PREFIX)share/$(EXECNAME)
+	install -d $(PREFIX)share/$(EXECNAME)
+	install -d $(PREFIX)share/$(EXECNAME)/media
+	install -d $(PREFIX)share/$(EXECNAME)/pebl-lib
+	install -d $(PREFIX)share/$(EXECNAME)/doc
+	install -d $(PREFIX)share/$(EXECNAME)/battery
 
-	cp -R media/* $(PREFIX)share/pebl/media/
-	rm -rf `find $(PREFIX)share/pebl/media -type d -name .svn`
-	cp  pebl-lib/*.pbl $(PREFIX)share/pebl/pebl-lib/
-	cp doc/pman/PEBLManual$(PEBL_VERSION).pdf $(PREFIX)/share/pebl/doc
-	cp bin/launcher.pbl $(PREFIX)/share/pebl/pebl-lib/
-	chmod -R uga+r $(PREFIX)share/pebl/
+	cp -R media/* $(PREFIX)share/$(EXECNAME)/media/
+	rm -rf `find $(PREFIX)share/$(EXECNAME)/media -type d -name .svn`
+	cp  pebl-lib/*.pbl $(PREFIX)share/$(EXECNAME)/pebl-lib/
+	cp doc/pman/PEBLManual$(PEBL_VERSION).pdf $(PREFIX)/share/$(EXECNAME)/doc
+	cp bin/launcher.pbl $(PREFIX)/share/$(EXECNAME)/pebl-lib/
+	chmod -R uga+r $(PREFIX)share/$(EXECNAME)/
 #	chmod +s $(PREFIX)bin/pebl ##suid root
-	cp -R battery/* $(PREFIX)share/pebl/battery
-	cp battery/\.\.png $(PREFIX)share/pebl/battery
-	cp battery/\.\.about.txt $(PREFIX)share/pebl/battery
-	rm -rf `find $(PREFIX)share/pebl/battery -type d -name .svn`
-	rm `find $(PREFIX)share/pebl/battery | grep \~`
-	rm -Rf `find $(PREFIX)share/pebl/battery | grep 'data'`
-	rm -f $(PREFIX)share/pebl/battery/launch.bat
-	rm -f $(PREFIX)share/pebl/battery/PEBLLaunch-log.txt
-	rm -f $(PREFIX)share/pebl/battery/*.config
-	rm -f $(PREFIX)share/pebl/battery/makelinks-mac.sh
+	cp -R battery/* $(PREFIX)share/$(EXECNAME)/battery
+	cp battery/\.\.png $(PREFIX)share/$(EXECNAME)/battery
+	cp battery/\.\.about.txt $(PREFIX)share/$(EXECNAME)/battery
+	rm -rf `find $(PREFIX)share/$(EXECNAME)/battery -type d -name .svn`
+	rm `find $(PREFIX)share/$(EXECNAME)/battery | grep \~`
+	rm -Rf `find $(PREFIX)share/$(EXECNAME)/battery | grep 'data'`
+	rm -f $(PREFIX)share/$(EXECNAME)/battery/launch.bat
+	rm -f $(PREFIX)share/$(EXECNAME)/battery/PEBLLaunch-log.txt
+	rm -f $(PREFIX)share/$(EXECNAME)/battery/*.config
+	rm -f $(PREFIX)share/$(EXECNAME)/battery/makelinks-mac.sh
 ##Now, convert all the battery files to unix format.
-	find $(PREFIX)share/pebl/battery -name '*pbl' -exec dos2unix {} \;
+	find $(PREFIX)share/$(EXECNAME)/battery -name '*pbl' -exec dos2unix {} \;
 
 ifeq (.depend,$(wildcard .depend))
 include .depend
