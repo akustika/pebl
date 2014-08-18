@@ -271,8 +271,8 @@ define FileSelect(p,resources)
               ["Change launcher size","Set password"],
               ["ChangeLauncherSize","SetPassword"])
 
-    menu3 <- MakeMenu("Help",180,0,win,14,120,["About","Manual","Website", "PEBL Wiki","Tutorial","Review PEBL","Donate"],
-          ["AboutMessage","OpenManual","GoToWeb","VisitWIKI","Tutorial","Review","Donate"])
+    menu3 <- MakeMenu("Help",180,0,win,14,120,["About","Manual","Website", "PEBL Wiki","Tutorial","Review PEBL","Donate","Cite"],
+          ["AboutMessage","OpenManual","GoToWeb","VisitWIKI","Tutorial","Review","Donate","CitePEBL"])
 
 
 
@@ -390,7 +390,7 @@ define FileSelect(p,resources)
    savechain <- MakeButton(gSaveChainText,xbase+470,chainbox.y+chainbox.height+35,win,95)
 
 
-   subjectbox <- EasyTextBox(gsubcode,xbase+350,ybase2+20,win,fontsize,60,yheight)
+   subjectbox <- EasyTextBox(gsubcode,xbase+350,ybase2+20,win,fontsize,120,yheight)
    sublabel   <- EasyLabel(gPartCode, xbase+270,subjectbox.y+subjectbox.height/2,win,fontsize)
    MoveCorner(sublabel,subjectbox.x-sublabel.width-10,subjectbox.y)
    subboxhighlight <- Rectangle(subjectbox.x+subjectbox.width/2,subjectbox.y+subjectbox.height/2,subjectbox.width,subjectbox.height,MakeColor("red"),0)
@@ -1138,7 +1138,7 @@ define FileSelect(p,resources)
       }elseif(tmp==29)  ##29 == donate 
        {		
          PushButton(donate,[0,0])
-	 Launchfile("http://www.superiorideas.org/node/139")
+	 Launchfile("http://www.superiorideas.org/projects/open-source-psychology-software")
 
 if(0)
 {
@@ -2957,10 +2957,19 @@ define Review(obj,click)
 
 }
 
+
+define CitePEBL(obj,click)
+{
+    PopUpMessageBox("PEBL Can be cited as: Mueller, S. T., & Piper, B. J. (2014). The Psychology Experiment Building Language (PEBL) and PEBL Test Battery. Journal of neuroscience methods, 222, 250-259. A web browser should open to the sciencedirect page for this article",obj.win)
+   Launchfile("http://www.sciencedirect.com/science/article/pii/S0165027013003762")
+
+}
+
+
 define Donate(obj,click)
 {
-      PopUpMessageBox("A web browser should open to the PEBL donation page at      http://www.superiorideas.org/node/139",obj.win)	
-     Launchfile("http://www.superiorideas.org/node/139")
+      PopUpMessageBox("A web browser should open to the PEBL donation page at   http://www.superiorideas.org/projects/open-source-psychology-software",obj.win)	
+       Launchfile("http://www.superiorideas.org/projects/open-source-psychology-software")
 }
 
 
@@ -3280,8 +3289,8 @@ To skip this screen when you start-up, enter the password.  You can get a passwo
    }elseif(id==4){
      PushButton(obj,gClick)
      ##go to donation page
-     Launchfile("http://www.superiorideas.org/node/139")
-    PopUpMessageBox("A web browser should open to the PEBL donation page at      http://www.superiorideas.org/node/139",win)
+     Launchfile("http://www.superiorideas.org/projects/open-source-psychology-software")
+    PopUpMessageBox("A web browser should open to the PEBL donation page at      http://www.superiorideas.org/projects/open-source-psychology-software",win)
  #    cont <- 0
    }elseif(id==5){
      PushButton(obj,gClick)
