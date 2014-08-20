@@ -1,14 +1,14 @@
 ## 
 ##
-## Travelling Salesman Problem requiring clicking points.
+## Traveling Salesman Problem requiring clicking points.
 ##
 ##
 
 define Start (p)
 {
-   
 
-   parpairs <- [["targsize",25],
+   parpairs <- [ ["usefile","subset.csv"], #use exactly these problems, instead of randomly-chosen.  set to 0 for random trials.
+	       ["targsize",25],
                ["dointro",1],
                ["xoffset",70],  ## Field area upper left
                ["yoffset",70],  ## 
@@ -18,16 +18,32 @@ define Start (p)
                ["height",500],
 	       ["inputlabel","click"], ##i.e., click or touch
 	       ["doflash",0],          ##should the circle flash when you click it?  Good for touchscreen, which covers the circle.
-	       ["dobeep",1]
+	       ["dobeep",1],
+	       ["randomstart",0]  ##should each trial start on a different random node         
                ]
-  gParams <- CreateParameters(parpairs,"tsp.pbl.par")
 
+  gParams <- CreateParameters(parpairs,"tsp.pbl.par")
   gTargSize <- gParams.targsize
   dointro <- gParams.dointro
-  
+
    Init()
 
    gData <- []  ##Log some data for immediate feedback
+
+   problemsLoaded <- 0
+   if(gParams.usefile != 0)
+   {
+    problems <- ReadCSV(gParams.usefile)     
+   if(Length(problems)>0)
+        {
+  	problems <- Shuffle(problems)
+	trials <- Nth(Transpose(problems),2)
+	problemsLoaded <- 1
+	}
+   }
+
+
+  if(not problemsLoaded){
 
    sizes <- ["10","20","30"]
 
@@ -49,13 +65,21 @@ define Start (p)
         PushOnEnd(trials,Transpose([Repeat(i,gParams.trialspersize) ,
                                     SampleN(subs,gParams.trialspersize)]))
       }
-      trials <- Shuffle(FlattenN(trials,1))
+      trialsbase <- Shuffle(FlattenN(trials,1))
 
-   } else { 
+    } else { 
      subs <- SubList(subs,1,trialspersize)
-     trials <- Shuffle(DesignFullCounterBalance(sizes,subs)) 
+     trialsbase <- Shuffle(DesignFullCounterBalance(sizes,subs)) 
+   }
+   trials <- []
+   loop(i,trialsbase)
+   {
+     PushOnEnd(trials,First(i)+"-"+Second(i))
    }
 
+  }
+
+  Print(trials)
 
   if(gParams.dobeep)
   {
@@ -70,7 +94,7 @@ define Start (p)
 
 
    gFileOut <- GetNewDataFile(gSubNum,gWin,"tsp","csv",  
-   "subnum,trial,test,type,point,clicklocX,clicklocY,clickid,time,rt")
+   "subnum,trial,test,type,point,targx,targy,clickX,clickY,pointid,fileorder,time,rt")
 
    gSumFile <- GetNewDataFile(gSubNum,gWin,"tsp-sum","csv",  
                 "subnum,trial,test,type,starttime,firstclick,endtime,elapsedtime,numpos,opt,obs,eff")
@@ -80,7 +104,7 @@ define Start (p)
 
 
    gLogFile <- FileOpenAppend("data/tsp-log.txt")
-   FilePrint(gLogFile,"TSP start " +GetTime() + " " + TimeStamp() + "  " + gSubCode)
+   FilePrint(gLogFile,"TSP START "  +GetTime() + " " + TimeStamp() + "  " + gSubCode)
 
 
    if(gParams.dointro)
@@ -103,6 +127,9 @@ define Start (p)
     Show(gMessage)
   
    tb.text <- tb.text + " "+gParams.inputlabel+" or click each circle, connecting the dots and finding the shortest path through all the points. "
+
+
+
     tsp <- FileReadTable("tours/example06-01.txt")
     Trial(tsp, gSubNum + ",1,tours/example06-01.txt,PRACTICE,")
 
@@ -137,7 +164,7 @@ define Start (p)
    loop(i,trials)
     {
           trial <- trial  + 1
-          tour <- "tours/tour-"+ First(i) + "-" + Second(i) + ".txt"
+          tour <- "tours/tour-"+ i + ".txt"
           tsp <- FileReadTable(tour)
 	  Print(tsp)
           Trial(tsp, gSubNum + "," + trial + ","  + tour + ",TEST,")
@@ -169,7 +196,7 @@ define Start (p)
 
 
    outtab <- Transpose([aggcond, aggtrials,aggtime, aggeff, aggbest])
-
+   dataline <- ""
    out <- "                 Your Perfomance     
 Condition Trials   Time (s)  Effic.   # Perfect
 -----------------------------------------------" + CR(1)
@@ -178,7 +205,10 @@ Condition Trials   Time (s)  Effic.   # Perfect
      {
        loop(datum, line)
        { 
+       
          out <- out + Format(datum,9) + " "
+	 dataline <- dataline+","+datum
+
        }
          out <- out + CR(1)
      }
@@ -195,6 +225,11 @@ Condition Trials   Time (s)  Effic.   # Perfect
    FilePrint(gReportFile,out)
    FileClose(gReportFile)   
    Print(out)
+
+
+   gPooled <- FileOpenAppend("data/tsp-pooled.csv")
+   FilePrint(gPooled,gSubNum+","+TimeSTamp()+","+GetTime()+dataline)
+
    gMessage.text <- out
    Show(gMessage)
 
@@ -215,8 +250,33 @@ define Trial(tsp,header)
    # initial placement changes.
 
    Hide(gMessage)
-   positions <- Rotate(Transpose(SubList(Transpose(tsp),3,4)), 
-                        RandomDiscrete(Length(tsp)))
+
+
+
+
+  ##Should we use a random starting point each time?
+  positions <- Transpose(SubList(Transpose(tsp),3,4))
+
+  ##the positions in the file are essentially meaningless.
+  ##let's renumber them in the order they actually are in the file.
+  indexes <- Sequence(1,Length(positions),1)
+
+
+   if(gParams.randomstart)
+   {
+       rotation <-  RandomDiscrete(Length(tsp))
+
+   }else{
+       rotation <- 0
+   }
+
+   ##'Positions' is the set of xy coordinates, starting with the start location.
+   ##indexes simply indexes these  based on their order in the file,
+   ##in case they get rotated.
+ 
+   positions <- Rotate(positions,rotation)
+   indexes <- Rotate(indexes,rotation)
+
 
    ## Initialize basic data structures.
    gTrace <- []        #Keeps track of complete path trace
@@ -227,9 +287,10 @@ define Trial(tsp,header)
 
    firstclick <- -1  ##record when the first click happened.
 
-   #Loop through positions, creating a structure keeping track of them, as well as
-   # those yet to be visited.  They are in text, so they need to be
-   # converted to numbers
+   ## Loop through positions, creating a structure keeping track of them, 
+   ## as well as
+   ## those yet to be visited.  They are in text, so they need to be
+   ## converted to numbers
    j <- 1
    loop(i, positions)
    { 
@@ -275,16 +336,32 @@ define Trial(tsp,header)
    gHits <-First(tmp2)
    gShapes <- Merge(gShapes, Second(tmp2))
 
- 
+   gOriginalPositions <- positions
+   gIndices <- indexes
+
    Draw()
    gTrialStartTime <- GetTime()
 
-   #Loop until UpdateBotState determines we are done.
+   ##output first target (not clicked on).
+   clickloc <- [0,0]
+   clickid <- 1
+   Print("originalpositions:")
+   Print(gOriginalPositions)
+   Print(gIndices)
+   origID <- Nth(gIndices,clickid)
+  orig <- Nth(gOriginalPositions,clickid)
+  FilePrint_(gFileOut, header + "0," )
+  FilePrint(gFileOut,  First(orig)+","+Second(orig)+","+
+                        First(clickloc)+","+Second(clickloc) + "," +
+                        clickID + "," +origID+"," + gTrialStartTime + ",0")
+
+   #Loop until UpdateState determines we are done.
    ret <- 0  
    pt <- 1
-   while( ret == 0)
+ 
+  while( ret == 0)
     {
-      FilePrint_(gFileOut, header + "," +pt + "," )
+      FilePrint_(gFileOut, header + pt + "," )
       ret <- UpdateState()   
       Draw()
       if(firstclick < 0)
@@ -347,8 +424,6 @@ define Init()
    height <- gParams.height
 
    gSleepEasy <- 1
-#   gVideoWidth <- 1280
-#   gVideoHeight <- 1024
    gPI <- 3.14159
 
    ## Squeeze this into width/height area.
@@ -453,8 +528,14 @@ define UpdateState()
 
   clickloc <- Nth(gUnvisited,x)      #Get the location and ID of the
   clickID  <- Nth(gUnvisitedIDs,x)   #clicked-on position
+
+  orig <- Nth(gOriginalPositions,clickID)
+  origID <- Nth(gIndices,clickid)
   time <- GetTime()
-  FilePrint(gFileOut, First(clickloc)+","+Second(clickloc) + "," + clickID + "," + time + "," + (time-gTrialStartTime))
+
+  FilePrint(gFileOut,   First(orig)+","+Second(orig)+","+
+                         First(clickloc)+","+Second(clickloc) + "," +
+                         clickID + "," + origID+","+ time + "," + (time-gTrialStartTime))
 
    #grab the thing.
    tmp <- Nth(gTargets, clickID)
@@ -524,7 +605,7 @@ gParams.inputlabel+" button above to continue."
 #  Draw()
 
 
-  FilePrint(gSumFile, header + ","  + gTrialStartTime + "," + firstclick  + "," + time + "," + etime +  "," +  Length(gPositions) + "," + dOpt + "," + dObs + "," + eff + "," )
+  FilePrint(gSumFile, header +  gTrialStartTime + "," + firstclick  + "," + time + "," + etime +  "," +  Length(gPositions) + "," + dOpt + "," + dObs + "," + eff + "," )
 
   gData <- Append(gData, [Length(gPositions), eff, etime/1000, best, 1])
 
