@@ -40,7 +40,7 @@ define Start(p)
 
 
    gFileOut <- GetNewDataFile(gSubNum,gWin,"gonogo","csv",
- "subnum,block,type,correctresponse,trial,choice,x,y,stim,present,response,responded,starttime,rt")
+ "subnum,block,type,correctresponse,trial,choice,x,y,stim,present,response,responded,corr,starttime,rt")
 
    gPooledFileOut <- FileOpenAppend("data/gonogo-pooled.csv")
    gSumFileOut <-GetNewDataFile(gSubNum,gWin,"gonogo-report","txt","")
@@ -151,7 +151,7 @@ define Start(p)
 
    FilePrint(gSumFileOut,"Mean Accuracy:          "+(Mean(Merge(err1,err2))))
    FilePrint(gSumFileOut,"Mean Error:             "+(1-Mean(Merge(err1,err2))))
-  FilePrint(gSumFileOut, "                 ROUND 1 Errors         ")
+  FilePrint(gSumFileOut, "                 ROUND 1 Accuracy         ")
    FilePrint(gSumFileOut,"----------------------------------------")
    FilePrint(gSumFileOut,"Cond    N       median  mean    sd")
    FilePrint(gSumFileOut,"----------------------------------------")
@@ -164,7 +164,7 @@ define Start(p)
        }
       FilePrint(gSumFileOut,tmp)
      }
-  FilePrint(gSumFileOut, "              ROUND 2 Errors            ")
+  FilePrint(gSumFileOut, "              ROUND 2 Accuracy          ")
    FilePrint(gSumFileOut,"----------------------------------------")
    FilePrint(gSumFileOut,"Cond    N       median  mean    sd")
    FilePrint(gSumFileOut,"----------------------------------------")
@@ -343,7 +343,8 @@ define DoBlock(trials,correctresponse,type)
 		   Draw()
          }
        }	   
-	   outline <- gSubNum+","+gBlock+","+type+","+correctresponse+","+trial+","+choice+","+First(xy)+","+Second(xy)+","+i+","+present+","+resp+","+responded+","+starttime + ","+(endtime-starttime)
+
+	   outline <- gSubNum+","+gBlock+","+type+","+correctresponse+","+trial+","+choice+","+First(xy)+","+Second(xy)+","+i+","+present+","+resp+","+responded+","+corr+","+starttime + ","+(endtime-starttime)
 	   FilePrint(gFileOut,outline)
 	   FilePrint(gPooledFileOut,outline)
 
