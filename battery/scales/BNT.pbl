@@ -84,7 +84,7 @@ define Start(p)
          out2b <- AskQuestion(3,gParams.domultiplechoice)
          out3  <- AskQuestion(4,gParams.domultiplechoice)
 
-      quantile <- Third(out1)+Third(out2)+Third(out3)+Third(out4)   
+      quantile <- Third(out1)+Third(out2)+Third(out2b)+Third(out3)   
     }
  
     data <- MakeCSVLine(Flatten([out1,out2a,out2b,out3]))   
