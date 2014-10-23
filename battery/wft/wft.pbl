@@ -40,7 +40,7 @@ define Start(lPar)
     }
 
 
- header <- "subnum,stim,word,compcount,legalcompcount,time0,time1,time,rt,response,complete,newword,islegal")
+ header <- "subnum,stim,word,compcount,legalcompcount,time0,time1,time,rt,response,complete,newword,islegal"
   gFileOut <- GetNewDataFile(gSubNum,gWin,"wft","csv",header)
 
 
