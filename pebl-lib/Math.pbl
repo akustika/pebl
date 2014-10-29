@@ -215,7 +215,7 @@ define Quantile(list,q)
         elts <- Append(elts,1+Round(i/100*(Length(list)-1)))
 
       }
-      Print(elts)
+
       ret <- ExtractListItems(sorted,elts)
 
    }else{
@@ -299,6 +299,7 @@ define NormalDensity(x)
 
 	if(not IsNumber(x))
 	{
+        Print("Value: "+x)
 	SignalFatalError("Argument of function [NormalDensity(<number>)] is not a number")
 	}
 
@@ -319,6 +320,7 @@ define SDTDPrime(hr,far)
 	  SignalFatalError("Second argument of function [SDTDPrime(<hr>,<far>)] is not a number")
 	}
 
+
    return CumNormInv(hr)-CumNormInv(far)
 }
 
@@ -334,7 +336,13 @@ define SDTBeta(hr,far)
 	{
 	SignalFatalError("Second argument of function [SDTBeta(<hr>,<far>)] is not a number")
 	}
-   beta <- NormalDensity(CumNormInv(far))/NormalDensity(CumNormInv(hr))
+
+   if(far==0 or hr==0 or hr==1 or far==1)
+   { 
+     beta <- "NA"
+   }else{
+     beta <- NormalDensity(CumNormInv(far))/NormalDensity(CumNormInv(hr))
+   }
   return beta
 }
 
