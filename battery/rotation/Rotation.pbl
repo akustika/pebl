@@ -1,6 +1,7 @@
 #################################################################
 ##  PEBL Mental Rotation Task
 ## 
+##  Version 0.3 (Nov 2014). Allows setting keys, feedback, practice trials.
 ##  Version 0.2 (enables translations, fixes response error)
 ##
 ##  For use with PEBL 0.11 or later
@@ -23,7 +24,11 @@ define Start(par)
   parpairs <- [["numrepeats",4],
                ["bgcolor","black"],
 	       ["fgcolor","red4"],
-	       ["xoffset",300]
+	       ["xoffset",300],
+               ["timeout",3000],
+	       ["samekey","<lshift>"],  ##alternate, try "<lshift>"
+	       ["diffkey","<rshift>"],   ##alternate, try "<rshift>"
+	       ["givefeedback",1]   ##Give correct/incorrect feedback
               ]
 
 
@@ -40,10 +45,12 @@ define Start(par)
      stims <- [stim1,stim2]
      stimnames <- ["bigl","zbolt"] ##for output purposes
 
+    gkeys <- [gParams.samekey,gParams.diffkey]
+
    ## Number of times through the design.
    numRepeats <- gParams.numrepeats
 
-  ##gLanguage defaults to 'en', but can be set at command line.  
+
   ##using the --language flag, or via the launcher
    GetStrings(gLanguage)
 
@@ -56,10 +63,17 @@ define Start(par)
 
   win <- MakeWindow(gParams.bgcolor)
 
+
   if(gSubNum==0)
    {
      gSubNum <- GetSubNum(win)
    }
+
+  fileOut <- GetNewDataFile(gSubNum,win,"rotate","csv",
+                "subNum,type,trialnum,cond,stimid,rot,resp,cor,rt")
+
+  reportfile <- GetNewDataFile(gSubNum,win,"rotate-report","txt", "")
+
 
 
    inst <- gInstructions
@@ -69,14 +83,11 @@ define Start(par)
   WaitForAnyKeyPress()
   Hide(tb)
   head <- EasyLabel(gHeader,gVideoWidth/2,gVideoHeight/2+200,win,22)
+  center <- EasyLabel("",gVideoWidth/2,gVideoHeight/2-200,win,50)
   Draw()
   
 
 
-  fileOut <- GetNewDataFile(gSubNum,win,"rotate","csv",
-                "subNum,trialnum,cond,stimid,rot,resp,cor,rt")
-
-  reportfile <- GetNewDataFile(gSubNum,win,"rotate-report","txt", "")
 
   data <- []
 
@@ -93,6 +104,14 @@ define Start(par)
 
      trials <- Shuffle(RepeatList(t2,numRepeats))
      trialnum <- 1
+
+     Print(trials)
+     ##prepend four practice trials
+
+    practrials <- [[2, 0, 1], [1, -1, 1], [1, 4, 0], [2, -2, 0]]
+    trialnum <- 1-Length(practrials)
+    trials <- Merge(practrials, trials)
+    type <- "PRACTICE"
 
     loop(i, trials)
      {
@@ -116,47 +135,98 @@ define Start(par)
       pts <- ReflectPoints(pts)
      }
 
+    ##No time limit for practice trials:
+    if(trialnum<1)
+       {
+           timeout <- -1
+       } else {
+          timeout <- gParams.timeout
+       }
+ 
 
     stm<- RotatePoints(pts,angleBase + gPI*rot/4)
     poly2 <- Polygon(gVideoWidth/2+gParams.xoffset/2,gVideoHeight/2,First(stm),Nth(stm,2),fgcolor,1)
     AddObject(poly2, win)
     Draw()
+
+
     t1 <- GetTime()
 
+      ##use timeout here if necessary:
+     if(timeout >0)
+      {
+         resp <- WaitForListKeyPressWithTimeout(gKeys,gParams.timeout,1)
+  #      resp <- Sample(gKeys)  #this is a dummy-response
+	 if(IsList(resp))
+          {
+            resp <- "<TIMEOUT>"
+          } else {
+	    resp <- Uppercase(resp)
+          }
 
-     resp <-  UpperCase(WaitForListKeyPress(["S","D"]))
-#     resp <- Sample(["S","D"])  #this is a dummy-response
+        }else{
+        resp <-  UpperCase(WaitForListKeyPress(gKeys))
+  #      resp <- Sample(gKeys)  #this is a dummy-response
+
+      }
+
 
     t2 <- GetTime()
 
-    cor <- ScoreTrial(resp,cond)
+    cor <- ScoreTrial(resp,cond,gKeys)
 
-    FilePrint(fileout,gSubNum + "," + trialnum + "," + cond + "," + stimid +
-               "," +  rot + "," + resp + "," + cor + "," + (t2-t1))
+  ##don't record the practice trials.
+  if(trialnum>0)
+    {
+      type <- "TEST"
+    }
+  
+    out <- gSubNum + ","+type+"," + trialnum + "," + cond + "," + stimid +
+             "," +  rot + "," + resp + "," + cor + "," + (t2-t1)
 
 
-    data <- Append(data,[cond,rot,(t2-t1),stimid])
+      FilePrint(fileout,out)
+      data <- Append(data,[type,cond,rot,(t2-t1),stimid])
+
+    if(gParams.givefeedback)
+    {
+      if(cor)
+      {
+         center.text <- gCorrect
+      } else {
+         center.text <- gIncorrect
+      }
+      Show(center)
+      Draw()
+      Wait(500)
+      Hide(center)
+    }
     
     RemoveObject(poly1,win)
     RemoveObject(poly2,win)
-
+    Draw()
     trialnum <- trialnum +1
 
     }
 
+  ##pull out just the test trials for statistics
 
-   dd <- Transpose(data)
+   test <- Nth(Transpose(data),1)
+   data2 <- Filter(data,Match(test,"TEST"))
+
+   dd <- Transpose(data2)
 
    out <- ""
+
    loop(i,stim) 
    {
      out <- out + "Stimulus object: " + Nth(stimnames,i) + CR(1)
 
-     filter <- Match(Nth(dd,4),i)
-     sub <- Filter(data,filter)
+     filter <- Match(Nth(dd,5),i)
+     sub <- Filter(data2,filter)
      tsub <- Transpose(sub)
 
-     out <- out + CR(1)+   AggBy2(Nth(tsub,3),Nth(tsub,2),Nth(tsub,1))
+     out <- out + CR(1)+   AggBy2(Nth(tsub,4),Nth(tsub,3),Nth(tsub,2))
      out <- out + CR(1)
    }
 
@@ -250,21 +320,22 @@ define Aggregate(data, cond)
  return stats
 }
 
-
-define ScoreTrial(resp, cond)
+## this should work for most keys, but may fail if you
+## use space (" "), enter, keypad stuff, etc.
+define ScoreTrial(resp, cond,keys)
 {  
   ret <- 0 
 
   if (cond ==1)  
    {
-     if(resp=="D") 
+     if(Uppercase(resp)==Uppercase(Second(keys))) 
        {
          ret <- 1
        } 
  
    } else { 
 
-     if(resp=="S") 
+     if(Uppercase(resp)==Uppercase(First(keys))) 
        {
          ret <- 1
        } 
@@ -297,12 +368,17 @@ define GetStrings(language)
 	lang <- Uppercase(language)
 	if(lang == "TR") 
      {
-       gInstructions <-  "Bu deneyde  iki nesnenin ayný olup olmadýðýna karar vereceksiniz. Bu nesneler diðerine göre faklý açýlarda döndürülecektir. Dödürülen nesnelerden bazýlarý ayný olurken bazýlarý ayna görüntüsü olacaktýr. Ayný olanlar için  'S';  farklý olanlar içi  'D' tuþuna basýnýz. "
-	   gHeader <- "Ayný olanlar için  'S';  farklý olanlar içi  'D' tuþuna basýnýz. "
+       gInstructions <-  "Bu deneyde  iki nesnenin ayný olup olmadýðýna karar vereceksiniz. Bu nesneler diðerine göre faklý açýlarda döndürülecektir. Dödürülen nesnelerden bazýlarý ayný olurken bazýlarý ayna görüntüsü olacaktýr. Ayný olanlar için  '"+gParams.samekey+"';  farklý olanlar içi  '"+gParams.diffkey+"' tuþuna basýnýz. "
+	   gHeader <- "Ayný olanlar için  '"+gParams.samekey+"';  farklý olanlar içi  '"+gParams.diffkey+"' tuþuna basýnýz. "
+        gCorrect <- "Correct"
+        gIncorrect <- "Incorrect"
 
      } else{ 
 	 ##default to english
        gInstructions <-  "In this task you will need to decide whether or not the two objects you see are identical.  They will be rotated with respect to one another, but some will be the same, and others will be mirror images. Press any key to begin."
-	   gHeader <- "Press 'S' for same and 'D' for different"
+	   gHeader <- "Press '"+gParams.samekey+"' for same and '"+gParams.diffkey+"' for different"
+        gCorrect <- "Correct"
+        gIncorrect <- "Incorrect"
+      
      }
 }
