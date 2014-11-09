@@ -15,6 +15,7 @@ define Start(p)
                ["isi",1500], ##Time between stimuli
                ["numP", 4],  ##Number of 'p' trials per block
 	       ["numR", 1],  ##Number of 'R' trials per block
+               ["stimtime",500],
 	       ["usemouse",1]] ##use mouse for response rather than keyboard
 
  Print(parpairs)
@@ -282,19 +283,18 @@ define DoBlock(trials,correctresponse,type)
      starttime <- GetTime()
 	 gStimOn <- 1
 	 ##make the stimulus disappear after 500 ms
-     RegisterEvent("<TIMER>", 1, starttime+500,"<GEQ>","HIDEME", [stim,star])
+     RegisterEvent("<TIMER>", 1, starttime+gParams.stimtime,"<GEQ>","HIDEME", [stim,star])
      if(gParams.usemouse)
      {
-       resp <- WaitForMouseButtonWithTimeout(1450)
+       resp <- WaitForMouseButtonWithTimeout(gParams.isi-50)
        Print(resp)
        ##this will eithe be ["<timeout>"] or [x,y,button,state]
       
 
      }else{
   
-      resp <- WaitForListKeyPressWithTimeout(["<lshift>","<rshift>"],1450,1)
+      resp <- WaitForListKeyPressWithTimeout(["<lshift>","<rshift>"],gParams.isi-50,1)
       #this will either be [<timeout>] or <buttonname>   
-      Print(resp)
      }
      endtime <- GetTime()
      HideMe(stim,star)
@@ -399,7 +399,20 @@ define GetStrings(lang)
 	gInst1 <- "Neste teste, irá ver uma série de 'P's e 'R's no ecrã. Sempre que surguir um 'P', responda pressionando a tecla Enter no teclado. NÃO RESPONDA quando surguir um 'R'.  A maioria das letras serão 'P's. Vai iniciar com alguns ensaios de prática. (Carregue na tecla Enter para começar)."
 	gInst2 <- "Agora, já sabe o que fazer nesta tarefa. Vai também deixar de ser avisado quando cometer um erro. (Carregue na tecla Enter para começar)."
 	gInst3 <- "Vai agora fazer um intervalo. Na segunda parte deste teste a regra vai mudar. Agora, vai carregar na tecla enter apenas quando surguir no ecrã um 'R' NÃO RESPONDA quando surguir um 'P'. Mais uma vez, a maioria das letras serão 'P's. Vai iniciar com alguns ensaios de prática. (Carregue na tecla Enter para começar)."
-	gLab <- "Carregue Enter para "
+
+
+
+    if(gParams.usemouse)
+    { 
+       method <- "clicking the mouse button anywhere on the screen. "
+       gLab <- "Press the mouse button for "
+
+    } else {
+        method<- " clicking one of the shift keys. "
+	gLab <- "Carregue <shift> para "
+    }
+
+
     gDebrief <- "Final. Bateria DPSM-HF "
 
    } elseif(Uppercase(lang)=="HR") {
@@ -408,8 +421,44 @@ define GetStrings(lang)
 	gInst1 <- "U ovom zadatku vidjet cete niz slova P i R na ekranu. Svaki put kada vidite slovo P pritisnite tipku SHIFT. NE ODGOVARAJTE kada vidite slovo R. Vecina slova koje cete vidjeti su slova P. Zapocet cete s nekoliko zadataka za uvjezbavanje. Pritisnite tipku SHIFT za pocetak."
 	gInst2 <- "Sada cete zapoceti s zadatkom za stvarno. Vise necete dobiti informaciju kada ste pogrijesili. Pritisnite bilo koju tipku za pocetak."
 	gInst3 <- "Mozete se malo odmoriti prije nego li nastavite. U drugom dijelu zadatka radit cete obrnuto. Ovaj put pritisnite tipku SHIFT kada vidite slovo R, ali ne kada vidite slovo P. Ponovno, vecina slova koju vidite bit ce slova P. Zapocet cete s nekoliko zadataka za uvjezbavanje. Pritisnite tipku SHIFT za pocetak."
+
+    if(gParams.usemouse)
+    { 
+       method <- "clicking the mouse button anywhere on the screen. "
+       gLab <- "Press the mouse button for "
+
+    } else {
+        method<- " clicking one of the shift keys. "
 	gLab <- "Pritisite tipku shift za "
+    }
+
     gDebrief <- "Hvala vam na sudjelovanju "
+
+
+  } elseif(Uppercase(lang)=="ES") {
+
+
+	gInst1 <- "En esta prueba observarás en la pantalla varias letras “P” y “R”. Siempre que veas una “P” responde presionando el shift derecho del teclado. NUNCA RESPONDAS cuando lo que aparezca sea una “R”. La mayoría de las letras que observarás serán “P”. Comenzarás con algunos ensayos de práctica. Presiona el shift derecho para comenzar."
+
+
+	gInst2 <- "Ahora la prueba comenzará con los ensayos reales. De ahora en adelante no se te dirá cuando cometas un error. Presiona cualquier tecla para comenzar."
+
+	gInst3 <- "You may take a short break before you continue.  In the second half of this study, the mapping will reverse.  This time, respond only when you see the 'R', but not when you see a 'P'. Once again, most of the letters you see will  be 'P's. You will begin with a few practice trials.  Press any key  to begin."
+
+      gDebrief <- "Thank you for participating. "
+
+
+    if(gParams.usemouse)
+    { 
+       method <- "clicking the mouse button anywhere on the screen. "
+       gLab <- "Press the mouse button for "
+    } else {
+      method<- " clicking one of the shift keys. "
+      gLab <- "Press <shift> for "
+    }
+
+     gDebrief <- "Gracias."
+
 
     }else {
     GetStrings("EN")
