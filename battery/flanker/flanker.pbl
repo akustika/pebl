@@ -26,7 +26,7 @@
 
 define Start(p)
 {
-     parpairs <- [["numreps",2],  ##20:number of repeats of the 2x3 design
+     parpairs <- [["numreps",20],  ##20:number of repeats of the 2x3 design
                   ["practicereps",1], #2
 		  ["includedashtrials",1], ##whether -->-- and --<-- trials should be included
                   ["includeemptytrials",1], ##whether [  >  ] and [  <  ] trials should be used
@@ -418,7 +418,20 @@ define GetStrings(language)
        gInterblock <- "Take a short break.  Hit any key to begin the next block."
        gDebrief <- "Thank you for participating in the study.  Alert the researcher that you are done."
          
+    } elseif(Uppercase(language)=="ES"){
+
+       gInst1text <- "Esta prueba comprobará de qué forma eres capaz de utilizar e ignorar información a la hora de tomar decisiones. En esta tarea se te preguntará la dirección de las flechas que se encuentran en el centro de un grupo de cinco. Si la flecha indica hacia la izquierda presiona el botón shift izquierdo de tu teclado. Si la flecha indica hacia la derecha presiona el botón shift derecho de tu teclado. Las puntas de las flechas que rodean a la flecha del centro pueden estar en la misma dirección, en la dirección opuesta o no tener punta y mostrarse solamente como líneas. Siempre vas a ignorar las flechas que rodean a la flecha del centro y responder solamente basándote en la del centro. Algunos ejemplos de la tarea se muestran a continuación. Presiona cualquier tecla para continuar."
+
+
+       gInst3text  <- "Comenzarás con un pequeño grupo de ensayos de prueba. Después de cada ensayo se te dirá si respondiste correctamente y cuánto tiempo te tomó responder (en milésimas de segundo). Debes responder lo más rápido que puedas. Recuerda, utiliza el shift derecho e izquierdo para responder. Presiona cualquier tecla para comenzar."
+
+       gFooterl <- "left-shift"
+       gFooterr <- "right-shift"
+       gInterblock <- "Take a short break.  Hit any key to begin the next block."
+       gDebrief <- "Thank you for participating in the study.  Alert the researcher that you are done."
+         
     } else {
+
        ##Fallback to english
        GetStrings("EN")
     }
