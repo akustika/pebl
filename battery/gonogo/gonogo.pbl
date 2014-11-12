@@ -14,7 +14,7 @@ define Start(p)
   parpairs <- [["reps",32], ##Number of repetitions of P/R blocks (with trials shuffled)
                ["isi",1500], ##Time between stimuli
                ["numP", 4],  ##Number of 'p' trials per block
-	       ["numR", 1],  ##Number of 'R' trials per block
+	           ["numR", 1],  ##Number of 'R' trials per block
                ["stimtime",500],
 	       ["usemouse",1]] ##use mouse for response rather than keyboard
 
@@ -152,7 +152,7 @@ define Start(p)
 
    FilePrint(gSumFileOut,"Mean Accuracy:          "+(Mean(Merge(err1,err2))))
    FilePrint(gSumFileOut,"Mean Error:             "+(1-Mean(Merge(err1,err2))))
-  FilePrint(gSumFileOut, "                 ROUND 1 Accuracy         ")
+  FilePrint(gSumFileOut, "                 ROUND 1 Accuracy rate        ")
    FilePrint(gSumFileOut,"----------------------------------------")
    FilePrint(gSumFileOut,"Cond    N       median  mean    sd")
    FilePrint(gSumFileOut,"----------------------------------------")
@@ -165,7 +165,7 @@ define Start(p)
        }
       FilePrint(gSumFileOut,tmp)
      }
-  FilePrint(gSumFileOut, "              ROUND 2 Accuracy          ")
+  FilePrint(gSumFileOut, "              ROUND 2 Accuracy rate         ")
    FilePrint(gSumFileOut,"----------------------------------------")
    FilePrint(gSumFileOut,"Cond    N       median  mean    sd")
    FilePrint(gSumFileOut,"----------------------------------------")
@@ -443,9 +443,9 @@ define GetStrings(lang)
 
 	gInst2 <- "Ahora la prueba comenzará con los ensayos reales. De ahora en adelante no se te dirá cuando cometas un error. Presiona cualquier tecla para comenzar."
 
-	gInst3 <- "You may take a short break before you continue.  In the second half of this study, the mapping will reverse.  This time, respond only when you see the 'R', but not when you see a 'P'. Once again, most of the letters you see will  be 'P's. You will begin with a few practice trials.  Press any key  to begin."
+	gInst3 <- "Puedes tomar un pequeno descanso para continuar. En esta segunda parte del estudio, tenemos que hacer lo contrario. Ahora, debes responder cada vez que aparezca la letra R, pero no responder cuando veas una letra P. La mayoria de letras que miraras seran P. Iniciaremos con una pequena practica. Presiona la tecla roja cuando estos listo para comenzar."
 
-      gDebrief <- "Thank you for participating. "
+    gDebrief <- "Gracias por tu participacion."
 
 
     if(gParams.usemouse)
@@ -454,10 +454,7 @@ define GetStrings(lang)
        gLab <- "Press the mouse button for "
     } else {
       method<- " clicking one of the shift keys. "
-      gLab <- "Press <shift> for "
-    }
-
-     gDebrief <- "Gracias."
+      gLab <- "Presiona la tecla roja cuando veas una letra"    }
 
 
     }else {
