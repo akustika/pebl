@@ -10,7 +10,7 @@ define Start(p)
 ##  Portuguese (Brazilian)
 ##  Dutch by Alien Van der Sluis
 ##  Turkish by Zeynel Baran
-
+## Spanish by user Carlos from Ecuador
 
 
    parpairs <- [["rounds",1]]#rounds is the number of times you go through form 1-2-3
@@ -724,6 +724,31 @@ define Initialize()
    gHeadBegin <- "Başlatmak için herhangi bir tuşa basın."
    gHeadBlock <- "Rengi belirtmek için tuşa basın."
    gExitText <- "Şimdi bitirdiniz. Katıldığınız için teşekkür ederiz."
+
+  }elseif(Uppercase(gLanguage)=="ES"){
+## SPANISH
+gKeys <- ["1","2","3","4"]
+keystring <- First(gKeys) +", "+ Second(gKeys)+ ", " +Third(gKeys)+ ", y "+ Fourth(gkeys)
+gColorBaseNames <- ["rojo","verde","azul","amarillo"]
+gWords <- ["auto","luna","pie","cero"]
+gPracticeText <- "Antes de comenzar tomaremos un momento para aprender las respuestas de cada tecla para cada color. Presiona las teclas ["+ keystring +
+"] consecutivamente para practicar y aprender los colores. Cuando estés listo presiona la barra espaciadora para comenzar." 
+gInst1 <- "Estás por iniciar una tarea en la cual conoceremos qué tan bien puedes leer palabras y colores. En la primera parte debes indicar el color de los puntos lo más rápido que puedas, para ésto debes presionar las teclas ["+keystring+"] según corresponda.
+
+Presiona cualquier tecla para comenzar."
+
+gInst2 <- "En la siguiente fase debes indicar el color con el cual están pintadas las palabras lo más rápido que puedas.
+
+Presiona cualquier tecla para continuar."
+
+gInst3 <- "Nuevamente, debes indicar los colores con los cuales están pintadas las palabras lo más rápido que puedas. Recuerda ¡no debes leer las palabras! En su lugar debes indicar el color con el cual están pintadas.
+
+Presiona cualquier tecla para continuar."
+
+gHeadBegin <-"Presiona cualquier tecla para continuar"
+gHeadBlock <- "Presiona la tecla para indicar el color."
+gExitText <-"Esto ha sido todo. Gracias por participar."
+
 
 
 
