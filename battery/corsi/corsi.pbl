@@ -25,7 +25,7 @@
 ##  Portuguese translation by Marco Moniz
 ##  Croation (HR) transaltions by Silvija Rucevic
 ##  Spanish translation (ES) by Yunior Broche
-
+##  Swedish translations (SE) by Anna Eva Hallin
 
 define Start(p)
 {
@@ -1007,10 +1007,37 @@ Presiona el clic cuando estés listo para comenzar."
     gCorrect <- "Correcto"
     gIncorrect <- "Incorrecto"
     gDone<- "Hecho"
+}elseif(lang=="SE") {
+
+ginstfor  <- "Du kommer att få göra ett test som mäter förmågan att komma ihåg ordningsföljder. Du kommer se nio blå fyrkanter på skärmen. Under varje försök kommer fyrkanterna lysa upp en efter en i en särskild ordning. Försök att komma ihåg ordningsföljden. När försöket är avslutat, ska du trycka på alla fyrkanterna som lyste I SAMMA ORDNING. När du är färdig, tryck på KLAR. Om du inte kan komma ihåg ordningsföljden exakt, tryck på fyrkanterna i en ordning som är så rätt som möjligt.
+
+ Du kommer starta med en sekvens av två fyrkanter, och du kommer få två försök på varje sekvenslängd. Sekvensen kommer att öka med en fyrkant om du repeterar minst en av sekvenserna korrekt. Om du trycker rätt så kommer nästa sekvens vara en fyrkant längre;
+   Klicka med musknappen när du är redo att starta."
+
+ginstback  <- "Du kommer att få göra ett test som mäter förmågan att komma ihåg ordningsföljder. Du kommer se nio blå fyrkanter på skärmen. Under varje försök kommer fyrkanterna lysa upp en efter en i en särskild ordning. Försök att komma ihåg ordningsföljden. När försöket är avslutat ska du trycka på alla fyrkanterna som lyste, men du ska göra det I OMVÄND ORDNING. Du ska alltså trycka på den sista fyrkanten som lyste först, sen den näst sista, och så vidare, fram till att du trycker på den första fyrkanten som lyste allra sist. När du är färdig, tryck på KLAR. Om du inte kan komma ihåg ordningsföljden exakt, försök att trycka på fyrkanterna i en ordning som är så rätt som möjligt.
+
+Du kommer starta med en sekvens av två fyrkanter, och du kommer få två försök på varje sekvenslängd. Sekvensen kommer att öka med en fyrkant om du repeterar minst en av sekvenserna korrekt. Om du trycker rätt så kommer nästa sekvens vara en fyrkant längre;
+   Klicka med musknappen när du är redo att starta."
+
+gPrompt1 <- "Först kommer vi göra några övningsuppgifter. De kommer inte påverka din poäng."
+
+  gPrompt2 <- "Nu börjar vi med testet. Dessa försök kommer att räknas mot din poäng. Klicka med musknappen för att starta."
 
 
+  gPromptFinal1 <- "Tack för din medverkan. Säg till försöksledaren att du är klar."
+  gPromptFinal2 <- "Blockspann:           "
+  gPromptFinal3 <- "Total poäng:          "
+  gPromptFinal4 <- "Antal korrekta försök: "
+  gPromptFinal5 <- "Minnesspann:           "
+ 
+  gReady <- "REDO"
+  gCorrect <- "Rätt"
+  gIncorrect <- "Fel"
+  gDone<- "Klar"    
+  
  }else {
 
+## Default to english
 
     gInstfor  <- "You are about to take part in a test that measures your ability to remember a sequence of locations on the screen. You will see nine blue squares on the screen. On each trial, the squares will be lit up one at a time in sequence.  Remember the sequence.  When the sequence is finished, you need to click on each square IN THE SAME ORDER THEY WERE GIVEN.  When you are done, click the button labeled DONE.  If you cannot remember the order of squares, click them in as close the the original order as you can. 
 
