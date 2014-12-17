@@ -7,6 +7,7 @@
 ##    http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2757760/
 ##
 ##  Croation translation (HR) By Silvija Rucevicgon
+## Italian translation (IT) by Antonella Somma
 
 define Start(p)
 {
@@ -14,7 +15,7 @@ define Start(p)
   parpairs <- [["reps",32], ##Number of repetitions of P/R blocks (with trials shuffled)
                ["isi",1500], ##Time between stimuli
                ["numP", 4],  ##Number of 'p' trials per block
-	           ["numR", 1],  ##Number of 'R' trials per block
+	       ["numR", 1],  ##Number of 'R' trials per block
                ["stimtime",500],
 	       ["usemouse",1]] ##use mouse for response rather than keyboard
 
@@ -457,7 +458,14 @@ define GetStrings(lang)
       gLab <- "Presiona la tecla roja cuando veas una letra"    }
 
 
-    }else {
+    }elseif(Uppercase(lang)=="IT") {
+        gInst1 <- "In questo compito, vedrà una serie di 'P' e 'R' sullo schermo. Ogni volta che vedrà una 'P', la prego di rispondere  premendo il tasto 'shift' di destra sulla tastiera. La prego di NON RISPONDERE quando vedrà la 'R'.  La maggior parte delle lettere che vedrà saranno 'P'. Comincerà con alcune prove per esercitarsi.  La prego di premere il tasto 'shift' di destra per cominciare."
+	gInst2 <- "Ora, il compito comincerà per davvero. Non le verrà più detto quando ha commesso un errore. Prema un tasto qualsiasi per cominciare."
+	gInst3 <- "Può fare una breve pausa prima di continuare.  Nella seconda meta di questa prova, la regola sarà invertita.  Questa volta, la prego di premere il tasto 'shift' di desta solo quando vedrà la 'R', ma non quando vedrà la 'P'. Ancora una volta, la maggior parte delle lettere che vedrà saranno 'P'. Comincerà con alcune prove per esercitarsi.  La prego di premere il tasto 'shift' di destra per cominciare."
+	gLab <- "Prema <shift> per "
+    gDebrief <- "Grazie per aver partecipato."
+
+  } else {
     GetStrings("EN")
   }
 }
