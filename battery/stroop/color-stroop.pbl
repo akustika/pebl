@@ -380,10 +380,10 @@ define DoTrial(stim,cond,code)
 
         resp <-WaitForListKeyPressWithTimeout(gKeys,2000,1)
         time2 <- GetTime()
-	Print(resp)
+
          if(IsList(resp))   ##Check to see if there was a time-out.
            {
-             gStimLabel.text <- "Too Slow"
+             gStimLabel.text <- gTooslow
              Draw()
              Wait(500)
              responded <- 0
@@ -396,9 +396,9 @@ define DoTrial(stim,cond,code)
 	     {
 	     if(corr)
 	     {
-     	       gStimLabel.text <-"Correct"
+     	       gStimLabel.text <-gCorrect
 	     }else{
-     	       gStimLabel.text <-"Incorrect"
+     	       gStimLabel.text <-gIncorrect
 	     }
 
 	     Draw()
@@ -416,7 +416,7 @@ define DoTrial(stim,cond,code)
 
     }elseif(cond=="audio")
     {
-         Print("time1")
+
          resp0 <-  GetVocalResponseTime(gResponseBuffer,gVoiceKeyThreshold, gVoiceKeyDuration)
 #        Wait(300)
 
@@ -527,6 +527,16 @@ define PracticeTrials(usepreset,dim)
    {
 
 
+    red <- Nth(gColorNames,1)
+    green <- Nth(gColorNames,2)
+    blue <- Nth(gColorNames,3)
+    yellow <- Nth(gColorNames,4)
+
+   w1 <-Nth(gNeutralNames,1)
+   w2 <-Nth(gNeutralNames,2)
+   w3 <-Nth(gNeutralNames,3)
+   w4 <-Nth(gNeutralNames,4)
+
      ##Hardcode list here.
      ##These lists determine the stimuli in the test; 
    ##the first is the condition (cong, neut, incong)
@@ -534,19 +544,19 @@ define PracticeTrials(usepreset,dim)
    ##the third is the color id (element of gColors, where 5 indicates black)
       if(dim=="color")
       {
-      x <-[["I","yellow",2],["N","when",4],["C","green",3],["N","hard",1],
-           ["C","yellow",4],["I","green",2],["C","blue",2],["N","and",3],
-           ["I","blue",3],["I","yellow",3],["C","red",1],["N","hard",2],
-   	   ["C","green",3],["C","red",1],["N","and",1],["C","blue",2],
-	   ["C","yellow",4],["I","red",3],["N","and",4],["N","over",2],
-	   ["I","green",4],["N","when",2],["I","yellow",1],["I","red",4]]
+      x <-[["I",yellow,2],["N",w1,4],["C",green,3],["N",w2,1],
+           ["C",yellow,4],["I",green,2],["C",blue,2],["N",w3,3],
+           ["I",blue,3],["I",yellow,3],["C",red,1],["N",w2,2],
+   	   ["C",green,3],["C",red,1],["N",w3,1],["C",blue,2],
+	   ["C",yellow,4],["I",red,3],["N",w3,4],["N",w4,2],
+	   ["I",green,4],["N",w1,2],["I",yellow,1],["I",red,4]]
       }else{
        x <- GenerateStimuli(8,dim)
       }
    }else {
        x <- GenerateStimuli(8,dim)
    }
-  Print(x)
+
   return x
 }
 
@@ -555,21 +565,32 @@ define Round1Trials(usepreset,dim)
 {
   if(usePreset)
    {
+
+    red <- Nth(gColorNames,1)
+    green <- Nth(gColorNames,2)
+    blue <- Nth(gColorNames,3)
+    yellow <- Nth(gColorNames,4)
+
+   w1 <-Nth(gNeutralNames,1)
+   w2 <-Nth(gNeutralNames,2)
+   w3 <-Nth(gNeutralNames,3)
+   w4 <-Nth(gNeutralNames,4)
+
    if(dim=="color")
    {
    ##the first is the condition (cong, neut, incong)
    ##the second is the word
    ##the third is the color id (element of gColors, where 5 indicates black)
 
-    x <- [["I","green",4],["C","blue",2],["N","and",4],["I","blue",1],["I","green",4],["N","and",1],["N","and",3],["N","hard",1],
-          ["C","green",3],["I","yellow",1],["C","red",1],["C","yellow",4],["C","blue",2],["I","red",4],["C","green",3],["C","red",1],
-          ["N","hard",2],["N","over",1],["N","over",4],["C","yellow",4],["I","green",2],["C","blue",2],["N","hard",2],["C","red",1],
-          ["N","when",4],["I","green",1],["N","hard",1],["N","hard",4],["I","blue",3],["N","when",1],["I","green",2],["C","red",1],
-          ["I","blue",4],["I","yellow",1],["I","yellow",3],["N","hard",3],["C","yellow",4],["C","green",3],["I","red",2],["N","when",4],
-          ["C","red",1],["N","when",3],["N","over",2],["N","and",4],["I","yellow",3],["C","green",3],["I","red",3],["I","red",2],
-          ["N","over",4],["C","yellow",4],["N","hard",4],["C","blue",2],["I","blue",3],["C","yellow",4],["C","green",3],["C","blue",2],
-          ["N","when",2],["N","when",2],["I","yellow",2],["I","red",4],["N","and",3],["I","green",1],["I","blue",1],["C","green",3],
-          ["I","red",3],["I","blue",4],["C","red",1],["N","over",3],["I","yellow",2],["C","yellow",4],["C","blue",2],["N","and",2]]
+    x <- [["I",green,4],["C",blue,2],["N",w3,4],["I",blue,1],["I",green,4],["N",w3,1],["N",w3,3],["N",w2,1],
+          ["C",green,3],["I",yellow,1],["C",red,1],["C",yellow,4],["C",blue,2],["I",red,4],["C",green,3],["C",red,1],
+          ["N",w2,2],["N",w4,1],["N",w4,4],["C",yellow,4],["I",green,2],["C",blue,2],["N",w2,2],["C",red,1],
+          ["N",w1,4],["I",green,1],["N",w2,1],["N",w2,4],["I",blue,3],["N",w1,1],["I",green,2],["C",red,1],
+          ["I",blue,4],["I",yellow,1],["I",yellow,3],["N",w2,3],["C",yellow,4],["C",green,3],["I",red,2],["N",w1,4],
+          ["C",red,1],["N",w1,3],["N",w4,2],["N",w3,4],["I",yellow,3],["C",green,3],["I",red,3],["I",red,2],
+          ["N",w4,4],["C",yellow,4],["N",w2,4],["C",blue,2],["I",blue,3],["C",yellow,4],["C",green,3],["C",blue,2],
+          ["N",w1,2],["N",w1,2],["I",yellow,2],["I",red,4],["N",w3,3],["I",green,1],["I",blue,1],["C",green,3],
+          ["I",red,3],["I",blue,4],["C",red,1],["N",w4,3],["I",yellow,2],["C",yellow,4],["C",blue,2],["N",w3,2]]
     } else {
      x <- GenerateStimuli(28,dim)
     }
@@ -585,31 +606,42 @@ define Round1Trials(usepreset,dim)
 define Round2Trials(usepreset,dim)
 {
   if(usePreset)
-   
+  
   {
+
+    red <- Nth(gColorNames,1)
+    green <- Nth(gColorNames,2)
+    blue <- Nth(gColorNames,3)
+    yellow <- Nth(gColorNames,4)
+
+   w1 <-Nth(gNeutralNames,1)
+   w2 <-Nth(gNeutralNames,2)
+   w3 <-Nth(gNeutralNames,3)
+   w4 <-Nth(gNeutralNames,4)
+
    if(dim=="color")
    {
    ##the first is the condition (cong, neut, incong)
    ##the second is the word
    ##the third is the color id (element of gColors, where 5 indicates black)
 
-     x <- [["I","yellow",3],["I","green",2],["I","red",2],["N","hard",4],
- ["C","blue",2],["I","yellow",2],["N","when",4],["N","when",3],["N","and",2],
- ["I","green",4],["I","yellow",2],["I","blue",4],["I","blue",3],
- ["I","green",4],["I","blue",1],["C","red",1],["I","blue",4],
- ["N","and",1],["N","over",4],["C","yellow",4],["C","blue",2],["C","green",3],
- ["C","red",1],["I","blue",3],["C","green",3],["I","green",2],
- ["C","blue",2],["I","red",4],["I","red",3],["N","over",4],["C","red",1],
- ["N","and",3],["C","yellow",4],["N","over",3],["C","green",3],
- ["N","hard",2],["C","blue",2],["C","red",1],["N","and",2],
- ["C","green",3],["I","blue",1],["N","and",3],["N","when",2],
- ["C","yellow",4],["N","hard",2],["N","over",1],["I","green",1],
- ["C","blue",2],["I","yellow",3],["I","yellow",1],["I","green",1],
- ["C","red",1],["I","red",4],["I","yellow",1],["N","hard",3],
- ["N","when",1],["C","green",3],["C","red",1],["C","yellow",4],
- ["C","yellow",4],["I","red",3],["N","over",2],["N","when",1],
- ["I","red",2],["N","hard",1],["C","yellow",4],["N","and",1],
- ["C","blue",2],["N","hard",1],["N","and",4],["C","green",3],["N","over",2]] 
+     x <- [["I",yellow,3],["I",green,2],["I",red,2],["N",w2,4],
+ ["C",blue,2],["I",yellow,2],["N",w1,4],["N",w1,3],["N",w3,2],
+ ["I",green,4],["I",yellow,2],["I",blue,4],["I",blue,3],
+ ["I",green,4],["I",blue,1],["C",red,1],["I",blue,4],
+ ["N",w3,1],["N",w4,4],["C",yellow,4],["C",blue,2],["C",green,3],
+ ["C",red,1],["I",blue,3],["C",green,3],["I",green,2],
+ ["C",blue,2],["I",red,4],["I",red,3],["N",w4,4],["C",red,1],
+ ["N",w3,3],["C",yellow,4],["N",w4,3],["C",green,3],
+ ["N",w2,2],["C",blue,2],["C",red,1],["N",w3,2],
+ ["C",green,3],["I",blue,1],["N",w3,3],["N",w1,2],
+ ["C",yellow,4],["N",w2,2],["N",w4,1],["I",green,1],
+ ["C",blue,2],["I",yellow,3],["I",yellow,1],["I",green,1],
+ ["C",red,1],["I",red,4],["I",yellow,1],["N",w2,3],
+ ["N",w1,1],["C",green,3],["C",red,1],["C",yellow,4],
+ ["C",yellow,4],["I",red,3],["N",w4,2],["N",w1,1],
+ ["I",red,2],["N",w2,1],["C",yellow,4],["N",w3,1],
+ ["C",blue,2],["N",w2,1],["N",w3,4],["C",green,3],["N",w4,2]] 
 
    }else{
       x <- GenerateStimuli(28,dim)
@@ -777,16 +809,20 @@ define Initialize()
 define GetStrings(language)
 {
 
+lang <- Uppercase(language)
 ##stimili are defined here because different languages may require different number or letter characters.
-  
-##Ignore the translation for now.
+
+  #start with english for fallback, then redefine  for specific languages.
 
 
+   ##Ignore the translation for now.
    gColorNames      <- ["red","blue","green","yellow"]
    gBlackName <- "black"
    gNeutralNames    <- ["when","hard","and","over"]
 
-
+   gCorrect <- "Correct"
+   gIncorrect <- "Incorrect"
+   gTooSlow <- "Too slow"
    if(gResponseType=="keyboard")
    {
      gKeys <- [1,2,3,4]
@@ -795,6 +831,7 @@ define GetStrings(language)
       gKeys <- [1,2,3,4]
       keystring <- "Say 'red', 'blue', 'green', or 'yellow'"
    }
+  gPracticeText <- "Before we begin, take a moment to learn the mapping between colors and the keyboard numbers.  Press the numbers 1-4 consecutively to practice the responses, and space bar to begin the test."
 
     gInstructionsBase<- "You are about to take part in an study in which you will be asked to determine the color that written words appear in.  Sometimes, the words will be actual color names.  When this happens, try not to respond with the written color name, but only with the color of the word."
 
@@ -853,7 +890,167 @@ if(gResponseType=="keyboard" )
 
     gPracticeHeaderText <- "PRACTICE"
     gTestHeaderText    <-  "TEST"
- }
+
+
+  if(lang=="ES")
+  {
+
+   gCorrect <- "Correcto"
+   gIncorrect <- "Incorrecto"
+   gTooSlow <- "Demasiado lento"
+   gColorNames      <- ["rojo","azul","verde","amarillo"]
+   gBlackName <- "negro"
+   gNeutralNames    <- ["cuando","dura","fin","sobre"]
+
+
+   if(gResponseType=="keyboard")
+   {
+     gKeys <- [1,2,3,4]
+     keystring <-  "1 = rojo   2 = azul  3 = verde  4 = amarillo"
+     }else{
+      gKeys <- [1,2,3,4]
+      keystring <- "Decir 'rojo', 'azul', 'verde', o 'amarillo'"
+   }
+
+    gPracticeText <- "Antes de comenzar toma un momento para que aprendas la relación entre los colores y los números en el teclado que corresponden a cada uno. Presiona los números del 1 al 4 consecutivamente para practicar las respuestas y la barra de espacio para comenzar la prueba."
+
+   gInstructionsBase<-  "Vas a realizar una prueba en la que determinarás el color con el que están escritas un grupo de palabras. En algunos casos las palabras serán nombres de colores. Debes evitar presionar el botón que corresponde con el nombre del color y responder solamente con el número del color con el que la palabra está coloreada."
+
+   gKeyManual <- "Debes responder empleando los números 1-2-3-4  que aparecen en la parte superior del teclado."
+
+    gKeyVocal <- "You will need to respond by saying the color of the written word, loudly and clearly, into the microphone."
+
+
+if(gResponseType=="keyboard" )
+  {
+    gInstructionsText <- gInstructionsBase+gKeyManual
+  }else{
+    gInstructionsText <- gInstructionsBase+gKeyVocal
+  }
+
+
+    gBreak1Text <- "Ha concluido la práctica. Ahora responderás la prueba real. Recuerda responder lo más rápido y preciso que puedas. Presiona cualquier tecla para comenzar."
+
+    gBreak2Text <- " Presiona cualquier tecla para comenzar."
+
+    gPracticeHeaderText <- "PRÁCTICA"
+    gTestHeaderText    <-  "PRUEBA"
+
+    ##these are for experimenter labels.
+    gFooter1TextManual <- "Presiona "+keystring
+    gFooter1aTextManual <- " para el color de la palabrad"
+    gFooter1TextManual2 <- " Presiona  "+keystring
+    gFooter1aTextManual2 <- "or '5' for other error."
+
+    gFooter1TextVocal <- "Say '"+keystring+"'"
+    gfooter1atextVocal <- "for the number of characters that appear on the screen"
+
+    gFooter2Text <-"Responder con rapidez y precisión."
+    gExitText <-"You are now finished. Thank you for participating."
+  
+   ##these don't need to be translated:
+   gPEBLColorNames  <- ["red","navy","darkgreen","yellow1","black"]
+
+   ##Create the actual colors to be used.
+   gColors <- []
+   loop(i,gPEBLColorNames)
+   {
+     gColors <- Append(gColors,MakeColor(i))
+   }
+   gBlack <- MakeColor("black")
+   gBg <- MakeColor("grey")
+
+   gFonts <- []
+   loop(i,gColors)
+   {
+      gFonts <- Append(gFonts, MakeFont(gPEBLBaseFontMono, 0, gStimSize, i,gBg,0))
+   }
+
+    gPracticeHeaderText <- "PRÁCTICA"
+    gTestHeaderText    <-  "PRUEBA"
+
+}elseif(lang=="IT")
+  {
+
+   gCorrect <- "Corretto"
+   gIncorrect <- "scorretto"
+   gTooSlow <- "Troppo lento"
+   gColorNames      <- ["rosso","blu","verde","giallo"]
+   gBlackName <- "nero"
+   gNeutralNames    <- ["quando","duro","e","sopra"]
+
+
+   if(gResponseType=="keyboard")
+   {
+     gKeys <- [1,2,3,4]
+     keystring <-  "1 = rosso   2 = blu  3 = verde  4 = giallo"
+     }else{
+      gKeys <- [1,2,3,4]
+      keystring <- "Say 'rosso', 'blu', 'verde', or 'giallo'"
+   }
+
+    gPracticeText <- "Prima di iniziare la prova, la preghiamo di prendersi un momento per imparare l'associazione tra i colori e i numeri della tastiera.  La prego di premere i numeri 1-4 uno dopo l'altro per esercitarsi con le risposte, e la barra spaziatrice per iniziare il test."
+
+    gInstructionsBase<- "Sta per prendere parte ad una prova in cui le verrà chiesto di stabilire il colore in cui sono scritte le parole. Qualche volta, le parole saranno effettivamente nomi di colori. Quando ciò accadrà, La prego di provare a rispondere non leggendo il nome del colore scritto, bensì con il colore in cui è scritta la parola."
+
+    gKeyManual <- " Per rispondere, la preghiamo di utilizzare i tasti 1-2-3-4 collocati lungo il bordo superiore della tastiera."
+
+    gKeyVocal <- "You will need to respond by saying the color of the written word, loudly and clearly, into the microphone."
+
+
+if(gResponseType=="keyboard" )
+  {
+    gInstructionsText <- gInstructionsBase+gKeyManual
+  }else{
+    gInstructionsText <- gInstructionsBase+gKeyVocal
+  }
+
+
+    gBreak1Text <- "L’allenamento è terminato. Ora cominceremo il test per davvero. Si ricordi di rispondere più velocemente e accuratamente possibile. Prema un tasto qualsiasi per cominciare."
+    gBreak2Text <- "Ora può fare una breve pausa.  Quando ricomincerà, si ricordi di rispondere più velocemente e accuratamente possibile. Prema un tasto qualsiasi per cominciare."
+
+    gPracticeHeaderText <- "ALLENAMENTO"
+    gTestHeaderText    <-  "TEST"
+
+    gFooter1TextManual <- "Prema "+keystring
+    gFooter1aTextManual <- "per il colore della parola"
+
+    gFooter1TextManual2 <- "Prema "+keystring
+    gFooter1aTextManual2 <- "o '5' per altri errori."
+
+    gFooter1TextVocal <- "Say '"+keystring+"'"
+    gfooter1atextVocal <- "for the number of characters that appear on the screen"
+
+    gFooter2Text <-"Risponda nel modo più veloce e preciso possibile. "
+
+    gExitText <-"Ora ha finito. La ringraziamo per la sua partecipazione."
+  
+
+
+
+
+
+   ##these don't need to be translated:
+   gPEBLColorNames  <- ["red","navy","darkgreen","yellow1","black"]
+
+   ##Create the actual colors to be used.
+   gColors <- []
+   loop(i,gPEBLColorNames)
+   {
+     gColors <- Append(gColors,MakeColor(i))
+   }
+   gBlack <- MakeColor("black")
+   gBg <- MakeColor("grey")
+
+   gFonts <- []
+   loop(i,gColors)
+   {
+      gFonts <- Append(gFonts, MakeFont(gPEBLBaseFontMono, 0, gStimSize, i,gBg,0))
+   }
+
+
+}
+}
 
 
 
@@ -875,7 +1072,7 @@ define DoPractice()
 {
    ##Do the practice here:
    ##Lets do a little learning about the key mappings
-   instructions <- EasyTextBox("Before we begin, take a moment to learn the mapping between colors and the keyboard numbers.  Press the numbers 1-4 consecutively to practice the responses, and space bar to begin the test.",
+   instructions <- EasyTextBox(gPracticeText,
                    10,10,gWin,28,gVideoWidth-20,200)
 
     Show(instructions) 
