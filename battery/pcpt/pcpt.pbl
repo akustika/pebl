@@ -417,20 +417,58 @@ define Start(lPar)
    foil2000 <- trialspercond-targ2000
    foil4000 <- trialspercond-targ4000
 
+  Print("TESTING:")
+  Print("--------------------")
+
+   PrintMe(reportfile,"Correct Trials   " +Tab(1)+ (corT1000 + corF1000) + "/" + trialspercond+ Tab(1) + (corT2000 + corF2000)+
+                      "/" + trialspercond + Tab(1) + (corT4000 + corF4000) + "/" +  trialspercond  +
+                      Tab(1)+ (corT1000+corT2000+corT4000+corF1000+corF2000+corF4000) +"/"+ (trialspercond*3))
+
+   PrintMe(reportfile,"Correct Targets  " +Tab(1)+ corT1000 + "/" +  targ1000 + Tab(1) + corT2000 + "/" + targ2000 + Tab(1) + corT4000 +   "/" + targ4000 +Tab(1)+
+                       (corT1000 +  corT2000 + corT4000)+ "/" + (targ1000+targ2000+targ4000   ))
+   PrintMe(reportfile,"Correct Foils    " +Tab(1)+ corF1000 + "/" + foil1000 + Tab(1) + corF2000 + "/" + foil2000 + Tab(1) + corF4000 + "/" + foil4000+Tab(1)+
+                        (corF1000 +  corF2000 + corF4000)+ "/" + (foil1000+foil2000+foil4000   ))
+   PrintMe(reportfile,"Target Acc Rate  " +Tab(1)+ Rnd(corT1000/targ1000,3) + Tab(1) + Rnd(corT2000/targ2000,3) + Tab(1) + Rnd(corT4000/targ4000,3)+Tab(1)+
+                      Rnd((corT1000+corT2000+corT4000)/(targ1000+targ2000+targ4000),3))
+
+
+   PrintMe(reportfile,"Foil Acc Rate    " +Tab(1)+ Rnd(corF1000/Max([1,foil1000]),3) + Tab(1) +
+                                                   Rnd(corF2000/Max([1,foil2000]),3) + Tab(1) + 
+                                                   Rnd(corF4000/Max([1,foil4000]),3) + Tab(1) + 
+                                                   Rnd((corF1000+corF2000+corF4000)/Max([1,(foil1000+foil2000+foil4000)]),3))
+
+
+
+
+   Print("A")
    ##Compute SDT beta and dprime for each delay condition.
    dp1000 <- Rnd(SDTDPrime(corT1000/targ1000,1-corF1000/Max([1,foil1000])),3)
+   Print("B")
    dp2000 <-Rnd(SDTDPrime(corT2000/targ2000,1-corF2000/Max([1,foil2000])),3)
+   Print("B")
    dp4000 <-Rnd(SDTDPrime(corT4000/targ4000,1-corF4000/Max([1,foil4000])),3)
+   Print("B")
    dpall  <- Rnd(SDTDPrime((corT1000+corT2000+corT4000)/(targ1000+targ2000+targ4000),
                        1-(corF1000+corF2000+corF4000)/Max([1,(foil1000+foil2000+foil4000)])),3)
 
+   Print("B")
+
+   Print("up1")
+   Print(corT1000/targ1000)
+   Print(1-corF1000/Max([1,foil1000]))
+
    beta1000 <- Rnd(SDTBeta(corT1000/targ1000,1-corF1000/Max([1,foil1000])),3)
+   Print("C")
+   Print(foil2000)
+   Print([corT2000/targ2000,1-corF2000/Max([1,foil2000])])
    beta2000 <- Rnd(SDTBeta(corT2000/targ2000,1-corF2000/Max([1,foil2000])),3)
+   Print("C2")
    beta4000 <- Rnd(SDTBeta(corT4000/targ4000,1-corF4000/Max([1,foil4000])),3)
+   Print("C3")
    betaall  <- Rnd(SDTBeta((corT1000+corT2000+corT4000)/(targ1000+targ2000+targ4000),
                        1-(corF1000+corF2000+corF4000)/Max([1,(foil1000+foil2000+foil4000)])),3)
 
-
+   Print("C4")
 ##Print out report
    PrintMe(reportfile,"--------------------------------------------------------")
    PrintMe(reportfile," Report for PEBL Continuous Performance Task (PCPT)")
@@ -583,7 +621,23 @@ define GetStrings(lang)
 {
  lang <- Uppercase(lang)
 
- if(lang=="PT")
+ if(lang=="IT")
+ {
+   gInst1 <- "Sta per prendere parte ad una prova che " +
+           "prevede che segua uno stimolo sullo schermo. Ci vorranno " +
+           "circa 14 minuti.  Vedrà delle lettere comparire "+
+           "velocemente sullo schermo. Il suo obiettivo sarà quello di " +
+           "premere la barra spaziatrice il più velocemente " + 
+           "possibile dopo ciascuna lettera, fatta eccezione per la lettera 'X'. " + 
+           "LA PREGO DI NON RISPONDERE ALLO STIMOLO 'X'.  Per cominciare prema la barra spaziatrice."
+
+   gInst2 <- "Ora potrà fare una breve pausa.  Prema la barra spaziatrice per continuare con il prossimo blocco. " +
+             "Ricordi, usi la barra spaziatrice per rispondere a tutti gli stimoli ECCETTO LA X"
+
+   gInstFinal <- "Grazie per aver partecipato alla somministrazione. Prema 'X' per uscire."
+
+   
+  }elseif(lang=="PT")
   {
    gInst1 <- "Está prestes a iniciar um teste em que terá de " +
            "prestar atenção a um estímulo que surgirá no ecrã. O teste demorará " +
@@ -611,4 +665,29 @@ define GetStrings(lang)
 
 
   }
+}
+
+
+
+
+
+##Compute beta
+define SDTBeta(hr,far)
+{
+	if(not IsNumber(hr))
+	{
+	SignalFatalError("First argument of function [SDTBeta(<hr>,<far>)] is not a number")
+	}
+	if(not IsNumber(far))
+	{
+	SignalFatalError("Second argument of function [SDTBeta(<hr>,<far>)] is not a number")
+	}
+
+   if(far==0 or hr==0 or hr==1 or far==1)
+   { 
+     beta <- "NA"
+   }else{
+     beta <- NormalDensity(CumNormInv(far))/NormalDensity(CumNormInv(hr))
+   }
+  return beta
 }
