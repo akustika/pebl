@@ -1,0 +1,7 @@
+Sta per prendere parte ad un prova in cui dovrà classificare delle carte in base ai disegni che appaiono su di esse. Per cominciare, vedrà quattro mazzi (prema il tasto del mouse per vedere i quattro mazzi).
+Ciascun mazzo ha numero, colore e forma diversi. Vedrà una serie di carte e dovrà stabilire a quale mazzo appartiene. Clicchi su un mazzo con il puntatore del mouse per indicare il mazzo cui appartiene ciascuna nuova carta.  La risposta corretta è determinata da una regola. Lei non saprà qual’è la regola, ma ad ogni prova Le diremo se la risposta era corretta o no. Prema il tasto del mouse per continuare.
+Infine, la regola può cambiare durante la prova, quindi, quando questo accade, dovrà capire quale è la regola il più velocemente possibile e cambiare in accordo ad essa. Prema il tasto del mouse per iniziare. 
+Ora può andare. La prego di avvisare la persona che le sta somministrando il test che ha finito. Clicchi con il mouse per uscire.
+Clicchi sul mazzo per classificare la carta
+Corretto!
+Sbagliato
