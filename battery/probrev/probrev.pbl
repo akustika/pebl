@@ -91,7 +91,9 @@ Press any key to begin.")
   ##
 
    datafile <- GetNewDataFile(gSubNum,gWin,"probrev","csv",
-                       "sub,block,stage,trial,targ")
+                       "sub,block,stage,totaltrial,trial,order,valid,corrfeedback,acc,corr,rt")
+
+
    reportfile <- GetNewDataFile(gSubNum,gWin,"probrev-report","txt","")
 
 
