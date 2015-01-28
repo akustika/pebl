@@ -82,7 +82,7 @@ define Start(p)
 
    MakeDirectory("data")
    gFileOut <- GetNewDataFile(gSubNum,gWin,"globallocal","csv",
-   "subnum,block,trial,correctresp,localstim,globalstim,consistency,correctLocal,correctGlobal,response,correct,time1,rt")
+   "subnum,block,trial,correctresp,localstim,globalstim,consistency,correctLocal,correctGlobal,positionX,positionY,response,correct,time1,rt")
 
     gReportfile <- GetNewdataFile(gSubNum,gWin,"globallocal-report","txt","")
 
@@ -205,7 +205,7 @@ define Start(p)
 
       FilePrint(gFileOut,gSubNum+","+block+","+trial+","+correctresp+","+
                 localStim+","+globalStim+"," + consistency+","+correctLocal+","+
-                correctGlobal+"," +resp+","+corr+","+time1+
+                correctGlobal+","  +stimlabel.x+","+stimlabel.y+","+resp+","+corr+","+time1+
                  ","+(time2-time1))
 
 
@@ -304,7 +304,7 @@ define Start(p)
 
       FilePrint(gFileOut,gSubNum+","+block+","+trial+","+correctresp+","+
                 localStim+","+globalStim+"," +  consistency+","+correctLocal+","+
-                correctGlobal+"," +resp+","+corr+","+time1+
+                correctGlobal+"," +stim.x+","+stim.y+"," +resp+","+corr+","+time1+
                  ","+(time2-time1))
 
       PushOnEnd(gDataBlock,block)
@@ -398,7 +398,7 @@ define Start(p)
 
       FilePrint(gFileOut,gSubNum+","+block+","+trial+","+correctresp+","+
                 localStim+","+globalStim+"," +  consistency+","+correctLocal+","+
-                correctGlobal+"," +resp+","+corr+","+time1+
+                correctGlobal+","  +stim.x+","+stim.y+","+resp+","+corr+","+time1+
                  ","+(time2-time1))
 
       PushOnEnd(gDataBlock,block)
@@ -514,7 +514,7 @@ define Start(p)
 
       FilePrint(gFileOut,gSubNum+","+block+","+trial+","+correctresp+","+
                 localStim+","+globalStim+"," +  consistency+","+correctLocal+","+
-                correctGlobal+"," +resp+","+corr+","+time1+
+                correctGlobal+","  +stim.x+","+stim.y+","+resp+","+corr+","+time1+
                  ","+(time2-time1))
 
       PushOnEnd(gDataBlock,block)
@@ -629,7 +629,7 @@ define Start(p)
 
       FilePrint(gFileOut,gSubNum+","+block+","+trial+","+correctresp+","+
                 localStim+","+globalStim+"," +  consistency+","+correctLocal+","+
-                correctGlobal+"," +resp+","+corr+","+time1+
+                correctGlobal+"," +stim.x+","+stim.y+"," +resp+","+corr+","+time1+
                  ","+(time2-time1))
 
 
@@ -752,7 +752,7 @@ if(gParams.doscatterconditions)
 
       FilePrint(gFileOut,gSubNum+","+block+","+trial+","+correctresp+","+
                 localStim+","+globalStim+"," +  consistency+","+correctLocal+","+
-                correctGlobal+"," +resp+","+corr+","+time1+
+                correctGlobal+"," +stim.x+","+stim.y+","+resp+","+corr+","+time1+
                  ","+(time2-time1))
 
       PushOnEnd(gDataBlock,block)
@@ -871,7 +871,7 @@ if(gParams.doscatterconditions)
 
       FilePrint(gFileOut,gSubNum+","+block+","+trial+","+correctresp+","+
                 localStim+","+globalStim+"," +  consistency+","+correctLocal+","+
-                correctGlobal+"," +resp+","+corr+","+time1+
+                correctGlobal+","  +stim.x+","+stim.y+","+resp+","+corr+","+time1+
                  ","+(time2-time1))
 
 
