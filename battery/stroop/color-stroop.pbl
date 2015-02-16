@@ -1049,7 +1049,85 @@ if(gResponseType=="keyboard" )
    }
 
 
-}
+}elseif(lang=="KR")
+{
+
+##Ignore the translation for now.
+
+ gColorNames      <- ["鍮④컯","?뚮옉","珥덈줉","?몃옉"]
+   gBlackName <- "寃"
+   gNeutralNames    <- ["?몄젣","?⑤떒??","洹몃━怨","?꾩뿉"]
+
+
+   if(gResponseType=="keyboard")
+   {
+     gKeys <- [1,2,3,4]
+     keystring <-  "1 = 鍮④컯   2 = ?뚮옉  3 = 珥덈줉  4 = ?몃옉"
+     }else{
+      gKeys <- [1,2,3,4]
+      keystring <- "留먰븯?몄슂 '鍮④컯', '?뚮옉', '珥덈줉', or '?몃옉'"
+   }
+
+    gInstructionsBase<- "湲?먯쓽 ?됯퉼??留욎텛??寃뚯엫???쒖옉?⑸땲?? ?곗뿬吏??⑥뼱???됯퉼濡??듯븯硫??⑸땲??"
+	
+    gKeyManual <- "?ㅻ낫?쒖쓽 1-2-3-4 ?ㅻ? ?뚮윭???듯븯??떆??"
+	
+    gKeyVocal <- "留덉씠?ъ뿉 ?⑥뼱???됯퉼???ш퀬 遺꾨챸?섍쾶 諛쒖쓬?댁꽌 ?듯븯??떆??"
+	
+
+if(gResponseType=="keyboard" )
+  {
+    gInstructionsText <- gInstructionsBase+gKeyManual
+  }else{
+    gInstructionsText <- gInstructionsBase+gKeyVocal
+  }
+
+
+    gBreak1Text <- "?곗뒿 寃뚯엫???앸궗?듬땲?? ?댁젣 吏꾩쭨 寃뚯엫???쒖옉?⑸땲?? 理쒕???鍮⑤━ ??듯빐???섎뒗 寃껋쓣 ?딆?留덉떗?쒖삤. ?쒖옉?섎젮硫??꾨Т ?ㅻ굹 ?꾨Ⅴ??떆??"
+	gBreak2Text <- "吏㏃? ?댁떇???쒖옉?⑸땲?? 寃뚯엫???ㅼ떆 ?쒖옉?좊븣 理쒕???鍮⑤━ ??듯븯???섎뒗 寃껋쓣 ?딆?留덉떗?쒖삤. ?쒖옉?섎젮硫??꾨Т ?ㅻ굹 ?꾨Ⅴ??떆??"
+	
+    gPracticeHeaderText <- "?곗뒿"
+    gTestHeaderText    <-  "?ㅼ쟾"
+
+    gFooter1TextManual <- "?꾨Ⅴ??떆??"+keystring
+    gFooter1aTextManual <- "?⑥뼱???됯퉼"
+
+    gFooter1TextManual2 <- "?꾨Ⅴ??떆??"+keystring
+    gFooter1aTextManual2 <- "?먮뒗 '5' ?ㅻⅨ ?ㅻ쪟."
+
+    gFooter1TextVocal <- "留먰븯??떆??'"+keystring+"'"
+    gfooter1atextVocal <- "?붾㈃???섑????⑥뼱???レ옄"
+
+    gFooter2Text <-"理쒕????뺥솗?섍퀬 鍮좊Ⅴ寃???듯븯??떆??"
+	
+    gExitText <-"寃뚯엫???앸궗?듬땲?? 李몄뿬??二쇱뀛??媛먯궗?⑸땲??"
+  
+
+   gColorNames      <- ["red","blue","green","yellow"]
+   gBlackName <- "black"
+   gNeutralNames    <- ["when","hard","and","over"]
+   gPEBLColorNames  <- ["red","navy","darkgreen","yellow1","black"]
+
+   ##Create the actual colors to be used.
+   gColors <- []
+   loop(i,gPEBLColorNames)
+   {
+     gColors <- Append(gColors,MakeColor(i))
+   }
+   gBlack <- MakeColor("black")
+   gBg <- MakeColor("grey")
+
+   gFonts <- []
+   loop(i,gColors)
+   {
+      gFonts <- Append(gFonts, MakeFont(gPEBLBaseFontMono, 0, gStimSize, i,gBg,0))
+   }
+
+    gPracticeHeaderText <- "PRACTICE"
+    gTestHeaderText    <-  "TEST"
+ }
+
+
 }
 
 
