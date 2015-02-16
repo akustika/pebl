@@ -30,7 +30,7 @@
 define Start(p)
 {
 
-
+   Print(gPEBLBaseFont)
    
     ##See params/corsi.pbl.schema file for parameter definitions:
     ##these are fallback parameters in case .schema file is lost.
@@ -459,7 +459,7 @@ define Trial(xy,stimseq, direction)
   RemoveObject(doneback,gWin)
   RemoveObject(targ,gWin)
 
-  Show(warn)
+#  Show(warn)
   Draw()
   Wait(500)
 
@@ -912,7 +912,71 @@ define GetSTrings(language)
 
   lang <- Uppercase(language)
 
-  if(lang=="HR")
+if(lang == "KR")
+{
+ 
+  gInstfor  <- "??寃뚯엫??李몄뿬??二쇱뀛??媛먯궗?⑸땲??  ??寃뚯엫?먯꽌 9媛쒖쓽 ?뚮????뺤궗媛곹삎 以묒뿉??紐?媛쒖쓽 ?뺤궗媛곹삎???쒖꽌?濡???踰덉뵫 源쒕컯?대뒗 寃껋쓣 蹂닿쾶 ??寃껋엯?덈떎. 洹??뺤궗媛곹삎???쒖꽌?濡?湲곗뼲?섏떗?쒖삤.  源쒕컯?꾩씠 ?앸굹硫?源쒕컯????뺤궗媛곹삎?ㅼ쓣 ?쒖꽌?濡?留덉슦?ㅻ? ?댁슜?섏뿬 ?대┃?섏떊 ?꾩뿉 ?섎걹?숈씠?쇨퀬 ?곗뿬吏?踰꾪듉???대┃?섏떗?쒖삤.  ?쒖꽌?濡?湲곗뼲?????놁쓣 ?뚮뒗 湲곗뼲?????덈뒗 理쒕???媛源뚯슫 ?쒖꽌?濡??대┃?섏떆硫??⑸땲??
+??媛쒖쓽 ?뺤궗媛곹삎??源쒕컯?대뒗 寃껋쑝濡?寃뚯엫???쒖옉?섍쾶 ?⑸땲?? ??踰덉뵫??湲고쉶媛 二쇱뼱吏怨???媛?以???媛??댁긽 留욎텛寃??섎㈃ 源쒕컯?대뒗 媛쒖닔媛 ??媛쒖뵫 ?섍쾶 ?⑸땲?? 留뚯빟 ??媛쒖쓽 ?뺤궗媛곹삎??源쒕컯?대뒗 ?쒖꽌?濡??뺥솗?섍쾶 ?대┃?섎㈃ ?ㅼ쓬?먮뒗 ??媛쒖쓽 ?뺤궗媛곹삎??源쒕컯?닿쾶 ?⑸땲??
+
+  以鍮꾧? ?섏뿀?쇰㈃ 留덉슦?ㅻ? ?대┃?섏떗?쒖삤."
+
+  gInstback <-"??寃뚯엫??李몄뿬??二쇱뀛??媛먯궗?⑸땲??  ??寃뚯엫?먯꽌 9媛쒖쓽 ?뚮????뺤궗媛곹삎 以묒뿉??紐?媛쒖쓽 ?뺤궗媛곹삎???쒖꽌?濡???踰덉뵫 源쒕컯?대뒗 寃껋쓣 蹂닿쾶 ??寃껋엯?덈떎. 洹??뺤궗媛곹삎???쒖꽌?濡?湲곗뼲?섏떗?쒖삤.  源쒕컯?꾩씠 ?앸굹硫?源쒕컯????뺤궗媛곹삎?ㅼ쓣 ?쒖꽌?濡?留덉슦?ㅻ? ?댁슜?섏뿬 ?대┃?섏떊 ?꾩뿉 ?섎걹?숈씠?쇨퀬 ?곗뿬吏?踰꾪듉???대┃?섏떗?쒖삤.  ?쒖꽌?濡?湲곗뼲?????놁쓣 ?뚮뒗 湲곗뼲?????덈뒗 理쒕???媛源뚯슫 ?쒖꽌?濡??대┃?섏떆硫??⑸땲??
+??媛쒖쓽 ?뺤궗媛곹삎??源쒕컯?대뒗 寃껋쑝濡?寃뚯엫???쒖옉?섍쾶 ?⑸땲?? ??踰덉뵫??湲고쉶媛 二쇱뼱吏怨???媛?以???媛??댁긽 留욎텛寃??섎㈃ 源쒕컯?대뒗 媛쒖닔媛 ??媛쒖뵫 ?섍쾶 ?⑸땲?? 留뚯빟 ??媛쒖쓽 ?뺤궗媛곹삎??源쒕컯?대뒗 ?쒖꽌?濡??뺥솗?섍쾶 ?대┃?섎㈃ ?ㅼ쓬?먮뒗 ??媛쒖쓽 ?뺤궗媛곹삎??源쒕컯?닿쾶 ?⑸땲??
+
+ 以鍮꾧? ?섏뿀?쇰㈃ 留덉슦?ㅻ? ?대┃?섏떗?쒖삤."
+
+
+  gPrompt1 <- "?듭닕?댁쭏 ?뚭퉴吏 ??踰덉쓽 ?곗뒿寃뚯엫???쒖옉?⑸땲?? ?곗뒿寃뚯엫? ?먯닔???곹뼢??二쇱? ?딆뒿?덈떎."
+
+  gPrompt2 <- "?댁젣 ?ㅼ젣 寃뚯엫???쒖옉?⑸땲?? ??寃뚯엫?ㅼ쓽 ?먯닔媛 ?⑹궛?⑸땲?? 留덉슦?ㅻ? ?대┃?섎㈃ ?쒖옉?⑸땲??"
+  
+
+  gPromptFinal1 <- "寃뚯엫??李몄뿬??二쇱뀛??媛먯궗?⑸땲??"
+  gPromptFinal2 <- "Block Span:           "
+  gPromptFinal3 <- "Total Score:          "
+  gPromptFinal4 <- "Total Correct Trials: "
+  gPromptFinal5 <- "Memory Span:          "
+
+
+        gReady <- "以鍮"
+	gCorrect <- "留욎븯?듬땲??"
+	gIncorrect <- "??몄뒿?덈떎"
+    gDone<- "??"
+
+}elseif(lang=="IT")
+{
+    gInstfor  <- "You are about to take part in a test that measures your ability to remember a sequence of locations on the screen. You will see nine blue squares on the screen. On each trial, the squares will be lit up one at a time in sequence.  Remember the sequence.  When the sequence is finished, you need to click on each square IN THE SAME ORDER THEY WERE GIVEN.  When you are done, click the button labeled DONE.  If you cannot remember the order of squares, click them in as close the the original order as you can. 
+
+You will start with a sequence of two squares, and you will get two tries for each sequence length.  The sequence will increase by one whenever you get at least one of the two sequences correct.
+If you are correct, your next list will be one longer; 
+  Click the mouse button when you are ready to begin."
+
+  gInstback <-"You are about to take part in a test that measures your ability to remember a sequence of locations on the screen. You will see nine blue squares on the screen. On each trial, the squares will be lit up one at a time in sequence.  Remember the sequence.  When the sequence is finished, you need to click on each square in the sequence.  However, you must do so IN THE OPPOSITE ORDER THAT THEY WERE GIVEN.  That is, click on the last square you saw first, then the next-to-last, and so on until you click on the first square last.  When you are done, click the button labeled DONE.  If you cannot remember the order of squares, click them in as close the the original order as you can. 
+
+You will start with a sequence of two squares, and you will get two tries for each sequence length.  The sequence will increase by one whenever you get at least one of the two sequences correct.
+If you are correct, your next list will be one longer; 
+  Click the mouse button when you are ready to begin."
+
+
+  gPrompt1 <- "You will first perform three practice trials to become familiar with the test. They will not affect your score."
+
+  gPrompt2 <- "Now, you will see perform the normal trials.  These will count toward your score.  Click the mouse to begin."
+
+
+  gPromptFinal1 <- "Thank you for participating.  Alert the Experimenter that you are done." 
+  gPromptFinal2 <- "Block Span:           "
+  gPromptFinal3 <- "Total Score:          "
+  gPromptFinal4 <- "Total Correct Trials: "
+  gPromptFinal5 <- "Memory Span:          "
+
+
+    gReady <- "READY"
+	gCorrect <- "Correct"
+	gIncorrect <- "Incorrect"
+    gDone<- "Done"
+
+
+  }elseif(lang=="HR")
   {
    Print("Using Croation Translation")
   ginstfor  <- "Sudjelovat cete u zadatku kojim se mjeri vasa sposobnost pamcenja niza kvadrata na ekranu. Vidjet cete devet plavih kvadrata na ekranu. U svakom pokusaju, kvadrati ce zasvijetliti jedan po jedan. Zapamtite niz. Kada zavrsi niz morate kliknuti na svaki od kvadrata koji je zasvijetlio ONIM REDOSLIJEDOM KOJI JE PRIKAZAN NA EKRANU.  
@@ -1034,7 +1098,7 @@ gPrompt1 <- "Först kommer vi göra några övningsuppgifter. De kommer inte på
   gCorrect <- "Rätt"
   gIncorrect <- "Fel"
   gDone<- "Klar"    
-  
+ 
  }else {
 
 ## Default to english
