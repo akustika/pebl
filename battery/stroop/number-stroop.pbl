@@ -10,7 +10,7 @@
  ## 
  ##  Modeled, roughly on  Hernandez et al. (2010).
  ##
- ## Spanish translation by Alena Esposito
+ ## Spanish translation by Alena Esposito and Yunior Broche
  ##
  ##
  ## 
@@ -384,7 +384,7 @@ if(cond == "keyboard" or cond=="keypad")
 		Print(resp0)
         if(Third(resp0)==0)
          {
-            gStimLabel.text <- "Too Slow"
+            gStimLabel.text <- gTooSlow
 			Draw()
 			Wait(500)
          }
@@ -440,7 +440,7 @@ if(cond == "keyboard" or cond=="keypad")
      
 
     FilePrint(gFileOut,out)
-	FilePrint(gPooledFileOut,out)
+    FilePrint(gPooledFileOut,out)
 
 
     ##Update some counters:
@@ -453,10 +453,10 @@ if(cond == "keyboard" or cond=="keypad")
 		   gErrors <- gErrors + 1
 		   if(resp == (SubString(Second(stim),1,1)))
 		    {
-			   gCongruenceErrors <- gCongruenceErrors + 1
-            }else{
-               gRandomErrors <- gRandomErrors + 1
-            }
+		        gCongruenceErrors <- gCongruenceErrors + 1
+                    }else{
+                         gRandomErrors <- gRandomErrors + 1
+                    }
         }
     Wait(500)
 
@@ -644,6 +644,11 @@ if (Uppercase(language) == "ES")
    gNeutralStim    <- ["Z","ZZ","ZZZ","M","MM","MMM","G","GG","GGG"]
    gIncongruentStim <- ["11","111","2","222","3","33"]
    gCongruentStim  <- ["1","22","333"]
+
+    gTooSlow <- "Demasiado lento"
+   gCorrect <- "Correcto"
+   gIncorrect <- "Incorrecto"
+
    if(gResponseType=="keyboard")
    {
      gKeys <- [1,2,3]
@@ -658,14 +663,15 @@ if (Uppercase(language) == "ES")
      keystring <- "uno, dos, o tres"
    }
 
-    gInstructionsBase<- "You are about to take part in an study in which you will be asked to determine how many characters are displayed on the computer screen.  There will either be one, two, or three characters.  Sometimes the characters will be letters, and other times they will be numbers. "
+  gInstructionsBase<- "En esta prueba deberás determinar cuántos elementos se muestran en la pantalla de la computadora. El número de elementos será de uno, dos o tres. Algunas veces los elementos serán letras, otras serán números. Para responder utilizarás los números 1-2-3 del pad numérico."
 
-	gKeyManual <- "You will need to respond with the 1-2-3 keys on the "+gResponseType+"
-      Z       1     2      3        (respond by pressing '1')
-     MM    11   22    33       (respond by pressing '2')
-    GGG  111  222  333     (respond by pressing '3').  
+gKeyManual <- "You will need to respond with the 1-2-3 keys on the "+gResponseType+"
+ Z     1    2    3   (responde presionando “1”)
+MM     11   22   33  (responde presionando “2”)
+GGG    111  222  333 (responde presionando “3”)
 
-Remember to ignore the actual identity of the character.  Press any key to try a practice round."
+Recuerda ignorar cualquier cualidad que no coincida con el número de elementos. Presiona cualquier tecla para iniciar la práctica."
+
 
 	gKeyVocal <- "You will need to respond by saying the number 1, 2, or 3, loudly and clearly, into the microphone:
       Z       1     2      3        (respond by saying '1')
@@ -682,18 +688,20 @@ if(gResponseType=="keyboard" or gResponseType=="keypad")
   }
 
 
-    gBreak1Text <- "Practice is complete.  Now you will be tested for real.  Remember to answer as quickly and accurately as possible.  Press any key to begin."
-    gBreak2Text <- "You may now take a short break.  When you resume, remember to  answer as quickly and accurately as possible.  Press any key to continue."
+    gBreak1Text <- "La práctica ha culminado. Ahora comenzará la prueba real. Recuerda responder lo más rápido y preciso que puedas. Presiona cualquier tecla para comenzar."
 
+    gBreak2Text <- " Presiona cualquier tecla para comenzar."
     gPracticeHeaderText <- "PRACTICE"
-	gTestHeaderText    <-  "TEST"
+    gTestHeaderText    <-  "TEST"
 
     gFooter1TextManual <- "Press "+keystring+" for the number of characters that appear on the screen"
     gFooter1TextManual2 <- "Press "+keystring+" or '4' for other error."
     gFooter1TextVocal <- "Say '"+keystring+"' for the number of characters that appear on the screen"
-	gFooter2Text <-"Respond as quickly and accurately as possible."
 
+    gFooter2Text <-"Responder con rapidez y precisión."
     gExitText <-"You are now finished. Thank you for participating."
+
+
   } else  {
 
 
@@ -704,7 +712,9 @@ if(gResponseType=="keyboard" or gResponseType=="keypad")
    gNeutralStim    <- ["Z","ZZ","ZZZ","M","MM","MMM","G","GG","GGG"]
    gIncongruentStim <- ["11","111","2","222","3","33"]
    gCongruentStim  <- ["1","22","333"]
-
+   gTooSlow <- "Too slow"
+   gCorrect <- "Correct"
+   gIncorrect <- "Incorrect"
    if(gResponseType=="keyboard")
    {
      gKeys <- [1,2,3]
@@ -714,8 +724,8 @@ if(gResponseType=="keyboard" or gResponseType=="keypad")
      gKeys <- ["<KP_1>","<KP_2>","<KP_3>"]
      keystring <-  "1, 2, or 3 key"
    }else{
-	 gKeys <- [1,2,3]
-     keystring <- "one, two, or three"
+     gKeys <- [1,2,3]
+     keystring <- "uno, dos, or tres"
    }
 
     gInstructionsBase<- "You are about to take part in an study in which you will be asked to determine how many characters are displayed on the computer screen.  There will either be one, two, or three characters.  Sometimes the characters will be letters, and other times they will be numbers. "
@@ -744,13 +754,16 @@ if(gResponseType=="keyboard" or gResponseType=="keypad")
     gBreak1Text <- "Practice is complete.  Now you will be tested for real.  Remember to answer as quickly and accurately as possible.  Press any key to begin."
     gBreak2Text <- "You may now take a short break.  When you resume, remember to  answer as quickly and accurately as possible.  Press any key to continue."
 
-    gPracticeHeaderText <- "PRACTICE"
-	gTestHeaderText    <-  "TEST"
+    gCorrect <- "Correct"
+    gIncorrect <- "Incorrect"
+    gTooSlow <- "Too slow"
+    gPracticeHeaderText <- "PRACTICE" 
+    gTestHeaderText    <-  "TEST"
 
     gFooter1TextManual <- "Press "+keystring+" for the number of characters that appear on the screen"
     gFooter1TextManual2 <- "Press "+keystring+" or '4' for other error."
     gFooter1TextVocal <- "Say '"+keystring+"' in response to the number of characters you see appear on the screen"
-	gFooter2Text <-"Respond as quickly and accurately as possible."
+    gFooter2Text <-"Respond as quickly and accurately as possible."
 
     gExitText <-"You are now finished. Thank you for participating."
 
