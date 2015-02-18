@@ -54,9 +54,9 @@ define Start(p)
                 ["useReverse",0],  #reverse the order of stacks
                 ["testtype",-1],    ##test type==-1: choose in-script. Otherwise, set based on initial instructions.
 		["timelimit",120],
-		["allowreset",0]
+		["allowreset",0],
+		["allowskip",0]
                ]
-
 
  gParams <- CreateParameters(parpairs,gParamFile)
 
@@ -329,6 +329,7 @@ define Trial(pair)
 
    ##Keep track of time to make first move.
    firstmovetime <- -1
+   gSkip <- 0
 
    ##extract data from input
    config <- First(pair)
@@ -474,6 +475,11 @@ define Trial(pair)
 
       }
 
+    if(gSkip)
+      {
+         continue <- 0
+	 success <- 0
+      }
     Draw()
     step <- step + 1 
     
@@ -571,20 +577,34 @@ define InitPoles()
    AddObject(r2,gWin)
    AddObject(r3,gWin)
 
+   gZones <- [r1,r2,r3]
+   gOut <- [1,2,3]
 
+
+
+   if(gParams.allowSkip)
+   {
+     rSkip <- Rectangle(440,gFooter.y+50,300,40,MakeColor("grey20"),0)
+     AddObject(rSkip,gWin)
+     PushOnEnd(gZones,rSkip)
+     PushOnEnd(gOut,4)
+     gSkipLabel <- MakeLabel(gSkipText,footerfont)
+     Move(gSkipLabel,rSkip.x,rSkip.y)
+     AddObject(gSkipLabel,gWin)
+   }
 
    ##if we have a 'reset' button, add one.
    if(gParams.allowReset)
      {
         r0 <- Rectangle(340,gFooter.y+50,300,40,MakeColor("grey20"),0)
         AddObject(r0,gWin)
-        gZones <- [r0,r1,r2,r3]
+	PushOnEnd(rReset,gZones)
+	PushOnEnd(gOut,0)
         gResetLabel <- MakeLabel(gResetText,footerfont)
         Move(gResetLabel,340,gFooter.y+50)
         AddObject(gResetLabel,gWin)
-     } else {
-        gZones <- [r1,r2,r3]
-     }
+     } 
+
 
   gDisks <-   [MakeImage("png/disk1.png"),MakeImage("png/disk2.png"),
                MakeImage("png/disk3.png"),MakeImage("png/disk4.png"),
@@ -746,17 +766,12 @@ define PlotDisksAnimate(config,inhand,ybase,disks,steps)
 define MoveDisk(config)
 {
    
-   ##We need a different target set when reset button is enabled.
-   if(gParams.allowReset)
-     {
-       out <- Sequence(0,3,1)
-     } else {
-       out <- Sequence(1,3,1)
-     }
 
 
 
    reset <- 0
+   skip <- 0
+
    ##We need to use separate code for timer/non-timer.
    if(gUseTimer)
    {
@@ -766,13 +781,14 @@ define MoveDisk(config)
          first <- WaitForClickOnTargetWithTimeout(gZones, out,100)
          if(first=="<timeout>")
            {
-		      timeleft <- (gEndTime-GetTime())/1000
+  	       timeleft <- (gEndTime-GetTime())/1000
               if(timeleft < 0)
                {
                    gTimeRanOut <- 1
                    cont <- 0
                }
-              UpdateGraph(gTimegraph,Max([0,timeleft]), 710,400,gParams.TimeLimit)
+
+             UpdateGraph(gTimegraph,Max([0,timeleft]), 710,400,gParams.TimeLimit)
               Draw()
 
            } else {
@@ -781,10 +797,14 @@ define MoveDisk(config)
                   ##We hit the 'abort' button.
                   cont <- 0
                   reset <- 1
-                } else {
+                }elseif(first==4){
+		  ##we hit the 'skip' button
+		  skip <- 1
+		  gSkip <- 1
+                 } else {
                  ##Time is not out; but we need to make sure there is 
                  ##something in the pile
-  			     if(Length(Nth(config,first))>0)
+  		 if(Length(Nth(config,first))>0)
                   {
                    cont <- 0
                   }
@@ -796,17 +816,19 @@ define MoveDisk(config)
  ########################################
  ##Non-timer branch, so use just standard click.
           
-       first <- WaitForClickOnTarget(gZones, out)
+       first <- WaitForClickOnTarget(gZones, gOut)
 
 
        if(first == 0)
         { 
            reset <- 1
-
-        } else {
+        }elseif(first==4){
+ 	  skip <- 1
+	  gSkip <- 1
+	} else {
           while(Length(Nth(config,first))==0)
            {
-             first <- WaitForClickOnTarget(gZones, out)
+             first <- WaitForClickOnTarget(gZones, gOut)
            }
 
          } 
@@ -815,7 +837,7 @@ define MoveDisk(config)
      ##1. ran out of time: gtimeranout == 1
      ##2. picked up a valid disk  gtimeranout == 0, reset == 0
      ##3. hit the reset button.  reset == 1, 
-
+     ##4. hit the 'skip' button; score as error, move on
    ##Valid click:
    if((not gTimeranout) and reset == 0)
      {
@@ -877,7 +899,7 @@ define MoveDisk(config)
 
       } else {
         ##No timer, so use just standard click.
-        next <- WaitForClickOnTarget(gZones, out)
+        next <- WaitForClickOnTarget(gZones, gOut)
 
       }
 
@@ -1772,10 +1794,11 @@ define TOLAnderson()
 define GetStrings(language)
 {
 
-   lang <- Uppercase(language)
-  if(lang == "EN") 
-   {
-    gSelect <- "Type number of test to use:"+ CR(2) +
+  lang <- Uppercase(language)
+
+##Default to english; overwrite with local text so as
+##more translations are required, it fails robustly.
+     gSelect <- "Type number of test to use:"+ CR(2) +
      "[1] Unconstrained pile heights, {3,4,5} disks, progressive difficulty, 24 trials"+CR(2)+
      "[2] Unconstrained pile heights, {3,4,5} disks, Random presentation, 24 trials"+CR(2)+
      "[3] Shallice test ([1,2,3] pile heights, 3 disks, Shallice's 12 problems."+CR(2)+
@@ -1802,11 +1825,13 @@ define GetStrings(language)
     gTimeLab <-  "Time (s)"
     gMovesOutLab <-  "You failed to complete the problem in the number of moves required."
     gResetText   <- "Reset problem"
+    gSkipText <- "Skip problem"
     gResetLab    <- "Click screen to restart problem."
     gTimeOutLab <-  "You ran out of time."
     gDebriefing <- "Thank you for participating. The experiment is now complete.  Press any key to exit."
     gContinueFail <- "Click screen to move on to the next problem."
-   }   elseif(lang == "BR") 
+
+  if(lang == "BR") 
    {
     gSelect <- "Digite o número do teste a ser usado:"+ CR(2) +
      "[1] Pilhas de alturas não-limitadas, {3,4,5} discos, dificuldade progressiva, 24 problemas"+CR(2)+
@@ -1945,8 +1970,6 @@ gSelect <- "Type number of test to use:"+ CR(2) +
     gTimeOutLab <-  "Isteklo vam je vrijeme."
     gDebriefing <- "Hvala vam na sudjelovanju. Zadaci su gotovi.  Pritisnite bilo koju tipku za izlazak."
     gContinueFail <- "Kliknite na ekran da biste zapoceli s novim zadatkom."
-    } else{
-     Print("Language: ["+lang+"] unknown.  Falling back on English translations.")
-     GetStrings("en")
-   }
+    } 
+
 }
