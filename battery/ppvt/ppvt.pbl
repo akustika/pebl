@@ -53,9 +53,6 @@ define Start(lPar)
 #   gVideoWidth <- 1152
 #   gVideoHeight <- 864
 
-   ##Set glanguage here to hard-code a language:
-   ## gLanguage <- "EN"
-   GetStrings(gLanguage)
 
    ##set default variable values in case .par file is unavailable.
 
@@ -68,11 +65,18 @@ define Start(lPar)
    ["totalTime",600],     ## total time of the test in milliseconds    
    ["TooFast",150],           ## trial is marked too fast if rt < 150 ms
    ["Lapse", 500],             ## trial is marked lapse if it is > 500 ms
-   ["Sleepattack", 30000]           ## trial is 'sleep attack' if > 30 s
+   ["Sleepattack", 30000],           ## trial is 'sleep attack' if > 30 s
+   ["usemouse",1]
                ]
 
 
+
     gParams <- CreateParameters(parpairs,gParamFile)
+
+
+   ##Set glanguage here to hard-code a language:
+   ## gLanguage <- "EN"
+   GetStrings(gLanguage)
 
    ##Type: 1 indicates a total time limit   (time is in totalTime);
    ##Type: 2 indicates a block-number limit (Number is in numBlocks);
@@ -189,7 +193,9 @@ define Start(lPar)
       ### Now, wait the proper delay before showing stimulus
       ###
       time0 <- GetTime() 
-	  resp1 <- WaitForListKeyPressWithTimeout([" "],isi,1)
+
+      resp1 <- GetResponse(isi)
+
       time1 <- GetTime()
          
       if(resp1 == " ")  #if r1==" "  we pressed the key before presentation
@@ -207,7 +213,7 @@ define Start(lPar)
           Show(gStim)
           Draw()
           time3<-GetTime()
-          resp2 <- WaitForKeyPress(" ")
+          resp2 <- GetResponse(600000)##long timeout--10 minutes
           time4 <- GetTime()
           rt <- time4-time3  #Get the RT
           Hide(gStim)         # Hide the stimulus
@@ -482,6 +488,24 @@ define Rnd(num,sig)
    return x 
 }
 
+define GetResponse(isi)
+{
+      if(gParams.usemouse)
+      {
+       mousepos <- WaitForMouseButtonWithTimeout(isi)
+       if(First(mousepos)=="<timeout>")
+       {
+           resp1 <-"X"
+       } else {
+           resp1 <-" "
+       }
+
+      }else{
+        resp1 <- WaitForListKeyPressWithTimeout([" "],isi,1)
+      }
+  return resp1
+}
+
 
 define GetStrings(lang)
 {
@@ -500,9 +524,19 @@ A sua tarefa é simples, carregue na tecla de espaço sempre que surguir um cír
 
    }else {
    ##default to english
+
+if(gParams.usemouse)
+{
+
+    gInst1 <- "You are about to take part in an experiment that involves attending to stimuli on a screen.  
+Your task is simple to press the mouse button whenever you see the red circle.  Do not respond to the fixation cross: '+'.  To begin, press the spacebar."
+
+
+}else{
+
  gInst1 <- "You are about to take part in an experiment that involves attending to stimuli on a screen.  
 Your task is simple to press the spacebar whenever you see the red circle.  Do not respond to the fixation cross: '+'.  To begin, press the spacebar."
-
+}
   gTooFastText <- "TOO FAST! Wait for the stimulus."
 
   gFinalInst <- "Thank you for participating in the experiment.  You may now leave. Press 'X' to finish experiment"

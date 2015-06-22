@@ -8,3 +8,4 @@ numTrials|120|Number of total trials. (120 =~ 10 minutes), for type 3
 TooFast|150|Trial is marked too fast if rt < this value (in ms)
 Lapse|500|Trial is marked lapse if RT > this value (in ms)
 Sleepattack|30000|Trial is 'sleep attack' if > this value (in ms)
+usemouse|0|Whether to use mouse (1) or spacebar (0) to make responses. 0=spacebar is traditional.
