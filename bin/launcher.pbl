@@ -2,6 +2,11 @@
 ##  This is a PEBL script that acts as a cross-platform 
 ##  launcher for PEBL.
 ##
+##
+## Version 0.4: adds a column (name) to an experiment chain, and 
+##              so is not backward compatible.
+##
+##
 ## Version 0.3: Adds parameter setting (version 0.14), 
 ## data file combining, http version check.  
 ##
@@ -16,7 +21,7 @@ define Start(p)
     gUseReloc <-  0  ##Set this from 0 to 1 if you want to run on windows 
                    ## NOT from an installation in Program Files, but from
                    ##A PEBL subdirectory of the current working directory.
-    gPEBLVersion <- "0.14"
+    gPEBLVersion <- "0.15"
  
      if(gDebug)
      {
@@ -215,8 +220,8 @@ define FileSelect(p,resources)
            	   
     parPairs <- [["checkfornew",0],
                  ["newest","0.14"],
-		          ["pwhash",""],
-				  ["screensize", "large"]
+	          ["pwhash",""],
+		  ["screensize", "large"]
                 ]
 
 
@@ -241,6 +246,9 @@ define FileSelect(p,resources)
    {
       Draw()        
       PopUpScreen(win)
+      gPasswordEntered <- 0
+   }else{
+      gPasswordEntered <- 1
    }
 
    SaveParamFile(gParams,"params/launcher.pbl.par")
@@ -332,8 +340,8 @@ define FileSelect(p,resources)
    combinedata <- MakeButton(gCombineDataText,gPortal.x+gPortal.width/2,gPortal.y+portalheight+56,win,gportal.width-4)
    viewoutput <- MakeButton(gViewDebugText,gPortal.x+gPortal.width/2, gportal.y+portalheight+77,win,gportal.width-4)
    viewerror  <- MakeButton(gViewErrorText,gPortal.x+gPortal.width/2, gPortal.y+portalheight+98,win,gportal.width-4)
+   makelauncher <- MakeButton(gMakeLauncherText,gPortal.x+gPortal.width/2,gPortal.y+portalheight+119,win,gPortal.width-4)
 
- 
    ##################################################
    ##################################################
    ##column 2
@@ -353,7 +361,13 @@ define FileSelect(p,resources)
    chainbox <- MakeScrollbox(MakeExpChainList(gExpChain),gExpchainText+gconfigName,
                         xbase+210,ybase2+165,win,fontsize,340,200,1)
    
-   box <- chainbox.outer
+
+##We need to custom override the chainbox clickon handler so we can edit
+##rows directly.
+   chainbox.editable <- 1
+
+
+box <- chainbox.outer
    box.height <- chainbox.height + 50
    box.y <- box.y + 25
    loadchain  <- MakePulldown(GetConfigFiles(),chainbox.x+10,chainbox.y+chainbox.height-15,win,fontsize,chainbox.width-32,1)
@@ -589,7 +603,7 @@ define FileSelect(p,resources)
 	   gDescription,demobox,savechain,loadchain,wiki,
            subplusbutton,clobox,filter,#donate,review,
            screenselection, randomizeChainBox,params,  combinedata,psetbox,
-          deletechain,menu1,menu2,menu3]
+          deletechain,menu1,menu2,menu3,makelauncher]
 
       returns <- 		   [1,2,3,4,0,
 				   6,7,8,9,10,
@@ -598,7 +612,7 @@ define FileSelect(p,resources)
 				   21,22,23,24,25,
 				   26,27,28,#29,30,
 				   31,32,33,34,35,
-				   36,0,0,0]
+				   36,0,0,0,37]
 
    resp <-  WaitForButtonClickOnTarget(vals,returns)
 
@@ -799,11 +813,16 @@ define FileSelect(p,resources)
 
       }elseif(tmp==3)
       {
-      ##insert chain.
+      ##insert into chain.
 
 	 PushButton(insertinchain,[0,0])
 
+	 ##filename
   	 fname <- Nth(gFlatFileList,gselected)
+	 ##label--set initially to fname
+
+	 label <- SubString(fname,1,StringLength(fname)-4)
+
 	 if(IsPEBLFile(fname))
          {
 	     paramindex <- psetbox.selected
@@ -815,7 +834,7 @@ define FileSelect(p,resources)
             }
 
 	    selected <- Max([0,chainbox.selected-1])
-            gExpChain <-  Insert(gexpchain,[gDirChain, fname,paramset],selected)
+            gExpChain <-  Insert(gexpchain,[gDirChain, label,fname,paramset],selected)
 
 	    
 	    chainbox.list<-MakeExpChainList(gexpchain)
@@ -827,7 +846,6 @@ define FileSelect(p,resources)
 
       }elseif(tmp==4)
       {
-
       ##delete
        PushButton(deletestep,[0,0])
 
@@ -846,6 +864,9 @@ define FileSelect(p,resources)
 	 PushButton(addtochain,[0,0])
 
   	 fname <- Nth(gFlatFileList,gselected)
+	 ##filename
+	 label <- SubString(fname,1,StringLength(fname)-4)
+
 	 if(IsPEBLFile(fname))
          {
 	     paramindex <- psetbox.selected
@@ -857,7 +878,7 @@ define FileSelect(p,resources)
 	         paramset <- Nth(psetbox.list,paramindex)
             }
 
-            PushOnEnd(gExpChain,[gDirChain, fname,paramset])
+            PushOnEnd(gExpChain,[gDirChain, label,fname,paramset])
 	    chainbox.list<-MakeExpChainList(gexpchain)
 	    chainbox.selected <- Length(chainbox.list)
             UpdateScrollbox(chainbox)
@@ -978,6 +999,8 @@ define FileSelect(p,resources)
       }elseif(tmp==23)  ##sAVE CHAIN
       {
          PushButton(savechain,[0,0])
+
+         gConfigname <- PopUpEntryBox(gConfigNameText,win,gClick,gConfigname)
          Saveconfig(gconfigname)
          PopupMessageBox("Configuration file:" + gConfigName+ " saved to disk",win)
        } elseif(tmp==36)
@@ -1039,7 +1062,7 @@ define FileSelect(p,resources)
 	  selected <-   Pulldown(loadchain,gClick)
 	  if(selected == loadchain.numitems)
           {
-            configname <- PopUpEntryBox(gConfigNameText,win,gClick)
+            configname <- PopUpEntryBox(gConfigNameText,win,gClick,"")
 	    if(not IsConfigFile(configname))
 	     {
                 configname <- configname + ".config"
@@ -1078,7 +1101,7 @@ define FileSelect(p,resources)
 	SetCheckBox(fullscreenbox,gFullScreen)
         SetCheckBox(demobox,gNIMHDemographics)
         SetCheckBox(randomizechainBox,gRandomizeChain)
-	UpdateScreenResPulldown(screenselection)
+	UpdateScreenResPulldown(screenselection) 
         DrawPulldown(screenselection)
 
 	title <- chainbox.header
@@ -1252,8 +1275,8 @@ if(0)
 
 	      xy <- [screenselection.x+screenselection.width/2,
                       screenselection.y+screenselection.height/2]
-              width <- ToNumber(PopUpEntryBox(gGetWidthText,win,xy))
-              height <- ToNumber(PopUpEntryBox(gGetHeightText,win,xy))
+              width <- ToNumber(PopUpEntryBox(gGetWidthText,win,xy,""))
+              height <- ToNumber(PopUpEntryBox(gGetHeightText,win,xy,""))
 	      gCustomScreenRes <-  width+"x"+height
               UpdateScreenResPulldown(screenselection)
 	      ##reset to choice
@@ -1337,6 +1360,34 @@ if(0)
        }
 
 
+      }elseif(tmp==37)
+      {
+
+       ##Set/edit parameters. 
+       PushButton(makelauncher,[0,0])
+       if(not gPasswordEntered) 
+       {
+         PopUpMessageBox("This version of the PEBL launcher cannot create a custom launch sequence.  Please donate to the PEBL project to get the custom launcher creator.",win)
+       }else{
+
+    if (gUseReloc)
+	    {
+
+             batfiletext <- "set ABSPATH=%CD%
+md logs
+START /B %ABSPATH%\PEBL\bin\pebl.exe customlauncher.pbl -v "+ gConfigName+"  > logs\launchlog.txt 2> logs\launcherrors.txt"
+            } else{
+
+    
+             batfiletext <- "md logs
+START /B "+ gPEBLName+ " customlauncher.pbl -v "+ gConfigName+"  > logs\launchlog.txt 2> logs\launcherrors.txt"
+            }
+
+	 batfile <-  FileOpenOverwrite("Launch " + gConfigName+".bat")
+	 FilePrint(batfile,batfiletext)
+	 FileClose(batfile)
+	 PopUpMessageBox("Launcher for " +gConfigName+ " created.",win)
+       }
       }
 
 
@@ -1367,11 +1418,11 @@ define CombineDataDialog(dirChain,filename,logfile)
 
         sep <- CR(1)
         gPEBLName <- "\bin\pebl.exe"  ##The relative location should be bin\pebl.exe
-  	    callstring <- "set ABSPATH=%CD%"+sep+"cd " + DirListToText(dirchain) + sep + gQuote+"%ABSPATH%\PEBL" +gPEBLName +gQuote + " " +  gQuote + "combinedatafiles.pbl"+gQuote
+  	callstring <- "set ABSPATH=%CD%"+sep+"cd " + DirListToText(dirchain) + sep + gQuote+"%ABSPATH%\PEBL" +gPEBLName +gQuote + " " +  gQuote + "combinedatafiles.pbl"+gQuote
 
      }else {
          
-  	      callstring <- "cd " + DirListToText(dirChain) + sep  + gPEBLName + " "  +gQuote+ "combinedatafiles.pbl"+gQuote 
+  	 callstring <- "cd " + DirListToText(dirChain) + sep  + gPEBLName + " "  +gQuote+ "combinedatafiles.pbl"+gQuote 
 
       }
 
@@ -1547,6 +1598,9 @@ define DirlistToText(list)
 ##it is used to save the .config files
 define  FileSaveTable(table,filename)
 {
+
+Print("saving:" + filename)
+Print(table)
    ##Not clear why we are using global here rather than the passed-in value.
 
    outfile <- FileOpenOverwrite(filename)  ##Overwrite whatever we ave, without checking for it.
@@ -1572,12 +1626,16 @@ define  FileSaveTable(table,filename)
 
 
 ##This makes the text to put in the expchain box.
+##note that this has no impact on the actual script run; it is just
+##informative
 define MakeExpChainList(expchain)
 {
+  Print("expchainlist:")
   tmp <- []
   loop(i,expchain)
     {
- 	PushOnEnd( tmp,DirlistToText(First(i))+Second(i) + " --pfile "+gQuote+Third(i) +gQuote)
+        Print(i)
+ 	PushOnEnd( tmp,Second(i))
     }
   return tmp	
 }
@@ -1600,7 +1658,7 @@ define RunScript(dirChain,filename,fullscreen,language,logfile,subcode,experimen
   ##On windows, should the launcher run from a PEBL subdirectory rather than C:\Program Files\pebl
    if(gUseReloc)
      {
-       Print(gPEBLName)
+
         sep <- CR(1)
         gPEBLName <- "\bin\pebl.exe"  ##The relative location should be bin\pebl.exe
 		callstring <- "set ABSPATH=%CD%"+sep+"cd " + DirListToText(dirchain) + sep + gQuote+"%ABSPATH%\PEBL\" +gPEBLName +gQuote+ " " +filename + " -s " + subcode
@@ -1784,11 +1842,11 @@ define IsPNGFile(fname)
 
 
 
+##This reads in some configuration stuff from the current
+## config file. 
+
 define ReadConfigFile(configname)
 {
-
-##This reads in some configuration stuff from the current
-## config file.
 
    if(FileExists(configName))
       {
@@ -1827,10 +1885,11 @@ define ReadConfigFile(configname)
    	   gexpchain <- []         ##sequence of experiments to run
    	   ##Get all config entries named 'expchain'
 	   chains <- Filter(config,Match(keys,"EXPCHAIN"))
+
 	   loop(i,chains)
             {
               PushOnEnd(gexpchain, 
-                 [SubList(i,4,Length(i)),Second(i),Third(i)])
+                 [SubList(i,5,Length(i)),Second(i),Third(i),Fourth(i)])
             }  
 
       } else {
@@ -1860,7 +1919,7 @@ define Saveconfig(configname)
 	        ["nimhdemo",gnimhdemographics],
 	        ["commandline",gCommandLineText],
 	        ["ipaddress",gDefaultHostName],
- 		    ["screenres",gScreenRes],
+		    ["screenres",gScreenRes],
 		    ["randomizechain",gRandomizeChain]
                ]
             
@@ -1871,13 +1930,18 @@ define Saveconfig(configname)
  	  ##3. the parameter file (could be default)
 
 
+         Print("expchain:")
+	 Print(gExpChain)
 	  loop(i,gexpchain)
           {
-
-	     ##we need to save 1. script name, 2. parameter file, 3 path
-	     ilist <- Flatten([Second(i),Third(i),First(i)])
+	     ##we need to save 0. human name 
+	                      #1. script name,
+                              #2. parameter file,
+                              #3 path
+	     ilist <- Flatten([Second(i),Third(i),Fourth(i),First(i)])
 	     PushOnEnd(out,["EXPCHAIN",ilist])
            }
+
       FileSaveTable(out,configname)
 }
 
@@ -1894,6 +1958,7 @@ define GetStrings(lang)
 	gViewDebugText <- "Open debug output"
         gViewErrorText <- "Open error output"
         gCombineDataText <-"Combine data"
+        gMakeLauncherText <- "Create custom launcher"
         gAddToChainText <- "Append"
 	gClearChainText <- "Clear Chain"
 	gInsertChainText <- "Insert"
@@ -3175,7 +3240,7 @@ To skip this screen when you start-up, enter the password.  You can get a passwo
   boxheight <- 301
   if(not IsWindow(win))
   { 
-    SignalFatalError("PopupEntryBox(win) needs a window to be specified, not [" + win + "]")
+    SignalFatalError("PopupScreen(win) needs a window to be specified, not [" + win + "]")
   }
 
 
@@ -3268,8 +3333,6 @@ To skip this screen when you start-up, enter the password.  You can get a passwo
      ##check password here.
       pw <- entrybox.text
       passwordhash <- MD5Sum(pw)
-#     Print(pw)
-#     Print(passwordhash)
 
       gParams.pwhash <- passwordhash
       if(gParams.pwhash=="2627692e567165c7a474f3ea97c07912")
