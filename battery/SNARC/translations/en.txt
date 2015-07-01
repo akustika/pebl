@@ -1,0 +1,15 @@
+Gender: 1 for female; 2 for male
+How old are you?
+Number: 
+Some numbers will be shown on the screen.
+Decide if the presented number is
+bigger or smaller than 
+Press any key when you are ready.
+<Left> for 
+<Right> for 
+<Up> for 
+<Down> for 
+smaller than 
+bigger than 
+WRONG
+Thanks for your participation

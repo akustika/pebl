@@ -1,0 +1,15 @@
+Genre: 1 féminin, 2 masculin
+Quel est votre âge?
+Nombre: 
+Des nombres seront affichés à l'écran.
+Veuillez répondre si le nombre affiché est
+plus petit ou plus grand que 
+Pressez une touche lorsque vous êtes prêt pour commencer.
+<Gauche> pour 
+<Droite> pour 
+<Haut> pour 
+<Bas> pour
+plus petit que 
+plus grand que 
+FAUX
+Merci pour votre participation

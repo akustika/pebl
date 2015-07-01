@@ -1,0 +1,15 @@
+Geschlecht: 1 weiblich 2 männlich
+Wie alt sind sie?
+Zahl:
+Es werden Ihnen nun einzelne Zahlen am Bildschirm gezeigt. 
+Entscheiden Sie, ob der gezeigte Zahl 
+ist grösser oder kleiner als 
+Drücken Sie eine Taste, wenn Sie bereit sind.
+<Links> für 
+<Rechts> für 
+<Oben> für 
+<Unten> für 
+kleiner als 
+grösser als 
+FALSCH
+Vielen Dank für Ihre Teilnahme
