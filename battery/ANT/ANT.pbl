@@ -269,7 +269,7 @@ if(0)
 
 
 	FilePrint(gSumFileOut,"----------------------------------------")
-	FilePrint(gSumFileOut,"Mean Response time (all trials) by Congruence type")
+	FilePrint(gSumFileOut,"Mean Response time (correct trials) by Congruence type")
 	FilePrint(gSumFileOut,"----------------------------------------")
 	FilePrint(gSumFileOut,"Cond    N       median  mean    sd")
 	FilePrint(gSumFileOut,"----------------------------------------")
@@ -285,7 +285,7 @@ if(0)
 
 
 	FilePrint(gSumFileOut,"----------------------------------------")
-	FilePrint(gSumFileOut,"Mean Response time (correcttrials) by Congruence type")
+	FilePrint(gSumFileOut,"Mean Response time (all trials) by Congruence type")
 	FilePrint(gSumFileOut,"----------------------------------------")
 	FilePrint(gSumFileOut,"Cond    N       median  mean    sd")
 	FilePrint(gSumFileOut,"----------------------------------------")
@@ -402,6 +402,7 @@ define Trial (stim,practice,endtime)
 	## Identify a delay time
 	min <- 400- (time1-time0)
 	delay <- Random()*1200+min
+	Print("Waiting: " + delay)
 	Wait(delay)
 	ShowAll(cueset,1)
 	Draw()
