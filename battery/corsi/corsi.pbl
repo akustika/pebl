@@ -24,14 +24,13 @@
 ##  Version 0.2, Released 12/2011 with improvements inspired by Reid Olsen
 ##  Portuguese translation by Marco Moniz
 ##  Croation (HR) transaltions by Silvija Rucevic
-##  Spanish translation (ES) by Yunior Broche
-##  Swedish translations (SE) by Anna Eva Hallin
-##  Korean translation (KR) by M. (Cindy) Lee
+##
+
 
 define Start(p)
 {
 
-   Print(gPEBLBaseFont)
+
    
     ##See params/corsi.pbl.schema file for parameter definitions:
     ##these are fallback parameters in case .schema file is lost.
@@ -460,7 +459,7 @@ define Trial(xy,stimseq, direction)
   RemoveObject(doneback,gWin)
   RemoveObject(targ,gWin)
 
-#  Show(warn)
+  Show(warn)
   Draw()
   Wait(500)
 
@@ -911,228 +910,34 @@ define RandomTrials(least, most, times)
 define GetSTrings(language)
 {
 
+##Known trasnlations: HR, EN, PT
   lang <- Uppercase(language)
+  fname <- "translations/corsi.pbl-"+LowerCase(lang)+".csv"
 
-if(lang == "KR")
-{
-   gInstfor  <- "이 게임에 참여해 주셔서 감사합니다.  이 게임에서 9개의 파란색 정사각형 중에서 몇 개의 정사각형이 순서대로 한 번씩 깜박이는 것을 보게 될 것입니다. 그 정사각형을 순서대로 기억하십시오.  깜박임이 끝나면 깜박였던 정사각형들을 순서대로 마우스를 이용하여 클릭하신 후에 ‘끝’이라고 쓰여진 버튼을 클릭하십시오.  순서대로 기억할 수 없을 때는 기억할 수 있는 최대의 가까운 순서대로 클릭하시면 됩니다.
-두 개의 정사각형이 깜박이는 것으로 게임이 시작하게 됩니다. 두 번씩의 기회가 주어지고 두 개 중 한 개 이상 맞추게 되면 깜박이는 개수가 한 개씩 늘게 됩니다. 만약 두 개의 정사각형을 깜박이는 순서대로 정확하게 클릭하면 다음에는 세 개의 정사각형이 깜박이게 됩니다.
-
-  준비가 되었으면 마우스를 클릭하십시오."
-
-  gInstback <-"이 게임에 참여해 주셔서 감사합니다.  이 게임에서 9개의 파란색 정사각형 중에서 몇 개의 정사각형이 순서대로 한 번씩 깜박이는 것을 보게 될 것입니다. 그 정사각형을 순서대로 기억하십시오.  깜박임이 끝나면 깜박였던 정사각형들을 순서대로 마우스를 이용하여 클릭하신 후에 ‘끝’이라고 쓰여진 버튼을 클릭하십시오.  순서대로 기억할 수 없을 때는 기억할 수 있는 최대의 가까운 순서대로 클릭하시면 됩니다.
-두 개의 정사각형이 깜박이는 것으로 게임이 시작하게 됩니다. 두 번씩의 기회가 주어지고 두 개 중 한 개 이상 맞추게 되면 깜박이는 개수가 한 개씩 늘게 됩니다. 만약 두 개의 정사각형을 깜박이는 순서대로 정확하게 클릭하면 다음에는 세 개의 정사각형이 깜박이게 됩니다.
-
- 준비가 되었으면 마우스를 클릭하십시오."
-
-
-  gPrompt1 <- "익숙해질 때까지 세 번의 연습게임을 시작합니다. 연습게임은 점수에 영향을 주지 않습니다."
-
-  gPrompt2 <- "이제 실제 게임을 시작합니다. 이 게임들의 점수가 합산됩니다. 마우스를 클릭하면 시작합니다."
-  
-
-  gPromptFinal1 <- "게임에 참여해 주셔서 감사합니다."
-  gPromptFinal2 <- "Block Span:           "
-  gPromptFinal3 <- "Total Score:          "
-  gPromptFinal4 <- "Total Correct Trials: "
-  gPromptFinal5 <- "Memory Span:          "
-
-
-    gReady <- "준비"
-	gCorrect <- "맞았습니다."
-	gIncorrect <- "틀렸습니다"
-    gDone<- "끝"
-
-
-}elseif(lang=="IT")
-{
-    gInstfor  <- "You are about to take part in a test that measures your ability to remember a sequence of locations on the screen. You will see nine blue squares on the screen. On each trial, the squares will be lit up one at a time in sequence.  Remember the sequence.  When the sequence is finished, you need to click on each square IN THE SAME ORDER THEY WERE GIVEN.  When you are done, click the button labeled DONE.  If you cannot remember the order of squares, click them in as close the the original order as you can. 
-
-You will start with a sequence of two squares, and you will get two tries for each sequence length.  The sequence will increase by one whenever you get at least one of the two sequences correct.
-If you are correct, your next list will be one longer; 
-  Click the mouse button when you are ready to begin."
-
-  gInstback <-"You are about to take part in a test that measures your ability to remember a sequence of locations on the screen. You will see nine blue squares on the screen. On each trial, the squares will be lit up one at a time in sequence.  Remember the sequence.  When the sequence is finished, you need to click on each square in the sequence.  However, you must do so IN THE OPPOSITE ORDER THAT THEY WERE GIVEN.  That is, click on the last square you saw first, then the next-to-last, and so on until you click on the first square last.  When you are done, click the button labeled DONE.  If you cannot remember the order of squares, click them in as close the the original order as you can. 
-
-You will start with a sequence of two squares, and you will get two tries for each sequence length.  The sequence will increase by one whenever you get at least one of the two sequences correct.
-If you are correct, your next list will be one longer; 
-  Click the mouse button when you are ready to begin."
-
-
-  gPrompt1 <- "You will first perform three practice trials to become familiar with the test. They will not affect your score."
-
-  gPrompt2 <- "Now, you will see perform the normal trials.  These will count toward your score.  Click the mouse to begin."
-
-
-  gPromptFinal1 <- "Thank you for participating.  Alert the Experimenter that you are done." 
-  gPromptFinal2 <- "Block Span:           "
-  gPromptFinal3 <- "Total Score:          "
-  gPromptFinal4 <- "Total Correct Trials: "
-  gPromptFinal5 <- "Memory Span:          "
-
-
-    gReady <- "READY"
-	gCorrect <- "Correct"
-	gIncorrect <- "Incorrect"
-    gDone<- "Done"
-
-
-  }elseif(lang=="HR")
+  if(FileExists(fname))
   {
-   Print("Using Croation Translation")
-  ginstfor  <- "Sudjelovat cete u zadatku kojim se mjeri vasa sposobnost pamcenja niza kvadrata na ekranu. Vidjet cete devet plavih kvadrata na ekranu. U svakom pokusaju, kvadrati ce zasvijetliti jedan po jedan. Zapamtite niz. Kada zavrsi niz morate kliknuti na svaki od kvadrata koji je zasvijetlio ONIM REDOSLIJEDOM KOJI JE PRIKAZAN NA EKRANU.  
-
-Jednom kada ste to napravili pritisnitie dugmme GOTOVO.  
-
-Ukoliko se ne mozete sjetiti tocne kombinacije niza kvadrata, odredite kombinaciju koja je najslicnija originalu. 
-
-Niz cete zapoceti s dva kvadrata te cete imati dva pokusaja za svaki niz. Niz ce se povecati za jedan kvadrat svaki put kada barem jedan od zadataka rijesite tocno. Ukoliko tocno odredite slijed, sljedeci niz bit ce duzi za jedan kvadrat. Pritisnite lijevo dugme misa za pocetak"
-
-  ginstback <-"Sudjelovat cete u zadatku kojim se mjeri vasa sposobnost pamcenja niza kvadrata na ekranu. Vidjet cete devet plavih kvadrata na ekranu. U svakom pokusaju, kvadrati ce zasvijetliti jedan po jedan. Zapamtite niz. Kada zavrsi niz morate kliknuti na svaki od kvadrata koji je zasvijetlio. No, to morate uciniti OBRUTIM REDOSLIJEDOM NEGO STO JE BILO PRIKAZANO NA EKRANU. Na primjer, najprije pritisnite onaj kvadrat koji je zadnji zasvijetlio. Jednom kada ste to napravili pritisnitie dugmme GOTOVO.  
-
-Ukoliko se ne mozete sjetiti tocne kombinacije niza kvadrata, odredite kombinciju koja je najslicnija originalu. 
-
-Niz cete zapoceti s dva kvadrata te cete imati dva pokusaja za svaki niz. Niz ce se povecati za jedan kvadrat svaki put kada barem jedan od zadataka rijesite tocno. Ukoliko tocno odredite slijed, sljedeci niz bit ce duzi za jedan kvadrat. Pritisnite lijevo dugme misa za pocetak."
-
-
-    gPrompt1 <- "Najprije cete imati nekoliko pokusaja za uvjezbavanje. Ovi pokusaji nece utjecati na vas rezultat."
-
-    gPrompt2 <-  "Sada cete zapoceti sa zadacima koji ce se bodovati. Pritisnite lijevo dugme misa za pocetak."
-    
-    gPromptFinal1 <- "Hvala na sudjelovanju. Obavijestite istrazivaca da ste gotovi. "
-    gPromptFinal2 <- "Raspon blokova:  "
-    gPromptFinal3 <- "Ukupni rezultat:          "
-    gPromptFinal4 <- "Broj tocnih pokusaja:               "
-    gPromptFinal5 <- "Raspon pamcenja:          "
-
-    gReady <- "PRIPREMITE SE"
-    gCorrect <- "Tocno"
-    gIncorrect <- "Netocno"
-     gDone <- "Gotovo"
-}elseif(lang=="PT")
+    gStrings <- ReadTranslation(fname,lang)
+  } else
   {
-   Print("Using Portuguese Translation")
-  ginstfor  <- "Está prestes a iniciar um teste que vai medir a sua capacidade de memorizar uma sequência visual. Vai ver nove quadrados azuis no ecrã. Em cada tentativa, os quadrados vão mudar de côr, um de cada vez e em sequência. Quando terminar a sequência,  terá de clicar em cada quadrado na ORDEM EXACTA EM QUE ESTES MUDARAM DE CÔR.
-  
-Quando terminar, clique no botão em baixo com o nome FINAL.  Se não conseguir se lembrar da ordem correcta, clique o mais próximo que conseguir do original. 
-
-Vai iniciar com uma sequência de dois quadrados, e terá duas tentativas por sequência.  As sequências vão aumentando de dificuldade, e o teste só termina quando errar em duas sequências consecutivas. 
-  
-(Clique no botão do rato quando estiver preparado para começar.)"
-
-  ginstback <-"Está prestes a iniciar um teste que vai medir a sua capacidade de memorizar uma sequência visual. Vai ver nove quadrados azuis no ecrã. Em cada tentativa, os quadrados vão mudar de côr, um de cada vez e em sequência. Quando terminar a sequência,  terá de clicar em cada quadrado na ORDEM INVERSA EM QUE ESTES MUDARAM DE CÔR.  Isto é, clique inicialmente no último quadrado que mudou de côr, e assim sucessivamente, do último para o primeiro. 
-
-Quando terminar, clique no botão em baixo com o nome FINAL.  Se não conseguir se lembrar da ordem correcta, clique o mais próximo que conseguir do original. 
-
-Vai iniciar com uma sequência de dois quadrados, e terá duas tentativas por sequência.  As sequências vão aumentando de dificuldade, e o teste só termina quando errar em duas sequências consecutivas. 
-  
-(Clique no botão do rato quando estiver preparado para começar.)"
-
-
-    gPrompt1 <- "Primeiro vai começar com três tentativas de prática para se familiarizar com o teste. Estas tentativas não vão afectar o resultado final.  (Carregue no botão do rato para continuar.)"
-
-    gPrompt2 <-  "Terminou a prática, vai iniciar agora as tentativas de teste.  (Carregue no botão do rato para INICIAR.)"
-    
-    gPromptFinal1 <- "Final do teste. Obrigado por participar. (Carregue em qualquer tecla para terminar.) "
-    gPromptFinal2 <- "Último Item com tentativa Completa:  "
-    gPromptFinal3 <- "Total Score:          "
-    gPromptFinal4 <- "Total Tentativas Correctas:               "
-    gPromptFinal5 <- "Memory Span:          "
-
-    gReady <- "PREPARADO"
-    gCorrect <- "Correcto"
-    gIncorrect <- "Incorrecto"
-    gDone <- "Final"
-  }elseif(lang=="ES")
-  {
-
-   Print("Using Spanish Translation")
-
-  ginstfor  <- "A continuación vas a realizar una prueba que evaluará tu capacidad para recordar secuencias ordenadas de elementos que aparecerán en la pantalla. Observarás nueve cuadrados azules que aparecerán en la pantalla. En cada intento los cuadrados se encenderán uno a la vez en un orden específico. Debes recordar ese orden y cuando los cuadrados dejen de encenderse deberás hacer clic EN EL MISMO ORDEN EN EL QUE SE ENCENDIERON AL PRINCIPIO. Cuando termines la secuencia da clic en el botón DONE. Si no recuerdas el orden de los cuadrados selecciónalos aproximadamente de acuerdo al orden original.
-Comenzarás con una secuencia de dos cuadrados y tendrás dos intentos para cada secuencia. El tamaño de las secuencias de bloques que se encenderán aumentará en uno siempre y cuando logres contestar correctamente alguno de los dos intentos anteriores. Si realizas una secuencia de manera correcta tu próxima secuencia será más larga.
-Presiona el clic  cuando estés listo para comenzar."
-
-
-  ginstback <-"NOT TRANSLATED> BACKWARD INSTRUCTIONS. A continuación vas a realizar una prueba que evaluará tu capacidad para recordar secuencias ordenadas de elementos que aparecerán en la pantalla. Observarás nueve cuadrados azules que aparecerán en la pantalla. En cada intento los cuadrados se encenderán uno a la vez en un orden específico. Debes recordar ese orden y cuando los cuadrados dejen de encenderse deberás hacer clic EN EL MISMO ORDEN EN EL QUE SE ENCENDIERON AL PRINCIPIO. Cuando termines la secuencia da clic en el botón DONE. Si no recuerdas el orden de los cuadrados selecciónalos aproximadamente de acuerdo al orden original.
-Comenzarás con una secuencia de dos cuadrados y tendrás dos intentos para cada secuencia. El tamaño de las secuencias de bloques que se encenderán aumentará en uno siempre y cuando logres contestar correctamente alguno de los dos intentos anteriores. Si realizas una secuencia de manera correcta tu próxima secuencia será más larga.
-Presiona el clic cuando estés listo para comenzar."
-
-   gPrompt1 <- "Primeramente realizarás tres ensayos de práctica para que te familiarices con la prueba. Estos resultados no afectarán tu puntuación en la prueba."
-
-   gPrompt2 <- "Ahora, podrás ver realizar los ensayos normales. Estos contarán para su puntuación . Haga clic en el ratón para empezar."
-
-  gPromptFinal1 <- "Gracias por participar. Alertar al experimentador que haya terminado."
-  gPromptFinal2 <- "Block Span:           "
-  gPromptFinal3 <- "Total Score:          "
-  gPromptFinal4 <- "Total Correct Trials: "
-  gPromptFinal5 <- "Memory span:          "
-
-
-    gReady <- "LISTO"
-    gCorrect <- "Correcto"
-    gIncorrect <- "Incorrecto"
-    gDone<- "Hecho"
-}elseif(lang=="SE") {
-
-ginstfor  <- "Du kommer att få göra ett test som mäter förmågan att komma ihåg ordningsföljder. Du kommer se nio blå fyrkanter på skärmen. Under varje försök kommer fyrkanterna lysa upp en efter en i en särskild ordning. Försök att komma ihåg ordningsföljden. När försöket är avslutat, ska du trycka på alla fyrkanterna som lyste I SAMMA ORDNING. När du är färdig, tryck på KLAR. Om du inte kan komma ihåg ordningsföljden exakt, tryck på fyrkanterna i en ordning som är så rätt som möjligt.
-
- Du kommer starta med en sekvens av två fyrkanter, och du kommer få två försök på varje sekvenslängd. Sekvensen kommer att öka med en fyrkant om du repeterar minst en av sekvenserna korrekt. Om du trycker rätt så kommer nästa sekvens vara en fyrkant längre;
-   Klicka med musknappen när du är redo att starta."
-
-ginstback  <- "Du kommer att få göra ett test som mäter förmågan att komma ihåg ordningsföljder. Du kommer se nio blå fyrkanter på skärmen. Under varje försök kommer fyrkanterna lysa upp en efter en i en särskild ordning. Försök att komma ihåg ordningsföljden. När försöket är avslutat ska du trycka på alla fyrkanterna som lyste, men du ska göra det I OMVÄND ORDNING. Du ska alltså trycka på den sista fyrkanten som lyste först, sen den näst sista, och så vidare, fram till att du trycker på den första fyrkanten som lyste allra sist. När du är färdig, tryck på KLAR. Om du inte kan komma ihåg ordningsföljden exakt, försök att trycka på fyrkanterna i en ordning som är så rätt som möjligt.
-
-Du kommer starta med en sekvens av två fyrkanter, och du kommer få två försök på varje sekvenslängd. Sekvensen kommer att öka med en fyrkant om du repeterar minst en av sekvenserna korrekt. Om du trycker rätt så kommer nästa sekvens vara en fyrkant längre;
-   Klicka med musknappen när du är redo att starta."
-
-gPrompt1 <- "Först kommer vi göra några övningsuppgifter. De kommer inte påverka din poäng."
-
-  gPrompt2 <- "Nu börjar vi med testet. Dessa försök kommer att räknas mot din poäng. Klicka med musknappen för att starta."
-
-
-  gPromptFinal1 <- "Tack för din medverkan. Säg till försöksledaren att du är klar."
-  gPromptFinal2 <- "Blockspann:           "
-  gPromptFinal3 <- "Total poäng:          "
-  gPromptFinal4 <- "Antal korrekta försök: "
-  gPromptFinal5 <- "Minnesspann:           "
- 
-  gReady <- "REDO"
-  gCorrect <- "Rätt"
-  gIncorrect <- "Fel"
-  gDone<- "Klar"    
- 
- }else {
-
-## Default to english
-
-    gInstfor  <- "You are about to take part in a test that measures your ability to remember a sequence of locations on the screen. You will see nine blue squares on the screen. On each trial, the squares will be lit up one at a time in sequence.  Remember the sequence.  When the sequence is finished, you need to click on each square IN THE SAME ORDER THEY WERE GIVEN.  When you are done, click the button labeled DONE.  If you cannot remember the order of squares, click them in as close the the original order as you can. 
-
-You will start with a sequence of two squares, and you will get two tries for each sequence length.  The sequence will increase by one whenever you get at least one of the two sequences correct.
-If you are correct, your next list will be one longer; 
-  Click the mouse button when you are ready to begin."
-
-  gInstback <-"You are about to take part in a test that measures your ability to remember a sequence of locations on the screen. You will see nine blue squares on the screen. On each trial, the squares will be lit up one at a time in sequence.  Remember the sequence.  When the sequence is finished, you need to click on each square in the sequence.  However, you must do so IN THE OPPOSITE ORDER THAT THEY WERE GIVEN.  That is, click on the last square you saw first, then the next-to-last, and so on until you click on the first square last.  When you are done, click the button labeled DONE.  If you cannot remember the order of squares, click them in as close the the original order as you can. 
-
-You will start with a sequence of two squares, and you will get two tries for each sequence length.  The sequence will increase by one whenever you get at least one of the two sequences correct.
-If you are correct, your next list will be one longer; 
-  Click the mouse button when you are ready to begin."
-
-
-  gPrompt1 <- "You will first perform three practice trials to become familiar with the test. They will not affect your score."
-
-  gPrompt2 <- "Now, you will see perform the normal trials.  These will count toward your score.  Click the mouse to begin."
-
-
-  gPromptFinal1 <- "Thank you for participating.  Alert the Experimenter that you are done." 
-  gPromptFinal2 <- "Block Span:           "
-  gPromptFinal3 <- "Total Score:          "
-  gPromptFinal4 <- "Total Correct Trials: "
-  gPromptFinal5 <- "Memory Span:          "
-
-
-    gReady <- "READY"
-	gCorrect <- "Correct"
-	gIncorrect <- "Incorrect"
-    gDone<- "Done"
-
+    gStrings <- ReadTranslation("translations/corsi.pbl-en.csv",lang)
   }
+
+
+   PrintProperties(gStrings)
+
+   ##recode to the variables we are using in the script.
+    gInstfor  <- gStrings.instfor
+    gInstback <- gStrings.instback
+    gPrompt1 <- gStrings.prompt1
+    gPrompt2 <- gStrings.prompt2
+    gPromptFinal1 <- gStrings.promptfinal1
+    gPromptFinal2 <- gStrings.promptfinal2
+    gPromptFinal3   <- gStrings.PromptFinal3 
+    gPromptFinal4 <-  gStrings.PromptFinal4 
+    gPromptFinal5 <-  gStrings.PromptFinal5
+    gReady <- gStrings.ready
+    gCorrect <- gStrings.correct
+    gIncorrect <- gStrings.incorrect
+    gDone  <- gStrings.done
+ 
 }
