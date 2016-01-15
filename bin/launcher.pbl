@@ -342,6 +342,9 @@ define FileSelect(p,resources)
    viewerror  <- MakeButton(gViewErrorText,gPortal.x+gPortal.width/2, gPortal.y+portalheight+98,win,gportal.width-4)
    makelauncher <- MakeButton(gMakeLauncherText,gPortal.x+gPortal.width/2,gPortal.y+portalheight+119,win,gPortal.width-4)
 
+   translatetest <- MakeButton(gTranslateTestText,gPortal.x+gPortal.width/2,
+             gPortal.y+portalheight+140,win,gPortal.width-4)
+
    ##################################################
    ##################################################
    ##column 2
@@ -603,7 +606,8 @@ box <- chainbox.outer
 	   gDescription,demobox,savechain,loadchain,wiki,
            subplusbutton,clobox,filter,#donate,review,
            screenselection, randomizeChainBox,params,  combinedata,psetbox,
-          deletechain,menu1,menu2,menu3,makelauncher]
+          deletechain,menu1,menu2,menu3,makelauncher,
+	   translatetest]
 
       returns <- 		   [1,2,3,4,0,
 				   6,7,8,9,10,
@@ -612,7 +616,8 @@ box <- chainbox.outer
 				   21,22,23,24,25,
 				   26,27,28,#29,30,
 				   31,32,33,34,35,
-				   36,0,0,0,37]
+				   36,0,0,0,37,
+				   38]
 
    resp <-  WaitForButtonClickOnTarget(vals,returns)
 
@@ -1370,7 +1375,7 @@ if(0)
          PopUpMessageBox("This version of the PEBL launcher cannot create a custom launch sequence.  Please donate to the PEBL project to get the custom launcher creator.",win)
        }else{
 
-    if (gUseReloc)
+         if (gUseReloc)
 	    {
 
              batfiletext <- "set ABSPATH=%CD%
@@ -1388,7 +1393,16 @@ START /B "+ gPEBLName+ " customlauncher.pbl -v "+ gConfigName+"  > logs\launchlo
 	 FileClose(batfile)
 	 PopUpMessageBox("Launcher for " +gConfigName+ " created.",win)
        }
-      }
+      }elseif(tmp==38)
+      {
+       PushButton(translatetest,[0,0])
+      file <- DirListToText(gDirChain)+Nth(gFlatFileList,gselected)
+      RunScript(gdirchain, "translatetest.pbl",0,gLanguage, logfile,0,"","")
+
+
+
+     }
+
 
 
      Draw()
@@ -1959,6 +1973,7 @@ define GetStrings(lang)
         gViewErrorText <- "Open error output"
         gCombineDataText <-"Combine data"
         gMakeLauncherText <- "Create custom launcher"
+        gTranslateTestText <- "Translate test"
         gAddToChainText <- "Append"
 	gClearChainText <- "Clear Chain"
 	gInsertChainText <- "Insert"
