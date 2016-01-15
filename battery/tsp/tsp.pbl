@@ -8,7 +8,7 @@ define Start (p)
 {
 
    parpairs <- [ ["usefile","subset.csv"], #use exactly these problems, instead of randomly-chosen.  set to 0 for random trials.
-	       ["targsize",25],
+	       ["targsize",20],
                ["dointro",1],
                ["xoffset",70],  ## Field area upper left
                ["yoffset",70],  ## 
@@ -19,12 +19,17 @@ define Start (p)
 	       ["inputlabel","click"], ##i.e., click or touch
 	       ["doflash",0],          ##should the circle flash when you click it?  Good for touchscreen, which covers the circle.
 	       ["dobeep",1],
+	       ["allowbackup",1],
 	       ["randomstart",0]  ##should each trial start on a different random node         
                ]
+
+
 
   gParams <- CreateParameters(parpairs,"tsp.pbl.par")
   gTargSize <- gParams.targsize
   dointro <- gParams.dointro
+   ##backup does not work!!
+   gParams.allowbackup <- 1
 
    Init()
 
@@ -251,8 +256,14 @@ define Trial(tsp,header)
 
    Hide(gMessage)
 
-
-
+   if(gParams.allowbackup)
+   {
+     Show(gBackupbg)
+     Show(gBackuptext)
+   } else {
+     Hide(gBackupbg)
+     Hide(gBackuptext)
+   }
 
   ##Should we use a random starting point each time?
   positions <- Transpose(SubList(Transpose(tsp),3,4))
@@ -464,8 +475,17 @@ define Init()
    Hide(gMessage)
    Draw()
 
-   gButtonX <- 1000
+   ##add these and hide them; if we don't use them, we just won't show them.
+    gBackupbg <- Rectangle(910,385,200,60,MakeColor("grey60"),1)
+    AddObject(gbackupbg,gWin)
+    gbackuptext <- EasyLabel("Backup",gbackupbg.x,gbackupbg.y,gWin,30)
+    Hide(gBackupBG)
+    Hide(gBackupText)
+
+
+   gButtonX <- 1150
    gButtonY <- 385
+
 
 
 }
@@ -517,7 +537,22 @@ define UpdateState()
 {
 
   ret <- 1
-  x <- WaitForClickOnTarget(gUnvisited, Sequence(1,Length(gUnvisited),1))
+
+  if(gParams.allowbackup)
+   {
+      clicktargs <- Append(gUnvisited,gBackupBg)
+   }else{
+      clicktargs <- gUnvisited
+   }
+  output <-  Sequence(1,Length(clicktargs),1)
+   Print("-------")
+   Print(clicktargs)
+   Print(output)
+
+
+  x <- WaitForClickOnTarget(clicktargs,output)
+
+  Print(x)
 
   if(gParams.dobeep)
   {
@@ -525,6 +560,36 @@ define UpdateState()
   }
   #x tells you the the element of gUnvisited that was clicked upon.
 
+
+
+  if(Length(clicktargs)>1 and gParams.allowbackup and x==Length(clicktargs))
+   {
+     ##backup
+
+     
+     
+     toremove <- Nth(gVisited,Length(gVisited))
+     Print("TOREMOV:")
+     Print(toremove)
+     clickID <- toremove    
+     gVisited <- RemoveSubSet(gVisited,[ Length(gVisited)])
+
+
+
+     gUnvisited <- Append(gUnvisited,[toremove])
+     gUnvisitedIDs <- Append(gUnvisitedIDs,[toremove])
+    time <- GetTime()
+    tmp <- Nth(gTargets, clickID)			 
+
+    FilePrint(gFileOut,   "REMOVED,REMOVED,"+
+                         First(gClick)+","+Second(gClick) + "," +
+                         toRemove + "," + toRemove+","+ time + "," + (time-gTrialStartTime))
+
+
+
+
+   } else {
+    
 
   clickloc <- Nth(gUnvisited,x)      #Get the location and ID of the
   clickID  <- Nth(gUnvisitedIDs,x)   #clicked-on position
@@ -550,12 +615,15 @@ define UpdateState()
    Wait(50)
    tmp.r <- gTargSize
    Draw()
+
   }
   #update the  list of where we've been and where we need to go
 
   gVisited <- Append(gVisited, clickloc)
   gUnvisited <- RemoveSubset(gUnvisited,[x])
   gUnvisitedIDs <- RemoveSubset(gUnvisitedIDs,[x])
+   }
+
 
    RemoveComplex(gLines)
    ##Draw the path where we have been so far.
@@ -583,7 +651,8 @@ define UpdateState()
 
 define DisplayStats(header,firstclick)
 {
-
+     Hide(gBackupbg)
+     Hide(gBackuptext)
     #compute some statistics.
     dOpt <-  ComputePathDistance(gPositions)
     dObs <-  ComputePathDistance(gVisited)
@@ -678,6 +747,7 @@ define WaitForClickOnTarget(targetlist,keylist)
          if(Nth(pos,4)=="<pressed>")
           {
             wait2 <- 0
+	    gClick <- pos
           }
        }
 
@@ -687,7 +757,7 @@ define WaitForClickOnTarget(targetlist,keylist)
           {
              if(Inside(pos,First(i)))
              {
-			    wait1 <- 0
+	        wait1 <- 0
                 ret <- Nth(i,2)
                 break
              }
@@ -702,7 +772,7 @@ define WaitForClickOnTarget(targetlist,keylist)
 ##
 define Inside(click,object)
 {
-	x <- First(click)
+    x <- First(click)
     y <- Second(click)
 
    if(IsList(object))
@@ -716,6 +786,8 @@ define Inside(click,object)
    }elseif(IsImage(object) or IsLabel(object) or 
       object.name == "<RECTANGLE>" or object.name == "<SQUARE>")
    {
+
+        Print("RECTANGLE")
 	##First, determine object limits
 	xlow <- object.x - object.width/2
 	xhigh <- object.x + object.width/2

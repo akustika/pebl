@@ -162,16 +162,21 @@ After the display appears, you can examine the circles as long as you want.  Tim
 	 tour <- Nth(tours,ArgMin(lengths))
 
 
-         pts <- SortBy(pts,(Order(tour)))  #re-sort the original points
-         tourangles <- GetAngles(pts)   #find angles of the tour. These are
+
+         pts2 <- SortBy(pts,(Order(tour)))  #re-sort the original points
+
+         tourangles <- GetAngles(pts2)   #find angles of the tour. These are
 	                                   #compute to range between 0 and pi, with 
 					   #pi=3.14 a straight line.  We want to get 
 					   #rid of straight lines to some extent.
 
-       }
+      closeness <- GetCloseness(tour, mat,pts)  
+      pts <- pts2
+      Print(Mean(tourangles))
+      Print(closeness)
 
+      }
 
-      
 
      if(gParams.useLetters)
      {
@@ -1083,7 +1088,8 @@ define ArgMin(list)
 }
 
 
-
+## Returns a set of angles subtended by each tri-point set.
+##
 define GetAngles(path)
 {
    angles <- []
@@ -1101,4 +1107,46 @@ define GetAngles(path)
  return angles
 }
 
+
+## This evaluates a path by examining how close each point is
+## to the two points it connects to.  This is done ordinally.
+## so that if we were always connected to the nearest two neighbors,
+##  we would have a value of 1.5
+define GetCloseness(path,distmatrix,pts)
+{
+     ##path should be a series of indices of distmatrix
+     ##distmatrix should be distances between all points.
+
+     size <- Length(path)     
+     Print(path)
+     ##figure out ordinal distance matrix.
+     orddist <- []
+     loop(row,distmatrix)
+     {
+     
+       # newrow <-SortBy(Sequence(1,size,1),row)     
+	#newrow <- Order(Order(row))
+	newrow <- Rank(row)
+	PushOnEnd(orddist, newrow)
+     }
+
+
+     vals <- []
+     loop(i, Sequence(1,size-1,1))
+     {
+
+     
+       ##for each one, consider the next of the prev and the prev of the next.
+        prev <- Nth(path,i)
+	next <- Nth(path,i+1)
+
+
+	prevord <- Nth(Nth(orddist,next),prev)-1
+	nextord <- Nth(Nth(orddist,prev),next)-1
+	PushOnEnd(vals,[prevord,nextord])
+     }
+
+
+  return (Mean(Flatten(vals)))
+}
 

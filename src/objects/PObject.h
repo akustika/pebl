@@ -3,7 +3,7 @@
 //    Name:       src/objects/PObject.h
 //    Purpose:    Contains the Definition of the PObject Class
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2005 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2016 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //

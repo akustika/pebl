@@ -24,8 +24,9 @@
 //    along with PEBL; if not, write to the Free Software
 //    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ////////////////////////////////////////////////////////////////////////////////
-#include "PEBLObjects.h"
 
+
+#include "PEBLObjects.h"
 #include "PEBLEnvironment.h"
 #include "../base/Variant.h"
 #include "../base/PList.h"
@@ -38,7 +39,10 @@
 #endif
 
 
+
+
 #include "../base/PEBLObject.h"
+#include "../devices/PEyeTracker.h"
 
 #include "../devices/DeviceState.h"
 #include "../devices/PEventLoop.h"
@@ -66,6 +70,7 @@
 #ifdef PEBL_MOVIES
 #include "../platforms/sdl/PlatformMovie.h"
 #endif
+
 
 
 #include "PEBLList.h"
@@ -1605,4 +1610,44 @@ Variant PEBLObjects::MakeCustomObject(Variant v)
     pcd=NULL;
     return tmp;
 
+}
+
+
+//Currently, this works with locally-connected eyetribe
+//tracker using gazelib.  In theory, it could work more generally
+Variant PEBLObjects::ConnectEyeTracker(Variant v)
+{
+    //this should offer setting the address and port (default is 127.0.0.1/6555)
+    PEyeTracker * pet = new PEyeTracker();
+
+    counted_ptr<PEBLObjectBase> tmpObject = counted_ptr<PEBLObjectBase>(pet);
+    
+    PComplexData *  pcd = new PComplexData(tmpObject);
+    Variant tmp = Variant(pcd);
+    delete pcd;
+    pcd=NULL;
+    return tmp;
+
+}
+
+
+
+// This returns a 'custom' object related to the current state of the
+// eye position.
+//
+Variant PEBLObjects::GetEyeObject(Variant v)
+{
+    
+    PList * plist = v.GetComplexData()->GetList();
+    Variant obj  = plist->First();
+
+    PEyeTracker * pet = dynamic_cast<PEyeTracker*>(obj.GetComplexData()->GetObject().get());
+
+    gtl::GazeData * gd = pet->GetGazeFrame();
+
+    Variant obj2 = pet->ConvertGazeData(gd);
+    delete gd;
+    gd = NULL;
+    
+    return obj2;
 }

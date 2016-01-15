@@ -3,7 +3,7 @@
 //    Name:       src/libs/PEBLObjects.h
 //    Purpose:    Function Library for managing PEBL Objects
 //    Author:     Shane T. Mueller, Ph.D.
-//    Copyright:  (c) 2003-2013 Shane T. Mueller <smueller@obereed.net>
+//    Copyright:  (c) 2003-2016 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
 //   
@@ -113,6 +113,9 @@ namespace PEBLObjects
 
     Variant MakeCustomObject(Variant v);
 
+
+    Variant ConnectEyeTracker(Variant v);
+    Variant GetEyeObject(Variant v);
 }
 
 

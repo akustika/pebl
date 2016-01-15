@@ -6,7 +6,7 @@
 //    Copyright:  (c) 2005-2010 Shane T. Mueller <smueller@obereed.net>
 //    License:    GPL 2
 //
-//   
+//
 //
 //     This file is part of the PEBL project.
 //
@@ -72,7 +72,7 @@ using std::endl;
 
 //  bool PlatformDrawObject::Draw()
 // {
- 
+
 //     return true;
 // }
 
@@ -101,7 +101,7 @@ using std::endl;
 // bool PlatformDrawObject::LockSurface()
 // {
 //     if(SDL_MUSTLOCK(mSurface))
-//         { 
+//         {
 
 //             //cout << "Locking-------->" << endl;
 //             //The below returns 0 on success, -1 otherwise,
@@ -113,7 +113,7 @@ using std::endl;
 //                 }
 //             return true;
 //         }
-    
+
 //     return false;
 
 // }
@@ -122,7 +122,7 @@ using std::endl;
 // bool PlatformDrawObject::UnlockSurface()
 // {
 //    if(SDL_MUSTLOCK(mSurface))
-//         { 
+//         {
 //             // cout << "------->Unlocking" << endl;
 //             SDL_UnlockSurface(mSurface);
 //         }
@@ -158,10 +158,10 @@ bool PlatformLine::Draw()
 
     int result;
 
-    
+
     result = lineRGBA(mParentSurface,mX, mY, mX+mDX, mY+mDY,
                       mColor.GetRed(), mColor.GetGreen(), mColor.GetBlue(), mColor.GetAlpha());
-    
+
     return result;
 }
 
@@ -185,7 +185,7 @@ bool PlatformRectangle::Draw()
         {
             result = boxRGBA(mParentSurface,mX - mDX/2, mY - mDY/2, mX+mDX/2, mY+mDY/2,
                              mColor.GetRed(), mColor.GetGreen(), mColor.GetBlue(), mColor.GetAlpha());
-       
+
         }
     else
         {
@@ -278,7 +278,7 @@ bool PlatformEllipse::Draw()
         {
             result = filledEllipseRGBA(mParentSurface,mX, mY, mRX, mRY,
                                      mColor.GetRed(), mColor.GetGreen(), mColor.GetBlue(), mColor.GetAlpha());
-            
+
         }
     else
         {
@@ -359,7 +359,7 @@ bool PlatformPolygon::Draw()
 {
     int result;
 
-    //We need to transform the double-list points into int vectors for 
+    //We need to transform the double-list points into int vectors for
     //the x and y points, plus the length.
 
     PList * pxlist = mXPoints.GetComplexData()->GetList();
@@ -369,7 +369,7 @@ bool PlatformPolygon::Draw()
     Sint16 *x = new Sint16[length];
     Sint16 *y = new Sint16[length];
 
-    vector<Variant>::iterator p1 = pxlist->Begin();    
+    vector<Variant>::iterator p1 = pxlist->Begin();
     vector<Variant>::iterator p2 = pylist->Begin();
 
     int i = 0;
@@ -430,7 +430,7 @@ bool PlatformBezier::Draw()
     int result;
 
 
-    //We need to transform the double-list points into int vectors for 
+    //We need to transform the double-list points into int vectors for
     //the x and y points, plus the length.
 
     PList * pxlist = mXPoints.GetComplexData()->GetList();
@@ -440,7 +440,7 @@ bool PlatformBezier::Draw()
     Sint16 *x = new Sint16[length];
     Sint16 *y = new Sint16[length];
 
-    vector<Variant>::iterator p1 = pxlist->Begin();    
+    vector<Variant>::iterator p1 = pxlist->Begin();
     vector<Variant>::iterator p2 = pylist->Begin();
 
     int i = 0;
@@ -451,13 +451,13 @@ bool PlatformBezier::Draw()
             p1++;
             p2++;
             i++;
-            
+
         }
 
-    
+
     result = bezierRGBA(mParentSurface,x,y,length,mSteps,
                         mColor.GetRed(), mColor.GetGreen(), mColor.GetBlue(), mColor.GetAlpha());
-    
+
     delete[] x;
     delete[] y;
 

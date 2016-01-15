@@ -486,7 +486,9 @@ define GetSubNum(win)
     {
     ##Thanks Ernesto Reyes Zamorano
     text <- "Ingrese el código del participante"
-
+    }elseif(gLanguage=="SE") #swedish by Kim Karlsson
+    {
+    text <- "Fyll i ärendekod"
     }   else {
    ##Default to English
     text <- "Enter Participant Identifier"
@@ -1257,7 +1259,7 @@ define GetNewDataFile(subraw,win,basename,extension,header)
         while(needsubcode)
         {
           ##Choose new code
-          gSubNum <- GetSubNum(gWin)
+          gSubNum <- GetSubNum(win)
           fname <- "data/"+gSubNum+"/"+ basename +"-"+gSubNum+"."+extension
           if(not FileExists(fname))
           {
@@ -1329,4 +1331,42 @@ define ClickOn(obj,xy)
       CallFunction(p.clickon,[p,x,y])
      }  
     }
+}
+
+
+##These two functions (readtranslation and formattext)
+## are useful utilities for .csv-style translations that
+##appear in 1.0 and later.
+
+define ReadTranslation(filename,lang)
+{
+  obj <- MakeCustomObject("translations")
+  obj.language <- lang
+  stringlist <- ReadCSV(filename)
+ cr <- CR(1)
+ loop(i,stringlist)
+  {
+  #   Print("text:"+i)
+    ##Add CR to the
+     text <- Second(i)
+     text2 <- FormatText(text)
+   #  Print(text2)
+     SetProperty(obj,First(i),text2)
+  }
+  return obj
+}
+
+
+##this works at replacing carriage returns (\n) etc. from text
+define FormatText(text)
+{
+  list <- SplitStringSlow(text,"\n")
+  out <- ""
+  sep <- ""
+  loop(i,list)
+  {
+   out <-out + sep +i
+   sep <- CR(1)
+  }
+ return out
 }

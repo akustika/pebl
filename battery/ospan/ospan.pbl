@@ -193,6 +193,7 @@ define ShowDistract(a_WaitTO)
 		keyWidth<-3*keyHeight
 		kb <- MakeKB( gWin, ["True","False"], xPos-keyWidth/2, yPos, 2, keyWidth, keyHeight, spc)
 
+		SetMouseCursorPosition(Floor(gVideoWidth/2),FLOOR(gVideoHeight/2))
 		resp<-GetKBInput( GetClickable( kb ), ["1", "0"]  )
 
 		if ( ToNumber( resp ) == truthVal )

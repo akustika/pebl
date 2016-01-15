@@ -573,7 +573,8 @@ i++;
 
     //Add a the default 'base font' names
     //gPEBLBaseFont defaults to a sans serif font
-    if((tmps == "CN") | (tmps== "KO") |(tmps == "JP"))
+    //ko isn't korean...kr or kp
+    if((tmps == "CN") | (tmps== "KO") |(tmps == "JP") | (tmps=="KR") | (tmps=="KP"))
         {
             //ukai handles chinese
             Evaluator::gGlobalVariableMap.AddVariable("gPEBLBaseFont",Variant("wqy-zenhei.ttc"));

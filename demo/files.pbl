@@ -6,6 +6,10 @@ define Start(parameter)
 	Print("Opening tmp.dat for writing")
 	xFile <- FileOpenWrite("tmp.dat")
 
+	PrintProperties(xfile)
+	xfile2 <- FileOpenWrite("tmp.dat")
+	PrintProperties(xfile)
+
 	Print("Writing Lines")
 	FilePrint(xFile, "Line 1")
 	FilePrint(xFile, "Line 2")

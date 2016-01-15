@@ -2,7 +2,7 @@
 #//////////////////////////////////////////////////////////////////////////
 #//////////////////////////////////////////////////////////////////////////
 #//
-#//	Copyright (c) 2003-2014
+#//	Copyright (c) 2003-2016
 #//	Shane T. Mueller, Ph.D.  smueller at obereed dot net
 #//
 #//     This file is part of the PEBL project.
@@ -30,7 +30,8 @@
 #locatable anywhere
 PREFIX = /usr/local/
 ##This is the name of the executable and share directory in linux:
-EXECNAME = pebl-language
+#EXECNAME = pebl-language
+EXECNAME = pebl
 
 PEBL_VERSION =0.14
 #USE_WAAVE=1       ##Optional; comment out to turn off waave multimedia library
@@ -38,7 +39,7 @@ PEBL_VERSION =0.14
 USE_NETWORK=1     ##Optional; comment out to turn off sdl_net library.
 USE_PORTS=1 
 USE_HTTP=1      ##Optional; turn on/off for http get/set
-
+USE_LIBGAZE=1    ##Optional; turn on/off eyetribe gazeapi.  Probably won't work on linux.
 USE_DEBUG = 1     ##Optional; turn on/off debugging stuff.
 
 C   = gcc
@@ -86,14 +87,17 @@ ifdef USE_HTTP
 	CXXFLAGS5 = -DPEBL_HTTP  
 endif
 
+ifdef USE_LIBGAZE
+	CXXFLAGS6 = -DPEBL_GAZELIB
+	LINKOPTS4 = -lGazeApiLib -lboost_system -lboost_thread
+endif
 
-
-CXXFLAGS = $(CXXFLAGS0) $(CXXFLAGS1) $(CXXFLAGS2) $(CXXFLAGS3) $(CXXFLAGS4) $(CXXFLAGS5)
-LINKOPTS = $(LINKOPTS1) $(LINKOPTS2) $(LINKOPTS3)
+CXXFLAGS = $(CXXFLAGS0) $(CXXFLAGS1) $(CXXFLAGS2) $(CXXFLAGS3) $(CXXFLAGS4) $(CXXFLAGS5) $(CXXFLAGS6)
+LINKOPTS = $(LINKOPTS1) $(LINKOPTS2) $(LINKOPTS3) $(LINKOPTS4)
 
 SDL_CONFIG = /usr/bin/sdl-config
 
-SDL_FLAGS = -I/usr/include/SDL -I/usr/local/include -D_REENTRANT -L/usr/lib -L/usr/local/lib
+SDL_FLAGS = -I/usr/include/SDL -I/usr/local/include -Ilibs/tet-cpp-client-master/include -D_REENTRANT -L/usr/lib -L/usr/local/lib -Llibs/tet-cpp-client-master 
 
 #ifeq($(USE_WAAVE),1)
 #SDL_FLAGS = $(SDLFLAGS) -L/home/smueller/Projects/src/waave-1.0/src 
@@ -203,6 +207,7 @@ POBJECT_SRC  =  $(OBJECTS_DIR)/PEnvironment.cpp \
 		$(OBJECTS_DIR)/PTextBox.cpp \
 		$(OBJECTS_DIR)/PMovie.cpp \
 		$(OBJECTS_DIR)/PCustomObject.cpp 
+
 ##		$(PUTILITIES_SRC)
 
 
@@ -221,8 +226,8 @@ PDEVICES_SRC =  $(DEVICES_DIR)/PDevice.cpp \
 	$(DEVICES_DIR)/PNetwork.cpp \
 	$(DEVICES_DIR)/PJoystick.cpp \
 	$(DEVICES_DIR)/PParallelPort.cpp \
-	$(DEVICES_DIR)/PComPort.cpp 
-
+	$(DEVICES_DIR)/PComPort.cpp \
+	$(DEVICES_DIR)/PEyeTracker.cpp
 
 
 PDEVICES_OBJ  = $(patsubst %.cpp, %.o, $(PDEVICES_SRC))
@@ -279,7 +284,7 @@ PEBLMAIN_SRC = 		$(APPS_DIR)/PEBL.cpp \
 			$(FUNCTIONLIB_SRC) \
 			$(POBJECT_SRC) \
 			$(PUTILITIES_SRC) \
-			$(PLATFORM_SDL_SRC)
+			$(PLATFORM_SDL_SRC) 
 ###			$(LIB_SRC)
 
 PEBLMAIN_OBJ = $(patsubst %.cpp, %.o, $(PEBLMAIN_SRC))

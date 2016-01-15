@@ -1,23 +1,16 @@
-#################################################
-##
-##   PEBL's Tower of Hanoi
-##
-##   Released May 2010
-##
-##
-##
-## 
-##  Shane Mueller (smueller@obereed.net)
-##
-##
-##
-##
-##
-##
-##
-##
+################################################# PEBL's Tower of
+##Hanoi Released May 2010 Shane Mueller (smueller@obereed.net) 
+
+
+
+## For Bishop problems, see J Child
+##Psychol Psychiatry. 2001 May;42(4):551-6.  Individual differences in
+##cognitive planning on the Tower of Hanoi task: neuropsychological
+##maturity or measurement error?  Bishop DV1, Aamodt-Leeper G,
+##Creswell C, McGurk R, Skuse DH.
+
+
 ##  Minor fixes contributed by Ross Spoon.
-##
  
 define Start(p)
 {

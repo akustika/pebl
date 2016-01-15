@@ -152,7 +152,7 @@ define Start(lPar)
   datafile <- GetNewDataFile(gSubNum,gWin,"toav","csv",
         "sub,trial,targ,toofast,responded,corr,mult,time,rt")   
 
-  reportfile <- GetnewdataFile(gSubNum,gWin,"tav-report","txt","")
+  reportfile <- GetnewdataFile(gSubNum,gWin,"toav-report","txt","")
 
 
 

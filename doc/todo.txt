@@ -1,5 +1,56 @@
+TODO for 0.15
+gonogo task--needs correct column; dprime, etc.
+reading span--needs summary score (accuracy for both tasks)
+document the .filename property on files.
+
+
+-Audio playback issue reproted by Paul Wright.
+
+Update the NIMHDemographics:
+> Here is the link to the policy:
+> Hi Shane,
+> The NIH is now recommending that participants be allowed to select
+> multiple boxes when asked about race and ethnicity, avoiding a
+> "multiple races" box. I could not find a way to do this with the
+> EasyChoice facility. Do you have a plan for supporting this in PEBL?
+> 
+> Also, the ethnicity question should now be separated from the race
+> question.
+> 
+> Here is the link to the policy:
+> 
+> https://www.whitehouse.gov/omb/fedreg_1997standards
+> 
+> Scroll down to "Categories and definitions" to get the gist of it.
+> 
+> Best,
+> S
+> https://www.whitehouse.gov/omb/fedreg_1997standards
+
+
+
+*Fix documentation references to removefile (should be deletefile):
+In the 0.14 manual DeleteFile is only mentioned in the brief function
+reference. Only RemoveFile has an entry in the detailed reference
+(chapter 8). RemoveFile is also referenced elsewhere, while DeleteFile
+appears only in that one spot.
+
 ========================================
+
+* figure out plug-in architecture
+ * handle space in google drive launcher.
+ * Look into  saving audio files issue with 0.14.
+
+* zoomx seems to zoom in both directions.
+* opspan-when you miss the click for time-out, you get true/false right away and might make an error.
+
 TODO for 0.14
+
+#On page 32 of the 0.14 manual, among codes for keys are listed both
+<enter> and <return>, but it seems that only the latter works, can
+anyone confirm?
+
+
 
 
  *Add/fix probedigit
@@ -42,6 +93,8 @@ TODO for 0.14
  * Fix multi-parameter stuff (DONE; removed this; 
                         need to fix the schema file for some test)
   *Add ui for parameter sets files (DONE)
+
+   *getnewdatafile hard-codes gWin instead of win.
 
 Verify:
 

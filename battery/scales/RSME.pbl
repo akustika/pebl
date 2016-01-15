@@ -20,12 +20,22 @@ define Start(p)
   rsme     <-  RSME(gWin)
   time2 <- GetTime()
 
+  MakeDirectory("data")
   filepool <- FileOpenAppend("data/RSME-pooled.csv")
+  line <-  gSubNum + ",RSME," + TimeStamp() +","+ rsme + "," + (time2-time1))
+  Print(line)
+  FilePrint(filepool,line)
 
-  Print( gSubNum + ",RSME," + TimeStamp() +","+ rsme + "," + (time2-time1))
-  FilePrint(filepool, gSubNum + ",RSME," + TimeStamp() +","+ rsme + "," + (time2-time1))
-
-
+ 
+  MakeDirectory("pooled")
+  pooled <- FileOpenAppend("pooled/pooleddat.csv")
+  time <- TimeStamp()
+  key <- MD5Sum(gSubNum+time)
+  Print("done1")
+  FilePrint(pooled,gSubNum+",rsme,"+key+",time,"+time)
+  FilePrint(pooled,gSubNum+",rsme,"+key+",rating,"+rsme)
+  FilePrint(pooled,gSubNum+",rsme,"+key+",elapsedtime,"+(time2-time1))
+   Print("done2")
 }
 
 

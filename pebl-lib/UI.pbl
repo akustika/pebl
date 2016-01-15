@@ -2,7 +2,7 @@
 #//    Name:       src/pebl-lib/UI.pbl
 #//    Purpose:    Contains PEBL functions used for GUI components
 #//    Author:     Shane T. Mueller, Ph.D.
-#//    Copyright:  (c) 2014 Shane T. Mueller <smueller@obereed.net>
+#//    Copyright:  (c) 2015 Shane T. Mueller <smueller@obereed.net>
 #//    License:    GPL 2
 #//
 #//
@@ -222,6 +222,9 @@ define GetTextEntryInput(obj,xy)
 {
    tb <- obj.entry
    obj.value <-   GetInput(tb,"<return>")
+
+  ##we need to update the stage.
+
    return obj.value
 }
 
@@ -364,7 +367,7 @@ define PopupMessageBox(text,win)
 
 
 ##Make an easy-to-use (small 300x200) pop-up messagebox function.
-define PopUpEntryBox(text,win,xy)
+define PopUpEntryBox(text,win,xy,default)
 {
   boxwidth <- 301
   boxheight <- 101
@@ -401,7 +404,7 @@ define PopUpEntryBox(text,win,xy)
    Draw(popup)
    Hide(bg)
    Hide(box)
-   entrybox <-  EasyTextBox("",10,boxheight-25, popup,13,boxwidth-20,20)
+   entrybox <-  EasyTextBox(default,10,boxheight-25, popup,13,boxwidth-20,20)
    
    Draw()
    resp <- GetInput(entrybox,"<return>")
@@ -820,7 +823,8 @@ define MakeScrollBox(opts, header,x,y,win,fontsize,
    outlinecol <-MakeColor("grey65")
    obj <- MakeCustomObject("scrollbox")
    obj.name <- "<CUSTOMOBJECT>"
-
+   obj.editable <- 0    ##should you be able to edit 
+                        ##particular entries?
 
    obj.basefont <- MakeFont(gPEBLBaseFont,0,fontsize,MakeColor("black"),MakeColor("white"),0)
    head <- MakeLabel(header,obj.baseFont)
@@ -1011,17 +1015,13 @@ if(obj.numitems <= obj.maxitems)
 define ClickOnScrollbox(obj,click)
 {
 
-
   y <- Second(click)
   box <- obj.box
-
   retval <- "<adjust>"
-
   button <- Third(click)
 
   if(Inside(click,obj.up) or button==4)
   {
-
 
    if(button==4)
    {
@@ -1053,6 +1053,14 @@ define ClickOnScrollbox(obj,click)
     selected <- Floor((y - box.y)/obj.lineheight)+1+obj.listoffset
     selected <- Bound(selected,obj.listoffset+1,obj.numitems)
     
+    if(selected==obj.selected and obj.editable)
+    {
+      #edit the value
+      val <- PopUpEntryBox("Enter new Label to describe experiment:",obj.win,gclick,Nth(obj.list,selected))
+      SetElement(obj.list,selected,val)
+      UpdateScrollBox(obj)
+
+    }
     obj.selected <- selected
     retval <- "<select>"
 

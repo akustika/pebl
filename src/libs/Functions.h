@@ -262,13 +262,15 @@ namespace PEBLObjects
             {(char*)"PAUSEPLAYBACK",   PausePlayback,  1,1},
 
             {(char*)"MAKECUSTOMOBJECT",   MakeCustomObject,  1,1},
+            {(char*)"CONNECTEYETRACKER",   ConnectEyeTracker,  0,0},
+            {(char*)"GETEYEOBJECT",        GetEyeObject,  1,1},
+            
             {0,            0,  0, 0}
         };
 }
 
 namespace PEBLEnvironment
 {
-
 
     PEBL_Function_Type  FunctionTable[] =
         {

@@ -31,7 +31,8 @@
 define Start(lPar)
 {
 
-  parpairs <- [["inputdevice","mouse"]]   ##mouse or keyboard are valid.
+  parpairs <- [["inputdevice","mouse"],
+               ["numtrials", 150]]   ##mouse or keyboard are valid.
      
   gParams<-CreateParameters(parpairs,gParamFile)
 
@@ -133,7 +134,7 @@ define Start(lPar)
 ## 
    deck <- 0
    trialnum <- 1
-   while(trialnum <= 150)
+   while(trialnum <= gparams.numtrials)
     {
       time0 <- GetTime()
       if(gInputDevice=="keyboard")
@@ -479,7 +480,7 @@ define WaitForContinue()
 define GetStrings(lang)
 {
 
- lang <- Uppercase(lang)
+  lang <- Uppercase(lang)
   gStrings <- MakeCustomObject("translation")
  
   gStrings.inst1mouse <- "Please make sure no keys are pressed.
@@ -533,4 +534,27 @@ mediante un click con el ratón. Haz un click con el ratón para iniciar el jueg
   gSTrings.feedback1 <- "Hvala vam na sudjelovanju u istrazivanju. Skupili ste ukupno "
   gSTrings.congrats <-  "Cestitamo! "
   gStrings.feedback3 <- " Mozete otici. Recite istrazivacu da ste gotovi. Pritisnite tipku X za izlaz."
-} }
+
+
+}elseif(Uppercase(language)=="HU")
+{
+##Translated by Krisztina Lakatos
+
+ gStrings.inst1mouse <- "Please make sure no keys are pressed.
+   Make sure that the numlock and scroll lock keys are untoggled."
+
+  gStrings.inst1key <- " Choose a door by pressing the C V B or N key. Press any key to begin."
+  
+  gStrings.inst2 <- "Most egy olyan játékot fogsz játszani, amiben egy szamárnak segítesz, hogy almához jusson. Minden ajtó mögött van pár alma, amit a szamár megkaphat, de minden ajtó megnyitásakor el is veszíthet a szamár egy pár almát. Az egérrel tudod kiválasztani, hogy melyik ajtó nyíljon ki. Tessék, itt az egér, kezdheted."
+
+  gStrings.headerkey <- "Select door by pressing corresponding key (cvbn)"
+
+  gStrings.headermouse <- "Select door by clicking with mouse" Kattints az egérrel, hogy kiválaszd az ajtót"
+  gStrings.total <- "Osszesen "
+  gStrings.apples <- " alma"
+
+  gSTrings.feedback1 <- "Thank you for participating in the experiment. You earned a total of "
+  gSTrings.congrats <- "Congratulations! "
+  gStrings.feedback3 <- " You may now leave.  Please alert the experimenter that you are done. Press the X key to exit."
+
+ }

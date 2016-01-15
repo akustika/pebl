@@ -28,8 +28,30 @@ obsolete.
 
                  RELEASE NOTES
 
+Version 0.15
 
 Version 0.14 (June 2014)
+-Added ability to skip trials in TOL.
+-Added RSME rating scale.
+Translations by Antonella Soma:
+color stroop
+bcst
+iowa
+gongo
+pcpt
+
+
+--PPVT will allow mouse responses.
+
+
+New tests: PASAT
+           Plus-minus task
+           Anti-saccade task
+
+-Fixed bug in BNT (recording data/output quantiles.)
+
+
+Version 0.14
 
 
 ===New Custom Object===

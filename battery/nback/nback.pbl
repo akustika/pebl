@@ -38,7 +38,7 @@ define Start(p)
 
   ##Do some basic  instructions. If you use this test, please edit the following, and provide your instructions back to the PEBL project.
 
-   MessageBox("In this task, you will see and/or hear a series of stimuli.  For each stimulus, you will need to determine whether it was the same as one you sawy previously.  To start, we will use one-back as the rule.  So, if a stimulus is identical to one you saw immediately previously, you will respond by hitting the shift key.  We will start with a short practice round.",gWin)
+   MessageBox("In this task, you will see and/or hear a series of stimuli.  For each stimulus, you will need to determine whether it was the same as one you saw previously.  To start, we will use one-back as the rule.  So, if a stimulus is identical to one you saw immediately previously, you will respond by hitting the shift key.  We will start with a short practice round.",gWin)
 
   if(gParams.test1 != "none")
    {
@@ -483,7 +483,7 @@ define DoNBackSequence(dim1,dim2, n, isi,
 	       Nth(des,1)+","+Nth(des,2)+","+Nth(des,3)+","+Nth(des,4)+","+
 	       doText+","+ doAudio+","+doSpatial+","+ timestart+","+
 	       resp1 + ","+corr1+"," + (time2) + "," + (time2-time1) + ","+ 
-	        resp2 + ","+corr2+"," + time3 + "," + (time3-time1)       )
+	       resp2 + ","+corr2+"," + time3 + "," + (time3-time1)       )
 
    
      WaitUntil(timestart+isi)

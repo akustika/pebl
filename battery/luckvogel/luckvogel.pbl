@@ -11,12 +11,12 @@ define Start(p)
                ["squaresize",50],
 	       ["prestime",300],
 	       ["delaytime",1000],
-	       ["length",1],
-	       ["length",2],
-	       ["length",3],
-	       ["length",4],
-	       ["length",8],
-	       ["length",12],
+	       ["length1",1],
+	       ["length2",2],
+	       ["length3",3],
+	       ["length4",4],
+	       ["length5",8],
+	       ["length6",12],
 	       ["trialsperlength",10], ##per length and same/diff condition
 	       ["givefeedback",1],
 	       ["blocksize",40],
@@ -26,6 +26,8 @@ define Start(p)
   gParams <- CreateParameters(parpairs,gParamFile)
 
 
+    gParams.length <- [gParams.length1,gParams.length2,gParams.length3,
+                       gparams.length4,gParams.length5,gParams.length6]
 
    if(gParams.UseAudioFeedback)
    {

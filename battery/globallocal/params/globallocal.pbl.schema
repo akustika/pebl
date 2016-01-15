@@ -8,4 +8,4 @@ stim1|H|Stimulus for left response
 stim2|S|Stimulus for right response
 stimdummy|█|Neutral dummy stimulus.  Navon used more of a O. Could also try ▓█▄
 giveErrorfeedback|1|Should error feedback be given on each trial
-doscatterconditions|1|Should you include 'scatter' conditions as blocks 6/7.
+doscatterconditions|1|Should you include 'scatter' conditions as blocks 6/7 (spatial uncertainty)
